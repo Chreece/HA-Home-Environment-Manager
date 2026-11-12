@@ -117,7 +117,8 @@
           "max_outdoor_humidity": "Dışarısı · RH (%) (≤)",
           "max_wind_kmh": "Havalandırma · Hava durumu ve uyarılar · km/h (≤)",
           "max_age_minutes": "Havalandırma · ⏱ · Açın (min, ≤)",
-          "indoor_mold": "Küf göstergesi · ≥ 70%"
+          "indoor_mold": "Küf göstergesi · ≥ 70%",
+          "max_age_mode": "Environment reading validity"
         },
         "data_description": {
           "outdoor_aqi": "«Dışarısı · AQI (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
@@ -141,7 +142,8 @@
           "max_outdoor_humidity": "«Dışarısı · RH (%) (≤)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
           "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
-          "indoor_mold": "«Küf göstergesi · ≥ 70%» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir."
+          "indoor_mold": "«Küf göstergesi · ≥ 70%» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "max_age_mode": "Ventilation · Measurement freshness"
         }
       },
       "setup_rooms": {
@@ -712,7 +714,8 @@
           "climate_sleep_start": "Uyku · Cihazlar · START",
           "climate_sleep_end": "Uyku · Cihazlar · END",
           "climate_target_source": "Cihazlar · kaynak · hedef",
-          "climate_comfort_adjustment_max_c": "Cihazlar (°C)"
+          "climate_comfort_adjustment_max_c": "Cihazlar (°C)",
+          "climate_occupancy_freshness_mode": "Room count freshness"
         },
         "data_description": {
           "climate_occupancy_sensors": "Seçilen durum veya öznitelikteki geçerli dolu oda listesi önceliklidir: listedeki odalar dolu, listede olmayanlar boştur. Liste yoksa seçilen herhangi bir varlık sensörünün açık olması dolu; hepsinin kapalı olması veya hiç sensör seçilmemesi boş demektir. Kullanılamayan veya geçersiz seçili kaynak bilinmiyor olarak kalır. Değişmeyen listeler ve ikili durumlar eskimez.",
@@ -727,7 +730,8 @@
           "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
           "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "«Cihazlar · kaynak · hedef» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
-          "climate_comfort_adjustment_max_c": "«Cihazlar (°C)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir."
+          "climate_comfort_adjustment_max_c": "«Cihazlar (°C)» için karar eşiği. Önerileri etkiler; tıbbi sınır değildir.",
+          "climate_occupancy_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven."
         }
       },
       "climate_equipment": {
@@ -2228,7 +2232,9 @@
           "general_home_policy": "Evde bulunma",
           "general_wake_alarm_entity": "Uyku · Sonraki alarm",
           "general_wake_lead_minutes_entity": "Uyku · Alarmdan kaç dakika önce",
-          "window_open_timeout_minutes": "Pencere açma bekleme süresi (dk)"
+          "window_open_timeout_minutes": "Pencere açma bekleme süresi (dk)",
+          "general_source_freshness_mode": "Home occupancy · Validity policy",
+          "global_threshold_max_age_mode": "Environment · Validity policy"
         },
         "data_description": {
           "weather_entities": "Seçin: Hava durumu ve uyarılar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2281,7 +2287,9 @@
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Sonraki alarm için saat veya tarih ve saat varlığını ve öndeki dakika varlığını seçin. HEM otomatik uykuyu bu kadar dakika önce bitirerek normal hedeflere döner. Tarihsiz saatler Home Assistant saat dilimini kullanır. Evde olmama, elle kontrol ve cihaz korumaları önceliğini korur.",
           "general_wake_lead_minutes_entity": "Negatif olmayan dakika değeri içeren sayısal bir varlık seçin; birim min olmalı veya boş bırakılmalıdır. 07:00 alarmı ve 30 değeri otomatik uykuyu 06:30’da bitirir; 0 alarmın çaldığı an demektir. Kapatmak için iki kaynağı da temizleyin.",
-          "window_open_timeout_minutes": "Havalandırma isteği kabul edildikten sonra, hâlâ gerekliyse yeni otomatik/PID başlatmalarına izin verilmeden önce beklenen süre. 0–30 dakika, varsayılan 5; 0 beklemeyi kapatır. Açık pencere korumaları ve cihazların asgari çalışma süreleri geçerliliğini korur."
+          "window_open_timeout_minutes": "Havalandırma isteği kabul edildikten sonra, hâlâ gerekliyse yeni otomatik/PID başlatmalarına izin verilmeden önce beklenen süre. 0–30 dakika, varsayılan 5; 0 beklemeyi kapatır. Açık pencere korumaları ve cihazların asgari çalışma süreleri geçerliliğini korur.",
+          "general_source_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven.",
+          "global_threshold_max_age_mode": "Automatic: weather entities can remain valid for 180 minutes, other numeric environmental measurements for 90 minutes, while valid change-driven binary contacts remain usable without an inactivity timeout. Custom: use the minute value below. Availability and restored-state checks always apply. Home Assistant last_reported advances on a repeated same-value write, not merely because time has passed."
         }
       },
       "room_occupancy": {
@@ -4308,6 +4316,42 @@
         "state_attributes": {
           "configuration_help": {
             "name": "Yardım"
+          }
+        }
+      },
+      "global_threshold_mode_max_age_mode": {
+        "name": "Ventilation · Measurement freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "home_global_policy_source_freshness_mode": {
+        "name": "Home occupancy · Report freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "area_climate_policy_occupancy_freshness_mode": {
+        "name": "Room occupancy · Count freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
           }
         }
       }
