@@ -344,7 +344,9 @@ jobs:
       - name: B6 translated entity names include required placeholders
         run: python -I .github/tests/test_062b6_name_placeholders.py
       - name: B7 direct settings saves and pending-value preservation
-        run: python -I .github/tests/test_062b7_autosave.py
+        run: |
+          python -I .github/tests/test_062b7_autosave.py
+          python -I .github/tests/test_062b7_save_confirmation.py
       - name: B1 concise settings labels and door UI in Chromium
         run: python -I .github/tests/test_062b1_menu_labels.py
       - name: Native floor accordion, settings, room moves and zero-floor parity
