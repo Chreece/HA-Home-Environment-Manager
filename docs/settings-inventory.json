@@ -2776,7 +2776,7 @@
         "custom_components/environment_manager/const.py:72",
         "custom_components/environment_manager/device_controls.py:100",
         "custom_components/environment_manager/device_controls.py:104",
-        "custom_components/environment_manager/equipment_model.py:1288",
+        "custom_components/environment_manager/equipment_model.py:1292",
         "custom_components/environment_manager/mold_control_demand.py:131"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -4822,7 +4822,7 @@
         "custom_components/environment_manager/config_flow.py:836",
         "custom_components/environment_manager/device_controls.py:177",
         "custom_components/environment_manager/environment_extended.py:187",
-        "custom_components/environment_manager/equipment_model.py:1225",
+        "custom_components/environment_manager/equipment_model.py:1229",
         "custom_components/environment_manager/switch.py:110"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -7755,7 +7755,7 @@
         "custom_components/environment_manager/const.py:72",
         "custom_components/environment_manager/device_controls.py:100",
         "custom_components/environment_manager/device_controls.py:104",
-        "custom_components/environment_manager/equipment_model.py:1288",
+        "custom_components/environment_manager/equipment_model.py:1292",
         "custom_components/environment_manager/mold_control_demand.py:131"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -8956,7 +8956,7 @@
         "custom_components/environment_manager/config_flow.py:836",
         "custom_components/environment_manager/device_controls.py:177",
         "custom_components/environment_manager/environment_extended.py:187",
-        "custom_components/environment_manager/equipment_model.py:1225",
+        "custom_components/environment_manager/equipment_model.py:1229",
         "custom_components/environment_manager/switch.py:110"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
