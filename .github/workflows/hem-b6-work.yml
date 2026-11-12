@@ -1,0 +1,24 @@
+name: HEM b6 isolated verification
+on:
+  push:
+    branches: [fix/062b6-door-dispatch-evidence]
+    paths: [.github/workflows/hem-b6-work.yml]
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Archive tracked source only
+        run: |
+          mkdir -p /tmp/hem-b6-source
+          git archive --format=tar.gz HEAD > /tmp/hem-b6-source/source.tar.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hem-b6-source
+          path: /tmp/hem-b6-source/
+          retention-days: 3
