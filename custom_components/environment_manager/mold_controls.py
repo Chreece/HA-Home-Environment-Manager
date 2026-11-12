@@ -93,8 +93,12 @@ async def async_recalculate_mold_factor(manager: Any, area_id: str) -> float:
         cfg = _calibration(manager, area_id)
         configured = selected(manager.settings, area_id, "temperature")
         pinned = cfg.get("indoor_temperature_entity") if configured is None else None
-        age = float(manager.thresholds.get(
-            "max_age_minutes", DEFAULT_THRESHOLDS["max_age_minutes"]))
+        # Honor the same explicit Automatic/Custom freshness policy used by
+        # normal environmental capture and weather/temperature diagnostics.
+        # Do not cast to float: that would discard the source-type policy.
+        from .freshness_policy import configured_limit
+        age = configured_limit(manager.thresholds, family="environment",
+            minutes_key="max_age_minutes", mode_key="max_age_mode")
         indoor_c, evidence = room_temperature_evidence(
             manager.hass, manager.settings, area_id,
             pinned=pinned if isinstance(pinned, str) else None,
