@@ -117,7 +117,8 @@
           "max_outdoor_humidity": "屋外 · RH (%) (≤)",
           "max_wind_kmh": "換気 · 天気と警報 · km/h (≤)",
           "max_age_minutes": "換気 · ⏱ · 開ける (min, ≤)",
-          "indoor_mold": "カビ指標 · ≥ 70%"
+          "indoor_mold": "カビ指標 · ≥ 70%",
+          "max_age_mode": "Environment reading validity"
         },
         "data_description": {
           "outdoor_aqi": "「屋外 · AQI (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
@@ -141,7 +142,8 @@
           "max_outdoor_humidity": "「屋外 · RH (%) (≤)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
           "max_wind_kmh": "Maximum outdoor wind speed for window-ventilation checks, in km/h. If the selected weather data reports stronger wind, HEM includes that caution in any useful conditional opening advice, keeps automatic outside-air use blocked and can recommend closing open windows. This is not a fan-speed setting.",
           "max_age_minutes": "Maximum age in minutes for environmental readings used by HEM, including selected outdoor/weather data and room measurements. Older readings become stale and cannot establish safe ventilation or valid mold-calibration temperatures.",
-          "indoor_mold": "「カビ指標 · ≥ 70%」の判断しきい値です。推奨に使い、医療上の基準ではありません。"
+          "indoor_mold": "「カビ指標 · ≥ 70%」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "max_age_mode": "Ventilation · Measurement freshness"
         }
       },
       "setup_rooms": {
@@ -712,7 +714,8 @@
           "climate_sleep_start": "睡眠 · デバイス · START",
           "climate_sleep_end": "睡眠 · デバイス · END",
           "climate_target_source": "デバイス · 情報源 · 目標",
-          "climate_comfort_adjustment_max_c": "デバイス (°C)"
+          "climate_comfort_adjustment_max_c": "デバイス (°C)",
+          "climate_occupancy_freshness_mode": "Room count freshness"
         },
         "data_description": {
           "climate_occupancy_sensors": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。",
@@ -727,7 +730,8 @@
           "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00.",
           "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source.",
           "climate_target_source": "「デバイス · 情報源 · 目標」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
-          "climate_comfort_adjustment_max_c": "「デバイス (°C)」の判断しきい値です。推奨に使い、医療上の基準ではありません。"
+          "climate_comfort_adjustment_max_c": "「デバイス (°C)」の判断しきい値です。推奨に使い、医療上の基準ではありません。",
+          "climate_occupancy_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven."
         }
       },
       "climate_equipment": {
@@ -2228,7 +2232,9 @@
           "general_home_policy": "在宅状況",
           "general_wake_alarm_entity": "睡眠 · 次のアラーム",
           "general_wake_lead_minutes_entity": "睡眠 · アラームの何分前に解除するか",
-          "window_open_timeout_minutes": "窓を開けるまでの待機時間（分）"
+          "window_open_timeout_minutes": "窓を開けるまでの待機時間（分）",
+          "general_source_freshness_mode": "Home occupancy · Validity policy",
+          "global_threshold_max_age_mode": "Environment · Validity policy"
         },
         "data_description": {
           "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2281,7 +2287,9 @@
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "次のアラームの時刻または日時エンティティと、解除までの分数を持つエンティティを選択します。HEM は指定した分数だけ早く自動睡眠モードを終了し、通常の目標値に戻します。日付のない時刻には Home Assistant のタイムゾーンを使います。不在、手動制御、機器の保護機能は引き続き優先されます。",
           "general_wake_lead_minutes_entity": "0 以上の分数を持つ数値エンティティを選択します。単位は min または単位なしです。アラームが 07:00、値が 30 なら 06:30 に自動睡眠モードを終了します。0 はアラーム時刻を意味します。無効にするには両方の選択を解除します。",
-          "window_open_timeout_minutes": "換気の依頼が受け付けられた後、必要に応じて新たな自動/PID起動を許可するまでの待機時間です。0～30分、既定は5分。0で待機を無効にします。窓開放時の保護と機器の最小運転・停止時間は引き続き適用されます。"
+          "window_open_timeout_minutes": "換気の依頼が受け付けられた後、必要に応じて新たな自動/PID起動を許可するまでの待機時間です。0～30分、既定は5分。0で待機を無効にします。窓開放時の保護と機器の最小運転・停止時間は引き続き適用されます。",
+          "general_source_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven.",
+          "global_threshold_max_age_mode": "Automatic: weather entities can remain valid for 180 minutes, other numeric environmental measurements for 90 minutes, while valid change-driven binary contacts remain usable without an inactivity timeout. Custom: use the minute value below. Availability and restored-state checks always apply. Home Assistant last_reported advances on a repeated same-value write, not merely because time has passed."
         }
       },
       "room_occupancy": {
@@ -4308,6 +4316,42 @@
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"
+          }
+        }
+      },
+      "global_threshold_mode_max_age_mode": {
+        "name": "Ventilation · Measurement freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "home_global_policy_source_freshness_mode": {
+        "name": "Home occupancy · Report freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "area_climate_policy_occupancy_freshness_mode": {
+        "name": "Room occupancy · Count freshness",
+        "state": {
+          "auto": "Automatic (by source type)",
+          "custom": "Custom timeout"
+        },
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
           }
         }
       }
