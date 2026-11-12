@@ -110,7 +110,9 @@ class DeviceSleep(unittest.TestCase):
         }
         self.hass.put(fixture["MOTION"], "on")  # Explicit [] in living ignores this.
         self.hass.put(count, "1", area="bath", age=15)
-        self.assertNotEqual(self.profile(self.a), "sleep", "A stale count cannot prove everyone asleep")
+        self.assertEqual(self.profile(self.a), "sleep", "Automatic permits a sampled count within its 240-minute limit")
+        self.manager.settings["climate_rooms"]["bath"]["occupancy_freshness_mode"] = "custom"
+        self.assertNotEqual(self.profile(self.a), "sleep", "A stale Custom-limited count cannot prove everyone asleep")
         self.manager.settings["climate_rooms"]["bath"]["occupancy_stale_minutes"] = 20
         self.assertEqual(self.profile(self.a), "sleep")
         self.assertEqual(self.facts(self.a)["occupancy"], "unoccupied")
