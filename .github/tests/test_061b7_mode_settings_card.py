@@ -379,19 +379,19 @@ def run():
         modal.locator('[data-hem-full-category127="mode"] > summary').click()
         modal.locator('[data-hem-full-category127="pid"] > summary').click()
         modal.locator('[data-hem-full-value127="select.user_renamed_method"]').select_option('manual')
-        modal.locator('[data-hem-full-apply127="select.user_renamed_method"]').click()
+        modal.locator('[data-hem-full-value127="select.user_renamed_method"]').dispatch_event('change')
         assert page.evaluate("calls[1]")==['select','select_option',
             {'entity_id':'select.user_renamed_method','option':'manual'}]
         gain=modal.locator('[data-hem-full-value127="number.gain_0_heat"]')
         gain.fill("4.6")
-        modal.locator('[data-hem-full-apply127="number.gain_0_heat"]').click()
+        modal.locator('[data-hem-full-value127="number.gain_0_heat"]').dispatch_event('change')
         assert page.evaluate("calls[2]")==['number','set_value',
             {'entity_id':'number.gain_0_heat','value':4.6}]
         modal.locator('[data-hem-full-apply127="switch.mode_quiet_sleep"]').click()
         assert page.evaluate("calls[3]")==['switch','turn_on',
             {'entity_id':'switch.mode_quiet_sleep'}]
         modal.locator('[data-hem-full-category127="pid"] [data-hem-full-value127="select.mode_calibration"]').select_option('imc_lambda')
-        modal.locator('[data-hem-full-apply127="select.mode_calibration"]').click()
+        modal.locator('[data-hem-full-value127="select.mode_calibration"]').dispatch_event('change')
         assert page.evaluate("calls[4]")==['select','select_option',
             {'entity_id':'select.mode_calibration','option':'imc_lambda'}]
         assert modal.locator('[data-hem-full-apply127="button.mode_unavailable"]').is_disabled()

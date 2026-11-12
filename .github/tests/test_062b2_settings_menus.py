@@ -52,6 +52,9 @@ LABELS = r"""() => {
   return result;
 }"""
 
+def card_menu_open(page):
+    return page.evaluate('card._roomSettingsDialog114.finished===false')
+
 with sync_playwright() as pw:
     browser = pw.chromium.launch(executable_path=CHROME, headless=True,
         args=['--no-sandbox', '--disable-dev-shm-usage'])
@@ -152,8 +155,8 @@ with sync_playwright() as pw:
             assert paragraph.evaluate('n=>n.getBoundingClientRect().width')>150
             assert group.evaluate('n=>n.scrollWidth<=n.clientWidth+2')
             assert page.evaluate('card._roomSettingsDialog114.draft')==draft
-            dialog.locator('[data-room-options-save114]').click()
-            page.wait_for_function('card._roomSettingsDialog114?.finished===true')
+            page.wait_for_function('card._roomSettingsDialog114?.optionsAutosave?.dirty.size===0')
+            assert card_menu_open(page)
             committed=page.evaluate('committed')
             assert committed==draft,(committed,draft)
             assert set(committed)=={field['name'] for field in form['data_schema']}

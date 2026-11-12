@@ -102,7 +102,7 @@ with sync_playwright() as p:
         ["button", "press", {"entity_id": "button.review_discard"}],
     ]
     modal.locator('[data-hem-full-value127="select.calibration"]').select_option("cohen_coon")
-    modal.locator('[data-hem-full-apply127="select.calibration"]').click()
+    modal.locator('[data-hem-full-value127="select.calibration"]').dispatch_event('change')
     assert page.evaluate("calls.at(-1)")==[
         "select", "select_option", {"entity_id": "select.calibration", "option": "cohen_coon"},
     ]

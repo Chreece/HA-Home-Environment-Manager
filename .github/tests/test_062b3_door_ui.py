@@ -52,6 +52,9 @@ LABELS = r"""() => {
   return result;
 }"""
 
+def card_menu_open(page):
+    return page.evaluate('card._roomSettingsDialog114.finished===false')
+
 with sync_playwright() as pw:
     browser = pw.chromium.launch(executable_path=CHROME, headless=True,
         args=['--no-sandbox', '--disable-dev-shm-usage'])
@@ -171,27 +174,27 @@ with sync_playwright() as pw:
             assert page.evaluate('card._roomSettingsDialog114.draft')==draft
             target=paired.locator('[data-hem-full-row127="select.door_target"]')
             target.locator('select').select_option('Bedroom [room1]')
-            target.locator('[data-hem-full-apply127]').click()
+            target.locator('select').dispatch_event('change')
             assert page.evaluate('native062.at(-1)')==['select','select_option',{
                 'entity_id':'select.door_target','option':'Bedroom [room1]'}]
             coordination=paired.locator('[data-hem-full-row127="select.door_coordination"]')
             coordination.locator('select').select_option('Coordinate starts')
-            coordination.locator('[data-hem-full-apply127]').click()
+            coordination.locator('select').dispatch_event('change')
             assert page.evaluate('native062.at(-1)')==['select','select_option',{
                 'entity_id':'select.door_coordination','option':'Coordinate starts'}]
             meter=paired.locator('[data-hem-full-row127="select.door_energy"]')
             meter.locator('select').select_option('Energy [sensor.energy]')
-            meter.locator('[data-hem-full-apply127]').click()
+            meter.locator('select').dispatch_event('change')
             assert page.evaluate('native062.at(-1)')==['select','select_option',{
                 'entity_id':'select.door_energy','option':'Energy [sensor.energy]'}]
             timeout=paired.locator('[data-hem-full-row127="number.door_report"]')
             timeout.locator('input').fill('30')
-            timeout.locator('[data-hem-full-apply127]').click()
+            timeout.locator('input').dispatch_event('change')
             assert page.evaluate('native062.at(-1)')==['number','set_value',{
                 'entity_id':'number.door_report','value':30}]
             assert page.evaluate('card._roomSettingsDialog114.draft')==draft
-            dialog.locator('[data-room-options-save114]').click()
-            page.wait_for_function('card._roomSettingsDialog114?.finished===true')
+            page.wait_for_function('card._roomSettingsDialog114?.optionsAutosave?.dirty.size===0')
+            assert card_menu_open(page)
             committed=page.evaluate('committed')
             assert committed==draft,(committed,draft)
             assert set(committed)=={field['name'] for field in form['data_schema']}

@@ -93,23 +93,14 @@ assert.equal(helper.context(card,'room0'),null);
   assert.equal(await card._openRoomSettings114('room0'),false);
   card._hass.user.is_admin=true;
   const calls=[];
-  const saved={...helper.context(card,'room0'),area:'room0',flowId:'options1',node:makeNode(),
-    fields:helper.fields(form),draft:Object.fromEntries(form.data_schema.map(f=>[f.name,[...f.default]])),
-    nativeForms:[],clientErrors:new Set(),busy:false,failed:false,finished:false,
-    api:async(method,path,data)=>{calls.push({method,path,data});return {type:'create_entry',flow_id:'options1'};}};
-  saved.draft.humidity=[];card._roomSettingsDialog114=saved;
-  await card._submitRoomSettings114(saved);
-  assert.equal(calls.length,1);assert.equal(calls[0].method,'POST');
-  assert.deepEqual(plain(calls[0].data.humidity),[]);
-  assert.deepEqual(Object.keys(calls[0].data).sort(),form.data_schema.map(f=>f.name).sort());
-  assert.deepEqual(plain(calls[0].data.temperature),['sensor.temp_a','sensor.temp_b']);
-  assert.equal(saved.finished,true);await helper.cleanup(saved);assert.equal(calls.length,1);
-  const failed={...saved,node:makeNode(),failed:false,finished:false,busy:false,cleanupStarted:false,
-    api:async(method,path,data)=>{calls.push({method,path,data});if(method==='POST')throw Error('offline');}};
-  card._roomSettingsDialog114=failed;await card._submitRoomSettings114(failed);
-  await failed.cleanupPromise;assert.equal(failed.failed,true);
-  assert.deepEqual(calls.slice(1).map(c=>c.method),['POST','DELETE']);
-  await helper.cleanup(failed);assert.equal(calls.length,3);
+  const saved={flowId:'options1',api:async(method,path)=>{calls.push({method,path});}};
+  await helper.cleanup(saved);await helper.cleanup(saved);
+  assert.deepEqual(calls,[{method:'DELETE',path:'config/config_entries/options/flow/options1'}]);
+  const completed={flowId:'done',finished:true,api:saved.api};
+  await helper.cleanup(completed);assert.equal(calls.length,1);
+  const delayed={api:saved.api};await helper.cleanup(delayed);
+  delayed.flowId='late';await helper.cleanup(delayed);
+  assert.equal(calls.at(-1).path,'config/config_entries/options/flow/late');
   console.log('BETA114_ROOM_OPTIONS_SCHEMA_ASSOCIATION_FULL_PAYLOAD_AND_CLEANUP=PASS');
 })().catch(error=>{console.error(error);process.exitCode=1;});
 """
@@ -140,6 +131,7 @@ SETUP = r"""({states,form,native})=>{
     }
     const flow_id=path.split('/').at(-1);
     const step={...structuredClone(form),flow_id};
+    for(const field of step.data_schema)field.default=structuredClone(committed[field.name]);
     if(data?.next_step_id){
       if(mode.holdAdvance)return await new Promise(resolve=>pending.advance=()=>resolve(step));
       if(mode.invalidSchema)step.data_schema.pop();
@@ -220,92 +212,54 @@ def browser_checks(card_source):
         assert detect.inner_text() == "Select detected covers"
         assert shades.locator('[data-room-option114]:checked').count() == 0
         detect.click()
-        assert shades.locator('[data-room-options-count114]').inner_text() == "2"
-        for cover in COVERS:
-            assert shades.locator(f'input[value="{cover}"]').is_checked()
-        selected = deepcopy(DEFAULTS)
-        selected['shades'] = COVERS
-        assert page.evaluate("card._roomSettingsDialog114.draft") == selected
-        assert len(page.evaluate("calls")) == 2, "Detect must edit only the draft"
-        assert page.evaluate("committed") == DEFAULTS
-        for width in (320, 390):
-            page.set_viewport_size({"width": width, "height": 850})
-            assert shades.evaluate("node=>node.scrollWidth<=node.clientWidth+1")
+        page.wait_for_function('committed.shades.length===2')
+        assert page.evaluate('committed.shades') == COVERS
+        assert popup.locator('[data-room-options-save114]').is_hidden()
+        assert page.evaluate('card._roomSettingsDialog114.finished') is False
+        for width in (320,390,700):
+            page.set_viewport_size({'width':width,'height':850})
+            assert shades.evaluate('n=>n.scrollWidth<=n.clientWidth+1')
         shades.locator('[data-room-clear114]').click()
-        assert shades.locator('[data-room-options-count114]').inner_text() == "0"
-        assert shades.locator('[data-room-option114]:checked').count() == 0
-        assert page.evaluate("card._roomSettingsDialog114.draft") == DEFAULTS
-        assert len(page.evaluate("calls")) == 2 and page.evaluate("committed") == DEFAULTS
-        detect.click()
-        popup.locator('[data-room-options-x114]').click()
-        page.wait_for_function("calls.some(call=>call.method==='DELETE')")
-        assert popup.count() == 0
-        assert page.evaluate("calls.map(call=>call.method)") == ["POST", "POST", "DELETE"]
-        assert page.evaluate("committed") == DEFAULTS, "Cancel must discard detected covers"
-
-        # Saved empty selections stay empty on reopen; detection is an
-        # explicit union, preserving an already selected cover without duplicates.
-        page.evaluate("calls=[]")
-        assert page.evaluate("card._openRoomSettings114('room0')") is True
-        assert page.evaluate("card._roomSettingsDialog114.draft") == DEFAULTS
-        reveal_source(shades)
-        shades.locator("summary").click()
+        page.wait_for_function('committed.shades.length===0')
+        assert page.evaluate('committed.temperature') == DEFAULTS['temperature']
+        popup.locator('[data-room-options-close114]').click()
+        assert popup.count()==0
+        assert page.evaluate("card._openRoomSettings114('room0')")
+        assert page.evaluate('card._roomSettingsDialog114.draft.shades') == []
+        reveal_source(shades);shades.locator('summary').click()
         shades.locator(f'input[value="{COVERS[1]}"]').check()
         detect.click()
-        cover_selection = [COVERS[1], COVERS[0]]
-        assert page.evaluate("card._roomSettingsDialog114.draft.shades") == cover_selection
-        assert shades.locator('[data-room-options-count114]').inner_text() == "2"
-        assert len(page.evaluate("calls")) == 2
-        temp = popup.locator('[data-room-options-group114="temperature"]')
-        reveal_source(temp)
-        temp.locator("summary").click()
+        cover_selection=[COVERS[1],COVERS[0]]
+        page.wait_for_function('committed.shades.length===2')
+        temp=popup.locator('[data-room-options-group114="temperature"]')
+        reveal_source(temp);temp.locator('summary').click()
+        page.evaluate('mode.validation=true;window.beforeCommitted=structuredClone(committed)')
         temp.locator('input[value="sensor.temp_a"]').uncheck()
-        temp.locator('input[value="sensor.temp_c"]').check()
-        temp.locator('input[type="search"]').fill("TEMP C")
-        assert temp.locator('[data-room-options-choice114]:visible').count() == 1
-        humidity = popup.locator('[data-room-options-group114="humidity"]')
-        reveal_source(humidity)
-        humidity.locator("summary").click()
-        humidity.locator('[data-room-clear114]').click()
-        assert humidity.locator('[data-room-options-count114]').inner_text() == "0"
-        # A normal hass refresh retains the exact dialog node and draft.
-        page.evaluate("window.before=card._roomSettingsDialog114.node;card._renderContent(true)")
-        assert page.evaluate("before===card._roomSettingsDialog114.node")
-        for width in (320, 390, 700):
-            page.set_viewport_size({"width": width, "height": 850})
-            assert popup.evaluate("node=>node.scrollWidth<=node.clientWidth+1")
-            box = popup.bounding_box()
-            assert box and box["x"] >= 0 and box["x"] + box["width"] <= width + 1, box
-        page.set_viewport_size({"width": 390, "height": 850})
-        popup.locator('[data-room-options-save114]').focus()
-        page.keyboard.press("Tab")
-        assert popup.locator('[data-room-options-x114]').evaluate("node=>node===node.getRootNode().activeElement")
-        # Backend validation keeps all edits rather than replacing them with defaults.
-        page.evaluate("mode.validation=true")
-        popup.locator('[data-room-options-save114]').click()
-        page.wait_for_function("!card._roomSettingsDialog114.busy")
-        assert temp.locator('input[value="sensor.temp_c"]').is_checked()
-        assert not temp.locator('input[value="sensor.temp_a"]').is_checked()
+        page.wait_for_function('card._roomSettingsDialog114.optionsAutosave.blocked===true')
         assert temp.locator('[data-room-options-field-error114]').is_visible()
-        assert page.evaluate("card._roomSettingsDialog114.draft.shades") == cover_selection
-        for cover in COVERS:
-            assert shades.locator(f'input[value="{cover}"]').is_checked()
-        assert page.evaluate("committed") == DEFAULTS
-        assert page.evaluate("calls.filter(c=>c.method==='DELETE').length") == 0
-        page.evaluate("mode.validation=false")
-        popup.locator('[data-room-options-save114]').click()
-        page.wait_for_function("card._roomSettingsDialog114.finished===true")
-        saved = page.evaluate("calls.filter(c=>c.data?.temperature).at(-1).data")
-        expected = deepcopy(DEFAULTS)
-        expected.update(temperature=["sensor.temp_b", "sensor.temp_c"], humidity=[],
-                        shades=cover_selection)
-        assert saved == expected, saved
-        assert page.evaluate("committed") == expected
-        # Success replaces the editing groups with a saved confirmation.
-        assert popup.locator('[data-room-detect-shades115]').count() == 0
-        assert popup.locator('[data-room-options-save114]').is_hidden()
+        assert not temp.locator('input[value="sensor.temp_a"]').is_checked()
+        assert page.evaluate('JSON.stringify(committed)===JSON.stringify(beforeCommitted)')
+        page.evaluate('mode.validation=false')
+        popup.locator('[data-room-options-status114] button').click()
+        page.wait_for_function("!committed.temperature.includes('sensor.temp_a')")
+        temp.locator('input[value="sensor.temp_c"]').check()
+        page.wait_for_function("committed.temperature.includes('sensor.temp_c')")
+        temp.locator('input[type="search"]').fill('TEMP C')
+        assert temp.locator('[data-room-options-choice114]:visible').count()==1
+        humidity=popup.locator('[data-room-options-group114="humidity"]')
+        reveal_source(humidity);humidity.locator('summary').click()
+        humidity.locator('[data-room-clear114]').click()
+        page.wait_for_function('committed.humidity.length===0')
+        page.evaluate('window.before=card._roomSettingsDialog114.node;card._renderContent(true)')
+        assert page.evaluate('before===card._roomSettingsDialog114.node')
+        expected=deepcopy(DEFAULTS)
+        expected.update(temperature=['sensor.temp_b','sensor.temp_c'],humidity=[],shades=cover_selection)
+        assert page.evaluate('committed')==expected
+        assert popup.locator('[data-room-detect-shades115]').count()==1
+        popup.locator('[data-room-options-close114]').focus();page.keyboard.press('Tab')
+        assert popup.locator('[data-room-options-x114]').evaluate('n=>n===n.getRootNode().activeElement')
         popup.locator('[data-room-options-close114]').click()
-        assert popup.count() == 0
+        assert popup.count()==0
 
         # A canceled create response is cleaned up and never advances into a form.
         page.evaluate("calls=[];mode={holdCreate:true};void card._openRoomSettings114('room0')")
@@ -323,19 +277,19 @@ def browser_checks(card_source):
         page.wait_for_function("calls.some(c=>c.method==='DELETE')")
         assert len(page.evaluate("calls")) == 3 and popup.count() == 0
 
-        # A network failure after Save does not automatically resubmit.
+        # A failed automatic save retains editors and does not retry on its own.
         page.evaluate("calls=[];mode={};card._openRoomSettings114('room0')")
-        page.evaluate("mode.failSave=true")
-        popup.locator('[data-room-options-save114]').click()
-        page.wait_for_function("card._roomSettingsDialog114.failed===true")
-        assert popup.locator('[data-room-options-status114]').get_attribute("role") == "alert"
-        assert popup.locator('[data-room-options-save114]').is_disabled()
-        assert popup.locator('[data-room-detect-shades115]').is_disabled()
-        page.wait_for_function("calls.some(c=>c.method==='DELETE')")
-        page.evaluate("mode={}")
-        popup.locator('[data-room-options-retry114]').click()
-        page.wait_for_function("card._roomSettingsDialog114.fields!==null")
-        assert page.evaluate("calls.filter(c=>c.data?.temperature).length") == 1
+        page.evaluate('mode.failSave=true')
+        page.evaluate("card._roomSettingsSelection114(card._roomSettingsDialog114,'temperature',[])")
+        page.wait_for_function('card._roomSettingsDialog114.optionsAutosave.blocked===true')
+        assert popup.locator('[data-room-options-status114]').get_attribute('role')=='alert'
+        assert popup.locator('[data-room-options-save114]').is_hidden()
+        count=page.evaluate("calls.filter(c=>c.data?.temperature).length")
+        page.wait_for_timeout(200)
+        assert page.evaluate("calls.filter(c=>c.data?.temperature).length")==count
+        page.evaluate('mode={}')
+        popup.locator('[data-room-options-status114] button').click()
+        page.wait_for_function('committed.temperature.length===0')
 
         # A different card source invalidates this room's open draft immediately.
         page.evaluate("card._configEntryOwner114='sensor.other';card._renderContent(true)")
@@ -363,12 +317,14 @@ def browser_checks(card_source):
         assert shades.locator('ha-form').evaluate("node=>node.data.shades") == cover_selection
         assert shades.locator('[data-room-options-count114]').inner_text() == "2"
         assert native.evaluate("card._roomSettingsDialog114.draft.shades") == cover_selection
-        assert native.evaluate("calls.length") == 2 and native.evaluate("committed") == DEFAULTS
+        native.wait_for_function('card._roomSettingsDialog114.optionsAutosave?.dirty.size===0')
+        assert native.evaluate('committed') == native.evaluate('card._roomSettingsDialog114.draft')
         shades.locator('[data-room-clear114]').click()
         assert shades.locator('ha-form').evaluate("node=>node.data.shades") == []
         assert shades.locator('[data-room-options-count114]').inner_text() == "0"
         assert native.evaluate("card._roomSettingsDialog114.draft") == DEFAULTS
-        assert native.evaluate("calls.length") == 2 and native.evaluate("committed") == DEFAULTS
+        native.wait_for_function('card._roomSettingsDialog114.optionsAutosave?.dirty.size===0')
+        assert native.evaluate('committed') == native.evaluate('card._roomSettingsDialog114.draft')
         shades.locator('[data-room-detect-shades115]').click()
         assert shades.locator('ha-form').evaluate("node=>node.data.shades") == COVERS
         native.evaluate("""()=>{
@@ -376,25 +332,25 @@ def browser_checks(card_source):
             '[data-room-options-group114="humidity"] ha-form');
           form.dispatchEvent(new CustomEvent('value-changed',{detail:{value:{}},bubbles:true}));
         }""")
-        popup.locator('[data-room-options-save114]').click()
-        native.wait_for_function("card._roomSettingsDialog114.finished===true")
+        native.wait_for_function('card._roomSettingsDialog114.optionsAutosave?.dirty.size===0')
+        assert native.evaluate('card._roomSettingsDialog114.finished') is False
         expected = deepcopy(DEFAULTS)
         expected['humidity'] = []
         expected['shades'] = COVERS
-        assert native.evaluate("calls.at(-1).data") == expected
+        assert native.evaluate("calls.filter(c=>c.data?.temperature).at(-1).data") == expected
         assert native.evaluate("committed") == expected
         # Success replaces the editing groups with a saved confirmation.
-        assert popup.locator('[data-room-detect-shades115]').count() == 0
+        assert popup.locator('[data-room-detect-shades115]').count() == 1
         assert popup.locator('[data-room-options-save114]').is_hidden()
         popup.locator('[data-room-options-close114]').click()
         native.evaluate("card._openRoomSettings114('room1')")
-        native.evaluate("card.remove()")
-        native.wait_for_function("calls.some(c=>c.method==='DELETE'&&c.path.endsWith('options2'))")
+        native.evaluate("window.lastFlow=card._roomSettingsDialog114.flowId;card.remove()")
+        native.wait_for_function("calls.some(c=>c.method==='DELETE'&&c.path.endsWith(lastFlow))")
         assert native.locator('.hem-room-options114').count() == 0
         assert not errors, errors
         browser.close()
     print("BETA114_ROOM_SETTINGS_BROWSER_DRAFTS_CANCEL_RACES_AND_NATIVE_FORM=PASS")
-    print("BETA115_DETECTED_COVERS_DRAFT_ONLY_FALLBACK_NATIVE_AND_EXPLICIT_SAVE=PASS")
+    print("B7_DETECTED_COVERS_AUTOSAVE_FALLBACK_NATIVE_AND_VALIDATION=PASS")
 
 
 if __name__ == "__main__":

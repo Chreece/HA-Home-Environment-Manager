@@ -100,12 +100,12 @@ with sync_playwright() as playwright:
         expect(section).to_have_count(1)
     dialog.locator('[data-hem-full-category127="targets"] > summary').click()
     dialog.locator('[data-hem-full-value127="number.hem_room_target"]').fill("21.5")
-    dialog.locator('[data-hem-full-apply127="number.hem_room_target"]').click()
+    dialog.locator('[data-hem-full-value127="number.hem_room_target"]').dispatch_event('change')
     page.wait_for_function("nativeCalls127.length===1")
     assert page.evaluate("nativeCalls127[0]")==["number","set_value",{"entity_id":"number.hem_room_target","value":21.5}]
     dialog.locator('[data-hem-full-category127="presence"] > summary').click()
     dialog.locator('[data-hem-full-value127="time.hem_room_sleep_start"]').fill("06:40")
-    dialog.locator('[data-hem-full-apply127="time.hem_room_sleep_start"]').click()
+    dialog.locator('[data-hem-full-value127="time.hem_room_sleep_start"]').dispatch_event('change')
     page.wait_for_function("nativeCalls127.length===2")
     assert page.evaluate("nativeCalls127[1]")==["time","set_value",{"entity_id":"time.hem_room_sleep_start","time":"06:40:00"}]
     dialog.locator('[data-hem-full-category127="mode"] > summary').click()
@@ -170,7 +170,7 @@ with sync_playwright() as playwright:
     # Control/targets/fans. Test the exact device-scoped native action.
     modal.locator('[data-hem-full-category127="pid"] > summary').click()
     modal.locator('[data-hem-full-value127="number.hem_pid_kp"]').fill("2.5")
-    modal.locator('[data-hem-full-apply127="number.hem_pid_kp"]').click()
+    modal.locator('[data-hem-full-value127="number.hem_pid_kp"]').dispatch_event('change')
     page.wait_for_function("calls.length===1")
     assert page.evaluate("calls[0]")==["number","set_value",{"entity_id":"number.hem_pid_kp","value":2.5}]
     modal.locator('[data-close-hem-controller126]').click()

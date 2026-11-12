@@ -72,7 +72,7 @@ with sync_playwright() as p:
     comfort=dialog.locator('[data-room-native-group126="targets"]')
     comfort.locator(":scope > summary").click()
     comfort.locator('[data-hem-full-value127="number.hem_home_target_a"]').fill("21.5")
-    comfort.locator('[data-hem-full-apply127="number.hem_home_target_a"]').click()
+    comfort.locator('[data-hem-full-value127="number.hem_home_target_a"]').dispatch_event('change')
     page.wait_for_function("nativeCalls.length===1")
     assert page.evaluate("nativeCalls[0]")==["number","set_value",{"entity_id":"number.hem_home_target_a","value":21.5}]
     dialog.locator('[data-room-native-group126="presence"] > summary').click()
