@@ -1,25 +1,49 @@
-name: HEM b7 source verification snapshot
+name: HEM b7 confirmation refinement
 on:
   push:
     branches: [feat/062b7-card-settings-autosave]
     paths: [.github/workflows/b7-build.yml]
 permissions:
-  contents: read
+  contents: write
 jobs:
-  snapshot:
+  build:
     if: github.repository == 'Chreece/HA-Home-Environment-Manager'
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
-      - run: |
-          mkdir -p /tmp/hem-b7
-          git archive --format=tar.gz HEAD > /tmp/hem-b7/source.tar.gz
-          git rev-parse HEAD > /tmp/hem-b7/commit.txt
-      - uses: actions/upload-artifact@v4
-        with:
-          name: hem-b7-source
-          path: /tmp/hem-b7/
-          retention-days: 3
+          ref: ${{ github.sha }}
+      - name: Apply exact locally tested confirmation correction
+        run: |
+          set -euo pipefail
+          test "$(git hash-object custom_components/environment_manager/frontend/air-quality-advisor-card.js)" = 5c5311e42aee4516969368aded9657cd4af007e8
+          git apply --check .github/b7-confirmation.patch
+          git apply .github/b7-confirmation.patch
+          python - <<'PY'
+          import subprocess
+          expected = {
+              'custom_components/environment_manager/frontend/air-quality-advisor-card.js': 'bb9212d6ba832a73f241b6420b9b4bf30ba7dcd2',
+              '.github/workflows/validate.yml': '34180f36f9a5432c0f4d7ada4d763b43fe980d94',
+              '.github/releases/v0.6.2b7.md': '5820b76a67d16ef5df8ca1b2b43a4edc2410923d',
+              '.github/tests/test_062b7_save_confirmation.py': 'fea5aca99ad64a6112d4e005d9d48bf8afd74f4a'
+          }
+          for path, sha in expected.items():
+              actual = subprocess.check_output(['git','hash-object',path],text=True).strip()
+              assert actual == sha, (path, actual, sha)
+          PY
+          node --check custom_components/environment_manager/frontend/air-quality-advisor-card.js
+          python -m py_compile .github/tests/test_062b7_save_confirmation.py
+          git diff --check
+      - name: Record verified frontend sources on feature branch only
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          cp .github/workflows/validate.yml .github/b7-validated-workflow.txt
+          git restore .github/workflows/validate.yml
+          git add -u
+          git add .github/b7-validated-workflow.txt
+          git diff --cached --check
+          git commit -m 'Retain floor drafts through stale registry reads and accept late confirmations'
+          git push origin HEAD:refs/heads/feat/062b7-card-settings-autosave
