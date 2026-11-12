@@ -1,0 +1,24 @@
+name: HEM card save verification
+on:
+  push:
+    branches: [feat/062b7-card-autosave]
+    paths: [.github/workflows/hem-b7-work.yml]
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Archive tracked public source only
+        run: |
+          mkdir -p /tmp/hem-b7-source
+          git archive --format=tar.gz HEAD > /tmp/hem-b7-source/source.tar.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hem-b7-source
+          path: /tmp/hem-b7-source/
+          retention-days: 3
