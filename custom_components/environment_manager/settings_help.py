@@ -1374,4 +1374,10 @@ class SettingsMetadata:
                                "setting_group": localized_setting_group(key, locale)})
         if text:
             attributes["configuration_help"] = text
+            # The card may use a different locale than HA Core. Transfer only
+            # this entity's three supported explanations, not the full catalog.
+            attributes["configuration_help_locales"] = {
+                language: configuration_help(key, language)
+                for language in ("en", "el", "de")
+            }
         return attributes

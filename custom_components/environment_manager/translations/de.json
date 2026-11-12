@@ -61,7 +61,7 @@
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
-          "weather_warnings": "Optional. Aktive oder nicht verfügbare ausgewählte Warnungen verhindern das Öffnen der Fenster."
+          "weather_warnings": "Optionale Warnungsentitäten in Home Assistant. Nur ausdrücklich aktive Warnungen werden als Außenluft-Risiko gewertet und verhindern automatische Fensteröffnungs-Empfehlungen. Unbekannte/nicht verfügbare Warnungen sind fehlende Daten, keine aktiven Warnungen; unabhängige Wetter-, Verschmutzungs- und Geräteschutzprüfungen bleiben aktiv."
         }
       },
       "delivery": {
@@ -233,7 +233,7 @@
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
           "outdoor_sensors": "Wähle echte Außensensoren. Messwerte über den Grenzwerten verhindern das Öffnen; unbekannte, nicht verfügbare oder veraltete Werte werden als fehlende Daten angezeigt.",
-          "weather_warnings": "Optional. Aktive oder nicht verfügbare ausgewählte Warnungen verhindern das Öffnen der Fenster.",
+          "weather_warnings": "Optionale Warnungsentitäten in Home Assistant. Nur ausdrücklich aktive Warnungen werden als Außenluft-Risiko gewertet und verhindern automatische Fensteröffnungs-Empfehlungen. Unbekannte/nicht verfügbare Warnungen sind fehlende Daten, keine aktiven Warnungen; unabhängige Wetter-, Verschmutzungs- und Geräteschutzprüfungen bleiben aktiv.",
           "general_room_occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab.",
           "general_home_trackers": "Eine passende Home-Assistant-Quelle für „Zuhause · Belegung · Geräte“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion. Auch number- und input_number-Helfer zählen als Anwesenheitszähler: 0 bedeutet niemand da, ein positiver Wert bedeutet anwesend. Unbekannte, veraltete oder nicht verfügbare Werte gelten nie als abwesend.",
           "general_occupied_rooms_entity": "Wählen Sie eine Entität, deren Zustand oder gewähltes Attribut Home-Assistant-Bereichs-IDs oder -Namen enthält, etwa [\"living_room\"]. Eine gültige Liste hat Vorrang vor Raumsensoren: aufgeführte Räume sind belegt, ausgelassene leer; [] bedeutet alle Räume leer. Eine unveränderte Liste bleibt über Nacht gültig. Fehlende oder ungültige Daten sind keine leere Liste.",
@@ -246,7 +246,7 @@
           "ai_conversation_agent": "Home-Assistant-Standard, Conversation-Agent oder datenfähige Task-AI wählen. Task AI verwendet ai_task.generate_data.",
           "language": "Standardmäßig wird die Home-Assistant-Sprache verwendet. Alternativ kann jede von HEM unterstützte Ansagesprache gewählt werden.",
           "use_mold_indicator": "Die Lüftungsempfehlung berücksichtigt die geschätzte relative Feuchte an der kältesten Oberfläche statt der normalen Raumluftfeuchte. Pro Raum kalibrieren; ohne Kalibrierung wird der Wert als unbekannt angezeigt.",
-          "pollen_entities": "Beim ersten Einrichten werden alle gefundenen Pollenquellen vorausgewählt. Eine später bewusst leere Auswahl bleibt leer.",
+          "pollen_entities": "Vorhandene numerische Pollenindex-Sensoren für den Standort wählen, auch wenn ihre ID nicht pollen enthält. HEM prüft den aktuellen Wert gegen Schwelle und Maximum der Anbieterskala. Bei aktivierter Pollen-Lüftungsvermeidung verhindert ein gültiger hoher Wert automatische Außenluftnutzung; Türen oder Fenster werden nicht geschlossen. Beispiel 0–5: Maximum 5, hohe Schwelle 3. Ohne Auswahl keine Pollenquelle. Fehlende/alte Werte bedeuten nicht saubere Luft. Inkompatible Skalen nicht mischen.",
           "use_announcement_hub": "Leitet HEM-Ansagen über die eingerichtete Integration Announcement Hub. Hub und Empfänger werden separat konfiguriert. Dieser Schalter wählt den Übertragungsweg; automatische Benachrichtigungen und Sprache werden weiterhin separat aktiviert.",
           "general_away_cooldown_minutes": "Nach einer frisch bestätigten leeren Raumbelegung so viele Minuten warten, bevor Away gilt. Unbekannte oder veraltete Daten lösen Away nicht aus.",
           "away_open_window_alert": "Standardmäßig aus. Sofortige Meldung, sobald alle ausgewählten Anwesenheitsquellen Abwesenheit bestätigen. Number-/input_number-Zähler: 0 = niemand da, positiv = anwesend. Unbekannte Werte beweisen keine Abwesenheit. Es werden nur echte offene Fenster gemeldet. Kein erneutes Senden beim Neustart während Abwesenheit; neue Fenster können erneut gemeldet werden.",
@@ -274,13 +274,13 @@
           "global_threshold_max_wind_kmh": "Dies ist ein Entscheidungswert für „Maximale Windgeschwindigkeit (km/h)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "global_threshold_max_age_minutes": "Dies ist ein Entscheidungswert für „Höchstalter einer Außenmessung (Minuten)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "global_threshold_indoor_mold": "Dies ist ein Entscheidungswert für „Schimmelindikator für Lüften (geschätzte Oberflächenfeuchte, %)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
-          "pollen_high_from": "Die Pollen-Warnschwelle hängt von der Skala des Anbieters ab.",
-          "pollen_max_scale": "Oberster Zahlenwert der Anbieterskala, z. B. 5.",
+          "pollen_high_from": "Pollenindex-Grenzwert, ab dem ein Messwert als hoch gilt. Originalskala des Anbieters verwenden, zwischen 0 und dem festgelegten Maximum; etwa 3 bei Maximum 5. Bei aktiver Lüftungsvermeidung verhindert ein gültiger hoher Wert automatische Außenluftnutzung.",
+          "pollen_max_scale": "Positiver Maximalwert des Pollenindex-Anbieters (1–100), nicht der aktuelle Messwert. Für eine Skala 0–5 den Wert 5 wählen. Alle ausgewählten Quellen müssen kompatible Skalen verwenden; HEM rechnet Anbieterindizes nicht um. Null ist kein gültiges Maximum.",
           "pollen_avoid_ventilation": "Hohe Pollenwerte können die Empfehlung zum Fensteröffnen optional sperren.",
           "general_source_stale_minutes": "Maximales Meldealter für die Bestätigung von Abwesenheit durch Personen-/Geräte-Tracker und für numerische Personenzähler (Standard: 240 Minuten). Unveränderte positive Zuhause-Zustände von Trackern oder ON-Zustände binärer Hausanwesenheitssensoren bleiben über Nacht gültig, ebenso Belegungs-/Schlaflisten. Fehlende, unbekannte, nicht verfügbare oder wiederhergestellte Quellen bestätigen keine Abwesenheit.",
           "general_home_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind.",
-          "general_wake_alarm_entity": "Wählen Sie den nächsten Wecker aus einer Zeit- oder Zeitstempel-Entität, etwa dem Handywecker oder einem input_datetime-Helfer. Wählen Sie darunter auch die Entität für den Vorlauf in Minuten. HEM beendet den automatischen Schlafmodus um diese Zeit vor dem Wecker und verwendet wieder die normalen Sollwerte. Reine Uhrzeiten verwenden die Home-Assistant-Zeitzone; datierte Werte bezeichnen einen einzelnen Wecker. Abwesenheit, ausdrücklich gewählte Profile, manuelle Steuerung und Geräteschutz behalten Vorrang.",
-          "general_wake_lead_minutes_entity": "Wählen Sie einen numerischen sensor, number oder input_number mit den Minuten vor dem Wecker. Zulässig sind min oder keine Einheit und ein endlicher Wert ab 0. Bei 07:00 und 30 Minuten endet der automatische Schlafmodus um 06:30; 0 bedeutet beim Klingeln. Beide Quellen auswählen oder zum Deaktivieren beide leeren. Die normale Regelung beginnt entsprechend früher; das Erreichen des Sollwerts bis zum Wecker wird nicht garantiert.",
+          "general_wake_alarm_entity": "Home-Assistant-Quelle für den nächsten Weckalarm auswählen. HEM kann das automatische Schlafprofil nur vor dem Alarm verlassen, wenn auch eine Quelle für die Minuten davor konfiguriert ist. Beide Quellen zusammen auswählen oder beide frei lassen. Unbekannte Werte beweisen keine Weckzeit.",
+          "general_wake_lead_minutes_entity": "Quelle mit der Anzahl Minuten vor dem nächsten Alarm wählen, zu denen HEM den automatischen Schlaf beenden soll. Erfordert die Weckalarmquelle oder beide bleiben leer. Ein unbekannter Wert löst kein Aufwachen aus.",
           "window_open_timeout_minutes": "Wartezeit nach Annahme einer Lüftungsaufforderung, bevor neue Automatik-/PID-Starts bei weiterem Bedarf wieder erlaubt sind. 0–30 Minuten, Standard 5; 0 deaktiviert das Warten. Fensterschutz und Gerätemindestzeiten gelten weiterhin."
         }
       },
@@ -453,8 +453,8 @@
         },
         "data_description": {
           "pollen_entity": "Eine passende Home-Assistant-Quelle für „Pollenprognose-Sensor (beliebiges Land)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
-          "pollen_high_from": "„Pollenindex ab diesem Wert hoch“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
-          "pollen_max_scale": "„Maximalwert der Pollen-Skala“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
+          "pollen_high_from": "Pollenindex-Grenzwert, ab dem ein Messwert als hoch gilt. Originalskala des Anbieters verwenden, zwischen 0 und dem festgelegten Maximum; etwa 3 bei Maximum 5. Bei aktiver Lüftungsvermeidung verhindert ein gültiger hoher Wert automatische Außenluftnutzung.",
+          "pollen_max_scale": "Positiver Maximalwert des Pollenindex-Anbieters (1–100), nicht der aktuelle Messwert. Für eine Skala 0–5 den Wert 5 wählen. Alle ausgewählten Quellen müssen kompatible Skalen verwenden; HEM rechnet Anbieterindizes nicht um. Null ist kein gültiges Maximum.",
           "pollen_avoid_ventilation": "„Bei hoher Pollenbelastung Lüften vermeiden“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
           "aqi_scale_0": "„AQI #1 · Quelle“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
           "aqi_custom_limit_0": "Dies ist ein Entscheidungswert für „AQI #1 · Sollwert“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
@@ -943,8 +943,8 @@
           "general_sleep_rooms_entity": "Wählen Sie eine Entität mit Schlafräumen als Home-Assistant-Bereichs-IDs oder -Namen im Zustand oder einem gewählten Attribut. Ein aufgeführter Raum gilt nur dann als schlafend, wenn er auch belegt ist. Eine unveränderte Liste bleibt gültig; fehlende oder ungültige Quellen sind unbekannt. Der manuelle Schalter Jetzt schlafen und der Raumzeitplan sind separate Schlafsignale. Ein konfigurierter Wecker kann den automatischen Schlafmodus vor dem Klingeln beenden.",
           "general_sleep_rooms_attribute": "Zustand oder ein tatsächlich mit einer Raumliste gefülltes Attribut wählen.",
           "general_source_stale_minutes": "Maximales Meldealter für die Bestätigung von Abwesenheit durch Personen-/Geräte-Tracker und für numerische Personenzähler (Standard: 240 Minuten). Unveränderte positive Zuhause-Zustände von Trackern oder ON-Zustände binärer Hausanwesenheitssensoren bleiben über Nacht gültig, ebenso Belegungs-/Schlaflisten. Fehlende, unbekannte, nicht verfügbare oder wiederhergestellte Quellen bestätigen keine Abwesenheit.",
-          "general_wake_alarm_entity": "Wählen Sie den nächsten Wecker aus einer Zeit- oder Zeitstempel-Entität, etwa dem Handywecker oder einem input_datetime-Helfer. Wählen Sie darunter auch die Entität für den Vorlauf in Minuten. HEM beendet den automatischen Schlafmodus um diese Zeit vor dem Wecker und verwendet wieder die normalen Sollwerte. Reine Uhrzeiten verwenden die Home-Assistant-Zeitzone; datierte Werte bezeichnen einen einzelnen Wecker. Abwesenheit, ausdrücklich gewählte Profile, manuelle Steuerung und Geräteschutz behalten Vorrang.",
-          "general_wake_lead_minutes_entity": "Wählen Sie einen numerischen sensor, number oder input_number mit den Minuten vor dem Wecker. Zulässig sind min oder keine Einheit und ein endlicher Wert ab 0. Bei 07:00 und 30 Minuten endet der automatische Schlafmodus um 06:30; 0 bedeutet beim Klingeln. Beide Quellen auswählen oder zum Deaktivieren beide leeren. Die normale Regelung beginnt entsprechend früher; das Erreichen des Sollwerts bis zum Wecker wird nicht garantiert."
+          "general_wake_alarm_entity": "Home-Assistant-Quelle für den nächsten Weckalarm auswählen. HEM kann das automatische Schlafprofil nur vor dem Alarm verlassen, wenn auch eine Quelle für die Minuten davor konfiguriert ist. Beide Quellen zusammen auswählen oder beide frei lassen. Unbekannte Werte beweisen keine Weckzeit.",
+          "general_wake_lead_minutes_entity": "Quelle mit der Anzahl Minuten vor dem nächsten Alarm wählen, zu denen HEM den automatischen Schlaf beenden soll. Erfordert die Weckalarmquelle oder beide bleiben leer. Ein unbekannter Wert löst kein Aufwachen aus."
         }
       },
       "pollen": {
@@ -958,8 +958,8 @@
         },
         "data_description": {
           "pollen_entity": "Numerischen Pollenindex eines beliebigen Home-Assistant-Anbieters wählen.",
-          "pollen_high_from": "Die Pollen-Warnschwelle hängt von der Skala des Anbieters ab.",
-          "pollen_max_scale": "Oberster Zahlenwert der Anbieterskala, z. B. 5.",
+          "pollen_high_from": "Pollenindex-Grenzwert, ab dem ein Messwert als hoch gilt. Originalskala des Anbieters verwenden, zwischen 0 und dem festgelegten Maximum; etwa 3 bei Maximum 5. Bei aktiver Lüftungsvermeidung verhindert ein gültiger hoher Wert automatische Außenluftnutzung.",
+          "pollen_max_scale": "Positiver Maximalwert des Pollenindex-Anbieters (1–100), nicht der aktuelle Messwert. Für eine Skala 0–5 den Wert 5 wählen. Alle ausgewählten Quellen müssen kompatible Skalen verwenden; HEM rechnet Anbieterindizes nicht um. Null ist kein gültiges Maximum.",
           "pollen_avoid_ventilation": "Hohe Pollenwerte können die Empfehlung zum Fensteröffnen optional sperren."
         }
       },
@@ -1368,7 +1368,7 @@
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
-          "weather_warnings": "Optional. Aktive oder nicht verfügbare ausgewählte Warnungen verhindern das Öffnen der Fenster."
+          "weather_warnings": "Optionale Warnungsentitäten in Home Assistant. Nur ausdrücklich aktive Warnungen werden als Außenluft-Risiko gewertet und verhindern automatische Fensteröffnungs-Empfehlungen. Unbekannte/nicht verfügbare Warnungen sind fehlende Daten, keine aktiven Warnungen; unabhängige Wetter-, Verschmutzungs- und Geräteschutzprüfungen bleiben aktiv."
         }
       },
       "delivery": {
@@ -1526,8 +1526,8 @@
         },
         "data_description": {
           "pollen_entity": "Eine passende Home-Assistant-Quelle für „Pollenprognose-Sensor (beliebiges Land)“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
-          "pollen_high_from": "„Pollenindex ab diesem Wert hoch“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
-          "pollen_max_scale": "„Maximalwert der Pollen-Skala“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
+          "pollen_high_from": "Pollenindex-Grenzwert, ab dem ein Messwert als hoch gilt. Originalskala des Anbieters verwenden, zwischen 0 und dem festgelegten Maximum; etwa 3 bei Maximum 5. Bei aktiver Lüftungsvermeidung verhindert ein gültiger hoher Wert automatische Außenluftnutzung.",
+          "pollen_max_scale": "Positiver Maximalwert des Pollenindex-Anbieters (1–100), nicht der aktuelle Messwert. Für eine Skala 0–5 den Wert 5 wählen. Alle ausgewählten Quellen müssen kompatible Skalen verwenden; HEM rechnet Anbieterindizes nicht um. Null ist kein gültiges Maximum.",
           "pollen_avoid_ventilation": "„Bei hoher Pollenbelastung Lüften vermeiden“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
           "aqi_scale_0": "„AQI #1 · Quelle“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
           "aqi_custom_limit_0": "Dies ist ein Entscheidungswert für „AQI #1 · Sollwert“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
@@ -2016,8 +2016,8 @@
           "general_sleep_rooms_entity": "Wählen Sie eine Entität mit Schlafräumen als Home-Assistant-Bereichs-IDs oder -Namen im Zustand oder einem gewählten Attribut. Ein aufgeführter Raum gilt nur dann als schlafend, wenn er auch belegt ist. Eine unveränderte Liste bleibt gültig; fehlende oder ungültige Quellen sind unbekannt. Der manuelle Schalter Jetzt schlafen und der Raumzeitplan sind separate Schlafsignale. Ein konfigurierter Wecker kann den automatischen Schlafmodus vor dem Klingeln beenden.",
           "general_sleep_rooms_attribute": "Zustand oder ein tatsächlich mit einer Raumliste gefülltes Attribut wählen.",
           "general_source_stale_minutes": "Maximales Meldealter für die Bestätigung von Abwesenheit durch Personen-/Geräte-Tracker und für numerische Personenzähler (Standard: 240 Minuten). Unveränderte positive Zuhause-Zustände von Trackern oder ON-Zustände binärer Hausanwesenheitssensoren bleiben über Nacht gültig, ebenso Belegungs-/Schlaflisten. Fehlende, unbekannte, nicht verfügbare oder wiederhergestellte Quellen bestätigen keine Abwesenheit.",
-          "general_wake_alarm_entity": "Wählen Sie den nächsten Wecker aus einer Zeit- oder Zeitstempel-Entität, etwa dem Handywecker oder einem input_datetime-Helfer. Wählen Sie darunter auch die Entität für den Vorlauf in Minuten. HEM beendet den automatischen Schlafmodus um diese Zeit vor dem Wecker und verwendet wieder die normalen Sollwerte. Reine Uhrzeiten verwenden die Home-Assistant-Zeitzone; datierte Werte bezeichnen einen einzelnen Wecker. Abwesenheit, ausdrücklich gewählte Profile, manuelle Steuerung und Geräteschutz behalten Vorrang.",
-          "general_wake_lead_minutes_entity": "Wählen Sie einen numerischen sensor, number oder input_number mit den Minuten vor dem Wecker. Zulässig sind min oder keine Einheit und ein endlicher Wert ab 0. Bei 07:00 und 30 Minuten endet der automatische Schlafmodus um 06:30; 0 bedeutet beim Klingeln. Beide Quellen auswählen oder zum Deaktivieren beide leeren. Die normale Regelung beginnt entsprechend früher; das Erreichen des Sollwerts bis zum Wecker wird nicht garantiert."
+          "general_wake_alarm_entity": "Home-Assistant-Quelle für den nächsten Weckalarm auswählen. HEM kann das automatische Schlafprofil nur vor dem Alarm verlassen, wenn auch eine Quelle für die Minuten davor konfiguriert ist. Beide Quellen zusammen auswählen oder beide frei lassen. Unbekannte Werte beweisen keine Weckzeit.",
+          "general_wake_lead_minutes_entity": "Quelle mit der Anzahl Minuten vor dem nächsten Alarm wählen, zu denen HEM den automatischen Schlaf beenden soll. Erfordert die Weckalarmquelle oder beide bleiben leer. Ein unbekannter Wert löst kein Aufwachen aus."
         }
       },
       "pollen": {
@@ -2031,8 +2031,8 @@
         },
         "data_description": {
           "pollen_entity": "Numerischen Pollenindex eines beliebigen Home-Assistant-Anbieters wählen.",
-          "pollen_high_from": "Die Pollen-Warnschwelle hängt von der Skala des Anbieters ab.",
-          "pollen_max_scale": "Oberster Zahlenwert der Anbieterskala, z. B. 5.",
+          "pollen_high_from": "Pollenindex-Grenzwert, ab dem ein Messwert als hoch gilt. Originalskala des Anbieters verwenden, zwischen 0 und dem festgelegten Maximum; etwa 3 bei Maximum 5. Bei aktiver Lüftungsvermeidung verhindert ein gültiger hoher Wert automatische Außenluftnutzung.",
+          "pollen_max_scale": "Positiver Maximalwert des Pollenindex-Anbieters (1–100), nicht der aktuelle Messwert. Für eine Skala 0–5 den Wert 5 wählen. Alle ausgewählten Quellen müssen kompatible Skalen verwenden; HEM rechnet Anbieterindizes nicht um. Null ist kein gültiges Maximum.",
           "pollen_avoid_ventilation": "Hohe Pollenwerte können die Empfehlung zum Fensteröffnen optional sperren."
         }
       },
@@ -2233,7 +2233,7 @@
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
           "outdoor_sensors": "Wähle echte Außensensoren. Messwerte über den Grenzwerten verhindern das Öffnen; unbekannte, nicht verfügbare oder veraltete Werte werden als fehlende Daten angezeigt.",
-          "weather_warnings": "Optional. Aktive oder nicht verfügbare ausgewählte Warnungen verhindern das Öffnen der Fenster.",
+          "weather_warnings": "Optionale Warnungsentitäten in Home Assistant. Nur ausdrücklich aktive Warnungen werden als Außenluft-Risiko gewertet und verhindern automatische Fensteröffnungs-Empfehlungen. Unbekannte/nicht verfügbare Warnungen sind fehlende Daten, keine aktiven Warnungen; unabhängige Wetter-, Verschmutzungs- und Geräteschutzprüfungen bleiben aktiv.",
           "general_room_occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab.",
           "general_home_trackers": "Eine passende Home-Assistant-Quelle für „Zuhause · Belegung · Geräte“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion. Auch number- und input_number-Helfer zählen als Anwesenheitszähler: 0 bedeutet niemand da, ein positiver Wert bedeutet anwesend. Unbekannte, veraltete oder nicht verfügbare Werte gelten nie als abwesend.",
           "general_occupied_rooms_entity": "Wählen Sie eine Entität, deren Zustand oder gewähltes Attribut Home-Assistant-Bereichs-IDs oder -Namen enthält, etwa [\"living_room\"]. Eine gültige Liste hat Vorrang vor Raumsensoren: aufgeführte Räume sind belegt, ausgelassene leer; [] bedeutet alle Räume leer. Eine unveränderte Liste bleibt über Nacht gültig. Fehlende oder ungültige Daten sind keine leere Liste.",
@@ -2246,7 +2246,7 @@
           "ai_conversation_agent": "Home-Assistant-Standard, Conversation-Agent oder datenfähige Task-AI wählen. Task AI verwendet ai_task.generate_data.",
           "language": "Standardmäßig wird die Home-Assistant-Sprache verwendet. Alternativ kann jede von HEM unterstützte Ansagesprache gewählt werden.",
           "use_mold_indicator": "Die Lüftungsempfehlung berücksichtigt die geschätzte relative Feuchte an der kältesten Oberfläche statt der normalen Raumluftfeuchte. Pro Raum kalibrieren; ohne Kalibrierung wird der Wert als unbekannt angezeigt.",
-          "pollen_entities": "Beim ersten Einrichten werden alle gefundenen Pollenquellen vorausgewählt. Eine später bewusst leere Auswahl bleibt leer.",
+          "pollen_entities": "Vorhandene numerische Pollenindex-Sensoren für den Standort wählen, auch wenn ihre ID nicht pollen enthält. HEM prüft den aktuellen Wert gegen Schwelle und Maximum der Anbieterskala. Bei aktivierter Pollen-Lüftungsvermeidung verhindert ein gültiger hoher Wert automatische Außenluftnutzung; Türen oder Fenster werden nicht geschlossen. Beispiel 0–5: Maximum 5, hohe Schwelle 3. Ohne Auswahl keine Pollenquelle. Fehlende/alte Werte bedeuten nicht saubere Luft. Inkompatible Skalen nicht mischen.",
           "use_announcement_hub": "Leitet HEM-Ansagen über die eingerichtete Integration Announcement Hub. Hub und Empfänger werden separat konfiguriert. Dieser Schalter wählt den Übertragungsweg; automatische Benachrichtigungen und Sprache werden weiterhin separat aktiviert.",
           "general_away_cooldown_minutes": "Nach einer frisch bestätigten leeren Raumbelegung so viele Minuten warten, bevor Away gilt. Unbekannte oder veraltete Daten lösen Away nicht aus.",
           "away_open_window_alert": "Standardmäßig aus. Sofortige Meldung, sobald alle ausgewählten Anwesenheitsquellen Abwesenheit bestätigen. Number-/input_number-Zähler: 0 = niemand da, positiv = anwesend. Unbekannte Werte beweisen keine Abwesenheit. Es werden nur echte offene Fenster gemeldet. Kein erneutes Senden beim Neustart während Abwesenheit; neue Fenster können erneut gemeldet werden.",
@@ -2274,13 +2274,13 @@
           "global_threshold_max_wind_kmh": "Dies ist ein Entscheidungswert für „Maximale Windgeschwindigkeit (km/h)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "global_threshold_max_age_minutes": "Dies ist ein Entscheidungswert für „Höchstalter einer Außenmessung (Minuten)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "global_threshold_indoor_mold": "Dies ist ein Entscheidungswert für „Schimmelindikator für Lüften (geschätzte Oberflächenfeuchte, %)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
-          "pollen_high_from": "Die Pollen-Warnschwelle hängt von der Skala des Anbieters ab.",
-          "pollen_max_scale": "Oberster Zahlenwert der Anbieterskala, z. B. 5.",
+          "pollen_high_from": "Pollenindex-Grenzwert, ab dem ein Messwert als hoch gilt. Originalskala des Anbieters verwenden, zwischen 0 und dem festgelegten Maximum; etwa 3 bei Maximum 5. Bei aktiver Lüftungsvermeidung verhindert ein gültiger hoher Wert automatische Außenluftnutzung.",
+          "pollen_max_scale": "Positiver Maximalwert des Pollenindex-Anbieters (1–100), nicht der aktuelle Messwert. Für eine Skala 0–5 den Wert 5 wählen. Alle ausgewählten Quellen müssen kompatible Skalen verwenden; HEM rechnet Anbieterindizes nicht um. Null ist kein gültiges Maximum.",
           "pollen_avoid_ventilation": "Hohe Pollenwerte können die Empfehlung zum Fensteröffnen optional sperren.",
           "general_source_stale_minutes": "Maximales Meldealter für die Bestätigung von Abwesenheit durch Personen-/Geräte-Tracker und für numerische Personenzähler (Standard: 240 Minuten). Unveränderte positive Zuhause-Zustände von Trackern oder ON-Zustände binärer Hausanwesenheitssensoren bleiben über Nacht gültig, ebenso Belegungs-/Schlaflisten. Fehlende, unbekannte, nicht verfügbare oder wiederhergestellte Quellen bestätigen keine Abwesenheit.",
           "general_home_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind.",
-          "general_wake_alarm_entity": "Wählen Sie den nächsten Wecker aus einer Zeit- oder Zeitstempel-Entität, etwa dem Handywecker oder einem input_datetime-Helfer. Wählen Sie darunter auch die Entität für den Vorlauf in Minuten. HEM beendet den automatischen Schlafmodus um diese Zeit vor dem Wecker und verwendet wieder die normalen Sollwerte. Reine Uhrzeiten verwenden die Home-Assistant-Zeitzone; datierte Werte bezeichnen einen einzelnen Wecker. Abwesenheit, ausdrücklich gewählte Profile, manuelle Steuerung und Geräteschutz behalten Vorrang.",
-          "general_wake_lead_minutes_entity": "Wählen Sie einen numerischen sensor, number oder input_number mit den Minuten vor dem Wecker. Zulässig sind min oder keine Einheit und ein endlicher Wert ab 0. Bei 07:00 und 30 Minuten endet der automatische Schlafmodus um 06:30; 0 bedeutet beim Klingeln. Beide Quellen auswählen oder zum Deaktivieren beide leeren. Die normale Regelung beginnt entsprechend früher; das Erreichen des Sollwerts bis zum Wecker wird nicht garantiert.",
+          "general_wake_alarm_entity": "Home-Assistant-Quelle für den nächsten Weckalarm auswählen. HEM kann das automatische Schlafprofil nur vor dem Alarm verlassen, wenn auch eine Quelle für die Minuten davor konfiguriert ist. Beide Quellen zusammen auswählen oder beide frei lassen. Unbekannte Werte beweisen keine Weckzeit.",
+          "general_wake_lead_minutes_entity": "Quelle mit der Anzahl Minuten vor dem nächsten Alarm wählen, zu denen HEM den automatischen Schlaf beenden soll. Erfordert die Weckalarmquelle oder beide bleiben leer. Ein unbekannter Wert löst kein Aufwachen aus.",
           "window_open_timeout_minutes": "Wartezeit nach Annahme einer Lüftungsaufforderung, bevor neue Automatik-/PID-Starts bei weiterem Bedarf wieder erlaubt sind. 0–30 Minuten, Standard 5; 0 deaktiviert das Warten. Fensterschutz und Gerätemindestzeiten gelten weiterhin."
         }
       },

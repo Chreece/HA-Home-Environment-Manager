@@ -120,6 +120,15 @@ class EquipmentEntity:
             attributes["configuration_help"] = scoped_help(
                 self._key, locale, attributes["configuration_help"],
             )
+        # Localize per displayed card language, independently of the selected
+        # announcement language. Only the current controller's help travels
+        # with its state; this does not alter announcements or physical logic.
+        translated = {}
+        for language in ("en", "el", "de"):
+            detail = equipment_configuration_help(key, language, modes=modes) if modes is not None else (
+                equipment_configuration_help(key, language))
+            translated[language] = scoped_help(key, language, detail) if mode else detail
+        attributes["configuration_help_locales"] = translated
         return attributes
 
     async def async_added_to_hass(self):

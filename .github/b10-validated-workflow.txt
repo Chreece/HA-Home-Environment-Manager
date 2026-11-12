@@ -1,0 +1,519 @@
+name: Validate Home Environment Manager
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hem-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - name: Validate canonical integration source
+        run: |
+          set -euo pipefail
+          python -I -m compileall -q .
+          node --check custom_components/environment_manager/frontend/air-quality-advisor-card.js
+          python -I - <<'PYCODE'
+          import json
+          import re
+          from pathlib import Path
+
+          integration = Path('custom_components/environment_manager')
+          manifest = json.loads((integration / 'manifest.json').read_text(encoding='utf-8'))
+          hacs = json.loads(Path('hacs.json').read_text(encoding='utf-8'))
+          assert integration.is_dir() and (integration / '__init__.py').is_file()
+          assert not Path('manifest.json').exists() and not Path('__init__.py').exists()
+          assert not hacs.get('content_in_root', False)
+          assert hacs.get('zip_release') is True and hacs.get('filename') == 'environment_manager.zip'
+          assert manifest['domain'] == 'environment_manager'
+          assert re.fullmatch(r'[0-9][0-9A-Za-z.+-]*', manifest['version'])
+          for path in Path('.').rglob('*.json'):
+              json.loads(path.read_text(encoding='utf-8'))
+          assert len(list(integration.joinpath('translations').glob('*.json'))) == 38
+          print('PASS: canonical manifest, JSON and translations', manifest['version'])
+          PYCODE
+          git diff --check
+      - name: Verify HEM brand assets and translated arrival help
+        run: python -I .github/tests/test_061b11_branding.py
+      - name: Prepare legacy unit test source paths (CI only, never packaged)
+        run: |
+          python - <<'PYCODE'
+          from pathlib import Path
+          source = Path("custom_components/environment_manager")
+          for entry in source.iterdir():
+              original = Path(entry.name)
+              if original.exists() or original.is_symlink():
+                  raise RuntimeError(f"Unexpected root integration path: {original}")
+              original.symlink_to(entry, target_is_directory=entry.is_dir())
+          PYCODE
+      - name: Validate beta publication guards and canonical ZIP
+        run: python -I .github/tests/test_publish_release.py
+      - name: Native floor registry grouping without requiring any floors
+        run: python -I .github/tests/test_061b20_floors.py --logic-only
+      - name: B1 room doors, area authority, Eco safety and profile precedence
+        run: python -I .github/tests/test_062b1_room_doors.py
+      - name: B3 passive door context, source health and exact-Area metadata
+        run: |
+          python -I .github/tests/test_062b3_door_context.py
+          python -I .github/tests/test_062b3_door_entities.py
+      - name: B5 bounded door start coordination and measured energy intervals
+        run: python -I .github/tests/test_062b5_door_coordination.py
+      - name: B6 advancing door clocks and honest dispatch evidence
+        run: python -I .github/tests/test_062b6_dispatch_evidence.py
+      - name: Off-state thermal anomaly evidence and false-positive guards
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_b21_off_state_watchdog.py
+          python -I .github/tests/test_b21_off_state_runtime.py
+          python -I .github/tests/test_b22_universal_off_profiles.py
+          python -I .github/tests/test_b22_off_state_runtime.py
+          python -I .github/tests/test_b23_off_state_options.py
+      - name: Independent mode profiles, native controls and calibrated mold demand
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_061b7_mode_settings.py
+          python -I .github/tests/test_061b7_mode_entities.py
+          python -I .github/tests/test_061b18_retire_legacy_controller_method.py
+          python -I .github/tests/test_061b7_mold_demand.py
+          python -I .github/tests/test_061b7_mold_announcement.py
+          python -I .github/tests/test_061b7_window_modes.py
+          python -I .github/tests/test_061b7_runtime_modes.py
+          python -I .github/tests/test_061b7_pwm_sampling.py
+          python -I .github/tests/test_061b7_runtime_mold.py
+      - name: Per-device airing options, accepted waits and actual timeout starts
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_061b6_device_window_settings.py
+          python -I .github/tests/test_061b6_window_wait.py
+          python -I .github/tests/test_061b6_window_advice.py
+          python -I .github/tests/test_061b6_announcement_contract.py
+      - name: Automatic minute retries, physical override and stable device authorization
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_061b6_native_retry.py
+          python -I .github/tests/test_061b6_native_authorization.py
+      - name: Conditional window advice, bounded device waits and announcement delivery
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_061b5_window_advice.py
+          python -I .github/tests/test_061b5_window_wait.py
+          python -I .github/tests/test_061b5_window_delivery.py
+          python -I .github/tests/test_061b5_window_text_settings.py
+      - name: Device fan limits and advanced comfort controls
+        run: |
+          python -I .github/tests/test_beta112_device_fan_limits.py
+          python -I .github/tests/test_beta112_advanced_comfort.py
+          python -I .github/tests/test_beta112_room_activity.py --logic-only
+      - name: Consistent profile humidity defaults and saved targets
+        run: python -I .github/tests/test_beta116_humidity_defaults.py
+      - name: Grouped setting names, translated options and purpose-specific help
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta116_settings_metadata.py
+          python -I .github/tests/test_061b17_all_translations.py
+      - name: Comfort target validity, native room settings and card request ownership
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_bugfix_comfort_band.py
+          python -I .github/tests/test_bugfix_native_settings.py
+          python -I .github/tests/test_bugfix_card_async.py
+      - name: Interrupted retries, missing foreign windows and registry request ownership
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_bugfix119_recovery.py
+          python -I .github/tests/test_bugfix119_occupancy.py
+          python -I .github/tests/test_bugfix119_dashboard.py
+      - name: Overnight presence, alarm wake-up and per-device household sleep
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta120_presence.py
+          python -I .github/tests/test_beta120_wake_alarm.py
+          python -I .github/tests/test_beta120_device_sleep.py
+          python -I .github/tests/test_beta120_general_wake.py
+      - name: Explicit device option labels, supported modes and household OFF
+        run: |
+          python -I .github/tests/test_061b9_option_labels.py
+          python -I .github/tests/test_061b9_option_metadata.py
+          python -I .github/tests/test_061b9_household_off.py
+      - name: Away profile authority and restored restart measurements
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta121_away_profile.py
+          python -I .github/tests/test_beta121_restored_measurements.py
+          python -I .github/tests/test_beta121_restart_dispatch.py
+          python -I .github/tests/test_beta121_automatic_target.py
+      - name: Restart-safe average history and shared entity trend views
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta122_average_restart.py
+          python -I .github/tests/test_beta122_entity_trends.py --logic-only
+          python -I .github/tests/test_beta122_card_details.py --logic-only
+      - name: Explicit device operating holds and translated numeric controls
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_061b1_operating_timing.py
+          python -I .github/tests/test_061b1_operating_timing_ui.py
+          python -I .github/tests/test_061b9_timing_minutes.py
+      - name: Presence choice meanings and automatic timing constraints
+        run: |
+          python -I .github/tests/test_061b2_presence_labels.py
+          python -I .github/tests/test_061b2_automatic_timing.py
+          python -I .github/tests/test_061b2_info_bubbles.py --logic-only
+      - name: Timed arrival preparation, live authority and restart continuity
+        run: python -I .github/tests/test_061b4_arrival_preparation.py
+      - name: Announcement language menu, Home Assistant default and consistent delivery
+        run: |
+          python -I .github/tests/test_061b5_language_settings.py
+          python -I .github/tests/test_061b5_announcement_delivery.py
+      - name: PID target cutoff, original retry budgets and live native shutdown
+        run: |
+          python -I .github/tests/test_beta111_pid_cutoff_math.py
+          python -I .github/tests/test_beta111_pid_supply_cutoff.py
+          python -I .github/tests/test_beta111_pid_target_cutoff.py
+      - name: Per-device defaults, persistence and retired timer cleanup
+        run: |
+          python -I .github/tests/test_beta110_device_setting.py
+          python -I .github/tests/test_beta110_timed_sequence_opt_in.py
+      - name: Native target retirement and interrupted shutdown through real actuator paths
+        run: |
+          python -I .github/tests/test_beta109_setpoint_sequence.py
+          python -I .github/tests/test_beta109_setpoint_grace_browser.py --status-only
+          python -I .github/tests/test_061b9_timed_removal.py
+          python -I .github/tests/test_061b9_retired_feedback.py
+      - name: Beta108 like-for-like setpoint feedback and read-only pending status
+        run: |
+          python -I .github/tests/test_beta108_setpoint_feedback.py
+          python -I .github/tests/test_beta108_pending_status.py
+          python -I .github/tests/test_beta108_retry_recovery.py
+          python -I .github/tests/test_beta108_target_shutdown.py
+      - name: Binary heat max and cool min through real dispatch and delayed native ACK
+        run: python -I .github/tests/test_onoff_native_extrema.py
+      - name: Beta105 physical contributor provenance and persisted average trends
+        run: |
+          python -I .github/tests/test_beta105_averages.py
+          node --check frontend/air-quality-advisor-card.js
+      - name: Beta102 reproduce 5°C heating and 4°C cooling native PID hold
+        run: python -I .github/tests/test_beta102_pid_target_followthrough.py
+      - name: Beta100 native binary setpoint bounds and physical-only telemetry
+        run: |
+          python -I .github/tests/test_beta100_native_pid.py
+          python -I .github/tests/test_beta100_delayed_feedback.py
+          node --check frontend/air-quality-advisor-card.js
+      - name: Beta91 native DRY-only PID, low-demand compressor PWM and restart continuity
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta91_dry_only_pwm.py
+          python -I .github/tests/test_beta91_pid_restart.py
+          python -I .github/tests/test_beta70_pid_profile.py
+          python -I .github/tests/test_beta73_restart_power_history.py
+          python -I .github/tests/test_beta99_startup_auto_recovery.py
+          python -I .github/tests/test_beta74_upstream_dwell.py
+          python -I .github/tests/test_beta88_power_startup_and_retries.py
+      - name: Beta90 source-verified window evidence and no phantom open sensor
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta90_window_evidence.py
+          python -I .github/tests/test_beta94_room_windows.py
+          python -I .github/tests/test_beta95_room_ventilation.py
+          python -I .github/tests/test_beta95_messages.py
+          python -I .github/tests/test_beta96_air_sensor_classification.py
+          python -I .github/tests/test_beta97_battery_power_selector.py
+          python -I .github/tests/test_beta98_nonblocking_ack.py
+          python -I .github/tests/test_beta98_native_reconnect.py
+          python -I .github/tests/test_beta66_windows.py
+          python -I .github/tests/test_beta75_native_supply_recovery.py
+          python -I .github/tests/test_beta83_supply_safety.py
+      - name: Beta89 native activity, real override and Automatic persistence
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta89_automatic.py
+          python -I .github/tests/test_beta94_dry_automatic.py
+          python -I .github/tests/test_beta72_resume_running.py
+          python -I .github/tests/test_beta85_native_resume.py
+      - name: Beta88 actual powered-device startup, binary setpoints and ACK retries
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta88_power_startup_and_retries.py
+          python -I .github/tests/test_beta83_supply_safety.py
+          python -I .github/tests/test_beta85_native_resume.py
+      - name: Beta86 real native HA device errors and complete Hub details
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta86_native_errors.py
+          python -I .github/tests/test_beta85_native_resume.py
+      - name: Preserve Beta85 guided interrupted-command Resume
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta85_native_resume.py
+          python -I .github/tests/test_beta72_resume_running.py
+          python -I .github/tests/test_beta73_restart_power_history.py
+          python -I .github/tests/test_beta99_startup_auto_recovery.py
+      - name: Preserve Beta84 unified PID review and upstream power protections
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta84_unified_review.py
+          python -I .github/tests/test_beta84_pid_review_runtime.py
+          python -I .github/tests/test_beta83_supply_safety.py
+          python -I .github/tests/test_beta74_upstream_dwell.py
+          python -I .github/tests/test_beta64_sleep_idle.py
+      - name: B19 PID evidence, source-bound learning progress and unchanged anti-windup
+        run: python -I .github/tests/test_061b19_pid_evidence.py
+      - name: Actual Beta82 menu entrypoints, per-room and consolidated General settings
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta82_pid_passive.py
+          python -I .github/tests/test_beta82_runtime_guard.py
+          python -I .github/tests/test_beta81_localization.py
+          python -I .github/tests/test_beta79_room_reconfigure.py
+          python -I .github/tests/test_beta80_menu_init.py
+          python -I .github/tests/test_beta79_general_form.py
+      - name: Room cover defaults and live mold measurement guidance
+        run: |
+          python -I .github/tests/test_beta115_cover_discovery.py
+          python -I .github/tests/test_beta115_mold_readiness.py
+          python -I .github/tests/test_beta115_sensor_scope.py
+          python -I .github/tests/test_beta115_popup_ownership.py
+      - name: Whole-home absence and room-list priority
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_home_presence_authority.py
+          python -I .github/tests/test_home_presence_consumers.py
+          python -I .github/tests/test_beta78_room_occupancy.py
+      - name: Guarded DRY-only and external-supply OFF recovery regressions
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta77_dry_only_target.py
+          python -I .github/tests/test_beta77_offline_supply_resume.py
+      - name: Real native reconnection after owned supply ON
+        run: python -I .github/tests/test_beta75_native_supply_recovery.py
+      - name: Per-device external supply min-ON, min-OFF and cooldown evidence
+        run: python -I .github/tests/test_beta74_upstream_dwell.py
+      - name: Actual persisted physical ON history and safe restart recovery
+        run: python -I .github/tests/test_beta73_restart_power_history.py
+      - name: Resume authorized running physical outputs without forcing OFF
+        run: python -I .github/tests/test_beta72_resume_running.py
+      - name: Restore genuinely closed windows without spurious restart delay
+        run: python -I .github/tests/test_beta66_windows.py
+      - name: Real PID profile response and physical minimum-OFF regression
+        run: python -I .github/tests/test_beta70_pid_profile.py
+      - name: Actual per-cover lux controller and existing protective behavior
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_beta69_shade_lux.py
+          python -I .github/tests/test_beta61_supply_selection.py
+          python -I .github/tests/test_beta62_pid_races.py
+          python -I .github/tests/test_beta63_cold_start.py
+          python -I .github/tests/test_beta64_sleep_idle.py
+          python -I .github/tests/test_beta65_data.py
+          python -I .github/tests/test_beta66_windows.py
+          python -I .github/tests/test_beta67_aqi.py
+          python -I .github/tests/test_beta68_scheduler.py
+          python -I .github/tests/test_beta68_metadata.py
+      - name: Device readiness and exact PID deadlines
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_061b8_readiness.py
+      - name: Bounded optional native targets and quiet dehumidifier stages
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_061b8_native_target_budget.py
+          python -I .github/tests/test_061b8_dehumidifier_fan.py
+      - name: Install runner-only Home Assistant and browser test packages
+        run: python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
+      - name: B3 native HA door entities, metadata writes and responsive context popup
+        run: |
+          python -I .github/tests/test_062b3_door_entities.py --with-ha
+          python -I .github/tests/test_062b3_door_ui.py
+      - name: B6 translated entity names include required placeholders
+        run: python -I .github/tests/test_062b6_name_placeholders.py
+      - name: B10 stable settings UI, source selection and safe room changes
+        run: |
+          python -I .github/tests/test_062b10_settings_completeness.py
+          python -I .github/tests/test_062b10_source_validation.py
+      - name: B9 on-demand setting help in every menu
+        run: python -I .github/tests/test_062b9_settings_help.py
+      - name: B8 settings inventory, advanced presentation and exact duplicate aliases
+        run: |
+          python -I .github/scripts/audit_settings.py --check
+          python -I .github/tests/test_062b8_settings_audit.py
+      - name: B7 direct settings saves and pending-value preservation
+        run: |
+          python -I .github/tests/test_062b7_autosave.py
+          python -I .github/tests/test_062b7_save_confirmation.py
+      - name: B1 concise settings labels and door UI in Chromium
+        run: python -I .github/tests/test_062b1_menu_labels.py
+      - name: Native floor accordion, settings, room moves and zero-floor parity
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: python -I .github/tests/test_061b20_floors.py
+      - name: Informative device help, exact mode labels and retired option exclusion
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: python -I .github/tests/test_061b9_device_help_card.py
+      - name: Compact device options, readiness timing and mobile help
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: python -I .github/tests/test_061b8_quick_options_card.py
+      - name: Independent mode panels, mold indication and scoped mobile controls
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: python -I .github/tests/test_061b7_mode_settings_card.py
+      - name: Per-device window options, exact controller ownership and mobile labels
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: python -I .github/tests/test_061b6_window_controls_card.py
+      - name: Conditional window cautions and bounded wait in room advice
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: python -I .github/tests/test_061b5_window_card.py
+      - name: Arrival controls, exact home ownership and outdoor label spacing
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: python -I .github/tests/test_061b4_arrival_card.py
+      - name: HEM logo, icon-only arrival action and info bubble
+        run: python -I .github/tests/test_061b11_branding_card.py
+      - name: B12 room hub settings and exact native service ownership
+        run: python -I .github/tests/test_061b12_device_room_settings.py
+      - name: B13 all HEM device and room settings, including time and button controls
+        run: python -I .github/tests/test_061b13_all_settings.py
+      - name: B15 actual backend Home Options menu and UI step contract
+        run: python -I .github/tests/test_061b15_home_options_contract.py
+      - name: B14 unified Home and room settings, exact registry and Options saves
+        run: python -I .github/tests/test_061b14_unified_home_settings.py
+      - name: B25 full-width HEM setting information in every menu
+        run: python -I .github/tests/test_b25_settings_help_layout.py
+      - name: Responsive outdoor and room text boundaries
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: python -I .github/tests/test_061b3_text_boundaries.py
+      - name: Room info layout, live refresh and outside-click dismissal
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: python -I .github/tests/test_061b2_info_bubbles.py
+      - name: Compact VOC labels and purpose-specific configuration help
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: |
+          hem_ui_status=0
+          python -I .github/tests/test_beta116_compact_metric_labels.py || hem_ui_status=1
+          python -I .github/tests/test_beta116_configuration_help.py || hem_ui_status=1
+          exit "$hem_ui_status"
+      - name: Interactive trends, direct room settings and problem toggles
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: |
+          hem_ui_status=0
+          python -I .github/tests/test_beta114_room_navigation.py || hem_ui_status=1
+          python -I .github/tests/test_beta114_room_settings.py || hem_ui_status=1
+          python -I .github/tests/test_beta114_interactive_trends.py || hem_ui_status=1
+          exit "$hem_ui_status"
+      - name: Entity history, complementary details and stable room fold controls
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: |
+          hem_ui_status=0
+          python -I .github/tests/test_beta122_entity_trends.py || hem_ui_status=1
+          python -I .github/tests/test_beta122_card_details.py || hem_ui_status=1
+          python -I .github/tests/test_061b1_room_fold.py || hem_ui_status=1
+          exit "$hem_ui_status"
+      - name: Preserve room interface verification images
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hem-061b4-ui-${{ github.sha }}
+          path: /tmp/hem-061b4-ui/
+          if-no-files-found: ignore
+      - name: Home Assistant dispatcher and compact card browser interactions
+        run: |
+          hem_browser_status=0
+          for hem_browser_test in \
+            .github/tests/test_beta68_events.py \
+            .github/tests/test_beta66_browser.py \
+            .github/tests/test_beta68_browser.py \
+            .github/tests/test_beta76_compact_browser.py \
+            .github/tests/test_beta84_review_browser.py \
+            .github/tests/test_beta85_resume_browser.py \
+            .github/tests/test_beta86_fault_card.py \
+            .github/tests/test_beta87_compact_browser.py \
+            .github/tests/test_beta89_card.py \
+            .github/tests/test_beta90_scroll_card.py \
+            .github/tests/test_beta91_stable_dom.py \
+            .github/tests/test_beta92_lovelace_scroll.py \
+            .github/tests/test_beta93_native_entity_links.py \
+            .github/tests/test_beta95_card.py \
+            .github/tests/test_beta98_resume_card.py \
+            .github/tests/test_beta101_weather_warning.py \
+            .github/tests/test_beta103_weather_persistent.py \
+            .github/tests/test_beta104_weather_no_scroll.py \
+            .github/tests/test_beta105_card.py \
+            .github/tests/test_beta107_room_metrics.py \
+            .github/tests/test_beta112_room_activity.py \
+            .github/tests/test_beta108_setpoint_feedback_browser.py \
+            .github/tests/test_beta109_setpoint_grace_browser.py \
+            .github/tests/test_beta110_device_option_browser.py
+          do
+            python -I "$hem_browser_test" || hem_browser_status=1
+          done
+          exit "$hem_browser_status"
+      - name: Package and inspect canonical HACS integration
+        run: |
+          python -I - <<'PY'
+          import hashlib
+          import importlib.util
+          import json
+          from pathlib import Path
+          import subprocess
+          from zipfile import ZipFile
+
+          script = Path('.github/scripts/publish_release.py')
+          spec = importlib.util.spec_from_file_location('hem_release_publisher', script)
+          publisher = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(publisher)
+
+          source = Path('custom_components/environment_manager')
+          manifest = json.loads((source / 'manifest.json').read_text(encoding='utf-8'))
+          hacs = json.loads(Path('hacs.json').read_text(encoding='utf-8'))
+          assert manifest['domain'] == 'environment_manager'
+          assert hacs['zip_release'] is True and hacs['filename'] == 'environment_manager.zip'
+          assert not hacs.get('content_in_root', False)
+          # Unit tests use an untracked compatibility symlink; only tracked code ships.
+          tracked = subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0')
+          assert 'manifest.json' not in tracked and '__init__.py' not in tracked
+          version = manifest['version']
+          sha = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode().strip()
+
+          data = publisher.package(Path('.'), sha, version)
+          names = publisher.inspect_zip(data, version)
+          assert 'manifest.json' in names and '__init__.py' in names
+          assert 'translations/el.json' in names
+          assert 'frontend/air-quality-advisor-card.js' in names
+          assert all(not name.startswith(publisher.SOURCE) for name in names)
+          assert all(name.startswith(('translations/', 'frontend/', 'brand/'))
+                     or '/' not in name for name in names)
+
+          output = Path('dist') / hacs['filename']
+          output.parent.mkdir(exist_ok=True)
+          output.write_bytes(data)
+          with ZipFile(output) as archive:
+              assert archive.testzip() is None
+              assert json.loads(archive.read('manifest.json')) == manifest
+          print('PASS: Marketplace/HACS release ZIP', version, len(names),
+                len(data), hashlib.sha256(data).hexdigest())
+          PY
