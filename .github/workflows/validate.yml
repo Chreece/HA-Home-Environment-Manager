@@ -343,6 +343,8 @@ jobs:
           python -I .github/tests/test_062b3_door_ui.py
       - name: B6 translated entity names include required placeholders
         run: python -I .github/tests/test_062b6_name_placeholders.py
+      - name: B9 on-demand setting help in every menu
+        run: python -I .github/tests/test_062b9_settings_help.py
       - name: B8 settings inventory, advanced presentation and exact duplicate aliases
         run: |
           python -I .github/scripts/audit_settings.py --check
