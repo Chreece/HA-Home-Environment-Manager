@@ -7777,8 +7777,10 @@
         escape(labels.slice(0,2).join(', ')+(labels.length>2?' +'+(labels.length-2):''))+
         '</small></span><span class="hem-room-options-count114" data-room-options-count114 '+
         'aria-label="'+escape(_roomOptionsWord114(this,'selected'))+'">'+selected.length+
-        '</span>'+this._icon('mdi:chevron-down')+'</summary>'+
-        '<div class="hem-room-options-group-body114"><div data-room-options-mount114></div>'+
+        '</span>'+this._icon('mdi:chevron-down')+
+        settingHelpButtonB9(this,"room",name,label)+'</summary>'+
+        '<div class="hem-room-options-group-body114">'+settingHelpPanelB9(this,"room",name,helper)+
+        '<div data-room-options-mount114></div>'+
         '<p class="hem-room-options-field-error114" data-room-options-field-error114 '+
         'role="alert" hidden></p>'+
         (name==='shades'&&field.options.length?'<button class="hem-room-options-clear114" type="button" '+
@@ -7794,7 +7796,8 @@
         native.schema=[field.schema];
         native.data={[name]:[...selected]};
         native.computeLabel=()=>label;
-        native.computeHelper=()=>helper;
+        // HEM owns the help disclosure; ha-form must not repeat it inline.
+        native.computeHelper=()=>"";
         native.computeError=error=>_roomOptionsError114(this,error,form);
         native.addEventListener('value-changed',event=>{
           event.stopPropagation();
@@ -7807,8 +7810,7 @@
       }else{
         const choices=[...field.options,...orphan.map(value=>({value,
           label:value+' · '+_roomOptionsWord114(this,'unavailable')}))];
-        mount.innerHTML=(helper?'<p class="hem-room-options-helper115">'+escape(helper)+'</p>':'')+
-          '<input type="search" class="hem-room-options-search114" '+
+        mount.innerHTML='<input type="search" class="hem-room-options-search114" '+
           'data-room-options-search114="'+name+'" autocomplete="off" '+
           'placeholder="'+escape(_roomOptionsWord114(this,'search'))+'" aria-label="'+
           escape(_roomOptionsWord114(this,'search')+' · '+label)+'">'+
@@ -9165,12 +9167,12 @@
       input='<input type="time" data-hem-full-value127="'+escape(field.id)+'" '+
         'value="'+(enabled?escape(value.slice(0,5)):"")+'" '+(enabled?"":"disabled")+'>';
     }
-    const help=typeof a.configuration_help==="string"?a.configuration_help.trim():"";
+    const help=(typeof a.configuration_help==="string"?a.configuration_help.trim():"")||settingHelpTextB9(this,"missing");
     return '<div class="hem-full-row127" data-hem-full-row127="'+escape(field.id)+'" '+
       (scope==="room"?'data-hem-room-row126="'+escape(field.id)+'" ':"")+
       'data-hem-full-scope127="'+scope+'">'+
       (help?'<details class="hem-full-help127"><summary class="hem-full-label127" title="'+
-         escape(tr127(this,"help"))+'">'+
+         escape(tr127(this,"help"))+'" aria-label="'+escape(tr127(this,"help")+' · '+field.label)+'">'+
          '<strong title="'+escape(field.id)+'">'+escape(field.label)+'</strong>'+
          this._icon("mdi:information-outline")+'</summary>'+
          '<div class="hem-full-help-body127"><p>'+escape(help)+'</p></div></details>':
@@ -9554,9 +9556,8 @@
         ': '+escape(name)+'</small>';
     }
     return '<div class="hem-full-row127 hem-home-field128" data-hem-home-field128="'+escape(name)+'">'+
-      (kind==="boolean"?"":'<div class="hem-full-label127"><strong>'+escape(label)+'</strong></div>')+
-      '<div class="hem-home-editor128">'+editor+'</div>'+
-      (help?'<p class="hem-home-helper128">'+escape(help)+'</p>':"")+
+      settingHelpHeadingB9(this,"home",name,label,help,kind==="boolean"?editor:null)+
+      (kind==="boolean"?"":'<div class="hem-home-editor128">'+editor+'</div>')+
       (error?'<small role="alert" class="hem-room-options-error114">'+
         escape(_roomOptionsError114(this,error,form))+'</small>':"")+'</div>';
   };
@@ -10009,30 +10010,31 @@
     const toIcon=typeof floor.icon==="string"?floor.icon:"";
     const rooms=ctx.areas.map(area=>{
       const assigned=area.floor_id===floorId;
-      return '<div class="hem-floor-room-choice140"><label>'+
+      return '<div class="hem-floor-room-choice140"><div class="hem-setting-heading-b9"><label>'+
         '<input type="checkbox" data-floor-area140="'+escape(area.area_id)+'" '+
         (assigned?'checked ':'')+'>'+
         '<span>'+escape(area.name)+'</span></label>'+
         '<button type="button" data-floor-room-settings140="'+escape(area.area_id)+'" '+
         'title="'+escape(words.manage+' · '+area.name)+'" aria-label="'+
         escape(words.manage+' · '+area.name)+'">'+this._icon("mdi:cog-outline")+
-        '</button></div>';
+        '</button>'+settingHelpButtonB9(this,"floor",floorId+"/"+area.area_id,area.name)+
+        '</div>'+settingHelpPanelB9(this,"floor",floorId+"/"+area.area_id,settingHelpTextB9(this,"membership"))+'</div>';
     }).join("");
     node.innerHTML='<header class="hem-floor-dialog-head140"><div><small>'+
       escape(words.settings)+'</small><h2>'+escape(floor.name)+'</h2></div>'+
       '<button type="button" data-floor-close140 aria-label="'+escape(words.close)+'">'+
       this._icon("mdi:close")+'</button></header>'+
       '<div class="hem-floor-dialog-body140"><section class="hem-floor-field-group140">'+
-      '<label>'+escape(words.name)+'<input type="text" data-floor-name140 required maxlength="100" value="'+
-      escape(floor.name)+'"></label>'+
-      '<label>'+escape(words.level)+'<input type="number" data-floor-level140 step="1" '+
-      'value="'+(floor.level===null?'':escape(floor.level))+'"></label>'+
-      '<label>'+escape(words.icon)+'<input type="text" data-floor-icon140 maxlength="94" '+
-      'placeholder="mdi:home-floor-1" value="'+escape(toIcon)+'"></label></section>'+
+      '<div class="hem-floor-field-b9">'+settingHelpHeadingB9(this,"floor","name",words.name,settingHelpTextB9(this,"name"))+
+      '<input type="text" data-floor-name140 aria-label="'+escape(words.name)+'" required maxlength="100" value="'+escape(floor.name)+'"></div>'+
+      '<div class="hem-floor-field-b9">'+settingHelpHeadingB9(this,"floor","level",words.level,settingHelpTextB9(this,"level"))+
+      '<input type="number" data-floor-level140 aria-label="'+escape(words.level)+'" step="1" value="'+(floor.level===null?'':escape(floor.level))+'"></div>'+
+      '<div class="hem-floor-field-b9">'+settingHelpHeadingB9(this,"floor","icon",words.icon,settingHelpTextB9(this,"icon"))+
+      '<input type="text" data-floor-icon140 aria-label="'+escape(words.icon)+'" maxlength="94" placeholder="mdi:home-floor-1" value="'+escape(toIcon)+'"></div></section>'+
       '<details class="hem-floor-members140" open><summary>'+
-      this._icon("mdi:floor-plan")+' '+escape(words.members)+' · '+ctx.areas.filter(a=>
-        a.floor_id===floorId).length+'</summary>'+
-      '<p>'+escape(words.note)+'</p>'+
+      this._icon("mdi:floor-plan")+'<span>'+escape(words.members)+' · '+ctx.areas.filter(a=>
+        a.floor_id===floorId).length+'</span>'+settingHelpButtonB9(this,"floor","members",words.members)+'</summary>'+
+      settingHelpPanelB9(this,"floor","members",words.note)+
       '<div class="hem-floor-room-choices140">'+(rooms||'<small>'+
         escape(words.empty)+'</small>')+'</div></details>'+
       '<p class="hem-floor-status140" data-floor-status140 role="status" aria-live="polite"></p>'+
@@ -11445,5 +11447,114 @@
     '.hem-settings-tools-b8 small{font-size:11px;color:var(--aqa-muted)}'+
     '</style>';};
   /* HEM_SETTINGS_AUDIT_B8_END */
+
+  /* HEM_SETTING_HELP_B9_START
+   * Help is presentation only. These controls never emit a value change or
+   * invoke an HA service. Keep inputs, validation and category descriptions.
+   */
+  const settingHelpWordsB9={
+    en:{missing:"No additional description is available for this setting.",
+      name:"Name of this floor in Home Assistant. Renaming it does not change its rooms or settings.",
+      level:"Optional whole-number floor level in Home Assistant. Negative levels can represent basements; leave blank when unspecified.",
+      icon:"Optional Material Design icon for this floor, for example mdi:home-floor-1. Leave blank for the default icon.",
+      membership:"Select this room to assign its Home Assistant Area to this floor, moving it from another floor if necessary. Clearing it removes only its assignment to this floor."},
+    el:{missing:"Δεν υπάρχει πρόσθετη περιγραφή για αυτή τη ρύθμιση.",
+      name:"Το όνομα αυτού του ορόφου στο Home Assistant. Η μετονομασία δεν αλλάζει τα δωμάτια ή τις ρυθμίσεις του.",
+      level:"Προαιρετικός ακέραιος αριθμός επιπέδου στο Home Assistant. Αρνητικές τιμές μπορούν να δηλώνουν υπόγεια· άφησέ το κενό όταν δεν ορίζεται.",
+      icon:"Προαιρετικό εικονίδιο Material Design για τον όροφο, π.χ. mdi:home-floor-1. Άφησέ το κενό για το προεπιλεγμένο εικονίδιο.",
+      membership:"Επίλεξε το δωμάτιο για να αντιστοιχίσεις τον χώρο του Home Assistant σε αυτόν τον όροφο, μεταφέροντάς τον από άλλον αν χρειάζεται. Η αποεπιλογή αφαιρεί μόνο την αντιστοίχιση σε αυτόν τον όροφο."},
+    de:{missing:"Für diese Einstellung ist keine zusätzliche Beschreibung verfügbar.",
+      name:"Name dieser Etage in Home Assistant. Eine Umbenennung ändert weder ihre Räume noch deren Einstellungen.",
+      level:"Optionale ganzzahlige Etagenhöhe in Home Assistant. Negative Werte können Kellergeschosse darstellen; bei unbekannter Höhe leer lassen.",
+      icon:"Optionales Material-Design-Symbol dieser Etage, zum Beispiel mdi:home-floor-1. Für das Standardsymbol leer lassen.",
+      membership:"Diesen Raum auswählen, um seinen Home-Assistant-Bereich dieser Etage zuzuordnen und gegebenenfalls von einer anderen Etage zu verschieben. Abwählen entfernt nur die Zuordnung zu dieser Etage."}
+  };
+  function settingHelpTextB9(card,key){
+    return (settingHelpWordsB9[card._language()]||settingHelpWordsB9.en)[key];
+  }
+  function settingHelpIdB9(scope,key){return 'hem-help-b9-'+scope+'-'+encodeURIComponent(key);}
+  function settingHelpButtonB9(card,scope,key,label){
+    const id=settingHelpIdB9(scope,key),name=tr127(card,'help')+' · '+label;
+    return '<button type="button" class="hem-setting-info-b9" data-setting-info-b9 '+
+      'aria-label="'+escape(name)+'" title="'+escape(tr127(card,'help'))+'" '+
+      'aria-expanded="false" aria-controls="'+escape(id)+'">'+
+      card._icon('mdi:information-outline')+'</button>';
+  }
+  function settingHelpPanelB9(card,scope,key,help){
+    return '<div id="'+escape(settingHelpIdB9(scope,key))+'" class="hem-setting-help-b9" '+
+      'data-setting-help-b9 hidden><p>'+escape(help||settingHelpTextB9(card,'missing'))+'</p></div>';
+  }
+  function settingHelpHeadingB9(card,scope,key,label,help,heading){
+    return '<div class="hem-setting-heading-b9">'+
+      (heading||'<strong>'+escape(label)+'</strong>')+
+      settingHelpButtonB9(card,scope,key,label)+'</div>'+settingHelpPanelB9(card,scope,key,help);
+  }
+  function bindSettingHelpB9(saved){
+    if(!saved?.node)return;
+    saved.settingHelpOpenB9 ||= new Set();
+    const node=saved.node;
+    const panelFor=button=>[...node.querySelectorAll('[data-setting-help-b9]')]
+      .find(panel=>panel.id===button.getAttribute('aria-controls'));
+    const setOpen=(button,panel,open)=>{
+      panel.hidden=!open;button.setAttribute('aria-expanded',String(open));
+      if(open)saved.settingHelpOpenB9.add(panel.id);else saved.settingHelpOpenB9.delete(panel.id);
+    };
+    if(!saved.settingHelpBoundB9){
+      saved.settingHelpBoundB9=true;
+      node.addEventListener('click',event=>{
+        const button=event.target?.closest?.('[data-setting-info-b9]');
+        if(!button||!node.contains(button))return;
+        event.preventDefault();event.stopImmediatePropagation();
+        const panel=panelFor(button);if(!panel)return;
+        const open=panel.hidden;
+        // A source-selector summary must open to expose its full-width help,
+        // but a help click must never invoke the selector or change its value.
+        if(open){const details=button.closest('summary')?.parentElement;
+          if(details?.tagName==='DETAILS')details.open=true;}
+        setOpen(button,panel,open);
+      },true);
+      node.addEventListener('keydown',event=>{
+        const button=event.target?.closest?.('[data-setting-info-b9]');
+        if(event.key!=='Escape'||!button||!node.contains(button)||button.getAttribute('aria-expanded')!=='true')return;
+        const panel=panelFor(button);if(!panel)return;
+        event.preventDefault();event.stopImmediatePropagation();setOpen(button,panel,false);
+      },true);
+    }
+    for(const button of node.querySelectorAll('[data-setting-info-b9]')){
+      const panel=panelFor(button);if(panel)setOpen(button,panel,saved.settingHelpOpenB9.has(panel.id));
+    }
+  }
+  // Preserve expanded help if a form re-renders for validation, or the card
+  // refreshes during an in-flight save. Listeners stay local to that dialog.
+  for(const name of ['_renderHomeGeneral128','_renderRoomSettingsForm114','_hemFullRender127']){
+    const prior=AirQualityAdvisorCard.prototype[name];
+    AirQualityAdvisorCard.prototype[name]=function(saved,...args){
+      const result=prior.call(this,saved,...args);bindSettingHelpB9(saved);return result;
+    };
+  }
+  const helpFloorOpenB9=AirQualityAdvisorCard.prototype._floorOpen140;
+  AirQualityAdvisorCard.prototype._floorOpen140=function(...args){
+    const result=helpFloorOpenB9.apply(this,args);bindSettingHelpB9(this._floorDialog140);return result;
+  };
+  const helpStylesB9=AirQualityAdvisorCard.prototype._styles;
+  AirQualityAdvisorCard.prototype._styles=function(){return helpStylesB9.call(this)+'<style>'+
+    '.hem-setting-heading-b9{display:flex;align-items:center;gap:8px;min-width:0;width:100%;box-sizing:border-box}'+
+    '.hem-setting-heading-b9>strong,.hem-setting-heading-b9>label{flex:1 1 auto;min-width:0;overflow-wrap:break-word}'+
+    '.hem-setting-heading-b9>strong{font-size:12px}'+
+    'dialog .hem-setting-info-b9{flex:0 0 30px;width:30px;min-width:30px;height:30px;min-height:30px;padding:5px;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;background:transparent;border:0;color:var(--primary-color,#03a9f4);cursor:pointer;margin-inline-start:auto}'+
+    'dialog .hem-setting-info-b9 ha-icon{--mdc-icon-size:18px;width:18px;height:18px;flex:0 0 18px}'+
+    '.hem-setting-info-b9:focus-visible{outline:2px solid var(--primary-color,#03a9f4);outline-offset:2px;border-radius:5px}'+
+    '.hem-setting-help-b9{width:100%;min-width:0;max-width:100%;box-sizing:border-box}'+
+    '.hem-setting-help-b9[hidden]{display:none!important}'+
+    '.hem-setting-help-b9 p{font-size:12px;line-height:1.5;margin:5px 0 8px;color:var(--secondary-text-color,#aaa);white-space:pre-line;overflow-wrap:break-word;word-break:normal}'+
+    '[data-room-options-group114]>summary>ha-icon:nth-last-child(2){color:var(--secondary-text-color,#aaa)}'+
+    '[data-room-options-group114][open]>summary>ha-icon:nth-last-child(2){transform:rotate(180deg)}'+
+    '.hem-floor-field-b9{display:grid;gap:5px;min-width:0}'+
+    '.hem-floor-field-b9>input{min-width:0;width:100%;box-sizing:border-box;padding:8px;border:1px solid var(--aqa-edge);border-radius:8px;background:var(--secondary-background-color,#292929);color:inherit;font:inherit}'+
+    '.hem-floor-room-choice140{display:block}'+
+    '.hem-floor-members140>summary{display:flex;align-items:center;gap:6px}'+
+    '.hem-floor-members140>summary>span{flex:1;min-width:0}'+
+    '</style>';};
+  /* HEM_SETTING_HELP_B9_END */
 
 })();
