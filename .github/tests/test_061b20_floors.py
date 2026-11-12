@@ -212,18 +212,20 @@ with sync_playwright() as playwright:
     dialog.locator('[data-floor-icon140]').fill("mdi:home-floor-b")
     dialog.locator('[data-floor-area140="kitchen"]').uncheck()
     dialog.locator('[data-floor-area140="loft"]').check()
-    dialog.locator('[data-floor-save140]').click()
-    expect(dialog).to_have_count(0)
+    expect(dialog.locator('[data-floor-save140]')).to_be_hidden()
+    page.wait_for_function('card._floorDialog140.floorEdits?.size===0')
+    expect(dialog).to_be_visible()
     page.wait_for_function("""()=>card._floorRegistry140?.floors[0]?.name==='Living level'&&
       card._floorRegistry140.membership.get('loft')==='ground'&&
       card._floorRegistry140.membership.get('kitchen')===null""")
     expect(page.locator('[data-floor-fold140="ground"] [data-room-fold87="loft"]')).to_have_count(1)
     expect(page.locator('[data-floor-fold140="__hem_unassigned140__"] [data-room-fold87="kitchen"]')).to_have_count(1)
-    assert page.evaluate("writes.map(w=>w.type)") == [
-        "config/floor_registry/update",
-        "config/area_registry/update",
-        "config/area_registry/update",
-    ]
+    assert page.evaluate("writes.filter(w=>w.type==='config/floor_registry/update').length") == 3
+    assert page.evaluate("writes.filter(w=>w.type==='config/area_registry/update').length") == 2
+    assert page.evaluate("writes.some(w=>w.name==='Living level')")
+    assert page.evaluate("writes.some(w=>w.level===-1)")
+    assert page.evaluate("writes.some(w=>w.icon==='mdi:home-floor-b')")
+    dialog.locator('[data-floor-close140]').last.click()
     assert page.evaluate("calls") == []
 
     page.locator('[data-floor-settings140="ground"]').click()

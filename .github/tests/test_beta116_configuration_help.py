@@ -178,7 +178,7 @@ with sync_playwright() as playwright:
         assert states[id]['attributes']['configuration_help'].strip() in help_box.text_content()
         assert help_box.locator('img').count() == 0
     assert modal.locator('[data-hem-full-value127="select.method_cooler"]').input_value() == 'pid'
-    assert modal.locator('[data-hem-full-apply127="number.cooler_gain"]').count() == 1
+    assert modal.locator('[data-hem-full-value127="number.cooler_gain"]').count() == 1
     assert modal.locator('[data-hem-full-apply127="button.cooler_calibrate"]').count() == 1
     assert page.evaluate('calls') == [], 'reading help mutated a setting'
     assert not errors, errors

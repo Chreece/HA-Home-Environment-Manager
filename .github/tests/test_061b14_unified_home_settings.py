@@ -94,9 +94,10 @@ with sync_playwright() as pw:
             menu_options:["choose_rooms","edit_room_room0","general_settings"]
           };
           if(data?.next_step_id==="general_settings")return homeForm;
-          if(method==="POST" && data?.weather_entities)return {
-            type:"create_entry",flow_id:"optionsHOME"
-          };
+          if(method==="POST" && data?.weather_entities){
+            for(const field of homeForm.data_schema)field.default=structuredClone(data[field.name]);
+            return {type:"create_entry",flow_id:"optionsHOME"};
+          }
           throw Error("Unknown options call "+path);
         };
         card._renderContent(true);
@@ -140,9 +141,9 @@ with sync_playwright() as pw:
     assert dialog.locator('[data-hem-home-form-groups128] > details').count() == 4
     assert dialog.locator('[data-hem-full-row127="number.home_timeout"]').count()==1
     assert page.evaluate("nativeCalls.length") == 0
-    expect(dialog.locator('[data-hem-home-save128]')).to_be_enabled()
-    dialog.locator('[data-hem-home-save128]').click()
-    page.wait_for_function("card._homeSettingsDialog128?.finished===true")
+    expect(dialog.locator('[data-hem-home-save128]')).to_be_hidden()
+    page.wait_for_function('card._homeSettingsDialog128.optionsAutosave?.dirty.size===0')
+    assert page.evaluate('card._homeSettingsDialog128.finished') is False
     saved = page.evaluate("homeCalls.filter(c=>c.data?.weather_entities).at(-1).data")
     assert saved == {
       "weather_entities":["weather.home","weather.second"],
@@ -152,7 +153,7 @@ with sync_playwright() as pw:
     assert page.evaluate("nativeCalls.length") == 0
     dialog.locator('[data-hem-home-close128]').last.click()
     expect(dialog).to_have_count(0)
-    assert page.evaluate("homeCalls.filter(c=>c.method==='DELETE').length") == 0
+    assert page.evaluate("homeCalls.filter(c=>c.method==='DELETE').length") == 1
 
     # Reopening uses fresh flow data, and registry controls are immediately writable.
     assert page.evaluate("card._openHomeSettings128()") is True
@@ -160,7 +161,7 @@ with sync_playwright() as pw:
     dialog=page.locator("dialog.hem-home-options128")
     dialog.locator('[data-hem-full-category127="presence"] > summary').click()
     dialog.locator('[data-hem-full-value127="number.home_timeout"]').fill("45")
-    dialog.locator('[data-hem-full-apply127="number.home_timeout"]').click()
+    dialog.locator('[data-hem-full-value127="number.home_timeout"]').dispatch_event('change')
     page.wait_for_function("nativeCalls.length===1")
     assert page.evaluate("nativeCalls[0]") == [
         "number","set_value",{"entity_id":"number.home_timeout","value":45}
