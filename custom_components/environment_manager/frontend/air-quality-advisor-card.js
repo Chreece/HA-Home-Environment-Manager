@@ -1360,6 +1360,52 @@
           matched.add(id);
         }
       }
+      // B13: the authenticated dashboard WebSocket carries HEM's saved,
+      // registered controller inventory. An unavailable HA climate state may
+      // expose zero extra attributes, and hass.entities is optional. A
+      // reconstructed climate facade is always display-only/unavailable.
+      const inventory=safeArray(this._dashboard105?.()?.controllers);
+      const displayed=new Set(physical.map(([id])=>id));
+      for(const record of inventory) {
+        if(!record || record.area_id!==area ||
+            typeof record.controller_id!=='string' ||
+            !Array.isArray(record.source_entity_ids) ||
+            !record.source_entity_ids.length ||
+            !record.source_entity_ids.every(id=>typeof id==='string' &&
+              /^(climate|humidifier|fan|switch|number|input_boolean|input_number)\.[a-z0-9_]+$/.test(id)))continue;
+        const entityId=record.climate_entity_id;
+        if(typeof entityId!=='string' ||
+            !/^climate\.[a-z0-9_]+$/.test(entityId) || displayed.has(entityId))continue;
+        const real=this._hass?.states?.[entityId];
+        const matchedSource=record.source_entity_ids.every(id=>
+          this._hass?.states?.[id] || safeArray(record.unavailable_source_entity_ids).includes(id));
+        if(!matchedSource)continue;
+        const selectedModes=safeArray(record.supported_operating_modes)
+          .filter(mode=>typeof mode==='string' && mode && mode!=='off');
+        const existing=real?.attributes||{};
+        const status=typeof record.status_code==='string'?record.status_code:
+          'waiting_for_physical_device';
+        const offline={
+          ...existing,
+          area_id:area,controller_id:record.controller_id,
+          source_device_id:record.source_device_id??null,
+          source_entity_ids:[...record.source_entity_ids],
+          friendly_name:existing.friendly_name||record.name||entityId,
+          control_mode:record.control_mode||'existing',
+          supported_operating_modes:selectedModes,
+          selected_operating_mode:selectedModes.includes(record.selected_operating_mode)
+            ?record.selected_operating_mode:(selectedModes.length===1?selectedModes[0]:null),
+          physical_primary_entity_id:record.native_primary_entity_id||
+            (record.source_entity_ids.length===1?record.source_entity_ids[0]:null),
+          physical_source_state:'unavailable',
+          upstream_power_switch:record.upstream_power_switch||null,
+          controller_status:{status,reason:record.status_reason_code||'native_source_unavailable'},
+          inventory_unavailable_source_entity_ids:safeArray(record.unavailable_source_entity_ids),
+          inventory_unavailable_b13:true,
+        };
+        physical.push([entityId,{...real,state:'unavailable',attributes:offline}]);
+        displayed.add(entityId);
+      }
       const windowAnnouncementSwitches=sharedStates.filter(([id,item])=>
         id.startsWith('switch.') && item?.attributes?.area_id===area &&
         item.attributes.window_announcement_role==='policy');
@@ -2299,7 +2345,12 @@
 
     _controllerPanel(room) {
       const devices=this._managedControllers(room.area_id);
-      if (!devices.length) return '';
+      const unregistered=safeArray(this._dashboard105?.()?.controllers)
+        .filter(item=>item?.area_id===room.area_id &&
+          !item.climate_entity_id &&
+          Array.isArray(item.source_entity_ids) &&
+          item.source_entity_ids.length);
+      if (!devices.length && !unregistered.length) return '';
       const l=this._climateLabels65();
       const pidLabels=this._pidLabels65();
       const fanCapacityLabels=this._fanLabels65();
@@ -2323,9 +2374,12 @@
         // Physical connectivity is independent of a controller's persisted
         // settings. Retain its card with an explicit offline explanation,
         // even when no external relay is configured (battery Zigbee TRVs).
-        const offlineIds=safeArray(attrs.source_entity_ids).filter(id=>
-          !this._hass?.states?.[id] ||
-          ['unknown','unavailable'].includes(this._hass.states[id].state));
+        const offlineIds=safeArray(attrs.source_entity_ids).filter(id=>{
+          const state=this._hass?.states?.[id];
+          return state ? ['unknown','unavailable'].includes(state.state) :
+            safeArray(attrs.inventory_unavailable_source_entity_ids).includes(id) ||
+            !state;
+        });
         const supplyId=attrs.upstream_power_switch ||
           entry.statusInfo?.state?.attributes?.upstream_power_switch;
         const supply=supplyId?this._hass?.states?.[supplyId]:null;
@@ -2589,11 +2643,23 @@
           modeControls+
           '</section>';
       }).join('');
+      const unavailableWords={
+        en:['Configured controller unavailable','The selected physical device is retained in HEM, but its logical controller is not registered as an active Home Assistant climate entity. No device commands are possible.'],
+        de:['Konfigurierter Regler nicht verfügbar','Das ausgewählte physische Gerät bleibt in HEM gespeichert, aber sein logischer Regler ist nicht als aktive Home-Assistant-Klimaentität registriert. Es sind keine Gerätebefehle möglich.'],
+        el:['Μη διαθέσιμος ρυθμισμένος ελεγκτής','Η επιλεγμένη φυσική συσκευή παραμένει αποθηκευμένη στο HEM, αλλά ο λογικός ελεγκτής δεν έχει ενεργή καταχώριση κλίματος στο Home Assistant. Δεν είναι δυνατές εντολές προς τη συσκευή.']
+      }[this._language()]||['Configured controller unavailable','Controller not registered.'];
+      const pending=unregistered.map(item=>
+        '<section class="managed-controller hem-physical-offline-b13" role="status">'+
+        '<strong>'+this._icon('mdi:alert-circle-outline')+
+        escape(item.name||item.controller_id)+'</strong>'+
+        '<small>'+escape(unavailableWords[0])+'</small>'+
+        '<small>'+escape(unavailableWords[1])+'</small>'+
+        '<small>'+escape(item.source_entity_ids.join(', '))+'</small></section>').join('');
       return '<div class="managed-controllers">'+
         '<strong>'+escape(l.devices)+'</strong>'+
         (this._climateEditError ? '<small role="alert" class="climate-edit-error">'+
           escape(this._climateEditError)+'</small>' : '')+
-        sections+'</div>';
+        sections+pending+'</div>';
     }
 
     _climatePanel(room, overview122) {
@@ -3921,8 +3987,11 @@
   const proto68 = AirQualityAdvisorCard.prototype;
   const managed68 = proto68._managedControllers;
   proto68._managedControllers = function(area) {
-    if (this._managedStates68 !== this._hass?.states) {
+    const inventory=this._dashboard105?.()?.controllers;
+    if (this._managedStates68 !== this._hass?.states ||
+        this._managedInventory68 !== inventory) {
       this._managedStates68 = this._hass?.states;
+      this._managedInventory68 = inventory;
       this._managedAreas68 = new Map();
     }
     if (!this._managedAreas68.has(area)) this._managedAreas68.set(area,managed68.call(this,area));
