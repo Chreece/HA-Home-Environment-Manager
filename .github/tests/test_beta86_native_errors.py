@@ -334,6 +334,67 @@ async def run():
     await monitor.async_set_announcements(specB,False)
     assert model.settings(manager,specB)["announce_device_errors"] is False
     assert model.settings(manager,specA)["announce_device_errors"] is True
+
+    # B12: the missing battery-powered TRV has NO power relay. Physical
+    # availability is independent from native fault codes, and does not
+    # clear the last known manufacturer's native error.
+    F.OFFLINE_NOTICE_DELAY_SECONDS=0.025
+    hub.is_on=False
+    manager.entry.options["use_announcement_hub"]=False
+    manager.entry.options.pop("notify_entities",None)
+    states["climate.a"]=state("off",error_code=0)
+    states["sensor.a_error_code"]=state("0",error_code=0)
+    monitor.state_changed("sensor.a_error_code")
+    monitor.state_changed("climate.a")
+    assert not monitor._offline_tasks
+    old_calls=len(manager.hass.services.calls)
+    states["sensor.a_error_code"]=state("unavailable")
+    monitor.state_changed("sensor.a_error_code")
+    assert not monitor._offline_tasks, "An optional fault sensor alone is NOT a device outage."
+    states["sensor.a_error_code"]=state("0",error_code=0)
+    monitor.state_changed("sensor.a_error_code")
+    states["climate.a"]=state("unavailable")
+    monitor.state_changed("climate.a")
+    assert "physical_a" in monitor._offline_tasks
+    assert monitor.details(specA)["status"]=="unavailable"
+    await asyncio.sleep(.085)
+    assert len(manager.hass.services.calls)==old_calls+1
+    event=manager.hass.services.calls[-1]
+    assert event[:2]==("persistent_notification","create"),event
+    assert "Bathroom Dehumidifier" in event[2]["message"],event
+    assert "climate.a" in event[2]["message"],event
+    assert event[2]["notification_id"].startswith("hem_native_unavailable_")
+    monitor.state_changed("climate.a")
+    await asyncio.sleep(.04)
+    assert len(manager.hass.services.calls)==old_calls+1, "Only one alert per outage."
+
+    # A recovery re-arms a second real disconnect, but a short Zigbee
+    # interruption cannot trigger a notice.
+    states["climate.a"]=state("off",error_code=0)
+    monitor.state_changed("climate.a")
+    assert "physical_a" not in monitor._offline_notified
+    states["climate.a"]=state("unknown")
+    monitor.state_changed("climate.a")
+    await asyncio.sleep(.005)
+    states["climate.a"]=state("off",error_code=0)
+    monitor.state_changed("climate.a")
+    await asyncio.sleep(.05)
+    assert len(manager.hass.services.calls)==old_calls+1
+    states["climate.a"]=state("unavailable")
+    monitor.state_changed("climate.a")
+    await asyncio.sleep(.085)
+    assert len(manager.hass.services.calls)==old_calls+2
+
+    # Per-device error toggle prevents the next offline alert. No command
+    # or power-switch assignment is required for preference changes.
+    states["climate.a"]=state("off",error_code=0)
+    monitor.state_changed("climate.a")
+    await monitor.async_set_announcements(specA,False)
+    states["climate.a"]=state("unavailable")
+    monitor.state_changed("climate.a")
+    await asyncio.sleep(.045)
+    assert len(manager.hass.services.calls)==old_calls+2
+    assert "physical_a" not in monitor._offline_tasks
     await monitor.async_stop()
     assert not monitor.active
     assert "device_faults.py" not in (ROOT/"sensor.py").read_text()
