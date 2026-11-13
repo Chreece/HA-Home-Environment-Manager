@@ -456,6 +456,7 @@ jobs:
             .github/tests/test_beta84_review_browser.py \
             .github/tests/test_beta85_resume_browser.py \
             .github/tests/test_beta86_fault_card.py \
+            .github/tests/test_062b12_offline_trv_browser.py \
             .github/tests/test_beta87_compact_browser.py \
             .github/tests/test_beta89_card.py \
             .github/tests/test_beta90_scroll_card.py \
