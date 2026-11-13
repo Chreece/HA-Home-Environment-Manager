@@ -1286,7 +1286,7 @@
         typeof item.attributes.operating_mode==='string' &&
         typeof item.attributes.setting_key==='string' && item.attributes.setting_key &&
         Array.isArray(item.attributes.source_entity_ids) && item.attributes.source_entity_ids.length>0);
-      const physical = states.filter(([id, item])=>
+      let physical = states.filter(([id, item])=>
         id.startsWith('climate.') && item?.attributes?.area_id===area &&
         Array.isArray(item.attributes.source_entity_ids) &&
         item.attributes.source_entity_ids.length>0 &&
@@ -1298,6 +1298,68 @@
         ['automatic','manual','off'].every((mode)=>item.attributes.options.includes(mode)));
       const signature = (item) => JSON.stringify(
         safeArray(item.attributes.source_entity_ids).slice().sort());
+      // An unavailable HA climate entity can lose *all* extra attributes.
+      // Recover its read-only card identity from HEM's still-available status
+      // sensor AND exact HA entity-registry unique IDs; never from a name,
+      // room match, arbitrary climate, or another integration's status.
+      // This does not change native availability or permit any HVAC command.
+      const registry=this._hass?.entities;
+      if (registry && typeof registry==='object') {
+        const matched=new Set(physical.map(([id])=>id));
+        const facades=Object.entries(registry).filter(([id,reg])=>
+          id.startsWith('climate.') && reg?.platform==='environment_manager' &&
+          typeof reg.unique_id==='string' && reg.unique_id.endsWith('_climate') &&
+          !reg.disabled_by);
+        for(const [sensorId,sensor] of states) {
+          const a=sensor?.attributes;
+          if(!sensorId.startsWith('sensor.') || !a ||
+              typeof a.controller_id!=='string' ||
+              typeof a.area_id!=='string' || a.area_id!==area ||
+              !Array.isArray(a.source_entity_ids) || !a.source_entity_ids.length ||
+              typeof a.status_code!=='string')continue;
+          const sReg=registry[sensorId];
+          if(sReg?.platform!=='environment_manager' ||
+              sReg.unique_id!==a.controller_id+'_control_status')continue;
+          const pairs=facades.filter(([,reg])=>
+            reg.unique_id===a.controller_id+'_climate' &&
+            (!reg.config_entry_id || !sReg.config_entry_id ||
+              reg.config_entry_id===sReg.config_entry_id) &&
+            (!reg.device_id || !sReg.device_id || reg.device_id===sReg.device_id));
+          if(pairs.length!==1)continue; // Ambiguous identities fail closed.
+          const [id]=pairs[0], native=this._hass?.states?.[id];
+          if(matched.has(id) || (native && !['unknown','unavailable'].includes(native.state)))continue;
+          const physicalDown=a.source_entity_ids.some(src=>
+            !this._hass?.states?.[src] ||
+            ['unknown','unavailable'].includes(this._hass.states[src].state));
+          if(!physicalDown)continue; // Not a native-disconnect recovery.
+          const savedModes=[...new Set(modeSettings.filter(([,row])=>
+            row.attributes.area_id===area &&
+            row.attributes.source_device_id===a.source_device_id &&
+            signature(row)===JSON.stringify([...a.source_entity_ids].sort()) &&
+            row.attributes.setting_key==='control_mode')
+            .map(([,row])=>row.attributes.operating_mode)
+            .filter(mode=>typeof mode==='string' && mode && mode!=='off'))];
+          const activeMode=savedModes.includes(a.native_mode) ? a.native_mode :
+            savedModes.length===1?savedModes[0]:null;
+          const offlineAttributes={
+            ...(native?.attributes||{}),
+            area_id:area,controller_id:a.controller_id,
+            source_entity_ids:[...a.source_entity_ids],
+            source_device_id:a.source_device_id??null,
+            control_mode:a.control_method||'existing',
+            supported_operating_modes:savedModes,
+            selected_operating_mode:activeMode,
+            physical_primary_entity_id:a.native_primary_entity_id||
+              (a.source_entity_ids.length===1?a.source_entity_ids[0]:null),
+            physical_source_state:'unavailable',
+            controller_status:{status:a.status_code,reason:a.status_reason_code},
+            upstream_power_switch:a.upstream_power_switch||null,
+          };
+          physical.push([id,{...native,state:native?.state||'unavailable',
+            attributes:offlineAttributes}]);
+          matched.add(id);
+        }
+      }
       const windowAnnouncementSwitches=sharedStates.filter(([id,item])=>
         id.startsWith('switch.') && item?.attributes?.area_id===area &&
         item.attributes.window_announcement_role==='policy');
@@ -2258,6 +2320,26 @@
           fan:'mdi:fan',switch:'mdi:power-plug-outline',
           number:'mdi:valve',input_number:'mdi:valve'
         })[nativeEndpoint?.entityId?.split('.')[0]] || 'mdi:devices';
+        // Physical connectivity is independent of a controller's persisted
+        // settings. Retain its card with an explicit offline explanation,
+        // even when no external relay is configured (battery Zigbee TRVs).
+        const offlineIds=safeArray(attrs.source_entity_ids).filter(id=>
+          !this._hass?.states?.[id] ||
+          ['unknown','unavailable'].includes(this._hass.states[id].state));
+        const supplyId=attrs.upstream_power_switch ||
+          entry.statusInfo?.state?.attributes?.upstream_power_switch;
+        const supply=supplyId?this._hass?.states?.[supplyId]:null;
+        const deliberatelyOff=Boolean(supplyId && supply?.state==='off');
+        const offlineCopy={
+          en:['Physical device unavailable','HEM retains its controller and settings, but cannot operate the disconnected device. Check batteries (if applicable) and Zigbee connectivity.'],
+          de:['Physisches Gerät nicht verfügbar','HEM behält Regler und Einstellungen bei, kann das getrennte Gerät aber nicht ansteuern. Prüfe gegebenenfalls die Batterien und die Zigbee-Verbindung.'],
+          el:['Μη διαθέσιμη φυσική συσκευή','Το HEM διατηρεί τον ελεγκτή και τις ρυθμίσεις του, αλλά δεν μπορεί να ελέγξει την αποσυνδεδεμένη συσκευή. Ελέγξτε τις μπαταρίες, εφόσον χρησιμοποιεί, και τη σύνδεση Zigbee.']
+        }[this._language()]||['Physical device unavailable','The device is disconnected. Check the native integration.'];
+        const offlinePanel=offlineIds.length && !deliberatelyOff ?
+          '<div class="hem-device-error hem-physical-offline-b12" role="alert">'+
+          '<strong>'+this._icon('mdi:alert-circle-outline')+
+          escape(offlineCopy[0])+'</strong><small>'+escape(offlineCopy[1])+
+          '</small><small>'+escape(offlineIds.join(', '))+'</small></div>':'';
         const nativeHeader='<div class="hem-physical-heading122">'+
           this._devicePageButton122('physical',room.area_id,entry.entityId,
             nativeEndpoint?.entityId,nativeIcon,nativeName)+
@@ -2501,7 +2583,7 @@
           'data-managed-climate93="'+escape(entry.entityId)+'" '+
           'data-controller-area="'+escape(room.area_id)+'">'+
           nativeHeader+
-          this._deviceSummary65(entry)+faultPanel+
+          offlinePanel+this._deviceSummary65(entry)+faultPanel+
           quickOptions+
           recoveryPanel+this._configurationHelp116(resumeControl,entry.resumeButtonId,entry.resumeButton,continueLabel)+
           modeControls+
