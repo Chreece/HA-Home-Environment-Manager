@@ -17,6 +17,7 @@ from homeassistant.helpers import entity_registry as er
 
 from .const import DOMAIN
 from .dashboard import dashboard_snapshot
+from .controller_inventory import controller_inventory
 
 COMMAND = f"{DOMAIN}/dashboard"
 
@@ -66,6 +67,9 @@ def websocket_dashboard(
     # Pure transformation of the latest validated Plan; no I/O, no physical
     # control, no registry changes, and no Recorder/database writes.
     result = dashboard_snapshot(manager.plan, manager.thresholds)
+    # Configured source membership is independent of an unavailable HA state.
+    # This is scoped to the already authorized recommendation sensor response.
+    result["controllers"] = controller_inventory(manager)
     preparation = getattr(manager, "arrival_preparation", None)
     if preparation is not None:
         result["arrival_preparation"] = preparation.snapshot()
