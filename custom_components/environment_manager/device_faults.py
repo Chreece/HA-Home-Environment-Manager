@@ -50,6 +50,9 @@ _EMPTY = frozenset((
 ))
 _UNAVAILABLE = frozenset(("unknown", "unavailable"))
 _LEVELS = {"critical": 3, "error": 2, "warning": 1}
+# Zigbee/source disconnects require independent, time-confirmed availability
+# alerts. Native manufacturer fault signatures intentionally remain separate.
+OFFLINE_NOTICE_DELAY_SECONDS = 180
 
 
 def _text(value: Any, limit: int = 160) -> str:
@@ -360,6 +363,8 @@ class NativeDeviceFaultMonitor:
         self._fingerprints: dict[str, tuple] = {}
         self._seen_device_alerts: dict[str, tuple] = {}
         self._tasks: set[asyncio.Task] = set()
+        self._offline_tasks: dict[str, asyncio.Task] = {}
+        self._offline_notified: set[str] = set()
 
     def start(self) -> None:
         self.active = True
@@ -367,12 +372,14 @@ class NativeDeviceFaultMonitor:
 
     async def async_stop(self) -> None:
         self.active = False
-        tasks = tuple(self._tasks)
+        tasks = tuple(self._tasks) + tuple(self._offline_tasks.values())
         for task in tasks:
             task.cancel()
         if tasks:
             await asyncio.gather(*tasks, return_exceptions=True)
         self._tasks.clear()
+        self._offline_tasks.clear()
+        self._offline_notified.clear()
         self._specs.clear()
         self._by_entity.clear()
 
@@ -436,6 +443,116 @@ class NativeDeviceFaultMonitor:
                 self._latest.pop(identifier, None)
                 self._last_active.pop(identifier, None)
                 self._fingerprints.pop(identifier, None)
+        self._sync_offline_alerts()
+
+    def _offline_sources(self, spec: Any) -> tuple[str, ...]:
+        """Native selected endpoints only; optional diagnostics never count.
+
+        An intentionally OFF, verified external supply explains a native
+        disconnect. A battery TRV has no supply and is always monitored.
+        No read or notification here ever authorizes a device command.
+        """
+        missing = tuple(entity for entity in spec.source_entities
+                        if (state := self.hass.states.get(entity)) is None
+                        or state.state in _UNAVAILABLE)
+        if not missing:
+            return ()
+        upstream = model.settings(self.manager, spec).get("power_switch_entity")
+        if isinstance(upstream, str) and upstream.startswith("switch."):
+            supply = self.hass.states.get(upstream)
+            if supply is not None and supply.state == "off":
+                from .equipment_power_switch import relay_identity
+                if relay_identity(self.hass, spec, upstream) is not None:
+                    return ()
+        return missing
+
+    def _offline_problems(self) -> dict[str, tuple[Any, tuple[str, ...]]]:
+        """Deduplicate independent controller channels by physical HA device."""
+        problems = {}
+        for spec in self._specs.values():
+            if model.settings(self.manager, spec).get("announce_device_errors", True) is not True:
+                continue
+            missing = self._offline_sources(spec)
+            if missing:
+                key = spec.source_device_id or spec.identifier
+                if key in problems:
+                    previous_spec, previous_sources = problems[key]
+                    problems[key] = (previous_spec, tuple(dict.fromkeys((*previous_sources, *missing))))
+                else:
+                    problems[key] = (spec, missing)
+        return problems
+
+    def _sync_offline_alerts(self) -> None:
+        """Start one debounced notice per physical outage, never per HA sample."""
+        if not self.active:
+            return
+        problems = self._offline_problems()
+        for key, task in tuple(self._offline_tasks.items()):
+            if key not in problems:
+                self._offline_tasks.pop(key, None)
+                task.cancel()
+        self._offline_notified.intersection_update(problems)
+        for key in problems:
+            if key in self._offline_notified or key in self._offline_tasks:
+                continue
+            self._offline_tasks[key] = self.hass.async_create_task(
+                self._announce_offline_after_delay(key)
+            )
+
+    async def _announce_offline_after_delay(self, device_key: str) -> None:
+        """Require sustained unavailability and live notification authority."""
+        try:
+            await asyncio.sleep(OFFLINE_NOTICE_DELAY_SECONDS)
+            if not self.active:
+                return
+            problem = self._offline_problems().get(device_key)
+            if problem is None:
+                return
+            spec, missing = problem
+            # Native-fault deduplication and battery-independent connectivity
+            # alerts have separate lifecycles and never clear each other.
+            from homeassistant.helpers import area_registry as ar
+            area = ar.async_get(self.hass).async_get_area(spec.area_id)
+            room = _text(getattr(area, "name", None) or spec.area_id, 96)
+            language = announcement_language(
+                self.hass, self.manager.settings.get("language", "auto")
+            )
+            labels = {
+                "en": ("Device unavailable", "The physical device {name} in {room} "
+                       "has remained unavailable for at least 3 minutes. "
+                       "Check its batteries if battery-powered, Zigbee connectivity "
+                       "and the native Home Assistant integration. "
+                       "No commands are sent to the disconnected device."),
+                "de": ("Gerät nicht verfügbar", "Das physische Gerät {name} in {room} "
+                       "ist seit mindestens 3 Minuten nicht verfügbar. "
+                       "Prüfe gegebenenfalls die Batterien, die Zigbee-Verbindung "
+                       "und die ursprüngliche Home-Assistant-Integration. "
+                       "An das getrennte Gerät werden keine Befehle gesendet."),
+                "el": ("Μη διαθέσιμη συσκευή", "Η φυσική συσκευή {name} στο δωμάτιο {room} "
+                       "δεν είναι διαθέσιμη για τουλάχιστον 3 λεπτά. "
+                       "Ελέγξτε τις μπαταρίες, εφόσον χρησιμοποιεί, τη σύνδεση Zigbee "
+                       "και την αρχική ενσωμάτωση του Home Assistant. "
+                       "Δεν αποστέλλονται εντολές στην αποσυνδεδεμένη συσκευή."),
+            }.get(resolve_language(language), ("Device unavailable",
+                "The device {name} in {room} has been unavailable for at least 3 minutes."))
+            name = _text(spec.name, 96) or "Device"
+            title = f"HEM · {labels[0]} · {name}"
+            sources = ", ".join(missing[:8])
+            message = labels[1].format(name=name, room=room) + (f"\nSources: {sources}" if sources else "")
+            # Mark the current outage once, even if delivery falls back to a
+            # persistent Home Assistant notice rather than a configured TTS.
+            self._offline_notified.add(device_key)
+            await _deliver_device_notice(
+                self.manager, spec, title, message, language,
+                area_name=room, kind="native_unavailable",
+            )
+        except asyncio.CancelledError:
+            raise
+        except Exception:
+            _LOGGER.exception("Unable to announce sustained physical device unavailability")
+        finally:
+            if self._offline_tasks.get(device_key) is asyncio.current_task():
+                self._offline_tasks.pop(device_key, None)
 
     def _refresh_spec(self, spec: Any, *, baseline: bool = False) -> None:
         identifier = spec.identifier
@@ -498,10 +615,13 @@ class NativeDeviceFaultMonitor:
     def state_changed(self, entity_id: Any) -> None:
         if not self.active or not isinstance(entity_id, str):
             return
-        for identifier in tuple(self._by_entity.get(entity_id, ())):
+        watched = tuple(self._by_entity.get(entity_id, ()))
+        for identifier in watched:
             spec = self._specs.get(identifier)
             if spec is not None:
                 self._refresh_spec(spec)
+        if watched:
+            self._sync_offline_alerts()
 
     def details(self, spec: Any) -> dict:
         return dict(self._latest.get(spec.identifier, {
@@ -545,6 +665,7 @@ class NativeDeviceFaultMonitor:
                 self.manager.entry, options=options,
             )
         self.manager.equipment._presentation_updates.request(spec.identifier)
+        self._sync_offline_alerts()
 
     async def _announce(self, spec: Any, fingerprint: tuple,
                         report: dict) -> None:
