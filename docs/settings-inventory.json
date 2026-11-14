@@ -2829,7 +2829,7 @@
         "custom_components/environment_manager/const.py:76",
         "custom_components/environment_manager/device_controls.py:100",
         "custom_components/environment_manager/device_controls.py:104",
-        "custom_components/environment_manager/logic.py:303"
+        "custom_components/environment_manager/logic.py:321"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -2844,7 +2844,7 @@
       "literal_references": [
         "custom_components/environment_manager/const.py:77",
         "custom_components/environment_manager/device_controls.py:106",
-        "custom_components/environment_manager/logic.py:305"
+        "custom_components/environment_manager/logic.py:323"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -3022,8 +3022,8 @@
         "custom_components/environment_manager/device_controls.py:352",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1122",
-        "custom_components/environment_manager/manager.py:672"
+        "custom_components/environment_manager/manager.py:1120",
+        "custom_components/environment_manager/manager.py:670"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7070,8 +7070,8 @@
         "custom_components/environment_manager/device_controls.py:352",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1122",
-        "custom_components/environment_manager/manager.py:672"
+        "custom_components/environment_manager/manager.py:1120",
+        "custom_components/environment_manager/manager.py:670"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7209,8 +7209,8 @@
         "custom_components/environment_manager/device_controls.py:352",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1122",
-        "custom_components/environment_manager/manager.py:672"
+        "custom_components/environment_manager/manager.py:1120",
+        "custom_components/environment_manager/manager.py:670"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7808,7 +7808,7 @@
         "custom_components/environment_manager/const.py:76",
         "custom_components/environment_manager/device_controls.py:100",
         "custom_components/environment_manager/device_controls.py:104",
-        "custom_components/environment_manager/logic.py:303"
+        "custom_components/environment_manager/logic.py:321"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7823,7 +7823,7 @@
       "literal_references": [
         "custom_components/environment_manager/const.py:77",
         "custom_components/environment_manager/device_controls.py:106",
-        "custom_components/environment_manager/logic.py:305"
+        "custom_components/environment_manager/logic.py:323"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -11158,8 +11158,8 @@
         "custom_components/environment_manager/device_controls.py:352",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1122",
-        "custom_components/environment_manager/manager.py:672"
+        "custom_components/environment_manager/manager.py:1120",
+        "custom_components/environment_manager/manager.py:670"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -12051,8 +12051,8 @@
         "custom_components/environment_manager/device_controls.py:352",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1122",
-        "custom_components/environment_manager/manager.py:672"
+        "custom_components/environment_manager/manager.py:1120",
+        "custom_components/environment_manager/manager.py:670"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -12190,8 +12190,8 @@
         "custom_components/environment_manager/device_controls.py:352",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1122",
-        "custom_components/environment_manager/manager.py:672"
+        "custom_components/environment_manager/manager.py:1120",
+        "custom_components/environment_manager/manager.py:670"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
