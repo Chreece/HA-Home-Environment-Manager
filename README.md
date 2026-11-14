@@ -45,8 +45,8 @@ creates its controls; choose its control method when you want HEM to operate it.
 ## Screenshots
 
 Explore HEM's dashboard and the settings available at the home, room, and device
-levels. These English-language illustrations use example rooms and sample
-measurements; they are not live Home Assistant data.
+levels. These English-language UI illustrations are based on HEM's interface and use
+sample rooms and measurements. They are not live Home Assistant data.
 
 ### Home dashboard
 
@@ -54,7 +54,7 @@ The compact overview brings outdoor ventilation advice, weather, the number of
 monitored rooms and room-by-room readings together in one card.
 
 <p align="center">
-  <img src="docs/images/hem-dashboard-overview.webp" alt="HEM dashboard showing outdoor ventilation advice, weather, air quality and five monitored rooms" width="900">
+  <img src="docs/images/hem-dashboard-overview.svg" alt="HEM dashboard showing outdoor ventilation advice, weather, air quality and five monitored rooms" width="900">
 </p>
 
 ### Room details and device controllers
@@ -64,7 +64,7 @@ room's occupancy and window status, climate controllers, and building-physics
 estimates.
 
 <p align="center">
-  <img src="docs/images/hem-room-expanded.webp" alt="Expanded HEM Bathroom view with air-quality readings, mold indication and climate device controllers" width="760">
+  <img src="docs/images/hem-room-expanded.svg" alt="Expanded HEM Bathroom view with air-quality readings, mold indication and climate device controllers" width="760">
 </p>
 
 ### Home settings
@@ -74,7 +74,7 @@ ventilation preferences, and announcement delivery. A searchable, grouped
 settings dialog keeps advanced options available without clutter.
 
 <p align="center">
-  <img src="docs/images/hem-home-settings.webp" alt="HEM Home settings with refresh sources, manage monitored rooms, search and grouped settings categories" width="900">
+  <img src="docs/images/hem-home-settings.svg" alt="HEM Home settings with refresh sources, manage monitored rooms, search and grouped settings categories" width="900">
 </p>
 
 ### Room settings
@@ -83,7 +83,7 @@ Choose a room's sensors, presence behavior, windows and doors, ventilation,
 shading and protection options independently of other rooms.
 
 <p align="center">
-  <img src="docs/images/hem-room-settings.webp" alt="HEM Bathroom room settings, grouped by sensors, device control, presence, ventilation, protection and alerts" width="760">
+  <img src="docs/images/hem-room-settings.svg" alt="HEM Bathroom room settings, grouped by sensors, device control, presence, ventilation, protection and alerts" width="760">
 </p>
 
 ### Per-device settings
@@ -93,7 +93,7 @@ methods, targets, PID and calibration parameters, power protections, and error
 announcements.
 
 <p align="center">
-  <img src="docs/images/hem-device-settings.webp" alt="HEM dehumidifier controller settings with operating methods, PID calibration and safety categories" width="900">
+  <img src="docs/images/hem-device-settings.svg" alt="HEM dehumidifier controller settings with operating methods, PID calibration and safety categories" width="900">
 </p>
 
 ## Marketplace version discovery
