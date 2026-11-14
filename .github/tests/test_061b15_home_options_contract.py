@@ -87,7 +87,23 @@ async def verify():
         'form.step_id!=="setup_general"' in source
     )
     assert 'next_step_id:"setup_general"' not in home
-    print("PASS: real backend general_settings menu -> setup_general form -> Home UI")
+
+    # The monitored-room Options menu's choose_rooms handler deliberately
+    # returns the long-established setup_rooms form. A B10 frontend expecting
+    # choose_rooms as the FORM step will reject every valid HA response.
+    chooser = method(tree, "ReconfigureRoomsMixin", "async_step_choose_rooms")
+    shown = [node for node in ast.walk(chooser)
+             if isinstance(node, ast.Call) and
+             isinstance(node.func, ast.Attribute) and
+             node.func.attr == "async_show_form"]
+    assert len(shown) == 1
+    steps = [kw.value.value for kw in shown[0].keywords
+             if kw.arg == "step_id" and isinstance(kw.value, ast.Constant)]
+    assert steps == ["setup_rooms"], steps
+    assert "next_step_id:'choose_rooms'" in source
+    assert "['setup_rooms','choose_rooms'].includes(form.step_id)" in source
+    assert "hem-settings-source-actions-b15" in source
+    print("PASS: real backend choose_rooms menu -> setup_rooms form -> Home UI")
 
 
 asyncio.run(verify())
