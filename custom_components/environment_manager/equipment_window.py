@@ -9,7 +9,7 @@ from typing import Any
 import math
 
 from . import equipment_model as model
-from .discovery import entity_area, is_window
+from .discovery import entity_area, is_window_contact
 from .room_sources import selected
 
 RESUME_SECONDS = 60.0
@@ -110,7 +110,9 @@ def evaluate(runtime: Any, spec: Any, cfg: dict | None = None) -> dict:
             "missing" if state is None else
             "invalid_domain" if not entity.startswith("binary_sensor.") else
             "other_area" if entity_area(runtime.hass, entity) != spec.area_id else
-            "not_window_contact" if not is_window(runtime.hass, state) else
+            "not_window_contact" if not is_window_contact(
+                runtime.hass, state, explicitly_selected=from_selection,
+            ) else
             "unknown" if state.state not in ("on", "off") else None
         )
         result["contact_states"][entity] = (reason or state.state)

@@ -18,7 +18,7 @@ from .const import (
     CONF_OCCUPANCY_GLOBAL, CONF_AWAY_WINDOWS_ALERT,
     CONF_AWAY_WINDOWS_PERSONS, CONF_AWAY_WINDOWS_DELIVERY, DOMAIN,
 )
-from .discovery import entity_area, is_window
+from .discovery import entity_area, is_window, is_window_contact
 from .hub_delivery import hub_installed, hub_available, async_submit_hub, async_system_notification, hub_ai_options
 from .occupancy_policy import _bool_presence, home_presence
 from .room_sources import native, selected
@@ -91,7 +91,7 @@ def confirmed_home_state(hass: Any, settings: Mapping[str, Any]) -> str:
 
 
 def open_windows(hass: Any, settings: Mapping[str, Any]) -> tuple[tuple[str, str], ...]:
-    """Collect actual ON Window-class binary contacts in configured rooms."""
+    """Collect open windows, including user-enrolled balcony door contacts."""
     from homeassistant.helpers import area_registry as ar
     from .device_hierarchy import configured_area_ids
 
@@ -121,7 +121,10 @@ def open_windows(hass: Any, settings: Mapping[str, Any]) -> tuple[tuple[str, str
                 continue
             state = hass.states.get(entity_id)
             if (state is None or entity_area(hass, entity_id) != area
-                    or not is_window(hass, state) or state.state != "on"):
+                    or not is_window_contact(
+                        hass, state, explicitly_selected=chosen is not None
+                        and entity_id in chosen,
+                    ) or state.state != "on"):
                 continue
             name = str(getattr(state, "name", None) or entity_id).strip()[:100]
             by_area.append((entity_id, f"{registered.name}: {name}"))

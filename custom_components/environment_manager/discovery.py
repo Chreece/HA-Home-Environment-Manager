@@ -397,8 +397,28 @@ def window_exclusion_choices(
 
 
 def is_window(hass: HomeAssistant, state: State) -> bool:
-    """Recognize only physical window contacts, never motorized covers."""
+    """Recognize Window-class binary contacts for automatic discovery only."""
     return state.domain == "binary_sensor" and _device_class(hass, state) == "window"
+
+
+# Balcony/patio doors may ventilate a room. These classes are never
+# automatically enrolled as windows: an explicit room selection is required.
+OPTIONAL_WINDOW_CONTACT_CLASSES = frozenset(("door", "opening"))
+
+
+def is_window_contact(
+    hass: HomeAssistant, state: State, *, explicitly_selected: bool = False,
+) -> bool:
+    """Window contact or an explicitly enrolled Door/Opening binary contact.
+
+    Garage doors, covers, motion, and unclassified binary sensors are excluded.
+    A name containing 'door' or 'window' does not confer eligibility.
+    """
+    return is_window(hass, state) or (
+        explicitly_selected is True
+        and state.domain == "binary_sensor"
+        and _device_class(hass, state) in OPTIONAL_WINDOW_CONTACT_CLASSES
+    )
 
 
 def _window_opened(state: State) -> bool | None:
@@ -422,9 +442,12 @@ def rooms(
             continue
         if state.entity_id in excluded_entities:
             continue
-        if is_window(hass, state):
-            allowed = selected(scoped, area, "windows")
-            if allowed is None or state.entity_id in allowed and native(hass, state.entity_id):
+        allowed = selected(scoped, area, "windows")
+        if is_window_contact(
+            hass, state, explicitly_selected=allowed is not None
+            and state.entity_id in allowed,
+        ):
+            if allowed is None or (state.entity_id in allowed and native(hass, state.entity_id)):
                 by_area_windows[area].append(Window(state.entity_id, state.name or state.entity_id, _window_opened(state)))
         elif (metric := supported_metric(hass, state, outdoor=False)):
             allowed = selected(scoped, area, "humidity" if metric == "humidity" else "air_quality")

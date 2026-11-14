@@ -27,7 +27,7 @@ describe that room.
 
 | Source group | What to select |
 | --- | --- |
-| **Windows** | Actual window-contact binary sensors with the `window` device class |
+| **Windows** | Genuine `window`-class contact sensors are preselected. `door` and generic `opening`-class binary sensors are also available but **unchecked by default**; select only balcony/patio doors or other real exterior openings that should count as windows. |
 | **Air quality and environmental sensors** | Supported pollutant sensors and optional environmental readings, such as illuminance |
 | **Temperature** | Room temperature measurements |
 | **Humidity** | Room relative-humidity measurements |
@@ -35,7 +35,15 @@ describe that room.
 | **Window blinds, shades and shutters** | Supported `cover.*` shading devices |
 
 Leave unused groups empty. Saved empty selections stay empty. A blind or shutter
-belongs in the shading group; window-state inputs come from window contacts.
+belongs in the shading group; window-state inputs come from contact sensors.
+**Home Assistant has no dedicated balcony-door device class:** a balcony door
+may be classified as `door`, `window` or `opening`. HEM does not infer
+this from its name. Door/Opening contacts are suggested for manual selection
+only; they are never automatically included in the Windows group. A chosen
+contact can also remain in the separate Door settings for room-boundary or
+Eco policies. Only confirmed open/closed states are trusted; unavailable or
+unknown selected contacts remain unknown and can hold automatic control.
+Do not use garage-door, motion or powered-cover entities for window evidence.
 
 ### 3. Complete General settings
 
@@ -739,7 +747,7 @@ recommended.
 | What you see | What to check |
 | --- | --- |
 | A sensor or device is missing from a room picker | Its HA area assignment, native entity type/device class and units; room names in entity IDs do not assign areas |
-| “No window sensors” | Select actual window-contact binary sensors; shades have a separate source group |
+| “No window sensors” | Select actual window-contact binary sensors, or explicitly enroll a suitable `door`/`opening` balcony-door contact; shades have a separate source group |
 | No opening recommendation | Read the reason, then check indoor demand, weather, outdoor air quality, AQI scale and ventilation limits |
 | Missing readings or history gaps | Check live source values, freshness and recorded samples; new history needs time to collect |
 | A selected appliance is not operating | Check Control · Method, current authorization, feedback, window/presence rules and minimum ON/OFF timing |

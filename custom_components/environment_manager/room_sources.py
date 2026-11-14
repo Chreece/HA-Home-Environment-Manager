@@ -127,13 +127,21 @@ def category(hass: Any, state: Any) -> str | None:
 
 def choices(hass: Any, area: str, previous: dict | None = None) -> dict[str, list[dict]]:
     from homeassistant.helpers import entity_registry as er
-    from .discovery import entity_area, is_pressure_sensor
+    from .discovery import (
+        _device_class, entity_area, is_pressure_sensor,
+        OPTIONAL_WINDOW_CONTACT_CLASSES,
+    )
     previous = previous if isinstance(previous, dict) else {}
     result = {group: {} for group in GROUPS}
     registry = er.async_get(hass)
     for state in hass.states.async_all():
         if entity_area(hass, state.entity_id) != area:
             continue
+        # Door-class and generic Opening binary contacts are optional
+        # candidates for balcony/patio openings, never automatic defaults.
+        if (state.domain == "binary_sensor" and native(hass, state.entity_id)
+                and _device_class(hass, state) in OPTIONAL_WINDOW_CONTACT_CLASSES):
+            result["windows"][state.entity_id] = "🚪 " + label(hass, state.entity_id)
         if not (group := category(hass, state)):
             continue
         if group == "shades":
@@ -168,7 +176,7 @@ def choices(hass: Any, area: str, previous: dict | None = None) -> dict[str, lis
 
 def defaults(hass: Any, settings: dict, area: str) -> dict[str, list[str]]:
     """Import existing inclusions/exclusions; do not restore removed grants."""
-    from .discovery import is_pressure_sensor
+    from .discovery import is_pressure_sensor, is_window
     existing = settings.get(CONF_ROOM_SOURCES, {}).get(area)
     if isinstance(existing, dict) and "shades" in existing:
         return {k: [e for e in selected(settings, area, k) or ()
@@ -177,8 +185,22 @@ def defaults(hass: Any, settings: dict, area: str) -> dict[str, list[str]]:
     available = choices(hass, area)
     excluded = set(settings.get("excluded_window_entities", [])) | set(
         settings.get("excluded_indoor_entities", {}).get(area, []))
-    result = {k: [v["value"] for v in values if v["value"] not in excluded]
-              for k, values in available.items()}
+    # Only Window-class contacts may be preselected in an unconfigured room.
+    # A Door/Opening stays unchecked until a user explicitly selects it.
+    result = {
+        group: [
+            item["value"] for item in candidates
+            if item["value"] not in excluded
+            and (
+                group != "windows"
+                or (
+                    (state := hass.states.get(item["value"])) is not None
+                    and is_window(hass, state)
+                )
+            )
+        ]
+        for group, candidates in available.items()
+    }
     # Discovery supplies draft inventory defaults, not automation grants.
     # Legacy rooms with no shade field may discover covers, but an explicit
     # saved list (including []) was already returned unchanged above.

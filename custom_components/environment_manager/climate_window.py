@@ -210,12 +210,16 @@ def window_substitution(
         return {**base, "status": "window_state_unknown"}
     if any(w.opened is True for w in windows):
         return {**base, "status": "window_already_open"}
-    from .discovery import entity_area, is_window
+    from .discovery import entity_area, is_window_contact
     for window in windows:
         if entity_area(hass, window.entity_id) != room.area_id:
             return {**base, "status": "window_wrong_room"}
         observed = hass.states.get(window.entity_id)
-        if observed is None or not is_window(hass, observed) or observed.state not in ("on", "off"):
+        # room.windows is the already-vetted selection from discovery.rooms().
+        # Door/Opening contacts appear here only after explicit enrollment.
+        if (observed is None or not is_window_contact(
+                hass, observed, explicitly_selected=True,
+            ) or observed.state not in ("on", "off")):
             return {**base, "status": "window_state_unknown"}
         if observed.state == "on":
             return {**base, "status": "window_already_open"}

@@ -16,6 +16,11 @@ window.__dict__.update({
  'POLICY_KEY':'pause_on_window_open',
  'entity_area':lambda hass,entity: spec.area_id if entity.startswith(('binary_sensor.window','climate.','switch.')) else 'elsewhere',
  'is_window':lambda hass,s:s.domain=='binary_sensor' and s.attributes.get('device_class')=='window',
+ 'is_window_contact':lambda hass,s,*,explicitly_selected=False:
+      s.domain=='binary_sensor' and (
+          s.attributes.get('device_class')=='window' or explicitly_selected and
+          s.attributes.get('device_class') in ('door','opening')
+      ),
  'selected':lambda settings,area,group:settings.get('room_sources',{}).get(area,{}).get(group),
 })
 extract('equipment_window.py',('_stamp','evaluate'),window.__dict__)
@@ -86,6 +91,27 @@ async def main():
   assert cold._window_policy(spec)['blocked'] is True
   cold.now=BASE+60
   assert cold._window_policy(spec)['status']=='window_closed_ready'
+
+ # A patio door belongs to window controls ONLY after explicit selection.
+ patio=make(opened=False,native='off')
+ patio.manager.settings['room_sources'][spec.area_id]['windows']=[
+  'binary_sensor.window_patio']
+ door=contact(patio,'on',entity='binary_sensor.window_patio')
+ door.attributes['device_class']='door'
+ p=patio._window_policy(spec)
+ assert p['status']=='window_open_pause' and p['open_contacts']==['binary_sensor.window_patio'],p
+ door=contact(patio,'unavailable',entity='binary_sensor.window_patio')
+ door.attributes['device_class']='door'
+ p=patio._window_policy(spec)
+ assert p['status']=='window_state_unknown' and p['blocked'],p
+ door=contact(patio,'off',entity='binary_sensor.window_patio')
+ door.attributes['device_class']='door'
+ assert patio._window_policy(spec)['status']=='window_close_warmup'
+ patio.now+=60
+ assert patio._window_policy(spec)['status']=='window_closed_ready'
+ # Same physical contact without an explicit window enrollment is inert.
+ patio.manager.settings['room_sources'][spec.area_id]['windows']=[]
+ assert patio._window_policy(spec)['status']=='window_contacts_not_configured'
 
  # Adding a new source is NOT an already-verified continuous closure.
  changed=make(opened=False,native='off')

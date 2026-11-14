@@ -595,6 +595,12 @@ class AirQualityManager:
                     state["native_air_mode_actuation"] = self.native_air_mode.statuses.get(
                         monitored.area_id,{"status":"advisory_only"}
                     )
+                    # The coordinator must not mistake an arbitrary Door
+                    # binary contact for a window. Only persisted room-window
+                    # selections can opt a balcony/patio door into this check.
+                    state["selected_window_contacts"] = list(
+                        selected_room_sources(config, monitored.area_id, "windows") or ()
+                    )
                     # All independent device drivers consume ONE per-room
                     # priority/exclusivity decision. They still recheck the
                     # physical state immediately before a device write.
