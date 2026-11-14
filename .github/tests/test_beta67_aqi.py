@@ -215,6 +215,15 @@ assert all(r.value is not None for r in verified)
 assert logic.verified_outdoor_pollution_sources((other,*other_indices))==()
 assert logic.verified_outdoor_pollution_sources((pm,logic.Reading(
     'sensor.missing_pm10','PM10','pm10',None)))[-1].value is None
+# An offline AQI or an unclassified numeric index remains optional/incomplete,
+# even if other, independently measured pollution data is healthy.
+offline_aqi=logic.Reading('sensor.offline_aqi','Offline AQI','aqi',None)
+offline_plan=logic.evaluate((offline_aqi,pm),weather_ok,(),(),const.DEFAULT_THRESHOLDS)
+assert offline_plan.outdoor_safe and not offline_plan.outside_reasons,offline_plan
+assert offline_aqi.entity_id in offline_plan.unavailable_outdoor
+assert dash.dashboard_snapshot(offline_plan,const.DEFAULT_THRESHOLDS)['outdoor']['status']=='partial'
+assert dash._reading(logic.Reading('sensor.unclassified_aqi','Raw AQI','aqi',95.0),
+                     None,indoor=False)['available'] is False
 assert dash._reading(pm,15.0,indoor=False)['available'] is True
 assert dash._reading(logic.Reading('sensor.high_pm','PM2.5','pm25',55.0),
                      15.0,indoor=False)['exceeded'] is True
