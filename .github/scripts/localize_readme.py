@@ -203,7 +203,107 @@ def translate_batch(batch, target: str) -> dict[int, str]:
             **translate_batch(batch[midpoint:], target)}
 
 
+
+# Local CPU translation avoids third-party API quotas and remains deterministic.
+NLLB_CODES = {
+    "ar": "arb_Arab", "bg": "bul_Cyrl", "bn": "ben_Beng",
+    "cs": "ces_Latn", "da": "dan_Latn", "de": "deu_Latn",
+    "el": "ell_Grek", "es": "spa_Latn", "fa": "pes_Arab",
+    "fi": "fin_Latn", "fr": "fra_Latn", "he": "heb_Hebr",
+    "hi": "hin_Deva", "hr": "hrv_Latn", "hu": "hun_Latn",
+    "id": "ind_Latn", "it": "ita_Latn", "ja": "jpn_Jpan",
+    "ko": "kor_Hang", "nb": "nob_Latn", "nl": "nld_Latn",
+    "pl": "pol_Latn", "pt": "por_Latn", "pt-BR": "por_Latn",
+    "ro": "ron_Latn", "ru": "rus_Cyrl", "sk": "slk_Latn",
+    "sr": "srp_Cyrl", "sv": "swe_Latn", "ta": "tam_Taml",
+    "th": "tha_Thai", "tr": "tur_Latn", "uk": "ukr_Cyrl",
+    "ur": "urd_Arab", "vi": "vie_Latn",
+    "zh-Hans": "zho_Hans", "zh-Hant": "zho_Hant",
+}
+INLINE_PROTECTED = re.compile(
+    r"(HEMLITERAL[0-9]{4}QXZ|\*\*|\[|\]|Home Assistant|"
+    r"(?<!\w)HEM(?!\w)|(?<!\w)HACS(?!\w)|"
+    r"(?<!\w)PID(?!\w)|(?<!\w)Ko-fi(?!\w)|(?<!\w)GitHub(?!\w))"
+)
+NLLB_REPO = "luigi000/nllb-200-distilled-600M-ct2-int8"
+
+
+def offline_translate_units(units, target: str) -> dict[int, str]:
+    """Translate prose only; never feed Markdown, URLs, YAML or code to NLLB."""
+    import ctranslate2
+    import sentencepiece as spm
+    from huggingface_hub import snapshot_download
+
+    if set(NLLB_CODES) != set(LANGUAGES) - {"en"}:
+        raise ValueError("Offline translation locale map is incomplete")
+    root = Path(snapshot_download(
+        repo_id=NLLB_REPO,
+        allow_patterns=("model.bin", "config.json", "shared_vocabulary.json",
+                        "sentencepiece.bpe.model")
+    ))
+    sp = spm.SentencePieceProcessor(model_file=str(root / "sentencepiece.bpe.model"))
+    translator = ctranslate2.Translator(
+        str(root), device="cpu", compute_type="int8",
+        inter_threads=1, intra_threads=2
+    )
+    locale = NLLB_CODES[target]
+    translated_parts = {}
+    pending: dict[str, None] = {}
+    ordered_parts = {}
+
+    # Split syntax from human text *before* machine translation.
+    for index, original, protected in units:
+        parts = INLINE_PROTECTED.split(original)
+        ordered_parts[index] = parts
+        for part in parts:
+            if (not part.strip() or INLINE_PROTECTED.fullmatch(part) or
+                    not re.search(r"[\w\u0080-\uffff]", part)):
+                continue
+            pending[part] = None
+
+    original_text = list(pending)
+    print(f"Offline NLLB {target}: {len(original_text)} distinct prose segments", flush=True)
+
+    # CTranslate2 batches reduce CPU time. Feed complete natural-language
+    # segments; keep the original syntax outside all model requests.
+    for offset in range(0, len(original_text), 24):
+        texts = original_text[offset:offset + 24]
+        source_tokens = []
+        for part in texts:
+            token_list = ["eng_Latn"] + sp.encode(part.strip(), out_type=str) + ["</s>"]
+            if len(token_list) > 480:
+                raise ValueError(f"Translation segment > NLLB context: {target}")
+            source_tokens.append(token_list)
+        outcomes = translator.translate_batch(
+            source_tokens, target_prefix=[[locale]] * len(texts),
+            beam_size=2, max_decoding_length=450, batch_type="tokens",
+            max_batch_size=24
+        )
+        if len(outcomes) != len(texts):
+            raise RuntimeError(f"Incomplete offline translation: {target}")
+        for original, output in zip(texts, outcomes):
+            words = [token for token in output.hypotheses[0]
+                     if token not in (locale, "</s>")]
+            phrase = sp.decode(words).strip()
+            if not phrase:
+                raise ValueError(f"Empty offline translation: {target}: {original[:70]}")
+            left = original[:len(original) - len(original.lstrip())]
+            right = original[len(original.rstrip()):]
+            translated_parts[original] = left + phrase + right
+        print(f"  {target}: {min(offset + len(texts), len(original_text))}/{len(original_text)}", flush=True)
+
+    output = {}
+    for index, original, protected in units:
+        parts = ordered_parts[index]
+        result = "".join(translated_parts.get(part, part) for part in parts)
+        result = recover_literals(result, protected)
+        if not result.strip():
+            raise ValueError(f"Empty localized README unit: {target} #{index}")
+        output[index] = result
+    return output
+
 def translate_units(units, target: str) -> dict[int, str]:
+    return offline_translate_units(units, target)
     results = {}
     batch = []
     length = 0
