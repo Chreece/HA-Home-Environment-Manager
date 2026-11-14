@@ -1,0 +1,78 @@
+name: Translate HEM README into supported languages
+
+on:
+  push:
+    branches: [docs/readme-kofi-locales-20261114]
+    paths:
+      - README.md
+      - .github/scripts/localize_readme.py
+      - .github/tests/test_readme_localizations.py
+      - .github/workflows/localize-readme.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hem-readme-localization
+  cancel-in-progress: true
+
+jobs:
+  translate:
+    if: github.repository == 'Chreece/HA-Home-Environment-Manager'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        locale: ["ar","bg","bn","cs","da","de","el","es","fa","fi","fr","he","hi","hr","hu","id","it","ja","ko","nb","nl","pl","pt","pt-BR","ro","ru","sk","sr","sv","ta","th","tr","uk","ur","vi","zh-Hans","zh-Hant"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install offline CPU translator
+        run: python -m pip install -q 'ctranslate2>=4.4,<5' 'sentencepiece>=0.2,<1' 'huggingface_hub>=0.32,<2' hf_xet
+      - name: Compile translator
+        run: python -m py_compile .github/scripts/localize_readme.py
+      - name: Translate ${{ matrix.locale }}
+        env:
+          HEM_LANG: ${{ matrix.locale }}
+        run: python -u .github/scripts/localize_readme.py --lang "$HEM_LANG"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: readme-${{ matrix.locale }}
+          path: docs/i18n/README.${{ matrix.locale }}.md
+          if-no-files-found: error
+          retention-days: 1
+
+  integrate:
+    needs: translate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: readme-*
+          path: docs/i18n
+          merge-multiple: true
+      - name: Validate English default and all 37 localized READMEs
+        run: python -I .github/tests/test_readme_localizations.py
+      - name: Commit all complete documentation together
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/i18n/README.*.md
+          git diff --cached --check
+          if ! git diff --cached --quiet; then
+            git commit -m 'docs(i18n): add full translated READMEs for all 37 supported locales'
+            git push origin HEAD:refs/heads/docs/readme-kofi-locales-20261114
+          fi
