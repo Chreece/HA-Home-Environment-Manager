@@ -59,6 +59,27 @@ with sync_playwright() as pw:
   modal=page.locator('dialog.hem-room-options114')
   search=modal.locator('[data-settings-search-b8]');advanced=modal.locator('[data-settings-advanced-b8]')
   expect(search).to_be_visible();expect(advanced).not_to_be_checked()
+  # Mobile source refresh shares the filter row, not a mostly empty toolbar
+  # between the header and settings. This also preserves full-width titles.
+  refresh=modal.locator('[data-settings-refresh-b10]')
+  expect(refresh).to_be_visible()
+  assert modal.locator('[data-settings-tools-b8] [data-settings-refresh-b10]').count()==1
+  assert modal.locator('.hem-room-options-head114 [data-settings-refresh-b10]').count()==0
+  assert modal.locator('.hem-settings-source-actions-b15').count()==1
+  assert modal.locator('.hem-settings-tools-b8').evaluate('n=>n.scrollWidth<=n.clientWidth+1')
+  if width<=390:
+   sr=search.bounding_box();rr=refresh.bounding_box()
+   assert sr and rr and abs(sr['y']-rr['y'])<=5,(sr,rr)
+   bar=modal.locator('.hem-settings-tools-b8').bounding_box()
+   first=modal.locator('[data-hem-unified141="targets"] > summary').bounding_box()
+   assert first and bar and 0<=first['y']-(bar['y']+bar['height'])<=24,(first,bar)
+   title=modal.locator('.hem-room-options-head114 h2')
+   assert title.evaluate('e=>parseFloat(getComputedStyle(e).fontSize)')>=19
+   group_label=modal.locator('[data-hem-unified141="targets"] > summary .hem-room-options-label114 strong')
+   assert group_label.evaluate('e=>parseFloat(getComputedStyle(e).fontSize)')>=14
+   label_small=modal.locator('[data-hem-unified141="targets"] > summary .hem-room-options-label114 small')
+   assert label_small.evaluate('e=>parseFloat(getComputedStyle(e).fontSize)')>=12
+   assert modal.evaluate('e=>e.scrollWidth<=e.clientWidth+1')
   for entity in ('number.pid_gain','number.met','number.radon'):
    assert modal.locator(f'[data-hem-full-row127="{entity}"]').get_attribute('hidden') is not None
   for entity in ('number.min_on','switch.verified','number.future'):
