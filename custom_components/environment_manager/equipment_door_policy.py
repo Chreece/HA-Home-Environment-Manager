@@ -80,8 +80,9 @@ def effective_eco(manager, spec, raw):
     explicit = raw.get("door_closed_eco")
     if type(explicit) is bool:
         return explicit
-    from . import equipment_model
-    return equipment_model.room_config(manager, spec).get("closed_door_eco") is True
+    rooms = manager.settings.get("climate_rooms", {})
+    room = rooms.get(spec.area_id, {}) if isinstance(rooms, Mapping) else {}
+    return isinstance(room, Mapping) and room.get("closed_door_eco") is True
 
 
 def effective_coordination(raw):
