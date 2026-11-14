@@ -34,4 +34,23 @@ jobs:
                       print(name, response.status, response.read(120).decode('utf-8','replace'),flush=True)
               except Exception as err:
                   print(name, type(err).__name__, str(err)[:160],flush=True)
+          print("Testing query lengths",flush=True)
+          for n in (200, 700, 1400, 2100, 2900, 3500):
+              phrase=("Environmental monitoring, humidity, climate control. " * 85)[:n]
+              url = "https://translate.googleapis.com/translate_a/single?" + urllib.parse.urlencode(
+                  {"client":"gtx","sl":"en","tl":"el","dt":"t","q":phrase})
+              try:
+                  with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0"}), timeout=12) as response:
+                      print("size",n,"status",response.status,flush=True)
+              except urllib.error.HTTPError as err:
+                  print("size",n,"error",err.code,flush=True)
+              except Exception as err:
+                  print("size",n,type(err).__name__,str(err)[:60],flush=True)
+          body=urllib.parse.urlencode({"client":"gtx","sl":"en","tl":"el","dt":"t","q":"An automatic home ventilation controller. "*100}).encode()
+          try:
+              req=urllib.request.Request("https://translate.googleapis.com/translate_a/single",data=body,headers={"User-Agent":"Mozilla/5.0"})
+              with urllib.request.urlopen(req,timeout=12) as response:
+                  print("post",response.status,response.read(80),flush=True)
+          except Exception as err:
+              print("post",type(err).__name__,str(err)[:100],flush=True)
           PY
