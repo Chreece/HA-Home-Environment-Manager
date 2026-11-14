@@ -50,6 +50,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
     def native_feature_switches():
         from .equipment_mode_entities import scoped_fields
+        from .equipment_door_policy import configured as door_configured
+        from .equipment_feature_registration import registered_control
         return [
             EquipmentQuietSwitch(manager, spec, key)
             for spec in equipment.specs(manager)
@@ -67,6 +69,11 @@ async def async_setup_entry(hass, entry, async_add_entities):
             EquipmentQuietSwitch(manager, spec, key, operating_mode=mode)
             for spec in equipment.specs(manager)
             for mode, key in scoped_fields(manager, spec, "switch")
+        ] + [
+            EquipmentQuietSwitch(manager, spec, "door_closed_eco")
+            for spec in equipment.specs(manager)
+            if (door_configured(manager, spec)
+                or registered_control(registry, "switch", spec, "door_closed_eco"))
         ]
 
     entities.extend(native_feature_switches())
@@ -222,10 +229,14 @@ class EquipmentQuietSwitch(EquipmentEntity, SwitchEntity):
 
     def __init__(self, manager, spec, key, *, operating_mode=None):
         self._equipment_init(manager, spec, key, operating_mode=operating_mode)
-        self._attr_icon = {"sensor_verified": "mdi:check-decagram-outline"}.get(key, "mdi:fan-speed-1")
+        self._attr_icon = {"sensor_verified": "mdi:check-decagram-outline",
+                           "door_closed_eco": "mdi:door-closed-lock"}.get(key, "mdi:fan-speed-1")
 
     @property
     def available(self):
+        if self._key == "door_closed_eco":
+            from .equipment_door_policy import configured
+            return configured(self._manager, self._spec)
         if getattr(self, "_operating_mode", None):
             descriptor = equipment.mode_descriptor(self._manager, self._spec, self._operating_mode)
             return bool(descriptor and self._key in descriptor.get("switch_fields", ()))
@@ -245,7 +256,10 @@ class EquipmentQuietSwitch(EquipmentEntity, SwitchEntity):
 
     @property
     def extra_state_attributes(self):
-        return {**super().extra_state_attributes, **_device_option_metadata(self)}
+        attributes = super().extra_state_attributes
+        if self._key == "door_closed_eco":
+            return {**attributes, "equipment_option_role": "policy"}
+        return {**attributes, **_device_option_metadata(self)}
 
     async def async_turn_on(self, **kwargs):
         await self._async_update_controller_settings({self._key: True})

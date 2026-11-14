@@ -410,6 +410,11 @@ jobs:
         run: python -I .github/tests/test_061b13_all_settings.py
       - name: B18 PID settings deduplication, paired decisions and responsive labels
         run: python -I .github/tests/test_062b18_device_pid_actions.py
+      - name: B19 per-device door preferences, exact area safety and native menu ownership
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_062b19_device_door_policy.py
+          python -I .github/tests/test_062b19_device_door_ui.py
       - name: B15 actual backend Home Options menu and UI step contract
         run: python -I .github/tests/test_061b15_home_options_contract.py
       - name: B14 unified Home and room settings, exact registry and Options saves

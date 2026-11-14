@@ -1511,6 +1511,37 @@ class EquipmentRuntime:
         """Validate edits to one operating profile or shared physical settings."""
         if "timed_setpoint_sequence" in changes:
             raise HomeAssistantError("The timed target setting has been removed")
+        if set(changes) & {"door_closed_eco", "door_start_coordination"}:
+            # Configuration-only: one physical device, never an actuator write.
+            from .equipment_door_policy import configured, COORDINATION_OPTIONS
+            if operating_mode is not None or len(changes) != 1:
+                raise HomeAssistantError("Edit one per-device door preference at a time")
+            key, value = next(iter(changes.items()))
+            if key == "door_closed_eco":
+                if type(value) is not bool:
+                    raise HomeAssistantError("Door Eco requires a Boolean")
+            elif type(value) is not str or value not in COORDINATION_OPTIONS:
+                raise HomeAssistantError("Unsupported door start-coordination policy")
+            lock = getattr(self.manager, "_device_settings_write_lock", None)
+            if lock is None:
+                lock = self.manager._device_settings_write_lock = asyncio.Lock()
+            async with lock:
+                if not self._ready or not self._current_spec(spec):
+                    raise HomeAssistantError("Controller storage or source identity is unavailable")
+                if not configured(self.manager, spec):
+                    raise HomeAssistantError("This device has no configured door in its own room")
+                options = deepcopy(self.manager.entry.options)
+                profiles = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
+                profiles = profiles if isinstance(profiles, dict) else {}
+                previous = profiles.get(spec.identifier)
+                previous = previous if isinstance(previous, dict) else {}
+                profiles[spec.identifier] = {**previous, key: value}
+                options[model.SETTINGS] = profiles
+                self.hass.config_entries.async_update_entry(self.manager.entry, options=options)
+            self._presentation_updates.request(spec.identifier)
+            if getattr(self.manager, "_active", False):
+                self.manager._recalculate(initial=True)
+            return
         if "off_state_watchdog_mode" in changes:
             # A shared device safety preference. Never take the hardware lock
             # or change the native state, even with pending ACKs or offline.

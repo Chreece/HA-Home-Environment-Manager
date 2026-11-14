@@ -9126,7 +9126,7 @@
   };
   hemUi129._hemFullOptionLabel129=function(field,option){
     const meta=field.state?.attributes||{};
-    const declared=meta.option_labels?.[option];
+    const declared=meta.option_labels_locales?.[this._language()]?.[option]||meta.option_labels?.[option];
     if(typeof declared==="string"&&declared.trim())return declared;
     // Native entity translation uses the stable option value for writes but
     // the current HA language for display. Do not translate physical
@@ -9219,7 +9219,7 @@
       const placeholders={channel:"",...(supplied&&typeof supplied==="object"&&!Array.isArray(supplied)?supplied:{})};
       try{const value=this._hass.localize(key,placeholders);if(value&&value!==key)localized=clean(value);}catch{}
     }
-    let label=stripOwner(custom||attrs.setting_label||attrs.setting_display_name||
+    let label=stripOwner(custom||attrs.setting_label_locales?.[this._language()]||attrs.setting_label||attrs.setting_display_name||
       reg.original_name_unprefixed||localized||reg.original_name||attrs.friendly_name||fallback||id);
     if(!custom){
       const group=clean(attrs.setting_group);
@@ -9378,6 +9378,20 @@
         reg.platform!=="environment_manager"))continue;
       const state=states[id]||null,attr=state?.attributes||{};
       if(this._retiredDeviceOption9?.(state))continue;
+      // The old room toggle/door-contact selector remain registered for
+      // backwards-compatible HA automations, but are not duplicated here.
+      // New policy editors belong to an exact controller device.
+      if(scope==="room"&&(
+         attr.door_setting_key==="coordination"||
+         (domain==="select"&&typeof reg.unique_id==="string"&&
+          /_door_[0-9a-f]{16}_coordination$/.test(reg.unique_id))||
+         (domain==="switch"&&reg.unique_id===
+           saved.entryId+"_area_"+saved.area+"_climate_operating_closed_door_eco")))continue;
+      if(scope==="device"&&
+         (["door_closed_eco","door_start_coordination"].includes(attr.setting_key)||
+          (typeof reg.unique_id==="string"&&
+           /_(?:door_closed_eco|door_start_coordination)$/.test(reg.unique_id)))&&
+         (attr.door_device_policy!==true||attr.door_room_configured!==true))continue;
       // The device-wide method is retired. This also blocks a transient
       // registry/state snapshot from showing an obsolete dropdown during an
       // upgrade; do not filter or mutate genuine per-operating-mode methods.
@@ -10722,7 +10736,7 @@
         presence:"Presence and sleep",ventilation:"Windows, doors, ventilation and shading",
         power:"Power and protection",alerts:"Announcements and errors"},
       device:{mode:"Control, targets and fans",pid:"PID and calibration",
-        presence:"Presence and sleep",ventilation:"Windows and ventilation",
+        presence:"Presence and sleep",ventilation:"Windows, doors and ventilation",
         power:"Power and protection",alerts:"Announcements and errors"},
       both:"Saved with Save · Applies immediately",saved:"Saved with Save",live:"Applies immediately"},
     de:{
@@ -10733,7 +10747,7 @@
         presence:"Anwesenheit und Schlaf",ventilation:"Fenster, Türen, Lüftung und Beschattung",
         power:"Stromversorgung und Schutz",alerts:"Meldungen und Fehler"},
       device:{mode:"Steuerung, Sollwerte und Lüfter",pid:"PID und Kalibrierung",
-        presence:"Anwesenheit und Schlaf",ventilation:"Fenster und Lüftung",
+        presence:"Anwesenheit und Schlaf",ventilation:"Fenster, Türen und Lüftung",
         power:"Stromversorgung und Schutz",alerts:"Meldungen und Fehler"},
       both:"Mit Speichern sichern · Sofort wirksam",saved:"Mit Speichern sichern",live:"Sofort wirksam"},
     el:{
@@ -10744,7 +10758,7 @@
         presence:"Παρουσία και ύπνος",ventilation:"Παράθυρα, πόρτες, αερισμός και σκίαση",
         power:"Ισχύς και προστασία",alerts:"Ανακοινώσεις και σφάλματα"},
       device:{mode:"Έλεγχος, στόχοι και ανεμιστήρες",pid:"PID και βαθμονόμηση",
-        presence:"Παρουσία και ύπνος",ventilation:"Παράθυρα και αερισμός",
+        presence:"Παρουσία και ύπνος",ventilation:"Παράθυρα, πόρτες και αερισμός",
         power:"Ισχύς και προστασία",alerts:"Ανακοινώσεις και σφάλματα"},
       both:"Αποθήκευση με το κουμπί · Εφαρμόζεται αμέσως",
       saved:"Αποθήκευση με το κουμπί",live:"Εφαρμόζεται αμέσως"}
@@ -10764,6 +10778,7 @@
   })[name]||"targets";
   const hemFieldCategory141=(field,scope)=>{
     const a=field.state?.attributes||{};
+    if(scope==="device"&&a.door_device_policy===true)return "ventilation";
     // The mode-scoped target name, not its controller ID, determines its category.
     if(scope==="device"&&a.settings_scope==="operating_mode"&&
        /^target_(manual|home|comfort|away|sleep|eco)_(heat|cool|humidity)$/.test(a.setting_key||""))
