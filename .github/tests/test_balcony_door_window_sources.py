@@ -42,8 +42,10 @@ def extract(filename: str, names: tuple[str, ...], target: types.ModuleType) -> 
     future = ast.ImportFrom(
         module="__future__", names=[ast.alias(name="annotations")], level=0,
     )
-    exec(compile(ast.Module(body=[future, *funcs], type_ignores=[]),
-                 str(path), "exec"), target.__dict__)
+    parsed = ast.fix_missing_locations(ast.Module(
+        body=[future, *funcs], type_ignores=[],
+    ))
+    exec(compile(parsed, str(path), "exec"), target.__dict__)
 
 class States:
     def __init__(self, states):
