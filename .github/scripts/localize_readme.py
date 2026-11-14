@@ -6,6 +6,7 @@ from machine translation. All outputs must validate before files are written.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import re
 import sys
@@ -327,10 +328,13 @@ def main() -> int:
         raise ValueError("Canonical Ko-fi banner missing")
     if NAV_PATTERN.search(source) is None:
         raise ValueError("English language selector missing")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--lang", choices=[code for code in LANGUAGES if code != "en"],
+                        help="Translate just one UI locale (for CI matrix jobs)")
+    args = parser.parse_args()
+    requested = [args.lang] if args.lang else [code for code in LANGUAGES if code != "en"]
     results = {}
-    for code in LANGUAGES:
-        if code == "en":
-            continue
+    for code in requested:
         print(f"Translating README: {code}", flush=True)
         page = render(source, code)
         validate(source, page, code)
@@ -339,7 +343,7 @@ def main() -> int:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     for code, page in results.items():
         (OUTPUT_DIR / f"README.{code}.md").write_text(page, encoding="utf-8")
-    print("PASS: all 37 translated READMEs + default English", flush=True)
+    print(f"PASS: {len(results)} localized README(s); English remains default", flush=True)
     return 0
 
 
