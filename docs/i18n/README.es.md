@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://ko-fi.com/chreece"><img src="../../.github/assets/ko-fi-banner.svg" alt="Apoyo a Grecia en Ko-fi" width="500"></a>
+  <a href="https://ko-fi.com/chreece"><img src="../../.github/assets/ko-fi-banner.svg" alt="Apoya a Chreece en Ko-fi" width="500"></a>
 </p>
 
 
@@ -18,280 +18,280 @@
 # HEM - Home Environment Manager
 
 <p align="center">
-  <img src="../../.github/assets/hem-logo.svg" alt="HEM logotipo" width="420">
+  <img src="../../.github/assets/hem-logo.svg" alt="Logotipo de HEM" width="420">
 </p>
 
-<p align="center"><strong>Todo el entorno de tu hogar, en una sola Home Assistant ¿Qué es eso?</strong></p>
+<p align="center"><strong>Controla el ambiente de toda tu casa desde una única tarjeta de Home Assistant.</strong></p>
 
-**HEM ayuda a tu hogar a entender su entorno y reaccionar a lo que cada habitación realmente necesita.** Trae su Home Assistant los sensores, los datos meteorológicos, la información de ocupación y los dispositivos climáticos compatibles juntos para que pueda controlar la calidad del aire, recibir consejos útiles sobre ventilación, gestionar el confort y automatizar el equipo que elija.
+**HEM te ayuda a conocer las condiciones de tu hogar y a responder a las necesidades de cada habitación.** Reúne los sensores de Home Assistant, los datos meteorológicos, la información de presencia y los equipos compatibles de climatización y tratamiento del aire. Así puedes supervisar la calidad del aire, recibir recomendaciones para ventilar, mejorar el confort y automatizar los dispositivos que elijas.
 
-Por ejemplo, HEM puede reducir la calefacción mientras todos están fuera, preparar habitaciones seleccionadas antes de regresar, usar un objetivo de humedad diferente mientras duerme, o pedirle que abra una ventana antes de ejecutar un deshumidificador. **control y recomendación**, sin controlar ningún dispositivo.
+Por ejemplo, HEM puede reducir la calefacción cuando no hay nadie en casa, preparar determinadas habitaciones antes de tu regreso, usar otro objetivo de humedad mientras duermes o recomendarte abrir una ventana antes de encender un deshumidificador. También puede limitarse a **supervisar y recomendar**, sin controlar ningún dispositivo.
 
-**Tú sigues a cargo.** Cada habitación tiene sus propias configuraciones, cada dispositivo con soporte tiene su propio controlador, modos de funcionamiento, objetivos y límites de seguridad. HEM nunca asume que la selección de un dispositivo le da permiso para operar ese dispositivo.
+**Tú decides.** Cada habitación tiene sus propios ajustes. Cada aparato compatible cuenta con métodos de control, modos de funcionamiento, consignas y límites de seguridad independientes. Seleccionar un dispositivo no le da permiso automáticamente a HEM para manejarlo.
 
-[Explora las características](#what-can-hem-do) · La Comisión [Ver la interfaz](#see-hem-in-action) · La Comisión [Instalar el HEM](#installation) · La Comisión [Establezca su hogar](#getting-started) · La Comisión [Guía detallada](../../docs/advanced-configuration.md)
+[Descubrir las funciones](#what-can-hem-do) · [Ver la interfaz](#see-hem-in-action) · [Instalar HEM](#installation) · [Primeros pasos](#getting-started) · [Guía detallada](../../docs/advanced-configuration.md)
 
 <a id="what-can-hem-do"></a>
-## ¿Qué puede HEM ¿Qué quieres decir?
+## ¿Qué puede hacer HEM?
 
-| Su situación | ¿Cómo lo hizo? HEM puede ayudar |
+| Situación | Cómo puede ayudarte HEM |
 | --- | --- |
-| **La casa está vacía.** | Cambia a los objetivos Away, respeta las reglas de presencia de cada habitación y evita el uso innecesario de equipos seleccionados. |
-| **Estás en camino a casa.** | Presiones **Prepárate para la llegada** para utilizar temporalmente los objetivos de comodidad en el hogar para los controladores automáticos elegibles, aunque todos estén todavía fuera. |
-| **Alguien está durmiendo.** | Utilice objetivos de sueño, reduzca el ruido de los ventiladores o mantenga apagados los dispositivos seleccionados mientras cada habitación está durmiendo. |
-| **Una habitación está húmeda.** | Comparar su indicación de humedad y moho con los objetivos, sugerir aire útil, o operar un deshumidificador autorizado utilizando PID el control. |
-| **Está caliente y soleado.** | Evaluar la temperatura de la habitación, la luz solar, el clima y los contactos de ventanas conectados antes de mover los tonos optados. |
-| **El aire al aire libre se ve mejor** | Se recomienda ventilación utilizando la demanda de interiores, la contaminación exterior, la temperatura, la humedad, el viento y los avisos de polen o clima disponibles. |
-| **Un calentador o TRV deja de responder** | Muestre su estado de no disponibilidad o espera, mantenga su controlador configurado y informe fallas del dispositivo soportado sin suponer que se haya recuperado una batería o un relé. |
+| **No hay nadie en casa** | Aplica las consignas del perfil de ausencia (Away), respeta las reglas de presencia de cada habitación y evita que determinados equipos funcionen sin necesidad. |
+| **Estás volviendo a casa** | Con **Preparar la llegada**, los controladores automáticos autorizados pueden usar temporalmente las consignas Home aunque todavía no haya regresado nadie. |
+| **Alguien está durmiendo** | Usa objetivos Sleep, reduce el ruido de los ventiladores o mantiene apagados algunos equipos mientras todas las habitaciones ocupadas están en modo de sueño. |
+| **Una habitación tiene demasiada humedad** | Compara la humedad y la estimación del riesgo de moho con los valores objetivo, aconseja ventilar o regula un deshumidificador autorizado mediante Automatic o PID. |
+| **Hace calor y hay mucho sol** | Evalúa la temperatura, la luz solar, el tiempo y los contactos de ventana antes de mover persianas o toldos cuyo control hayas autorizado. |
+| **El aire exterior es más favorable** | Recomienda ventilar teniendo en cuenta las necesidades de la estancia, la contaminación exterior, la temperatura, la humedad, el viento y, cuando existen, los avisos meteorológicos o datos de polen. |
+| **Un radiador o una válvula termostática (TRV) deja de responder** | Muestra su estado de indisponibilidad o espera, conserva la configuración y notifica las incidencias compatibles sin dar por hecho que la batería o el relé se hayan recuperado. |
 
-Estos son ejemplos, no acciones que HEM Los resultados dependerán de los sensores seleccionados, de la capacidad de cada dispositivo. Home Assistant las capacidades y sus configuraciones de acceso.
+Son ejemplos, no acciones obligatorias en todas las viviendas. Las posibilidades dependen de los sensores que hayas seleccionado, de las funciones que tus equipos ofrecen realmente en Home Assistant y de las autorizaciones que configures.
 
 <a id="explore-the-features"></a>
-## Explora las características
+## Descubre todas las funciones
 
 <a id="a-complete-home-dashboard"></a>
-### Un panel de control completo para el hogar
+### Toda la casa en un panel
 
-El HEM la tarjeta le da una visión general útil sin abrir varias integraciones.
+La tarjeta HEM ofrece una visión general sin tener que abrir varias integraciones.
 
-- Consulte las condiciones del exterior, la calidad del aire y si es recomendable ventilar.
-- Comparar todas las habitaciones monitorizadas con un vistazo: temperatura, humedad relativa, AQI, PM2.5, indicación de moho, luz y otras lecturas de apoyo.
-- Expande cualquier espacio para mediciones detalladas, información sobre ventanas y puertas, estado climático, controladores activos, razones de espera y estimaciones de física del edificio.
-- Ver historias y tendencias, ver qué sensores contribuyeron a un promedio y distinguir las lecturas faltantes de los valores medidos.
-- Habitaciones de grupo por número real Home Assistant los pisos, o utilizar una lista de habitaciones sencillas cuando no hay pisos.
+- Consulta las condiciones exteriores, la calidad del aire y las recomendaciones de ventilación.
+- Compara todas las habitaciones monitorizadas: temperatura, humedad relativa, AQI, PM2.5, indicador de riesgo de moho, iluminación y otras medidas disponibles.
+- Despliega cualquier habitación para consultar sus mediciones, puertas y ventanas, equipos de climatización, controladores activos, motivos de espera y estimaciones relacionadas con la física del edificio.
+- Revisa el historial y las tendencias, identifica qué sensores intervienen en una media y diferencia los datos ausentes de las medidas reales.
+- Agrupa las habitaciones por las plantas definidas en Home Assistant o utiliza una lista sencilla si no tienes plantas configuradas.
 
 <a id="different-settings-for-the-home-each-room-and-each-device"></a>
-### Diferentes configuraciones para la casa, cada habitación y cada dispositivo
+### Ajustes distintos para la casa, cada habitación y cada dispositivo
 
-HEM mantiene las políticas compartidas separadas de las decisiones locales.
+HEM separa las reglas generales del hogar de las decisiones que afectan a una habitación o un equipo concreto.
 
-| Nivel de configuración | Lo que puede configurar |
+| Nivel | Qué puedes configurar |
 | --- | --- |
-| **En el hogar** | Fuentes de clima exterior y de contaminación, salas monitorizadas, límites globales de ventilación, presencia de los hogares, preparación de la llegada y entrega de anuncios. |
-| **Habitación** | Fuentes de temperatura y humedad de interior, umbral de calidad del aire, contacto entre ventanas y puertas, comportamiento de sueño y ocupación, objetivos de comodidad específicos de la habitación, opciones de ventilación y sombreado. |
-| **Dispositivo individual** | Sus modos de control disponibles, Automático/Manual/PID método, objetivos por perfil, sensores, configuración silenciosa del ventilador, tiempos mínimos de funcionamiento, protecciones de potencia, comportamiento de ventana y notificaciones de error del dispositivo. |
+| **Hogar** | Fuentes de tiempo y contaminación exterior, habitaciones supervisadas, límites generales de ventilación, presencia en casa, preparación de la llegada y canales de avisos. |
+| **Habitación** | Sensores de temperatura y humedad, umbrales de calidad del aire, contactos de ventanas y puertas, reglas de presencia y sueño, objetivos de confort, ventilación y protección solar. |
+| **Dispositivo** | Modos compatibles, método Automatic/Manual/PID, consignas por perfil, sensores, ajustes silenciosos, tiempos mínimos de funcionamiento, protecciones eléctricas, comportamiento ante ventanas abiertas y avisos de fallo. |
 
-Los tres niveles son accesibles a través de configuraciones agrupadas y buscadas en la tarjeta. Los controles avanzados están disponibles cuando sea necesario, sin aglomerar las configuraciones cotidianas. Home Assistant cambios en la configuración.
+Los tres niveles están disponibles desde menús agrupados con búsqueda en la propia tarjeta. Las opciones avanzadas siguen siendo accesibles sin recargar los ajustes cotidianos. Puedes actualizar las fuentes disponibles cuando cambie tu instalación de Home Assistant.
 
 <a id="climate-control-and-pid-device-by-device"></a>
-### Control del clima y PID, dispositivo por dispositivo
+### Climatización y PID, dispositivo por dispositivo
 
-HEM puede trabajar con compatible Home Assistant **el clima**, **humidificador** y **el ventilador** Dispositivos, incluidos equipos de calefacción, enfriamiento, deshumidificación, humidificación y apoyo para la circulación del aire o limpieza del aire.
+HEM puede trabajar con equipos compatibles de Home Assistant de tipo **climate**, **humidifier** y **fan**, incluidos sistemas de calefacción, refrigeración, humidificación, deshumidificación y determinados equipos de circulación o limpieza del aire.
 
-Por cada uno **Modo de funcionamiento físico soportado**, elegir el método de control de forma independiente:
+Para **cada modo de funcionamiento realmente compatible**, elige un método de control independiente:
 
-| Método | Lo que significa |
+| Método | Qué significa |
 | --- | --- |
-| **Las actuales** | Dejar de operar con la ruta del controlador existente. |
-| **Automático** | Sigue HEMla demanda medida, los objetivos y permisos basados en la situación. |
-| **PID** | Utilice el control proporcional, integral y derivado basado en retroalimentación cuando el dispositivo y la medición lo apoyen. |
-| **Manual** | Control a través de solicitudes y objetivos explícitamente respaldados. |
-| **Desactivado** | Mantenga ese controlador apagado, sujeto a los requisitos de protección física y retroalimentación. |
+| **Existing** | Mantener el método de control que ya utiliza el dispositivo. |
+| **Automatic** | Responder a la necesidad medida, las consignas según la situación y los permisos que hayas establecido. |
+| **PID** | Utilizar un control proporcional, integral y derivativo con realimentación cuando el equipo y las mediciones lo permitan. |
+| **Manual** | Controlar mediante las órdenes manuales y consignas compatibles. |
+| **Off** | Mantener ese controlador apagado respetando las protecciones y comprobaciones de respuesta necesarias. |
 
-Por ejemplo, un aire acondicionado puede utilizar **PID para calefacción** y **Automático para enfriamiento**Un deshumidificador puede tener su propio PID Los aficionados elegibles pueden utilizar el sistema de calibración, los objetivos y el tiempo de ciclo. PID cuando estén disponibles retroalimentaciones adecuadas y controles específicos.
+Por ejemplo, un aire acondicionado puede emplear **PID al calentar** y **Automatic al enfriar**. Un deshumidificador puede disponer de parámetros PID, objetivos y tiempos de ciclo propios. Algunos ventiladores también pueden utilizar PID si cuentan con información fiable para el tipo de control requerido.
 
-PID es **No** una supervisión universal: HEM Las opciones avanzadas incluyen ajuste y calibración por modo, ajustes sugeridos/adaptivos, operación silenciosa y ajustes de ventilador en etapa compatibles. Usted aprueba los cambios sugeridos a menos que opte explícitamente por una adaptación automática limitada.
+**PID no es una forma de saltarse las protecciones.** HEM solo ofrece los métodos compatibles con el aparato, su modo físico y los datos disponibles. Entre las opciones avanzadas están la calibración y los ajustes por modo, las propuestas de adaptación, el funcionamiento silencioso y las velocidades de ventilación compatibles. Tú apruebas los cambios propuestos, salvo que actives expresamente una adaptación automática dentro de límites definidos.
 
 <a id="comfortable-when-youre-home-economical-when-youre-away"></a>
-### Comodo cuando estás en casa, económico cuando no estás
+### Confort cuando estás en casa, ahorro cuando estás fuera
 
-HEM puede elegir entre **Comodidad, hogar, lejos, sueño y ecología** objetivos basados en la situación del hogar, la evidencia de la habitación y sus selecciones explícitas.
+HEM puede elegir entre los perfiles **Comfort, Home, Away, Sleep y Eco** según la situación del hogar, la información de cada estancia y tus preferencias.
 
-- **En casa y fuera:** Utilice diferentes objetivos de calefacción, enfriamiento y humedad dependiendo de la presencia verificada en el hogar.
-- **Presencia de la habitación:** Utilice un dispositivo elegible siempre que haya demanda, solo mientras su habitación esté ocupada o solo mientras la habitación esté vacía.
-- **Dormir:** Aplicar objetivos nocturnos y comportamiento más silencioso del ventilador.
-- **Eco:** Usar objetivos económicos cuando se configuren. Una puerta interior cerrada puede participar en una política ecológica protegida cuando se verifica que la habitación está vacía y se cumplen otras condiciones; una puerta cerrada por sí sola no prueba que la habitación está aislada.
-- **Preparación para el despertar:** Utilice una fuente de alarma siguiente configurada para dejar el sueño automático antes de la alarma y dar tiempo a los dispositivos elegibles para responder.
+- **Home y Away:** Utiliza objetivos de calefacción, refrigeración y humedad distintos según la presencia confirmada en la vivienda.
+- **Presencia en la habitación:** Un dispositivo compatible puede funcionar cuando hace falta, solo cuando la estancia está ocupada o solo cuando está vacía.
+- **Sleep:** Aplica consignas nocturnas y ventilación más silenciosa. Puedes hacer que determinados equipos permanezcan apagados cuando todas las habitaciones ocupadas están en modo de sueño.
+- **Eco:** Usa consignas de ahorro donde las hayas configurado. Una puerta interior cerrada puede formar parte de una regla Eco protegida si se confirma que la habitación está vacía y se cumplen otras condiciones. Cerrar una puerta, por sí solo, no demuestra que el espacio esté aislado.
+- **Preparación del despertar:** Según la próxima alarma configurada, HEM puede salir antes del modo Sleep automático para dar tiempo a que respondan los equipos adecuados.
 
-Si la ocupación, la disponibilidad del dispositivo u otra evidencia requerida es incierta, HEM no simplemente asume que es seguro arrancar un dispositivo automático.
+Si la presencia, la disponibilidad de un aparato o cualquier otra información necesaria es incierta, HEM no presupone que sea seguro iniciar el control automático.
 
 <a id="prepare-your-environment-before-you-arrive"></a>
-### Prepare su entorno antes de llegar
+### Prepara tu hogar antes de volver
 
-**Prepárate para la llegada** Es una acción cronometrada para un hogar confirmado. HEMEs el dispositivo de casa.
+**Preparar la llegada** es una acción temporal para una vivienda cuya ausencia (Away) está confirmada. Puedes activarla desde la cabecera de la tarjeta o desde el dispositivo Home de HEM.
 
-HEM se aplica temporalmente la configuración **Objetivos para el hogar** a los automáticos elegibles/PID los controladores para que las habitaciones puedan comenzar a calentarse, enfriarse o ajustar la humedad antes de regresar. **sólo cuando ya tenga el permiso necesario de control físico**.
+Durante ese periodo, HEM aplica las **consignas Home** a los controladores Automatic/PID adecuados. Así, las habitaciones seleccionadas pueden empezar a calentarse, enfriarse o ajustar su humedad antes de tu regreso. También puede permitir temporalmente un controlador que normalmente exige presencia en su habitación, **pero solo si ya tiene permiso para manejar físicamente ese dispositivo**.
 
-La preparación no es un comando para activar todo. Los dispositivos todavía necesitan una demanda genuina, sensores válidos y autorización, y deben respetar las ventanas, tiempos mínimos de encendido y apagado y sus propias protecciones. La acción termina cuando alguien llega, lo cancelas o el temporizador configurado expira. Home Assistant reiniciar no reinicia el tiempo completo.
+Preparar la llegada no significa encenderlo todo. Debe existir una necesidad real, datos de sensores válidos y autorización. Siguen vigentes las restricciones de ventanas, los tiempos mínimos ON/OFF y las protecciones de cada aparato. La acción finaliza cuando llega alguien, la cancelas o vence el plazo. Reiniciar Home Assistant no reinicia ese plazo desde cero.
 
 <a id="ventilation-advice-windows-doors-and-shading"></a>
-### Consejos de ventilación, ventanas, puertas y sombras
+### Consejos de ventilación, ventanas, puertas y sombreado
 
-HEM comparaciones **¿Qué necesita una habitación?** con **si el aire exterior puede ayudar**.
+HEM compara **lo que necesita una habitación** con **la utilidad del aire exterior para cubrir esa necesidad**.
 
-- Recomienda abrir o cerrar ventanas utilizando las mediciones actuales de los interiores, la humedad exterior, la contaminación, la temperatura, el viento, las alertas meteorológicas y el contexto opcional del polen.
-- Utilice los contactos de ventanas y puertas seleccionados para explicar las condiciones de la habitación y evite tratar a un contacto desconocido como cerrado.
-- Opcionalmente, le pedirá que intente abrir una ventana antes de iniciar un aparato automático compatible, y luego continuar con el control normal después de que la respuesta configurada espere si es necesario.
-- Utilice la información de la puerta para el conocimiento de los límites de la habitación, las precauciones de ventilación y el comportamiento ecológico opcional.
-- Gestionar los persianas, persianas y sombras seleccionados utilizando las ventanas, temperatura, clima, elevación solar y pruebas de iluminación opcionales adecuadas.
+- Recomienda abrir o cerrar ventanas según las mediciones interiores, la humedad y la contaminación exteriores, la temperatura, el viento, los avisos meteorológicos y, opcionalmente, los datos de polen.
+- Usa los contactos de puertas y ventanas elegidos para interpretar las condiciones de la habitación sin asumir que un contacto de estado desconocido está cerrado.
+- Si lo deseas, puede sugerirte abrir una ventana antes de activar automáticamente un equipo compatible y retomar el control normal tras el tiempo de espera configurado cuando proceda.
+- La información de las puertas ayuda a comprender la separación entre estancias, emitir advertencias de ventilación y aplicar reglas Eco opcionales con comprobaciones de seguridad.
+- Permite controlar persianas, estores y toldos autorizados a partir de datos adecuados de ventanas, temperatura, meteorología, elevación solar y, opcionalmente, luminosidad.
 
-HEM No se abre una ventana por sí sola porque la aireación ayudaría.
+No necesitas ventanas motorizadas para recibir consejos de ventilación. **HEM no abre una ventana por sí mismo** simplemente porque ventilar pueda resultar útil.
 
 <a id="humidity-mold-indication-and-air-quality"></a>
-### Humedad, indicación de moho y calidad del aire
+### Humedad, riesgo estimado de moho y calidad del aire
 
-HEM combina lecturas apoyadas como **temperatura, humedad, CO2, partículas, COV, IQI y iluminación** Las mediciones disponibles dependen de lo que su Home Assistant la configuración proporciona.
+HEM reúne mediciones compatibles como **temperatura, humedad, CO₂, partículas en suspensión, COV, AQI y luminosidad**. Los valores disponibles dependen de los sensores conectados a tu Home Assistant.
 
-Su **indicación del molde** Estimar las condiciones de humedad en una superficie fría a partir de las temperaturas de la habitación y del exterior y una medición de calibración.
+Su **indicador de riesgo de moho** estima las condiciones de humedad en una superficie fría a partir de las temperaturas interior y exterior y de una medición de calibración. Bien configurado, puede influir en la consigna efectiva de un controlador automático de humedad compatible.
 
-**La indicación de moho es una estimación, no un detector de moho o esporas.** Los datos de los sensores que faltan o están obsoletos no pueden justificar un nuevo comando de dispositivo basado en molde.
+**Es una estimación, no un detector de moho ni de esporas.** Los datos ausentes o desactualizados no justifican el envío de nuevas órdenes basadas en ese indicador.
 
 <a id="announcements-diagnostics-and-protection"></a>
-### Anuncios, diagnóstico y protección
+### Avisos, diagnóstico y protecciones
 
-Puede enviar recomendaciones y alertas relevantes a través de configuraciones Home Assistant notificaciones, reproductores de medios de comunicación TTS o **El centro de anuncios**, con la redacción opcional de IA. IA puede cambiar la forma en que se expresa un mensaje; HEMLas decisiones de control físico siguen siendo deterministas.
+Puedes recibir recomendaciones y alertas mediante notificaciones de Home Assistant, TTS/reproductores multimedia o **Announcement Hub**. Opcionalmente, la IA puede mejorar la redacción de los mensajes. **Las decisiones que afectan físicamente a los equipos siguen reglas deterministas** y no las toma la IA.
 
-HEM Incluye también protecciones y diagnósticos específicos del dispositivo:
+HEM también ofrece protecciones y diagnóstico por dispositivo:
 
-- Duración mínima de encendido y apagado, ajustes máximos de tiempo de funcionamiento y manejo de interruptores de alimentación externos compatibles.
-- Restricciones de ventana y ocupación, manejo manual y controles de reconocimiento de comandos nativos.
-- Informe de error y dispositivo no disponible, con una opción de comportamiento de notificación para cada dispositivo.
-- Un perro de vigilancia opcional después del cierre para la presunta continuación del calentamiento después de un comando de apagado, con vigilancia vigilada y tentativas limitadas de recuperación.
-- Razones claras de espera, estado actual de funcionamiento y disponibilidad de la fuente, para que puedas investigar antes de habilitar más control.
+- Tiempos mínimos encendido/apagado, duración máxima de funcionamiento y control de interruptores externos de alimentación compatibles.
+- Restricciones por ventanas y presencia, respeto de intervenciones manuales y comprobación de la respuesta a las órdenes nativas.
+- Avisos por fallos o indisponibilidad con ajustes individuales para cada equipo.
+- Vigilancia opcional tras una orden OFF cuando existen indicios de que la calefacción sigue funcionando, con verificaciones prudentes e intentos de recuperación limitados.
+- Motivos de espera, estado de funcionamiento y disponibilidad de fuentes claramente indicados para que puedas investigar antes de permitir más automatizaciones.
 
-**Los límites de seguridad siguen vigentes incluso cuando se deshabilita la alerta.** HEM nunca trata un envío de comando exitoso como prueba de que un aparato haya respondido físicamente.
+**Las protecciones siguen activas aunque deshabilites los avisos.** Que una orden se haya enviado correctamente no demuestra que el aparato la haya ejecutado físicamente.
 
 <a id="see-hem-in-action"></a>
-## ¿Ves ? HEM en acción
+## HEM en acción
 
-Estas ilustraciones en inglés usan muestras de habitaciones y mediciones, mostrando la interfaz en lugar de mostrar datos en vivo de una casa en particular.
+Las siguientes ilustraciones están en inglés y muestran habitaciones y datos de ejemplo. Sirven para explicar la interfaz y no representan lecturas reales de una vivienda determinada.
 
 <a id="home-at-a-glance"></a>
-### A la casa en un vistazo
+### Tu casa de un vistazo
 
-Obtenga consejos de ventilación, condiciones climáticas y el estado de cada habitación vigilada en una sola tarjeta.
+Consulta las recomendaciones de ventilación, el tiempo y el estado de todas las habitaciones supervisadas en una única tarjeta.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM tablero de control en casa con asesoramiento de ventilación y lecturas ambientales en cinco habitaciones" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.svg" alt="Panel HEM con consejos de ventilación y mediciones ambientales de cinco habitaciones" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
-### Ampliar una habitación para los detalles completos
+### Detalles de una habitación
 
-Inspeccionar la calidad del aire, la indicación del moho, la presencia, el estado de las ventanas, los controladores climáticos y las explicaciones para cada decisión.
+Examina la calidad del aire, el indicador de moho, la presencia, las ventanas, los controladores y los motivos de cada decisión.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Tablero de mando ampliado de baño con lecturas y controladores independientes de dispositivos" width="760">
+  <img src="../../docs/images/hem-room-expanded.svg" alt="Vista ampliada de un baño con mediciones y controladores independientes" width="760">
 </p>
 
 <a id="home-settings"></a>
-### Configuración del hogar
+### Ajustes del hogar
 
-Gestionar las fuentes al aire libre, la presencia en toda la casa, las habitaciones controladas, los límites de ventilación, la preparación y las notificaciones.
+Configura las fuentes exteriores, la presencia general, las habitaciones, los límites de ventilación, la preparación de llegada y las notificaciones.
 
 <p align="center">
-  <img src="../../docs/images/hem-home-settings.svg" alt="HEM Configuraciones de hogar con grupos de búsqueda y gestión de fuentes y habitaciones" width="900">
+  <img src="../../docs/images/hem-home-settings.svg" alt="Ajustes generales de HEM con grupos de búsqueda y gestión de fuentes y habitaciones" width="900">
 </p>
 
 <a id="room-settings"></a>
-### Configuración de la habitación
+### Ajustes de las habitaciones
 
-Elige lo que importa para cada habitación: sus propios sensores, objetivos, ocupación, puertas, ventanas, ventilación, sombreado y salvaguardias.
+Elige los sensores, objetivos, reglas de presencia, puertas, ventanas, ventilación, persianas y protecciones apropiados para cada habitación.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-settings.svg" alt="Grupos HEM configuración de la habitación para sensores, controles de dispositivos, sueño, ventanas y protección" width="760">
+  <img src="../../docs/images/hem-room-settings.svg" alt="Ajustes agrupados de una habitación para sensores, equipos, sueño y ventanas" width="760">
 </p>
 
 <a id="device-settings"></a>
-### Configuración del dispositivo
+### Ajustes de los dispositivos
 
-Ajuste a la perfección un dispositivo sin cambiar los demás, incluidos los métodos de control compatibles, PID, la operación silenciosa, el tiempo y la denuncia de fallas.
+Personaliza por separado los métodos de control, el PID, el funcionamiento silencioso, los tiempos y los avisos de fallos de cada equipo.
 
 <p align="center">
-  <img src="../../docs/images/hem-device-settings.svg" alt="Grupos HEM configuración del dispositivo con control, PID, protección energética y notificaciones" width="900">
+  <img src="../../docs/images/hem-device-settings.svg" alt="Ajustes de dispositivo HEM para control, PID, protección eléctrica y notificaciones" width="900">
 </p>
 
 <a id="getting-started"></a>
-## Comenzando
+## Primeros pasos
 
-1. **Organicen sus habitaciones.** En el Home Assistant, crear o comprobar sus Áreas y asignar los sensores y dispositivos apropiados a cada uno.
-2. **Elige qué controlar.** Añadir HEM, seleccione las habitaciones que le interesan y revise la temperatura, humedad, ventana, calidad del aire y las fuentes de dispositivo sugeridas.
-3. **Configurar la información compartida.** Seleccione las fuentes disponibles de clima al aire libre/con calidad del aire, la evidencia de ocupación del hogar y los destinos de anuncios que desee.
-4. **Home Environment Manager** Abre un panel en modo de edición y agrega el **Gestión del medio ambiente del hogar** Comience con el seguimiento de la habitación, lecturas y consejos de ventilación.
-5. **Habilitar el control sólo cuando sea útil.** Abre una habitación, elige un aparato soportado, revisa su controlador y seleccione explícitamente Automático o PID para los modos que quieras HEM para operar.
+1. **Organiza las habitaciones.** Crea o revisa las Áreas (Areas) de Home Assistant y asigna los sensores y aparatos correspondientes a cada una.
+2. **Elige qué quieres supervisar.** Añade HEM, selecciona las habitaciones y revisa las fuentes sugeridas de temperatura, humedad, ventanas, calidad del aire y dispositivos. Puedes dejar sin configurar los grupos que no utilices.
+3. **Configura la información común.** Elige las fuentes meteorológicas y de calidad del aire exterior, los datos de presencia en casa y los destinos de avisos que necesites.
+4. **Añade la tarjeta.** Abre un panel en modo edición y añade **Home Environment Manager**. Empieza supervisando los valores de las habitaciones y las recomendaciones de ventilación.
+5. **Autoriza el control solo donde sea útil.** Abre una habitación, elige un equipo compatible, revisa su controlador y selecciona expresamente Automatic o PID en los modos que HEM podrá manejar.
 
-Lo haces. **No** Comience con los sensores que tiene, e introduzca el control automático un dispositivo a la vez.
+**No necesitas un dispositivo inteligente en cada habitación.** Empieza con los sensores que ya tienes y activa el control automático de manera gradual, equipo por equipo.
 
 <a id="add-the-card-manually"></a>
 ### Añadir la tarjeta manualmente
 
-La integración normalmente registra su propia tarjeta Lovelace.
+La integración suele registrar su propia tarjeta Lovelace. Si prefieres utilizar YAML:
 
 ~~~yaml
 type: custom:home-environment-manager-card
 ~~~
 
-Si su Home Assistant la instalación tiene más de una HEM el sensor de recomendación, es posible que deba configurar el sensor de recomendación adecuado **entidad** de forma explícita:
+Si tienes varios sensores de recomendaciones HEM en Home Assistant, quizá debas indicar expresamente la **entidad (entity)** correspondiente:
 
 ~~~yaml
 type: custom:home-environment-manager-card
 entity: sensor.your_hem_recommendation_sensor
 ~~~
 
-Para obtener instrucciones paso a paso sobre las fuentes de la habitación, los perfiles, PID las configuraciones, políticas de ventanas, preparación, calibración de moldes, sombreado solar y entrega de anuncios, utilizar la [Guía detallada de configuración](../../docs/advanced-configuration.md).
+Si necesitas más información sobre sensores, perfiles, PID, reglas de ventanas, preparación de llegada, calibración del riesgo de moho, sombreado y avisos, consulta la [guía de configuración detallada](../../docs/advanced-configuration.md).
 
 <a id="installation"></a>
 ## Instalación
 
 <a id="hacs--home-assistant-community-store"></a>
-### HACS / Home Assistant Tienda comunitaria
+### Con HACS (Home Assistant Community Store)
 
-1. Abierto **HACS** en el Home Assistant.
-2. Añadir **https://github.com/Chreece/HA-Home-Environment-Manager** como un **repositorio personalizado** en el **Integración** categoría si no está ya incluida en la lista.
-3. Encuentra **Home Environment Manager** y instalarlo.
-4. Reinicio **Home Assistant** para cargar la integración.
-5. ¡Vete a **Configuraciones → Dispositivos y servicios → Agregar integración**, la búsqueda de **Home Environment Manager** y completar la configuración.
+1. Abre **HACS** en Home Assistant.
+2. Añade **https://github.com/Chreece/HA-Home-Environment-Manager** como **repositorio personalizado (custom repository)** en la categoría **Integration**, si todavía no aparece.
+3. Busca **Home Environment Manager** e instálalo.
+4. Reinicia **Home Assistant** para cargar la integración.
+5. Ve a **Ajustes → Dispositivos y servicios → Añadir integración**, busca **Home Environment Manager** y completa la configuración.
 
 <a id="manual-installation"></a>
 ### Instalación manual
 
-Copia del repositorio **custom_components/environment_manager** carpeta en la coincidencia **custom_components** directorio en su Home Assistant configuración, manteniendo el nombre del directorio **environment_manager**- Reiniciar . Home Assistant y añadir la integración a través de **Configuración → Dispositivos y servicios**.
+Copia la carpeta **custom_components/environment_manager** del repositorio dentro del directorio **custom_components** correspondiente de tu configuración de Home Assistant, conservando el nombre **environment_manager**. Reinicia Home Assistant y añade la integración desde **Ajustes → Dispositivos y servicios**.
 
-Para cambios posteriores en la instalación, mantenga sus HEM Introducción y configuración de integración. recargar el panel de control en su navegador si la apariencia de la tarjeta no se actualiza inmediatamente.
+En futuras actualizaciones, conserva la entrada de HEM que ya tengas y sus ajustes. Si la tarjeta no cambia de aspecto enseguida, actualiza la página del panel en el navegador.
 
 <a id="common-questions"></a>
-## Preguntas comunes
+## Preguntas frecuentes
 
-**¿Puedo usarlo? HEM ¿sin darle el control de mis dispositivos?**
+**¿Puedo usar HEM sin permitirle controlar mis dispositivos?**
 
-Sí. El monitoreo, las mediciones, los consejos de ventilación, el historial y muchas indicaciones ambientales funcionan sin habilitar la activación del dispositivo.
+Sí. La supervisión, las mediciones, los consejos de ventilación, el historial y muchos indicadores ambientales funcionan sin activar el control de equipos.
 
-**- ¿Qué quieres ? HEM ¿controlar automáticamente cada dispositivo que descubre?**
+**¿HEM controla automáticamente todos los dispositivos que detecta?**
 
-No. Selecciona los dispositivos físicos que desea administrar y selecciona explícitamente el método de control para los modos soportados.
+No. Tú seleccionas qué equipos quieres gestionar y autorizas los métodos de control de los modos compatibles. Las funciones disponibles también dependen de las capacidades reales de cada aparato y de los sensores.
 
-**Todos los aparatos soportan PID?**
+**¿Todos los equipos admiten PID?**
 
-- No, no es así. HEM apoyo PID para **subvencionables** trayectorias de calefacción, enfriamiento, humedad o control de ventiladores cuando el aparato y las mediciones seleccionadas proporcionen las capacidades y retroalimentación necesarias. PID el control.
+No. PID solo está disponible para **modos compatibles** de calefacción, refrigeración, humedad o ventilación cuando existen las capacidades y las mediciones necesarias. HEM no añade un PID ficticio a los modos que no lo soportan.
 
-**¿Puedo darle reglas diferentes a cada habitación?**
+**¿Puedo establecer reglas distintas en cada habitación?**
 
-Las condiciones de ocupación, el comportamiento del sueño, las fuentes, los objetivos y algunas preferencias de seguridad pueden variar según la habitación, mientras que cada dispositivo físico tiene sus propias configuraciones de funcionamiento y protección.
+Sí. La presencia, el sueño, las fuentes, las consignas y algunas opciones de seguridad pueden variar según la habitación. Cada equipo conserva sus propios ajustes de funcionamiento y protección.
 
-**Puede HEM ¿Preparar mi casa mientras estoy fuera?**
+**¿Puede HEM preparar la casa mientras estoy fuera?**
 
-- Sí, es cierto. **Prepárate para la llegada** Los controladores automáticos elegibles y ya autorizados pueden utilizar los objetivos en el hogar durante un período limitado.
+Sí. **Preparar la llegada** permite temporalmente que los controladores automáticos adecuados y previamente autorizados utilicen las consignas Home. No anula las protecciones ni garantiza que se alcancen los objetivos.
 
-**¿Me abre las ventanas una recomendación de "bueno para la ventilación"?**
+**¿Una recomendación para ventilar abre mis ventanas automáticamente?**
 
-El movimiento automático es una característica separada y opt-in para los tonos o cubiertas compatibles, sujetos a sus propios controles de seguridad.
+No. Solo indica cuándo puede convenir ventilar. El movimiento motorizado es una función independiente y opcional para persianas y protecciones solares compatibles, con sus propias comprobaciones de seguridad.
 
-**¿Qué pasa si un sensor o un dispositivo no está disponible?**
+**¿Qué ocurre si un sensor o dispositivo deja de estar disponible?**
 
-HEM El control automático requiere una autoridad y pruebas válidas actuales.
+HEM diferencia la falta de datos de las mediciones reales, conserva cuando es posible la configuración de los controladores y muestra los motivos de espera y los diagnósticos. Para cualquier control automático siguen siendo necesarios datos actuales válidos y la autorización correspondiente.
 
 <a id="help-and-troubleshooting"></a>
 ## Ayuda y solución de problemas
 
-Si parece que algo está mal, revise la habitación o el controlador correspondiente **Razón**, **Diagnostica**, la disponibilidad de la fuente y el método de control actual. [Guía detallada de configuración](../../docs/advanced-configuration.md) cubre los estados de espera comunes, las políticas de presencia, PID Eligibilidad, ventanas y resolución de problemas de respuesta del dispositivo.
+Si algo no funciona como esperabas, revisa el **Motivo (Reason)**, los **Diagnósticos (Diagnostics)**, la disponibilidad de fuentes y el método de control de la habitación o dispositivo afectado. La [guía de configuración detallada](../../docs/advanced-configuration.md) explica las esperas habituales, las reglas de presencia, los requisitos de PID, las ventanas y los problemas de respuesta de los equipos.
 
-Para un problema reproducible, [abrir una GitHub La cuestión](https://github.com/Chreece/HA-Home-Environment-Manager/issues) con el comportamiento esperado, el comportamiento real, las configuraciones de habitación/dispositivo pertinentes y los pasos para reproducirse. Eliminar información privada de los registros e imágenes.
+Si puedes reproducir un fallo, [abre una incidencia en GitHub](https://github.com/Chreece/HA-Home-Environment-Manager/issues). Indica el comportamiento esperado, el observado, los ajustes relevantes y los pasos necesarios para reproducirlo. Elimina los datos personales de registros e imágenes.
 
-Las contribuciones y mejoras son bienvenidas. [Contribución.md](../../CONTRIBUTING.md).
+Se agradecen las contribuciones y las mejoras. Consulta [CONTRIBUTING.md](../../CONTRIBUTING.md).
 
 <a id="support-and-license"></a>
 ## Apoyo y licencia
 
-Si HEM es útil para usted, usted puede [apoyo a Grecia en Ko-fi](https://ko-fi.com/chreece).
+Si HEM te resulta útil, puedes [apoyar a Chreece en Ko-fi](https://ko-fi.com/chreece).
 
-Distribuido bajo el [Licencia del MIT](../../LICENSE).
+Distribuido bajo la [licencia MIT](../../LICENSE).

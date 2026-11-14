@@ -17,6 +17,10 @@
 
 # HEM - Home Environment Manager
 
+<!-- HEM-TRANSLATION-UNREVIEWED-START -->
+> ⚠️ **Unreviewed machine translation.** This page has not been checked for linguistic or technical accuracy, and some descriptions may be wrong. For installation, device control and safety instructions, refer to the <a href="../../README.md">English README</a>.
+<!-- HEM-TRANSLATION-UNREVIEWED-END -->
+
 <p align="center">
   <img src="../../.github/assets/hem-logo.svg" alt="HEM logotip" width="420">
 </p>
