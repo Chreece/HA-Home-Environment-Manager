@@ -2262,8 +2262,8 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/areas/data/areas",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:160",
-        "custom_components/environment_manager/__init__.py:187",
+        "custom_components/environment_manager/__init__.py:164",
+        "custom_components/environment_manager/__init__.py:191",
         "custom_components/environment_manager/__init__.py:70",
         "custom_components/environment_manager/compact_options.py:202",
         "custom_components/environment_manager/compact_options.py:214",
@@ -2429,7 +2429,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/delivery/data/language",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:199",
+        "custom_components/environment_manager/__init__.py:203",
         "custom_components/environment_manager/__init__.py:68",
         "custom_components/environment_manager/ai_rewrite.py:227",
         "custom_components/environment_manager/ai_rewrite.py:65",
@@ -2911,8 +2911,8 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/setup_rooms/data/areas",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:160",
-        "custom_components/environment_manager/__init__.py:187",
+        "custom_components/environment_manager/__init__.py:164",
+        "custom_components/environment_manager/__init__.py:191",
         "custom_components/environment_manager/__init__.py:70",
         "custom_components/environment_manager/compact_options.py:202",
         "custom_components/environment_manager/compact_options.py:214",
@@ -3232,7 +3232,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/setup_general/data/language",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:199",
+        "custom_components/environment_manager/__init__.py:203",
         "custom_components/environment_manager/__init__.py:68",
         "custom_components/environment_manager/ai_rewrite.py:227",
         "custom_components/environment_manager/ai_rewrite.py:65",
@@ -6959,8 +6959,8 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/choose_rooms/data/areas",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:160",
-        "custom_components/environment_manager/__init__.py:187",
+        "custom_components/environment_manager/__init__.py:164",
+        "custom_components/environment_manager/__init__.py:191",
         "custom_components/environment_manager/__init__.py:70",
         "custom_components/environment_manager/compact_options.py:202",
         "custom_components/environment_manager/compact_options.py:214",
@@ -7258,8 +7258,8 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/areas/data/areas",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:160",
-        "custom_components/environment_manager/__init__.py:187",
+        "custom_components/environment_manager/__init__.py:164",
+        "custom_components/environment_manager/__init__.py:191",
         "custom_components/environment_manager/__init__.py:70",
         "custom_components/environment_manager/compact_options.py:202",
         "custom_components/environment_manager/compact_options.py:214",
@@ -7408,7 +7408,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/delivery/data/language",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:199",
+        "custom_components/environment_manager/__init__.py:203",
         "custom_components/environment_manager/__init__.py:68",
         "custom_components/environment_manager/ai_rewrite.py:227",
         "custom_components/environment_manager/ai_rewrite.py:65",
@@ -11047,8 +11047,8 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/setup_rooms/data/areas",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:160",
-        "custom_components/environment_manager/__init__.py:187",
+        "custom_components/environment_manager/__init__.py:164",
+        "custom_components/environment_manager/__init__.py:191",
         "custom_components/environment_manager/__init__.py:70",
         "custom_components/environment_manager/compact_options.py:202",
         "custom_components/environment_manager/compact_options.py:214",
@@ -11368,7 +11368,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/setup_general/data/language",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:199",
+        "custom_components/environment_manager/__init__.py:203",
         "custom_components/environment_manager/__init__.py:68",
         "custom_components/environment_manager/ai_rewrite.py:227",
         "custom_components/environment_manager/ai_rewrite.py:65",
@@ -11940,8 +11940,8 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/choose_rooms/data/areas",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:160",
-        "custom_components/environment_manager/__init__.py:187",
+        "custom_components/environment_manager/__init__.py:164",
+        "custom_components/environment_manager/__init__.py:191",
         "custom_components/environment_manager/__init__.py:70",
         "custom_components/environment_manager/compact_options.py:202",
         "custom_components/environment_manager/compact_options.py:214",
