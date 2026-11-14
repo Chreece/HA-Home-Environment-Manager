@@ -83,4 +83,29 @@ jobs:
                   print("real_batch",mode,"http_error",err.code,flush=True)
               except Exception as err:
                   print("real_batch",mode,type(err).__name__,str(err)[:120],flush=True)
+          import time,re
+          variants = {
+              "xml": "\n".join(f'<p id="hem{i:04d}">{unit}</p>' for i,unit,_ in batch),
+              "square": "\n".join(f'[{i:04d}] {unit}' for i,unit,_ in batch),
+              "sentinel": "\n".join(f'__HEMSEG{i:04d}__ {unit}' for i,unit,_ in batch),
+              "numbered": "\n".join(f'{i:04d}. {unit}' for i,unit,_ in batch),
+          }
+          for name,phrase in variants.items():
+              time.sleep(1.3)
+              addr="https://translate.googleapis.com/translate_a/single?"
+              args=urllib.parse.urlencode({"client":"gtx","sl":"en","tl":"el","dt":"t","q":phrase})
+              try:
+                  with urllib.request.urlopen(urllib.request.Request(addr+args,headers={"User-Agent":"Mozilla/5.0"}),timeout=12) as response:
+                      import json
+                      payload=json.load(response)
+                  result="".join(row[0] or "" for row in payload[0])
+                  expr={"xml":r'<p id="hem[0-9]{4}">',
+                    "square":r'\[[0-9]{4}\]',"sentinel":r'__HEMSEG[0-9]{4}__',
+                    "numbered":r'[0-9]{4}\.'}[name]
+                  print("variant",name,"markers",len(re.findall(expr,result)),
+                    "chars",len(result),"sample",repr(result[:170]),flush=True)
+              except urllib.error.HTTPError as err:
+                  print("variant",name,"http",err.code,flush=True)
+              except Exception as err:
+                  print("variant",name,type(err).__name__,str(err)[:60],flush=True)
           PY
