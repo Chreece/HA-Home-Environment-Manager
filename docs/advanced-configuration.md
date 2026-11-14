@@ -1,0 +1,758 @@
+# Detailed configuration and behavior
+
+[← Back to the HEM overview](../README.md)
+
+This guide documents HEM's more detailed setup choices, prerequisites, safety checks, and runtime behavior. The [README](../README.md) is the easier starting point, with screenshots and real-life examples. **Monitoring and recommendations do not require authorizing any equipment.** Use automatic control only for the devices and modes you explicitly select.
+
+---
+
+## First setup
+
+### 1. Prepare your Home Assistant areas
+
+Create an area for each room you want to monitor and assign its sensors and
+devices to that area. An entity's own area assignment takes precedence over its
+device's area. HEM uses these assignments to suggest sources.
+
+For ventilation advice, also have a weather entity and outdoor air-quality
+sources available. Additional features need their corresponding inputs: window
+contacts for window state, occupancy sources for presence, and controllable
+appliances for climate control.
+
+### 2. Choose rooms and review their sources
+
+The setup wizard starts with **Choose rooms**, then shows one source page for
+each selected room. Review the suggestions and select the entities that actually
+describe that room.
+
+| Source group | What to select |
+| --- | --- |
+| **Windows** | Actual window-contact binary sensors with the `window` device class |
+| **Air quality and environmental sensors** | Supported pollutant sensors and optional environmental readings, such as illuminance |
+| **Temperature** | Room temperature measurements |
+| **Humidity** | Room relative-humidity measurements |
+| **Devices** | Native `climate.*`, `humidifier.*` and `fan.*` appliances |
+| **Window blinds, shades and shutters** | Supported `cover.*` shading devices |
+
+Leave unused groups empty. Saved empty selections stay empty. A blind or shutter
+belongs in the shading group; window-state inputs come from window contacts.
+
+### 3. Complete General settings
+
+Choose the shared inputs and optional features you use:
+
+- **Weather and outdoor air quality:** the sources used to judge ventilation
+  conditions. Optional warning and pollen sensors add further context.
+- **Home occupancy:** people, trackers, presence sensors or explicitly selected
+  people counters. You can also choose shared occupied-room and sleeping-room lists.
+- **Announcements:** direct notification destinations, media players and TTS, or
+  your configured Announcement Hub. **Announcement language** defaults to
+  **Home Assistant language** and also offers all 38 languages supported by HEM.
+  Choose an optional AI agent here too.
+- **Mold indication and ventilation limits:** enable mold indication if you will
+  calibrate it, and review the outdoor temperature, humidity, wind and pollution limits.
+
+After saving, review **Ventilation · AQI scale** on the HEM Home device for each
+AQI source. Select the provider's actual scale, or configure a custom scale and
+limit. A number without a known scale cannot be compared meaningfully.
+
+Ventilation limits identify outside conditions that need caution and continue
+to protect automatic use of outside air. A measured indoor need can still
+produce a conditional request to air the room briefly, naming the detected
+cold, heat, humidity, wind, weather alerts or pollution. Missing outside data
+is described as uncertain. HEM does not describe these conditions as suitable.
+These limits are separate from a room's heating or cooling targets.
+
+You can also change the announcement language on the HEM **Home Environment**
+device under **Announcement · Language**. The default follows Home Assistant's
+configured language when each announcement is sent. An explicit choice applies
+to announcement text, AI rewriting and the language sent to Announcement Hub or
+direct TTS. The full menu is available even without a TTS provider; spoken output
+requires the selected provider to support that language.
+
+### Give window airing a chance before automatic devices start
+
+Each eligible device controller has **Ask to open windows**, which defaults to
+**off**, and its own **Window opening wait (min)**, which defaults to **5 minutes**
+and accepts **0–30 minutes**. These appear beside the device's control settings
+in the card and as native Home Assistant entities. Turn the option on only for
+devices where you want an airing request before automatic operation. With the
+option off, the device follows normal demand without this added delay. A wait
+of **0** also removes the added delay. The shared **Window opening timeout** in
+General remains available for existing room-controller paths.
+
+The general mold, humidity and particle announcements respect this preference
+too. When an authorized, available automatic device can handle that problem
+with its airing option off, HEM does not ask you to open a window for the same
+problem and adds no window-response wait. Other reasons still appear: a
+particle purifier does not remove CO₂. An unavailable, unauthorized or paused
+device, or one with an invalid configured supply, does not silence advice or
+create a promise that it will start.
+If another device in the same room has airing enabled, it does not add a
+redundant request or wait for a problem already covered by that ready device.
+
+When opening a real, closed room window could help, HEM requests it through the
+enabled automatic announcement channels. Opening requests name the room and
+explain the reason; they do not list the contact sensors. Closing requests name
+the room and the friendly names of the windows that are actually open, together
+with the reason for closing them. When an opted-in Automatic/PID device would
+otherwise start for a problem that airing can also reduce, the request names
+that device and its response time. HEM briefly defers that new start while submitting the
+request. Submission is bounded to 130 seconds; a rejected or failed delivery
+releases it immediately. Once a direct output succeeds or Announcement Hub
+accepts the job, the configured response timer starts. Hub acceptance confirms
+queueing, not that someone has heard the message.
+
+If the window stays closed until the timer expires, normal device control
+resumes if demand still exists. Repeated announcements and changing sensor
+numbers do not extend the deadline. Each device has its own deadline, and an
+unanswered request is consumed for that demand episode instead of restarting
+the wait at every reminder. Opening the window hands control to the
+device's existing window policy; closing it retains the normal stabilization
+and minimum operating-time checks. This option is independent of the device's
+**Window protection** setting. Running equipment, manual commands and OFF
+commands retain their own behavior. Humidifiers, dehumidifiers, thermal devices
+and particle-filtering air purifiers can participate when measurements support
+the same benefit from airing; an extraction fan is not an indoor alternative.
+
+The bounded response wait requires someone home and an awake room, verified contacts in that
+room and an enabled announcement channel. Outdoor warnings remain in the
+message; airing that would demonstrably worsen the relevant humidity or
+pollutant measurement is not suggested for that purpose. Actionable opening
+requests use Announcement Hub's **warning** level, so a warning-level TTS
+threshold can include them. Optional wake/return timing reminders remain
+informational. HEM sends the complete reasons, cautions and response times to
+the delivery destination. When AI announcements and Announcement Hub are both
+enabled, HEM requests the Hub's AI rewrite and lets the Hub own that delivery.
+Direct HEM delivery retains complete caution and timeout wording.
+
+## Add the dashboard card
+
+HEM includes and automatically registers its dashboard card. In dashboard edit
+mode, add the **Home Environment Manager** card. You can also use a manual card:
+
+```yaml
+type: custom:home-environment-manager-card
+```
+
+The card detects the recommendation sensor when there is exactly one candidate.
+If you need to select it explicitly, choose HEM's **Window recommendations**
+sensor in the card editor. For YAML, replace the sample entity below with your
+actual entity ID:
+
+```yaml
+type: custom:home-environment-manager-card
+entity: sensor.your_hem_recommendation_sensor
+show_outside: true
+show_metrics: true
+show_science: true
+```
+
+Entity IDs can differ with your language, naming and renames. The older
+`custom:air-quality-advisor-card` type remains supported.
+
+### Using the card
+
+When Home Assistant has configured floors, HEM groups each monitored room under
+its real HA floor. Floor groups can be expanded or collapsed independently and
+show room counts and whether any of their rooms need attention. Rooms not
+assigned to a floor appear under **Rooms without a floor**. The floor gear lets
+an HA administrator change that floor's name, level, icon and the room
+assignments, or open the existing settings of an individual HEM room. These
+floor settings use the native Home Assistant floor and area registries and
+never control a heater, fan or dehumidifier themselves.
+
+If you have **no Home Assistant floors**, HEM displays the original flat room
+list, with no floor heading or floor settings. Create or assign floors in
+**Settings → Areas, labels & zones**. Renaming or moving areas in Home Assistant
+updates their HEM groups without duplicating area configuration. Room targets,
+sleep, PID and other environmental controls remain independently configured
+per room; floor-wide environmental overrides are not implied.
+
+- Read the outdoor summary and room status, then expand a room for its advice,
+  additional measurements and device controllers. Expanded tiles show data
+  that is not already in the room overview; warning and calibration details
+  remain available without repeating the same current value.
+- Open information and warning details to understand missing inputs or the
+  reason for a recommendation.
+- Use a room's settings gear to edit its selected sources. **Room controls**
+  opens the room's Home Assistant device page.
+- Open an averaged room reading (**≈**, with multiple contributing sensors) for
+  HEM's trend view and choose **6 h**, **24 h**, **7 d** or **All**. Inspect points
+  with the pointer, touch/drag or keyboard; gaps represent missing readings.
+  Single-sensor readings and contributing sensors open the same trend window
+  using their recorded Home Assistant history. **Open entity** opens that
+  sensor's native Home Assistant details. History remains useful when a current
+  value is unavailable; sources excluded from recording may have no history.
+- Average history keeps separate records for each exact group of contributing
+  sensors. Temporary startup outages do not replace the original group's
+  samples. A returning group resumes its history with a visible gap.
+- The icon before a physical entity's name opens its device page; the icon
+  before a HEM controller's name opens its HEM device page. Clicking either
+  name opens the corresponding entity. Announcement controls show the bell
+  icon and current On/Off state.
+- For a waiting controller, read its **Reason** and **Diagnostics** before
+  changing settings.
+
+Opening advice compares indoor needs with the available outdoor evidence.
+Useful manual airing can still be suggested with detected weather or pollution
+cautions and explicit uncertainty about missing or stale outside readings.
+HEM does not claim a moisture or pollutant benefit contradicted by comparable
+outside measurements. Read the room's reasons and diagnostics for the basis
+of the recommendation.
+
+## Where to change settings
+
+Use **Settings → Devices & services → Home Environment Manager → Configure**
+to choose rooms, open **Settings · {room name}**, or edit **General settings**.
+The room page also lets you select that room's occupancy/presence sensors.
+
+Everyday operating settings are grouped on the integration's devices:
+
+| Device | Settings you will find there |
+| --- | --- |
+| **Home** | Shared ventilation limits, announcements, occupancy and source-specific AQI settings |
+| **{Room} Environment** | Room targets, sleep, mold and other room policies |
+| **Individual device controller** | That appliance's control method, targets, supported limits, behavior and PID options |
+
+Setting names use prefixes such as **Announcement**, **Ventilation**, **Sleep**
+and **PID** so related controls stay together. Help explains what each setting
+changes. Removing a monitored room revokes its automatic controls; replacing or
+moving a physical device can require choosing its control method again.
+
+Each controller's shared quick options appear in one compact row. Select an
+option's **icon** to read its explanation, or its adjacent **state** to change
+that exact option. Window protection, device-error announcements, opening
+requests and supported optional behaviors share this row. Mode methods and
+their parameters stay inside their individual mode panels.
+
+The help explains the effect of both On and Off and which conditions apply to
+that device. **Announce device errors** controls error delivery; fault detection
+and device protection remain active when announcements are disabled.
+**Maximum target by mode** lists only the device's supported native target
+modes, such as **(Heating, Cooling)** or **(Dehumidifying)**, using translated
+mode names. **Keep device off when all asleep** explicitly pauses an opted-in
+automatic device while the household sleep condition is confirmed.
+
+### Detect possible heating after an OFF command
+
+HEM monitors independent, fresh room temperature sensors after an HEM-owned
+heater has been commanded OFF. If, after a 30-minute thermal settling period,
+the room continues warming for at least 15 minutes (≥0.7°C increase and
+≥1.5°C above the heating target), HEM records a **suspected** thermal fault.
+The device can still report OFF while physically heating; room temperature
+alone never proves that a valve/relay is active.
+
+For HEM-commissioned heating endpoints with unchanged identity, available
+native sources, no conflicting heater and authorization to control the device,
+HEM may send **at most two** additional OFF commands, 10 minutes apart. HEM
+never infers permission to turn anything ON. The original OFF time and retry
+budget persist across restarts. If the anomaly remains, HEM escalates via the
+same device-error notification channels, including Announcement Hub. The
+controller diagnostics show the room temperature evidence and recovery count.
+
+This uses Home Assistant's generic heating capabilities; there are no
+brand-specific Zigbee profiles or entity-ID lists. The watchdog is inactive
+without a verified HEM OFF episode and independent room temperature evidence.
+Solar gain, residual radiator heat and unknown heat sources are still possible.
+A native reported OFF is **not proof of physical shutdown**.
+
+## Enable device control
+
+1. Select the appliance in the room's **Devices** group and save.
+2. Open its HEM controller through **Device controllers** in the card or the
+   integration's device list.
+3. Review its feedback sensors, targets, presence/sleep behavior and supported
+   limits. For fans, check the intended purpose and minimum/maximum speed.
+4. Choose the method in each supported operating-mode panel, such as
+   **Heating**, **Cooling**, **Drying**, **Humidifying** or **Fan**.
+
+| Method | What it does |
+| --- | --- |
+| **Existing room controller** | Keeps the existing controller path without handing operation to the new per-device method |
+| **Automatic** | Follows HEM's automatic demand and profile decisions |
+| **Manual** | Uses explicit requests and targets through the HEM controller |
+| **Off** | Requests the controller/device off, subject to its operating protections |
+| **PID** | Uses feedback-based PID demand control where supported |
+
+Choosing **Automatic**, **Manual** or **PID** authorizes operation of that exact
+native appliance through its supported controls. If HEM asks you to turn an
+already running appliance off first, do so and wait for its reported state
+before taking control.
+
+The authorization is bound to the physical device and its registered control
+endpoints in that room. Changing room feedback sensors or reordering the same
+sources does not invalidate a selected method. Existing grants are recognized
+only when those physical identities still match.
+
+An unacknowledged command does not change **Automatic** or **PID** to Manual.
+While demand and authority remain valid, HEM retries unconfirmed native power
+and mode commands every **60 seconds**. After **three unsuccessful dispatch
+attempts** it announces that the device is not responding to HEM, while
+continuing to retry.
+Unavailable checks do not count as dispatch attempts. Device availability,
+window policy and minimum operating times still constrain each attempt.
+
+Full-demand native setpoints for **PID ON/OFF control** are best effort. HEM
+makes at most **three actual dispatch attempts** for the same request. If the
+device still reports a different target, HEM records the unconfirmed result,
+stops retrying that target and continues its automatic ON/OFF control. This
+allows devices whose continuous mode ignores a temperature or humidity
+setpoint to remain under PID control. The displayed native target remains
+the device's reported value; native ON/OFF commands still require feedback.
+
+A confirmed manual change on the appliance after HEM has successfully
+controlled it can pause automatic control. Use
+**Control · Continue Automatic** when you want HEM to resume. Window state,
+availability, presence policies and minimum ON/OFF times still apply; the reason
+display explains ordinary waiting periods.
+
+### Independent operating modes
+
+Each supported mode has its own method dropdown and **Parameters** section.
+Heating can use PID while Cooling uses Automatic and Drying uses a separately
+tuned PID. Gains, measurement/cycle timing, calibration, profile targets and
+supported fan/swing/quiet settings belong to their mode. Editing an inactive
+mode does not restart the active mode's cycle or change its pending command.
+The device keeps one physical controller; window, presence, power supply and
+minimum ON/OFF protections remain shared.
+
+The native **Auto** and **Heat/Cool** modes retain their supported automatic
+and manual choices. PID belongs to an explicit direction: use the separate
+Heat and Cool panels when the appliance advertises those modes. Fan PID needs
+qualified feedback for its configured extraction or filtration purpose.
+
+Resume, a change to the active control settings, a real policy pause or loss
+of valid feedback invalidates the old PID integral and cycle checkpoint. When
+operation becomes eligible again, HEM calculates a fresh cycle. Normal PWM
+OFF periods and minimum-OFF waits keep their current phase. These resets never
+erase physical run/rest history, an unconfirmed native command or a genuine
+manual override.
+
+Low PID demand can need a longer ON/OFF cycle to fit the appliance's minimum
+operating times. If a controller check misses the scheduled start, HEM keeps
+at most one overdue pulse and starts it when the existing physical protections
+permit. Its timing follows the confirmed device start, including the full
+following OFF period. Missed cycles do not accumulate into a burst of heating
+or cooling. Controller status exposes the effective PID target, selected
+measurement, demand and next scheduled window for diagnosis.
+These timings use confirmed native state; delayed appliance feedback can
+affect the duty actually delivered.
+
+Device status distinguishes a missing physical source from Home Assistant
+startup and an available device's stability checks. Diagnostics include the
+selected source, readiness deadline, effective cycle and operating minimums,
+last confirmed ON/OFF times, and the **next eligible window**. Eligibility is
+followed by fresh demand, feedback and operating-protection checks; it is not
+a promise that the physical device will start at that instant.
+
+For a supported appliance with Automatic/PID permission to control native
+ON/OFF operation, its **Maximum target by mode** option determines whether HEM
+writes a native target during the ON period. Enabled by default, it requests
+the appliance's reported maximum during heating or humidifying and its
+reported minimum during cooling or drying. This keeps the appliance's internal
+thermostat or humidistat from ending HEM's requested ON period early when its
+local sensor differs from the selected room sensor. Turn the option off to
+leave the native setpoint unchanged, including devices whose continuous mode
+ignores target changes. HEM's room target still determines demand and when to
+request OFF, with the configured operating minimums and confirmed feedback.
+Devices authorized only for setpoint changes keep their bounded target
+adjustments; Dry modes without a native humidity setter use their supported
+mode control.
+
+Appliances advertising fan modes such as **low**, **medium** and **high** also
+have staged fan control. HEM selects from their available stages and applies
+the active occupied/sleep quiet limit to the final speed command. A pending
+optional native target does not prevent a required quiet fan reduction.
+Fan-stage control and compressor ON/OFF timing remain separate; advertised fan
+speeds alone do not establish proportional compressor control.
+
+### Room-presence choices
+
+The controller's **Presence · Requirement** setting decides when **Automatic**
+and **PID** may operate this particular device:
+
+| Choice | Meaning |
+| --- | --- |
+| **No room-presence restriction** | Meet demand whether this room is occupied or empty, using the active target profile. This does not mean continuously ON. |
+| **Only while room is occupied** | Allow operation only when HEM confirms someone is in this room. |
+| **Only while room is empty** | Allow operation only when HEM confirms this room is empty. Someone may still be elsewhere at home. |
+
+If room presence is unknown, the two restricted choices pause operation.
+Confirmed whole-home **Away** takes priority over room sensors and counts every
+room as empty. A valid shared occupied-room list is authoritative: a room
+included in it is occupied and a room omitted from it is empty. With neither a
+configured room list nor any room-presence sensors, HEM treats the room as empty.
+
+When a presence condition stops matching, HEM requests OFF for an output it
+already controls, respecting its current minimum ON time and native protections.
+Presence permission does not create demand or override sleep, window or other
+control rules. The stored choices and existing selections remain unchanged;
+the labels now state their meaning directly.
+
+The optional **Prepare for arrival** action temporarily allows eligible automatic
+controllers restricted to occupied rooms to prepare those rooms while everyone
+is still away, using their existing permission for native ON/OFF control. It
+preserves the actual presence readings and the stored choices.
+See [Prepare for arrival](#prepare-for-arrival) for its scope and timeout.
+
+### Device operating times
+
+Each controller has **Operation · Minimum device ON time (min)** and
+**Operation · Minimum device OFF time (min)**. These govern how long HEM keeps
+the device operating or stopped before requesting the opposite state. For a
+radiator valve, this is its controlled heating operation.
+
+Both settings accept **0 minutes**, which disables that forced operating
+hold, and fractional minutes retain the existing one-second resolution.
+For example, **0.5 min** means 30 seconds and **10 min** means 600 seconds.
+**Power · Maximum ON time (min)** also displays and accepts minutes, with a
+one-minute step and the same supported duration limits as before. These
+physical operating limits are shared across the device's operating modes.
+
+Saved durations and entity identities are preserved across installation changes. Existing
+settings are converted for display, so 600 stored seconds appears as 10
+minutes. Home Assistant number edits and `number.set_value` calls for these
+three entities now take minutes. PID measurement/PWM intervals and the
+separate supply-switch cooldown retain their own units.
+
+Choose any required
+minimum interval from the appliance manufacturer's guidance; compressor
+equipment and radiator valves need different operating policies. Aqara's
+[E1 guidance](https://www.aqara.com/eu/product/radiator-thermostat-e1/faq/)
+also notes that frequent on/off cycling increases valve motor use and battery
+consumption.
+
+HEM preserves existing effective timings until you explicitly edit
+one of these minimums. Editing one preserves the other minimum. An ON minimum
+already recorded for a running cycle completes first; following cycles use
+the new setting. Zero does not fabricate device feedback or skip confirmation
+of a pending command. Existing external supply-switch protections remain
+independent of the newly chosen operating hold.
+
+### Targets and profiles
+
+Review heating, cooling and humidity targets for **Comfort**, **Home**, **Away**,
+**Sleep** and **Eco**. Presence, sleep context and an explicit preset influence
+the active profile.
+
+Each mode's target numbers initially follow the room's profile. An explicit
+mode target overrides only that mode and profile, including a separate Manual
+target. The card and native configuration numbers retain the requested value;
+the controller also reports an effective humidity target when calibrated mold
+protection needs a lower value.
+
+| Profile | Default humidity target when no target is saved |
+| --- | --- |
+| Comfort, Home, Away, Sleep | **65%** |
+| Eco | **70%** |
+
+Your saved targets remain in effect. These are HEM's starting control values;
+adjust them to your room and supported appliance range.
+
+Advanced ISO 7730 comfort inputs are optional. Ordinary temperature/humidity
+control does not require them. When a maximum native target is enabled, HEM
+requests it after confirmed native ON. When stopping is permitted, HEM requests
+OFF directly. Demand, minimum operating times and device protections determine
+the ON period, and native OFF feedback confirms shutdown.
+
+### Optional PID calibration
+
+First select **PID** in the relevant operating-mode panel on the appliance's
+controller, then open that mode's **Parameters**.
+
+For a first adaptive setup, **PID · Calibration → Adaptive · Suggest & approve**
+learns from normal operation. Review the proposed gains and confidence, then
+choose **Approve** or **Discard**. If approval is held, the proposal remains
+pending. Resolve the displayed condition and press **Approve** again.
+**Adaptive · Automatic (max 10%/day)** is a separate opt-in mode that applies
+bounded adjustments automatically.
+
+For a measured model, choose **IMC / λ** or **Cohen-Coon**, enter the measured
+process gain, time constant, dead time and λ where applicable, then use
+**PID · Apply · Calibration** with the native output off and its state confirmed.
+This calculates gains from your inputs; it does not run a live measurement test.
+Calibration inputs, applied gains and reviews stay with the observed mode;
+heating evidence cannot be applied as a drying calibration.
+
+## Presence and sleep
+
+### Home Occupancy
+
+In **General settings**, select direct home sources under
+**Home · Occupancy · Devices**. A fresh positive source means someone is home.
+When all configured direct sources are freshly away/off/zero, home presence
+becomes Away and overrides room activity. Automatic profile selection uses Away
+unless an explicit preset is selected. Unknown or unavailable evidence does not
+prove that everybody is away.
+
+While configured home-presence sources are unresolved, Automatic/PID cannot
+start an appliance or increase its output using a fallback Home target. HEM
+rechecks the live presence and target before a command, including after a
+restart. A valid explicit preset or Manual selection keeps its own control
+semantics. Physical OFF protections and settings editing remain available.
+
+Sensor values marked as restored by Home Assistant are ignored until the
+sensor publishes a real reading. A restored old temperature cannot lower a
+room's current average and create heating demand.
+
+Without direct home sources, HEM can derive home presence from room evidence.
+The Home occupancy away-delay setting applies to that room-derived absence.
+It is separate from the announcement repeat interval, even when both show
+10 minutes.
+
+### Prepare for arrival
+
+When HEM confirms that everyone is away, press **Prepare for arrival** in the
+card header or on the **Home Environment** device. HEM temporarily uses the
+room's configured **Home** targets for eligible automatic controllers so heating,
+cooling and humidity control can begin before you get home. Devices still run
+according to measured demand; the action does not turn every appliance on.
+
+Set **Home - Prepare - Max Time** on the Home Environment device, or
+open that setting from the duration control in the card. The default is
+**60 minutes**; the allowed range is **1–1440 minutes**. Changing the setting
+affects the next press and leaves a running deadline unchanged.
+
+| Event | Result |
+| --- | --- |
+| Press Prepare while confirmed Away | Start the configured duration using Home targets. |
+| Press the native Prepare button again | Renew from now using the current timeout setting. |
+| Someone arrives | End preparation and let normal home/room presence and sleep rules select the profile. |
+| Timeout expires while still Away | Return automatic profile selection to Away. |
+| Press Cancel in the card or on the device | End preparation immediately and recalculate from actual presence and current settings. |
+| Presence becomes unknown | Suspend the preparation effect; the original countdown continues. Resume only if Away is confirmed before expiry. |
+| Home Assistant restarts | Restore the original expiry time; never restart the full duration. |
+
+The card shows the remaining time and changes the action to **Cancel** while
+preparation is active. Narrow cards use an accessible icon with the full action
+in its tooltip. Start is unavailable when someone is home or home presence is
+unknown; it does not queue an action for a later absence.
+
+Preparation applies to **Automatic/PID with automatic profile selection** and
+eligible automatic room control. It includes devices normally restricted to
+occupied rooms when their managed controller already has permission and support
+for native ON/OFF control. Actual home and room presence remain unchanged, and empty-room
+requirements continue to use the actual absence. Explicit presets, Manual, Off
+and manual pauses retain their authority. Window checks, valid sensor inputs,
+device availability, minimum ON/OFF times, power limits and startup protections
+continue to apply. Therefore cancellation or expiry can change the requested
+profile before an appliance's permitted physical transition occurs.
+
+Existing room controllers and migrated controls authorized only to change a
+setpoint keep their original presence restrictions. Unrestricted ones can follow
+Home and Away targets normally. Preparation does not grant them new power
+control or leave an elevated Home setpoint behind a closed presence gate.
+An already-running native thermostat also receives the current profile's
+setpoint when the room is within the profile's temperature range, without a
+mode change, so its temporary Home setpoint can return to Away after expiry.
+
+### Room presence and shared lists
+
+Select local presence sensors on each room's source page, or configure a shared
+occupied-rooms source in General settings. For a shared list, select **State**
+or the attribute containing the list. For example:
+
+```json
+["living_room", "bedroom"]
+```
+
+Use your actual Home Assistant area IDs, names or unambiguous aliases. A valid
+list takes priority over local room sensors: listed rooms are occupied and
+omitted rooms are unoccupied. `[]` or an empty state means no rooms are occupied.
+An unchanged list remains valid overnight; it does not need to publish the same
+value repeatedly. The same applies to binary occupancy/presence sensors that
+remain On or Off.
+
+When no shared list is configured, or its entity is missing, unavailable or
+awaiting a live report, HEM checks local presence sensors. Any selected sensor
+that is On means the room is occupied; all selected sensors Off means unoccupied.
+A room with no presence sources is also treated as unoccupied for control and
+room display. Unavailable selected sources can still produce Unknown. Malformed
+lists and unknown room names remain Unknown rather than using sensor fallback.
+Sampled numeric occupancy counts retain their configured freshness limit.
+Verified whole-home Away takes precedence over room activity.
+
+### What the room sleep settings do
+
+| Setting | Purpose |
+| --- | --- |
+| **Sleep · Sleeping now** | Marks the room as currently sleeping for climate sleep behavior |
+| **Sleep · Use schedule** | Enables the local-time sleep interval; the default is **22:00–07:00** |
+| **Shared sleeping-room list** | Activates Sleep when the room is both occupied and in the selected list |
+| **Noise · Room used for sleeping** | Classifies the room for calibrated nighttime noise assessment |
+
+Sleep context can select sleep targets or a device's configured sleep/quiet
+behavior. Turning **Sleeping now** off does not override an active schedule or
+shared sleeping-room list. The noise classification does not activate climate
+Sleep.
+
+### Leave Sleep before an alarm
+
+In **General settings**, select both of these inputs:
+
+| Setting | What to select |
+| --- | --- |
+| **Sleep · Next alarm** | A timestamp sensor such as a phone's next alarm, a date-and-time helper, or a time entity/helper |
+| **Sleep · Minutes before alarm** | A numeric sensor, Number or Input Number helper containing a nonnegative number of minutes |
+
+For example, an alarm at **07:00** and a minutes value of **30** make HEM leave
+automatic Sleep at **06:30**. Devices then use their normal automatic targets
+and sleep-related pauses or quiet limits are released. Other quiet settings
+still apply. This gives the room time
+to warm, cool or adjust humidity before waking. It does not guarantee that a
+target will be reached by the alarm; that depends on the room and equipment.
+
+Use **0** to leave Sleep when the alarm rings. A time-only source repeats in
+Home Assistant's configured local timezone; a dated timestamp identifies a
+specific alarm. The minutes source can have a minutes unit or no unit. Select
+neither input to disable the feature.
+
+Changes to the alarm or lead time are applied immediately. Once an alarm has
+rung, a phone clearing it or publishing tomorrow's alarm will not put devices
+back to Sleep during the same sleep episode. The episode ends when its room or
+household sleep condition ends. A reload preserves an already-triggered wake
+episode. Missing or invalid alarm inputs cannot start a new wake transition.
+
+This feature releases **automatic** Sleep. An explicitly selected Sleep preset,
+Manual control, Away behavior, window checks and device protection delays keep
+their normal priority.
+
+### Keep selected devices off when everybody is sleeping
+
+Each HEM device controller has **Sleep · Keep device off when all asleep**,
+disabled by default. Enable it for a device that should stop while everybody
+is sleeping, such as a living-room purifier while occupants sleep in bedrooms.
+
+HEM applies this option when **at least one room is occupied and every occupied
+room is also in the shared sleeping-room list**. It checks occupied rooms
+throughout Home Assistant, including rooms without HEM equipment. An empty
+occupied-room list does not mean everybody is sleeping, and an occupied room
+outside the sleeping-room list ends household Sleep.
+
+This option applies separately to each device in **Automatic** or **PID**
+control. It requests OFF even if that device's separate room sleep behavior is
+Normal or Sleep targets, while retaining minimum ON time, native confirmation,
+manual override and device protection checks. It does not mark its own room as
+occupied. Unknown evidence and a verified empty home do not prove that everyone
+is asleep. Turning the option off, a confirmed awake occupant, or the configured
+alarm preparation time releases this household hold. The device's own room
+sleep and presence rules still apply, and Manual control retains its authority.
+
+## Optional solar shading
+
+1. Select the eligible blinds, shades or shutters in the room's source settings.
+2. Open each cover's HEM controller and select its **associated window contact**.
+3. Set the closing-temperature threshold on the cover controller. Review
+   **Shading · Minimum sun elevation for shading (°)** on the
+   **{Room} Environment** device.
+4. If wanted, enable movement announcements or add a lux sensor and minimum lux.
+5. Enable **Shading · Automatic solar shade cooling** for the intended cover.
+
+Closing also needs current room temperature, a known closed linked window,
+sunlight/elevation, suitable selected weather and available cover feedback.
+Selecting a cover alone does not enable movement. When movement announcements
+are enabled, failure to submit the announcement holds the movement.
+
+Low lux alone does not trigger reopening. HEM automatically reopens only covers
+whose earlier automatic closure it confirmed and owns. Manual movement holds
+further automatic ownership until you explicitly re-enable it.
+
+## Mold indication measurement
+
+Mold indication estimates humidity at the coldest surface using a calibrated
+temperature relationship. It does not detect mold growth or spores.
+
+For an authorized Automatic/PID humidity controller, valid calibration also
+sets the upper room-humidity target needed to respect the configured surface
+humidity limit. A room can therefore need dehumidification even when its room
+humidity is below its usual comfort target. HEM derives this target from the
+same current temperatures and calibration as the indication, keeps your saved
+comfort target, and reports both values. Missing or stale evidence does not
+create mold-based device demand. Native and room minimum limits still apply;
+diagnostics identify a mold target that those limits cannot reach.
+
+Mold-based control requires selected indoor temperature and humidity reports
+no older than **10 minutes**, or the configured maximum age if that is shorter.
+Outdoor weather follows its configured maximum age. The monitoring display can
+retain an estimate under its longer monitoring age; that displayed number alone
+does not authorize a device command without current control inputs.
+
+1. Enable **Use mold indication instead of raw room RH** in General settings.
+2. Select room temperature and humidity sensors, plus weather sources providing
+   usable outdoor temperature.
+3. Open the card's **Mold indication measurement** explanation and the room's
+   **Room controls** / **{Room} Environment** device.
+4. Choose settled conditions with the room **at least 10°C warmer than outdoors**
+   for a useful cold-surface measurement. Check that heating, ventilation and
+   direct sun have not just changed the surface conditions.
+5. Measure the coldest relevant surface with a thermometer. Enter
+   **Mold · Measured coldest surface temperature (°C)**.
+6. Press **Mold · Recalculate calibration factor** while the indoor, outdoor and
+   surface readings represent the same conditions.
+
+The panel colours the temperature readings **green** when the recommended
+temperature contrast is met, **red** when it is too small or outdoors is not
+colder, and neutral when readings are missing. Green confirms temperature
+contrast; you still need to check that conditions are stable.
+
+The recalculation button saves the factor from the surface measurement and
+current selected room/weather temperatures. Recalculate after changing the
+surface measurement. For background, see Home Assistant's
+[mold-indicator calibration guide](https://www.home-assistant.io/integrations/mold_indicator/#calibration).
+
+## Announcements
+
+Configure delivery in **General settings**, then enable
+**Announcement · Automatic notifications** and/or
+**Announcement · Automatic speech** on the Home device.
+
+- With **Announcement Hub**, enable **Announcement · Use Announcement Hub**
+  and configure recipients and destinations in that integration.
+- For direct delivery, select notification entities and/or a TTS engine with
+  media players. Check their Home Assistant area assignments for room targeting.
+- Set the announcement repeat interval as needed. **0** disables repeats while
+  allowing the initial announcement.
+- For optional AI wording, choose the agent in General settings, then enable
+  **Announcement · AI wording** on the Home device. AI rewrites the wording;
+  it does not decide climate control or ventilation rules.
+
+A running Hub handles its own routing and rejected jobs. HEM uses configured
+direct fallback when Hub is disabled or unavailable.
+
+To explicitly announce current actionable recommendations, open
+**Developer tools → Actions** and run:
+
+```yaml
+action: environment_manager.announce
+data:
+  channels: both
+```
+
+Use `tts` or `notification` to limit the channel. Optional `areas` contains Home
+Assistant area IDs. This action announces current recommendations; it does not
+send arbitrary text, and there may be nothing to announce when no action is
+recommended.
+
+## Troubleshooting
+
+| What you see | What to check |
+| --- | --- |
+| A sensor or device is missing from a room picker | Its HA area assignment, native entity type/device class and units; room names in entity IDs do not assign areas |
+| “No window sensors” | Select actual window-contact binary sensors; shades have a separate source group |
+| No opening recommendation | Read the reason, then check indoor demand, weather, outdoor air quality, AQI scale and ventilation limits |
+| Missing readings or history gaps | Check live source values, freshness and recorded samples; new history needs time to collect |
+| A selected appliance is not operating | Check Control · Method, current authorization, feedback, window/presence rules and minimum ON/OFF timing |
+| PID keeps waiting while the room is below its heating target | Check the controller's effective PID target and measurement, demand percentage, remaining minimum OFF time and next PWM window; the room overview and appliance's own sensor can show different values |
+| Control stops after a source change | Check the selected appliance and sensors, then explicitly choose the control method again |
+| PID calibration is held | Check method/model inputs, that the physical output is off, and that its reported state has been confirmed |
+| Mold controls are absent or uncalibrated | Enable mold indication, allow the reload, provide fresh room/weather readings, measure the surface and recalculate |
+| A cover does not move | Check its opt-in, associated closed window, weather/sun, temperature/lux conditions and manual-override status |
+| The card is missing after an update | Confirm HEM loaded, restart after installation, refresh the browser, and select the actual Window recommendations sensor |
+| Announcements are silent | Check the speech/notification switches, Hub routing or direct destinations, room assignments and whether actionable recommendations exist |
+| “Requesting window opening” | A bounded announcement submission is in progress; a failed submission releases the automatic start |
+| “Waiting for you to open the window” | The opening request was accepted; the device can resume after the configured timeout if its window stays closed |
+
+For a reproducible problem, open an
+[issue](https://github.com/Chreece/HA-Home-Environment-Manager/issues) with the displayed reason, relevant settings, a brief Home Assistant environment description, and
+steps to reproduce. Remove personal details from logs and screenshots.
