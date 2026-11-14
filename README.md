@@ -12,6 +12,8 @@
 </p>
 <!-- HEM-LANGUAGE-SELECTOR-END -->
 
+<sub>Translation quality: English is the reference. The Greek, German, French and Spanish guides have been rewritten for clarity but still welcome independent native-speaker review. The other language pages are unreviewed machine translations and may contain incorrect wording. Use the English guide for installation and safety details. <a href="docs/i18n/QUALITY.md">See translation status and review guidance.</a></sub>
+
 # HEM - Home Environment Manager
 
 <p align="center">
