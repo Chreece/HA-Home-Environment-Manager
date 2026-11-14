@@ -84,7 +84,10 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
                 data["average_evidence"] = {**aggregate, "area_id": room.area_id}
         readings.append(data)
     high = [item for item in readings if item["exceeded"]]
-    air_readings = [item for item in readings if item["metric"] != "illuminance"]
+    # Estimated eCO₂ is displayed, but cannot alone certify that room air is
+    # safe or complete the genuine pollutant evidence used by ventilation.
+    air_readings = [item for item in readings
+                    if item["metric"] not in ("illuminance", "eco2")]
     known = any(item["available"] for item in air_readings)
     incomplete_air = any(not item["available"] for item in air_readings)
     opened = [item for item in room.windows if item.opened is True]

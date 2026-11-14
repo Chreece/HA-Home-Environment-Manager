@@ -139,7 +139,8 @@ with sync_playwright() as pw:
             expect(group.locator(':scope > summary strong')).to_have_text(HEADINGS[language])
             assert dialog.locator('[data-hem-unified141="presence"] [data-room-options-group114="door_sensors"]').count()==0
             assert dialog.locator('[data-hem-unified141="presence"] [data-hem-full-row127="switch.closed_room_eco"]').count()==0
-            assert dialog.locator('[data-hem-full-row127="switch.closed_room_eco"]').count()==1
+            assert dialog.locator('[data-hem-full-row127="switch.closed_room_eco"]').count()==0
+            assert dialog.locator('[data-hem-full-row127="select.door_coordination"]').count()==0
             order=group.locator('[data-hem-unified-sources141]').evaluate('node=>[...node.children].map(n=>n.getAttribute("data-room-options-group114")||(n.hasAttribute("data-hem-door-eco062")?"eco":"unexpected"))')
             assert order==['windows','door_sensors','eco','shades'],order
             assert page.evaluate('native062.length')==0
@@ -147,8 +148,8 @@ with sync_playwright() as pw:
             dialog.locator("[data-settings-advanced-b8]").check()
             assert paired.locator('[data-hem-full-row127]').evaluate_all(
                 'nodes=>nodes.map(n=>n.getAttribute("data-hem-full-row127"))') == [
-                    'switch.closed_room_eco','select.door_target','select.door_coordination',
-                    'select.door_kind','number.door_report','select.door_energy']
+                    'select.door_target','select.door_kind',
+                    'number.door_report','select.door_energy']
             assert dialog.locator('[data-hem-unified141="presence"] [data-hem-full-row127="select.door_target"]').count()==0
             for text in dialog.locator('.hem-full-label127 strong').all_text_contents():
                 assert 'Gästezimmer' not in text and 'Environment' not in text,text
@@ -157,32 +158,27 @@ with sync_playwright() as pw:
             door.locator(':scope > summary').click()
             door.locator('input[type=checkbox][value="binary_sensor.door_b"]').check()
             draft=page.evaluate('structuredClone(card._roomSettingsDialog114.draft)')
-            eco=group.locator('[data-hem-full-row127="switch.closed_room_eco"]')
-            button=eco.locator('[data-hem-full-apply127]')
-            button.focus()
+            # Door Eco and coordination were moved to individual controllers.
+            # The door-to-room link, purpose, meter and report timeout remain
+            # room-owned evidence, and stay independently editable.
+            target=paired.locator('[data-hem-full-row127="select.door_target"]')
+            select=target.locator('select')
+            select.focus()
             page.evaluate('card._hemFullRender127(card._roomSettingsDialog114,"room")')
-            expect(button).to_be_focused()
+            expect(select).to_be_focused()
             assert page.evaluate('card._roomSettingsDialog114.draft')==draft
-            assert eco.count()==1
-            button.click()
-            assert page.evaluate('native062')==[['switch','turn_on',{'entity_id':'switch.closed_room_eco'}]]
-            eco.locator('.hem-full-help127 > summary').click()
+            assert target.count()==1
+            target.locator('.hem-full-help127 > summary').click()
             page.evaluate('card.shadowRoot.activeElement?.blur();card._hemFullRender127(card._roomSettingsDialog114,"room")')
-            expect(eco.locator('.hem-full-help127')).to_have_attribute('open','')
-            paragraph=eco.locator('.hem-full-help-body127 p')
+            expect(target.locator('.hem-full-help127')).to_have_attribute('open','')
+            paragraph=target.locator('.hem-full-help-body127 p')
             assert paragraph.evaluate('n=>n.getBoundingClientRect().width')>150
             assert group.evaluate('n=>n.scrollWidth<=n.clientWidth+2')
             assert page.evaluate('card._roomSettingsDialog114.draft')==draft
-            target=paired.locator('[data-hem-full-row127="select.door_target"]')
-            target.locator('select').select_option('Bedroom [room1]')
-            target.locator('select').dispatch_event('change')
+            select.select_option('Bedroom [room1]')
+            select.dispatch_event('change')
             assert page.evaluate('native062.at(-1)')==['select','select_option',{
                 'entity_id':'select.door_target','option':'Bedroom [room1]'}]
-            coordination=paired.locator('[data-hem-full-row127="select.door_coordination"]')
-            coordination.locator('select').select_option('Coordinate starts')
-            coordination.locator('select').dispatch_event('change')
-            assert page.evaluate('native062.at(-1)')==['select','select_option',{
-                'entity_id':'select.door_coordination','option':'Coordinate starts'}]
             meter=paired.locator('[data-hem-full-row127="select.door_energy"]')
             meter.locator('select').select_option('Energy [sensor.energy]')
             meter.locator('select').dispatch_event('change')

@@ -64,6 +64,7 @@ LIMIT_FIELDS = (
 )
 FAN_LIMIT_FIELDS = ("fan_min_percentage", "fan_max_percentage")
 DEVICE_SELECTS = {"off_state_watchdog_mode": ("monitor_recover", "monitor_only", "disabled"),
+                  "door_start_coordination": ("inherit", "observe", "conflicts", "shared"),
                   "presence_requirement": ("always", "occupied", "absent"),
                   "sleep_behavior": ("normal", "pause", "sleep_targets"),
                   "fan_purpose": ("auto", "extraction", "filtration")}
@@ -74,6 +75,8 @@ DEFAULTS = {"control_mode": "existing", "preset": "none", "requested_mode": None
             "power_switch_entity": None,
             "quiet_sleep": False, "quiet_occupied": False,
             "sleep_when_everyone_asleep": False,
+            "door_closed_eco": False,
+            "door_start_coordination": "inherit",
             "pause_on_window_open": True,
             "announce_before_start": False,
             "native_full_output": True,
@@ -149,6 +152,9 @@ def base_settings(manager: Any, spec: ManagedDevice) -> dict:
         if key not in MODE_METADATA_KEYS and key not in (
             "operating_mode", "timed_setpoint_sequence")
     }}
+    from .equipment_door_policy import effective_eco, effective_coordination
+    result["door_closed_eco"] = effective_eco(manager, spec, raw)
+    result["door_start_coordination"] = effective_coordination(raw)
     # Missing settings and legacy strings/numbers never opt a device in.
     # Old installations keep recovery; invalid persisted settings fail closed.
     watchdog_mode = raw.get("off_state_watchdog_mode", "monitor_recover")
@@ -1065,7 +1071,7 @@ def plan_for(manager: Any, spec: ManagedDevice) -> dict:
     # gates. A stale cached plan must not keep Eco active after the door opens.
     # Do not operate a physical device or infer isolation from an unselected
     # contact. Use only independently verified fresh same-area measurements.
-    if room.get("closed_door_eco") is True or room.get("door_sensors"):
+    if cfg.get("door_closed_eco") is True or room.get("door_sensors"):
         from .room_doors import observe as observe_room_door
         from .room_sources import (
             selected as selected_room_inputs, aggregate, room_temperature_evidence,
@@ -1098,7 +1104,8 @@ def plan_for(manager: Any, spec: ManagedDevice) -> dict:
             for eid in contact_ids
         )
         door = observe_room_door(
-            manager.hass, spec.area_id, room,
+            manager.hass, spec.area_id,
+            {**room, "closed_door_eco": cfg.get("door_closed_eco") is True},
             occupancy=occupancy, occupancy_evidence=evidence,
             occupancy_sources=[source for source in sensors
                                if source != shared.get("occupied_rooms_entity")],

@@ -135,7 +135,16 @@ def start_hold(runtime, spec, cap, cfg, plan, mode, *, automatic=True, power=Tru
     now = runtime.clock()
     budget = getattr(runtime, "_door_start_budget", None)
     settings = runtime.manager.settings
-    if budget is None and not configured(settings):
+    device_preference = cfg.get("door_start_coordination", "inherit")
+    if device_preference not in ("inherit", "observe", "conflicts", "shared"):
+        device_preference = "observe"
+    if device_preference != "inherit":
+        # A stale saved override cannot coordinate via a neighbor's door
+        # when this device has no longer any verified configured door itself.
+        from .equipment_door_policy import configured as own_door_configured
+        if not own_door_configured(runtime.manager, spec):
+            device_preference = "observe"
+    if budget is None and device_preference not in ("conflicts", "shared") and not configured(settings):
         return None
     if budget is None:
         runtime._door_start_budget = budget = StartBudget()
@@ -153,7 +162,8 @@ def start_hold(runtime, spec, cap, cfg, plan, mode, *, automatic=True, power=Tru
     if state.state not in ("off", "unknown", "unavailable") and not state.attributes.get("restored"):
         budget.records.pop(spec.identifier, None)
         return None
-    eligible = (automatic is True and power is True and mode != "off" and state.state == "off"
+    eligible = (device_preference != "observe"
+                and automatic is True and power is True and mode != "off" and state.state == "off"
                 and cfg.get("control_mode") == "automatic" and cfg.get("preset", "none") == "none"
                 and plan.get("away") == "home" and plan.get("sleeping") is False
                 and plan.get("arrival_preparing") is not True
@@ -174,7 +184,10 @@ def start_hold(runtime, spec, cap, cfg, plan, mode, *, automatic=True, power=Tru
                 config = rooms[owner]
                 opts = contact_options(config, contact)
                 target = opts["target_area"]
-                if (opts["kind"] != "interior" or opts.get("coordination") not in ("conflicts", "shared")
+                policy = (opts.get("coordination") if device_preference == "inherit"
+                          else device_preference)
+                if (opts["kind"] != "interior" or policy not in ("conflicts", "shared")
+                        or (device_preference != "inherit" and owner != spec.area_id)
                         or spec.area_id not in (owner, target)
                         or target not in target_areas(runtime.hass, settings, owner)):
                     continue
@@ -182,7 +195,7 @@ def start_hold(runtime, spec, cap, cfg, plan, mode, *, automatic=True, power=Tru
                                                datetime.fromtimestamp(now, timezone.utc))
                 if observed["health"] != "ok" or observed["state"] != "open" or observed["state_age_seconds"] < 30:
                     continue
-                links.append((target if owner == spec.area_id else owner, contact, opts["coordination"]))
+                links.append((target if owner == spec.area_id else owner, contact, policy))
             peers = managed_devices(runtime.hass, runtime.manager.entry.entry_id, settings) if links else ()
             for other, contact, policy in sorted(links)[:128]:
                 for peer in peers[:128]:
@@ -230,7 +243,7 @@ def start_hold(runtime, spec, cap, cfg, plan, mode, *, automatic=True, power=Tru
                     candidate = {"kind": kind, "peer": other_cap.primary, "contact": contact,
                                  "minimum_progress": 1 if local_mode == "filter" else 0.1}
                     progress = own_metric
-                    signature = (_source_signature(settings, spec.area_id), local_mode,
+                    signature = (_source_signature(settings, spec.area_id), device_preference, local_mode,
                                  tuple(sorted(targets.items())), cfg.get("operating_mode"))
                     break
                 if candidate is not None:

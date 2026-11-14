@@ -11,8 +11,6 @@ import asyncio
 import json
 import logging
 import re
-from functools import lru_cache
-from pathlib import Path
 from typing import Any
 
 from .languages import resolve_language
@@ -37,14 +35,52 @@ _CONTROL = re.compile(r"[\x00-\x1f\x7f]")
 _NUMBER = re.compile(r"\d+(?:[.,]\d+)*")
 
 
-@lru_cache(maxsize=1)
+# Static, versioned labels: no sync filesystem I/O on the Home Assistant event loop.
+AGENT_DEFAULT_LABELS: dict[str, str] = {
+    "en": "Home Assistant default",
+    "el": "Προεπιλεγμένος πράκτορας Home Assistant",
+    "de": "Home Assistant-Standardagent",
+    "fr": "Agent Home Assistant par défaut",
+    "es": "Agente predeterminado de Home Assistant",
+    "it": "Home Assistant - Agente predefinito",
+    "nl": "Home Assistant - Standaardagent",
+    "pt": "Home Assistant - Agente predefinido",
+    "pt-BR": "Home Assistant - Agente padrão",
+    "pl": "Home Assistant - Domyślny agent",
+    "ru": "Home Assistant - Агент по умолчанию",
+    "uk": "Home Assistant - Типовий агент",
+    "tr": "Home Assistant - Varsayılan temsilci",
+    "cs": "Home Assistant - Výchozí agent",
+    "sk": "Home Assistant - Predvolený agent",
+    "hu": "Home Assistant - Alapértelmezett ügynök",
+    "ro": "Home Assistant - Agent implicit",
+    "bg": "Home Assistant - Агент по подразбиране",
+    "hr": "Home Assistant - Zadani agent",
+    "sr": "Home Assistant - Подразумевани агент",
+    "sv": "Home Assistant - Standardagent",
+    "nb": "Home Assistant - Standardagent",
+    "da": "Home Assistant - Standardagent",
+    "fi": "Home Assistant - Oletusavustaja",
+    "id": "Home Assistant - Agen bawaan",
+    "vi": "Home Assistant - Trợ lý mặc định",
+    "th": "Home Assistant - ตัวแทนเริ่มต้น",
+    "hi": "Home Assistant - डिफ़ॉल्ट एजेंट",
+    "zh-Hans": "Home Assistant - 默认会话代理",
+    "zh-Hant": "Home Assistant - 預設對話代理",
+    "ja": "Home Assistant - 既定のエージェント",
+    "ko": "Home Assistant - 기본 대화 에이전트",
+    "ar": "Home Assistant - الوكيل الافتراضي",
+    "he": "Home Assistant - סוכן ברירת מחדל",
+    "fa": "Home Assistant - عامل پیش‌فرض",
+    "bn": "Home Assistant - ডিফল্ট এজেন্ট",
+    "ur": "Home Assistant - پہلے سے طے شدہ ایجنٹ",
+    "ta": "Home Assistant - இயல்புநிலை முகவர்"
+}
+
+
 def _agent_labels() -> dict[str, str]:
-    """Default-agent choices in all supported languages, not only five."""
-    root = Path(__file__).parent / "config_i18n_overrides.json"
-    return {
-        code: item["agent"]
-        for code, item in json.loads(root.read_text(encoding="utf-8")).items()
-    }
+    """All supported default-agent labels, without event-loop disk access."""
+    return AGENT_DEFAULT_LABELS
 
 
 def conversation_agent_choices(hass: Any, saved: str | None = None) -> list[dict[str, str]]:

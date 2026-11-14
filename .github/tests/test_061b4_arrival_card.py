@@ -160,6 +160,20 @@ def actions(page, expect):
         expect(action).to_be_disabled()
         expected = "only while away" if presence == "unknown" else "confirmed away"
         assert expected in action.get_attribute("title")
+        if presence == "home":
+            # HA may report the Prepare entity unavailable or omit its state
+            # while the home is occupied. The tooltip must explain the
+            # temporary occupancy gate, not say HEM is unsupported.
+            page.evaluate("""() => {window.missingWhileHome124 =
+                card._hass.states['button.renamed_arrival_a'];
+              setNative124('button.renamed_arrival_a',undefined);}""")
+            settle(page)
+            expect(action).to_be_disabled()
+            assert "Someone is home right now" in action.get_attribute("title")
+            assert page.locator(".hem-arrival124").get_attribute(
+                "data-arrival-status124") == "home"
+            page.evaluate("setNative124('button.renamed_arrival_a',missingWhileHome124)")
+            settle(page)
         # The delegated handler also guards synthetic/stale disabled clicks.
         action.evaluate("node=>node.dispatchEvent(new MouseEvent('click',{bubbles:true,composed:true}))")
         assert page.evaluate("calls.length") == 2
@@ -294,6 +308,18 @@ def run():
                         page.screenshot(path=str(shots / f"061b4-arrival-active-{current}.png"), full_page=True)
                     page.evaluate("patchArrival124({active:false,can_start:true,expires_at:null})")
                     settle(page)
+                # Human-readable occupancy message in each supported UI
+                # language, even though the native button is disabled.
+                page.evaluate("patchArrival124({active:false,can_start:false,home_status:'home'})")
+                settle(page)
+                tooltip=page.locator(".hem-arrival-action124").get_attribute("title")
+                assert {
+                    "en":"Someone is home right now",
+                    "el":"Κάποιος βρίσκεται στο σπίτι",
+                    "de":"Es ist gerade jemand zu Hause",
+                }[language] in tooltip,(language,tooltip)
+                page.evaluate("patchArrival124({active:false,can_start:true,home_status:'away'})")
+                settle(page)
                 if language == "en":
                     current = "arrival-actions"
                     actions(page, expect)

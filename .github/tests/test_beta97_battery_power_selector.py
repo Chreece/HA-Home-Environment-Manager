@@ -138,6 +138,12 @@ features.pid_calibration_supported=lambda *a,**kw:False
 features.registered_control=lambda *a,**kw:False
 features.register_late_capabilities=lambda *a,**kw:None
 sys.modules[features.__name__]=features
+# This isolated legacy power-selector fixture does not load room-door
+# discovery. No selected doors are supplied; the real platform must therefore
+# register no per-controller door selectors in this test.
+door_policy=ModuleType(pkg.__name__+'.equipment_door_policy')
+door_policy.configured=lambda manager,spec:False
+sys.modules[door_policy.__name__]=door_policy
 mode_entities=ModuleType(pkg.__name__+'.equipment_mode_entities')
 mode_entities.scoped_fields=lambda *args:()
 sys.modules[mode_entities.__name__]=mode_entities

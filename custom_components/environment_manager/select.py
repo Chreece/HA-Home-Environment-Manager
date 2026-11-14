@@ -135,6 +135,10 @@ async def async_setup_entry(hass, entry, async_add_entities):
             for key in ("pid_fan_capacity_mode", "pid_fan_capacity_for_mode"):
                 if active or registered_control(registry, "select", spec, key):
                     selection.append(EquipmentSelect(manager, spec, key))
+            from .equipment_door_policy import configured as door_configured
+            if (door_configured(manager, spec)
+                    or registered_control(registry, "select", spec, "door_start_coordination")):
+                selection.append(EquipmentSelect(manager, spec, "door_start_coordination"))
         return selection
 
     entities.extend(native_feature_selects())
@@ -145,8 +149,10 @@ async def async_setup_entry(hass, entry, async_add_entities):
     entities.extend(EquipmentSelect(manager, spec, key)
                     for spec in equipment.specs(manager)
                     for key in equipment.DEVICE_SELECTS
-                    if key != "fan_purpose" or (cap := equipment.capabilities(manager, spec)) is not None
-                    and (cap.domain == "fan" or set(cap.modes) == {"off", "fan_only"}))
+                    if key != "door_start_coordination"
+                    and (key != "fan_purpose" or
+                         ((cap := equipment.capabilities(manager, spec)) is not None
+                          and (cap.domain == "fan" or set(cap.modes) == {"off", "fan_only"}))))
     from .room_sources import selected
     from .const import CONF_AREAS
     for area in manager.settings.get(CONF_AREAS, []):
@@ -166,6 +172,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
                                      setting_key="scale", entity_id=source))
     register_late_capabilities(
         hass, entry, async_add_entities, entities, native_feature_selects,
+        policy_changes=True,
     )
 
 
@@ -383,6 +390,9 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
             if self._key.startswith("pid_"):
                 return self.controller_settings["control_mode"] == "pid"
             return True
+        if self._key == "door_start_coordination":
+            from .equipment_door_policy import configured
+            return configured(self._manager, self._spec)
         if self._key == "quiet_fan_mode":
             cap = equipment.capabilities(self._manager, self._spec)
             return bool(cap and cap.fan_modes and not cap.fan_percentage)

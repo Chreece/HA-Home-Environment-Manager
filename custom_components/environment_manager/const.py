@@ -47,7 +47,9 @@ from .languages import SUPPORTED_LANGUAGE_TAGS
 
 LANGUAGES = ("auto", *SUPPORTED_LANGUAGE_TAGS)
 SUPPORTED_AIR_METRICS = ("aqi", "co2", "pm25", "pm10", "voc", "voc_parts", "no2", "o3", "so2")
-INDOOR_METRICS = (*SUPPORTED_AIR_METRICS, "humidity")
+INDOOR_METRICS = (*SUPPORTED_AIR_METRICS, "humidity", "eco2")
+# eCO₂ is an informational CO₂-equivalent estimate, not a control/ventilation
+# metric and never an outdoor pollutant threshold.
 WEATHER_CLEAR = frozenset(("sunny", "clear-night", "partlycloudy", "cloudy"))
 
 DEFAULT_THRESHOLDS = {
@@ -83,6 +85,7 @@ UNIT_LABEL = {
     "mold": "%",
     "aqi": "AQI",
     "co2": "ppm",
+    "eco2": "ppm",
     "pm25": "µg/m³",
     "pm10": "µg/m³",
     "voc": "µg/m³",

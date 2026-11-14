@@ -53,6 +53,10 @@ class EquipmentEntity:
         # in memory and use a full legacy name instead.
         locale = getattr(getattr(manager.hass, "config", None), "language", "en")
         self._attr_name = localized_equipment_name(key, locale, channel)
+        if key in ("door_closed_eco", "door_start_coordination"):
+            from .equipment_door_policy import words
+            prefix = {"el": "Πόρτα", "de": "Tür"}.get(str(locale).split("-")[0], "Door")
+            self._attr_name = prefix + " · " + channel + words(locale)[key]
         if operating_mode:
             from .equipment_mode_entities import setting_label
             from .operating_mode_catalog import operating_mode_label
@@ -129,6 +133,27 @@ class EquipmentEntity:
                 equipment_configuration_help(key, language))
             translated[language] = scoped_help(key, language, detail) if mode else detail
         attributes["configuration_help_locales"] = translated
+        if key in ("door_closed_eco", "door_start_coordination"):
+            from .equipment_door_policy import configured, words
+            help_key = "eco_help" if key == "door_closed_eco" else "coord_help"
+            attributes.update(
+                setting_key=key,
+                door_device_policy=True,
+                door_room_configured=configured(self._manager, self._spec),
+                setting_label=words(locale)[key],
+                setting_label_locales={lang: words(lang)[key] for lang in ("en", "el", "de")},
+                configuration_help=words(locale)[help_key],
+                configuration_help_locales={
+                    lang: words(lang)[help_key] for lang in ("en", "el", "de")
+                },
+            )
+            if key == "door_start_coordination":
+                attrs = ("inherit", "observe", "conflicts", "shared")
+                attributes["option_labels"] = {key: words(locale)[key] for key in attrs}
+                attributes["option_labels_locales"] = {
+                    lang: {key: words(lang)[key] for key in attrs}
+                    for lang in ("en", "el", "de")
+                }
         return attributes
 
     async def async_added_to_hass(self):
