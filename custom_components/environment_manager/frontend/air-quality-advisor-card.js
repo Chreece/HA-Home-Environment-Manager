@@ -9420,7 +9420,8 @@
       const edit=saved.nativeEdits?.get(field.id);
       if(edit&&edit.phase!=="saved")return true; // Never lose an in-flight or failed draft.
       const usable=record=>!record.disabled&&record.state&&
-        !["unavailable","unknown"].includes(record.state.state);
+        record.state.state!=="unavailable"&&
+        (record.domain==="button"||record.state.state!=="unknown");
       // A live legacy action remains reachable if every new mode control is offline.
       if(usable(field)&&!replacements.some(usable))return true;
       return false;

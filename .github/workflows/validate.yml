@@ -408,6 +408,8 @@ jobs:
         run: python -I .github/tests/test_061b12_device_room_settings.py
       - name: B13 all HEM device and room settings, including time and button controls
         run: python -I .github/tests/test_061b13_all_settings.py
+      - name: B18 PID settings deduplication, paired decisions and responsive labels
+        run: python -I .github/tests/test_062b18_device_pid_actions.py
       - name: B15 actual backend Home Options menu and UI step contract
         run: python -I .github/tests/test_061b15_home_options_contract.py
       - name: B14 unified Home and room settings, exact registry and Options saves
