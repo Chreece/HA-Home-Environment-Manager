@@ -54,6 +54,8 @@ jobs:
         run: python -I .github/tests/test_061b11_branding.py
       - name: Verify user-friendly README and screenshots
         run: python -I .github/tests/test_readme_user_guide.py
+      - name: Verify all 38 README languages and technical identifiers
+        run: python -I .github/tests/test_readme_localizations.py
       - name: Prepare legacy unit test source paths (CI only, never packaged)
         run: |
           python - <<'PYCODE'
