@@ -80,6 +80,17 @@ class FakeGitHub:
 
 
 class PublishReleaseTests(unittest.TestCase):
+    def test_current_beta_has_nonempty_matching_release_notes(self):
+        """A version bump must not reach main without a publishable notes file."""
+        manifest = json.loads((ROOT / "custom_components/environment_manager/manifest.json").read_text())
+        version = manifest["version"]
+        self.assertIsNotNone(publisher.version_key(version))
+        notes = ROOT / ".github/releases" / f"v{version}.md"
+        self.assertTrue(notes.is_file(), f"Missing release notes for current version: {notes}")
+        text = notes.read_text(encoding="utf-8")
+        self.assertTrue(text.strip().startswith(f"# HEM v{version}"), "Release notes must match manifest version")
+        self.assertGreater(len(text.strip()), 250, "Release notes are incomplete")
+
     @classmethod
     def setUpClass(cls):
         cls.directory = tempfile.TemporaryDirectory()

@@ -6461,7 +6461,7 @@
       this._icon('mdi:chart-line')+escape(word105(this,'trend'))+
       '</strong><button type="button" data-close-avg105 title="'+
       escape(word105(this,'close'))+'" aria-label="'+escape(word105(this,'close'))+
-      '">'+this._icon('mdi:close')+'</button></header>'+
+      '"><span class="hem-avg-close-glyph-b17" aria-hidden="true">&times;</span></button></header>'+
       '<div class="hem-avg-body105"></div>';
     this.shadowRoot.appendChild(pop);
     this._averageDialog105={node:pop,area,metric,
@@ -6805,7 +6805,7 @@
     pop.innerHTML='<header class="hem-avg-head105"><strong>'+this._icon('mdi:chart-line')+
       escape(ew122(this,'title'))+'</strong><button type="button" data-close-avg105 title="'+
       escape(word105(this,'close'))+'" aria-label="'+escape(word105(this,'close'))+'">'+
-      this._icon('mdi:close')+'</button></header><div class="hem-avg-body105"></div>';
+      '<span class="hem-avg-close-glyph-b17" aria-hidden="true">&times;</span></button></header><div class="hem-avg-body105"></div>';
     this.shadowRoot.appendChild(pop);
     const saved=this._averageDialog105={node:pop,entity122:id,history122:[],status122:'loading',
       connection122:this._hass.connection,dashboard122:this._state()[0],returnTo114:returnTo,last:null};
@@ -12611,6 +12611,21 @@
       .hem-room-glance87 .hem-room-metric-unit107{font-size:12px}
     }
   </style>`;};
+  /* HEM_VISIBLE_HISTORY_CLOSE_B17_START
+   * ha-icon can render blank in shadow DOM/mobile webviews. Text glyph never
+   * depends on an icon registry or remote resource and keeps the 44px hit area.
+   */
+  const visibleCloseB17=AirQualityAdvisorCard.prototype;
+  const beforeVisibleCloseB17=visibleCloseB17._styles;
+  visibleCloseB17._styles=function(){return beforeVisibleCloseB17.call(this)+`<style>
+    .hem-avg-head105 [data-close-avg105] .hem-avg-close-glyph-b17{
+      display:block;color:var(--primary-text-color,#fff);
+      font:700 30px/1 Arial,Roboto,sans-serif;text-align:center;
+      pointer-events:none;user-select:none;
+    }
+  </style>`;};
+  /* HEM_VISIBLE_HISTORY_CLOSE_B17_END */
+
   /* HEM_MOBILE_DENSITY_READABILITY_B16_END */
 
   /* HEM_FRESHNESS_POLICY_B11_END */
