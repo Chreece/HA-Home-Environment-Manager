@@ -2,6 +2,16 @@
   <img src=".github/assets/hem-banner.svg" alt="Home Environment Manager - smarter air quality, comfort, ventilation and climate control" width="1200">
 </p>
 
+<p align="center">
+  <a href="https://ko-fi.com/chreece"><img src=".github/assets/ko-fi-banner.svg" alt="Support Chreece on Ko-fi" width="500"></a>
+</p>
+
+<!-- HEM-LANGUAGE-SELECTOR-START -->
+<p align="center">
+  <strong>English (default)</strong> · <a href="docs/i18n/README.ar.md">العربية</a> · <a href="docs/i18n/README.bg.md">Български</a> · <a href="docs/i18n/README.bn.md">বাংলা</a> · <a href="docs/i18n/README.cs.md">Čeština</a> · <a href="docs/i18n/README.da.md">Dansk</a> · <a href="docs/i18n/README.de.md">Deutsch</a> · <a href="docs/i18n/README.el.md">Ελληνικά</a> · <a href="docs/i18n/README.es.md">Español</a> · <a href="docs/i18n/README.fa.md">فارسی</a> · <a href="docs/i18n/README.fi.md">Suomi</a> · <a href="docs/i18n/README.fr.md">Français</a> · <a href="docs/i18n/README.he.md">עברית</a> · <a href="docs/i18n/README.hi.md">हिन्दी</a> · <a href="docs/i18n/README.hr.md">Hrvatski</a> · <a href="docs/i18n/README.hu.md">Magyar</a> · <a href="docs/i18n/README.id.md">Bahasa Indonesia</a> · <a href="docs/i18n/README.it.md">Italiano</a> · <a href="docs/i18n/README.ja.md">日本語</a> · <a href="docs/i18n/README.ko.md">한국어</a> · <a href="docs/i18n/README.nb.md">Norsk bokmål</a> · <a href="docs/i18n/README.nl.md">Nederlands</a> · <a href="docs/i18n/README.pl.md">Polski</a> · <a href="docs/i18n/README.pt.md">Português</a> · <a href="docs/i18n/README.pt-BR.md">Português (Brasil)</a> · <a href="docs/i18n/README.ro.md">Română</a> · <a href="docs/i18n/README.ru.md">Русский</a> · <a href="docs/i18n/README.sk.md">Slovenčina</a> · <a href="docs/i18n/README.sr.md">Српски</a> · <a href="docs/i18n/README.sv.md">Svenska</a> · <a href="docs/i18n/README.ta.md">தமிழ்</a> · <a href="docs/i18n/README.th.md">ไทย</a> · <a href="docs/i18n/README.tr.md">Türkçe</a> · <a href="docs/i18n/README.uk.md">Українська</a> · <a href="docs/i18n/README.ur.md">اردو</a> · <a href="docs/i18n/README.vi.md">Tiếng Việt</a> · <a href="docs/i18n/README.zh-Hans.md">简体中文</a> · <a href="docs/i18n/README.zh-Hant.md">繁體中文</a>
+</p>
+<!-- HEM-LANGUAGE-SELECTOR-END -->
+
 # HEM - Home Environment Manager
 
 <p align="center">
