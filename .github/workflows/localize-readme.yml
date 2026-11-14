@@ -15,7 +15,7 @@ permissions:
 
 concurrency:
   group: hem-readme-localization
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   translate:
@@ -32,6 +32,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install offline CPU translator
+        run: python -m pip install -q 'ctranslate2>=4.4,<5' 'sentencepiece>=0.2,<1' 'huggingface_hub>=0.32,<2' hf_xet
       - name: Compile translator
         run: python -m py_compile .github/scripts/localize_readme.py
       - name: Translate ${{ matrix.locale }}
