@@ -39,7 +39,8 @@ discovery = module(
     dr=N(async_get=lambda hass: N(async_get=hass.devices.get)),
 )
 tree = ast.parse((ROOT / "discovery.py").read_text(encoding="utf-8"))
-names = {"entity_area", "_device_class", "is_window"}
+names = {"entity_area", "_device_class", "is_window", "is_window_contact"}
+discovery.OPTIONAL_WINDOW_CONTACT_CLASSES = frozenset(("door", "opening"))
 functions = [node for node in tree.body
              if isinstance(node, ast.FunctionDef) and node.name in names]
 assert {node.name for node in functions} == names
