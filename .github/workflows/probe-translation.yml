@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - uses: actions/checkout@v4
       - name: Test availability of public translation and open models
         shell: bash
         run: |
@@ -53,4 +54,33 @@ jobs:
                   print("post",response.status,response.read(80),flush=True)
           except Exception as err:
               print("post",type(err).__name__,str(err)[:100],flush=True)
+          import importlib.util
+          from pathlib import Path
+          spec=importlib.util.spec_from_file_location("hem_i18n", ".github/scripts/localize_readme.py")
+          module=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(module)
+          readme=Path("README.md").read_text(encoding="utf-8")
+          _,units=module.build_units(module.NAV_PATTERN.sub("",readme))
+          batch=[]; size=0
+          for item in units:
+              n=len(item[1])+16
+              if batch and size+n>2900: break
+              batch.append(item);size+=n
+          q="\n".join(f"🟪{idx:04d}🟪 {unit}" for idx,unit,extra in batch)
+          print("real_batch",len(batch),"text_chars",len(q),"url_chars",len(urllib.parse.urlencode({"client":"gtx","sl":"en","tl":"el","dt":"t","q":q})),flush=True)
+          for mode in ("GET","POST"):
+              data=urllib.parse.urlencode({"client":"gtx","sl":"en","tl":"el","dt":"t","q":q}).encode()
+              addr="https://translate.googleapis.com/translate_a/single"
+              req=urllib.request.Request(addr+"?"+data.decode() if mode=="GET" else addr,
+                 data=None if mode=="GET" else data,headers={"User-Agent":"Mozilla/5.0"})
+              try:
+                  with urllib.request.urlopen(req,timeout=15) as resp:
+                      body=resp.read(200000).decode('utf-8')
+                  import json
+                  segments="".join(row[0] or "" for row in json.loads(body)[0])
+                  print("real_batch",mode,"status",resp.status,"markers",len(module.BATCH_MARKER.findall(segments)),flush=True)
+              except urllib.error.HTTPError as err:
+                  print("real_batch",mode,"http_error",err.code,flush=True)
+              except Exception as err:
+                  print("real_batch",mode,type(err).__name__,str(err)[:120],flush=True)
           PY
