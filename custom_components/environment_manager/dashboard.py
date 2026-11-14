@@ -26,7 +26,7 @@ def _reading(reading: Reading, threshold: float | None, *, indoor: bool) -> dict
     aqi = (reading.details or {}).get("aqi", {}) if reading.metric == "aqi" else {}
     # An uncalibrated AQI index may have a numeric value but is not
     # evaluated evidence. Show it as incomplete, never as safe/green.
-    trusted_aqi = reading.metric != "aqi" or aqi.get("status") == "ready"
+    trusted_aqi = indoor or reading.metric != "aqi" or aqi.get("status") == "ready"
     if aqi:
         threshold = aqi.get("custom_limit") if aqi.get("scale") == "custom" else (
             100 if aqi.get("scale") == "us_epa" else

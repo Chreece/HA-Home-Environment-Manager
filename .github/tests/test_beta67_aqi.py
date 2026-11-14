@@ -224,6 +224,10 @@ assert offline_aqi.entity_id in offline_plan.unavailable_outdoor
 assert dash.dashboard_snapshot(offline_plan,const.DEFAULT_THRESHOLDS)['outdoor']['status']=='partial'
 assert dash._reading(logic.Reading('sensor.unclassified_aqi','Raw AQI','aqi',95.0),
                      None,indoor=False)['available'] is False
+# Indoor AQI display behavior is unaffected by this *outdoor-only* policy.
+indoor_aqi=logic.Reading('sensor.living_aqi','Indoor AQI','aqi',120.0)
+indoor_view=dash._reading(indoor_aqi,100.0,indoor=True)
+assert indoor_view['available'] is True and indoor_view['exceeded'] is True,indoor_view
 assert dash._reading(pm,15.0,indoor=False)['available'] is True
 assert dash._reading(logic.Reading('sensor.high_pm','PM2.5','pm25',55.0),
                      15.0,indoor=False)['exceeded'] is True
