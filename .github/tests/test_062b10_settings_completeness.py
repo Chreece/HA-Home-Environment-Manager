@@ -129,6 +129,8 @@ def check_options(browser):
  # Source actions belong BELOW the title header, never in its flex row.
  assert modal.locator('.hem-settings-source-actions-b15 > [data-settings-refresh-b10]').count()==1
  assert modal.locator('.hem-settings-source-actions-b15 > [data-settings-manage-rooms-b10]').count()==1
+ assert modal.locator('[data-settings-tools-b8] .hem-settings-source-actions-b15').count()==1
+ assert modal.locator('[data-settings-tools-b8]').evaluate('n=>n.scrollWidth<=n.clientWidth+1')
  assert modal.locator('.hem-room-options-head114 [data-settings-refresh-b10]').count()==0
  assert modal.locator('.hem-room-options-head114 [data-settings-manage-rooms-b10]').count()==0
  title=modal.locator('.hem-room-options-head114 h2')

@@ -12064,7 +12064,16 @@
       manage.setAttribute('data-settings-manage-rooms-b10','');manage.textContent=b10Text(this,'manage');
       toolbar.append(manage);
     }
-    header.after(toolbar);
+    // Share the existing search/Advanced row instead of reserving an
+    // almost empty toolbar row above it (especially tall on mobile).
+    // Keep actions outside the title header so long localized room names
+    // cannot be squeezed into vertical letters.
+    const tools=node.querySelector('[data-settings-tools-b8]');
+    if(tools){
+      const count=tools.querySelector('[data-settings-count-b8]');
+      if(count)tools.insertBefore(toolbar,count);
+      else tools.appendChild(toolbar);
+    }else header.after(toolbar);
     node.addEventListener('click',event=>{
       const button=event.target?.closest?.('button');
       if(button===refresh){
@@ -12507,13 +12516,99 @@
       .hem-avg-dialog105 .hem-trend-readout114{min-height:48px;margin:10px 0 2px}
       .hem-trend114 .hem-average-summary105{margin:9px 0 8px}
       .hem-trend-help114{margin:6px 0 9px}
+      /* One compact settings toolbar, not a full-height refresh-only row. */
+      .hem-room-options114 .hem-room-options-head114{
+        padding:11px 13px 10px;
+      }
+      .hem-room-options114 .hem-room-options-head114 h2{
+        font-size:20px;line-height:1.25;
+      }
+      .hem-room-options114 .hem-room-options-body114{padding:8px 10px}
+      .hem-room-options114 .hem-room-options-footer114{padding:8px 10px}
+      .hem-room-options114 .hem-settings-tools-b8{
+        display:grid;grid-template-columns:minmax(0,1fr) max-content;
+        gap:6px 8px;align-items:center;padding:8px 8px 7px;
+        border-bottom:0;min-width:0;
+      }
+      .hem-room-options114 .hem-settings-tools-b8>input[type=search]{
+        grid-column:1;grid-row:1;min-width:0;max-width:100%;
+        min-height:42px;font-size:16px;line-height:1.3;
+        padding:9px 10px;
+      }
+      .hem-room-options114 .hem-settings-tools-b8>.hem-settings-source-actions-b15{
+        grid-column:2;grid-row:1;display:flex;align-items:center;
+        justify-content:flex-end;gap:5px;padding:0;margin:0;min-width:0;
+      }
+      .hem-room-options114 .hem-settings-tools-b8>.hem-settings-source-actions-b15>button{
+        min-width:0;min-height:42px;padding:8px;
+        font-size:13px;line-height:1.2;white-space:normal;
+      }
+      .hem-room-options114 .hem-settings-tools-b8>label{
+        grid-column:1;grid-row:2;min-width:0;max-width:100%;
+        font-size:13px;line-height:1.4;white-space:normal;
+      }
+      .hem-room-options114 .hem-settings-tools-b8>label span{
+        overflow-wrap:break-word;word-break:normal;
+      }
+      .hem-room-options114 .hem-settings-tools-b8>small{
+        grid-column:2;grid-row:2;justify-self:end;
+        font-size:12px;white-space:nowrap;
+      }
+      /* The Home toolbar has two actions. Keep both visible rather than
+         forcing the search box offscreen on 320px phones. */
+      .hem-home-options128 .hem-settings-tools-b8>.hem-settings-source-actions-b15{
+        grid-column:1 / -1;grid-row:2;
+        justify-content:flex-start;flex-wrap:wrap;
+      }
+      .hem-home-options128 .hem-settings-tools-b8>label{grid-row:3}
+      .hem-home-options128 .hem-settings-tools-b8>small{grid-row:3}
+      .hem-room-options114 .hem-unified141{margin-bottom:5px}
+      .hem-room-options114 .hem-room-options-group114>summary{
+        min-height:48px;padding:8px 9px;gap:8px;
+      }
+      .hem-room-options114 .hem-room-options-label114 strong{
+        font-size:15px;line-height:1.35;
+      }
+      .hem-room-options114 .hem-room-options-label114 small:not(:empty){
+        display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+        white-space:normal;overflow:hidden;text-overflow:clip;
+        font-size:13px;line-height:1.4;
+      }
+      .hem-room-options114 .hem-room-options-count114{
+        font-size:13px;min-width:25px;height:25px;
+      }
+      .hem-room-options114 .hem-full-rows127{gap:5px;padding:3px 7px 8px}
+      .hem-room-options114 .hem-full-label127 strong,
+      .hem-room-options114 .hem-room-options-choice114 strong{
+        font-size:14px;line-height:1.4;
+      }
+      .hem-room-options114 .hem-full-editor127 input,
+      .hem-room-options114 .hem-full-editor127 select,
+      .hem-room-options114 .hem-room-options-search114{
+        min-height:42px;font-size:16px;
+      }
+      .hem-room-options114 .hem-room-options-helper115{
+        font-size:13px;line-height:1.45;margin:5px 2px 8px;
+      }
+      .hem-room-options114 .hem-room-options-choice114{padding:6px 5px}
+      .hem-room-options114 .hem-room-options-choice114 small{
+        font-size:12px;line-height:1.4;
+      }
+      .hem-controller-options126 .hem-full-label127 strong{font-size:14px}
+      .hem-controller-options126 .hem-full-editor127 input,
+      .hem-controller-options126 .hem-full-editor127 select{font-size:16px}
+      /* 10px units and secondary metric labels are illegible on phones;
+         allow the narrow-row layout to decide how many values fit. */
+      .hem-room-glance87 .hem-room-metric-unit107,
+      .hem-room-glance87 .hem-room-metric-label107,
+      .hem-room-air-chip89 small{font-size:12px}
     }
     @container hem-rooms107 (max-width:400px){
       /* Prefer readable values and fewer secondary chips to 8px text. */
       .hem-room-glance87 .hem-room-metric107,
       .hem-room-glance87 .hem-room-metric-value107{font-size:12px}
       .hem-room-glance87 .hem-room-name87{font-size:13px;min-width:0}
-      .hem-room-glance87 .hem-room-metric-unit107{font-size:10.5px}
+      .hem-room-glance87 .hem-room-metric-unit107{font-size:12px}
     }
   </style>`;};
   /* HEM_MOBILE_DENSITY_READABILITY_B16_END */
