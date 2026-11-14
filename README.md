@@ -18,12 +18,12 @@ room conditions, outdoor air quality, ventilation advice, moisture and optional
 climate control into one dashboard. It uses the sensors and appliances already
 connected to Home Assistant.
 
-**Current release:** [v0.6.1b13](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.1b13)
+**Current release:** [v0.6.2b15](https://github.com/Chreece/HA-Home-Environment-Manager/releases/tag/v0.6.2b15)
 · **Requires:** Home Assistant 2026.10.0 or newer
 · **Status:** Beta
 
 [Install](#installation) · [First setup](#first-setup) ·
-[Dashboard](#add-the-dashboard-card) · [Device control](#enable-device-control) ·
+[Screenshots](#screenshots) · [Dashboard](#add-the-dashboard-card) · [Device control](#enable-device-control) ·
 [Presence and sleep](#presence-and-sleep) · [Mold](#mold-indication-measurement) ·
 [Troubleshooting](#troubleshooting)
 
@@ -41,6 +41,60 @@ connected to Home Assistant.
 
 You can start with monitoring and advice. Selecting an appliance during setup
 creates its controls; choose its control method when you want HEM to operate it.
+
+## Screenshots
+
+Explore HEM's dashboard and the settings available at the home, room, and device
+levels. These English-language UI illustrations are based on HEM's interface and use
+sample rooms and measurements. They are not live Home Assistant data.
+
+### Home dashboard
+
+The compact overview brings outdoor ventilation advice, weather, the number of
+monitored rooms and room-by-room readings together in one card.
+
+<p align="center">
+  <img src="docs/images/hem-dashboard-overview.svg" alt="HEM dashboard showing outdoor ventilation advice, weather, air quality and five monitored rooms" width="900">
+</p>
+
+### Room details and device controllers
+
+Expand a room to inspect indoor air quality, humidity and mold indication, the
+room's occupancy and window status, climate controllers, and building-physics
+estimates.
+
+<p align="center">
+  <img src="docs/images/hem-room-expanded.svg" alt="Expanded HEM Bathroom view with air-quality readings, mold indication and climate device controllers" width="760">
+</p>
+
+### Home settings
+
+Set shared outdoor sources, comfort and air-quality thresholds, home presence,
+ventilation preferences, and announcement delivery. A searchable, grouped
+settings dialog keeps advanced options available without clutter.
+
+<p align="center">
+  <img src="docs/images/hem-home-settings.svg" alt="HEM Home settings with refresh sources, manage monitored rooms, search and grouped settings categories" width="900">
+</p>
+
+### Room settings
+
+Choose a room's sensors, presence behavior, windows and doors, ventilation,
+shading and protection options independently of other rooms.
+
+<p align="center">
+  <img src="docs/images/hem-room-settings.svg" alt="HEM Bathroom room settings, grouped by sensors, device control, presence, ventilation, protection and alerts" width="760">
+</p>
+
+### Per-device settings
+
+Configure each supported controller separately, including its operating
+methods, targets, PID and calibration parameters, power protections, and error
+announcements.
+
+<p align="center">
+  <img src="docs/images/hem-device-settings.svg" alt="HEM dehumidifier controller settings with operating methods, PID calibration and safety categories" width="900">
+</p>
 
 ## Marketplace version discovery
 
