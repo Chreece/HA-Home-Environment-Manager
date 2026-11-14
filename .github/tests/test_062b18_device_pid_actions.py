@@ -103,6 +103,7 @@ with sync_playwright() as pw:
   assert modal.locator('[data-hem-full-category127="mode"] [data-hem-full-row127="number.dry_target"]').count()==1
   assert modal.locator('[data-hem-full-category127="pid"] [data-hem-full-row127="number.dry_target"]').count()==0
   words=LANG[lang];pid=modal.locator('[data-hem-full-category127="pid"]')
+  pid.locator(":scope > summary").click()
   assert words[0] in pid.locator('[data-hem-full-row127="button.dry_approve"]').inner_text()
   assert words[1] in pid.locator('[data-hem-full-row127="button.dry_discard"]').inner_text()
   assert words[2] in pid.locator('[data-hem-full-row127="button.fan_apply"]').inner_text()
@@ -118,7 +119,6 @@ with sync_playwright() as pw:
     const b=card._hemControllerDialog126.node
     .querySelector('[data-hem-pid-review-b18="discard"]');
     return a?.nextElementSibling===b;}""")
-  pid.locator(":scope > summary").click()
   x=approve.bounding_box();y=discard.bounding_box()
   assert x and y,(x,y)
   if width>340:
