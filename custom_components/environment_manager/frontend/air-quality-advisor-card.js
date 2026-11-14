@@ -1120,20 +1120,36 @@
         const belong = (d) => safeArray(d?.identifiers)
           .filter((pair) => Array.isArray(pair) && pair[0]==='environment_manager')
           .map((pair) => pair[1]);
-        const home = entries.filter((device) => belong(device).some(
+        // HEM controller child devices also have identifiers without
+        // "_area_". Do not confuse those with a Home hub when HA has not yet
+        // populated its frontend entity map.
+        const candidates = entries.filter((device) => belong(device).some(
           (identifier) => typeof identifier === 'string' && !identifier.includes('_area_')
         ));
+        const hubs = candidates.filter((device)=>device?.model==='Home Environment Hub');
+        const home = hubs.length ? hubs : candidates;
+        const snapshot = this._dashboardEntity===stateId &&
+          this._dashboardContext?.connection===connection ? this._dashboardData : null;
+        const verifiedOwner = typeof snapshot?.owner_entry_id==='string' &&
+          snapshot.owner_entry_id ? snapshot.owner_entry_id : null;
         const currentDevice = this._hass?.entities?.[stateId]?.device_id;
-        const parent = home.find((device)=>device.id===currentDevice) ||
-                       (home.length===1 ? home[0] : null);
+        const registryOwner = home.find((device)=>device.id===currentDevice);
+        const matches = verifiedOwner ? home.filter((device)=>
+          belong(device).includes(verifiedOwner)) : [];
+        // An authenticated WS owner wins when the optional HA entity map is
+        // absent. Contradictory identities fail closed; never pick first.
+        const parent = verifiedOwner ?
+          (matches.length===1 &&
+           (!registryOwner || registryOwner.id===matches[0].id) ? matches[0] : null)
+          : registryOwner || (home.length===1 ? home[0] : null);
         if (!parent) {
-          // Multiple integrations or an incomplete HA registry are ambiguous.
-          // Do not navigate to a guessed device; retry when HA reconnects.
-          throw new Error('Home device registry not yet unambiguous');
+          throw new Error('HEM Home device ownership is not yet unambiguous');
         }
         const ids = belong(parent);
-        const entryId = ids.find((id) => typeof id==='string' && !id.includes('_area_'));
-        if (!entryId) throw new Error('Home device registry is incomplete');
+        const entryId = verifiedOwner || ids.find((id)=>
+          typeof id==='string' && !id.includes('_area_'));
+        if (!entryId || !ids.includes(entryId))
+          throw new Error('Home device registry owner mismatch');
         const roomDevices = new Map();
         for (const device of entries) {
           for (const identifier of belong(device)) {
