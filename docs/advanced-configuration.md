@@ -74,7 +74,7 @@ requires the selected provider to support that language.
 
 Each eligible device controller has **Ask to open windows**, which defaults to
 **off**, and its own **Window opening wait (min)**, which defaults to **5 minutes**
-and accepts **0–30 minutes**. These appear beside the device's control settings
+and accepts **0-30 minutes**. These appear beside the device's control settings
 in the card and as native Home Assistant entities. Turn the option on only for
 devices where you want an airing request before automatic operation. With the
 option off, the device follows normal demand without this added delay. A wait
@@ -511,7 +511,7 @@ according to measured demand; the action does not turn every appliance on.
 
 Set **Home - Prepare - Max Time** on the Home Environment device, or
 open that setting from the duration control in the card. The default is
-**60 minutes**; the allowed range is **1–1440 minutes**. Changing the setting
+**60 minutes**; the allowed range is **1-1440 minutes**. Changing the setting
 affects the next press and leaves a running deadline unchanged.
 
 | Event | Result |
@@ -578,7 +578,7 @@ Verified whole-home Away takes precedence over room activity.
 | Setting | Purpose |
 | --- | --- |
 | **Sleep · Sleeping now** | Marks the room as currently sleeping for climate sleep behavior |
-| **Sleep · Use schedule** | Enables the local-time sleep interval; the default is **22:00–07:00** |
+| **Sleep · Use schedule** | Enables the local-time sleep interval; the default is **22:00-07:00** |
 | **Shared sleeping-room list** | Activates Sleep when the room is both occupied and in the selected list |
 | **Noise · Room used for sleeping** | Classifies the room for calibrated nighttime noise assessment |
 
