@@ -2431,8 +2431,8 @@
       "literal_references": [
         "custom_components/environment_manager/__init__.py:203",
         "custom_components/environment_manager/__init__.py:68",
-        "custom_components/environment_manager/ai_rewrite.py:227",
-        "custom_components/environment_manager/ai_rewrite.py:65",
+        "custom_components/environment_manager/ai_rewrite.py:101",
+        "custom_components/environment_manager/ai_rewrite.py:263",
         "custom_components/environment_manager/aqi_sources.py:89",
         "custom_components/environment_manager/away_windows.py:204"
       ],
@@ -2543,7 +2543,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/delivery/data/ai_rewrite_announcements",
       "literal_references": [
-        "custom_components/environment_manager/ai_rewrite.py:35",
+        "custom_components/environment_manager/ai_rewrite.py:33",
         "custom_components/environment_manager/const.py:32"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -2571,7 +2571,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/thresholds/data/outdoor_aqi",
       "literal_references": [
-        "custom_components/environment_manager/const.py:57"
+        "custom_components/environment_manager/const.py:59"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -2584,7 +2584,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/thresholds/data/outdoor_co2",
       "literal_references": [
-        "custom_components/environment_manager/const.py:58"
+        "custom_components/environment_manager/const.py:60"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -2597,7 +2597,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/thresholds/data/outdoor_pm25",
       "literal_references": [
-        "custom_components/environment_manager/const.py:59",
+        "custom_components/environment_manager/const.py:61",
         "custom_components/environment_manager/environment.py:161",
         "custom_components/environment_manager/environment.py:311",
         "custom_components/environment_manager/environment_history.py:19"
@@ -2613,7 +2613,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/thresholds/data/outdoor_pm10",
       "literal_references": [
-        "custom_components/environment_manager/const.py:60",
+        "custom_components/environment_manager/const.py:62",
         "custom_components/environment_manager/environment.py:162",
         "custom_components/environment_manager/environment_history.py:19"
       ],
@@ -2628,7 +2628,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/thresholds/data/outdoor_voc",
       "literal_references": [
-        "custom_components/environment_manager/const.py:61"
+        "custom_components/environment_manager/const.py:63"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -2641,7 +2641,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/thresholds/data/outdoor_voc_parts",
       "literal_references": [
-        "custom_components/environment_manager/const.py:62"
+        "custom_components/environment_manager/const.py:64"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -2654,7 +2654,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/thresholds/data/outdoor_no2",
       "literal_references": [
-        "custom_components/environment_manager/const.py:63"
+        "custom_components/environment_manager/const.py:65"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -2667,7 +2667,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/thresholds/data/outdoor_o3",
       "literal_references": [
-        "custom_components/environment_manager/const.py:64"
+        "custom_components/environment_manager/const.py:66"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -2680,7 +2680,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/thresholds/data/outdoor_so2",
       "literal_references": [
-        "custom_components/environment_manager/const.py:65"
+        "custom_components/environment_manager/const.py:67"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -2693,7 +2693,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/thresholds/data/indoor_aqi",
       "literal_references": [
-        "custom_components/environment_manager/const.py:66"
+        "custom_components/environment_manager/const.py:68"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -2706,7 +2706,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/thresholds/data/indoor_co2",
       "literal_references": [
-        "custom_components/environment_manager/const.py:67",
+        "custom_components/environment_manager/const.py:69",
         "custom_components/environment_manager/door_context.py:267"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -2720,7 +2720,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/thresholds/data/indoor_pm25",
       "literal_references": [
-        "custom_components/environment_manager/const.py:68"
+        "custom_components/environment_manager/const.py:70"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -2733,7 +2733,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/thresholds/data/indoor_pm10",
       "literal_references": [
-        "custom_components/environment_manager/const.py:69"
+        "custom_components/environment_manager/const.py:71"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -2746,7 +2746,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/thresholds/data/indoor_voc",
       "literal_references": [
-        "custom_components/environment_manager/const.py:70"
+        "custom_components/environment_manager/const.py:72"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -2759,7 +2759,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/thresholds/data/indoor_voc_parts",
       "literal_references": [
-        "custom_components/environment_manager/const.py:71"
+        "custom_components/environment_manager/const.py:73"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -2773,7 +2773,7 @@
       "catalog_path": "strings.json/config/step/thresholds/data/indoor_humidity",
       "literal_references": [
         "custom_components/environment_manager/config_flow.py:1853",
-        "custom_components/environment_manager/const.py:72",
+        "custom_components/environment_manager/const.py:74",
         "custom_components/environment_manager/device_controls.py:100",
         "custom_components/environment_manager/device_controls.py:104",
         "custom_components/environment_manager/equipment_model.py:1299",
@@ -2792,7 +2792,7 @@
       "literal_references": [
         "custom_components/environment_manager/config_flow.py:1828",
         "custom_components/environment_manager/config_flow.py:1849",
-        "custom_components/environment_manager/const.py:74",
+        "custom_components/environment_manager/const.py:76",
         "custom_components/environment_manager/device_controls.py:103",
         "custom_components/environment_manager/device_controls.py:506",
         "custom_components/environment_manager/device_controls.py:97"
@@ -2810,7 +2810,7 @@
       "literal_references": [
         "custom_components/environment_manager/config_flow.py:1828",
         "custom_components/environment_manager/config_flow.py:1849",
-        "custom_components/environment_manager/const.py:75",
+        "custom_components/environment_manager/const.py:77",
         "custom_components/environment_manager/device_controls.py:103",
         "custom_components/environment_manager/device_controls.py:506",
         "custom_components/environment_manager/device_controls.py:97"
@@ -2826,7 +2826,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/thresholds/data/max_outdoor_humidity",
       "literal_references": [
-        "custom_components/environment_manager/const.py:76",
+        "custom_components/environment_manager/const.py:78",
         "custom_components/environment_manager/device_controls.py:100",
         "custom_components/environment_manager/device_controls.py:104",
         "custom_components/environment_manager/logic.py:321"
@@ -2842,7 +2842,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/thresholds/data/max_wind_kmh",
       "literal_references": [
-        "custom_components/environment_manager/const.py:77",
+        "custom_components/environment_manager/const.py:79",
         "custom_components/environment_manager/device_controls.py:106",
         "custom_components/environment_manager/logic.py:323"
       ],
@@ -2859,7 +2859,7 @@
       "literal_references": [
         "custom_components/environment_manager/config_flow.py:104",
         "custom_components/environment_manager/config_flow.py:1854",
-        "custom_components/environment_manager/const.py:78",
+        "custom_components/environment_manager/const.py:80",
         "custom_components/environment_manager/device_controls.py:105",
         "custom_components/environment_manager/device_controls.py:98",
         "custom_components/environment_manager/device_controls.py:99"
@@ -2876,7 +2876,7 @@
       "catalog_path": "strings.json/config/step/thresholds/data/indoor_mold",
       "literal_references": [
         "custom_components/environment_manager/config_flow.py:1853",
-        "custom_components/environment_manager/const.py:73",
+        "custom_components/environment_manager/const.py:75",
         "custom_components/environment_manager/device_controls.py:100",
         "custom_components/environment_manager/device_controls.py:104",
         "custom_components/environment_manager/mold_control_demand.py:65",
@@ -2929,7 +2929,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/setup_room_sources/data/windows",
       "literal_references": [
-        "custom_components/environment_manager/ai_rewrite.py:80",
+        "custom_components/environment_manager/ai_rewrite.py:116",
         "custom_components/environment_manager/area_entities.py:144",
         "custom_components/environment_manager/away_windows.py:109",
         "custom_components/environment_manager/away_windows.py:153",
@@ -2951,8 +2951,8 @@
         "custom_components/environment_manager/device_controls.py:244",
         "custom_components/environment_manager/device_controls.py:417",
         "custom_components/environment_manager/device_controls.py:435",
-        "custom_components/environment_manager/discovery.py:453",
-        "custom_components/environment_manager/discovery.py:464"
+        "custom_components/environment_manager/discovery.py:462",
+        "custom_components/environment_manager/discovery.py:473"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -3234,8 +3234,8 @@
       "literal_references": [
         "custom_components/environment_manager/__init__.py:203",
         "custom_components/environment_manager/__init__.py:68",
-        "custom_components/environment_manager/ai_rewrite.py:227",
-        "custom_components/environment_manager/ai_rewrite.py:65",
+        "custom_components/environment_manager/ai_rewrite.py:101",
+        "custom_components/environment_manager/ai_rewrite.py:263",
         "custom_components/environment_manager/aqi_sources.py:89",
         "custom_components/environment_manager/away_windows.py:204"
       ],
@@ -6977,7 +6977,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/room_settings/data/windows",
       "literal_references": [
-        "custom_components/environment_manager/ai_rewrite.py:80",
+        "custom_components/environment_manager/ai_rewrite.py:116",
         "custom_components/environment_manager/area_entities.py:144",
         "custom_components/environment_manager/away_windows.py:109",
         "custom_components/environment_manager/away_windows.py:153",
@@ -6999,8 +6999,8 @@
         "custom_components/environment_manager/device_controls.py:244",
         "custom_components/environment_manager/device_controls.py:417",
         "custom_components/environment_manager/device_controls.py:435",
-        "custom_components/environment_manager/discovery.py:453",
-        "custom_components/environment_manager/discovery.py:464"
+        "custom_components/environment_manager/discovery.py:462",
+        "custom_components/environment_manager/discovery.py:473"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7116,7 +7116,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/edit_room/data/windows",
       "literal_references": [
-        "custom_components/environment_manager/ai_rewrite.py:80",
+        "custom_components/environment_manager/ai_rewrite.py:116",
         "custom_components/environment_manager/area_entities.py:144",
         "custom_components/environment_manager/away_windows.py:109",
         "custom_components/environment_manager/away_windows.py:153",
@@ -7138,8 +7138,8 @@
         "custom_components/environment_manager/device_controls.py:244",
         "custom_components/environment_manager/device_controls.py:417",
         "custom_components/environment_manager/device_controls.py:435",
-        "custom_components/environment_manager/discovery.py:453",
-        "custom_components/environment_manager/discovery.py:464"
+        "custom_components/environment_manager/discovery.py:462",
+        "custom_components/environment_manager/discovery.py:473"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7410,8 +7410,8 @@
       "literal_references": [
         "custom_components/environment_manager/__init__.py:203",
         "custom_components/environment_manager/__init__.py:68",
-        "custom_components/environment_manager/ai_rewrite.py:227",
-        "custom_components/environment_manager/ai_rewrite.py:65",
+        "custom_components/environment_manager/ai_rewrite.py:101",
+        "custom_components/environment_manager/ai_rewrite.py:263",
         "custom_components/environment_manager/aqi_sources.py:89",
         "custom_components/environment_manager/away_windows.py:204"
       ],
@@ -7522,7 +7522,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/delivery/data/ai_rewrite_announcements",
       "literal_references": [
-        "custom_components/environment_manager/ai_rewrite.py:35",
+        "custom_components/environment_manager/ai_rewrite.py:33",
         "custom_components/environment_manager/const.py:32"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -7550,7 +7550,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/thresholds/data/outdoor_aqi",
       "literal_references": [
-        "custom_components/environment_manager/const.py:57"
+        "custom_components/environment_manager/const.py:59"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7563,7 +7563,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/thresholds/data/outdoor_co2",
       "literal_references": [
-        "custom_components/environment_manager/const.py:58"
+        "custom_components/environment_manager/const.py:60"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7576,7 +7576,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/thresholds/data/outdoor_pm25",
       "literal_references": [
-        "custom_components/environment_manager/const.py:59",
+        "custom_components/environment_manager/const.py:61",
         "custom_components/environment_manager/environment.py:161",
         "custom_components/environment_manager/environment.py:311",
         "custom_components/environment_manager/environment_history.py:19"
@@ -7592,7 +7592,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/thresholds/data/outdoor_pm10",
       "literal_references": [
-        "custom_components/environment_manager/const.py:60",
+        "custom_components/environment_manager/const.py:62",
         "custom_components/environment_manager/environment.py:162",
         "custom_components/environment_manager/environment_history.py:19"
       ],
@@ -7607,7 +7607,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/thresholds/data/outdoor_voc",
       "literal_references": [
-        "custom_components/environment_manager/const.py:61"
+        "custom_components/environment_manager/const.py:63"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7620,7 +7620,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/thresholds/data/outdoor_voc_parts",
       "literal_references": [
-        "custom_components/environment_manager/const.py:62"
+        "custom_components/environment_manager/const.py:64"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7633,7 +7633,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/thresholds/data/outdoor_no2",
       "literal_references": [
-        "custom_components/environment_manager/const.py:63"
+        "custom_components/environment_manager/const.py:65"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7646,7 +7646,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/thresholds/data/outdoor_o3",
       "literal_references": [
-        "custom_components/environment_manager/const.py:64"
+        "custom_components/environment_manager/const.py:66"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7659,7 +7659,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/thresholds/data/outdoor_so2",
       "literal_references": [
-        "custom_components/environment_manager/const.py:65"
+        "custom_components/environment_manager/const.py:67"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7672,7 +7672,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/thresholds/data/indoor_aqi",
       "literal_references": [
-        "custom_components/environment_manager/const.py:66"
+        "custom_components/environment_manager/const.py:68"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7685,7 +7685,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/thresholds/data/indoor_co2",
       "literal_references": [
-        "custom_components/environment_manager/const.py:67",
+        "custom_components/environment_manager/const.py:69",
         "custom_components/environment_manager/door_context.py:267"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -7699,7 +7699,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/thresholds/data/indoor_pm25",
       "literal_references": [
-        "custom_components/environment_manager/const.py:68"
+        "custom_components/environment_manager/const.py:70"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7712,7 +7712,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/thresholds/data/indoor_pm10",
       "literal_references": [
-        "custom_components/environment_manager/const.py:69"
+        "custom_components/environment_manager/const.py:71"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7725,7 +7725,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/thresholds/data/indoor_voc",
       "literal_references": [
-        "custom_components/environment_manager/const.py:70"
+        "custom_components/environment_manager/const.py:72"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7738,7 +7738,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/thresholds/data/indoor_voc_parts",
       "literal_references": [
-        "custom_components/environment_manager/const.py:71"
+        "custom_components/environment_manager/const.py:73"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7752,7 +7752,7 @@
       "catalog_path": "strings.json/options/step/thresholds/data/indoor_humidity",
       "literal_references": [
         "custom_components/environment_manager/config_flow.py:1853",
-        "custom_components/environment_manager/const.py:72",
+        "custom_components/environment_manager/const.py:74",
         "custom_components/environment_manager/device_controls.py:100",
         "custom_components/environment_manager/device_controls.py:104",
         "custom_components/environment_manager/equipment_model.py:1299",
@@ -7771,7 +7771,7 @@
       "literal_references": [
         "custom_components/environment_manager/config_flow.py:1828",
         "custom_components/environment_manager/config_flow.py:1849",
-        "custom_components/environment_manager/const.py:74",
+        "custom_components/environment_manager/const.py:76",
         "custom_components/environment_manager/device_controls.py:103",
         "custom_components/environment_manager/device_controls.py:506",
         "custom_components/environment_manager/device_controls.py:97"
@@ -7789,7 +7789,7 @@
       "literal_references": [
         "custom_components/environment_manager/config_flow.py:1828",
         "custom_components/environment_manager/config_flow.py:1849",
-        "custom_components/environment_manager/const.py:75",
+        "custom_components/environment_manager/const.py:77",
         "custom_components/environment_manager/device_controls.py:103",
         "custom_components/environment_manager/device_controls.py:506",
         "custom_components/environment_manager/device_controls.py:97"
@@ -7805,7 +7805,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/thresholds/data/max_outdoor_humidity",
       "literal_references": [
-        "custom_components/environment_manager/const.py:76",
+        "custom_components/environment_manager/const.py:78",
         "custom_components/environment_manager/device_controls.py:100",
         "custom_components/environment_manager/device_controls.py:104",
         "custom_components/environment_manager/logic.py:321"
@@ -7821,7 +7821,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/thresholds/data/max_wind_kmh",
       "literal_references": [
-        "custom_components/environment_manager/const.py:77",
+        "custom_components/environment_manager/const.py:79",
         "custom_components/environment_manager/device_controls.py:106",
         "custom_components/environment_manager/logic.py:323"
       ],
@@ -7838,7 +7838,7 @@
       "literal_references": [
         "custom_components/environment_manager/config_flow.py:104",
         "custom_components/environment_manager/config_flow.py:1854",
-        "custom_components/environment_manager/const.py:78",
+        "custom_components/environment_manager/const.py:80",
         "custom_components/environment_manager/device_controls.py:105",
         "custom_components/environment_manager/device_controls.py:98",
         "custom_components/environment_manager/device_controls.py:99"
@@ -7855,7 +7855,7 @@
       "catalog_path": "strings.json/options/step/thresholds/data/indoor_mold",
       "literal_references": [
         "custom_components/environment_manager/config_flow.py:1853",
-        "custom_components/environment_manager/const.py:73",
+        "custom_components/environment_manager/const.py:75",
         "custom_components/environment_manager/device_controls.py:100",
         "custom_components/environment_manager/device_controls.py:104",
         "custom_components/environment_manager/mold_control_demand.py:65",
@@ -11065,7 +11065,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/setup_room_sources/data/windows",
       "literal_references": [
-        "custom_components/environment_manager/ai_rewrite.py:80",
+        "custom_components/environment_manager/ai_rewrite.py:116",
         "custom_components/environment_manager/area_entities.py:144",
         "custom_components/environment_manager/away_windows.py:109",
         "custom_components/environment_manager/away_windows.py:153",
@@ -11087,8 +11087,8 @@
         "custom_components/environment_manager/device_controls.py:244",
         "custom_components/environment_manager/device_controls.py:417",
         "custom_components/environment_manager/device_controls.py:435",
-        "custom_components/environment_manager/discovery.py:453",
-        "custom_components/environment_manager/discovery.py:464"
+        "custom_components/environment_manager/discovery.py:462",
+        "custom_components/environment_manager/discovery.py:473"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -11370,8 +11370,8 @@
       "literal_references": [
         "custom_components/environment_manager/__init__.py:203",
         "custom_components/environment_manager/__init__.py:68",
-        "custom_components/environment_manager/ai_rewrite.py:227",
-        "custom_components/environment_manager/ai_rewrite.py:65",
+        "custom_components/environment_manager/ai_rewrite.py:101",
+        "custom_components/environment_manager/ai_rewrite.py:263",
         "custom_components/environment_manager/aqi_sources.py:89",
         "custom_components/environment_manager/away_windows.py:204"
       ],
@@ -11958,7 +11958,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/room_settings/data/windows",
       "literal_references": [
-        "custom_components/environment_manager/ai_rewrite.py:80",
+        "custom_components/environment_manager/ai_rewrite.py:116",
         "custom_components/environment_manager/area_entities.py:144",
         "custom_components/environment_manager/away_windows.py:109",
         "custom_components/environment_manager/away_windows.py:153",
@@ -11980,8 +11980,8 @@
         "custom_components/environment_manager/device_controls.py:244",
         "custom_components/environment_manager/device_controls.py:417",
         "custom_components/environment_manager/device_controls.py:435",
-        "custom_components/environment_manager/discovery.py:453",
-        "custom_components/environment_manager/discovery.py:464"
+        "custom_components/environment_manager/discovery.py:462",
+        "custom_components/environment_manager/discovery.py:473"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -12097,7 +12097,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/edit_room/data/windows",
       "literal_references": [
-        "custom_components/environment_manager/ai_rewrite.py:80",
+        "custom_components/environment_manager/ai_rewrite.py:116",
         "custom_components/environment_manager/area_entities.py:144",
         "custom_components/environment_manager/away_windows.py:109",
         "custom_components/environment_manager/away_windows.py:153",
@@ -12119,8 +12119,8 @@
         "custom_components/environment_manager/device_controls.py:244",
         "custom_components/environment_manager/device_controls.py:417",
         "custom_components/environment_manager/device_controls.py:435",
-        "custom_components/environment_manager/discovery.py:453",
-        "custom_components/environment_manager/discovery.py:464"
+        "custom_components/environment_manager/discovery.py:462",
+        "custom_components/environment_manager/discovery.py:473"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },

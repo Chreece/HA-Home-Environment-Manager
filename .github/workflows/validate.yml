@@ -414,6 +414,8 @@ jobs:
         run: |
           set -euo pipefail
           python -I .github/tests/test_062b19_device_door_policy.py
+          python -I .github/tests/test_062b19_eco2_classification.py
+          python -I .github/tests/test_062b19_ai_agent_nonblocking.py
           python -I .github/tests/test_062b19_device_door_ui.py
       - name: B15 actual backend Home Options menu and UI step contract
         run: python -I .github/tests/test_061b15_home_options_contract.py

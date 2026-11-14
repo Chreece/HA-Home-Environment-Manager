@@ -18,6 +18,7 @@ from .logic import Reading, Room, Warning, Weather, Window
 DEVICE_CLASS_METRICS = {
     "aqi": "aqi",
     "co2": "co2",
+    "carbon_dioxide": "co2",  # Home Assistant SensorDeviceClass.CO2
     "pm25": "pm25",
     "pm10": "pm10",
     "nitrogen_dioxide": "no2",
@@ -42,6 +43,9 @@ WARNING_HINTS = re.compile(
     r"weather_warning|dwd|nina_|storm|gewitter|severe_weather|"
     r"avis_meteo|aviso_meteorol|προειδοποι|κακοκαιρ", re.IGNORECASE
 )
+# eCO₂ is an equivalent, often VOC-derived estimate, not an NDIR CO₂ reading.
+# Explicitly named estimates remain visible but must not become CO₂ evidence.
+ECO2_HINT = re.compile(r"(?<![a-z0-9])e[\s_-]?co2(?![a-z0-9])", re.IGNORECASE)
 INACTIVE_ALERT_STATES = {
     "off", "no", "none", "clear", "green", "safe", "normal", "inactive",
     "no warning", "no warnings", "no alert", "no alerts", "0", "", "ok",
@@ -99,8 +103,13 @@ def _metric(hass: HomeAssistant, state: State) -> str | None:
     if not state.entity_id.startswith("sensor."):
         return None
     metric = DEVICE_CLASS_METRICS.get(_device_class(hass, state))
+    identifier = f"{state.entity_id} {getattr(state, 'name', '')}".replace("₂", "2")
+    if metric == "co2" and ECO2_HINT.search(identifier):
+        return "eco2"
     if metric:
         return metric
+    if ECO2_HINT.search(identifier):
+        return "eco2"
     slug = state.entity_id.split(".", 1)[-1]
     return next(
         (result for suffix, result in SUFFIX_METRICS.items() if slug == suffix or slug.endswith("_" + suffix)),
@@ -126,7 +135,7 @@ def _normalize(metric: str, value: float, unit: str | None) -> float | None:
         return value if u in ("", "%") else None
     if metric == "illuminance":
         return value if u in ("lx", "lux") else None
-    if metric == "co2":
+    if metric in ("co2", "eco2"):
         return value if u in ("ppm",) else None
     if metric in ("pm25", "pm10", "voc", "no2", "o3", "so2"):
         if u in ("µg/m3", "ug/m3"):
@@ -224,7 +233,7 @@ def reading(hass: HomeAssistant, entity_id: str, max_age_minutes: float, *, outd
     # Sanity bounds are not calibration. They reject physically implausible
     # concentrations so a broken low sensor cannot make an unsafe room green.
     # Keep supported_metric() unit checks independent of value validation.
-    if metric == "co2" and normalized is not None and not 250 <= normalized <= 20000:
+    if metric in ("co2", "eco2") and normalized is not None and not 250 <= normalized <= 20000:
         normalized = None
     if metric == "humidity" and normalized is not None and not 0 < normalized <= 100:
         normalized = None
@@ -547,7 +556,7 @@ def indoor_sensor_exclusion_choices(
     registry = er.async_get(hass)
     devices = dr.async_get(hass)
     titles = {
-        "aqi": "AQI", "co2": "CO₂", "pm25": "PM2.5", "pm10": "PM10",
+        "aqi": "AQI", "co2": "CO₂", "eco2": "eCO₂ (estimated)", "pm25": "PM2.5", "pm10": "PM10",
         "voc": "VOC (µg/m³)", "voc_parts": "VOC (ppb)", "humidity": "RH (%)",
     }
     known: set[str] = set()

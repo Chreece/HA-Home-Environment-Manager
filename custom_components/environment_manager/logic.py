@@ -455,7 +455,7 @@ def evaluate(
                     Recommendation("close", room.area_id, room.name, opened, tuple(outside))
                 )
             continue
-        if not any(reading.value is not None and reading.metric != "illuminance"
+        if not any(reading.value is not None and reading.metric not in ("illuminance", "eco2")
                    for reading in room.readings) and not indoor_reasons:
             diagnostics.append((room.name, "no_indoor_data"))
         elif indoor_reasons and closed and not opened and not unknown:

@@ -324,7 +324,7 @@
     'windy-variant':'mdi:weather-windy-variant', exceptional:'mdi:alert-octagon-outline',
     hail:'mdi:weather-hail', snowyrainy:'mdi:weather-snowy-rainy'
   };
-  const METRIC_ICON = { co2:'mdi:molecule-co2', aqi:'mdi:air-filter', pm25:'mdi:blur',
+  const METRIC_ICON = { co2:'mdi:molecule-co2', eco2:'mdi:molecule-co2', aqi:'mdi:air-filter', pm25:'mdi:blur',
     pm10:'mdi:blur', voc:'mdi:flask-outline', voc_parts:'mdi:flask-outline',
     illuminance:'mdi:brightness-5', humidity:'mdi:water-percent', mold:'mdi:water-alert-outline' };
   const RH_FALLBACK_TEXT = {"en":"RH fallback active","de":"RH-Ersatzwert aktiv","el":"Ενεργή εφεδρική χρήση σχετικής υγρασίας","fr":"Repli sur l’humidité relative actif","es":"Respaldo de humedad relativa activo","ar":"الاعتماد الاحتياطي على الرطوبة النسبية نشط","bg":"Активно заместване с относителна влажност","bn":"আপেক্ষিক আর্দ্রতার বিকল্প সক্রিয়","cs":"Aktivní náhradní relativní vlhkost","da":"RH-reservemåling aktiv","fa":"جایگزین رطوبت نسبی فعال است","fi":"Suhteellisen kosteuden varatila käytössä","he":"גיבוי לחות יחסית פעיל","hi":"सापेक्ष आर्द्रता का बैकअप सक्रिय","hr":"Aktivna zamjena relativnom vlagom","hu":"Relatív páratartalom tartalékmód aktív","id":"Cadangan kelembapan relatif aktif","it":"Fallback umidità relativa attivo","ja":"相対湿度の代替値を使用中","ko":"상대습도 대체값 사용 중","nb":"RH-reservemåling aktiv","nl":"RH-terugval actief","pl":"Aktywna rezerwowa wilgotność względna","pt":"Alternativa por humidade relativa ativa","pt-br":"Fallback de umidade relativa ativo","ro":"Mod de rezervă cu umiditate relativă activ","ru":"Используется резервная относительная влажность","sk":"Aktívna náhradná relatívna vlhkosť","sr":"Активна резервна релативна влажност","sv":"Reservvärde för relativ luftfuktighet aktivt","ta":"ஒப்பீட்டு ஈரப்பத மாற்று செயலில் உள்ளது","th":"ใช้ค่าความชื้นสัมพัทธ์สำรอง","tr":"Bağıl nem yedek ölçümü etkin","uk":"Активна резервна відносна вологість","ur":"نسبتی نمی کی متبادل پیمائش فعال ہے","vi":"Đang dùng độ ẩm tương đối dự phòng","zh-hans":"已启用相对湿度回退","zh-hant":"已啟用相對濕度備援"};
@@ -1249,6 +1249,10 @@
     }
 
     _metricName(metric) {
+      if(metric==='eco2'){
+        // CO₂-equivalent (often VOC-derived), not measured NDIR CO₂.
+        return ({el:'eCO₂ (εκτίμηση)',de:'eCO₂ (Schätzwert)'}[this._language()]||'eCO₂ (estimated)');
+      }
       if(metric==='temperature')return _roomLabels87(this._language()).temperature;
       if (metric === 'mold') {
         const translated = this._t('metric_mold');
@@ -2079,6 +2083,7 @@
       const de = lang === 'de';
       const texts = {
         co2: ['CO₂ shows how much exhaled air accumulates indoors. Elevated levels suggest insufficient ventilation and may coincide with sleepiness and impaired concentration.', 'Το CO₂ δείχνει πόσος εκπνεόμενος αέρας συσσωρεύεται. Υψηλή συγκέντρωση υποδηλώνει ανεπαρκή αερισμό και μπορεί να συνδέεται με υπνηλία και μειωμένη συγκέντρωση.', 'CO₂ zeigt die Ansammlung ausgeatmeter Luft und kann auf unzureichende Lüftung hinweisen.'],
+        eco2: ['eCO₂ is a carbon-dioxide-equivalent estimate, often derived from VOC/gas signals. It is not direct CO₂ measurement and cannot alone authorize a ventilation decision or certify safe indoor air.', 'Το eCO₂ είναι εκτίμηση ισοδύναμου CO₂, συχνά από σήματα VOC/αερίων. Δεν είναι άμεση μέτρηση CO₂ και δεν αρκεί μόνο του για απόφαση αερισμού ή πιστοποίηση ασφαλούς αέρα.', 'eCO₂ ist eine Schätzung des CO₂-Äquivalents, oft aus VOC-/Gassignalen. Es ist keine direkte CO₂-Messung und reicht allein weder für eine Lüftungsentscheidung noch als Nachweis guter Luft.'],
         pm25: ['PM2.5 particles can penetrate deeply into the lungs. Filtration and avoiding polluted outdoor air may reduce exposure.', 'Τα σωματίδια PM2.5 διεισδύουν βαθιά στους πνεύμονες. Ο καθαρισμός και η αποφυγή ρυπασμένου εξωτερικού αέρα μειώνουν την έκθεση.', 'PM2,5-Partikel können tief in die Lunge eindringen. Filtration kann die Belastung senken.'],
         pm10: ['PM10 is inhalable particulate matter. High exposure can irritate the airways.', 'Τα PM10 είναι εισπνεόμενα αιωρούμενα σωματίδια που μπορούν να ερεθίσουν τους αεραγωγούς.', 'PM10 ist einatembarer Feinstaub, der die Atemwege reizen kann.'],
         humidity: ['Relative humidity depends on temperature. Persistently high RH increases condensation and mold risk; low RH may cause dryness.', 'Η σχετική υγρασία εξαρτάται από τη θερμοκρασία. Η παρατεταμένα υψηλή υγρασία αυξάνει τον κίνδυνο συμπύκνωσης και μούχλας· η χαμηλή προκαλεί ξηρότητα.', 'Relative Luftfeuchte hängt von der Temperatur ab. Dauerhaft hohe Werte fördern Kondenswasser und Schimmel.'],
@@ -8569,7 +8574,7 @@
       paused:'Paused',ending:'Finishing',minute:'min',duration:'Home - Prepare - Max Time',
       remaining:'Time remaining',edit:'Edit the timeout for the next preparation.',
       away:'Temporarily use Home settings while everyone is away.',
-      home:'Preparation is available when everyone is confirmed away.',
+      home:'Someone is home right now. Preparation is temporarily disabled until everyone is confirmed away.',
       unknown:'Waiting for confirmed home presence. Preparation is available only while away.',
       suspended:'Preparation is paused while home presence is unknown. The timeout continues.',
       expired:'The preparation timeout has ended. Waiting for the home status to refresh.',
@@ -8581,7 +8586,7 @@
       paused:'Pausiert',ending:'Wird beendet',minute:'Min.',duration:'Zuhause - Vorbereiten - Maximale Dauer',
       remaining:'Verbleibende Zeit',edit:'Dauer für die nächste Vorbereitung ändern.',
       away:'Vorübergehend die Einstellungen für Zuhause verwenden, während alle abwesend sind.',
-      home:'Die Vorbereitung ist verfügbar, wenn alle sicher abwesend sind.',
+      home:'Es ist gerade jemand zu Hause. Die Vorbereitung ist vorübergehend deaktiviert, bis alle nachweislich abwesend sind.',
       unknown:'Warte auf einen bestätigten Anwesenheitsstatus. Die Vorbereitung ist nur bei Abwesenheit verfügbar.',
       suspended:'Die Vorbereitung pausiert bei unbekanntem Anwesenheitsstatus. Die Zeit läuft weiter.',
       expired:'Die Vorbereitungszeit ist abgelaufen. Warte auf die Aktualisierung des Hausstatus.',
@@ -8593,7 +8598,7 @@
       paused:'Σε παύση',ending:'Ολοκλήρωση',minute:'λεπ.',duration:'Σπίτι - Προετοιμασία - Μέγιστος χρόνος',
       remaining:'Χρόνος που απομένει',edit:'Αλλαγή του χρονικού ορίου για την επόμενη προετοιμασία.',
       away:'Προσωρινή χρήση των ρυθμίσεων Στο σπίτι ενώ όλοι απουσιάζουν.',
-      home:'Η προετοιμασία είναι διαθέσιμη όταν έχει επιβεβαιωθεί ότι όλοι απουσιάζουν.',
+      home:'Κάποιος βρίσκεται στο σπίτι. Η προετοιμασία δεν μπορεί προσωρινά να ξεκινήσει· θα είναι διαθέσιμη μόλις επιβεβαιωθεί ότι όλοι απουσιάζουν.',
       unknown:'Αναμονή για επιβεβαιωμένη παρουσία στο σπίτι. Η προετοιμασία είναι διαθέσιμη μόνο κατά την απουσία.',
       suspended:'Η προετοιμασία είναι σε παύση όσο η παρουσία στο σπίτι είναι άγνωστη. Το χρονικό όριο συνεχίζει να μετρά.',
       expired:'Το χρονικό όριο προετοιμασίας έληξε. Αναμονή για ενημέρωση της κατάστασης του σπιτιού.',
@@ -8658,11 +8663,16 @@
     const words=this._arrivalWords124(),control=source.controls[source.action];
     const available=control.valid&&(source.active||source.canStart);
     const actionName=source.active?words.cancel:words.prepare;
-    const reason=!control.owned?words.unavailable:source.expired?words.expired:
+    // The verified Home presence temporarily gates Prepare. Even when HA
+    // reports its native button unavailable or lacks a recent state, tell
+    // the user WHY, without relaxing any service/ownership authorization.
+    const reason=!source.owned?words.unavailable:source.expired?words.expired:
       source.active&&source.homeStatus==='unknown'?words.suspended:
-      source.active?(control.valid?words.cancel:words.unavailable):source.canStart?
-      (control.valid?words.away:words.unavailable):source.homeStatus==='home'?words.home:
-      source.homeStatus==='unknown'?words.unknown:words.unavailable;
+      source.active?(control.valid?words.cancel:words.unavailable):
+      source.homeStatus==='home'?words.home:
+      source.homeStatus==='unknown'?words.unknown:
+      !control.owned?words.unavailable:source.canStart?
+      (control.valid?words.away:words.unavailable):words.unavailable;
     const minutes=source.active&&source.remaining!==null?Math.ceil(source.remaining/60):source.timeout;
     const duration=minutes===null?'—':this._format(minutes)+' '+words.minute;
     const configured=source.timeout===null?'—':this._format(source.timeout)+' '+words.minute;
@@ -8673,7 +8683,8 @@
     const actionTitle=actionName+'. '+(source.pending?words.requesting:reason)+'. '+help.purpose;
     return '<div class="hem-arrival124'+(source.active?' is-active':'')+'"'+
       ' data-arrival-status124="'+(source.expired?'expired':source.active?
-        (source.homeStatus==='unknown'?'paused':'active'):source.homeStatus==='away'?'away':'unavailable')+'">'+
+        (source.homeStatus==='unknown'?'paused':'active'):source.homeStatus==='away'?'away':
+        source.homeStatus==='home'?'home':'unavailable')+'">'+
       '<button type="button" class="hem-arrival-action124" data-arrival-action124="'+source.action+'"'+
       ' data-arrival-owner124="'+escape(source.owner)+'" data-arrival-entity124="'+escape(control.id||'')+'"'+
       ' aria-label="'+escape(actionTitle)+'" title="'+escape(actionTitle)+'"'+
