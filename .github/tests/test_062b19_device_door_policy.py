@@ -13,17 +13,17 @@ ROOT=Path(__file__).resolve().parents[2]
 SRC=ROOT/"custom_components/environment_manager"
 fixture=runpy.run_path(str(ROOT/".github/tests/test_062b5_door_coordination.py"),
                        run_name="hem_b19_imported_fixture")
-policy=fixture["load"]("equipment_door_policy")
 Engine=fixture["EngineTests"]
 pkg="hem_b5_fixture"
+case=Engine("test_observe_is_noop_and_shared_requires_verified_active_peer")
+case.setUp()
+# Engine.setUp installs its isolated equipment_model/door_settings stubs.
+policy=fixture["load"]("equipment_door_policy")
 model=sys.modules[pkg+".equipment_model"]
 
 def room_config(manager,spec):
     return manager.settings["climate_rooms"].get(spec.area_id,{})
 model.room_config=room_config
-
-case=Engine("test_observe_is_noop_and_shared_requires_verified_active_peer")
-case.setUp()
 door_settings=sys.modules[pkg+".door_settings"]
 door_settings.editable_contact=lambda hass,settings,area,entity: (
     entity in settings.get("climate_rooms",{}).get(area,{}).get("door_sensors",[]) and
