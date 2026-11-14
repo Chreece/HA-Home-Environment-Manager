@@ -1,0 +1,37 @@
+name: Probe documentation translation providers
+
+on:
+  push:
+    branches: [docs/readme-kofi-locales-20261114]
+    paths: [.github/workflows/probe-translation.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Test availability of public translation and open models
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import urllib.request, urllib.parse, urllib.error
+          endpoints = {
+              "google_short": "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=el&dt=t&q=Hello%20world",
+              "google_web": "https://translate.google.com/translate_a/single?client=gtx&sl=en&tl=el&dt=t&q=Hello%20world",
+              "mymemory": "https://api.mymemory.translated.net/get?q=Hello%20world&langpair=en%7Cel",
+              "lingva": "https://lingva.ml/api/v1/en/el/Hello%20world",
+              "libre": "https://translate.argosopentech.com/languages",
+              "huggingface_model": "https://huggingface.co/facebook/m2m100_418M/resolve/main/config.json",
+          }
+          for name, url in endpoints.items():
+              try:
+                  request=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+                  with urllib.request.urlopen(request, timeout=10) as response:
+                      print(name, response.status, response.read(120).decode('utf-8','replace'),flush=True)
+              except Exception as err:
+                  print(name, type(err).__name__, str(err)[:160],flush=True)
+          PY
