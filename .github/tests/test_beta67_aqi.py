@@ -182,11 +182,84 @@ assert not any(r.code=='aqi_scale_unconfigured' for r in plan.outside_reasons)
 assert plan.outdoor_safe
 result=dash.dashboard_snapshot(plan,const.DEFAULT_THRESHOLDS)
 assert result['outdoor']['status']=='safe',result['outdoor']
-# An unidentified provider remains explicitly unconfigured; no false green.
+# Unknown-scale AQI is optional/incomplete, NEVER a ventilation blocker,
+# a bogus safe (green) measurement, or a reason to close an open window.
 other=logic.Reading('sensor.us_epa_air_quality_index','Unknown','aqi',27)
 no_scale=global_aqi(other,{},hass=hass)
 other=logic.Reading(other.entity_id,other.name,'aqi',27,{'aqi':no_scale})
-assert not logic.evaluate((other,),weather,(),(),const.DEFAULT_THRESHOLDS).outdoor_safe
+unknown_plan=logic.evaluate((other,),weather,(),(),const.DEFAULT_THRESHOLDS)
+assert unknown_plan.outdoor_safe and not unknown_plan.outside_reasons,unknown_plan
+assert unknown_plan.unavailable_outdoor==(other.entity_id,),unknown_plan
+unknown_view=dash.dashboard_snapshot(unknown_plan,const.DEFAULT_THRESHOLDS)['outdoor']
+assert unknown_view['status']=='partial' and not unknown_view['data_complete'],unknown_view
+assert unknown_view['blockers']==[] and unknown_view['unavailable_sensors']==[other.entity_id],unknown_view
+assert unknown_view['readings'][0]['available'] is False,unknown_view
+assert unknown_view['readings'][0]['exceeded'] is False,unknown_view
+
+# Real physical pollutant evidence remains independently authoritative,
+# even if several supplemental AQI subindices are unconfigured.
+pm=logic.Reading('sensor.outdoor_pm25','PM2.5','pm25',5.0)
+co2=logic.Reading('sensor.outdoor_co2','CO2','co2',700.0)
+other_indices=tuple(logic.Reading(f'sensor.aqi_{metric}',f'AQI {metric}','aqi',25.0,
+    {'aqi':{'status':'configuration_required','scale_source':'provider_not_identified'}})
+    for metric in ('co2','humidity','pm25','temperature','tvoc'))
+weather_ok=weather
+optional_outdoor=(other,*other_indices,pm,co2)
+mix=logic.evaluate(optional_outdoor,weather_ok,(),(),const.DEFAULT_THRESHOLDS)
+assert mix.outdoor_safe and not mix.outside_reasons,mix.outside_reasons
+assert len(mix.unavailable_outdoor)==len(other_indices)+1,mix.unavailable_outdoor
+assert set(mix.unavailable_outdoor)=={r.entity_id for r in (other,*other_indices)}
+verified=logic.verified_outdoor_pollution_sources(optional_outdoor)
+assert verified==(pm,),verified
+assert all(r.value is not None for r in verified)
+assert logic.verified_outdoor_pollution_sources((other,*other_indices))==()
+assert logic.verified_outdoor_pollution_sources((pm,logic.Reading(
+    'sensor.missing_pm10','PM10','pm10',None)))[-1].value is None
+# An offline AQI or an unclassified numeric index remains optional/incomplete,
+# even if other, independently measured pollution data is healthy.
+offline_aqi=logic.Reading('sensor.offline_aqi','Offline AQI','aqi',None)
+offline_plan=logic.evaluate((offline_aqi,pm),weather_ok,(),(),const.DEFAULT_THRESHOLDS)
+assert offline_plan.outdoor_safe and not offline_plan.outside_reasons,offline_plan
+assert offline_aqi.entity_id in offline_plan.unavailable_outdoor
+assert dash.dashboard_snapshot(offline_plan,const.DEFAULT_THRESHOLDS)['outdoor']['status']=='partial'
+assert dash._reading(logic.Reading('sensor.unclassified_aqi','Raw AQI','aqi',95.0),
+                     None,indoor=False)['available'] is False
+# Indoor AQI display behavior is unaffected by this *outdoor-only* policy.
+indoor_aqi=logic.Reading('sensor.living_aqi','Indoor AQI','aqi',120.0)
+indoor_view=dash._reading(indoor_aqi,100.0,indoor=True)
+assert indoor_view['available'] is True and indoor_view['exceeded'] is True,indoor_view
+assert dash._reading(pm,15.0,indoor=False)['available'] is True
+assert dash._reading(logic.Reading('sensor.high_pm','PM2.5','pm25',55.0),
+                     15.0,indoor=False)['exceeded'] is True
+
+room=logic.Room('living','Living',(
+    logic.Window('binary_sensor.living_window','Window',False),),
+    (logic.Reading('sensor.living_co2','CO2','co2',1350.0),))
+advised=logic.evaluate(optional_outdoor,weather_ok,(),(room,),const.DEFAULT_THRESHOLDS)
+assert [rec.action for rec in advised.recommendations]==['open'],advised
+assert advised.recommendations[0].cautions==(),advised.recommendations[0].cautions
+open_room=logic.Room('living','Living',(
+    logic.Window('binary_sensor.living_window','Window',True),),room.readings)
+assert not logic.evaluate(optional_outdoor,weather_ok,(),(open_room,),
+                          const.DEFAULT_THRESHOLDS).recommendations
+# Actual measured harm still takes priority over optional AQI policy.
+unsafe_pm=logic.Reading('sensor.high_pm','PM2.5','pm25',55.0)
+pm_plan=logic.evaluate((other,unsafe_pm),weather_ok,(),(open_room,),const.DEFAULT_THRESHOLDS)
+assert not pm_plan.outdoor_safe and any(r.code=='outside_pm25' for r in pm_plan.outside_reasons)
+assert [rec.action for rec in pm_plan.recommendations]==['close']
+bad_aqi=logic.Reading('sensor.verified_us_aqi','High AQI','aqi',140.0,
+    {'aqi':{'status':'ready','scale':'us_epa','operational_unsafe':True}})
+aqi_plan=logic.evaluate((bad_aqi,),weather_ok,(),(open_room,),const.DEFAULT_THRESHOLDS)
+assert not aqi_plan.outdoor_safe and [rec.action for rec in aqi_plan.recommendations]==['close']
+assert logic.verified_outdoor_pollution_sources((bad_aqi,))==(bad_aqi,)
+bad_co2=logic.evaluate((logic.Reading('sensor.outdoor_co2','CO2','co2',920.0),),
+                       weather_ok,(),(open_room,),const.DEFAULT_THRESHOLDS)
+assert not bad_co2.outdoor_safe and any(r.code=='outside_co2' for r in bad_co2.outside_reasons)
+
+manager_code=(ROOT/'manager.py').read_text()
+alternative_code=(ROOT/'climate_window.py').read_text()
+assert 'valid_outside=verified_outdoor_pollution_sources(outdoor_readings)' in manager_code
+assert 'measured = verified_outdoor_pollution_sources(outdoor)' in alternative_code
 
 # Actual options writer: overrides and auto survive updates while source absent.
 class HAError(Exception): pass

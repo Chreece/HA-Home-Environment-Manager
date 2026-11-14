@@ -82,6 +82,11 @@ fixture["module"](
     ("unknown", "unavailable") else None,
     is_stale=lambda state, minutes: not occupancy._fresh(state, minutes),
     is_window=lambda hass, state: state.attributes.get("device_class") == "window",
+    is_window_contact=lambda hass, state, *, explicitly_selected=False:
+        state.domain == "binary_sensor" and (
+            state.attributes.get("device_class") == "window" or
+            explicitly_selected and state.attributes.get("device_class") in ("door", "opening")
+        ),
     reading=lambda *args, **kwargs: None,
 )
 legacy_rooms = importlib.import_module(LEGACY_PACKAGE + ".climate_rooms")

@@ -41,7 +41,8 @@ now=1000.
 state=N(state='off',last_changed=datetime.fromtimestamp(800,tz=timezone.utc))
 runtime=N(manager=N(settings={},plan=N(environment={},rooms=(N(area_id='room',windows=(N(entity_id='binary_sensor.window'),)),),climate_rooms=())),hass=N(states=N(get=lambda key:state)),clock=lambda:now)
 ns={'Any':object,'math':math,'model':N(), 'RESUME_SECONDS':60.,'POLICY_KEY':'pause_on_window_open',
- 'selected':lambda *args:None,'entity_area':lambda *args:'room','is_window':lambda *args:True}
+ 'selected':lambda *args:None,'entity_area':lambda *args:'room',
+ 'is_window':lambda *args:True,'is_window_contact':lambda *args,**kwargs:True}
 functions('equipment_window.py',('_stamp','evaluate'),ns)
 p=ns['evaluate'](runtime,sp,{'pause_on_window_open':True})
 assert p['contacts']==['binary_sensor.window'] and not p['blocked']

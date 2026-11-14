@@ -111,7 +111,9 @@ Preparation is not a command to turn everything on. Devices still need genuine d
 HEM compares **what a room needs** with **whether outdoor air can help**.
 
 - Recommend opening or closing windows using current indoor measurements, outdoor humidity, pollution, temperature, wind, weather alerts and optional pollen context.
+- Treat an AQI index as optional: an unconfigured provider scale is reported as incomplete data, not a reason to block ventilation or close a window. Valid measured pollutants and genuinely unsafe, correctly scaled AQI readings still apply.
 - Use selected window and door contacts to explain room conditions and avoid treating an unknown contact as closed.
+- Optionally include balcony or patio doors with Home Assistant binary-sensor class `door` or `opening` as **window inputs**. They appear in the room's window selector but are **never preselected**; regular door monitoring remains independent.
 - Optionally ask you to try opening a window before starting a supported automatic appliance, then continue normal control after the configured response wait if needed.
 - Use door information for room boundary awareness, ventilation cautions and optional guarded Eco behavior.
 - Manage opted-in shutters, blinds and shades using suitable window, temperature, weather, sun-elevation and optional illuminance evidence.

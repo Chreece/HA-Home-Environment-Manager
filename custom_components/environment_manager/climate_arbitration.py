@@ -15,7 +15,7 @@ from __future__ import annotations
 from typing import Any
 
 from .climate_coordination import device_inventory
-from .discovery import entity_area, is_window
+from .discovery import entity_area, is_window, is_window_contact
 from .pid_math import finite
 
 CHANNELS = ("thermal", "humidity", "extraction", "filtration")
@@ -105,6 +105,11 @@ def _contact_interlock(hass: Any, area: str, plan: dict) -> bool:
         return True
     if not isinstance(contacts,list):
         return False
+    # Optional Door/Opening contacts are authoritative only when the manager
+    # copied their persisted room-window enrollment into this live plan.
+    enrolled = plan.get("selected_window_contacts", ())
+    if not isinstance(enrolled, (list, tuple, set, frozenset)):
+        enrolled = ()
     for entity in contacts:
         if not isinstance(entity,str) or entity_area(hass,entity)!=area:
             return False
@@ -112,8 +117,13 @@ def _contact_interlock(hass: Any, area: str, plan: dict) -> bool:
         # Use the same registry-aware window classifier as discovery and
         # the per-device safety policy. A valid HA contact's device class
         # can live in the entity registry rather than state.attributes.
-        if (state is None or not is_window(hass, state)
-                or state.state!="off"):
+        if (state is None or not (
+                is_window(hass, state) or (
+                    entity in enrolled and is_window_contact(
+                        hass, state, explicitly_selected=True,
+                    )
+                )
+            ) or state.state!="off"):
             return False
     return True
 

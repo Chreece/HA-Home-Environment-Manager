@@ -29,6 +29,10 @@ discovery = ModuleType(PKG + ".discovery")
 discovery.entity_area = lambda hass, entity: hass.areas.get(entity)
 discovery.is_window = lambda hass, state: (
     state.domain == "binary_sensor" and state.attributes.get("device_class") == "window")
+discovery.is_window_contact = lambda hass, state, *, explicitly_selected=False: (
+    discovery.is_window(hass, state) or explicitly_selected
+    and state.domain == "binary_sensor"
+    and state.attributes.get("device_class") in ("door", "opening"))
 discovery.reading = no_service
 sys.modules[discovery.__name__] = discovery
 

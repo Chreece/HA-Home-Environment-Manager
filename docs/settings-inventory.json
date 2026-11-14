@@ -2296,8 +2296,8 @@
       "catalog_path": "strings.json/config/step/window_sensors/data/excluded_window_entities",
       "literal_references": [
         "custom_components/environment_manager/const.py:9",
-        "custom_components/environment_manager/room_sources.py:178",
-        "custom_components/environment_manager/room_sources.py:332",
+        "custom_components/environment_manager/room_sources.py:183",
+        "custom_components/environment_manager/room_sources.py:351",
         "custom_components/environment_manager/sensor.py:104",
         "custom_components/environment_manager/sensor.py:167"
       ],
@@ -2313,8 +2313,8 @@
       "catalog_path": "strings.json/config/step/indoor_sensors/data/excluded_indoor_entities",
       "literal_references": [
         "custom_components/environment_manager/const.py:10",
-        "custom_components/environment_manager/room_sources.py:179",
-        "custom_components/environment_manager/room_sources.py:333",
+        "custom_components/environment_manager/room_sources.py:184",
+        "custom_components/environment_manager/room_sources.py:352",
         "custom_components/environment_manager/sensor.py:105",
         "custom_components/environment_manager/sensor.py:168"
       ],
@@ -2434,7 +2434,7 @@
         "custom_components/environment_manager/ai_rewrite.py:227",
         "custom_components/environment_manager/ai_rewrite.py:65",
         "custom_components/environment_manager/aqi_sources.py:89",
-        "custom_components/environment_manager/away_windows.py:201"
+        "custom_components/environment_manager/away_windows.py:204"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -2829,7 +2829,7 @@
         "custom_components/environment_manager/const.py:76",
         "custom_components/environment_manager/device_controls.py:100",
         "custom_components/environment_manager/device_controls.py:104",
-        "custom_components/environment_manager/logic.py:303"
+        "custom_components/environment_manager/logic.py:321"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -2844,7 +2844,7 @@
       "literal_references": [
         "custom_components/environment_manager/const.py:77",
         "custom_components/environment_manager/device_controls.py:106",
-        "custom_components/environment_manager/logic.py:305"
+        "custom_components/environment_manager/logic.py:323"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -2932,7 +2932,7 @@
         "custom_components/environment_manager/ai_rewrite.py:80",
         "custom_components/environment_manager/area_entities.py:144",
         "custom_components/environment_manager/away_windows.py:109",
-        "custom_components/environment_manager/away_windows.py:150",
+        "custom_components/environment_manager/away_windows.py:153",
         "custom_components/environment_manager/climate_commissioning.py:143",
         "custom_components/environment_manager/climate_window.py:206"
       ],
@@ -2951,8 +2951,8 @@
         "custom_components/environment_manager/device_controls.py:244",
         "custom_components/environment_manager/device_controls.py:417",
         "custom_components/environment_manager/device_controls.py:435",
-        "custom_components/environment_manager/discovery.py:430",
-        "custom_components/environment_manager/discovery.py:441"
+        "custom_components/environment_manager/discovery.py:453",
+        "custom_components/environment_manager/discovery.py:464"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -3003,9 +3003,9 @@
       "literal_references": [
         "custom_components/environment_manager/room_sources.py:101",
         "custom_components/environment_manager/room_sources.py:15",
-        "custom_components/environment_manager/room_sources.py:160",
-        "custom_components/environment_manager/room_sources.py:191",
-        "custom_components/environment_manager/room_sources.py:203"
+        "custom_components/environment_manager/room_sources.py:165",
+        "custom_components/environment_manager/room_sources.py:210",
+        "custom_components/environment_manager/room_sources.py:222"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -3022,8 +3022,8 @@
         "custom_components/environment_manager/device_controls.py:352",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1116",
-        "custom_components/environment_manager/manager.py:666"
+        "custom_components/environment_manager/manager.py:1120",
+        "custom_components/environment_manager/manager.py:670"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -3237,7 +3237,7 @@
         "custom_components/environment_manager/ai_rewrite.py:227",
         "custom_components/environment_manager/ai_rewrite.py:65",
         "custom_components/environment_manager/aqi_sources.py:89",
-        "custom_components/environment_manager/away_windows.py:201"
+        "custom_components/environment_manager/away_windows.py:204"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -4664,8 +4664,8 @@
         "custom_components/environment_manager/config_flow.py:797",
         "custom_components/environment_manager/environment_extended.py:175",
         "custom_components/environment_manager/environment_extended.py:83",
-        "custom_components/environment_manager/room_sources.py:285",
-        "custom_components/environment_manager/room_sources.py:292"
+        "custom_components/environment_manager/room_sources.py:304",
+        "custom_components/environment_manager/room_sources.py:311"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -4711,8 +4711,8 @@
         "custom_components/environment_manager/config_flow.py:799",
         "custom_components/environment_manager/environment_extended.py:163",
         "custom_components/environment_manager/environment_extended.py:84",
-        "custom_components/environment_manager/room_sources.py:285",
-        "custom_components/environment_manager/room_sources.py:292"
+        "custom_components/environment_manager/room_sources.py:304",
+        "custom_components/environment_manager/room_sources.py:311"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -4744,7 +4744,7 @@
         "custom_components/environment_manager/environment_extended.py:166",
         "custom_components/environment_manager/environment_extended.py:167",
         "custom_components/environment_manager/environment_extended.py:85",
-        "custom_components/environment_manager/room_sources.py:285"
+        "custom_components/environment_manager/room_sources.py:304"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -4775,8 +4775,8 @@
         "custom_components/environment_manager/environment.py:197",
         "custom_components/environment_manager/environment_extended.py:169",
         "custom_components/environment_manager/environment_extended.py:86",
-        "custom_components/environment_manager/room_sources.py:285",
-        "custom_components/environment_manager/room_sources.py:294"
+        "custom_components/environment_manager/room_sources.py:304",
+        "custom_components/environment_manager/room_sources.py:313"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -4791,7 +4791,7 @@
       "literal_references": [
         "custom_components/environment_manager/config_flow.py:804",
         "custom_components/environment_manager/environment_extended.py:87",
-        "custom_components/environment_manager/room_sources.py:285"
+        "custom_components/environment_manager/room_sources.py:304"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -5223,9 +5223,9 @@
         "custom_components/environment_manager/area_entities.py:28",
         "custom_components/environment_manager/climate_air_mode_native.py:317",
         "custom_components/environment_manager/climate_air_mode_native.py:324",
-        "custom_components/environment_manager/climate_arbitration.py:156",
-        "custom_components/environment_manager/climate_arbitration.py:157",
-        "custom_components/environment_manager/climate_arbitration.py:222"
+        "custom_components/environment_manager/climate_arbitration.py:166",
+        "custom_components/environment_manager/climate_arbitration.py:167",
+        "custom_components/environment_manager/climate_arbitration.py:232"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -6561,7 +6561,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/select_devices/data/selected_devices",
       "literal_references": [
-        "custom_components/environment_manager/climate_arbitration.py:314",
+        "custom_components/environment_manager/climate_arbitration.py:324",
         "custom_components/environment_manager/climate_entry_ownership.py:28",
         "custom_components/environment_manager/climate_entry_ownership.py:75",
         "custom_components/environment_manager/climate_native.py:208",
@@ -6941,7 +6941,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/room_occupancy_sources/data/room_occupancy_sensors",
       "literal_references": [
-        "custom_components/environment_manager/away_windows.py:138",
+        "custom_components/environment_manager/away_windows.py:141",
         "custom_components/environment_manager/away_windows.py:78",
         "custom_components/environment_manager/compact_options.py:317",
         "custom_components/environment_manager/compact_options.py:338",
@@ -6980,7 +6980,7 @@
         "custom_components/environment_manager/ai_rewrite.py:80",
         "custom_components/environment_manager/area_entities.py:144",
         "custom_components/environment_manager/away_windows.py:109",
-        "custom_components/environment_manager/away_windows.py:150",
+        "custom_components/environment_manager/away_windows.py:153",
         "custom_components/environment_manager/climate_commissioning.py:143",
         "custom_components/environment_manager/climate_window.py:206"
       ],
@@ -6999,8 +6999,8 @@
         "custom_components/environment_manager/device_controls.py:244",
         "custom_components/environment_manager/device_controls.py:417",
         "custom_components/environment_manager/device_controls.py:435",
-        "custom_components/environment_manager/discovery.py:430",
-        "custom_components/environment_manager/discovery.py:441"
+        "custom_components/environment_manager/discovery.py:453",
+        "custom_components/environment_manager/discovery.py:464"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7051,9 +7051,9 @@
       "literal_references": [
         "custom_components/environment_manager/room_sources.py:101",
         "custom_components/environment_manager/room_sources.py:15",
-        "custom_components/environment_manager/room_sources.py:160",
-        "custom_components/environment_manager/room_sources.py:191",
-        "custom_components/environment_manager/room_sources.py:203"
+        "custom_components/environment_manager/room_sources.py:165",
+        "custom_components/environment_manager/room_sources.py:210",
+        "custom_components/environment_manager/room_sources.py:222"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7070,8 +7070,8 @@
         "custom_components/environment_manager/device_controls.py:352",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1116",
-        "custom_components/environment_manager/manager.py:666"
+        "custom_components/environment_manager/manager.py:1120",
+        "custom_components/environment_manager/manager.py:670"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7119,7 +7119,7 @@
         "custom_components/environment_manager/ai_rewrite.py:80",
         "custom_components/environment_manager/area_entities.py:144",
         "custom_components/environment_manager/away_windows.py:109",
-        "custom_components/environment_manager/away_windows.py:150",
+        "custom_components/environment_manager/away_windows.py:153",
         "custom_components/environment_manager/climate_commissioning.py:143",
         "custom_components/environment_manager/climate_window.py:206"
       ],
@@ -7138,8 +7138,8 @@
         "custom_components/environment_manager/device_controls.py:244",
         "custom_components/environment_manager/device_controls.py:417",
         "custom_components/environment_manager/device_controls.py:435",
-        "custom_components/environment_manager/discovery.py:430",
-        "custom_components/environment_manager/discovery.py:441"
+        "custom_components/environment_manager/discovery.py:453",
+        "custom_components/environment_manager/discovery.py:464"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7190,9 +7190,9 @@
       "literal_references": [
         "custom_components/environment_manager/room_sources.py:101",
         "custom_components/environment_manager/room_sources.py:15",
-        "custom_components/environment_manager/room_sources.py:160",
-        "custom_components/environment_manager/room_sources.py:191",
-        "custom_components/environment_manager/room_sources.py:203"
+        "custom_components/environment_manager/room_sources.py:165",
+        "custom_components/environment_manager/room_sources.py:210",
+        "custom_components/environment_manager/room_sources.py:222"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7209,8 +7209,8 @@
         "custom_components/environment_manager/device_controls.py:352",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1116",
-        "custom_components/environment_manager/manager.py:666"
+        "custom_components/environment_manager/manager.py:1120",
+        "custom_components/environment_manager/manager.py:670"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7242,8 +7242,8 @@
       "catalog_path": "strings.json/options/step/window_sensors/data/excluded_window_entities",
       "literal_references": [
         "custom_components/environment_manager/const.py:9",
-        "custom_components/environment_manager/room_sources.py:178",
-        "custom_components/environment_manager/room_sources.py:332",
+        "custom_components/environment_manager/room_sources.py:183",
+        "custom_components/environment_manager/room_sources.py:351",
         "custom_components/environment_manager/sensor.py:104",
         "custom_components/environment_manager/sensor.py:167"
       ],
@@ -7292,8 +7292,8 @@
       "catalog_path": "strings.json/options/step/indoor_sensors/data/excluded_indoor_entities",
       "literal_references": [
         "custom_components/environment_manager/const.py:10",
-        "custom_components/environment_manager/room_sources.py:179",
-        "custom_components/environment_manager/room_sources.py:333",
+        "custom_components/environment_manager/room_sources.py:184",
+        "custom_components/environment_manager/room_sources.py:352",
         "custom_components/environment_manager/sensor.py:105",
         "custom_components/environment_manager/sensor.py:168"
       ],
@@ -7413,7 +7413,7 @@
         "custom_components/environment_manager/ai_rewrite.py:227",
         "custom_components/environment_manager/ai_rewrite.py:65",
         "custom_components/environment_manager/aqi_sources.py:89",
-        "custom_components/environment_manager/away_windows.py:201"
+        "custom_components/environment_manager/away_windows.py:204"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7808,7 +7808,7 @@
         "custom_components/environment_manager/const.py:76",
         "custom_components/environment_manager/device_controls.py:100",
         "custom_components/environment_manager/device_controls.py:104",
-        "custom_components/environment_manager/logic.py:303"
+        "custom_components/environment_manager/logic.py:321"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7823,7 +7823,7 @@
       "literal_references": [
         "custom_components/environment_manager/const.py:77",
         "custom_components/environment_manager/device_controls.py:106",
-        "custom_components/environment_manager/logic.py:305"
+        "custom_components/environment_manager/logic.py:323"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -8798,8 +8798,8 @@
         "custom_components/environment_manager/config_flow.py:797",
         "custom_components/environment_manager/environment_extended.py:175",
         "custom_components/environment_manager/environment_extended.py:83",
-        "custom_components/environment_manager/room_sources.py:285",
-        "custom_components/environment_manager/room_sources.py:292"
+        "custom_components/environment_manager/room_sources.py:304",
+        "custom_components/environment_manager/room_sources.py:311"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -8845,8 +8845,8 @@
         "custom_components/environment_manager/config_flow.py:799",
         "custom_components/environment_manager/environment_extended.py:163",
         "custom_components/environment_manager/environment_extended.py:84",
-        "custom_components/environment_manager/room_sources.py:285",
-        "custom_components/environment_manager/room_sources.py:292"
+        "custom_components/environment_manager/room_sources.py:304",
+        "custom_components/environment_manager/room_sources.py:311"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -8878,7 +8878,7 @@
         "custom_components/environment_manager/environment_extended.py:166",
         "custom_components/environment_manager/environment_extended.py:167",
         "custom_components/environment_manager/environment_extended.py:85",
-        "custom_components/environment_manager/room_sources.py:285"
+        "custom_components/environment_manager/room_sources.py:304"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -8909,8 +8909,8 @@
         "custom_components/environment_manager/environment.py:197",
         "custom_components/environment_manager/environment_extended.py:169",
         "custom_components/environment_manager/environment_extended.py:86",
-        "custom_components/environment_manager/room_sources.py:285",
-        "custom_components/environment_manager/room_sources.py:294"
+        "custom_components/environment_manager/room_sources.py:304",
+        "custom_components/environment_manager/room_sources.py:313"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -8925,7 +8925,7 @@
       "literal_references": [
         "custom_components/environment_manager/config_flow.py:804",
         "custom_components/environment_manager/environment_extended.py:87",
-        "custom_components/environment_manager/room_sources.py:285"
+        "custom_components/environment_manager/room_sources.py:304"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -9357,9 +9357,9 @@
         "custom_components/environment_manager/area_entities.py:28",
         "custom_components/environment_manager/climate_air_mode_native.py:317",
         "custom_components/environment_manager/climate_air_mode_native.py:324",
-        "custom_components/environment_manager/climate_arbitration.py:156",
-        "custom_components/environment_manager/climate_arbitration.py:157",
-        "custom_components/environment_manager/climate_arbitration.py:222"
+        "custom_components/environment_manager/climate_arbitration.py:166",
+        "custom_components/environment_manager/climate_arbitration.py:167",
+        "custom_components/environment_manager/climate_arbitration.py:232"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -10681,7 +10681,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/select_devices/data/selected_devices",
       "literal_references": [
-        "custom_components/environment_manager/climate_arbitration.py:314",
+        "custom_components/environment_manager/climate_arbitration.py:324",
         "custom_components/environment_manager/climate_entry_ownership.py:28",
         "custom_components/environment_manager/climate_entry_ownership.py:75",
         "custom_components/environment_manager/climate_native.py:208",
@@ -11068,7 +11068,7 @@
         "custom_components/environment_manager/ai_rewrite.py:80",
         "custom_components/environment_manager/area_entities.py:144",
         "custom_components/environment_manager/away_windows.py:109",
-        "custom_components/environment_manager/away_windows.py:150",
+        "custom_components/environment_manager/away_windows.py:153",
         "custom_components/environment_manager/climate_commissioning.py:143",
         "custom_components/environment_manager/climate_window.py:206"
       ],
@@ -11087,8 +11087,8 @@
         "custom_components/environment_manager/device_controls.py:244",
         "custom_components/environment_manager/device_controls.py:417",
         "custom_components/environment_manager/device_controls.py:435",
-        "custom_components/environment_manager/discovery.py:430",
-        "custom_components/environment_manager/discovery.py:441"
+        "custom_components/environment_manager/discovery.py:453",
+        "custom_components/environment_manager/discovery.py:464"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -11139,9 +11139,9 @@
       "literal_references": [
         "custom_components/environment_manager/room_sources.py:101",
         "custom_components/environment_manager/room_sources.py:15",
-        "custom_components/environment_manager/room_sources.py:160",
-        "custom_components/environment_manager/room_sources.py:191",
-        "custom_components/environment_manager/room_sources.py:203"
+        "custom_components/environment_manager/room_sources.py:165",
+        "custom_components/environment_manager/room_sources.py:210",
+        "custom_components/environment_manager/room_sources.py:222"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -11158,8 +11158,8 @@
         "custom_components/environment_manager/device_controls.py:352",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1116",
-        "custom_components/environment_manager/manager.py:666"
+        "custom_components/environment_manager/manager.py:1120",
+        "custom_components/environment_manager/manager.py:670"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -11373,7 +11373,7 @@
         "custom_components/environment_manager/ai_rewrite.py:227",
         "custom_components/environment_manager/ai_rewrite.py:65",
         "custom_components/environment_manager/aqi_sources.py:89",
-        "custom_components/environment_manager/away_windows.py:201"
+        "custom_components/environment_manager/away_windows.py:204"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -11922,7 +11922,7 @@
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/room_occupancy_sources/data/room_occupancy_sensors",
       "literal_references": [
-        "custom_components/environment_manager/away_windows.py:138",
+        "custom_components/environment_manager/away_windows.py:141",
         "custom_components/environment_manager/away_windows.py:78",
         "custom_components/environment_manager/compact_options.py:317",
         "custom_components/environment_manager/compact_options.py:338",
@@ -11961,7 +11961,7 @@
         "custom_components/environment_manager/ai_rewrite.py:80",
         "custom_components/environment_manager/area_entities.py:144",
         "custom_components/environment_manager/away_windows.py:109",
-        "custom_components/environment_manager/away_windows.py:150",
+        "custom_components/environment_manager/away_windows.py:153",
         "custom_components/environment_manager/climate_commissioning.py:143",
         "custom_components/environment_manager/climate_window.py:206"
       ],
@@ -11980,8 +11980,8 @@
         "custom_components/environment_manager/device_controls.py:244",
         "custom_components/environment_manager/device_controls.py:417",
         "custom_components/environment_manager/device_controls.py:435",
-        "custom_components/environment_manager/discovery.py:430",
-        "custom_components/environment_manager/discovery.py:441"
+        "custom_components/environment_manager/discovery.py:453",
+        "custom_components/environment_manager/discovery.py:464"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -12032,9 +12032,9 @@
       "literal_references": [
         "custom_components/environment_manager/room_sources.py:101",
         "custom_components/environment_manager/room_sources.py:15",
-        "custom_components/environment_manager/room_sources.py:160",
-        "custom_components/environment_manager/room_sources.py:191",
-        "custom_components/environment_manager/room_sources.py:203"
+        "custom_components/environment_manager/room_sources.py:165",
+        "custom_components/environment_manager/room_sources.py:210",
+        "custom_components/environment_manager/room_sources.py:222"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -12051,8 +12051,8 @@
         "custom_components/environment_manager/device_controls.py:352",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1116",
-        "custom_components/environment_manager/manager.py:666"
+        "custom_components/environment_manager/manager.py:1120",
+        "custom_components/environment_manager/manager.py:670"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -12100,7 +12100,7 @@
         "custom_components/environment_manager/ai_rewrite.py:80",
         "custom_components/environment_manager/area_entities.py:144",
         "custom_components/environment_manager/away_windows.py:109",
-        "custom_components/environment_manager/away_windows.py:150",
+        "custom_components/environment_manager/away_windows.py:153",
         "custom_components/environment_manager/climate_commissioning.py:143",
         "custom_components/environment_manager/climate_window.py:206"
       ],
@@ -12119,8 +12119,8 @@
         "custom_components/environment_manager/device_controls.py:244",
         "custom_components/environment_manager/device_controls.py:417",
         "custom_components/environment_manager/device_controls.py:435",
-        "custom_components/environment_manager/discovery.py:430",
-        "custom_components/environment_manager/discovery.py:441"
+        "custom_components/environment_manager/discovery.py:453",
+        "custom_components/environment_manager/discovery.py:464"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -12171,9 +12171,9 @@
       "literal_references": [
         "custom_components/environment_manager/room_sources.py:101",
         "custom_components/environment_manager/room_sources.py:15",
-        "custom_components/environment_manager/room_sources.py:160",
-        "custom_components/environment_manager/room_sources.py:191",
-        "custom_components/environment_manager/room_sources.py:203"
+        "custom_components/environment_manager/room_sources.py:165",
+        "custom_components/environment_manager/room_sources.py:210",
+        "custom_components/environment_manager/room_sources.py:222"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -12190,8 +12190,8 @@
         "custom_components/environment_manager/device_controls.py:352",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1116",
-        "custom_components/environment_manager/manager.py:666"
+        "custom_components/environment_manager/manager.py:1120",
+        "custom_components/environment_manager/manager.py:670"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },

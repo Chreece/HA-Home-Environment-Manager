@@ -45,7 +45,8 @@ stub("homeassistant.components", __path__=[])
 stub("homeassistant.components.tts", __path__=[])
 stub("homeassistant.components.tts.const", DATA_COMPONENT="tts_component")
 
-stub(PKG + ".discovery", entity_area=lambda hass, entity: None, is_window=lambda *args: True)
+stub(PKG + ".discovery", entity_area=lambda hass, entity: None, is_window=lambda *args: True,
+     is_window_contact=lambda *args, **kwargs: True)
 stub(PKG + ".occupancy_policy", _bool_presence=lambda value: False,
      home_presence=lambda *args, **kwargs: ("away", None, None))
 stub(PKG + ".room_sources", native=lambda *args: [], selected=lambda *args: [])

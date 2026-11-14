@@ -239,6 +239,22 @@ def _outdoor_not_lower(indoor: Reading, outdoor: tuple[Reading, ...]) -> bool:
     return any(item.value >= indoor.value for item in candidates)
 
 
+def verified_outdoor_pollution_sources(outdoor: tuple[Reading, ...]) -> tuple[Reading, ...]:
+    """Return selected pollution measurements that can be interpreted safely.
+
+    AQI is optional: an index without a verified provider scale is not
+    evidence of either clean or polluted air. Retain all non-AQI physical
+    pollutant sources, including missing readings, so their own fail-closed
+    source requirements continue to apply independently of AQI.
+    """
+    return tuple(
+        item for item in outdoor
+        if item.metric in ("aqi", "pm25", "pm10", "no2", "o3", "so2")
+        and (item.metric != "aqi" or
+             (item.details or {}).get("aqi", {}).get("status") == "ready")
+    )
+
+
 def evaluate(
     outdoor: tuple[Reading, ...],
     weather: tuple[Weather, ...],
@@ -262,15 +278,17 @@ def evaluate(
     # same metric calculable.
     unavailable_outdoor.extend(
         item.entity_id for item in outdoor
-        if item.value is None and item.metric != "aqi"
+        if item.value is None
     )
     averaged_outdoor = _averaged_readings(outdoor)
     for reading in averaged_outdoor:
         if reading.metric == "aqi" and reading.value is not None:
             classification = (reading.details or {}).get("aqi", {})
             if classification.get("status") != "ready":
+                # Optional unknown-scale indices are *unverified*, not
+                # physical pollution hazards or reasons to close windows.
+                # Keep them in outdoor data-health diagnostics only.
                 unavailable_outdoor.append(reading.entity_id)
-                outside.append(Reason("aqi_scale_unconfigured", reading.name))
                 continue
             if classification.get("operational_unsafe"):
                 outside.append(_reading_reason("outside", reading))
@@ -318,10 +336,14 @@ def evaluate(
     # not silently present incomplete outside data as verified suitable.
     opening_cautions = list(outside)
     for item in outdoor:
+        # AQI is an optional supplement. Do not repeat a separate warning
+        # for each source with no scale in every room's ventilation advice.
+        # It remains visible as incomplete/out-of-scale outside data.
+        if item.metric == "aqi":
+            continue
         if item.entity_id in unavailable_outdoor and not any(
-            reason.label == item.name and reason.code in (
-                "aqi_scale_unconfigured", "unavailable_outdoor"
-            ) for reason in opening_cautions
+            reason.label == item.name and reason.code == "unavailable_outdoor"
+            for reason in opening_cautions
         ):
             opening_cautions.append(Reason("unavailable_outdoor", item.name))
     # A manual request already explains these conditions as reasons for care.

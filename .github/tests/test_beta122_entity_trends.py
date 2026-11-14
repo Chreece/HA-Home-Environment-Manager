@@ -585,19 +585,43 @@ def browser_checks(data):
         screenshot_dir = os.environ.get("HEM_TEST_SCREENSHOT_DIR")
         if screenshot_dir:
             Path(screenshot_dir).mkdir(parents=True, exist_ok=True)
-        for width, language in ((590, "en"), (390, "el"), (320, "de")):
-            page.set_viewport_size({"width": width, "height": 900})
+        # Verify real viewport geometry, including short iPhone-sized views:
+        # the dialog cannot sit under the status bar and its sticky close
+        # button must remain a 44px touch target after scrolling the history.
+        for width, height, language in ((590, 900, "en"), (390, 844, "el"),
+                                        (320, 568, "de")):
+            page.set_viewport_size({"width": width, "height": height})
             page.evaluate("language=>{card._hass={...card._hass,language};card._refreshAverage105(true)}", language)
-            page.wait_for_timeout(40)
+            page.wait_for_timeout(60)
             bounds = popup.bounding_box()
-            assert bounds["x"] >= 0 and bounds["x"] + bounds["width"] <= width + 1
+            assert bounds and bounds["x"] >= 0 and bounds["x"] + bounds["width"] <= width + 1, bounds
             assert popup.evaluate("e=>e.scrollWidth<=e.clientWidth+1"), "Entity chart overflowed horizontally"
             assert popup.locator("[data-open-entity122]").is_visible()
             assert chart.is_visible()
+            if width <= 390:
+                assert bounds["y"] >= 58, ("History header overlaps mobile status bar", bounds)
+                assert bounds["y"] + bounds["height"] <= height - 58, ("Popup clipped at bottom", bounds)
+                close_button = popup.locator("[data-close-avg105]")
+                box = close_button.bounding_box()
+                assert box is not None and box["width"] >= 43 and box["height"] >= 43, box
+                assert box["y"] >= 58, ("Close icon obscured by mobile status bar", box)
+                assert close_button.get_attribute("aria-label"), "Close has no accessible label"
+                assert popup.evaluate("e=>getComputedStyle(e).overscrollBehaviorY") == "contain"
+                assert popup.evaluate("e=>parseFloat(getComputedStyle(e).fontSize)") >= 12
+                if width == 320:
+                    popup.evaluate("e=>{e.scrollTop=e.scrollHeight}")
+                    page.wait_for_timeout(40)
+                    sticky = close_button.bounding_box()
+                    assert sticky and sticky["y"] >= bounds["y"] - 1, ("Sticky close scrolled out", sticky)
+                    assert sticky["y"] + sticky["height"] <= height - 58, sticky
             if screenshot_dir:
                 page.screenshot(path=str(Path(screenshot_dir) / f"beta122-entity-trend-{width}-{language}.png"))
 
-        popup.locator("[data-close-avg105]").click()
+        close_box = popup.locator("[data-close-avg105]").bounding_box()
+        assert close_box
+        page.touchscreen.tap(close_box["x"] + close_box["width"]/2,
+                             close_box["y"] + close_box["height"]/2)
+        assert popup.count() == 0, "Mobile close button did not dismiss history"
         failed = open_entity()
         page.evaluate("index=>historyRequests[index].reject(new Error('Recorder unavailable'))", failed)
         popup.locator('[data-entity-history-status122="error"]').wait_for()
