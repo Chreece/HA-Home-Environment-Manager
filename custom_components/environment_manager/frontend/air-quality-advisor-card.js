@@ -12022,19 +12022,30 @@
     const header=node.querySelector(scope==='home'?'.hem-home-options-head128':'.hem-room-options-head114')||node.querySelector('header');
     if(!header)return;
     saved.settingsSourcesBoundB10=true;
+    // Action buttons are NOT part of the title's flex row. In Greek and
+    // German they previously squeezed the heading into vertical letters.
+    // Keep the whole row inside this settings dialog and preserve its handlers.
+    const toolbar=document.createElement('div');
+    toolbar.className='hem-settings-source-actions-b15';
+    toolbar.setAttribute('role','group');
     const refresh=document.createElement('button');refresh.type='button';
     refresh.setAttribute('data-settings-refresh-b10','');refresh.textContent=b10Text(this,'refresh');
-    header.append(refresh);
+    toolbar.append(refresh);
     if(scope==='home'){
       const manage=document.createElement('button');manage.type='button';
       manage.setAttribute('data-settings-manage-rooms-b10','');manage.textContent=b10Text(this,'manage');
-      header.append(manage);
+      toolbar.append(manage);
     }
+    header.after(toolbar);
     node.addEventListener('click',event=>{
       const button=event.target?.closest?.('button');
-      if(button===refresh){event.stopPropagation();this._settingsRefreshSourcesB10(saved,scope);}
+      if(button===refresh){
+        event.preventDefault();event.stopPropagation();
+        this._settingsRefreshSourcesB10(saved,scope);return;
+      }
       if(button?.hasAttribute('data-settings-manage-rooms-b10')){
-        event.stopPropagation();this._settingsManageRoomsB10(saved);
+        event.preventDefault();event.stopPropagation();
+        if(!button.disabled)this._settingsManageRoomsB10(saved);
       }
     });
     saved.sourceFingerprintB10=this._settingsSourceFingerprintB10();
@@ -12047,10 +12058,17 @@
   };
   b10._settingsRefreshSourcesB10=function(saved,scope){
     if(!this._settingsActive(saved,scope)||saved.sourcesRefreshingB10)return;
+    // An explicit click always supersedes any pending background inventory
+    // refresh; otherwise the user can see the old schema a second time.
+    clearTimeout(saved.sourceRefreshTimerB10);
+    saved.sourceRefreshTimerB10=null;
     saved.sourcesRefreshingB10=true;
     const button=saved.node.querySelector('[data-settings-refresh-b10]');
+    const manage=saved.node.querySelector('[data-settings-manage-rooms-b10]');
     if(button){button.disabled=true;button.textContent=b10Text(this,'refreshing');}
-    this._settingsQueue(saved.entryId,async()=>{
+    if(manage)manage.disabled=true;
+    this._settingsOptionsStatus(saved,scope,b10Text(this,'refreshing'));
+    const task=this._settingsQueue(saved.entryId,async()=>{
       if(!this._settingsActive(saved,scope))return;
       const active=()=>{if(!this._settingsActive(saved,scope))throw Error('Configuration owner changed');};
       let flow=null;
@@ -12065,21 +12083,46 @@
         if(form?.type!=='form'||form.flow_id!==flow||!Array.isArray(form.data_schema)||
            form.step_id!==(scope==='home'?'setup_general':'edit_room'))throw Error('Invalid refreshed schema');
         const previous=saved.flowId;
-        saved.flowId=flow;flow=null;
-        if(scope==='home')this._renderHomeGeneral128(saved,form,true);
-        else this._renderRoomSettingsForm114(saved,form,true);
+        // A new form owns a new Options flow. Re-arm its cleanup lifecycle:
+        // the previous flow may have been consumed by autosave and carried
+        // cleanupStarted=true, which silently stranded replacement forms.
+        const previousLifecycle={
+          cleanupStarted:saved.cleanupStarted,
+          cleanupRequested:saved.cleanupRequested,
+          cleanupPromise:saved.cleanupPromise,
+          cleanupFailed:saved.cleanupFailed,
+        };
+        saved.flowId=flow;
+        saved.cleanupStarted=false;
+        saved.cleanupRequested=false;
+        saved.cleanupPromise=null;
+        saved.cleanupFailed=false;
+        try{
+          if(scope==='home')this._renderHomeGeneral128(saved,form,true);
+          else this._renderRoomSettingsForm114(saved,form,true);
+        }catch(error){
+          saved.flowId=previous;
+          Object.assign(saved,previousLifecycle);
+          throw error;
+        }
+        flow=null;
         if(b10CompatibleFlow(previous)&&previous!==saved.flowId){
           try{await saved.api('DELETE',settingsFlow(previous));}catch{}
         }
         active();saved.sourceFingerprintB10=this._settingsSourceFingerprintB10();
         this._settingsOptionsStatus(saved,scope,b10Text(this,'refreshed'));
       }catch(error){
+        console.warn('HEM source inventory refresh failed',error);
         if(this._settingsActive(saved,scope))this._settingsOptionsStatus(saved,scope,b10Text(this,'failure'),true);
       }finally{if(b10CompatibleFlow(flow))try{await saved.api('DELETE',settingsFlow(flow));}catch{}}
     }).finally(()=>{
       saved.sourcesRefreshingB10=false;
-      if(this._settingsActive(saved,scope)&&button?.isConnected){button.disabled=false;button.textContent=b10Text(this,'refresh');}
+      if(this._settingsActive(saved,scope)){
+        if(button?.isConnected){button.disabled=false;button.textContent=b10Text(this,'refresh');}
+        if(manage?.isConnected)manage.disabled=false;
+      }
     });
+    saved.sourceRefreshTaskB15=task;
   };
   // Registry/source membership changes are less frequent than sensor values.
   // Reconcile fresh choices once per changed identity set, and only after
@@ -12094,7 +12137,9 @@
       if(saved.sourceFingerprintB10&&fingerprint!==saved.sourceFingerprintB10){
         clearTimeout(saved.sourceRefreshTimerB10);
         saved.sourceRefreshTimerB10=setTimeout(()=>{
-          if(this._settingsActive(saved,scope)&&!saved.optionsAutosave?.running)
+          // Entry-scoped transaction queue already waits for pending saves.
+          // Do not discard this refresh just because an autosave is running.
+          if(this._settingsActive(saved,scope))
             this._settingsRefreshSourcesB10(saved,scope);
         },600);
       }
@@ -12104,7 +12149,11 @@
   // Explicit room enrollment uses the supported 'choose_rooms' Options step.
   // It is not equivalent to granting a new appliance permission.
   b10._settingsManageRoomsB10=async function(saved){
-    if(!this._settingsActive(saved,'home')||saved.roomManagerB10)return;
+    if(!this._settingsActive(saved,'home')||saved.roomManagerB10||
+       saved.roomManagerOpeningB15)return;
+    saved.roomManagerOpeningB15=true;
+    const manageButton=saved.node.querySelector('[data-settings-manage-rooms-b10]');
+    if(manageButton)manageButton.disabled=true;
     const connection=saved.connection,owner=saved.owner,entry=saved.entryId;
     const active=()=>this._settingsActive(saved,'home')&&saved.connection===connection&&saved.owner===owner;
     const words=B10_WORDS[this._language()]||B10_WORDS.en;
@@ -12114,18 +12163,28 @@
       Promise.resolve(saved.api('DELETE',settingsFlow(stale))).catch(()=>{});
     }};
     try{
-      const menu=await saved.api('POST','config/config_entries/options/flow',{handler:entry});
+      // A pending refresh/Options save belongs to this same config entry.
+      // Wait for it once rather than requiring another manual click.
+      if(saved.sourceRefreshTaskB15)await saved.sourceRefreshTaskB15;
       if(!active())return;
+      const menu=await saved.api('POST','config/config_entries/options/flow',{handler:entry});
       flow=menu?.flow_id;
+      if(!active())return;
       const options=Array.isArray(menu?.menu_options)?menu.menu_options:Object.keys(menu?.menu_options||{});
       if(menu?.type!=='menu'||!b10CompatibleFlow(flow)||!options.includes('choose_rooms'))throw Error('Room management unavailable');
       const form=await saved.api('POST',settingsFlow(flow),{next_step_id:'choose_rooms'});
       if(!active())return;
-      if(form?.type!=='form'||form.flow_id!==flow||form.step_id!=='choose_rooms')throw Error('Invalid room form');
+      // Actual backend contract: menu choice "choose_rooms" opens a form
+      // with step_id="setup_rooms" (ReconfigureRoomsMixin). B10 required
+      // "choose_rooms" here and rejected the valid form on every click.
+      if(form?.type!=='form'||form.flow_id!==flow||
+         !['setup_rooms','choose_rooms'].includes(form.step_id))
+        throw Error('Invalid monitored-room form');
       const field=form.data_schema?.find(item=>item.name==='areas');
       if(!field?.selector?.select?.multiple)throw Error('Room selector missing');
       const optionsList=homeOptions128(field);
-      const originally=new Set(Array.isArray(field.default)?field.default:[]);
+      const initial=field.default??field.description?.suggested_value??[];
+      const originally=new Set(Array.isArray(initial)?initial:[]);
       node=document.createElement('dialog');node.className='hem-room-options114 hem-settings-rooms-b10';
       node.setAttribute('aria-label',words.manage);
       const choices=optionsList.map(option=>'<label class="hem-room-options-choice114"><input type="checkbox" data-room-member-b10="'+escape(option.value)+'" '+
@@ -12140,7 +12199,8 @@
       saved.roomManagerB10=node;
       const close=()=>{if(!node)return;
         disposeFlow();try{if(node.open)node.close();}catch{}node.remove();
-        if(saved.roomManagerB10===node)saved.roomManagerB10=null;};
+        if(saved.roomManagerB10===node)saved.roomManagerB10=null;
+        if(active()&&manageButton?.isConnected)manageButton.disabled=false;};
       saved.closeRoomManagerB10=close;
       node.addEventListener('cancel',e=>{e.preventDefault();close();});
       const current=()=>[...node.querySelectorAll('[data-room-member-b10]:checked')].map(el=>el.getAttribute('data-room-member-b10'));
@@ -12163,16 +12223,21 @@
         try{
           const selected=current();if(!selected.length)throw Error('No selected rooms');
           const result=await saved.api('POST',settingsFlow(flow),{areas:selected});
-          if(result?.type!=='create_entry'||result.flow_id!==flow)throw Error('Room change rejected');
+          if(result?.type!=='create_entry'||
+             (result.flow_id!==undefined&&result.flow_id!==flow))
+            throw Error('Room change rejected');
           flow=null;status.textContent=words.managed;close();
         }catch{if(active()){status.textContent=words.failure;button.disabled=false;}}
       });
       this.shadowRoot.appendChild(node);try{node.showModal();}catch{node.setAttribute('open','');}
       render();
-    }catch{
+    }catch(error){
+      console.warn('HEM monitored-room selection failed',error);
       if(active())this._settingsOptionsStatus(saved,'home',words.failure,true);
     }finally{
+      saved.roomManagerOpeningB15=false;
       if(!node&&b10CompatibleFlow(flow))try{await saved.api('DELETE',settingsFlow(flow));}catch{}
+      if(!node&&active()&&manageButton?.isConnected)manageButton.disabled=false;
     }
   };
   const closeHomeB10=b10._closeHomeSettings128;
@@ -12207,9 +12272,13 @@
   };
   const cssB10=b10._styles;
   b10._styles=function(){return cssB10.call(this)+'<style>'+
-    '[data-settings-refresh-b10],[data-settings-manage-rooms-b10]{font:inherit;font-size:12px;padding:6px 9px;max-width:100%;border:1px solid var(--aqa-edge);border-radius:8px;background:transparent;color:var(--aqa-blue);cursor:pointer}'+
-    '[data-settings-refresh-b10]:disabled{opacity:.5}'+
-    '.hem-room-options-head114{flex-wrap:wrap}'+
+    '[data-settings-refresh-b10],[data-settings-manage-rooms-b10]{font:inherit;font-size:12px;padding:8px 10px;max-width:100%;border:1px solid var(--aqa-edge);border-radius:8px;background:transparent;color:var(--aqa-blue);cursor:pointer}'+
+    '[data-settings-refresh-b10]:disabled,[data-settings-manage-rooms-b10]:disabled{opacity:.5;cursor:progress}'+
+    '.hem-settings-source-actions-b15{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end;min-width:0;padding:10px 16px 8px;box-sizing:border-box}'+
+    '.hem-settings-source-actions-b15>button{min-width:0;flex:0 1 auto;white-space:normal;overflow-wrap:normal;word-break:normal}'+
+    '.hem-home-options128>.hem-room-options-head114{flex-wrap:nowrap;min-width:0}'+
+    '.hem-home-options128>.hem-room-options-head114>div{min-width:0;flex:1 1 auto}'+
+    '.hem-home-options128>.hem-room-options-head114 h2{white-space:normal;word-break:normal;overflow-wrap:normal;hyphens:none}'+
     '[data-settings-room-status-b10]{font-size:12px;white-space:normal}'+
     '[data-settings-disabled-b10]{color:var(--secondary-text-color,#aaa);font-size:12px}'+
     '[data-settings-entity-manage-b10]{font-size:12px;color:var(--aqa-blue)}'+
