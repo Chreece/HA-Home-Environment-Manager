@@ -107,7 +107,7 @@ def check_options(browser):
        return form;
      }
      if(data?.next_step_id==='choose_rooms'){
-       flow.kind='rooms';return {type:'form',step_id:'choose_rooms',flow_id:id,
+       flow.kind='rooms';return {type:'form',step_id:'setup_rooms',flow_id:id,
          data_schema:[{name:'areas',default:window.chosenRooms||['room0'],selector:{select:{multiple:true,options:[
            {value:'room0',label:'Room 0'},{value:'room1',label:'Room 1'}]}}}]};
      }
@@ -115,7 +115,7 @@ def check_options(browser):
        if((data.general_wake_alarm_entity!=='none') !== (data.general_wake_lead_minutes_entity!=='none'))throw Error('Invalid');
        liveHome=structuredClone(data);return {type:'create_entry',flow_id:id};
      }
-     if(flow.kind==='rooms'){window.chosenRooms=data.areas;return {type:'create_entry',flow_id:id};}
+     if(flow.kind==='rooms'){window.chosenRooms=data.areas;return {type:'create_entry'};}
      throw Error('Wrong flow');
    };
    card._hass.callWS=async req=>req.type==='config/entity_registry/list'?[]:[];
@@ -126,11 +126,22 @@ def check_options(browser):
  modal=page.locator('dialog.hem-home-options128')
  expect(modal.locator('[data-settings-refresh-b10]')).to_be_visible()
  expect(modal.locator('[data-settings-manage-rooms-b10]')).to_be_visible()
+ # Source actions belong BELOW the title header, never in its flex row.
+ assert modal.locator('.hem-settings-source-actions-b15 > [data-settings-refresh-b10]').count()==1
+ assert modal.locator('.hem-settings-source-actions-b15 > [data-settings-manage-rooms-b10]').count()==1
+ assert modal.locator('.hem-room-options-head114 [data-settings-refresh-b10]').count()==0
+ assert modal.locator('.hem-room-options-head114 [data-settings-manage-rooms-b10]').count()==0
+ title=modal.locator('.hem-room-options-head114 h2')
+ assert title.bounding_box()['width']>170,title.bounding_box()
  # Add a source while the menu is already open, then refresh without losing drafts.
  page.evaluate('homeForm.data_schema.find(f=>f.name==="pollen_entities").selector.select.options.push({value:"sensor.birch_index",label:"Birch index"})')
+ old_count=page.evaluate('flowWrites.filter(x=>x.data?.next_step_id==="general_settings").length')
  modal.locator('[data-settings-refresh-b10]').click()
  page.wait_for_function('card._homeSettingsDialog128?.fields?.find(f=>f.name==="pollen_entities")?.schema.selector.select.options.length===1')
+ page.wait_for_function('!card._homeSettingsDialog128?.sourcesRefreshingB10')
+ assert page.evaluate('flowWrites.filter(x=>x.data?.next_step_id==="general_settings").length')==old_count+1
  assert modal.locator('[data-hem-home-input128="pollen_entities"][value="sensor.birch_index"]').count()==1
+ assert modal.locator('[data-settings-refresh-b10]').is_enabled()
  # First half of the wake pair is held, not submitted.
  # Reopen all enclosing categories, including the b8 Advanced tier, before
  # triggering a genuine user edit; a hidden element cannot receive a click.
@@ -147,10 +158,19 @@ def check_options(browser):
  # Backend rejected field must appear at that field, not only generic status.
  page.evaluate("card._settingsHomeFieldErrorB10(card._homeSettingsDialog128,'pollen_entities','Invalid provider index')")
  expect(modal.locator('[data-hem-home-field128="pollen_entities"] [role="alert"]')).to_contain_text('Invalid provider')
- # Separate room-management flow, consent only for removals.
+ # A second click after autosave must still replace a previously cleaned-up
+ # Options flow. The new form must own its cleanup and retain current choices.
+ modal.locator('[data-settings-refresh-b10]').click()
+ page.wait_for_function('!card._homeSettingsDialog128?.sourcesRefreshingB10')
+ assert page.evaluate('card._homeSettingsDialog128.cleanupStarted') is False
+ # Separate room-management flow, consent only for removals. Backend returns
+ # setup_rooms, not choose_rooms, and create_entry may omit flow_id.
+ before_rooms=page.evaluate('flowWrites.filter(x=>x.data?.next_step_id==="choose_rooms").length')
  modal.locator('[data-settings-manage-rooms-b10]').click()
  manage=page.locator('dialog.hem-settings-rooms-b10')
  expect(manage).to_be_visible()
+ assert page.evaluate('flowWrites.filter(x=>x.data?.next_step_id==="choose_rooms").length')==before_rooms+1
+ assert page.evaluate('card._homeSettingsDialog128.node.querySelector("[data-hem-home-status128]")?.getAttribute("role")')!='alert'
  manage.locator('[data-room-member-b10="room1"]').check()
  manage.locator('[data-settings-save-room-b10]').click()
  page.wait_for_function('Array.isArray(window.chosenRooms)')
