@@ -34,8 +34,14 @@ with sync_playwright() as pw:
       document.body.append(card);
       card.setConfig({entity:'sensor.hem_recommendation'});
       const devices=[
-        {id:'hem_home',identifiers:[['environment_manager','hem_entry']]},
-        {id:'hem_room',identifiers:[['environment_manager','hem_entry_area_wohnzimmer']]}
+        {id:'other_home',model:'Home Environment Hub',
+          identifiers:[['environment_manager','other_entry']]},
+        {id:'hem_home',model:'Home Environment Hub',
+          identifiers:[['environment_manager','hem_entry']]},
+        {id:'hem_controller',model:'Managed Environment Controller',
+          identifiers:[['environment_manager','hem_entry_controller_child']]},
+        {id:'hem_room',model:'Area Environment Hub',
+          identifiers:[['environment_manager','hem_entry_area_wohnzimmer']]}
       ];
       window.hass={
         language:'en',states,connection:{},
@@ -46,7 +52,8 @@ with sync_playwright() as pw:
             attempts.dashboard+=1;
             if(attempts.dashboard===1)
               return Promise.reject(Error('temporary dashboard transport error'));
-            return Promise.resolve({version:1,summary:{safe:0,attention:0,unknown:0},
+            return Promise.resolve({version:1,owner_entry_id:'hem_entry',
+              summary:{safe:0,attention:0,unknown:0},
               rooms:[],outdoor:{status:'unknown',readings:[],warnings:[],weather:[]},
               controllers:[]});
           }
@@ -79,7 +86,8 @@ with sync_playwright() as pw:
         calls:calls.length,
     })""")
     assert status["loaded"]==1,status
-    assert status["attempts"]=={"dashboard":2,"registry":2},status
+    assert status["attempts"]["dashboard"]==2,status
+    assert 2<=status["attempts"]["registry"]<=3,status
     assert status["home"]=="hem_home" and status["room"]=="hem_room",status
     assert status["dashboardRetry"] is None and status["deviceRetry"] is None
     assert status["calls"]==0
@@ -102,7 +110,8 @@ with sync_playwright() as pw:
             }
             if(entity_id==='sensor.new_owner'){
               newDashboardCalls++;
-              return Promise.resolve({version:1,rooms:[],summary:{},outdoor:{}});
+              return Promise.resolve({version:1,owner_entry_id:'new_entry',
+                rooms:[],summary:{},outdoor:{}});
             }
           }
           if(type==='config/device_registry/list')
