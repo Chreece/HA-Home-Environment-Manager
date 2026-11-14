@@ -127,10 +127,7 @@ def category(hass: Any, state: Any) -> str | None:
 
 def choices(hass: Any, area: str, previous: dict | None = None) -> dict[str, list[dict]]:
     from homeassistant.helpers import entity_registry as er
-    from .discovery import (
-        _device_class, entity_area, is_pressure_sensor,
-        OPTIONAL_WINDOW_CONTACT_CLASSES,
-    )
+    from .discovery import _device_class, entity_area, is_pressure_sensor
     previous = previous if isinstance(previous, dict) else {}
     result = {group: {} for group in GROUPS}
     registry = er.async_get(hass)
@@ -140,7 +137,7 @@ def choices(hass: Any, area: str, previous: dict | None = None) -> dict[str, lis
         # Door-class and generic Opening binary contacts are optional
         # candidates for balcony/patio openings, never automatic defaults.
         if (state.domain == "binary_sensor" and native(hass, state.entity_id)
-                and _device_class(hass, state) in OPTIONAL_WINDOW_CONTACT_CLASSES):
+                and _device_class(hass, state) in ("door", "opening")):
             result["windows"][state.entity_id] = "🚪 " + label(hass, state.entity_id)
         if not (group := category(hass, state)):
             continue
