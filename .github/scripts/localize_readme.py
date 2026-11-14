@@ -262,6 +262,23 @@ def render(source: str, target: str) -> str:
                     components.append(item[2] + translated[item[1]] + item[3])
             lines.append("|".join(components))
     page = rebase_relative_urls("\n".join(lines).strip() + "\n")
+    # Translated headings have translated slugs. Preserve the canonical
+    # English IDs so the original table-of-contents links keep working.
+    canonical_headings = [line for line in raw.splitlines()
+                          if re.match(r"^#{1,6} ", line)]
+    translated_lines = []
+    heading_index = 0
+    for line in page.splitlines():
+        if re.match(r"^#{1,6} ", line):
+            heading = re.sub(r"^#{1,6} ", "", canonical_headings[heading_index])
+            slug = re.sub(r"[^\w -]", "", heading.lower()).strip().replace(" ", "-")
+            if slug:
+                translated_lines.append(f'<a id="{slug}"></a>')
+            heading_index += 1
+        translated_lines.append(line)
+    if heading_index != len(canonical_headings):
+        raise ValueError(f"Heading structure changed in {target}")
+    page = "\n".join(translated_lines) + "\n"
     first_header = re.search(r"^# ", page, flags=re.M)
     if not first_header:
         raise ValueError(f"No H1 found in {target}")
