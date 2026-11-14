@@ -15,7 +15,7 @@
 </p>
 <!-- HEM-LANGUAGE-SELECTOR-END -->
 
-# HEM - Responsabile dell'ambiente
+# HEM - Home Environment Manager
 
 <p align="center">
   <img src="../../.github/assets/hem-logo.svg" alt="HEM logo" width="420">
@@ -207,7 +207,7 @@ Armonizzazione fine di un dispositivo senza modificare gli altri, compresi i met
 1. **Organizzate le vostre stanze.** In Home Assistant, creare o controllare le vostre aree e assegnare i sensori e i dispositivi appropriati a ciascuno di essi.
 2. **Scegli cosa controllare.** Aggiungere HEM, selezionare le stanze che ti interessano e rivedere la temperatura, l'umidità, la finestra, la qualità dell'aria e le fonti di dispositivo suggerite.
 3. **Configurare le informazioni condivise.** Selezionare le fonti meteorologiche disponibili all'aperto/qualità dell'aria, le prove di occupazione delle famiglie e le destinazioni di annuncio che desiderate.
-4. **Aggiungi la scheda.** Apri un pannello di controllo in modalità modifica e aggiungi il **Responsabile dell'ambiente** Inizia con il monitoraggio della stanza, le letture e i consigli di ventilazione.
+4. **Home Environment Manager** Apri un pannello di controllo in modalità modifica e aggiungi il **Responsabile dell'ambiente** Inizia con il monitoraggio della stanza, le letture e i consigli di ventilazione.
 5. **Abilitare il controllo solo quando utile.** Aprire una stanza, scegliere un apparecchio supportato, rivedere il suo controller e selezionare esplicitamente Automatic o PID per le modalità che si desidera HEM operare.
 
 Lo sai . **non** Inizia con i sensori che hai e introduce il controllo automatico, un dispositivo alla volta.
@@ -237,10 +237,10 @@ Per le istruzioni passo dopo passo sulle fonti, i profili, PID le impostazioni, 
 ### HACS / Home Assistant Magazzino comunitario
 
 1. Apri **HACS** in Home Assistant.
-2. Aggiungere **L'Unione europea ha adottato un regolamento (CE) n.** come un **archivio personalizzato** nel **Integrazione** categoria se non è già elencata.
-3. Trova **Responsabile dell'ambiente** e installatelo.
+2. Aggiungere **https://github.com/Chreece/HA-Home-Environment-Manager** come un **archivio personalizzato** nel **Integrazione** categoria se non è già elencata.
+3. Trova **Home Environment Manager** e installatelo.
 4. Ripristino **Home Assistant** per caricare l'integrazione.
-5. Vai a **Impostazioni → Dispositivi e servizi → Aggiungere integrazione**, ricerca per **Responsabile dell'ambiente** e completare l'impostazione.
+5. Vai a **Impostazioni → Dispositivi e servizi → Aggiungere integrazione**, ricerca per **Home Environment Manager** e completare l'impostazione.
 
 <a id="manual-installation"></a>
 ### Installazione manuale

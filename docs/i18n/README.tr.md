@@ -15,7 +15,7 @@
 </p>
 <!-- HEM-LANGUAGE-SELECTOR-END -->
 
-# HEM - Ev Çevre Müdürü
+# HEM - Home Environment Manager
 
 <p align="center">
   <img src="../../.github/assets/hem-logo.svg" alt="HEM logo" width="420">
@@ -207,7 +207,7 @@ Desteklenen kontrol yöntemleri de dahil olmak üzere diğerlerini değiştirmed
 1. **Odalarınızı düzenleyin.** İçeride Home AssistantBölgeleri oluşturmak veya kontrol etmek ve her birine uygun sensörler ve cihazlar atamak.
 2. **Neyi izleyeceğinizi seçin.** Ekle HEM, değer verdiğiniz odaları seçin ve önerilen sıcaklık, nem, pencere, hava kalitesi ve cihaz kaynaklarını gözden geçirin.
 3. **Paylaşılan bilgileri yapılandır.** Açık hava/hava kalitesi kaynaklarını, evin işgalinin kanıtlarını ve istediğiniz ilan destinasyonlarını seçin.
-4. **Kartı ekle.** Düzenleme modunda bir tabloyu açın ve **Ev Çevre Yöneticisi** Oda izleme, okuma ve havalandırma tavsiyesi ile başlayın.
+4. **Home Environment Manager** Düzenleme modunda bir tabloyu açın ve **Ev Çevre Yöneticisi** Oda izleme, okuma ve havalandırma tavsiyesi ile başlayın.
 5. **Sadece yararlı olduğunda kontrolü etkinleştir.** Bir odayı açın, desteklenen bir cihaz seçin, kontrolörünü gözden geçirin ve açıkça Otomatik veya PID İstediğiniz modlar için HEM İşlem için.
 
 Sen de öyle. **Hayır.** Her odada akıllı bir cihaz lazım. Sahip olduğunuz sensörlerle başlayın ve otomatik kontrolü bir seferde bir cihazla başlatın.
@@ -238,9 +238,9 @@ Oda kaynakları, profilleri hakkında adım adım talimatlar, PID Ayarlar, pence
 
 1. Açık **HACS** İçinde Home Assistant.
 2. Ekle **https://github.com/Chreece/HA-Home-Environment-Manager** bir olarak **özel deposu** Bu arada **Entegrelik** Kategori, henüz listelenmemişse.
-3. Bul **Ev Çevre Yöneticisi** ve yükle.
+3. Bul **Home Environment Manager** ve yükle.
 4. Yeniden başlat **Home Assistant** Birleştirmeyi yüklemek için.
-5. Git . **Ayarlar → Cihazlar & Hizmetler → Entegreliği Ekle**, arama **Ev Çevre Yöneticisi** Ve ayarlamaları tamamla.
+5. Git . **Ayarlar → Cihazlar & Hizmetler → Entegreliği Ekle**, arama **Home Environment Manager** Ve ayarlamaları tamamla.
 
 <a id="manual-installation"></a>
 ### Elsel kurulum

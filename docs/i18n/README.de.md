@@ -15,7 +15,7 @@
 </p>
 <!-- HEM-LANGUAGE-SELECTOR-END -->
 
-# HEM - Home Umweltmanager
+# HEM - Home Environment Manager
 
 <p align="center">
   <img src="../../.github/assets/hem-logo.svg" alt="HEM Logo" width="420">
@@ -207,7 +207,7 @@ Ein Gerät ohne Änderung der anderen, einschließlich unterstützter Steuerungs
 1. **Organisieren Sie Ihre Zimmer.** In Home AssistantSie können Ihre Bereiche erstellen oder überprüfen und jedem die entsprechenden Sensoren und Geräte zuweisen.
 2. **Wählen Sie aus, was Sie überwachen sollen.** Hinzufügen HEMSie können die unbenutzten Gruppen leer lassen.
 3. **Konfiguration der gemeinsamen Informationen.** Wählen Sie verfügbare Wetter-/Luftqualitätsquellen im Freien, Nachweise für den Haushalt und die gewünschten Ankündigungszielen aus.
-4. **Fügen Sie die Karte hinzu.** Öffnen Sie ein Dashboard im Bearbeitungsmodus und fügen Sie die **Home Umweltmanager** Beginnen Sie mit Raumüberwachung, Messungen und Lüftungsberatung.
+4. **Home Environment Manager** Öffnen Sie ein Dashboard im Bearbeitungsmodus und fügen Sie die **Home Umweltmanager** Beginnen Sie mit Raumüberwachung, Messungen und Lüftungsberatung.
 5. **Steuerung nur dann aktivieren, wenn sie nützlich ist.** Öffnen Sie einen Raum, wählen Sie ein unterstütztes Gerät, überprüfen Sie seinen Controller und wählen Sie ausdrücklich PID für die gewünschten Modi HEM - Ich kann nicht arbeiten.
 
 Du weißt es . **nicht** Beginnen Sie mit den Sensoren, die Sie haben, und führen Sie automatische Steuerung ein Gerät nach dem anderen ein.
@@ -237,15 +237,15 @@ Für Schritt-für-Schritt-Anweisungen zu den Quellen, Profilen, PID Einheitliche
 ### HACS / Home Assistant Gemeinschaftsgeschäft
 
 1. Öffnen **HACS** in Home Assistant.
-2. Hinzufügen **Die Kommission hat die Kommission mit dem Vorschlag für eine Verordnung (EG) Nr. 1333/2008 zur Verfügung gestellt.** als eine **benutzerdefiniertes Repository** in der **Integration** Kategorie, wenn sie nicht bereits aufgelistet ist.
-3. Finden Sie **Home Umweltmanager** Und installieren Sie es.
+2. Hinzufügen **https://github.com/Chreece/HA-Home-Environment-Manager** als eine **benutzerdefiniertes Repository** in der **Integration** Kategorie, wenn sie nicht bereits aufgelistet ist.
+3. Finden Sie **Home Environment Manager** Und installieren Sie es.
 4. Neustart **Home Assistant** Die Integration ist zu laden.
-5. Geht zu **Einstellungen → Geräte & Dienstleistungen → Integration hinzufügen**, Suche nach **Home Umweltmanager** und die Einrichtung abschließen.
+5. Geht zu **Einstellungen → Geräte & Dienstleistungen → Integration hinzufügen**, Suche nach **Home Environment Manager** und die Einrichtung abschließen.
 
 <a id="manual-installation"></a>
 ### Manuelle Installation
 
-Kopieren Sie das Repository **custom_components/environment_manager** Ordner in die Passform **custom_components** Verzeichnis in Ihrem Home Assistant Konfiguration und Aufbewahrung des Verzeichnisnamen **Umwelt_manager**- Neustart Home Assistant und die Integration durch **Einstellungen → Geräte & Dienstleistungen**.
+Kopieren Sie das Repository **custom_components/environment_manager** Ordner in die Passform **custom_components** Verzeichnis in Ihrem Home Assistant Konfiguration und Aufbewahrung des Verzeichnisnamen **environment_manager**- Neustart Home Assistant und die Integration durch **Einstellungen → Geräte & Dienstleistungen**.
 
 Für spätere Installationsänderungen halten Sie Ihre vorhandenen HEM Integrations-Eingabe und -Einstellungen. Laden Sie das Dashboard in Ihrem Browser neu, wenn sich das Aussehen der Karte nicht sofort erfrischt.
 

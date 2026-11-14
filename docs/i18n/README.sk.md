@@ -15,7 +15,7 @@
 </p>
 <!-- HEM-LANGUAGE-SELECTOR-END -->
 
-# HEM - Domáci manažér životného prostredia
+# HEM - Home Environment Manager
 
 <p align="center">
   <img src="../../.github/assets/hem-logo.svg" alt="HEM logo" width="420">
@@ -207,7 +207,7 @@ Pevné nastavenie jedného zariadenia bez zmeny ostatných vrátane podporovaný
 1. **Uistite sa, že vaše izby sú organizované.** V Home Assistant, vytvorte alebo skontrolujte svoje oblasti a priradite každému vhodné senzory a zariadenia.
 2. **Vyberte si, čo sledovať.** Pridať HEMVyberte si miestnosti, ktoré vás zaujímajú, a preskúmajte navrhovanú teplotu, vlhkosť, okná, kvalitu vzduchu a zdroje zariadenia.
 3. **Konfigurovať zdieľané informácie.** Vyberte dostupné zdroje počasia/kvalitu ovzdušia, dôkazy o obývaní domácností a akékoľvek reklamné destinácie, ktoré chcete.
-4. **Pridajte kartu.** Otvorte paneli v režime úpravy a pridajte **Domáce manažér životného prostredia** Začnite s monitorovaním miestnosti, odčítaním a poradenstvom o ventilácii.
+4. **Home Environment Manager** Otvorte paneli v režime úpravy a pridajte **Domáce manažér životného prostredia** Začnite s monitorovaním miestnosti, odčítaním a poradenstvom o ventilácii.
 5. **Umožniť ovládanie len tam, kde je užitočné.** Otvorte miestnosť, vyberte podporované zariadenie, preskúmajte jeho ovládač a výslovne vyberte Automatické alebo PID pre režimy, ktoré chcete HEM operovať.
 
 Ty áno. **nie** Začnite s senzormi, ktoré máte, a začnite automaticky ovládať jedno zariadenie naraz.
@@ -237,10 +237,10 @@ Pre postupné pokyny o zdrojoch miestnosti, profiloch, PID nastavenia, politiky 
 ### HACS / Home Assistant Občanský obchod
 
 1. Otvorené **HACS** v Home Assistant.
-2. Pridať **Hospodárska spolupráca v oblasti životného prostredia** ako **vlastný repository** v **Integrácia** kategória, ak nie je už uvedená na zozname.
-3. Nájsť **Domáce manažér životného prostredia** a nainštalovať ho.
+2. Pridať **https://github.com/Chreece/HA-Home-Environment-Manager** ako **vlastný repository** v **Integrácia** kategória, ak nie je už uvedená na zozname.
+3. Nájsť **Home Environment Manager** a nainštalovať ho.
 4. Opätovné spustenie **Home Assistant** na zaťaženie integrácie.
-5. Choď na **Nastavenia → Zariadenia a služby → Pridanie integrácie**, vyhľadávanie **Domáce manažér životného prostredia** a dokončiť nastavenie.
+5. Choď na **Nastavenia → Zariadenia a služby → Pridanie integrácie**, vyhľadávanie **Home Environment Manager** a dokončiť nastavenie.
 
 <a id="manual-installation"></a>
 ### Ručná inštalácia

@@ -41,6 +41,13 @@ for path in sorted(PAGES.glob("README.*.md")):
     assert page.count("<!-- HEM-LANGUAGE-SELECTOR-START -->") == 1, path
     assert page.count("<!-- HEM-LANGUAGE-SELECTOR-END -->") == 1, path
     assert '<a href="../../README.md">English</a>' in page, path
+    # Never translate literal integration identifiers, installation URL or paths.
+    assert "# HEM - Home Environment Manager" in page, path
+    assert "**https://github.com/Chreece/HA-Home-Environment-Manager**" in page, path
+    assert "**Home Environment Manager**" in page, path
+    assert "**custom_components/environment_manager**" in page, path
+    assert "**custom_components**" in page, path
+    assert "**environment_manager**" in page, path
     for other in LOCALES - {code, "en"}:
         assert f'href="README.{other}.md"' in page, (path, other)
     assert page.index('src="../../.github/assets/hem-banner.svg"') < page.index(

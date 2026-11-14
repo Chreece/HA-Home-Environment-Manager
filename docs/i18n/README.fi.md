@@ -15,7 +15,7 @@
 </p>
 <!-- HEM-LANGUAGE-SELECTOR-END -->
 
-# HEM - Kotiympäristöjohtaja
+# HEM - Home Environment Manager
 
 <p align="center">
   <img src="../../.github/assets/hem-logo.svg" alt="HEM logo" width="420">
@@ -207,7 +207,7 @@ yhden laitteen hienostuneisuus ilman muiden vaihtamista, mukaan lukien tukemat o
 1. **Järjestäkää huoneenne.** Sisällä Home Assistant, luoda tai tarkistaa alueesi ja määrätä jokaiselle asianmukaiset anturit ja laitteet.
 2. **Valitse, mitä tarkkailla.** Lisää HEMValitse huoneet, joista välität, ja tarkista ehdotetut lämpötilat, kosteus, ikkunat, ilmanlaatu ja laitteen lähteet.
 3. **Säännön yhteistä tietoa.** Valitse käytettävissä olevat ulkona olevat sää-/ilmalaatuiset lähteet, kotitalouden väliaikaiset tiedot ja haluamasi ilmoituksen kohteet.
-4. **Lisää kortti.** Avaa painiketta muokkaustilaan ja lisää **Kotiympäristöjohtaja** Aloita huoneen seurannalla, lukemalla ja tuuletuksella.
+4. **Home Environment Manager** Avaa painiketta muokkaustilaan ja lisää **Kotiympäristöjohtaja** Aloita huoneen seurannalla, lukemalla ja tuuletuksella.
 5. **Käytännössä vain silloin, kun se on hyödyllistä.** Avaa huone, valitse tukematon laitteen, tarkista sen ohjaaja ja valitse nimenomaisesti automaattinen tai PID haluamasi muodoista HEM Toiminta.
 
 - Kyllä sinä tiedät. **ei ole** Aloita käyttämäsi antureilla ja ota käyttöön automaattinen ohjaus yksi laitteen kerrallaan.
@@ -237,15 +237,15 @@ Huoneen lähteistä, profiileista, PID Käytetään myös sähköisiä laitteita
 ### HACS / Home Assistant Yhteisön kauppa
 
 1. Avaa . **HACS** Vihreillä Home Assistant.
-2. Lisää **Euroopan parlamentin ja neuvoston asetus (EU) N:o 1303/2013, annettu 10 päivänä marraskuuta 2014, Euroopan parlamentin ja neuvoston asetuksen (EU) N:o 1303/2013, Euroopan parlamentin ja neuvoston asetuksen (EU) N:o 1303/2013, (EU) N:o 1303/2013 ja Euroopan parlamentin ja neuvoston asetuksen (EU) N:o 1303/2013, (EU) N:o 1303/2013, (EU) N:o 1303/2013, (EU) N:o 1303/2013 ja (EU) N:o 1303/2013, (EU) N:o 1303/2013, (EU) N:o 1303/2013 ja (EU) N:o 1303/2013, (EU) N:o 1303/2013, (EU) N:o 1303/2013 ja (EU) N:o 1303/2013, (EU) N:o 1303/2013** Vihreä **Säännöllinen säilytys** Se on **Yhteenliittymä** luokka, jos se ei ole jo lueteltu.
-3. Etsi **Kotiympäristöjohtaja** ja asentaa se.
+2. Lisää **https://github.com/Chreece/HA-Home-Environment-Manager** Vihreä **Säännöllinen säilytys** Se on **Yhteenliittymä** luokka, jos se ei ole jo lueteltu.
+3. Etsi **Home Environment Manager** ja asentaa se.
 4. Aloittakaa uudelleen **Home Assistant** Täytyy ladata integrointi.
-5. Menkää . **Asetukset → Laitteet & palvelut → Lisää integrointia**, etsiä **Kotiympäristöjohtaja** Ja lopeta järjestely.
+5. Menkää . **Asetukset → Laitteet & palvelut → Lisää integrointia**, etsiä **Home Environment Manager** Ja lopeta järjestely.
 
 <a id="manual-installation"></a>
 ### Käsikirjoitus
 
-Kopioida varasto **custom_components/environment_manager** Pöydän mukaan **custom_components** luettelo Home Assistant konfiguraatio, jossa säilytetään luettelon nimi **ympäristö_hallinta**Aloita uudelleen . Home Assistant ja lisätä integrointi **Asetukset → Laitteet & palvelut**.
+Kopioida varasto **custom_components/environment_manager** Pöydän mukaan **custom_components** luettelo Home Assistant konfiguraatio, jossa säilytetään luettelon nimi **environment_manager**Aloita uudelleen . Home Assistant ja lisätä integrointi **Asetukset → Laitteet & palvelut**.
 
 Jälkimmäisiä asennusmuutoksia varten säilytetään olemassa olevia HEM integrointi- ja -asetukset. Jos kortin ulkonäkö ei uudistu välittömästi, ladata selaimesi ohjauslauta.
 

@@ -15,7 +15,7 @@
 </p>
 <!-- HEM-LANGUAGE-SELECTOR-END -->
 
-# HEM - 가정 환경 관리자
+# HEM - Home Environment Manager
 
 <p align="center">
   <img src="../../.github/assets/hem-logo.svg" alt="HEM 로고" width="420">
@@ -207,7 +207,7 @@ HEM 또한 장치별 보호 및 진단도 포함합니다.
 1. **방을 정리해** 내 Home Assistant, 각 영역을 생성하거나 확인하고 각 영역에 적절한 센서와 장치를 부여합니다.
 2. **무엇을 감시해야 하는지 선택하세요.** 추가 HEM, 당신이 관심 있는 방을 선택하고 제안된 온도, 습도, 창, 공기 품질 및 장치 출처를 검토하십시오.
 3. **공유된 정보를 구성합니다.** 야외 날씨/공기의 질의 자료, 가정 사용 증거 및 원하는 목적지 발표를 선택하십시오.
-4. **카드를 추가해** 편집 모드에서 패시보드를 열고 **가정 환경 관리자** 카드. 방 모니터링, 판독 및 환기 상담을 시작하세요.
+4. **Home Environment Manager** 편집 모드에서 패시보드를 열고 **가정 환경 관리자** 카드. 방 모니터링, 판독 및 환기 상담을 시작하세요.
 5. **유용할 때만 제어할 수 있습니다.** 방을 열고, 지원된 기기를 선택하고, 컨트롤러를 검토하고, PID 원하는 모드를 위해 HEM 수술을 해야 합니다.
 
 그래요 **아니** 모든 방에서 스마트 기기를 사용해야 합니다. 여러분이 가지고 있는 센서들을 시작해서 자동 제어 장치를
@@ -237,15 +237,15 @@ entity: sensor.your_hem_recommendation_sensor
 ### HACS / Home Assistant 커뮤니티 스토어
 
 1. 개방 **HACS** 에 Home Assistant.
-2. 추가 **[http://github.com/Chreece/HA-Home-Environment-Manager]** 의 경우 **사용자 지정 저장소** 이 **통합** 카테고리가 이미 목록에 있지 않은 경우.
-3. 찾아라 **가정 환경 관리자** 그리고 그것을 설치합니다.
+2. 추가 **https://github.com/Chreece/HA-Home-Environment-Manager** 의 경우 **사용자 지정 저장소** 이 **통합** 카테고리가 이미 목록에 있지 않은 경우.
+3. 찾아라 **Home Environment Manager** 그리고 그것을 설치합니다.
 4. 다시 시작 **Home Assistant** 통합을 충전하기 위해서
-5. 가서 **설정 → 장치 및 서비스 → 통합을 추가**, 검색 **가정 환경 관리자** 그리고 세팅을 완료합니다.
+5. 가서 **설정 → 장치 및 서비스 → 통합을 추가**, 검색 **Home Environment Manager** 그리고 세팅을 완료합니다.
 
 <a id="manual-installation"></a>
 ### 수동 설치
 
-저장소의 복사 **custom_components/environment_manager** 일치하는 폴더에 **custom_components** 귀하의 디렉토리 Home Assistant 디렉토리 이름을 유지하기 위한 구성 **환경_관리자**다시 시작하세요 Home Assistant 그리고 통합을 통해 **설정 → 장치 및 서비스**.
+저장소의 복사 **custom_components/environment_manager** 일치하는 폴더에 **custom_components** 귀하의 디렉토리 Home Assistant 디렉토리 이름을 유지하기 위한 구성 **environment_manager**다시 시작하세요 Home Assistant 그리고 통합을 통해 **설정 → 장치 및 서비스**.
 
 이후 설치 변경을 위해, 기존의 HEM 통합 입력 및 설정. 카드의 외모가 즉시 업데이트되지 않으면 브라우저의 래시보드를 다시 로드하십시오.
 

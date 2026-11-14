@@ -15,7 +15,7 @@
 </p>
 <!-- HEM-LANGUAGE-SELECTOR-END -->
 
-# HEM - Directorul de mediu
+# HEM - Home Environment Manager
 
 <p align="center">
   <img src="../../.github/assets/hem-logo.svg" alt="HEM logo" width="420">
@@ -207,7 +207,7 @@ Ajustarea fină a unui dispozitiv fără schimbarea celorlalte, inclusiv a metod
 1. **Organizează-ţi camerele.** În Home Assistant, creaţi sau verificaţi zonele şi atribuiţi senzorilor şi dispozitivelor corespunzătoare fiecărei.
 2. **Alege ce să monitorizezi.** Adăugați HEM, selectaţi camerele care vă interesează şi verificaţi temperatura, umiditatea, fereastra, calitatea aerului şi sursele de dispozitive sugerate.
 3. **Configurați informațiile împărțite.** Selectați sursele disponibile pentru condițiile meteorologice/calitatea aerului în aer liber, dovezi privind ocuparea locuințelor și orice destinații de anunțuri doriți.
-4. **Adăugaţi cardul.** Deschideţi un tablou în modul de editare şi adăugaţi **Home Manager de mediu** Începe cu monitorizarea camerei, lecturile şi sfaturile de ventilaţie.
+4. **Home Environment Manager** Deschideţi un tablou în modul de editare şi adăugaţi **Home Manager de mediu** Începe cu monitorizarea camerei, lecturile şi sfaturile de ventilaţie.
 5. **Activaţi controlul numai atunci când este util.** Deschideţi o cameră, alegeţi un dispozitiv suportat, verificaţi controlerul său şi selectaţi în mod explicit PID pentru modalităţile pe care le doriţi HEM pentru a opera.
 
 - Da, ştii. **Nu** Începe cu senzorii pe care îi ai, şi introduce controlul automat, un dispozitiv la un moment dat.
@@ -237,10 +237,10 @@ Pentru instrucțiuni pas cu pas cu privire la sursele de cameră, profiluri, PID
 ### HACS / Home Assistant Magazin comunitar
 
 1. Deschis **HACS** în Home Assistant.
-2. Adăugați **În cazul în care este necesar să se asigure că este necesar să se asigure că este necesar să se asigure că este necesar să se asigure că este necesar să se asigure că este necesar să se asigure că este necesar să se asigure că este necesar să se asigure că este necesar să se asigure că este necesar să se asigure că este necesar să se asigure că este necesar să se asigure că este necesar să se asigure că este necesar să se asigure că este necesar să se asigure că este necesar să se asigure că este necesar să se asigure că este necesar.** ca o **depozit personalizat** în **Integrare** categoria dacă nu este deja listată.
-3. Găsiţi **Home Manager de mediu** şi să-l instalezi.
+2. Adăugați **https://github.com/Chreece/HA-Home-Environment-Manager** ca o **depozit personalizat** în **Integrare** categoria dacă nu este deja listată.
+3. Găsiţi **Home Environment Manager** şi să-l instalezi.
 4. Reluare **Home Assistant** pentru a încărca integrarea.
-5. Du-te la **Setări → Dispozitive & servicii → Adăugați integrare**, căutarea pentru **Home Manager de mediu** Şi să terminăm setarea.
+5. Du-te la **Setări → Dispozitive & servicii → Adăugați integrare**, căutarea pentru **Home Environment Manager** Şi să terminăm setarea.
 
 <a id="manual-installation"></a>
 ### Instalarea manuală

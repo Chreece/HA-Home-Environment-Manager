@@ -15,7 +15,7 @@
 </p>
 <!-- HEM-LANGUAGE-SELECTOR-END -->
 
-# HEM - 家庭環境管理者
+# HEM - Home Environment Manager
 
 <p align="center">
   <img src="../../.github/assets/hem-logo.svg" alt="HEM ロゴ" width="420">
@@ -207,7 +207,7 @@ HEM また,デバイス特有の保護と診断を含む.
 1. **部屋を整理する** 中 Home Assistant各区域に適切なセンサーと装置を割り当てます
 2. **監視するものを選択する** 追加する HEM部屋の温度,湿度,窓,空気の質,装置の源をチェックして,使用されていないグループを空にしておくことができます.
 3. **共有された情報を設定する.** 屋外の気象/空気の品質の情報源,家庭用占拠の証拠,そしてあなたが望む広告目的地を選択してください.
-4. **カードを追加する** 編集モードでダッシュボードを開いて **家庭環境管理者** 部屋のモニタリング,読み取り,通風のアドバイスから始めましょう
+4. **Home Environment Manager** 編集モードでダッシュボードを開いて **家庭環境管理者** 部屋のモニタリング,読み取り,通風のアドバイスから始めましょう
 5. **制御を有効にする** 部屋を開いて,サポートされた装置を選択し,そのコントローラをチェックし, PID あなたが望むモードのために HEM 操作する
 
 分かってる **はい** 各部屋にスマートな装置が必要です センサーから始め 一度に自動制御装置を導入します
@@ -237,15 +237,15 @@ entity: sensor.your_hem_recommendation_sensor
 ### HACS / Home Assistant コミュニティショップ
 
 1. オープン **HACS** 中 Home Assistant.
-2. 追加する **[http://github.com/Chreece/HA-Home-Environment-Manager]** とする **カスタムリポジトリ** 中には **統合** リストに記載されていない場合のカテゴリー
-3. 探す **家庭環境管理者** そしてそれをインストールする.
+2. 追加する **https://github.com/Chreece/HA-Home-Environment-Manager** とする **カスタムリポジトリ** 中には **統合** リストに記載されていない場合のカテゴリー
+3. 探す **Home Environment Manager** そしてそれをインストールする.
 4. 再起動 **Home Assistant** 統合を充電する
-5. 行って **設定 → デバイス & サービス → 統合を追加**検索する **家庭環境管理者** そして,設定を完了します.
+5. 行って **設定 → デバイス & サービス → 統合を追加**検索する **Home Environment Manager** そして,設定を完了します.
 
 <a id="manual-installation"></a>
 ### 手動の設置
 
-資料庫のコピー **custom_components/environment_manager** パッケージをマッチングに **構成要素** リストの Home Assistant 設定,ディレクトリ名を保持する **環境_管理者**再起動する Home Assistant 統合を追加する **設定 → デバイスとサービス**.
+資料庫のコピー **custom_components/environment_manager** パッケージをマッチングに **custom_components** リストの Home Assistant 設定,ディレクトリ名を保持する **environment_manager**再起動する Home Assistant 統合を追加する **設定 → デバイスとサービス**.
 
 設置変更については,既存の HEM ブラウザのダッシュボードがすぐに刷新されない場合,再充電します.
 

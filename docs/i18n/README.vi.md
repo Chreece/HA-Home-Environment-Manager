@@ -15,7 +15,7 @@
 </p>
 <!-- HEM-LANGUAGE-SELECTOR-END -->
 
-# HEM - Nhà quản lý môi trường
+# HEM - Home Environment Manager
 
 <p align="center">
   <img src="../../.github/assets/hem-logo.svg" alt="HEM logo" width="420">
@@ -207,7 +207,7 @@ Tốt điều chỉnh một thiết bị mà không thay đổi các thiết b�
 1. **Hãy sắp xếp phòng của mình.** Trong Home Assistant, tạo hoặc kiểm tra khu vực của bạn và gán các cảm biến và thiết bị thích hợp cho mỗi người.
 2. **Chọn những gì để theo dõi.** Thêm thêm HEM, chọn các phòng bạn quan tâm và xem xét nhiệt độ, độ ẩm, cửa sổ, chất lượng không khí và các nguồn thiết bị được đề xuất.
 3. **Thiết lập thông tin chia sẻ.** Chọn các nguồn thời tiết ngoài trời / chất lượng không khí có sẵn, bằng chứng về việc chiếm dụng hộ gia đình và bất kỳ điểm đến thông báo nào bạn muốn.
-4. **Thêm thẻ đi.** Mở bảng điều khiển trong chế độ chỉnh sửa và thêm **Nhà quản lý môi trường** Bắt đầu với việc giám sát phòng, đọc và tư vấn thông gió.
+4. **Home Environment Manager** Mở bảng điều khiển trong chế độ chỉnh sửa và thêm **Nhà quản lý môi trường** Bắt đầu với việc giám sát phòng, đọc và tư vấn thông gió.
 5. **Chỉ cho phép điều khiển khi hữu ích.** Mở một phòng, chọn một thiết bị được hỗ trợ, xem xét bộ điều khiển của nó và rõ ràng chọn tự động hoặc PID cho các chế độ bạn muốn HEM để hoạt động.
 
 Anh biết. **Không** bắt đầu với các cảm biến bạn có, và giới thiệu điều khiển tự động một thiết bị tại một thời điểm.
@@ -238,9 +238,9 @@ entity: sensor.your_hem_recommendation_sensor
 
 1. Mở **HACS** trong Home Assistant.
 2. Thêm thêm **https://github.com/Chreece/HA-Home-Environment-Manager** như một **kho lưu trữ tùy chỉnh** trong **Tích hợp** hạng mục nếu nó chưa được liệt kê.
-3. Tìm ra **Nhà quản lý môi trường** và cài đặt nó.
+3. Tìm ra **Home Environment Manager** và cài đặt nó.
 4. Khởi động lại **Home Assistant** để tải bộ tích hợp.
-5. Hãy đi. **Cài đặt → Thiết bị & dịch vụ → Thêm tích hợp**, tìm kiếm **Nhà quản lý môi trường** và hoàn thành việc thiết lập.
+5. Hãy đi. **Cài đặt → Thiết bị & dịch vụ → Thêm tích hợp**, tìm kiếm **Home Environment Manager** và hoàn thành việc thiết lập.
 
 <a id="manual-installation"></a>
 ### Thiết lập thủ công

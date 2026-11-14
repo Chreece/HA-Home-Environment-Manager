@@ -15,7 +15,7 @@
 </p>
 <!-- HEM-LANGUAGE-SELECTOR-END -->
 
-# HEM - Główny zarządca środowiska
+# HEM - Home Environment Manager
 
 <p align="center">
   <img src="../../.github/assets/hem-logo.svg" alt="HEM logo" width="420">
@@ -207,7 +207,7 @@ Wypełnienie jednego urządzenia bez zmiany pozostałych, w tym wspierane metody
 1. **Organizuj swoje pokoje.** W Home Assistant, tworzyć lub sprawdzić swoje obszary i przypisać odpowiednie czujniki i urządzenia do każdego z nich.
 2. **Wybierz, co monitorujesz.** Dodać HEMWybierz pokoje, które Cię interesują i sprawdź zaproponowaną temperaturę, wilgotność, okna, jakość powietrza i źródła urządzenia.
 3. **Konfiguracja informacji udostępnianych.** Wybierz dostępne źródła pogody / jakości powietrza na zewnątrz, dowody na zajęcie gospodarstw domowych i dowolne cele ogłoszenia, które chcesz.
-4. **Dodaj kartę.** Otwórz deskę w trybie edycji i dodaj **Home Manager środowiskowe** Zacznij od monitorowania pomieszczeń, odczytów i porad w zakresie wentylacji.
+4. **Home Environment Manager** Otwórz deskę w trybie edycji i dodaj **Home Manager środowiskowe** Zacznij od monitorowania pomieszczeń, odczytów i porad w zakresie wentylacji.
 5. **Włącz kontrolę tylko tam, gdzie jest użyteczna.** Otwórz pomieszczenie, wybierz urządzenie obsługiwane, przejrzyj jego kontroler i wyraźnie wybierz Automatyczny lub PID dla modów, które chcesz HEM do operacji.
 
 - Tak. **Nie** Zacznij od czujników, które masz, i wprowadź automatyczne sterowanie jednym urządzeniem na raz.
@@ -238,9 +238,9 @@ Wskazówki krok po kroku dotyczące źródeł pomieszczeń, profili, PID ustawie
 
 1. Otwarte **HACS** w Home Assistant.
 2. Dodać **https://github.com/Chreece/HA-Home-Environment-Manager** jako **obiektywny repozytorium** w **Integracja** kategorii, jeśli nie jest ona już wymieniona.
-3. Znajdź **Home Manager środowiskowe** I zainstaluj go.
+3. Znajdź **Home Environment Manager** I zainstaluj go.
 4. Powtórny start **Home Assistant** do ładowania integracji.
-5. Idź do **Ustawienia → Urządzenia i usługi → Dodaj integrację**, poszukiwanie **Home Manager środowiskowe** I zakończę ustawienie.
+5. Idź do **Ustawienia → Urządzenia i usługi → Dodaj integrację**, poszukiwanie **Home Environment Manager** I zakończę ustawienie.
 
 <a id="manual-installation"></a>
 ### Installacja ręczna

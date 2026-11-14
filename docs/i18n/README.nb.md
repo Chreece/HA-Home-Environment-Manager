@@ -15,7 +15,7 @@
 </p>
 <!-- HEM-LANGUAGE-SELECTOR-END -->
 
-# HEM - Hjem miljøleder
+# HEM - Home Environment Manager
 
 <p align="center">
   <img src="../../.github/assets/hem-logo.svg" alt="HEM logo" width="420">
@@ -207,7 +207,7 @@ Finjustering av en enhet uten å endre de andre, inkludert støttet kontrollmeto
 1. **Ordne rommene dine.** I Home Assistant, opprette eller sjekke områdene dine og tildele passende sensorer og enheter til hver.
 2. **Velg hva du skal overvåke.** Legg til HEM, velg rommene du bryr deg om og gjennomgå de foreslåtte temperaturene, fuktigheten, vinduet, luftkvaliteten og enhetens kilder.
 3. **Konfigurere delt informasjon.** Velg tilgjengelige utendørs vær/luftkvalitetskilder, evidens for husholdningsbesettelse og eventuelle annonseringsdestinasjoner du vil.
-4. **Legg til kortet.** Åpne et instrumentbrett i redigering og legge til **Hjem miljøansvarlig** Begynn med overvåking av rommet, avlesninger og ventilasjonsrådgivning.
+4. **Home Environment Manager** Åpne et instrumentbrett i redigering og legge til **Hjem miljøansvarlig** Begynn med overvåking av rommet, avlesninger og ventilasjonsrådgivning.
 5. **Aktiver styring bare der det er nyttig.** Åpne et rom, velg et støttet apparat, se gjennom kontrolløren og uttrykkelig velg PID for de modene du ønsker HEM å operere.
 
 Det gjør du. **ikke** Start med sensorer du har, og innfør automatisk kontroll en enhet i gangen.
@@ -237,10 +237,10 @@ For stegvis instruksjoner om romkilder, profiler, PID settinger, vinduer politik
 ### HACS / Home Assistant EU-butikk
 
 1. Åpne **HACS** i Home Assistant.
-2. Legg til **HTTPS://github.com/Chreece/HA-Home-Environment-Manager** som en **Custom repositori** i den **Integrasjon** kategori hvis den ikke allerede er oppført.
-3. Finn **Hjem miljøansvarlig** og installere den.
+2. Legg til **https://github.com/Chreece/HA-Home-Environment-Manager** som en **Custom repositori** i den **Integrasjon** kategori hvis den ikke allerede er oppført.
+3. Finn **Home Environment Manager** og installere den.
 4. Å starte på nytt **Home Assistant** for å laste inn integrasjonen.
-5. Gå til **Innstillinger → Enheter & tjenester → Legg til integrasjon**, søk etter **Hjem miljøansvarlig** og fullføre innstillingen.
+5. Gå til **Innstillinger → Enheter & tjenester → Legg til integrasjon**, søk etter **Home Environment Manager** og fullføre innstillingen.
 
 <a id="manual-installation"></a>
 ### Manuell installasjon

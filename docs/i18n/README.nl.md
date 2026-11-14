@@ -15,7 +15,7 @@
 </p>
 <!-- HEM-LANGUAGE-SELECTOR-END -->
 
-# HEM - Home Milieu Manager
+# HEM - Home Environment Manager
 
 <p align="center">
   <img src="../../.github/assets/hem-logo.svg" alt="HEM logo" width="420">
@@ -207,7 +207,7 @@ Een apparaat fijn afstemmen zonder de anderen te wijzigen, met inbegrip van onde
 1. **Organiseer je kamers.** In Home Assistant, uw gebieden te maken of te controleren en de juiste sensoren en apparaten aan elk toe te wijzen.
 2. **Kies wat je moet monitoren.** Voeg toe HEMSelecteer de kamers waar je om geeft en kijk de aanbevolen temperatuur, vochtigheid, raam, luchtkwaliteit en apparaatbronnen.
 3. **Configureer gedeelde informatie.** Selecteer beschikbare weer- en luchtkwaliteitbronnen, bewijs van huishoudelijke bezetting en eventuele aankondigingsbestemmingen die u wilt.
-4. **Voeg de kaart toe.** Open een dashboard in bewerkingsmodus en voeg de **Home Milieummanager** Begin met kamermonitoring, lezen en ventilatieadvies.
+4. **Home Environment Manager** Open een dashboard in bewerkingsmodus en voeg de **Home Milieummanager** Begin met kamermonitoring, lezen en ventilatieadvies.
 5. **Beheersing alleen als het nuttig is.** Maak een kamer open, kies een ondersteund apparaat, bekijk de controller en selecteer uitdrukkelijk PID voor de modus die je wilt HEM om te opereren.
 
 - Ja, dat weet je. **- Niet** Begin met de sensoren die je hebt, en introduceer automatische besturing één apparaat per keer.
@@ -238,9 +238,9 @@ Voor stapsgewijze instructies over kamerbronnen, profielen, PID de opstelling, h
 
 1. Open . **HACS** in Home Assistant.
 2. Voeg toe **https://github.com/Chreece/HA-Home-Environment-Manager** als een **aangepaste opslagplaats** In de **Integratie** categorie indien deze niet al is vermeld.
-3. Zoek **Home Milieummanager** en installeer het.
+3. Zoek **Home Environment Manager** en installeer het.
 4. Start opnieuw **Home Assistant** om de integratie op te laden.
-5. Ga naar **Instellingen → Apparaten & diensten → Integratie toevoegen**, zoeken naar **Home Milieummanager** En de installatie afmaken.
+5. Ga naar **Instellingen → Apparaten & diensten → Integratie toevoegen**, zoeken naar **Home Environment Manager** En de installatie afmaken.
 
 <a id="manual-installation"></a>
 ### Handmatige installatie

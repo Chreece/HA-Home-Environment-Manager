@@ -15,7 +15,7 @@
 </p>
 <!-- HEM-LANGUAGE-SELECTOR-END -->
 
-# HEM - 家庭环境经理
+# HEM - Home Environment Manager
 
 <p align="center">
   <img src="../../.github/assets/hem-logo.svg" alt="HEM 标志" width="420">
@@ -207,7 +207,7 @@ HEM 也包括设备特定的保护和诊断:
 1. **整理自己的房间.** 在 Home Assistant建立或检查您的区域,并分配适当的传感器和设备.
 2. **选择什么要监控.** 添加 HEM您可以选择您关心的房间,并查看建议的温度,湿度,窗口,空气质量和设备来源.
 3. **配置共享信息.** 选择可用的户外天气/空气质量来源,家庭占用率的证据以及您想要的任何公告目的地.
-4. **加入卡片.** 在编辑模式下打开仪表板,然后添加 **家庭环境经理** 首先要进行室内监测,读数和通风建议.
+4. **Home Environment Manager** 在编辑模式下打开仪表板,然后添加 **家庭环境经理** 首先要进行室内监测,读数和通风建议.
 5. **只有在有用的地方才能启用控制.** 打开一个房间,选择一个支持的设备,查看其控制器,并明确选择自动或 PID 对于你想要的模式 HEM 运作.
 
 你知道. **没有** 在每个房间都需要一个智能设备. 首先要使用你拥有的传感器,然后一次推出一个自动控制设备.
@@ -237,15 +237,15 @@ entity: sensor.your_hem_recommendation_sensor
 ### HACS / Home Assistant 社区商店
 
 1. 开放 **HACS** 在 Home Assistant.
-2. 添加 **希腊/希腊/HA-Home-Environment-Manager** 作为 **定制存储库** 在 **整合** 如果尚未列出类别.
-3. 找到 **家庭环境经理** 然后安装它.
+2. 添加 **https://github.com/Chreece/HA-Home-Environment-Manager** 作为 **定制存储库** 在 **整合** 如果尚未列出类别.
+3. 找到 **Home Environment Manager** 然后安装它.
 4. 重启 **Home Assistant** 为了加载集成.
-5. 走去 **设置 → 设备和服务 → 添加集成**搜索 **家庭环境经理** 然后完成设置.
+5. 走去 **设置 → 设备和服务 → 添加集成**搜索 **Home Environment Manager** 然后完成设置.
 
 <a id="manual-installation"></a>
 ### 手动安装
 
-复制库的文件 **客户端_组件/环境_管理器** 在匹配文件 ⁇ 中 **定制_组件** 在您的目录中 Home Assistant 配置,保持目录名称 **环境_管理器**重新启动 Home Assistant 并通过 **设置 → 设备和服务**.
+复制库的文件 **custom_components/environment_manager** 在匹配文件 ⁇ 中 **custom_components** 在您的目录中 Home Assistant 配置,保持目录名称 **environment_manager**重新启动 Home Assistant 并通过 **设置 → 设备和服务**.
 
 对于随后的安装更改,请保留现有的 HEM 如果卡的外观不立即更新,请重新加载浏览器中的仪表板.
 

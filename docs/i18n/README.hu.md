@@ -15,7 +15,7 @@
 </p>
 <!-- HEM-LANGUAGE-SELECTOR-END -->
 
-# HEM - Otthoni környezetkezelő
+# HEM - Home Environment Manager
 
 <p align="center">
   <img src="../../.github/assets/hem-logo.svg" alt="HEM logó" width="420">
@@ -207,7 +207,7 @@ Az egyik készülék finom kiigazítása a többiek megváltoztatása nélkül, 
 1. **Rendelkezzétek a szobáitokat.** A Home Assistant, létrehozza vagy ellenőrizze a területét, és minden egyes területre a megfelelő érzékelőket és berendezéseket adja.
 2. **Válassza ki, mit figyeljen.** Hozzáadás HEMVálasszon ki a szobákat, melyeket érdekli, és nézze át a javasolt hőmérsékletet, nedvességet, ablakokat, levegőminőséget és készülékforrásokat.
 3. **A megosztott információk konfigurálása.** Válassza ki a szabadtéri időjárás/ levegőminőségi forrásokat, a háztartási lakosságra vonatkozó bizonyítékokat és a kívánt hirdetési célpontokat.
-4. **Adja hozzá a kártyát.** Nyissa ki a panelit a szerkesztési módban, és adja hozzá a **Otthoni környezetkezelő** Kezdje a szobás megfigyelést, az olvasást és a szellőztetést.
+4. **Home Environment Manager** Nyissa ki a panelit a szerkesztési módban, és adja hozzá a **Otthoni környezetkezelő** Kezdje a szobás megfigyelést, az olvasást és a szellőztetést.
 5. **Csak akkor engedélyezze a vezérléset, ha hasznos.** Nyisd ki egy szobát, válaszd ki egy támogatott készüléket, nézd át a vezérlőjét, és kifejezetten válaszd ki Automatic vagy PID a kívánt módokhoz HEM operálni.
 
 Te igen. **Nem** Minden szobában kell egy okos készülék. Kezdjük az érzékelőkkel, és vezéreljük be az automatikus vezérlő eszközt egyszerre.
@@ -237,15 +237,15 @@ A szobák forrásai, profiljai, PID a beállítások, ablakpolitikák, előkész
 ### HACS / Home Assistant Közösségi áruház
 
 1. Nyitva **HACS** a Home Assistant.
-2. Hozzáadás **Az Európai Parlament és a Tanács (HL L 347., 2011.12., 1. o.).** a) **Személyes tároló** a **Integráció** kategória, ha még nem szerepel a listán.
-3. Találd meg **Otthoni környezetkezelő** és telepítem.
+2. Hozzáadás **https://github.com/Chreece/HA-Home-Environment-Manager** a) **Személyes tároló** a **Integráció** kategória, ha még nem szerepel a listán.
+3. Találd meg **Home Environment Manager** és telepítem.
 4. Újraindítás **Home Assistant** hogy feltöltse az integrációt.
-5. Menj! **Beállítások → Felszerelések & szolgáltatások → Integráció hozzáadása**, keresés **Otthoni környezetkezelő** és befejezzük a beépítést.
+5. Menj! **Beállítások → Felszerelések & szolgáltatások → Integráció hozzáadása**, keresés **Home Environment Manager** és befejezzük a beépítést.
 
 <a id="manual-installation"></a>
 ### Kézi telepítés
 
-A tároló másolatai **custom_components/environment_manager** A tároló a megfelelő **custom_components** az Önben található Home Assistant konfiguráció, a címke nevet megtartva **környezet_kezelő**- Újra indítsuk. Home Assistant és az integrációt a **Beállítások → Felszerelések & szolgáltatások**.
+A tároló másolatai **custom_components/environment_manager** A tároló a megfelelő **custom_components** az Önben található Home Assistant konfiguráció, a címke nevet megtartva **environment_manager**- Újra indítsuk. Home Assistant és az integrációt a **Beállítások → Felszerelések & szolgáltatások**.
 
 A későbbi telepítési módosításokhoz a meglévő HEM integrációs bejegyzés és beállítások. Újra töltsd be a böngésződben lévő műszerpultot, ha a kártya megjelenése nem frissül meg azonnal.
 

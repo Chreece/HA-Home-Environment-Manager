@@ -15,7 +15,7 @@
 </p>
 <!-- HEM-LANGUAGE-SELECTOR-END -->
 
-# HEM - Home Pengelola Lingkungan
+# HEM - Home Environment Manager
 
 <p align="center">
   <img src="../../.github/assets/hem-logo.svg" alt="HEM logo" width="420">
@@ -207,7 +207,7 @@ Penyesuaian halus satu perangkat tanpa mengubah yang lain, termasuk metode kontr
 1. **Perbaiki kamarmu.** Dalam Home Assistant, membuat atau memeriksa Area Anda dan menetapkan sensor dan perangkat yang tepat untuk setiap.
 2. **Pilih apa yang akan dipantau.** Tambahkan HEM, pilih kamar yang Anda sukai dan meninjau suhu, kelembaban, jendela, kualitas udara dan sumber perangkat yang disarankan.
 3. **Mengkonfigurasi informasi bersama.** Pilih sumber cuaca luar ruangan / kualitas udara yang tersedia, bukti pekerjaan rumah tangga dan tujuan pengumuman apa pun yang Anda inginkan.
-4. **Tambahkan kartu.** Buka dashboard dalam mode edit dan tambahkan **Home Pengelola Lingkungan** Mulailah dengan pemantauan kamar, pembacaan dan saran ventilasi.
+4. **Home Environment Manager** Buka dashboard dalam mode edit dan tambahkan **Home Pengelola Lingkungan** Mulailah dengan pemantauan kamar, pembacaan dan saran ventilasi.
 5. **Mengaktifkan kontrol hanya di mana berguna.** Buka ruangan, pilih perangkat yang didukung, meninjau pengontrolnya dan secara eksplisit pilih Otomatis atau PID untuk mode yang Anda inginkan HEM untuk beroperasi.
 
 Kau tahu. **Tidak** mulai dengan sensor yang Anda miliki, dan memperkenalkan kontrol otomatis satu perangkat pada satu waktu.
@@ -238,9 +238,9 @@ Untuk instruksi langkah demi langkah tentang sumber kamar, profil, PID pengatura
 
 1. Terbuka **HACS** di Home Assistant.
 2. Tambahkan **https://github.com/Chreece/HA-Home-Environment-Manager** sebagai **repositori khusus** dalam **Integrasi** kategori jika belum terdaftar.
-3. Temukan **Home Pengelola Lingkungan** dan menginstalnya.
+3. Temukan **Home Environment Manager** dan menginstalnya.
 4. Mulai ulang **Home Assistant** untuk memuat integrasi.
-5. Pergilah ke **Pengaturan → Perangkat & Layanan → Tambahkan integrasi**, mencari untuk **Home Pengelola Lingkungan** dan menyelesaikan pengaturan.
+5. Pergilah ke **Pengaturan → Perangkat & Layanan → Tambahkan integrasi**, mencari untuk **Home Environment Manager** dan menyelesaikan pengaturan.
 
 <a id="manual-installation"></a>
 ### Instalasi manual

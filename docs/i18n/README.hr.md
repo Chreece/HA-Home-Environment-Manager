@@ -15,7 +15,7 @@
 </p>
 <!-- HEM-LANGUAGE-SELECTOR-END -->
 
-# HEM - Domaći menadžer za okoliš
+# HEM - Home Environment Manager
 
 <p align="center">
   <img src="../../.github/assets/hem-logo.svg" alt="HEM logotip" width="420">
@@ -207,7 +207,7 @@ U skladu s člankom 4. stavkom 1. stavkom 1. točka 1. PID, tiho rad, vrijeme i 
 1. **Organizirajte svoje sobe.** U Home Assistant, kreirati ili provjeriti svoje područja i dodijeliti odgovarajuće senzore i uređaje na svaki.
 2. **Izaberite što pratiti.** Dodavanje HEM, odaberite prostorije koje vas zanimaju i pregledajte predloženu temperaturu, vlažnost, prozor, kvalitetu zraka i izvore uređaja.
 3. **Konfigurirajte zajedničke informacije.** Izberite dostupne izvore vanjskog vremena/kvaliteta zraka, dokaze o stanovanju domaćina i svaka željena destinacija za objavu.
-4. **Dodaj kartu.** Otvorite preglednicu u načinu uređivanja i dodajte **Domaći menadžer za okoliš** Počnite sa nadzorom sobe, procjenama i savjeta za ventilaciju.
+4. **Home Environment Manager** Otvorite preglednicu u načinu uređivanja i dodajte **Domaći menadžer za okoliš** Počnite sa nadzorom sobe, procjenama i savjeta za ventilaciju.
 5. **Olakšati kontrolu samo ako je korisno.** Otvorite prostoriju, odaberite podržanu uređaj, pregledajte njegov upravljač i izričito odaberite Automatic ili PID za režime koje želite HEM da se radi.
 
 Ti znaš. **Ne, ne.** Počnite s senzorima koje imate, i uvedite automatsku kontrolu, jedan uređaj u isto vrijeme.
@@ -237,15 +237,15 @@ Za koračne upute o izvorima prostorija, profilima, PID S obzirom na to da se ra
 ### HACS / Home Assistant Prodavnica Zajednice
 
 1. Otvoreno **HACS** u Home Assistant.
-2. Dodavanje **S druge strane, u skladu s člankom 1. stavkom 1. stavkom 1. stavkom 1. stavkom 1. stavkom 1. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2. stavkom 2.** kao **prilagođeni skladište** u **Integriranje** kategorije ako već nije navedena.
-3. Pronađite **Domaći menadžer za okoliš** I instalirati ga.
+2. Dodavanje **https://github.com/Chreece/HA-Home-Environment-Manager** kao **prilagođeni skladište** u **Integriranje** kategorije ako već nije navedena.
+3. Pronađite **Home Environment Manager** I instalirati ga.
 4. Ponovno pokretanje **Home Assistant** Da učestvujemo u integraciji.
-5. Idite na **Nastavnice → Napređaji i usluge → Dodajte integraciju**, traženje za **Domaći menadžer za okoliš** I završiti postavljanje.
+5. Idite na **Nastavnice → Napređaji i usluge → Dodajte integraciju**, traženje za **Home Environment Manager** I završiti postavljanje.
 
 <a id="manual-installation"></a>
 ### Ugrađivanje
 
-Kopirajte skladište. **Custom_components/environment_manager** dosje u odgovarajuće **custom_components** Popis u vašem Home Assistant konfiguracija, zadržavanje imena direktorija **environment_manager**Ponovno pokrenite. Home Assistant i dodaju integraciju kroz **Postavke → Uređaji i usluge**.
+Kopirajte skladište. **custom_components/environment_manager** dosje u odgovarajuće **custom_components** Popis u vašem Home Assistant konfiguracija, zadržavanje imena direktorija **environment_manager**Ponovno pokrenite. Home Assistant i dodaju integraciju kroz **Postavke → Uređaji i usluge**.
 
 Za naknadne izmjene instalacije, zadržite postojeće HEM integracijski ulaz i postavke. Prenošite raspored u vašem pretraživaču ako izgled kartice ne osveži se odmah.
 

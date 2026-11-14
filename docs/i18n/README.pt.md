@@ -15,7 +15,7 @@
 </p>
 <!-- HEM-LANGUAGE-SELECTOR-END -->
 
-# HEM - Gestor de Ambiente
+# HEM - Home Environment Manager
 
 <p align="center">
   <img src="../../.github/assets/hem-logo.svg" alt="HEM logotipo" width="420">
@@ -207,7 +207,7 @@ Ajustar perfeitamente um dispositivo sem alterar os outros, incluindo os método
 1. **Organizem os quartos.** No Home Assistant, criar ou verificar as suas Áreas e atribuir os sensores e dispositivos adequados a cada uma delas.
 2. **Escolha o que monitorar.** Adicionar HEM, selecionar os quartos que lhe interessam e revisar a temperatura, a humidade, a janela, a qualidade do ar e as fontes do dispositivo sugeridos.
 3. **Configurar informações compartilhadas.** Selecione as fontes disponíveis de clima ao ar livre/qualidade do ar, evidências de ocupação doméstica e quaisquer destinos de anúncio que deseje.
-4. **Adicione o cartão.** Abra um painel de controle em modo de edição e adicione o **Home Gestor de Meio Ambiente** Comece com o monitoramento da sala, leituras e aconselhamento de ventilação.
+4. **Home Environment Manager** Abra um painel de controle em modo de edição e adicione o **Home Gestor de Meio Ambiente** Comece com o monitoramento da sala, leituras e aconselhamento de ventilação.
 5. **Habilitar o controlo apenas quando útil.** Abre uma sala, escolha um aparelho suportado, revise o seu controlador e selecione explicitamente Automático ou PID para os modos que você deseja HEM Para operar.
 
 - Sim , sim . **Não** Comece com os sensores que tem, e introduz o controle automático, um dispositivo por vez.
@@ -237,15 +237,15 @@ Para instruções passo a passo sobre as fontes, perfis, PID As informações so
 ### HACS / Home Assistant Loja comunitária
 
 1. Abre **HACS** em Home Assistant.
-2. Adicionar **O programa de apoio é destinado a ajudar os cidadãos da Grécia e da Grécia.** como um **Repositório personalizado** No **Integração** Categoria se não for já listada.
-3. Encontrar **Home Gestor de Meio Ambiente** E instale-o.
+2. Adicionar **https://github.com/Chreece/HA-Home-Environment-Manager** como um **Repositório personalizado** No **Integração** Categoria se não for já listada.
+3. Encontrar **Home Environment Manager** E instale-o.
 4. Reiniciar **Home Assistant** para carregar a integração.
-5. Vai para **Configurações → Dispositivos e serviços → Adicionar integração**, busca por **Home Gestor de Meio Ambiente** E concluir a configuração.
+5. Vai para **Configurações → Dispositivos e serviços → Adicionar integração**, busca por **Home Environment Manager** E concluir a configuração.
 
 <a id="manual-installation"></a>
 ### Instalação manual
 
-Copiar o repositório **custom_components/environment_manager** na pasta de correspondência **custom_componentes** diretório em seu Home Assistant configuração, mantendo o nome do diretório **ambiente_manager**Reiniciar . Home Assistant e adicionar a integração através de **Configurações → Dispositivos e serviços**.
+Copiar o repositório **custom_components/environment_manager** na pasta de correspondência **custom_components** diretório em seu Home Assistant configuração, mantendo o nome do diretório **environment_manager**Reiniciar . Home Assistant e adicionar a integração através de **Configurações → Dispositivos e serviços**.
 
 Para mudanças de instalação subsequentes, mantenha as instalações existentes HEM inserção e configurações de integração. Recarregar o painel do navegador se a aparência do cartão não se atualizar imediatamente.
 
