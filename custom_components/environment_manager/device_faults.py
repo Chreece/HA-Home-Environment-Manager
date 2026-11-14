@@ -365,6 +365,9 @@ class NativeDeviceFaultMonitor:
         self._tasks: set[asyncio.Task] = set()
         self._offline_tasks: dict[str, asyncio.Task] = {}
         self._offline_notified: set[str] = set()
+        # Track sustained physical outages independently from native faults.
+        # Log once per episode and once after actual physical reconnection.
+        self._offline_logged: set[str] = set()
 
     def start(self) -> None:
         self.active = True
@@ -380,6 +383,7 @@ class NativeDeviceFaultMonitor:
         self._tasks.clear()
         self._offline_tasks.clear()
         self._offline_notified.clear()
+        self._offline_logged.clear()
         self._specs.clear()
         self._by_entity.clear()
 
@@ -419,6 +423,13 @@ class NativeDeviceFaultMonitor:
                 watched[entity].add(spec.identifier)
             for entity in found[spec.identifier]:
                 watched[entity].add(spec.identifier)
+            # An intentionally OFF, verified external relay suppresses a
+            # native-unavailable alarm. When it turns ON again while the
+            # native appliance stays offline, the change itself must trigger
+            # a new debounce even if the native source never sends an event.
+            upstream = model.settings(self.manager, spec).get("power_switch_entity")
+            if isinstance(upstream, str) and upstream.startswith("switch."):
+                watched[upstream].add(spec.identifier)
         return (
             specs,
             {key: tuple(sorted(set(value))) for key, value in found.items()},
@@ -491,6 +502,22 @@ class NativeDeviceFaultMonitor:
             if key not in problems:
                 self._offline_tasks.pop(key, None)
                 task.cancel()
+        for key in self._offline_logged - problems.keys():
+            # No "recovered" log when the user merely turned a verified
+            # external supply OFF, disabled alerts, or deselected the device.
+            # Recovery requires an actual reachable native HA source.
+            specs = tuple(spec for spec in self._specs.values()
+                          if (spec.source_device_id or spec.identifier) == key)
+            if specs and all(
+                (state := self.hass.states.get(source)) is not None
+                and state.state not in _UNAVAILABLE
+                for spec in specs for source in spec.source_entities
+            ):
+                _LOGGER.info(
+                    "HEM physical device %s (%s) is available again",
+                    specs[0].name, specs[0].area_id,
+                )
+            self._offline_logged.discard(key)
         self._offline_notified.intersection_update(problems)
         for key in problems:
             if key in self._offline_notified or key in self._offline_tasks:
@@ -539,13 +566,24 @@ class NativeDeviceFaultMonitor:
             title = f"HEM · {labels[0]} · {name}"
             sources = ", ".join(missing[:8])
             message = labels[1].format(name=name, room=room) + (f"\nSources: {sources}" if sources else "")
-            # Mark the current outage once, even if delivery falls back to a
-            # persistent Home Assistant notice rather than a configured TTS.
+            # Deduplicate the episode before the async transport call.
+            # A Hub rejection must not cause local duplicate fallback/retries.
             self._offline_notified.add(device_key)
-            await _deliver_device_notice(
+            if device_key not in self._offline_logged:
+                _LOGGER.info(
+                    "HEM physical device %s (%s) unavailable for at least %s seconds: %s",
+                    name, room, OFFLINE_NOTICE_DELAY_SECONDS, sources,
+                )
+                self._offline_logged.add(device_key)
+            accepted = await _deliver_device_notice(
                 self.manager, spec, title, message, language,
                 area_name=room, kind="native_unavailable",
             )
+            if not accepted:
+                _LOGGER.warning(
+                    "HEM device-unavailable alert for %s (%s) was not accepted "
+                    "by any configured notification transport", name, room,
+                )
         except asyncio.CancelledError:
             raise
         except Exception:
@@ -615,7 +653,16 @@ class NativeDeviceFaultMonitor:
     def state_changed(self, entity_id: Any) -> None:
         if not self.active or not isinstance(entity_id, str):
             return
-        watched = tuple(self._by_entity.get(entity_id, ()))
+        watched = set(self._by_entity.get(entity_id, ()))
+        if entity_id.startswith("switch."):
+            # External power assignment may change without a HA entity
+            # registry event. Pick up the *current* configured relay even if
+            # the cached fault index still refers to the old relay.
+            watched.update(
+                spec.identifier for spec in self._specs.values()
+                if model.settings(self.manager, spec).get("power_switch_entity")
+                == entity_id
+            )
         for identifier in watched:
             spec = self._specs.get(identifier)
             if spec is not None:
@@ -692,19 +739,23 @@ class NativeDeviceFaultMonitor:
 
 async def _deliver_device_notice(manager: Any, spec: Any, title: str,
                                  message: str, language: str, *,
-                                 area_name: str, kind: str) -> None:
-    """Use one established device-notice transport and one delivery owner."""
+                                 area_name: str, kind: str) -> bool:
+    """Return confirmed delivery/queue acceptance without duplicate routing.
+
+    While Announcement Hub is running it owns delivery exclusively, even
+    when it rejects a request. Native fallback is only used when Hub is not
+    selected/available.
+    """
     hass, config = manager.hass, manager.settings
     from .hub_delivery import hub_available, async_submit_hub, hub_ai_options
     if config.get(CONF_HUB) is True and hub_available(hass):
         # Hub owns AI, routing, occupancy, retry and visual/TTS fallback.
         # Its rejection is not permission for duplicate local delivery.
-        await async_submit_hub(hass, {
+        return await async_submit_hub(hass, {
             "title": title, "area": [area_name],
             "level": "warning", "text": message,
             "language": language, **hub_ai_options(config),
         })
-        return
     notified = False
     notify_targets = manager._targets_in_room(
         config.get(CONF_NOTIFY_TARGETS, []), spec.area_id
@@ -756,7 +807,9 @@ async def _deliver_device_notice(manager: Any, spec: Any, title: str,
                     "title": title, "message": message,
                 }, blocking=True,
             )
+            notified = True
         except asyncio.CancelledError:
             raise
         except Exception:
             _LOGGER.exception("Unable to show HEM device notice in Home Assistant")
+    return notified
