@@ -8,6 +8,7 @@ from dataclasses import asdict, fields, FrozenInstanceError, replace
 from datetime import timedelta
 from pathlib import Path
 import runpy
+import re
 import sys
 from types import ModuleType, SimpleNamespace as N
 import unittest
@@ -73,12 +74,12 @@ class ReadingContract(unittest.TestCase):
         nodes = [node for node in tree.body if
                  isinstance(node, ast.FunctionDef) and node.name in names or
                  isinstance(node, ast.Assign) and any(isinstance(target, ast.Name)
-                    and target.id in ('DEVICE_CLASS_METRICS', 'SUFFIX_METRICS')
+                    and target.id in ('DEVICE_CLASS_METRICS', 'SUFFIX_METRICS', 'ECO2_HINT')
                     for target in node.targets)]
         constants = sys.modules[base['PACKAGE'] + '.const']
         namespace = dict(__name__=base['PACKAGE'] + '.discovery',
                          __package__=base['PACKAGE'],
-                         Reading=Reading, timedelta=timedelta,
+                         Reading=Reading, timedelta=timedelta, re=re,
                          dt_util=N(utcnow=lambda: now), er=base['registry'],
                          INDOOR_METRICS=constants.INDOOR_METRICS,
                          SUPPORTED_AIR_METRICS=constants.SUPPORTED_AIR_METRICS)
