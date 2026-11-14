@@ -9297,6 +9297,19 @@
       alerts:"Ανακοινώσεις και σφάλματα",schedule:"Προγράμματα",other:"Άλλες ρυθμίσεις",
       help:"Βοήθεια ρύθμισης"}
   };
+  const HEM_PID_ACTIONS_B18={
+    en:{approve:"Approve calibration proposal",discard:"Reject calibration proposal",
+      apply:"Apply PID calibration",fan:"Apply fan-capacity calibration",
+      approveButton:"Approve",discardButton:"Reject"},
+    el:{approve:"Έγκριση πρότασης βαθμονόμησης",discard:"Απόρριψη πρότασης βαθμονόμησης",
+      apply:"Εφαρμογή βαθμονόμησης PID",fan:"Εφαρμογή βαθμονόμησης απόδοσης ανεμιστήρα",
+      approveButton:"Έγκριση",discardButton:"Απόρριψη"},
+    de:{approve:"Kalibrierungsvorschlag annehmen",discard:"Kalibrierungsvorschlag ablehnen",
+      apply:"PID-Kalibrierung anwenden",fan:"Lüfterleistung kalibrieren",
+      approveButton:"Annehmen",discardButton:"Ablehnen"},
+  };
+  const pidActionsB18=card=>HEM_PID_ACTIONS_B18[card._language()]||HEM_PID_ACTIONS_B18.en;
+  const pidKeyB18=key=>/^(?:pid_[a-z0-9_]+|kp|ki|kd|cycle_seconds|sample_seconds)$/.test(key);
   const tr127=(card,key)=>(HEM_FULL_WORDS127[card._language()]||HEM_FULL_WORDS127.en)[key]||key;
   const DOMAINS127=new Set(["number","select","switch","button","time"]);
   const ORDER127=["mode","targets","pid","fan","power","presence","ventilation","alerts","schedule","other"];
@@ -9381,7 +9394,77 @@
       result.push(field);
     }
 
-    return result.sort((a,b)=>a.label.localeCompare(b.label,this._language())||a.id.localeCompare(b.id));
+    const ordered=result.sort((a,b)=>a.label.localeCompare(b.label,this._language())||a.id.localeCompare(b.id));
+    if(scope!=="device")return ordered;
+    // Per-operating-mode PID controls supersede the original controller-wide
+    // editors. Match the actual immutable registry IDs and controller owner;
+    // never guess by display labels, state entity IDs or source product names.
+    const scoped=new Map();
+    for(const field of ordered){
+      const a=field.state?.attributes||{},key=a.setting_key;
+      if(a.settings_scope!=="operating_mode"||!pidKeyB18(key)||
+         typeof a.controller_id!=="string"||typeof a.operating_mode!=="string"||
+         field.reg?.unique_id!==a.controller_id+"_mode_"+a.operating_mode+"_"+key)continue;
+      const index=a.controller_id+"|"+field.domain+"|"+key;
+      if(!scoped.has(index))scoped.set(index,[]);
+      scoped.get(index).push(field);
+    }
+    const compact=ordered.filter(field=>{
+      const a=field.state?.attributes||{},owner=a.controller_id,unique=field.reg?.unique_id;
+      if(a.settings_scope==="operating_mode"||typeof owner!=="string"||
+         typeof unique!=="string"||!unique.startsWith(owner+"_"))return true;
+      const key=unique.slice(owner.length+1);
+      if(!pidKeyB18(key))return true;
+      const replacements=scoped.get(owner+"|"+field.domain+"|"+key);
+      if(!replacements?.length)return true;
+      const edit=saved.nativeEdits?.get(field.id);
+      if(edit&&edit.phase!=="saved")return true; // Never lose an in-flight or failed draft.
+      const usable=record=>!record.disabled&&record.state&&
+        record.state.state!=="unavailable"&&
+        (record.domain==="button"||record.state.state!=="unknown");
+      // A live legacy action remains reachable if every new mode control is offline.
+      if(usable(field)&&!replacements.some(usable))return true;
+      return false;
+    });
+    const words=pidActionsB18(this),pairs=new Map();
+    for(const field of compact){
+      const a=field.state?.attributes||{},owner=a.controller_id,unique=field.reg?.unique_id;
+      if(field.domain!=="button"||typeof owner!=="string"||typeof unique!=="string")continue;
+      const scopedMode=a.settings_scope==="operating_mode"&&
+        typeof a.operating_mode==="string"?a.operating_mode:null;
+      const suffix=owner+"_"+(scopedMode?"mode_"+scopedMode+"_":"");
+      if(!unique.startsWith(suffix))continue;
+      const key=unique.slice(suffix.length);
+      const prefix=scopedMode&&a.operating_mode_label?a.operating_mode_label+" · ":"";
+      const custom=field.reg?.name_by_user||field.reg?.name;
+      if((key==="pid_review_approve"&&a.pid_review_role==="approve")||
+         (key==="pid_review_discard"&&a.pid_review_role==="discard")){
+        const role=a.pid_review_role;
+        field.pidReviewActionB18=role;
+        field.pidReviewGroupB18=owner+"|"+(scopedMode||"legacy");
+        if(!custom)field.label=prefix+"PID · "+words[role];
+        if(!pairs.has(field.pidReviewGroupB18))pairs.set(field.pidReviewGroupB18,{});
+        pairs.get(field.pidReviewGroupB18)[role]=field;
+      }else if(key==="pid_apply_calibration"&&a.pid_calibration_role==="apply"){
+        if(!custom)field.label=prefix+"PID · "+words.apply;
+      }else if(key==="pid_apply_fan_capacity"&&a.pid_fan_capacity_role==="apply"){
+        if(!custom)field.label=prefix+"PID · "+words.fan;
+      }
+    }
+    // Pair actions from the same exact mode/controller. Each remains its own
+    // HA entity, validation, status, accessibility label and button.press.
+    const handled=new Set(),presented=[];
+    for(const field of compact){
+      const group=field.pidReviewGroupB18,match=group&&pairs.get(group);
+      if(group&&match?.approve&&match?.discard){
+        if(handled.has(group))continue;
+        handled.add(group);
+        match.approve.pidReviewPairB18=true;
+        match.discard.pidReviewPairB18=true;
+        presented.push(match.approve,match.discard);
+      }else presented.push(field);
+    }
+    return presented;
   };
   hemFull127._hemFullRow127=function(field,scope){
     const s=field.state,a=s?.attributes||{},value=s?.state,domain=field.domain;
@@ -9413,7 +9496,9 @@
         'value="'+(enabled?escape(value.slice(0,5)):"")+'" '+(enabled?"":"disabled")+'>';
     }
     const help=(typeof a.configuration_help==="string"?a.configuration_help.trim():"")||settingHelpTextB9(this,"missing");
-    return '<div class="hem-full-row127" data-hem-full-row127="'+escape(field.id)+'" '+
+    return '<div class="hem-full-row127" '+
+      (scope==="device"&&field.pidReviewPairB18?'data-hem-pid-review-b18="'+escape(field.pidReviewActionB18)+'" ':"")+
+      'data-hem-full-row127="'+escape(field.id)+'" '+
       (scope==="room"?'data-hem-room-row126="'+escape(field.id)+'" ':"")+
       'data-hem-full-scope127="'+scope+'">'+
       (help?'<details class="hem-full-help127"><summary class="hem-full-label127" title="'+
@@ -9427,7 +9512,9 @@
       ((domain==="switch"||domain==="button")?'<button type="button" data-hem-full-apply127="'+escape(field.id)+'" '+
       'data-hem-full-target127="'+scope+'" '+(enabled?"":"disabled")+'>'+
       escape(domain==="switch"&&enabled?(this._quickState8?.(value)||value):
-        tr127(this,domain==="button"?"press":"apply"))+'</button>':"")+'</div>'+
+        domain==="button"&&scope==="device"&&field.pidReviewActionB18?
+          pidActionsB18(this)[field.pidReviewActionB18+"Button"]:
+          tr127(this,domain==="button"?"press":"apply"))+'</button>':"")+'</div>'+
       '<small role="status" data-hem-full-status127>'+
       (enabled?"":escape(tr127(this,"unavailable")))+'</small></div>';
   };
@@ -9522,6 +9609,9 @@
       if(oldStatus.textContent!==nextStatus.textContent)oldStatus.textContent=nextStatus.textContent;
     }
     old.hidden=next.hidden;
+    const pidPair=next.getAttribute("data-hem-pid-review-b18");
+    if(pidPair)old.setAttribute("data-hem-pid-review-b18",pidPair);
+    else old.removeAttribute("data-hem-pid-review-b18");
     old.setAttribute('data-settings-tier-b8',next.getAttribute('data-settings-tier-b8')||'primary');
   }
   hemFull127._hemFullRender127=function(saved,scope){
@@ -10674,6 +10764,10 @@
   })[name]||"targets";
   const hemFieldCategory141=(field,scope)=>{
     const a=field.state?.attributes||{};
+    // The mode-scoped target name, not its controller ID, determines its category.
+    if(scope==="device"&&a.settings_scope==="operating_mode"&&
+       /^target_(manual|home|comfort|away|sleep|eco)_(heat|cool|humidity)$/.test(a.setting_key||""))
+      return "mode";
     if(hemDoorEco062(field)||hemDoorSetting063(field))return "ventilation";
     const key=[a.setting_key,field.reg?.unique_id,field.id,field.label].filter(Boolean).join("_").toLowerCase();
     if(scope==="home"){
@@ -12629,5 +12723,21 @@
   /* HEM_MOBILE_DENSITY_READABILITY_B16_END */
 
   /* HEM_FRESHNESS_POLICY_B11_END */
+
+
+  /* HEM_DEVICE_PID_PRESENTATION_B18_START */
+  const devicePidCssB18=AirQualityAdvisorCard.prototype._styles;
+  AirQualityAdvisorCard.prototype._styles=function(){
+    return devicePidCssB18.call(this)+[
+      "<style>",
+      '.hem-controller-options126 [data-hem-full-category127="pid"]>.hem-full-rows127{grid-template-columns:repeat(2,minmax(0,1fr))}',
+      '.hem-controller-options126 [data-hem-full-category127="pid"]>.hem-full-rows127>.hem-full-row127{grid-column:1/-1}',
+      '.hem-controller-options126 [data-hem-full-category127="pid"]>.hem-full-rows127>.hem-full-row127[data-hem-pid-review-b18]{grid-column:auto;min-width:0}',
+      '.hem-controller-options126 [data-hem-pid-review-b18] .hem-full-editor127 button{min-height:40px;min-width:0;width:100%;white-space:normal}',
+      '@media(max-width:340px){.hem-controller-options126 [data-hem-full-category127="pid"]>.hem-full-rows127>.hem-full-row127[data-hem-pid-review-b18]{grid-column:1/-1}}',
+      "</style>"
+    ].join("");
+  };
+  /* HEM_DEVICE_PID_PRESENTATION_B18_END */
 
 })();
