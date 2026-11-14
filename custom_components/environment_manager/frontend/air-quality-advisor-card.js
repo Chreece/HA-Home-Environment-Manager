@@ -1052,7 +1052,8 @@
         // A quiet HA connection must still recover an initially failed
         // WebSocket snapshot, without waiting for another hass state update.
         // Cap unattended retries to avoid repeated permission-error traffic.
-        if (this.isConnected && this._dashboardFailureCount<=6) {
+        if (this.isConnected && this._dashboardFailureCount<=6 &&
+            typeof setTimeout === 'function') {
           if (this._dashboardRetryHandle !== null)
             clearTimeout(this._dashboardRetryHandle);
           this._dashboardRetryHandle = setTimeout(() => {
@@ -1179,7 +1180,8 @@
         this._deviceRegistryFailureCount = Math.min(6, this._deviceRegistryFailureCount+1);
         this._deviceRegistryNextAttemptAt = Date.now()+
           Math.min(60000, 1000*(2**this._deviceRegistryFailureCount));
-        if (this.isConnected && this._deviceRegistryFailureCount<=6) {
+        if (this.isConnected && this._deviceRegistryFailureCount<=6 &&
+            typeof setTimeout === 'function') {
           if (this._deviceRegistryRetryHandle !== null)
             clearTimeout(this._deviceRegistryRetryHandle);
           this._deviceRegistryRetryHandle = setTimeout(() => {
