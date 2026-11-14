@@ -531,6 +531,7 @@
       this._dashboardContext = null;
       this._dashboardFailureCount = 0;
       this._dashboardNextAttemptAt = 0;
+      this._dashboardRetryHandle = null;
       this._climateEditError = null;
       this._lastState = null;
       this._lastConfigKey = null;
@@ -542,6 +543,7 @@
       this._deviceRegistryLoaded = false;
       this._deviceRegistryFailureCount = 0;
       this._deviceRegistryNextAttemptAt = 0;
+      this._deviceRegistryRetryHandle = null;
       this._focusedEditor = null;
       this._pendingRender = false;
       this._pendingForceRender = false;
@@ -948,6 +950,13 @@
     }
 
     disconnectedCallback() {
+      // A detached Lovelace card must never keep an async retry loop alive.
+      for (const key of ['_dashboardRetryHandle','_deviceRegistryRetryHandle']) {
+        if (this[key] !== null) clearTimeout(this[key]);
+        this[key] = null;
+      }
+      this._dashboardNextAttemptAt = 0;
+      this._deviceRegistryNextAttemptAt = 0;
       if (this._editRenderTimer !== null) {
         clearTimeout(this._editRenderTimer);
         this._editRenderTimer = null;
@@ -988,6 +997,10 @@
           previous.connection !== connection) {
         // A pending request or retry delay belongs only to its source and
         // connection. Changing either must allow the new source to load now.
+        if (this._dashboardRetryHandle !== null) {
+          clearTimeout(this._dashboardRetryHandle);
+          this._dashboardRetryHandle = null;
+        }
         this._dashboardContext = {entityId, connection};
         this._dashboardFetching = null;
         this._dashboardFailureCount = 0;
@@ -1026,12 +1039,28 @@
         this._dashboardLoadedRevision = capturedRevision;
         this._dashboardFailureCount = 0;
         this._dashboardNextAttemptAt = 0;
+        if (this._dashboardRetryHandle !== null) {
+          clearTimeout(this._dashboardRetryHandle);
+          this._dashboardRetryHandle = null;
+        }
         this._render(true);
       }).catch((error) => {
         if (!current()) return;
         this._dashboardFailureCount = Math.min(6, this._dashboardFailureCount+1);
         this._dashboardNextAttemptAt = Date.now() +
           Math.min(60000, 1000 * (2 ** this._dashboardFailureCount));
+        // A quiet HA connection must still recover an initially failed
+        // WebSocket snapshot, without waiting for another hass state update.
+        // Cap unattended retries to avoid repeated permission-error traffic.
+        if (this.isConnected && this._dashboardFailureCount<=6 &&
+            typeof setTimeout === 'function') {
+          if (this._dashboardRetryHandle !== null)
+            clearTimeout(this._dashboardRetryHandle);
+          this._dashboardRetryHandle = setTimeout(() => {
+            this._dashboardRetryHandle = null;
+            if (this.isConnected && current()) this._loadDashboard();
+          }, Math.max(50,this._dashboardNextAttemptAt-Date.now()));
+        }
         if (this._dashboardFailureCount<=2) {
           console.warn('Home Environment Manager dashboard will retry',error);
         }
@@ -1060,6 +1089,10 @@
           previous.connection !== connection) {
         // Settings links and options-flow ownership belong to the selected
         // source and HA connection, even while its registry request is pending.
+        if (this._deviceRegistryRetryHandle !== null) {
+          clearTimeout(this._deviceRegistryRetryHandle);
+          this._deviceRegistryRetryHandle = null;
+        }
         this._deviceRegistryContext = {stateId, connection};
         this._deviceRegistryLoading = null;
         this._deviceRegistryLoaded = false;
@@ -1088,20 +1121,36 @@
         const belong = (d) => safeArray(d?.identifiers)
           .filter((pair) => Array.isArray(pair) && pair[0]==='environment_manager')
           .map((pair) => pair[1]);
-        const home = entries.filter((device) => belong(device).some(
+        // HEM controller child devices also have identifiers without
+        // "_area_". Do not confuse those with a Home hub when HA has not yet
+        // populated its frontend entity map.
+        const candidates = entries.filter((device) => belong(device).some(
           (identifier) => typeof identifier === 'string' && !identifier.includes('_area_')
         ));
+        const hubs = candidates.filter((device)=>device?.model==='Home Environment Hub');
+        const home = hubs.length ? hubs : candidates;
+        const snapshot = this._dashboardEntity===stateId &&
+          this._dashboardContext?.connection===connection ? this._dashboardData : null;
+        const verifiedOwner = typeof snapshot?.owner_entry_id==='string' &&
+          snapshot.owner_entry_id ? snapshot.owner_entry_id : null;
         const currentDevice = this._hass?.entities?.[stateId]?.device_id;
-        const parent = home.find((device)=>device.id===currentDevice) ||
-                       (home.length===1 ? home[0] : null);
+        const registryOwner = home.find((device)=>device.id===currentDevice);
+        const matches = verifiedOwner ? home.filter((device)=>
+          belong(device).includes(verifiedOwner)) : [];
+        // An authenticated WS owner wins when the optional HA entity map is
+        // absent. Contradictory identities fail closed; never pick first.
+        const parent = verifiedOwner ?
+          (matches.length===1 &&
+           (!registryOwner || registryOwner.id===matches[0].id) ? matches[0] : null)
+          : registryOwner || (home.length===1 ? home[0] : null);
         if (!parent) {
-          // Multiple integrations or an incomplete HA registry are ambiguous.
-          // Do not navigate to a guessed device; retry when HA reconnects.
-          throw new Error('Home device registry not yet unambiguous');
+          throw new Error('HEM Home device ownership is not yet unambiguous');
         }
         const ids = belong(parent);
-        const entryId = ids.find((id) => typeof id==='string' && !id.includes('_area_'));
-        if (!entryId) throw new Error('Home device registry is incomplete');
+        const entryId = verifiedOwner || ids.find((id)=>
+          typeof id==='string' && !id.includes('_area_'));
+        if (!entryId || !ids.includes(entryId))
+          throw new Error('Home device registry owner mismatch');
         const roomDevices = new Map();
         for (const device of entries) {
           for (const identifier of belong(device)) {
@@ -1120,6 +1169,10 @@
         this._deviceRegistryUnavailable = false;
         this._deviceRegistryFailureCount = 0;
         this._deviceRegistryNextAttemptAt = 0;
+        if (this._deviceRegistryRetryHandle !== null) {
+          clearTimeout(this._deviceRegistryRetryHandle);
+          this._deviceRegistryRetryHandle = null;
+        }
         this._render(true);
       }).catch((error) => {
         if (!current()) return;
@@ -1127,6 +1180,15 @@
         this._deviceRegistryFailureCount = Math.min(6, this._deviceRegistryFailureCount+1);
         this._deviceRegistryNextAttemptAt = Date.now()+
           Math.min(60000, 1000*(2**this._deviceRegistryFailureCount));
+        if (this.isConnected && this._deviceRegistryFailureCount<=6 &&
+            typeof setTimeout === 'function') {
+          if (this._deviceRegistryRetryHandle !== null)
+            clearTimeout(this._deviceRegistryRetryHandle);
+          this._deviceRegistryRetryHandle = setTimeout(() => {
+            this._deviceRegistryRetryHandle = null;
+            if (this.isConnected && current()) this._loadDeviceIds();
+          }, Math.max(50,this._deviceRegistryNextAttemptAt-Date.now()));
+        }
         // A temporary websocket/registry outage must not break card rendering
         // and must not generate a console warning on every hass state update.
         if (this._deviceRegistryFailureCount<=2) {
@@ -4015,7 +4077,11 @@
     disconnect68.call(this);
   };
   proto68.connectedCallback = function() {
-    if (this._hass) this._render(true);
+    if (this._hass) {
+      this._loadDashboard();
+      this._loadDeviceIds();
+      this._render(true);
+    }
   };
   /* HEM_CARD68_END */
 

@@ -67,6 +67,10 @@ def websocket_dashboard(
     # Pure transformation of the latest validated Plan; no I/O, no physical
     # control, no registry changes, and no Recorder/database writes.
     result = dashboard_snapshot(manager.plan, manager.thresholds)
+    # This entry ID has already been verified against the caller's readable
+    # recommendation sensor. Disambiguate multiple HEM Home devices without
+    # trusting names, registry order, or a sometimes absent frontend entity map.
+    result["owner_entry_id"] = entry_id
     # Configured source membership is independent of an unavailable HA state.
     # This is scoped to the already authorized recommendation sensor response.
     result["controllers"] = controller_inventory(manager)

@@ -11,7 +11,7 @@ import probatio
 from homeassistant.components.frontend import add_extra_js_url
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant, ServiceCall, ServiceResponse, SupportsResponse
+from homeassistant.core import HomeAssistant, ServiceCall, ServiceResponse, SupportsResponse, callback
 from homeassistant.helpers import config_validation as cv
 
 from .const import DOMAIN, PLATFORMS, LANGUAGES
@@ -131,6 +131,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     from .pid_review import decode_mobile_action, is_pending
     from . import equipment_model as equipment_model
 
+    # HA's event bus calls @callback handlers on the event loop. Without it,
+    # the synchronous function can run in the executor and cannot safely
+    # call hass.async_create_task for a guarded pending PID approval.
+    @callback
     def _pid_mobile_review_action(event):
         decision = decode_mobile_action(event.data.get("action"))
         if decision is None:
