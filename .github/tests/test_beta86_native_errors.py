@@ -13,6 +13,7 @@ import json
 from pathlib import Path
 import sys
 from types import ModuleType, SimpleNamespace as N
+from unittest.mock import patch
 
 ROOT=Path(__file__).resolve().parents[2]
 PKG="hem_beta86_native_fault_fixture"
@@ -32,7 +33,9 @@ model.SETTINGS="equipment_controllers"
 model.specs=lambda manager:manager.specs
 model.settings=lambda manager,spec:{
     "announce_device_errors":manager.settings.get(model.SETTINGS,{})
-    .get(spec.identifier,{}).get("announce_device_errors",True)
+    .get(spec.identifier,{}).get("announce_device_errors",True),
+    "power_switch_entity":manager.settings.get(model.SETTINGS,{})
+    .get(spec.identifier,{}).get("power_switch_entity"),
 }
 sys.modules[model.__name__]=model
 cfg_mod=ModuleType(PKG+".config_data")
@@ -395,6 +398,85 @@ async def run():
     await asyncio.sleep(.045)
     assert len(manager.hass.services.calls)==old_calls+2
     assert "physical_a" not in monitor._offline_tasks
+
+    # B14: an OFF verified external relay must suppress the native-offline
+    # warning; when the same supply turns ON, the relay event alone must
+    # start the debounce even if the Zigbee TRV remains silent.
+    supply_mod=ModuleType(PKG+".equipment_power_switch")
+    supply_mod.relay_identity=lambda hass,spec,entity: (
+        {"owned":True} if entity in ("switch.protected","switch.changed") else None
+    )
+    sys.modules[supply_mod.__name__]=supply_mod
+    states["climate.a"]=state("off",error_code=0)
+    monitor.state_changed("climate.a")
+    await monitor.async_set_announcements(specA,True)
+    profile=manager.entry.options[model.SETTINGS][specA.identifier]
+    profile["power_switch_entity"]="switch.protected"
+    states["switch.protected"]=state("off")
+    monitor.refresh()  # rebuild the real current upstream watcher
+    assert "switch.protected" in monitor._by_entity
+    states["climate.a"]=state("unavailable")
+    monitor.state_changed("climate.a")
+    assert "physical_a" not in monitor._offline_tasks
+
+    prior=len(manager.hass.services.calls)
+    with patch.object(F._LOGGER,"info") as info_logs:
+        states["switch.protected"]=state("on")
+        monitor.state_changed("switch.protected")
+        assert "physical_a" in monitor._offline_tasks
+        await asyncio.sleep(.080)
+        assert len(manager.hass.services.calls)==prior+1
+        assert manager.hass.services.calls[-1][:2]==(
+            "persistent_notification","create")
+        assert info_logs.call_count==1,info_logs.call_args_list
+        assert "unavailable" in str(info_logs.call_args_list[0])
+        # Identical native samples or switch reports never log or notify again.
+        monitor.state_changed("climate.a")
+        monitor.state_changed("switch.protected")
+        await asyncio.sleep(.040)
+        assert len(manager.hass.services.calls)==prior+1
+        assert info_logs.call_count==1
+        # Reconnection is logged exactly once; merely setting the relay OFF
+        # does not falsely claim physical recovery.
+        states["climate.a"]=state("off",error_code=0)
+        monitor.state_changed("climate.a")
+        assert info_logs.call_count==2
+        assert "available again" in str(info_logs.call_args_list[-1])
+        monitor.state_changed("climate.a")
+        assert info_logs.call_count==2
+
+    # A changed selected relay is recognized even if no device-registry
+    # change caused a complete fault-monitor re-index.
+    profile["power_switch_entity"]="switch.changed"
+    states["switch.changed"]=state("off")
+    states["climate.a"]=state("unavailable")
+    monitor.state_changed("switch.changed")
+    assert "physical_a" not in monitor._offline_tasks
+    assert "switch.changed" not in monitor._by_entity
+    states["switch.changed"]=state("on")
+    monitor.state_changed("switch.changed")
+    assert "physical_a" in monitor._offline_tasks
+    await asyncio.sleep(.080)
+    assert len(manager.hass.services.calls)==prior+2
+
+    # Hub owns notifications: a rejected queue request never falls back to
+    # native duplicate TTS/notify, but the failure is explicitly logged.
+    states["climate.a"]=state("off",error_code=0)
+    monitor.state_changed("climate.a")
+    hub.is_on=True
+    async def reject_hub(hass,payload):
+        return False
+    hub.async_submit_hub=reject_hub
+    manager.entry.options["use_announcement_hub"]=True
+    states["climate.a"]=state("unavailable")
+    with patch.object(F._LOGGER,"warning") as warning_logs:
+        monitor.state_changed("climate.a")
+        await asyncio.sleep(.080)
+        assert any("not accepted" in str(call)
+                   for call in warning_logs.call_args_list)
+    assert len(manager.hass.services.calls)==prior+2
+    states["climate.a"]=state("off",error_code=0)
+    monitor.state_changed("climate.a")
     await monitor.async_stop()
     assert not monitor.active
     assert "device_faults.py" not in (ROOT/"sensor.py").read_text()
