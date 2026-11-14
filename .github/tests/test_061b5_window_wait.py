@@ -59,6 +59,11 @@ model = stub("equipment_model", ManagedDevice=N, Capabilities=Cap,
     legacy_hold=lambda *args: None)
 stub("discovery", entity_area=lambda hass, entity: hass.areas.get(entity),
      is_window=lambda hass, state: state.attributes.get("device_class") == "window",
+     is_window_contact=lambda hass, state, *, explicitly_selected=False:
+         state.domain == "binary_sensor" and (
+             state.attributes.get("device_class") == "window" or
+             explicitly_selected and state.attributes.get("device_class") in ("door", "opening")
+         ),
      temperature_sensor_c=lambda hass, entity, age: 18.0)
 stub("room_sources", selected=lambda settings, area, group:
      settings.get("room_sources", {}).get(area, {}).get(group))
