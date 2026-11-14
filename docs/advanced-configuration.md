@@ -61,8 +61,19 @@ Choose the shared inputs and optional features you use:
   calibrate it, and review the outdoor temperature, humidity, wind and pollution limits.
 
 After saving, review **Ventilation · AQI scale** on the HEM Home device for each
-AQI source. Select the provider's actual scale, or configure a custom scale and
-limit. A number without a known scale cannot be compared meaningfully.
+AQI source **if you want to use its index for decisions**. Select the
+provider's actual scale, or configure a custom scale and limit. A numeric
+index without a verified scale cannot be compared meaningfully.
+
+**AQI is optional.** An index whose scale has not been configured remains
+visible as *incomplete information*; it never blocks ventilation, forces
+window closure, or invalidates otherwise verified outdoor pollution readings.
+You do not need an AQI sensor at all. Actual PM2.5, CO₂ and other supported
+physical measurements keep their own limits and safety rules; a **verified
+unsafe AQI** still correctly blocks unsuitable outdoor air. The dashboard
+labels outdoor data **partial** when optional AQI readings are unverified.
+Automatic outside-air intake still requires separate valid, supported
+pollutant evidence; unknown AQI readings do not count as proof of clean air.
 
 Ventilation limits identify outside conditions that need caution and continue
 to protect automatic use of outside air. A measured indoor need can still

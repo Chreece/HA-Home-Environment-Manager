@@ -24,6 +24,9 @@ def _reason(reason: Reason) -> dict[str, str]:
 def _reading(reading: Reading, threshold: float | None, *, indoor: bool) -> dict[str, Any]:
     value = reading.value
     aqi = (reading.details or {}).get("aqi", {}) if reading.metric == "aqi" else {}
+    # An uncalibrated AQI index may have a numeric value but is not
+    # evaluated evidence. Show it as incomplete, never as safe/green.
+    trusted_aqi = reading.metric != "aqi" or aqi.get("status") == "ready"
     if aqi:
         threshold = aqi.get("custom_limit") if aqi.get("scale") == "custom" else (
             100 if aqi.get("scale") == "us_epa" else
@@ -38,10 +41,10 @@ def _reading(reading: Reading, threshold: float | None, *, indoor: bool) -> dict
                  else UNIT_LABEL.get(reading.metric, "")),
         "value": value,
         "threshold": threshold,
-        "available": value is not None,
+        "available": value is not None and trusted_aqi,
         **({"details": reading.details} if reading.details else {}),
         "exceeded": (
-            bool(aqi.get("operational_unsafe"))
+            (bool(aqi.get("operational_unsafe")) if trusted_aqi else False)
             if aqi else
             (value is not None and threshold is not None
              and (value >= threshold if indoor else value > threshold))

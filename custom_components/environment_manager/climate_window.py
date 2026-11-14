@@ -16,7 +16,7 @@ from typing import Any
 
 from .climate_coordination import device_inventory
 from .climate_equipment import classify_hvac
-from .logic import Reason, _numeric_weather_mean
+from .logic import Reason, _numeric_weather_mean, verified_outdoor_pollution_sources
 
 
 AIR_POLLUTANTS = frozenset(("aqi", "pm25", "pm10", "no2", "o3", "so2"))
@@ -228,7 +228,9 @@ def window_substitution(
         cautions.append(Reason("outside_conditions_not_verified"))
     # An empty or stale AQ sensor is not proof that outdoor air is harmless;
     # disclose the uncertainty without hiding a measured thermal/moisture need.
-    measured = [r for r in outdoor if r.metric in AIR_POLLUTANTS]
+    # Only an AQI whose scale is verified can count as measured
+    # outdoor pollution evidence; otherwise AQI remains optional.
+    measured = verified_outdoor_pollution_sources(outdoor)
     if not measured:
         cautions.append(Reason("no_outdoor_data"))
     for reading in measured:

@@ -55,7 +55,7 @@ from .equipment_model import legacy_settings as equipment_legacy_settings, claim
 from .building_physics import moisture_potential
 from .environment_extended import global_pollen, global_aqi
 from .logic import Reading, Reason, Recommendation
-from .logic import Plan, evaluate
+from .logic import Plan, evaluate, verified_outdoor_pollution_sources
 from .messages import announcement
 from .languages import announcement_language
 from .tts_languages import tts_language
@@ -509,15 +509,13 @@ class AirQualityManager:
                 # Fast fan polling may reuse this plan; record when its
                 # outdoor-air and sensor evidence was actually evaluated.
                 state["air_evidence_at"]=time()
-                valid_outside=[r for r in outdoor_readings
-                               if r.metric in ("pm25","pm10","no2","o3","so2","aqi")]
+                # An unconfigured optional AQI index must not suppress
+                # valid measured particulate/air-pollutant evidence. Missing
+                # *physical* pollutant sources still fail the intake gate.
+                valid_outside=verified_outdoor_pollution_sources(outdoor_readings)
                 state["air_actions"]["outdoor_air_verified"]=(
                     base_plan.outdoor_safe is True and bool(valid_outside)
                     and all(r.value is not None for r in valid_outside)
-                    and all(
-                        (r.details or {}).get("aqi",{}).get("status")=="ready"
-                        if r.metric=="aqi" else True for r in valid_outside
-                    )
                 )
                 substitute=window_substitution(
                     self.hass, raw_for_climate[monitored.area_id],
