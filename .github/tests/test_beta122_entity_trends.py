@@ -606,6 +606,10 @@ def browser_checks(data):
                 assert box is not None and box["width"] >= 43 and box["height"] >= 43, box
                 assert box["y"] >= 58, ("Close icon obscured by mobile status bar", box)
                 assert close_button.get_attribute("aria-label"), "Close has no accessible label"
+                glyph = close_button.locator(".hem-avg-close-glyph-b17")
+                assert glyph.inner_text().strip() == "×", "Visible close glyph is missing"
+                assert glyph.evaluate("e=>parseFloat(getComputedStyle(e).fontSize)") >= 26
+                assert close_button.locator("ha-icon").count() == 0
                 assert popup.evaluate("e=>getComputedStyle(e).overscrollBehaviorY") == "contain"
                 assert popup.evaluate("e=>parseFloat(getComputedStyle(e).fontSize)") >= 12
                 if width == 320:

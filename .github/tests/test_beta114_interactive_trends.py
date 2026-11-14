@@ -306,6 +306,9 @@ def browser_checks(states):
             assert popup.locator(".hem-avg-head105>strong").inner_text() == expected_heading
             assert popup.get_attribute("aria-label") == expected_heading
             assert popup.locator("[data-close-avg105]").get_attribute("aria-label") == expected_close
+            glyph = popup.locator("[data-close-avg105] .hem-avg-close-glyph-b17")
+            assert glyph.inner_text().strip() == "×", "Average popup lacks a visible close glyph"
+            assert glyph.evaluate("e=>parseFloat(getComputedStyle(e).fontSize)") >= 26
             if screenshot_dir:
                 page.screenshot(path=str(Path(screenshot_dir) / f"beta114-trend-{width}-{theme}.png"))
         # One value and empty history keep sources usable without invented data.
