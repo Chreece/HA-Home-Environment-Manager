@@ -118,7 +118,7 @@ with sync_playwright() as pw:
     const b=card._hemControllerDialog126.node
     .querySelector('[data-hem-pid-review-b18="discard"]');
     return a?.nextElementSibling===b;}""")
-  pid.locator("> summary").click()
+  pid.locator(":scope > summary").click()
   x=approve.bounding_box();y=discard.bounding_box()
   assert x and y,(x,y)
   if width>340:
