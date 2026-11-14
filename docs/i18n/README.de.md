@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="../../.github/assets/hem-banner.svg" alt="Home Umweltmanager - intelligenter Luftqualität, Komfort, Lüftung und Klimakontrolle" width="1200">
+  <img src="../../.github/assets/hem-banner.svg" alt="HEM - intelligente Steuerung von Raumklima, Luftqualität, Lüftung und Komfort" width="1200">
 </p>
 
 <p align="center">
-  <a href="https://ko-fi.com/chreece"><img src="../../.github/assets/ko-fi-banner.svg" alt="Unterstützung von Chreece Ko-fi" width="500"></a>
+  <a href="https://ko-fi.com/chreece"><img src="../../.github/assets/ko-fi-banner.svg" alt="Chreece auf Ko-fi unterstützen" width="500"></a>
 </p>
 
 
@@ -18,280 +18,280 @@
 # HEM - Home Environment Manager
 
 <p align="center">
-  <img src="../../.github/assets/hem-logo.svg" alt="HEM Logo" width="420">
+  <img src="../../.github/assets/hem-logo.svg" alt="HEM-Logo" width="420">
 </p>
 
-<p align="center"><strong>Die ganze Umgebung Ihres Hauses, in einem Home Assistant Das ist eine Karte.</strong></p>
+<p align="center"><strong>Das gesamte Raumklima Ihres Zuhauses auf einer einzigen Home-Assistant-Karte.</strong></p>
 
-**HEM hilft Ihrem Zuhause, die Umgebung zu verstehen und auf das zu reagieren, was jedes Zimmer wirklich braucht.** Es bringt deine Home Assistant Sensoren, Wetterdaten, Besatzungsinformationen und kompatible Klimaanlagen zusammen, damit Sie die Luftqualität überwachen, nützliche Lüftungsberatungen erhalten, Komfortmanagement und die von Ihnen gewählte Ausrüstung automatisieren können.
+**HEM hilft Ihrem Zuhause, Umgebungsbedingungen zu erfassen und auf die Bedürfnisse jedes einzelnen Raums zu reagieren.** Dazu führt die Integration Sensoren aus Home Assistant, Wetterdaten, Anwesenheitsinformationen und kompatible Geräte für Heizung, Kühlung und Luftaufbereitung zusammen. Sie behalten Luftqualität und Raumklima im Blick, erhalten sinnvolle Lüftungsempfehlungen und können ausgewählte Geräte automatisieren.
 
-Zum Beispiel: HEM Sie können die Heizung reduzieren, während alle weg sind, ausgewählte Räume vorbereiten, bevor Sie zurückkehren, während Sie schlafen ein anderes Luftfeuchtigkeitsziel verwenden oder Sie bitten, ein Fenster zu öffnen, bevor Sie einen Entfeuchter ausführen. **Überwachung und Empfehlung**, ohne die Kontrolle von Geräten.
+So kann HEM beispielsweise die Heizung absenken, wenn niemand zu Hause ist, bestimmte Räume vor Ihrer Rückkehr vorbereiten, nachts einen anderen Luftfeuchtigkeitswert anstreben oder zuerst zum Lüften auffordern, bevor ein Luftentfeuchter eingeschaltet wird. Auf Wunsch bleibt es bei **Überwachung und Empfehlungen**, ganz ohne automatische Gerätesteuerung.
 
-**Du bleibst an der Spitze.** Jeder Raum hat seine eigenen Einstellungen, jedes unterstützte Gerät hat seine eigene Steuerung, Betriebsweise, Ziele und Sicherheitsgrenzen. HEM niemals davon ausgeht, dass die Auswahl eines Geräts ihm die Erlaubnis gibt, dieses Gerät zu bedienen.
+**Die Entscheidung liegt bei Ihnen.** Jeder Raum hat eigene Einstellungen. Jedes unterstützte Gerät verfügt über getrennte Betriebsarten, Regelverfahren, Sollwerte und Schutzgrenzen. Dass Sie ein Gerät auswählen, bedeutet nicht automatisch, dass HEM es steuern darf.
 
-[Erkunden Sie die Merkmale](#what-can-hem-do) · [Siehe die Schnittstelle](#see-hem-in-action) · [Installieren](#installation) · [Machen Sie Ihr Zuhause](#getting-started) · [Detaillierte Anleitung](../../docs/advanced-configuration.md)
+[Funktionen entdecken](#what-can-hem-do) · [Oberfläche ansehen](#see-hem-in-action) · [HEM installieren](#installation) · [Erste Schritte](#getting-started) · [Ausführliche Anleitung](../../docs/advanced-configuration.md)
 
 <a id="what-can-hem-do"></a>
-## Was kann HEM - Das tun wir?
+## Was kann HEM?
 
-| Ihre Situation | Wie? HEM kann helfen |
+| Situation | So unterstützt Sie HEM |
 | --- | --- |
-| **Das Haus ist leer.** | Schalten Sie die Zielsetzungen auf Weg, respektieren Sie die Präsenzregeln in jedem Raum und vermeiden Sie, ausgewählte Geräte unnötig zu betreiben. |
-| **Du bist auf dem Weg nach Hause.** | Drücken Sie **Bereiten Sie sich auf die Ankunft vor.** die vorübergehende Nutzung von Wohnkomfortzielen für qualifizierte automatische Steuerungen, auch wenn alle noch weg sind. |
-| **Jemand schläft.** | Nutzen Sie Schlafziele, reduzieren Sie das Fanlärm oder halten Sie die gewählten Geräte aus, während jedes besetzte Zimmer schläft. |
-| **Ein Zimmer ist feucht.** | Vergleichen Sie seine Feuchtigkeits- und Schimmelanzeige mit Zielen, schlagen Sie eine nützliche Belüftung vor oder bedienen Sie einen autorisierten Entfeuchter mit Hilfe von Automatischen oder PID Die Kontrolle. |
-| **Es ist heiß und sonnig.** | Bewertet die Raumtemperatur, das Sonnenlicht, das Wetter und die angeschlossenen Fensterkontakte, bevor Sie die gewählten Farbtöne wechseln. |
-| **Die Außenluft sieht besser aus.** | Es wird empfohlen, eine Lüftung zu ermöglichen, wobei die Nachfrage nach Innenräumen, die Umweltverschmutzung im Freien, die Temperatur, die Luftfeuchtigkeit, der Wind und die verfügbaren Pollen- oder Wetterwarnungen zu berücksichtigen sind. |
-| **Ein Heizgerät oder TRV hört auf zu reagieren** | Anzeigen Sie den nicht verfügbaren oder wartenden Zustand, behalten Sie den konfigurierten Controller und melden Sie Fehler des unterstützten Geräts, ohne davon auszugehen, dass sich eine Batterie oder eine Relay wiederhergestellt hat. |
+| **Niemand ist zu Hause** | HEM verwendet die für Abwesenheit festgelegten Sollwerte (Away), beachtet die Anwesenheitsregeln der einzelnen Räume und vermeidet den unnötigen Betrieb ausgewählter Geräte. |
+| **Sie sind auf dem Heimweg** | Mit **Ankunft vorbereiten** können berechtigte automatische Regler vorübergehend die Home-Komfortwerte nutzen, obwohl noch niemand zurückgekehrt ist. |
+| **Jemand schläft** | HEM kann Schlaf-Sollwerte verwenden, die Lüfterlautstärke reduzieren oder festgelegte Geräte ausgeschaltet lassen, wenn in allen belegten Räumen geschlafen wird. |
+| **Ein Raum ist zu feucht** | HEM vergleicht Feuchtigkeit und Schimmelrisiko-Indikator mit Ihren Zielwerten, empfiehlt Lüften oder regelt einen dafür freigegebenen Entfeuchter automatisch beziehungsweise per PID. |
+| **Es ist heiß und sonnig** | Vor dem Bewegen ausdrücklich freigegebener Rollläden oder Jalousien berücksichtigt HEM Raumtemperatur, Sonneneinstrahlung, Wetter und vorhandene Fensterkontakte. |
+| **Die Außenluft ist günstiger** | Lüftungsempfehlungen berücksichtigen den Bedarf im Raum sowie Schadstoffe, Temperatur, Luftfeuchtigkeit, Wind und gegebenenfalls Pollen- oder Wetterwarnungen. |
+| **Ein Heizgerät oder Heizkörperthermostat (TRV) reagiert nicht** | HEM zeigt den Ausfall beziehungsweise Wartezustand an, behält die Gerätekonfiguration bei und meldet geeignete Fehler, ohne fälschlich eine Wiederherstellung der Batterie- oder Relaisfunktion anzunehmen. |
 
-Dies sind Beispiele, nicht Maßnahmen, die HEM Die Ergebnisse hängen von den ausgewählten Sensoren ab. Home Assistant Fähigkeiten und Ihre Eintrittsinstellungen.
+Diese Beispiele sind keine verbindlichen Automatikregeln für jedes Zuhause. Die möglichen Aktionen hängen von Ihren Sensoren, den tatsächlichen Home-Assistant-Funktionen der Geräte und Ihren ausdrücklichen Freigaben ab.
 
 <a id="explore-the-features"></a>
-## Erkunden Sie die Merkmale
+## Funktionen im Überblick
 
 <a id="a-complete-home-dashboard"></a>
-### Ein komplettes Heim-Dashboard
+### Das ganze Zuhause auf einem Dashboard
 
-Die HEM Die Karte gibt Ihnen einen nützlichen Überblick, ohne mehrere Integrationen zu öffnen.
+Die HEM-Karte verschafft Ihnen einen Überblick, ohne dass Sie zwischen mehreren Integrationen wechseln müssen.
 
-- Sehen Sie sich die Außenbedingungen, die Luftqualität an und ob eine Lüftung ratsam ist.
-- Vergleichen Sie alle überwachten Räume auf einen Blick: Temperatur, relative Luftfeuchtigkeit, AQI, PM2,5, Schimmelindizierung, Licht und andere unterstützte Messwerte.
-- Erweitern Sie alle Räume für detaillierte Messungen, Fenster- und Türinformationen, Klimastatus, aktive Steuerungen, Wartegründe und Gebäudephysik-Schätzungen.
-- Schauen Sie sich Geschichten und Trends an, sehen Sie, welche Sensoren zu einem Durchschnitt beigetragen haben und unterscheiden Sie fehlende Messwerte von gemessenen Werten.
-- Gruppenräume nach tatsächlichen Home Assistant oder eine einfache Zimmerliste verwenden, wenn Sie keine Böden haben.
+- Sehen Sie Außenbedingungen, Luftqualität und aktuelle Lüftungsempfehlungen.
+- Vergleichen Sie alle überwachten Räume auf einen Blick: Temperatur, relative Luftfeuchtigkeit, AQI, PM2.5, Schimmelrisiko-Indikator, Helligkeit und weitere unterstützte Messwerte.
+- Klappen Sie einzelne Räume auf, um Messwerte, Fenster und Türen, Klimageräte, aktive Regler, Wartegründe und bauphysikalische Schätzwerte zu sehen.
+- Verfolgen Sie Verlauf und Trends, erkennen Sie die Sensoren hinter einem Durchschnitt und unterscheiden Sie fehlende Daten von tatsächlich gemessenen Werten.
+- Gruppieren Sie Räume nach den in Home Assistant angelegten Etagen oder nutzen Sie eine einfache Raumliste, wenn keine Etagen vorhanden sind.
 
 <a id="different-settings-for-the-home-each-room-and-each-device"></a>
-### Verschiedene Einstellungen für das Haus, jedes Zimmer und jedes Gerät
+### Einstellungen für Zuhause, Raum und Gerät getrennt
 
-HEM die gemeinsame Politik von lokalen Entscheidungen getrennt hält.
+HEM trennt übergreifende Regeln von den Anforderungen einzelner Räume und Geräte.
 
-| Einstellungsstufe | Was Sie einrichten können |
+| Einstellungsebene | Was Sie festlegen können |
 | --- | --- |
-| **Zuhause** | Außenwetter und Verschmutzungsquellen, überwachte Räume, globale Lüftungsgrenzen, Haushaltsaufenthalt, Ankunftsvorbereitung und Ankündigungen. |
-| **Zimmer** | Innenraumtemperatur- und Luftfeuchtigkeitsquellen, Luftqualitätsschwellen, Fenster- und Türkontakte, Schlaf- und Bewohnerverhalten, Raumspezifische Komfortziele, Lüftungs- und Schattierungsmöglichkeiten. |
-| **Ein einzelnes Gerät** | Die verfügbaren Steuerungsarten, automatisch/handlich/PID Methode, Profilziele, Sensoren, stille Ventilatorinstellungen, Mindestbetriebszeiten, Stromschutz, Fensterverhalten und Fehlermeldungen des Geräts. |
+| **Zuhause** | Außenwetter- und Luftqualitätssensoren, überwachte Räume, allgemeine Lüftungsgrenzen, Anwesenheit im Haushalt, Ankunftsvorbereitung und Benachrichtigungskanäle. |
+| **Raum** | Temperatur- und Feuchtigkeitssensoren, Luftqualitätsgrenzen, Fenster- und Türkontakte, Anwesenheit und Schlafzustand, Komfortziele, Lüftung und Beschattung. |
+| **Einzelnes Gerät** | Unterstützte Betriebsarten, Regelverfahren Automatic/Manual/PID, Sollwerte je Profil, Sensoren, leise Lüfterstufen, Mindestlaufzeiten, Stromversorgungsschutz, Verhalten bei offenen Fenstern und Fehlermeldungen. |
 
-Alle drei Ebenen sind über gruppierte, durchsuchbare Einstellungen in der Karte zugänglich. Home Assistant Änderungen an der Einrichtung.
+Alle Ebenen erreichen Sie über übersichtlich gruppierte und durchsuchbare Einstellungen in der Karte. Erweiterte Optionen bleiben verfügbar, ohne die Alltagsansicht zu überladen. Ändert sich Ihre Home-Assistant-Installation, können Sie die verfügbaren Quellen neu einlesen.
 
 <a id="climate-control-and-pid-device-by-device"></a>
-### Klimabewältigung PID, Gerät für Gerät
+### Klimaregelung und PID für jedes Gerät
 
-HEM kann mit kompatiblen Home Assistant **Klima**, **Luftbefeuchter** und **Ventilator** Geräte, einschließlich Heizung, Kühlung, Entfeuchtung, Befeuchtung und Luftkreislauf- oder Luftreinigungsgeräte.
+HEM unterstützt kompatible Home-Assistant-Geräte der Typen **climate**, **humidifier** und **fan**. Dazu können Heizungen, Klimaanlagen, Luftbe- und -entfeuchter sowie geeignete Geräte zur Luftzirkulation oder Luftreinigung gehören.
 
-Für jeden **unterstützter physischer Betriebsmodus**, die Kontrollmethode unabhängig auswählen:
+Für **jede tatsächlich unterstützte Betriebsart** legen Sie das Regelverfahren unabhängig fest:
 
-| Methode | Was es bedeutet |
+| Verfahren | Bedeutung |
 | --- | --- |
-| **Bestehende** | Lassen Sie den Betrieb mit dem vorhandenen Steuerungsweg. |
-| **Automatisiert** | Folgen Sie mir HEMDie Messen der Nachfrage, die auf der Situation basierenden Ziele und Genehmigungen. |
-| **PID** | Verwenden Sie proportionale, integrale und abgeleitete Rückkopplungssteuerung, wenn das Gerät und die Messung sie unterstützen. |
-| **Handbuch** | Kontrolle durch ausdrücklich unterstützte Anfragen und Ziele. |
-| **Wir sind weg .** | Halten Sie den Steuergerät aus, unter Berücksichtigung des physischen Schutzes und der Rückkopplungsanforderungen. |
+| **Existing** | Die bisherige Geräte- beziehungsweise Regelungssteuerung bleibt zuständig. |
+| **Automatic** | HEM reagiert auf gemessenen Bedarf, situationsabhängige Sollwerte und die erteilten Freigaben. |
+| **PID** | Rückgekoppelte proportional-integral-differenzielle Regelung, sofern Gerät und Messwerte sie unterstützen. |
+| **Manual** | Steuerung über ausdrücklich unterstützte manuelle Befehle und Sollwerte. |
+| **Off** | Der betreffende Regler bleibt ausgeschaltet, unter Beachtung der erforderlichen Schutz- und Rückmeldebedingungen. |
 
-Zum Beispiel kann eine Klimaanlage **PID für Heizung** und **Automatische Kühlung**Ein Entfeuchter kann seine eigene PID die Kalibrierung, die Ziele und die Zykluszeit. PID wenn geeignete Rückmeldungen und zwecksspezifische Kontrollen zur Verfügung stehen.
+Beispielsweise kann eine Klimaanlage beim **Heizen PID** und beim **Kühlen Automatic** verwenden. Ein Luftentfeuchter kann eigene PID-Parameter, Zielwerte und Schaltzeiten besitzen. Geeignete Lüfter lassen sich ebenfalls per PID regeln, wenn für ihren Zweck passende Rückmeldungen vorliegen.
 
-PID ist **nicht** eine allgemeine Überschreitung: HEM Sie unterstützen die vorgeschlagenen Änderungen, es sei denn, Sie entscheiden sich ausdrücklich für eine begrenzte automatische Anpassung.
+**PID ist keine pauschale Umgehung von Schutzregeln.** HEM bietet nur Verfahren an, die das konkrete Gerät, die Betriebsart und die zugehörigen Messungen unterstützen. Zu den erweiterten Optionen zählen Kalibrierung, abgestimmte Parameter je Betriebsart, Vorschläge zur adaptiven Anpassung, leiser Betrieb und unterstützte Lüfterstufen. Vorgeschlagene Änderungen müssen Sie bestätigen, sofern Sie keine ausdrücklich begrenzte automatische Anpassung aktiviert haben.
 
 <a id="comfortable-when-youre-home-economical-when-youre-away"></a>
-### Komfortabel, wenn man zu Hause ist, wirtschaftlich, wenn man weg ist.
+### Komfort bei Anwesenheit, Sparbetrieb bei Abwesenheit
 
-HEM kann zwischen **Komfort, Zuhause, Weg, Schlaf und Öko** Ziele basierend auf der Situation des Haushaltes, den Zimmernachweisen und Ihren ausdrücklichen Auswahlen.
+HEM kann zwischen den Sollwertprofilen **Comfort, Home, Away, Sleep und Eco** wählen. Ausschlaggebend sind die bestätigte Situation im Haushalt, die Informationen aus den Räumen und Ihre Einstellungen.
 
-- **Zuhause und Weg:** Verwenden Sie unterschiedliche Ziele für Heizung, Kühlung und Luftfeuchtigkeit, abhängig von der geprüften Anwesenheit des Hauses.
-- **Anwesenheit im Raum:** Führen Sie ein berechtigtes Gerät immer aus, wenn es Nachfrage gibt, nur wenn sein Zimmer besetzt ist oder nur wenn der Raum leer ist.
-- **Schlaf:** Ein ausgewähltes Gerät kann abgeschaltet bleiben, wenn alle besetzten Räume schlafen.
-- **Öko:** Eine geschlossene Innentür kann an einer geschützten Öko-Politik teilnehmen, wenn der Raum geprüft wird, dass er leer ist und andere Bedingungen erfüllt sind; eine geschlossene Tür allein beweist nicht, dass der Raum isoliert ist.
-- **Aufwachenvorbereitung:** Verwenden Sie eine konfigurierte nächste Alarmquelle, um automatischen Schlaf vor dem Alarm zu lassen und den berechtigten Geräten Zeit zu geben, zu reagieren.
+- **Home und Away:** Unterschiedliche Sollwerte für Heizung, Kühlung und Luftfeuchtigkeit bei bestätigter An- oder Abwesenheit.
+- **Raumanwesenheit:** Ein geeignetes Gerät kann bei Bedarf immer, nur bei Anwesenheit oder nur bei Abwesenheit im zugehörigen Raum laufen.
+- **Sleep:** Nacht-Sollwerte und leisere Lüftereinstellungen. Ein ausgewähltes Gerät kann ausgeschaltet bleiben, solange in allen belegten Räumen geschlafen wird.
+- **Eco:** Energieeffizientere Sollwerte, wo Sie diese hinterlegt haben. Eine geschlossene Innentür kann unter zusätzlichen Schutzbedingungen in eine Eco-Regel einfließen, wenn der Raum nachweislich leer ist. Allein eine geschlossene Tür beweist keine vollständige Abtrennung.
+- **Aufwachen vorbereiten:** Anhand einer konfigurierten nächsten Weckzeit kann HEM den automatischen Schlafbetrieb rechtzeitig beenden, damit geeignete Geräte reagieren können.
 
-Ist die Besetzung, die Verfügbarkeit des Geräts oder andere erforderliche Beweise unsicher, HEM ist nicht einfach davon auszugehen, dass es sicher ist, ein automatisches Gerät zu starten.
+Fehlen verlässliche Angaben zur Anwesenheit, Geräteverfügbarkeit oder anderen erforderlichen Voraussetzungen, schaltet HEM ein automatisches Gerät nicht einfach unter der Annahme ein, dass dies sicher sei.
 
 <a id="prepare-your-environment-before-you-arrive"></a>
-### Bereiten Sie Ihre Umgebung vor
+### Räume vor der Rückkehr vorbereiten
 
-**Bereiten Sie sich auf die Ankunft vor.** ist eine zeitgemäße Aktion für ein bestätigtes Away-Haus. HEMDas ist das Heimgerät.
+**Ankunft vorbereiten** ist eine zeitlich begrenzte Aktion für ein nachweislich abwesendes Zuhause (Away). Sie können sie über die Kartenüberschrift oder das HEM-Home-Gerät auslösen.
 
-HEM wird vorübergehend die konfigurierte **Zuhauseziele** zu berechtigtem Automatic/PID Ein Kontrollgerät, das normalerweise nur in besetzten Räumen eingesetzt wird, kann vor der Rückkehr mit der Erwärmung, Kühlung oder Anpassung der Luftfeuchtigkeit beginnen. **nur, wenn sie bereits die erforderliche körperliche Kontrollgenehmigung hat**.
+Dabei verwendet HEM vorübergehend die eingestellten **Home-Sollwerte** für dafür geeignete Automatic-/PID-Regler. So können Räume bereits vor Ihrer Rückkehr aufgeheizt, gekühlt oder hinsichtlich der Feuchtigkeit angepasst werden. Vorübergehend kann auch ein Regler zugelassen werden, der normalerweise nur bei Raumanwesenheit läuft, **allerdings nur, wenn die Erlaubnis zur physischen Gerätesteuerung bereits besteht**.
 
-Vorbereitung ist kein Befehl, um alles einzuschalten. Geräte benötigen immer noch echte Nachfrage, gültige Sensoren und Genehmigungen, und müssen Fenster, minimale ON/OFF-Zeiten und ihren eigenen Schutz respektieren. Home Assistant Neustart nicht den vollständigen Timer wieder auf.
+Die Vorbereitung ist kein Befehl, alle Geräte einzuschalten. Es müssen tatsächlich Regelbedarf, gültige Sensordaten und die nötigen Freigaben vorliegen. Fensterbedingungen, Mindest-Ein- und -Ausschaltzeiten und Schutzfunktionen bleiben gültig. Die Aktion endet bei Ihrer Ankunft, nach Abbruch oder wenn die Zeit abgelaufen ist. Ein Neustart von Home Assistant beginnt die Laufzeit nicht erneut in voller Länge.
 
 <a id="ventilation-advice-windows-doors-and-shading"></a>
-### Rat zur Lüftung, Fenster, Türen und Schattierung
+### Lüftungsempfehlungen, Fenster, Türen und Beschattung
 
-HEM Vergleiche **was ein Zimmer braucht** mit **ob die Außenluft helfen kann**.
+HEM stellt gegenüber, **was ein Raum benötigt** und **ob die Außenluft dabei helfen kann**.
 
-- Es wird empfohlen, Fenster zu öffnen oder zu schließen, wobei die aktuellen Innenmessungen, die Luftfeuchtigkeit, die Umweltverschmutzung, die Temperatur, der Wind, die Wetterwarnungen und der optionalen Pollenkontext verwendet werden.
-- Verwenden Sie ausgewählte Fenster- und Türkontakte, um die Raumbedingungen zu erklären und vermeiden Sie, einen unbekannten Kontakt als geschlossen zu behandeln.
-- Erfordern Sie optional, ein Fenster zu öffnen, bevor Sie ein unterstütztes automatisches Gerät starten, und setzen Sie dann die normale Steuerung fort, nachdem die konfigurierte Antwort warten muss, falls erforderlich.
-- Verwenden Sie Türinformationen für Raumgrenzbewusstsein, Lüftungsvorkehrungen und optionales geschütztes Umweltverhalten.
-- Verwalten Sie die eingeschlossenen Fenster, Verhütungen und Schattierungen mit geeigneten Fenster-, Temperatur-, Wetter-, Sonneneinstufungs- und optionalen Beleuchtungsnachweisen.
+- Empfehlungen zum Öffnen oder Schließen von Fenstern beruhen auf Innenmessungen sowie Außenfeuchte, Schadstoffen, Temperatur, Wind, Wetterwarnungen und optionalen Pollendaten.
+- Ausgewählte Fenster- und Türkontakte helfen dabei, die Raumsituation einzuschätzen. Ein unbekannter Kontaktzustand wird nicht einfach als „geschlossen“ gewertet.
+- Auf Wunsch fordert HEM vor dem Start eines unterstützten automatischen Geräts zunächst zum Lüften auf. Nach der eingestellten Wartezeit kann die normale Regelung gegebenenfalls fortgesetzt werden.
+- Türinformationen fließen in die Einschätzung von Raumgrenzen, Lüftungshinweisen und optionalen, abgesicherten Eco-Regeln ein.
+- Freigegebene Rollläden, Jalousien und andere Beschattungssysteme lassen sich anhand geeigneter Fenster-, Temperatur-, Wetter- und Sonnenstandsdaten sowie optionaler Helligkeitsmessungen steuern.
 
-HEM Sie kann ohne steuerbare Fenster eine Lüftungsberatung geben, sie öffnet kein Fenster allein, nur weil eine Belüftung hilft.
+Für Lüftungsempfehlungen brauchen Sie keine elektrisch steuerbaren Fenster. **HEM öffnet Fenster nicht selbstständig**, nur weil frische Luft hilfreich wäre.
 
 <a id="humidity-mold-indication-and-air-quality"></a>
-### Feuchtigkeit, Schimmelanzeige und Luftqualität
+### Luftfeuchtigkeit, Schimmelrisiko und Luftqualität
 
-HEM kombiniert unterstützte Messwerte wie **Temperatur, Luftfeuchtigkeit, CO2, Partikel, VOC, AQI und Beleuchtung** Die verfügbaren Messungen hängen davon ab, was Ihre Home Assistant Einheitliche Einrichtung.
+HEM führt unterstützte Messwerte wie **Temperatur, Luftfeuchtigkeit, CO₂, Feinstaub, VOC, AQI und Helligkeit** zusammen. Welche davon verfügbar sind, hängt von den Sensoren Ihrer Home-Assistant-Installation ab.
 
-Die **Schimmelanzeige** Es kann die Luftfeuchtigkeit eines unterstützten automatischen Luftfeuchtigkeitssteuerers beeinflussen, wenn sie ordnungsgemäß konfiguriert ist.
+Der **Schimmelrisiko-Indikator** schätzt die Feuchtebedingungen an einer kühlen Oberfläche anhand der Raum- und Außentemperatur sowie einer Kalibrierungsmessung. Bei richtiger Einrichtung kann dieser Wert den wirksamen Sollwert einer geeigneten automatischen Luftfeuchtigkeitsregelung beeinflussen.
 
-**Die Schimmel-Anzeige ist eine Schätzung, nicht ein Schimmel- oder Sporentmelder.** Fehlende oder veraltete Sensordaten können keinen neuen Schimmel-basierten Gerätebefehl rechtfertigen.
+**Der Indikator ist eine Schätzung und kein Sensor für Schimmel oder Sporen.** Fehlende oder veraltete Messwerte dürfen keine neuen, auf dieser Schätzung beruhenden Gerätebefehle auslösen.
 
 <a id="announcements-diagnostics-and-protection"></a>
-### Ankündigungen, Diagnose und Schutz
+### Benachrichtigungen, Diagnose und Schutz
 
-Sie können relevante Empfehlungen und Benachrichtigungen über konfigurierte Home Assistant Mitteilungen, TTS/Medien-Player oder **Ankündigungshub**, mit optionaler KI-Formulierung. KI kann die Ausdrückung einer Nachricht ändern; HEMDie Entscheidungen der physischen Kontrolle bleiben deterministisch.
+Empfehlungen und Warnungen können über Home-Assistant-Benachrichtigungen, TTS/Medienwiedergabe oder den **Announcement Hub** ausgegeben werden. Optional kann KI die Formulierung verständlicher gestalten. **Die physische Geräteentscheidung bleibt dabei deterministisch** und wird nicht von der KI getroffen.
 
-HEM umfasst auch ein bestimmtes Gerät für den Schutz und die Diagnose:
+Zusätzliche Gerätefunktionen umfassen:
 
-- Mindestzeit der Ein- und Auslösung, Höchstbetriebszeit-Einstellungen und unterstützte externe Leistungsschalter.
-- Fenster- und Besatzungsbeschränkungen, manuelle Überschreitung und Native-Kommando-Bestätigungskontrollen.
-- Fehler- und nicht verfügbare Geräteberichterstattung mit einer Wahl des Benachrichtigungsverhaltens für jedes Gerät.
-- Eine optionale Überwachung nach dem Schalten für vermutete Weiterwärmung nach einem OFF-Befehl, mit bewachter Überwachung und begrenzten Wiederherstellungsversuchen.
-- Klarer Wartegründe, aktueller Betriebszustand und Quelleverfügbarkeit, damit Sie untersuchen können, bevor Sie mehr Kontrolle ermöglichen.
+- Mindest-Ein- und -Ausschaltzeiten, maximale Betriebsdauer und die unterstützte Ansteuerung externer Netzschalter.
+- Sperren aufgrund von Fenstern oder Anwesenheit, Behandlung manueller Eingriffe sowie Prüfung der Rückmeldung nach Gerätebefehlen.
+- Meldung von Gerätefehlern und Nichtverfügbarkeit mit einzeln einstellbarem Benachrichtigungsverhalten.
+- Optionale Überwachung nach einem OFF-Befehl, wenn Anzeichen dafür bestehen, dass die Heizung dennoch weiterläuft; mit abgesicherten Prüfungen und begrenzten Wiederholungsversuchen.
+- Verständliche Wartegründe, Betriebszustände und Informationen zur Verfügbarkeit der Datenquellen, um Probleme vor dem Aktivieren weiterer Automatiken untersuchen zu können.
 
-**Die Sicherheitsgrenzen bleiben auch dann in Kraft, wenn eine Alarmmeldung ausgeschaltet ist.** HEM eine erfolgreiche Kommandoversendung niemals als Beweis für die physische Reaktion eines Geräts betrachtet.
+**Schutzgrenzen gelten auch bei abgeschalteten Benachrichtigungen.** Eine erfolgreich gesendete Anweisung ist noch kein Beweis dafür, dass das Gerät sie tatsächlich ausgeführt hat.
 
 <a id="see-hem-in-action"></a>
-## Siehst du ? HEM in Aktion
+## HEM in der Praxis
 
-Diese englischsprachigen Illustrationen verwenden Probenräume und Messungen, um die Schnittstelle zu demonstrieren, anstatt Live-Daten aus einem bestimmten Haus zu zeigen.
+Die folgenden englischsprachigen Abbildungen verwenden Beispieldaten und fiktive Räume. Sie zeigen die Bedienoberfläche, nicht die Live-Daten eines bestimmten Haushalts.
 
 <a id="home-at-a-glance"></a>
-### Zuhause auf einen Blick
+### Das Zuhause auf einen Blick
 
-Erhalten Sie Rat zur Lüftung, Wetterbedingungen und den Status jedes überwachten Raumes in einer einzigen Karte.
+Lüftungsempfehlungen, Wetterbedingungen und alle überwachten Räume erscheinen auf einer Karte.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM Home-Dashboard mit Lüftungsberatung und Umweltmessungen in fünf Räumen" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM-Übersicht mit Lüftungsempfehlungen und Umgebungswerten aus fünf Räumen" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
-### Erweitern Sie den Raum für alle Details
+### Einen Raum im Detail anzeigen
 
-Überprüfen Sie die Luftqualität, die Schimmelanzeige, die Anwesenheit, den Fensterzustand, die Klimakontrollen und die Erläuterungen für jede Entscheidung.
+Sehen Sie Luftqualität, Schimmelrisiko-Indikator, Anwesenheit, Fensterstatus, Klimaregler und die Gründe für deren Entscheidungen.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Erweiterte Badezimmer-Dashboard mit Messungen und unabhängigen Gerätecontrollern" width="760">
+  <img src="../../docs/images/hem-room-expanded.svg" alt="Aufgeklappte Badansicht mit Messwerten und unabhängigen Gerätesteuerungen" width="760">
 </p>
 
 <a id="home-settings"></a>
-### Home-Einstellungen
+### Einstellungen für das Zuhause
 
-Verwalten Sie Außenquellen, die Anwesenheit im ganzen Haus, überwachte Räume, Lüftungsgrenzen, Vorbereitung und Benachrichtigungen.
+Konfigurieren Sie Außenquellen, Anwesenheit, überwachte Räume, Lüftungsgrenzen, Ankunftsvorbereitung und Benachrichtigungen.
 
 <p align="center">
-  <img src="../../docs/images/hem-home-settings.svg" alt="HEM Home-Einstellungen mit Suchgruppen und Quell- und Raummanagement" width="900">
+  <img src="../../docs/images/hem-home-settings.svg" alt="HEM-Hauseinstellungen mit durchsuchbaren Gruppen und Quellenverwaltung" width="900">
 </p>
 
 <a id="room-settings"></a>
-### Raum Einstellungen
+### Raumeinstellungen
 
-Wählen Sie, was für jedes Zimmer wichtig ist: seine eigenen Sensoren, Ziele, Platz, Türen, Fenster, Lüftung, Schatten und Sicherheitsvorkehrungen.
+Wählen Sie je Raum Sensoren, Sollwerte, Anwesenheitsregeln, Türen, Fenster, Lüftung, Beschattung und Schutzfunktionen.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-settings.svg" alt="Gruppe HEM Raum Einstellungen für Sensoren, Gerätebedienungen, Schlaf, Fenster und Schutz" width="760">
+  <img src="../../docs/images/hem-room-settings.svg" alt="Gruppierte HEM-Raumeinstellungen für Sensoren, Geräte, Schlafzustand und Fenster" width="760">
 </p>
 
 <a id="device-settings"></a>
-### Geräteinstellungen
+### Geräteeinstellungen
 
-Ein Gerät ohne Änderung der anderen, einschließlich unterstützter Steuerungsmethoden, fein abgestimmt PID, ruhiger Betrieb, Timing und Fehlermeldung.
+Passen Sie Regelverfahren, PID, leisen Betrieb, Zeitvorgaben und Fehlermeldungen für jedes Gerät getrennt an.
 
 <p align="center">
-  <img src="../../docs/images/hem-device-settings.svg" alt="Gruppe HEM Einstellungen des Geräts mit Steuerung, PID, Stromschutz und Mitteilungen" width="900">
+  <img src="../../docs/images/hem-device-settings.svg" alt="HEM-Geräteeinstellungen für Regelung, PID, Stromschutz und Benachrichtigungen" width="900">
 </p>
 
 <a id="getting-started"></a>
-## Ich beginne
+## Erste Schritte
 
-1. **Organisieren Sie Ihre Zimmer.** In Home AssistantSie können Ihre Bereiche erstellen oder überprüfen und jedem die entsprechenden Sensoren und Geräte zuweisen.
-2. **Wählen Sie aus, was Sie überwachen sollen.** Hinzufügen HEMSie können die unbenutzten Gruppen leer lassen.
-3. **Konfiguration der gemeinsamen Informationen.** Wählen Sie verfügbare Wetter-/Luftqualitätsquellen im Freien, Nachweise für den Haushalt und die gewünschten Ankündigungszielen aus.
-4. **Home Environment Manager** Öffnen Sie ein Dashboard im Bearbeitungsmodus und fügen Sie die **Home Umweltmanager** Beginnen Sie mit Raumüberwachung, Messungen und Lüftungsberatung.
-5. **Steuerung nur dann aktivieren, wenn sie nützlich ist.** Öffnen Sie einen Raum, wählen Sie ein unterstütztes Gerät, überprüfen Sie seinen Controller und wählen Sie ausdrücklich PID für die gewünschten Modi HEM - Ich kann nicht arbeiten.
+1. **Räume zuordnen.** Legen Sie in Home Assistant Bereiche (Areas) an oder prüfen Sie die bestehenden und ordnen Sie Sensoren und Geräte korrekt zu.
+2. **Überwachung auswählen.** Fügen Sie HEM hinzu, wählen Sie die gewünschten Räume und prüfen Sie vorgeschlagene Temperatur-, Feuchtigkeits-, Fenster-, Luftqualitäts- und Gerätequellen. Nicht benötigte Gruppen können leer bleiben.
+3. **Gemeinsame Daten festlegen.** Wählen Sie verfügbare Außenwetter- und Luftqualitätsquellen, Informationen zur Anwesenheit im Haushalt und bei Bedarf Empfänger für Benachrichtigungen.
+4. **Karte hinzufügen.** Öffnen Sie ein Dashboard im Bearbeitungsmodus und fügen Sie die Karte **Home Environment Manager** hinzu. Beginnen Sie mit der Überwachung, den Messwerten und den Lüftungsempfehlungen.
+5. **Steuerung gezielt freigeben.** Öffnen Sie einen Raum, wählen Sie ein geeignetes Gerät, prüfen Sie dessen Regler und aktivieren Sie Automatic oder PID ausdrücklich nur für die gewünschten Betriebsarten.
 
-Du weißt es . **nicht** Beginnen Sie mit den Sensoren, die Sie haben, und führen Sie automatische Steuerung ein Gerät nach dem anderen ein.
+**Nicht jeder Raum benötigt ein smartes Gerät.** Nutzen Sie zuerst die vorhandenen Sensoren und aktivieren Sie die automatische Steuerung schrittweise, Gerät für Gerät.
 
 <a id="add-the-card-manually"></a>
-### Fügen Sie die Karte manuell hinzu
+### Karte manuell hinzufügen
 
-Wenn Sie YAML bevorzugen, verwenden Sie:
+Normalerweise registriert die Integration ihre Lovelace-Karte selbst. Falls Sie YAML bevorzugen:
 
 ~~~yaml
 type: custom:home-environment-manager-card
 ~~~
 
-Wenn Ihre Home Assistant die Installation hat mehr als eine HEM Empfehlungssensor, müssen Sie möglicherweise die geeignete **Einheit** ausdrücklich:
+Wenn Ihre Home-Assistant-Installation mehrere HEM-Empfehlungssensoren besitzt, müssen Sie gegebenenfalls die passende **Entität (entity)** angeben:
 
 ~~~yaml
 type: custom:home-environment-manager-card
 entity: sensor.your_hem_recommendation_sensor
 ~~~
 
-Für Schritt-für-Schritt-Anweisungen zu den Quellen, Profilen, PID Einheitliche Veröffentlichungen, Ankündigungen und Ankündigungen [Detailliertes Konfigurationsleitfaden](../../docs/advanced-configuration.md).
+Eine ausführliche Anleitung zu Raumquellen, Profilen, PID-Einstellungen, Fensterregeln, Ankunftsvorbereitung, Schimmelkalibrierung, Beschattung und Benachrichtigungen finden Sie im [Konfigurationshandbuch](../../docs/advanced-configuration.md).
 
 <a id="installation"></a>
 ## Installation
 
 <a id="hacs--home-assistant-community-store"></a>
-### HACS / Home Assistant Gemeinschaftsgeschäft
+### Mit HACS (Home Assistant Community Store)
 
-1. Öffnen **HACS** in Home Assistant.
-2. Hinzufügen **https://github.com/Chreece/HA-Home-Environment-Manager** als eine **benutzerdefiniertes Repository** in der **Integration** Kategorie, wenn sie nicht bereits aufgelistet ist.
-3. Finden Sie **Home Environment Manager** Und installieren Sie es.
-4. Neustart **Home Assistant** Die Integration ist zu laden.
-5. Geht zu **Einstellungen → Geräte & Dienstleistungen → Integration hinzufügen**, Suche nach **Home Environment Manager** und die Einrichtung abschließen.
+1. Öffnen Sie **HACS** in Home Assistant.
+2. Fügen Sie **https://github.com/Chreece/HA-Home-Environment-Manager** gegebenenfalls als **benutzerdefiniertes Repository (Custom Repository)** in der Kategorie **Integration** hinzu.
+3. Suchen Sie nach **Home Environment Manager** und installieren Sie die Integration.
+4. Starten Sie **Home Assistant** neu, damit die Integration geladen wird.
+5. Öffnen Sie **Einstellungen → Geräte & Dienste → Integration hinzufügen**, suchen Sie nach **Home Environment Manager** und schließen Sie die Einrichtung ab.
 
 <a id="manual-installation"></a>
 ### Manuelle Installation
 
-Kopieren Sie das Repository **custom_components/environment_manager** Ordner in die Passform **custom_components** Verzeichnis in Ihrem Home Assistant Konfiguration und Aufbewahrung des Verzeichnisnamen **environment_manager**- Neustart Home Assistant und die Integration durch **Einstellungen → Geräte & Dienstleistungen**.
+Kopieren Sie den Ordner **custom_components/environment_manager** aus dem Repository in das passende Verzeichnis **custom_components** Ihrer Home-Assistant-Konfiguration. Behalten Sie den Ordnernamen **environment_manager** bei. Starten Sie Home Assistant neu und fügen Sie die Integration über **Einstellungen → Geräte & Dienste** hinzu.
 
-Für spätere Installationsänderungen halten Sie Ihre vorhandenen HEM Integrations-Eingabe und -Einstellungen. Laden Sie das Dashboard in Ihrem Browser neu, wenn sich das Aussehen der Karte nicht sofort erfrischt.
+Behalten Sie bei späteren Updates Ihren vorhandenen HEM-Eintrag und dessen Einstellungen. Falls die Karte nicht sofort aktualisiert aussieht, laden Sie das Dashboard im Browser neu.
 
 <a id="common-questions"></a>
 ## Häufige Fragen
 
-**Kann ich es benutzen? HEM ohne ihm die Kontrolle über meine Geräte zu geben?**
+**Kann ich HEM nutzen, ohne ihm die Steuerung meiner Geräte zu erlauben?**
 
-Ja, Überwachung, Messung, Lüftungsberatung, Vergangenheit und viele Umweltangaben funktionieren, ohne das Gerät zu aktivieren.
+Ja. Überwachung, Messwerte, Lüftungsempfehlungen, Verlauf und viele Umgebungsindikatoren funktionieren auch ohne aktive Gerätesteuerung.
 
-**- Will . HEM Sie kontrollieren automatisch jedes Gerät, das sie entdeckt?**
+**Steuert HEM alle gefundenen Geräte automatisch?**
 
-Sie wählen die physischen Geräte aus, die Sie verwalten möchten, und wählen explizit die Steuerungsmethode für unterstützte Modi.
+Nein. Sie wählen die Geräte und die Regelverfahren für die unterstützten Betriebsarten ausdrücklich aus. Welche Funktionen möglich sind, hängt weiterhin von den Gerätefähigkeiten und geeigneten Sensordaten ab.
 
 **Unterstützt jedes Gerät PID?**
 
-- Nein, ich weiß nicht. HEM Unterstützungen PID für **in Betracht kommen** Wärme-, Kühl-, Luftfeuchtigkeits- oder Lüftersteuerungswege, wenn das Gerät und die gewählten Messungen die erforderlichen Fähigkeiten und Rückmeldungen bieten. PID Die Kontrolle.
+Nein. PID steht nur für **geeignete** Heiz-, Kühl-, Feuchtigkeits- und Lüfterregelungen zur Verfügung, wenn passende Fähigkeiten und verlässliche Rückmeldungen vorhanden sind. HEM ergänzt keine künstliche PID-Regelung für nicht unterstützte Betriebsarten.
 
-**Kann ich jedem Zimmer unterschiedliche Regeln geben?**
+**Kann ich für jeden Raum eigene Regeln festlegen?**
 
-Ja, die Bedingungen des Einsatzes, das Schlafverhalten, die Quellen, die Ziele und einige Sicherheitsvorlieben können sich je nach Raum unterscheiden, während jedes physische Gerät seine eigenen Betriebs- und Schutzabstellungen hat.
+Ja. Anwesenheit, Schlafzustand, Datenquellen, Sollwerte und manche Sicherheitseinstellungen können je Raum unterschiedlich sein. Auch jedes Gerät besitzt eigene Betriebs- und Schutzoptionen.
 
-**Kann HEM Bereiten Sie mein Zuhause vor, während ich weg bin?**
+**Kann HEM mein Zuhause während meiner Abwesenheit vorbereiten?**
 
-- Ja, ich weiß. **Bereiten Sie sich auf die Ankunft vor.** Sie erlaubt den berechtigten, bereits autorisierten automatischen Controllern vorübergehend, Heimziele für einen begrenzten Zeitraum zu nutzen.
+Ja. Mit **Ankunft vorbereiten** können berechtigte, zuvor freigegebene automatische Regler vorübergehend Home-Sollwerte nutzen. Schutzfunktionen werden nicht umgangen, und das Erreichen der Zielwerte ist nicht garantiert.
 
-**Öffnet eine Empfehlung für eine gute Lüftung meine Fenster?**
+**Öffnet HEM meine Fenster automatisch, wenn es Lüften empfiehlt?**
 
-Automatische Bewegung ist eine separate, opt-in-Funktion für berechtigte unterstützte Farbtöne oder -deckungen, die ihren eigenen Sicherheitsprüfungen unterliegen.
+Nein. Eine Lüftungsempfehlung erklärt nur, wann Lüften sinnvoll sein kann. Automatische Bewegungen sind eine separate, ausdrücklich freizugebende Funktion für geeignete Beschattungssysteme und unterliegen eigenen Sicherheitsprüfungen.
 
-**Was ist, wenn ein Sensor oder ein Gerät nicht verfügbar ist?**
+**Was passiert, wenn ein Sensor oder Gerät nicht verfügbar ist?**
 
-HEM die unbekannte Daten von realen Messungen unterscheidet, die konfigurierten Controllerinformationen soweit möglich speichert und Wartegründe und Diagnostik aufdeckt.
+HEM unterscheidet unbekannte Zustände von echten Messwerten, behält Reglerdaten nach Möglichkeit bei und zeigt Wartegründe sowie Diagnoseinformationen. Für automatische Eingriffe sind weiterhin gültige aktuelle Daten und die notwendigen Freigaben erforderlich.
 
 <a id="help-and-troubleshooting"></a>
 ## Hilfe und Fehlerbehebung
 
-Wenn etwas falsch erscheint, überprüfen Sie den entsprechenden Raum oder die Kontrollstelle **Der Grund**, **Diagnostik**, Quelleverfügbarkeit und aktuelle Kontrollmethode. [Detailliertes Konfigurationsleitfaden](../../docs/advanced-configuration.md) umfasst gemeinsame Wartezustände, Präsenzpolitik, PID Anspruchsberechtigung, Fenster und Fehlerbehebung der Geräteantworten.
+Wenn etwas nicht wie erwartet funktioniert, prüfen Sie beim jeweiligen Raum oder Regler den **Grund (Reason)**, die **Diagnose (Diagnostics)**, die Verfügbarkeit der Quellen und das eingestellte Regelverfahren. Das [Konfigurationshandbuch](../../docs/advanced-configuration.md) erläutert typische Wartezustände, Anwesenheitsregeln, PID-Voraussetzungen, Fensterbedingungen und Probleme mit Geräterückmeldungen.
 
-Für ein reproduzierbares Problem [öffnen GitHub Ausgabe](https://github.com/Chreece/HA-Home-Environment-Manager/issues) mit dem erwarteten Verhalten, dem tatsächlichen Verhalten, den relevanten Raum-/Geräte-Einstellungen und den Reproduktionsschritten.
+Bei reproduzierbaren Fehlern [erstellen Sie ein GitHub-Issue](https://github.com/Chreece/HA-Home-Environment-Manager/issues). Beschreiben Sie das erwartete und tatsächliche Verhalten, relevante Raum- und Geräteeinstellungen sowie die Schritte zum Nachstellen. Entfernen Sie persönliche Daten aus Protokollen und Bildern.
 
-Beiträge und Verbesserungen sind zu begrüßen. [Contributions.md](../../CONTRIBUTING.md).
+Beiträge und Verbesserungen sind willkommen. Weitere Hinweise stehen in [CONTRIBUTING.md](../../CONTRIBUTING.md).
 
 <a id="support-and-license"></a>
 ## Unterstützung und Lizenz
 
-Wenn HEM ist für Sie nützlich, können Sie [Unterstützung von Griechenland bei Ko-fi](https://ko-fi.com/chreece).
+Wenn HEM Ihnen hilft, können Sie [Chreece auf Ko-fi unterstützen](https://ko-fi.com/chreece).
 
-Verteilt unter der [MIT-Lizenz](../../LICENSE).
+Veröffentlicht unter der [MIT-Lizenz](../../LICENSE).
