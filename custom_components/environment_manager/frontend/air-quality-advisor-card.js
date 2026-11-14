@@ -6803,8 +6803,9 @@
     pop.className='hem-avg-dialog105';
     pop.setAttribute('popover','manual');pop.setAttribute('role','dialog');pop.setAttribute('tabindex','-1');
     pop.innerHTML='<header class="hem-avg-head105"><strong>'+this._icon('mdi:chart-line')+
-      escape(ew122(this,'title'))+'</strong><button type="button" data-close-avg105>'+this._icon('mdi:close')+
-      '</button></header><div class="hem-avg-body105"></div>';
+      escape(ew122(this,'title'))+'</strong><button type="button" data-close-avg105 title="'+
+      escape(word105(this,'close'))+'" aria-label="'+escape(word105(this,'close'))+'">'+
+      this._icon('mdi:close')+'</button></header><div class="hem-avg-body105"></div>';
     this.shadowRoot.appendChild(pop);
     const saved=this._averageDialog105={node:pop,entity122:id,history122:[],status122:'loading',
       connection122:this._hass.connection,dashboard122:this._state()[0],returnTo114:returnTo,last:null};
@@ -7249,6 +7250,33 @@
     .hem-trend114 .hem-average-source105 ha-icon{--mdc-icon-size:13px}
     .hem-trend114 .hem-avg-collect105{min-height:90px;justify-content:center;color:var(--hem-trend-muted114);font-size:12px}
     .hem-trend-plot114>.hem-trend-chart114+.hem-avg-collect105{position:absolute;inset:25px 14px 30px 48px;min-height:0;text-align:center;pointer-events:none}
+    /* The recorder history is a top-layer popup. On iOS/HA's mobile webview,
+       top:12px puts its header beneath the system status bar. Center the
+       scrollable dialog inside the usable viewport and keep the Close control
+       visible, contrasted, and at least 44px across all small screens. */
+    @media(max-width:640px){
+      .hem-avg-dialog105[popover]{
+        inset:auto;left:50%;top:50%;right:auto;bottom:auto;
+        margin:0;transform:translate(-50%,-50%);
+        width:calc(100vw - 24px);max-width:560px;
+        max-height:calc(100dvh - 128px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));
+        overflow-y:auto;overscroll-behavior:contain;
+        -webkit-overflow-scrolling:touch;scroll-padding-top:60px;
+      }
+      .hem-avg-head105{position:sticky;top:0;z-index:5;min-height:54px;gap:12px}
+      .hem-avg-head105>strong{min-width:0;flex:1 1 auto;line-height:1.35}
+      .hem-avg-head105 button[data-close-avg105]{
+        flex:0 0 44px;min-width:44px;min-height:44px;width:44px;height:44px;
+        display:inline-flex;align-items:center;justify-content:center;
+        border:1px solid var(--divider-color,#626a75);
+        background:var(--secondary-background-color,#363941);
+        color:var(--primary-text-color,#fff);border-radius:50%;
+      }
+      .hem-avg-head105 button[data-close-avg105] ha-icon{--mdc-icon-size:24px}
+      .hem-avg-head105 button[data-close-avg105]:focus-visible{
+        outline:3px solid var(--primary-color,#03a9f4);outline-offset:2px;
+      }
+    }
     @media(max-width:380px){
       .hem-avg-dialog105{padding:0 12px 12px}
       .hem-trend-ranges114{flex:1 1 auto;justify-content:space-between}
@@ -12383,6 +12411,113 @@
   const freshnessStylesB11=freshnessB11._styles;
   freshnessB11._styles=function(){return freshnessStylesB11.call(this)+
     '<style>.hem-freshness-auto-b11{display:none!important}</style>';};
+  /* HEM_MOBILE_DENSITY_READABILITY_B16_START
+   * Compact content-driven cards without reducing fonts or hiding statuses.
+   * Late stylesheet is intentional: earlier compact card rules used tiny
+   * 8-11px text and some nested grids stretched sparse content vertically.
+   * Keep physical permissions and the native device UI unchanged.
+   */
+  const mobileCompactB16=AirQualityAdvisorCard.prototype;
+  const previousMobileStylesB16=mobileCompactB16._styles;
+  mobileCompactB16._styles=function(){return previousMobileStylesB16.call(this)+`<style>
+    .rooms-list,.metric-grid,.managed-controllers,.hem-floor-rooms140{
+      align-items:start;align-content:start;grid-auto-rows:max-content;
+    }
+    .hem-room-fold87,.hem-device-fold87,.managed-controller.hem-compact-device76{
+      align-self:start;min-height:0;height:auto;
+    }
+    .hem-room-body87:empty,.hem-device-body87:empty,
+    .hem-room-readings66:empty,.hem-device-data:empty{
+      display:none;
+    }
+    .hem-room-body87>.room>.metric-grid{margin:4px 0 6px;gap:6px}
+    .hem-room-body87 .section-head{margin:8px 0 4px}
+    .hem-room-body87 .pid-panel{margin:5px 0;padding:8px}
+    .hem-device-body87{padding:6px 7px 8px}
+    .hem-device-body87 .hem-device-data{gap:5px;margin:4px 0}
+    .hem-floor-rooms140{gap:6px}
+    @media(max-width:600px){
+      .content{font-size:14px;line-height:1.45}
+      .card-heading h2{font-size:18px;line-height:1.3}
+      .section-head,.room-main h3{font-size:15px;line-height:1.35}
+      .rooms-list{gap:6px;margin:7px 0}
+      .room{padding:10px;border-radius:12px}
+      .metric-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,143px),1fr));gap:6px}
+      .metric{padding:8px 9px;border-radius:9px;min-height:0;align-self:start}
+      .metric-number{font-size:17px;line-height:1.25}
+      .metric-name,.metric-limit,.mold-summary,.metric-number small{
+        font-size:12px;line-height:1.4;white-space:normal;overflow-wrap:anywhere;
+      }
+      .hem-source{font-size:12px;line-height:1.4;white-space:normal;overflow:visible;text-overflow:clip}
+      .hem-metric-alert122,.rh-fallback,.mold-warning,.pollen-indicator,.science-line,
+      .science-caveat,.shade-status,.shade-panel small,.hem-device-error,.hem-device-error small,
+      .hem-room-ventilation95,.hem-room-door062,.hem-full-notice127{
+        font-size:12.5px;line-height:1.45;
+      }
+      .managed-controllers{margin-top:6px;padding-top:6px;gap:5px}
+      .managed-controllers>strong,.managed-status,.climate-entity-link,
+      .hem-compact-device76 .climate-entity-link{font-size:13px;line-height:1.4}
+      .managed-status{margin:4px 0 6px}
+      .hem-compact-device76 .hem-device-data>div{padding:6px 8px}
+      .hem-compact-device76 .hem-device-data span,.hem-device-data span{
+        font-size:12px;line-height:1.35;white-space:normal;overflow:visible;
+        text-overflow:clip;overflow-wrap:anywhere;
+      }
+      .hem-compact-device76 .hem-device-data b,.hem-device-data b{
+        font-size:15px;line-height:1.3;
+      }
+      .hem-room-fold87>summary.hem-room-glance87{
+        min-height:44px;padding:7px 8px;
+      }
+      .hem-room-glance87 .hem-room-name87{font-size:13px;min-width:0}
+      .hem-room-glance87 .hem-room-metric107,
+      .hem-room-glance87 .hem-room-metric-value107{
+        font-size:12px;line-height:1.3;
+      }
+      .hem-room-glance87 .hem-room-metric-unit107,
+      .hem-room-glance87 .hem-room-metric-label107{font-size:10.5px}
+      .hem-room-air-chip89{font-size:11.5px}
+      .hem-room-air-chip89 small{font-size:10.5px}
+      .hem-overview-title87,.hem-overview-stat87{font-size:12px}
+      .hem-overview-stat87 b{font-size:15px}
+      .hem-device-glance87{min-height:44px;padding:7px 8px}
+      .hem-device-main87 strong{font-size:13px}
+      .hem-device-state87,.hem-device-reading87{font-size:12px}
+      .hem-compact-extra87,.hem-device-error small{font-size:12px}
+      .hem-context-body76 small,.hem-floating-info87 small,
+      .hem-room-options-head114 small,.hem-room-options-label114 small,
+      .hem-room-options-choice114 small,.hem-full-help127 p,
+      .hem-home-intro128,.hem-home-helper128,.hem-home-editor128>small,
+      .hem-floor-main140 small,.hem-floor-dialog-head140 small,
+      .hem-floor-members140 p,.hem-settings-tools-b8 small{
+        font-size:13px;line-height:1.45;
+      }
+      .hem-floating-info87{font-size:13px}
+      .hem-avg-dialog105{font-size:13px}
+      .hem-avg-head105>strong{font-size:14px}
+      .hem-trend114 .hem-average-summary105 strong{font-size:16px}
+      .hem-trend-current114,.hem-trend-current114 b,
+      .hem-trend-nav114 button,.hem-trend-ranges114 button,
+      .hem-trend-stats114,.hem-trend114 .hem-avg-period105,
+      .hem-trend-help114,.hem-trend-readout114 time,
+      .hem-trend-chart114 text,.hem-entity-history-footer122 small{
+        font-size:12px;
+      }
+      .hem-trend-readout114>div>span{font-size:12px}
+      .hem-avg-dialog105 .hem-trend-readout114{min-height:48px;margin:10px 0 2px}
+      .hem-trend114 .hem-average-summary105{margin:9px 0 8px}
+      .hem-trend-help114{margin:6px 0 9px}
+    }
+    @container hem-rooms107 (max-width:400px){
+      /* Prefer readable values and fewer secondary chips to 8px text. */
+      .hem-room-glance87 .hem-room-metric107,
+      .hem-room-glance87 .hem-room-metric-value107{font-size:12px}
+      .hem-room-glance87 .hem-room-name87{font-size:13px;min-width:0}
+      .hem-room-glance87 .hem-room-metric-unit107{font-size:10.5px}
+    }
+  </style>`;};
+  /* HEM_MOBILE_DENSITY_READABILITY_B16_END */
+
   /* HEM_FRESHNESS_POLICY_B11_END */
 
 })();

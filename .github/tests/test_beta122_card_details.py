@@ -381,6 +381,30 @@ def browser_checks(data):
                 for element in room.locator(selector).all():
                     rect = element.bounding_box()
                     assert rect and rect["x"] >= 0 and rect["x"] + rect["width"] <= width + 1, (width, selector, rect)
+            if width <= 375:
+                # Compact cards must remain legible at 320/375px. Earlier
+                # versions reduced several labels to 8-11px to fit one row.
+                sizes = page.evaluate("""() => {
+                  const root=card.shadowRoot;
+                  const size=selector=>{
+                    const node=root.querySelector(selector);
+                    return node ? parseFloat(getComputedStyle(node).fontSize) : null;
+                  };
+                  return {
+                    room:size('.hem-room-glance87 .hem-room-name87'),
+                    metric:size('.metric-name'),
+                    number:size('.metric-number'),
+                    device:size('.hem-device-main87 strong'),
+                    metadata:size('.hem-compact-device76 .hem-device-data span'),
+                  };
+                }""")
+                for name,minimum in (("room",12.5),("metric",12),("number",16),("device",12.5)):
+                    assert sizes[name] is not None and sizes[name] >= minimum, (width, name, sizes)
+                if sizes["metadata"] is not None:
+                    assert sizes["metadata"] >= 12, (width, sizes)
+                assert room.locator(".metric-grid").evaluate(
+                    "e=>getComputedStyle(e).alignContent") == "start"
+                assert room.evaluate("e=>e.scrollWidth<=e.clientWidth+1"), "Sparse room card overflowed"
             if screenshot_dir:
                 destination = Path(screenshot_dir)
                 destination.mkdir(parents=True, exist_ok=True)
