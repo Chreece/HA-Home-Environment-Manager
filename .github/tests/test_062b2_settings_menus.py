@@ -103,14 +103,18 @@ with sync_playwright() as pw:
                 const data=[
                   ['switch.closed_room_eco','off','climate_operating_closed_door_eco','Eco when doors are closed and room is empty'],
                   ['number.room_delay','10','climate_operating_unoccupied_delay_minutes','Vacancy delay (min)'],
-                  ['number.sleep_heat','18','climate_profile_sleep_heat','Sleep · Heating target (°C)']
+                  ['number.sleep_heat','18','climate_profile_sleep_heat','Sleep · Heating target (°C)'],
+                  ['select.door_target','Not connected','door_target_area','Door A · Connects to room']
                 ];
                 window.registry062=data.map(([entity_id,value,key,name])=>{
                     card._hass.states[entity_id]={state:value,attributes:{
                       friendly_name:'Gästezimmer Environment ° '+name,
                       configuration_help:'The setting applies only to this room. Existing safety checks remain in force.',
                       min:0,max:240,step:1,
-                      setting_key:entity_id==='switch.closed_room_eco'?'area_'+key:undefined}};
+                      setting_key:entity_id==='switch.closed_room_eco'?'area_'+key:undefined,
+                      door_setting_key:key==='door_target_area'?'target_area':undefined,
+                      door_source_entity:key==='door_target_area'?'binary_sensor.door_a':undefined,
+                      options:key==='door_target_area'?['Not connected','Bedroom [room1]']:undefined}};
                     return {entity_id,device_id:'living-device',config_entry_id:'entry0',platform:'environment_manager',
                         unique_id:'entry0_area_room0_'+key};
                 });
@@ -122,13 +126,14 @@ with sync_playwright() as pw:
                 card._hass.callService=async (...args)=>{native062.push(args);};
             }""",language)
             assert page.evaluate("card._openRoomSettings114('room0')")
-            page.wait_for_function('card._roomSettingsDialog114?.fullRegistry127?.length===3')
+            page.wait_for_function('card._roomSettingsDialog114?.fullRegistry127?.length===4')
             dialog=page.locator('dialog.hem-room-options114')
             group=dialog.locator('[data-hem-unified141="ventilation"]')
             expect(group.locator(':scope > summary strong')).to_have_text(HEADINGS[language])
             assert dialog.locator('[data-hem-unified141="presence"] [data-room-options-group114="door_sensors"]').count()==0
             assert dialog.locator('[data-hem-unified141="presence"] [data-hem-full-row127="switch.closed_room_eco"]').count()==0
-            assert dialog.locator('[data-hem-full-row127="switch.closed_room_eco"]').count()==1
+            assert dialog.locator('[data-hem-full-row127="switch.closed_room_eco"]').count()==0
+            assert dialog.locator('[data-hem-full-row127="select.door_target"]').count()==1
             order=group.locator('[data-hem-unified-sources141]').evaluate('node=>[...node.children].map(n=>n.getAttribute("data-room-options-group114")||(n.hasAttribute("data-hem-door-eco062")?"eco":"unexpected"))')
             assert order==['windows','door_sensors','eco','shades'],order
             assert page.evaluate('native062.length')==0
@@ -139,19 +144,21 @@ with sync_playwright() as pw:
             door.locator(':scope > summary').click()
             door.locator('input[type=checkbox][value="binary_sensor.door_b"]').check()
             draft=page.evaluate('structuredClone(card._roomSettingsDialog114.draft)')
-            eco=group.locator('[data-hem-full-row127="switch.closed_room_eco"]')
-            button=eco.locator('[data-hem-full-apply127]')
-            button.focus()
+            target=group.locator('[data-hem-full-row127="select.door_target"]')
+            control=target.locator('select')
+            control.focus()
             page.evaluate('card._hemFullRender127(card._roomSettingsDialog114,"room")')
-            expect(button).to_be_focused()
+            expect(control).to_be_focused()
             assert page.evaluate('card._roomSettingsDialog114.draft')==draft
-            assert eco.count()==1
-            button.click()
-            assert page.evaluate('native062')==[['switch','turn_on',{'entity_id':'switch.closed_room_eco'}]]
-            eco.locator('.hem-full-help127 > summary').click()
+            assert target.count()==1
+            control.select_option('Bedroom [room1]')
+            page.wait_for_function('native062.length===1')
+            assert page.evaluate('native062')==[['select','select_option',{
+                'entity_id':'select.door_target','option':'Bedroom [room1]'}]]
+            target.locator('.hem-full-help127 > summary').click()
             page.evaluate('card.shadowRoot.activeElement?.blur();card._hemFullRender127(card._roomSettingsDialog114,"room")')
-            expect(eco.locator('.hem-full-help127')).to_have_attribute('open','')
-            paragraph=eco.locator('.hem-full-help-body127 p')
+            expect(target.locator('.hem-full-help127')).to_have_attribute('open','')
+            paragraph=target.locator('.hem-full-help-body127 p')
             assert paragraph.evaluate('n=>n.getBoundingClientRect().width')>150
             assert group.evaluate('n=>n.scrollWidth<=n.clientWidth+2')
             assert page.evaluate('card._roomSettingsDialog114.draft')==draft
@@ -164,4 +171,4 @@ with sync_playwright() as pw:
             assert not errors,errors
             page.close()
     browser.close()
-print('PASS: all-menu contextual labels; exact door/Eco adjacency, drafts, writes and help at EN/EL/DE 320/390/760px')
+print('PASS: all-menu contextual labels; room door linkage retained, room Eco hidden, drafts, writes and help at EN/EL/DE 320/390/760px')
