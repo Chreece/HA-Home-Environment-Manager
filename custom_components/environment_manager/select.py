@@ -463,6 +463,11 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
 
     @property
     def current_option(self):
+        if self._key == "off_state_watchdog_mode":
+            # This physical-device preference is shared across all operating
+            # modes. A state write must not deepcopy every inactive PID/profile
+            # or resolve live capabilities merely to display one of 3 options.
+            return equipment.watchdog_option(self._manager, self._spec)
         value = self.controller_settings.get(self._key)
         if self._key == "quiet_fan_mode" and value is None and "low" in self.options:
             return "low"

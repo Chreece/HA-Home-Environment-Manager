@@ -103,6 +103,7 @@ async def check_setting_editor():
     rt = m.equipment
     assert model.DEVICE_SELECTS["off_state_watchdog_mode"] == OPTIONS
     assert model.base_settings(m, dev)["off_state_watchdog_mode"] == "monitor_recover"
+    assert model.watchdog_option(m, dev) == "monitor_recover"
     original_other = deepcopy(m.entry.options[model.SETTINGS][other.identifier])
     rt._thermal_off_sessions = {dev.identifier: object()}
     rt.statuses[dev.identifier] = {"status": "suspected_output_after_off"}
@@ -156,6 +157,7 @@ async def check_setting_editor():
     for invalid in (None, False, "not-a-choice", []):
         raw["off_state_watchdog_mode"] = invalid
         assert model.base_settings(m, dev)["off_state_watchdog_mode"] == "disabled"
+        assert model.watchdog_option(m, dev) == "disabled"
     raw["off_state_watchdog_mode"] = "monitor_only"
     # The key is a shared physical preference, never a per-mode PID field.
     assert "off_state_watchdog_mode" not in model.MODE_FIELDS
@@ -163,6 +165,7 @@ async def check_setting_editor():
         raw, {"control_mode": "pid"}, operating_mode="heat",
     )
     assert model.base_settings(m, dev)["off_state_watchdog_mode"] == "monitor_only"
+    assert model.watchdog_option(m, dev) == "monitor_only"
     assert model.raw_settings(m, dev)["mode_settings"]["heat"]["control_mode"] == "pid"
 
 

@@ -144,6 +144,25 @@ def raw_settings(manager: Any, spec: ManagedDevice) -> dict:
     return deepcopy(raw) if isinstance(raw, dict) else {}
 
 
+def _watchdog_option(raw: dict) -> str:
+    """Normalize a device-wide watchdog preference, without profile resolution."""
+    choice = raw.get("off_state_watchdog_mode", "monitor_recover")
+    return (choice if choice in DEVICE_SELECTS["off_state_watchdog_mode"]
+            else "disabled")
+
+
+def watchdog_option(manager: Any, spec: ManagedDevice) -> str:
+    """Fast read for the shared watchdog Select: no deepcopy or active-mode scan.
+
+    Only the exact controller's persisted top-level preference is authoritative.
+    The watchdog is never a per-mode setting; missing/legacy uses the old default
+    while malformed saved values fail closed, exactly like base_settings().
+    """
+    profiles = manager.settings.get(SETTINGS, {})
+    raw = profiles.get(spec.identifier, {}) if isinstance(profiles, dict) else {}
+    return _watchdog_option(raw if isinstance(raw, dict) else {})
+
+
 def base_settings(manager: Any, spec: ManagedDevice) -> dict:
     """Legacy effective defaults, without transient or inactive mode metadata."""
     raw = raw_settings(manager, spec)
@@ -157,11 +176,7 @@ def base_settings(manager: Any, spec: ManagedDevice) -> dict:
     result["door_start_coordination"] = effective_coordination(raw)
     # Missing settings and legacy strings/numbers never opt a device in.
     # Old installations keep recovery; invalid persisted settings fail closed.
-    watchdog_mode = raw.get("off_state_watchdog_mode", "monitor_recover")
-    result["off_state_watchdog_mode"] = (
-        watchdog_mode if watchdog_mode in DEVICE_SELECTS["off_state_watchdog_mode"]
-        else "disabled"
-    )
+    result["off_state_watchdog_mode"] = _watchdog_option(raw)
     result["native_full_output"] = raw.get("native_full_output", True) is True
     result["sleep_when_everyone_asleep"] = raw.get("sleep_when_everyone_asleep") is True
     result["announce_before_start"] = raw.get("announce_before_start") is True
