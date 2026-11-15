@@ -1080,6 +1080,9 @@
         "description": "Tilstedeværelse · sensor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Konfigurer «innstillinger · kilde» bare for valgt rom. Feil data stopper handlingen."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Område · innstillinger",
         "data": {
           "edit_room_area": "Enheter"
+        },
+        "data_description": {
+          "edit_room_area": "Konfigurer «innstillinger · kilde» bare for valgt rom. Feil data stopper handlingen."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Tilstedeværelse · sensor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Konfigurer «innstillinger · kilde» bare for valgt rom. Feil data stopper handlingen."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Område · innstillinger",
         "data": {
           "edit_room_area": "Enheter"
+        },
+        "data_description": {
+          "edit_room_area": "Konfigurer «innstillinger · kilde» bare for valgt rom. Feil data stopper handlingen."
         }
       },
       "edit_room": {

@@ -1080,6 +1080,9 @@
         "description": "재실 · 센서",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "“설정 · 정보원”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "구역 · 설정",
         "data": {
           "edit_room_area": "장치"
+        },
+        "data_description": {
+          "edit_room_area": "“설정 · 정보원”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "재실 · 센서",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "“설정 · 정보원”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "구역 · 설정",
         "data": {
           "edit_room_area": "장치"
+        },
+        "data_description": {
+          "edit_room_area": "“설정 · 정보원”은 선택한 방에만 설정하세요. 유효하지 않은 데이터는 동작을 중지합니다."
         }
       },
       "edit_room": {

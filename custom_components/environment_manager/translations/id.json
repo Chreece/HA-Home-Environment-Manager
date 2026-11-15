@@ -1080,6 +1080,9 @@
         "description": "Kehadiran · sensor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Atur “pengaturan · sumber” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Area · pengaturan",
         "data": {
           "edit_room_area": "Perangkat"
+        },
+        "data_description": {
+          "edit_room_area": "Atur “pengaturan · sumber” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Kehadiran · sensor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Atur “pengaturan · sumber” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Area · pengaturan",
         "data": {
           "edit_room_area": "Perangkat"
+        },
+        "data_description": {
+          "edit_room_area": "Atur “pengaturan · sumber” hanya untuk ruang terpilih. Data tidak valid menghambat tindakan."
         }
       },
       "edit_room": {
