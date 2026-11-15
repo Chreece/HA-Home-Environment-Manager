@@ -5,12 +5,12 @@
     "Catalog entries are not counts of controls shown on any device.",
     "Literal references are navigation aids, not proof of use or non-use.",
     "Legacy form reachability and dynamic consumers require separate review.",
-    "No stored configuration, authorization, runtime or native entity was removed."
+    "Saved configuration and native actuator authorization are preserved; obsolete door timeout Number registry entries are retired."
   ],
   "counts": {
     "native_catalog": 178,
     "form_catalog": 722,
-    "dynamic_door": 5,
+    "dynamic_door": 4,
     "dynamic_mode_target": 18
   },
   "policy": {
@@ -65,7 +65,6 @@
       "equipment_pid_adaptation_mode": "compatibility_tuning",
       "area_climate_operating_humidity_hysteresis_rh": "strategy_tuning",
       "area_climate_operating_cooling_dry_deferral_rh_points": "strategy_tuning",
-      "door_report_timeout_minutes": "optional_diagnostics",
       "door_energy_meter": "optional_diagnostics"
     },
     "advanced_options": {
@@ -1380,7 +1379,7 @@
       "same_property_options_alias": null,
       "catalog_path": "strings.json/entity/number/shade_close_above_c",
       "literal_references": [
-        "custom_components/environment_manager/number.py:995"
+        "custom_components/environment_manager/number.py:1005"
       ],
       "consumer_status": "runtime_and_dynamic_generation_not_exhaustively_proven"
     },
@@ -1406,7 +1405,7 @@
       "same_property_options_alias": null,
       "catalog_path": "strings.json/entity/number/shade_min_lux",
       "literal_references": [
-        "custom_components/environment_manager/number.py:953"
+        "custom_components/environment_manager/number.py:963"
       ],
       "consumer_status": "runtime_and_dynamic_generation_not_exhaustively_proven"
     },
@@ -1457,7 +1456,7 @@
       "catalog_path": "strings.json/entity/number/home_aqi_custom_limit",
       "literal_references": [
         "custom_components/environment_manager/aqi_sources.py:92",
-        "custom_components/environment_manager/number.py:520"
+        "custom_components/environment_manager/number.py:530"
       ],
       "consumer_status": "runtime_and_dynamic_generation_not_exhaustively_proven"
     },
@@ -1484,7 +1483,7 @@
       "catalog_path": "strings.json/entity/number/arrival_preparation_timeout",
       "literal_references": [
         "custom_components/environment_manager/arrival_preparation.py:25",
-        "custom_components/environment_manager/number.py:450"
+        "custom_components/environment_manager/number.py:460"
       ],
       "consumer_status": "runtime_and_dynamic_generation_not_exhaustively_proven"
     },
@@ -4566,7 +4565,7 @@
         "custom_components/environment_manager/environment_extended.py:151",
         "custom_components/environment_manager/environment_science.py:135",
         "custom_components/environment_manager/equipment_model.py:43",
-        "custom_components/environment_manager/number.py:792",
+        "custom_components/environment_manager/number.py:802",
         "custom_components/environment_manager/number.py:91"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -4877,7 +4876,7 @@
         "custom_components/environment_manager/config_flow.py:845",
         "custom_components/environment_manager/device_controls.py:130",
         "custom_components/environment_manager/environment_extended.py:195",
-        "custom_components/environment_manager/number.py:502"
+        "custom_components/environment_manager/number.py:512"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -8700,7 +8699,7 @@
         "custom_components/environment_manager/environment_extended.py:151",
         "custom_components/environment_manager/environment_science.py:135",
         "custom_components/environment_manager/equipment_model.py:43",
-        "custom_components/environment_manager/number.py:792",
+        "custom_components/environment_manager/number.py:802",
         "custom_components/environment_manager/number.py:91"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -9011,7 +9010,7 @@
         "custom_components/environment_manager/config_flow.py:845",
         "custom_components/environment_manager/device_controls.py:130",
         "custom_components/environment_manager/environment_extended.py:195",
-        "custom_components/environment_manager/number.py:502"
+        "custom_components/environment_manager/number.py:512"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -12217,35 +12216,28 @@
       "kind": "dynamic_door",
       "key": "door_target_area",
       "presentation": "primary",
-      "definition": "custom_components/environment_manager/door_entities.py:select_entities/number_entities",
+      "definition": "custom_components/environment_manager/door_entities.py:select_entities",
       "consumer": "custom_components/environment_manager/door_settings.py:async_update"
     },
     {
       "kind": "dynamic_door",
       "key": "door_kind",
       "presentation": "primary",
-      "definition": "custom_components/environment_manager/door_entities.py:select_entities/number_entities",
-      "consumer": "custom_components/environment_manager/door_settings.py:async_update"
-    },
-    {
-      "kind": "dynamic_door",
-      "key": "door_report_timeout_minutes",
-      "presentation": "advanced",
-      "definition": "custom_components/environment_manager/door_entities.py:select_entities/number_entities",
+      "definition": "custom_components/environment_manager/door_entities.py:select_entities",
       "consumer": "custom_components/environment_manager/door_settings.py:async_update"
     },
     {
       "kind": "dynamic_door",
       "key": "door_coordination",
       "presentation": "primary",
-      "definition": "custom_components/environment_manager/door_entities.py:select_entities/number_entities",
+      "definition": "custom_components/environment_manager/door_entities.py:select_entities",
       "consumer": "custom_components/environment_manager/door_settings.py:async_update"
     },
     {
       "kind": "dynamic_door",
       "key": "door_energy_meter",
       "presentation": "advanced",
-      "definition": "custom_components/environment_manager/door_entities.py:select_entities/number_entities",
+      "definition": "custom_components/environment_manager/door_entities.py:select_entities",
       "consumer": "custom_components/environment_manager/door_settings.py:async_update"
     },
     {
