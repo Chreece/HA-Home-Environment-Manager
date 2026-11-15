@@ -1080,6 +1080,9 @@
         "description": "Hiện diện · cảm biến",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Chỉ thiết lập “cài đặt · nguồn” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Khu vực · cài đặt",
         "data": {
           "edit_room_area": "Thiết bị"
+        },
+        "data_description": {
+          "edit_room_area": "Chỉ thiết lập “cài đặt · nguồn” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Hiện diện · cảm biến",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Chỉ thiết lập “cài đặt · nguồn” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Khu vực · cài đặt",
         "data": {
           "edit_room_area": "Thiết bị"
+        },
+        "data_description": {
+          "edit_room_area": "Chỉ thiết lập “cài đặt · nguồn” trong phòng đã chọn. Dữ liệu sai sẽ chặn thao tác."
         }
       },
       "edit_room": {
