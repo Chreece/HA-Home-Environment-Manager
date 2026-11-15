@@ -9,6 +9,7 @@ from __future__ import annotations
 from .settings_name_catalog import (
     localized_setting_name, localized_setting_group, setting_locale,
 )
+from .setting_option_explanations import option_help_locales
 
 SETTING_HELP = {'area_area_environment_air_speed_m_s': {'de': 'Gemessene Luftgeschwindigkeit im Raum in m/s für PMV/PPD, '
                                                'wenn keine Live-Quelle gewählt ist. Eine repräsentative '
@@ -1378,6 +1379,9 @@ class SettingsMetadata:
             attributes.update({"setting_display_name": name,
                                "setting_key": key,
                                "setting_group": localized_setting_group(key, locale)})
+        details = option_help_locales(key) if key else {}
+        if details:
+            attributes["option_help_locales"] = details
         if text:
             attributes["configuration_help"] = text
             # The card may use a different locale than HA Core. Transfer only
