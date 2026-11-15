@@ -344,6 +344,28 @@ OPTION_TEXT.update({
   }
 })
 
+OPTION_TEXT["door_kind"] = {
+    "interior": [
+        "A normal interior doorway connecting rooms. Only this class can be used for optional cross-room coordination when explicitly linked.",
+        "Κανονική εσωτερική πόρτα μεταξύ δωματίων. Μόνο αυτός ο τύπος μπορεί να χρησιμοποιηθεί για προαιρετικό συντονισμό συσκευών ανάμεσα σε συνδεδεμένους χώρους.",
+        "Normale Innentür zwischen Räumen. Nur diese Art darf für die optionale Koordinierung zwischen ausdrücklich verbundenen Räumen genutzt werden.",
+    ],
+    "fire": [
+        "Fire or safety door. HEM never recommends holding it open or uses it for cross-room airflow/start coordination.",
+        "Πυράντοχη πόρτα ή πόρτα ασφαλείας. Το HEM δεν προτείνει να μείνει ανοιχτή ούτε τη χρησιμοποιεί για συντονισμό μεταξύ χώρων.",
+        "Brand- oder Sicherheitstür. HEM empfiehlt nicht, sie offen zu halten, und verwendet sie nicht zur Raum-übergreifenden Koordinierung.",
+    ],
+    "exterior": [
+        "Door to outdoors. It is not a connection between two HEM rooms and is excluded from cross-room coordination.",
+        "Εξωτερική πόρτα. Δεν συνδέει δύο δωμάτια του HEM και δεν χρησιμοποιείται για συντονισμό μεταξύ χώρων.",
+        "Außentür. Sie verbindet nicht zwei HEM-Räume und bleibt von der Raum-übergreifenden Koordinierung ausgeschlossen.",
+    ],
+}
+OPTION_TEXT["door_coordination"] = {
+    option: OPTION_TEXT["equipment_door_start_coordination"][option]
+    for option in ("observe", "conflicts", "shared")
+}
+
 def option_help_locales(key: str) -> dict[str, dict[str, str]]:
     """Return safe, static explanations keyed by native select option values."""
     options = OPTION_TEXT.get(OPTION_ALIASES.get(key, key), {})
