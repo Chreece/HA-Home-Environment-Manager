@@ -1080,6 +1080,9 @@
         "description": "Obsadenosť · senzor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Nastavte „nastavenia · zdroj“ iba pre vybranú izbu. Chýbajúce dáta bránia akcii."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Oblasť · nastavenia",
         "data": {
           "edit_room_area": "Zariadenia"
+        },
+        "data_description": {
+          "edit_room_area": "Nastavte „nastavenia · zdroj“ iba pre vybranú izbu. Chýbajúce dáta bránia akcii."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Obsadenosť · senzor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Nastavte „nastavenia · zdroj“ iba pre vybranú izbu. Chýbajúce dáta bránia akcii."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Oblasť · nastavenia",
         "data": {
           "edit_room_area": "Zariadenia"
+        },
+        "data_description": {
+          "edit_room_area": "Nastavte „nastavenia · zdroj“ iba pre vybranú izbu. Chýbajúce dáta bránia akcii."
         }
       },
       "edit_room": {

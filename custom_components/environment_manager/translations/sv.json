@@ -1080,6 +1080,9 @@
         "description": "Närvaro · sensor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Ställ in ”inställningar · källa” endast för valt rum. Ogiltiga värden stoppar åtgärden."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Område · inställningar",
         "data": {
           "edit_room_area": "Enheter"
+        },
+        "data_description": {
+          "edit_room_area": "Ställ in ”inställningar · källa” endast för valt rum. Ogiltiga värden stoppar åtgärden."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Närvaro · sensor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Ställ in ”inställningar · källa” endast för valt rum. Ogiltiga värden stoppar åtgärden."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Område · inställningar",
         "data": {
           "edit_room_area": "Enheter"
+        },
+        "data_description": {
+          "edit_room_area": "Ställ in ”inställningar · källa” endast för valt rum. Ogiltiga värden stoppar åtgärden."
         }
       },
       "edit_room": {
