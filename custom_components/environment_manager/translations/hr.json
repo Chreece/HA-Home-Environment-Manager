@@ -1080,6 +1080,9 @@
         "description": "Prisutnost · senzor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Postavite „postavke · izvor” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Područje · postavke",
         "data": {
           "edit_room_area": "Uređaji"
+        },
+        "data_description": {
+          "edit_room_area": "Postavite „postavke · izvor” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Prisutnost · senzor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Postavite „postavke · izvor” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Područje · postavke",
         "data": {
           "edit_room_area": "Uređaji"
+        },
+        "data_description": {
+          "edit_room_area": "Postavite „postavke · izvor” samo za odabranu prostoriju. Nedostajući podaci blokiraju radnju."
         }
       },
       "edit_room": {

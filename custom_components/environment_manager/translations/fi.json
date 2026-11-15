@@ -1080,6 +1080,9 @@
         "description": "Läsnäolo · anturi",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Määritä ”asetukset · lähde” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Alue · asetukset",
         "data": {
           "edit_room_area": "Laitteet"
+        },
+        "data_description": {
+          "edit_room_area": "Määritä ”asetukset · lähde” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Läsnäolo · anturi",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Määritä ”asetukset · lähde” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Alue · asetukset",
         "data": {
           "edit_room_area": "Laitteet"
+        },
+        "data_description": {
+          "edit_room_area": "Määritä ”asetukset · lähde” vain valitulle huoneelle. Virheelliset tiedot estävät toiminnon."
         }
       },
       "edit_room": {

@@ -1080,6 +1080,9 @@
         "description": "Capteurs de présence par pièce",
         "data": {
           "room_occupancy_area": "Pièce"
+        },
+        "data_description": {
+          "room_occupancy_area": "Configurez « paramètres · source » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Zone · paramètres",
         "data": {
           "edit_room_area": "Appareils"
+        },
+        "data_description": {
+          "edit_room_area": "Configurez « paramètres · source » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Capteurs de présence par pièce",
         "data": {
           "room_occupancy_area": "Pièce"
+        },
+        "data_description": {
+          "room_occupancy_area": "Configurez « paramètres · source » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Zone · paramètres",
         "data": {
           "edit_room_area": "Appareils"
+        },
+        "data_description": {
+          "edit_room_area": "Configurez « paramètres · source » dans la pièce choisie. Des données manquantes ou incompatibles bloquent l'action."
         }
       },
       "edit_room": {
