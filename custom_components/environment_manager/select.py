@@ -449,6 +449,10 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
     @property
     def extra_state_attributes(self):
         attributes = super().extra_state_attributes
+        from .setting_option_explanations import option_help_locales
+        explanations = option_help_locales("equipment_" + self._key)
+        if explanations:
+            attributes = {**attributes, "option_help_locales": explanations}
         if self._key in ("pid_fan_capacity_mode", "pid_fan_capacity_for_mode"):
             return {**attributes, "pid_fan_capacity_role":
                 "strategy" if self._key == "pid_fan_capacity_mode" else "direction"}
