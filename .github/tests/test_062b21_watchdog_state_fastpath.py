@@ -7,7 +7,6 @@ Home Assistant installation. This tests code paths, not a substitute algorithm.
 from __future__ import annotations
 
 import ast
-from copy import deepcopy
 from pathlib import Path
 from types import SimpleNamespace as NS
 
@@ -111,6 +110,6 @@ assert probe.current_option == "monitor_recover"
 
 # No mutation, state change, physical command, timer or session was required.
 assert records[other_id]["off_state_watchdog_mode"] == "disabled"
-assert before == list(range(50_000))
+assert before == {"sleep": list(range(50_000))}
 print("PASS: actual watchdog Select read is controller-scoped O(1) and avoids all")
 print("      inactive profile deepcopy, full resolver, capability scan and HA I/O")
