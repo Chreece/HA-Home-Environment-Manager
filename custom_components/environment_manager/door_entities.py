@@ -107,6 +107,26 @@ class DoorEntity:
 
 
 class DoorSelect(DoorEntity, SelectEntity):
+    @property
+    def extra_state_attributes(self):
+        attributes = super().extra_state_attributes
+        if self._key in ("kind", "coordination"):
+            from .setting_option_explanations import option_help_locales
+            descriptions = option_help_locales("door_" + self._key)
+            labels = words(self._manager)
+            # The native Select stores localized HA option text, not raw IDs.
+            # Bind explanations to the exact published labels, while the
+            # explanatory language can still follow the current card locale.
+            mapped = {
+                language: {labels[raw]: explanation
+                           for raw, explanation in texts.items()
+                           if raw in labels}
+                for language, texts in descriptions.items()
+            }
+            if mapped:
+                attributes["option_help_locales"] = mapped
+        return attributes
+
     def _choices(self):
         text = words(self._manager)
         if self._key == "coordination":
