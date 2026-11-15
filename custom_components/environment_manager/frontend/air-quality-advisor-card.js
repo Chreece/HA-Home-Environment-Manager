@@ -9866,13 +9866,13 @@
     ".hem-full-help127 summary:focus-visible{outline:2px solid var(--aqa-blue);outline-offset:2px;border-radius:4px}",
     ".hem-full-help127 summary::-webkit-details-marker{display:none}",
     ".hem-full-help127 ha-icon{--mdc-icon-size:16px;width:18px;height:18px;flex:0 0 18px;color:var(--aqa-blue)}",
-    ".hem-full-help127 p{font-size:11px;line-height:1.5;white-space:pre-line;overflow-wrap:break-word;word-break:normal;margin:5px 0}",
+    ".hem-full-help127 p{font-size:12.5px;line-height:1.55;white-space:pre-line;overflow-wrap:break-word;word-break:normal;margin:7px 0}",
     ".hem-full-options-help127{display:grid;gap:8px;min-width:0;padding:10px 0 3px;border-top:1px solid var(--aqa-edge);margin-top:9px}",
-    ".hem-full-options-title127{font-size:12px;line-height:1.4}",
+    ".hem-full-options-title127{font-size:13px;line-height:1.4}",
     ".hem-full-option-explain127{min-width:0;overflow-wrap:break-word;padding:0 0 0 8px;border-inline-start:2px solid var(--aqa-edge)}",
-    ".hem-full-option-explain127 strong{font-size:11px;display:block;line-height:1.4}",
+    ".hem-full-option-explain127 strong{font-size:12px;display:block;line-height:1.4}",
     ".hem-full-option-explain127 small{font-weight:400;opacity:.85}",
-    ".hem-full-option-explain127 p{margin:3px 0 0;font-size:11px}",
+    ".hem-full-option-explain127 p{margin:3px 0 0;font-size:12px}",
     ".hem-full-range127{font-variant-numeric:tabular-nums;opacity:.86}",
     "</style>"].join("");};
   /* HEM_FULL_REGISTRY_SETTINGS127_END */
@@ -12018,17 +12018,23 @@
       name:"Name of this floor in Home Assistant. Renaming it does not change its rooms or settings.",
       level:"Optional whole-number floor level in Home Assistant. Negative levels can represent basements; leave blank when unspecified.",
       icon:"Optional Material Design icon for this floor, for example mdi:home-floor-1. Leave blank for the default icon.",
-      membership:"Select this room to assign its Home Assistant Area to this floor, moving it from another floor if necessary. Clearing it removes only its assignment to this floor."},
+      membership:"Select this room to assign its Home Assistant Area to this floor, moving it from another floor if necessary. Clearing it removes only its assignment to this floor.",
+      room_occupancy_area:"Choose the room whose presence sources you want to configure. The selection itself does not report occupancy or control a device.",
+      edit_room_area:"Choose which Home Assistant room to edit. Changing this selection does not move any sensor or change the room settings."},
     el:{missing:"Δεν υπάρχει πρόσθετη περιγραφή για αυτή τη ρύθμιση.",
       name:"Το όνομα αυτού του ορόφου στο Home Assistant. Η μετονομασία δεν αλλάζει τα δωμάτια ή τις ρυθμίσεις του.",
       level:"Προαιρετικός ακέραιος αριθμός επιπέδου στο Home Assistant. Αρνητικές τιμές μπορούν να δηλώνουν υπόγεια· άφησέ το κενό όταν δεν ορίζεται.",
       icon:"Προαιρετικό εικονίδιο Material Design για τον όροφο, π.χ. mdi:home-floor-1. Άφησέ το κενό για το προεπιλεγμένο εικονίδιο.",
-      membership:"Επίλεξε το δωμάτιο για να αντιστοιχίσεις τον χώρο του Home Assistant σε αυτόν τον όροφο, μεταφέροντάς τον από άλλον αν χρειάζεται. Η αποεπιλογή αφαιρεί μόνο την αντιστοίχιση σε αυτόν τον όροφο."},
+      membership:"Επίλεξε το δωμάτιο για να αντιστοιχίσεις τον χώρο του Home Assistant σε αυτόν τον όροφο, μεταφέροντάς τον από άλλον αν χρειάζεται. Η αποεπιλογή αφαιρεί μόνο την αντιστοίχιση σε αυτόν τον όροφο.",
+      room_occupancy_area:"Διάλεξε το δωμάτιο για το οποίο θέλεις να ρυθμίσεις πηγές παρουσίας. Η επιλογή δεν δηλώνει από μόνη της παρουσία και δεν ελέγχει συσκευές.",
+      edit_room_area:"Διάλεξε τον χώρο του Home Assistant που θέλεις να επεξεργαστείς. Η επιλογή δεν μετακινεί αισθητήρες ούτε αλλάζει από μόνη της τις ρυθμίσεις του χώρου."},
     de:{missing:"Für diese Einstellung ist keine zusätzliche Beschreibung verfügbar.",
       name:"Name dieser Etage in Home Assistant. Eine Umbenennung ändert weder ihre Räume noch deren Einstellungen.",
       level:"Optionale ganzzahlige Etagenhöhe in Home Assistant. Negative Werte können Kellergeschosse darstellen; bei unbekannter Höhe leer lassen.",
       icon:"Optionales Material-Design-Symbol dieser Etage, zum Beispiel mdi:home-floor-1. Für das Standardsymbol leer lassen.",
-      membership:"Diesen Raum auswählen, um seinen Home-Assistant-Bereich dieser Etage zuzuordnen und gegebenenfalls von einer anderen Etage zu verschieben. Abwählen entfernt nur die Zuordnung zu dieser Etage."}
+      membership:"Diesen Raum auswählen, um seinen Home-Assistant-Bereich dieser Etage zuzuordnen und gegebenenfalls von einer anderen Etage zu verschieben. Abwählen entfernt nur die Zuordnung zu dieser Etage.",
+      room_occupancy_area:"Raum auswählen, dessen Anwesenheitsquellen eingerichtet werden sollen. Die Auswahl selbst beweist keine Anwesenheit und steuert kein Gerät.",
+      edit_room_area:"Den Home-Assistant-Raum zur Bearbeitung auswählen. Dabei werden weder Sensoren verschoben noch Raumeinstellungen automatisch geändert."}
   };
   function settingHelpTextB9(card,key){
     return (settingHelpWordsB9[card._language()]||settingHelpWordsB9.en)[key];
@@ -12042,8 +12048,12 @@
       card._icon('mdi:information-outline')+'</button>';
   }
   function settingHelpPanelB9(card,scope,key,help){
+    const description=(typeof help==="string"&&help.trim())
+      ?help:settingHelpTextB9(card,key)||settingHelpTextB9(card,"missing");
+    const paragraphs=description.split(/\n\s*\n/).filter(text=>text.trim())
+      .map(text=>'<p>'+escape(text.trim())+'</p>').join("");
     return '<div id="'+escape(settingHelpIdB9(scope,key))+'" class="hem-setting-help-b9" '+
-      'data-setting-help-b9 hidden><p>'+escape(help||settingHelpTextB9(card,'missing'))+'</p></div>';
+      'data-setting-help-b9 hidden>'+paragraphs+'</div>';
   }
   function settingHelpHeadingB9(card,scope,key,label,help,heading){
     return '<div class="hem-setting-heading-b9">'+
