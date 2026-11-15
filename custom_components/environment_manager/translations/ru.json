@@ -1080,6 +1080,9 @@
         "description": "Присутствие · датчик",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Настройка «настройки · источник» только для выбранной комнаты. Неверные данные блокируют действие."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Область · настройки",
         "data": {
           "edit_room_area": "Устройства"
+        },
+        "data_description": {
+          "edit_room_area": "Настройка «настройки · источник» только для выбранной комнаты. Неверные данные блокируют действие."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Присутствие · датчик",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Настройка «настройки · источник» только для выбранной комнаты. Неверные данные блокируют действие."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Область · настройки",
         "data": {
           "edit_room_area": "Устройства"
+        },
+        "data_description": {
+          "edit_room_area": "Настройка «настройки · источник» только для выбранной комнаты. Неверные данные блокируют действие."
         }
       },
       "edit_room": {

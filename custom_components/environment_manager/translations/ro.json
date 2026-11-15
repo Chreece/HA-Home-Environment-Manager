@@ -1080,6 +1080,9 @@
         "description": "Ocupare · senzor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Configurați „setări · sursă” numai pentru camera aleasă. Datele greșite blochează acțiunea."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Zonă · setări",
         "data": {
           "edit_room_area": "Dispozitive"
+        },
+        "data_description": {
+          "edit_room_area": "Configurați „setări · sursă” numai pentru camera aleasă. Datele greșite blochează acțiunea."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Ocupare · senzor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Configurați „setări · sursă” numai pentru camera aleasă. Datele greșite blochează acțiunea."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Zonă · setări",
         "data": {
           "edit_room_area": "Dispozitive"
+        },
+        "data_description": {
+          "edit_room_area": "Configurați „setări · sursă” numai pentru camera aleasă. Datele greșite blochează acțiunea."
         }
       },
       "edit_room": {
