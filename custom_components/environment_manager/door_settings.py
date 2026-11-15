@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import asyncio
 from collections.abc import Mapping
-import math
 
 from .config_data import mutable_copy as deepcopy
 from .room_doors import contact_options
@@ -85,15 +84,6 @@ async def async_update(manager, area, entity, key, value):
             if value is not None and (not isinstance(value, str)
                     or value not in choices(manager.hass, area, item.get("energy_meter"))):
                 raise HomeAssistantError("Choose a native cumulative energy meter in this exact Area")
-        elif key == "report_timeout_minutes":
-            if isinstance(value, bool):
-                raise HomeAssistantError("Report timeout must be minutes, not a Boolean")
-            try:
-                value = float(value)
-            except (ValueError, TypeError, OverflowError) as err:
-                raise HomeAssistantError("Invalid report timeout") from err
-            if not math.isfinite(value) or not 0 <= value <= 10080:
-                raise HomeAssistantError("Report timeout must be 0–10080 minutes")
         else:
             raise HomeAssistantError("Unsupported door setting")
         item[key] = value

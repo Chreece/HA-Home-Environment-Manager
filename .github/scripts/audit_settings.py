@@ -49,10 +49,10 @@ def inventory():
                     'catalog_path':f'strings.json/{section}/step/{step}/data/{key}',
                     'literal_references':sorted(paths.get(key,()))[:6],
                     'consumer_status':'catalog_only_step_reachability_not_proven'})
-    for key in ('target_area','kind','report_timeout_minutes','coordination','energy_meter'):
+    for key in ('target_area','kind','coordination','energy_meter'):
         records.append({'kind':'dynamic_door','key':'door_'+key,
             'presentation':'advanced' if 'door_'+key in policy['advanced'] else 'primary',
-            'definition':'custom_components/environment_manager/door_entities.py:select_entities/number_entities',
+            'definition':'custom_components/environment_manager/door_entities.py:select_entities',
             'consumer':'custom_components/environment_manager/door_settings.py:async_update'})
     for profile in ('manual','home','comfort','away','sleep','eco'):
         for metric in ('heat','cool','humidity'):
@@ -73,7 +73,7 @@ def inventory():
         'limitations':['Catalog entries are not counts of controls shown on any device.',
             'Literal references are navigation aids, not proof of use or non-use.',
             'Legacy form reachability and dynamic consumers require separate review.',
-            'No stored configuration, authorization, runtime or native entity was removed.'],
+            'Saved configuration and native actuator authorization are preserved; obsolete door timeout Number registry entries are retired.'],
         'counts':dict(Counter(r['kind'] for r in records)),
         'policy':policy,'settings':records}
 

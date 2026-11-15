@@ -117,11 +117,15 @@ class DispatchEvidenceTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(r.calls,[])
             self.assertIsNone(r.record['pending'])
 
-    async def test_contact_report_expiry_is_rechecked(self):
+    async def test_legacy_report_expiry_does_not_cancel_dispatch(self):
+        # A contact may legitimately stay at ON/OFF for months. A persisted
+        # pre-migration heartbeat threshold must not revoke native authority.
         self.config['door_settings']={self.contact.entity_id:{'report_timeout_minutes':1}}
+        self.contact.last_reported=self.time-timedelta(days=365)
         r=self.runtime(mutation=lambda _:setattr(self,'offset',61))
         await r.tick(SPEC)
-        self.assertEqual(r.calls,[])
+        self.assertEqual(len(r.calls),1)
+        self.assertEqual(r.calls[0]['data'],{'hvac_mode':'heat'})
 
     async def test_closure_stability_boundary_is_rechecked(self):
         self.contact.last_changed=self.time-timedelta(seconds=119)

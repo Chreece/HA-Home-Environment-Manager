@@ -316,12 +316,22 @@ async def async_setup_entry(hass, entry, async_add_entities) -> None:
             ))
     for spec in equipment.specs(manager):
         numbers.extend(_equipment_numbers(manager, spec, registry))
+    # Retire only old per-door heartbeat Number entities. Previously saved
+    # timeouts remain inert; contact state age never removes valid evidence.
     door_rooms = manager.settings.get("climate_rooms", {})
-    if isinstance(door_rooms, dict) and any(
-            isinstance(room, dict) and isinstance(room.get("door_sensors"), list)
-            and room["door_sensors"] for room in door_rooms.values()):
-        from .door_entities import number_entities
-        numbers.extend(number_entities(manager))
+    getter = getattr(registry, "async_get_entity_id", None)
+    remover = getattr(registry, "async_remove", None)
+    if isinstance(door_rooms, dict) and callable(getter) and callable(remover):
+        from hashlib import sha256
+        for area_id, room_cfg in door_rooms.items():
+            contacts = room_cfg.get("door_sensors", []) if isinstance(room_cfg, dict) else []
+            for contact in contacts if isinstance(contacts, list) else ():
+                if not isinstance(contact, str):
+                    continue
+                suffix = sha256(contact.encode()).hexdigest()[:16]
+                uid = f"{entry.entry_id}_area_{area_id}_door_{suffix}_report_timeout_minutes"
+                if old_entity := getter("number", DOMAIN, uid):
+                    remover(old_entity)
     async_add_grouped_entities(entry.runtime_data, async_add_entities, numbers)
     from .aqi_sources import register_late_sources
     register_late_sources(manager, entry, async_add_entities, numbers,

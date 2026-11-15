@@ -134,18 +134,28 @@ class Evidence(unittest.TestCase):
         hass.states['binary_sensor.door_a'].last_changed=now-timedelta(days=30)
         self.assertTrue(self.observe()['eco_active'])
         self.assertEqual(self.observe()['contacts'][0]['health'],'ok')
-    def test_reporting_expiry_is_explicit_not_last_change(self):
-        c=hass.states['binary_sensor.door_a'];c.last_changed=now-timedelta(days=4)
-        c.last_reported=now-timedelta(seconds=5)
+    def test_legacy_report_timeout_never_expires_an_unchanged_contact(self):
+        c=hass.states['binary_sensor.door_a']
+        c.last_changed=now-timedelta(days=4000)
+        c.last_reported=now-timedelta(days=4000)
         cfg={**self.cfg,'door_settings':{'binary_sensor.door_a':{'report_timeout_minutes':5}}}
+        observation=self.observe(cfg)
+        self.assertTrue(observation['eco_active'])
+        self.assertEqual(observation['boundary'],'closed')
+        self.assertEqual(observation['contacts'][0]['health'],'ok')
+        self.assertNotIn('report_due_epoch',observation['contacts'][0])
+        self.assertNotIn('report_timeout_minutes',observation['contacts'][0])
+        c.state='on'
+        c.last_changed=now-timedelta(days=4)
+        self.assertEqual(self.observe(cfg)['boundary'],'open')
+    def test_missing_report_timestamp_does_not_invalidate_a_live_contact(self):
+        c=hass.states['binary_sensor.door_a']
+        cfg={**self.cfg,'door_settings':{'binary_sensor.door_a':{'report_timeout_minutes':30}}}
         self.assertTrue(self.observe(cfg)['eco_active'])
-        c.last_reported=now-timedelta(minutes=6)
-        self.assertFalse(self.observe(cfg)['eco_active'])
-        self.assertEqual(self.observe(cfg)['contacts'][0]['health'],'report_expired')
-    def test_missing_or_future_heartbeat_does_not_authorize_eco(self):
-        cfg={**self.cfg,'door_settings':{'binary_sensor.door_a':{'report_timeout_minutes':5}}}
-        self.assertEqual(self.observe(cfg)['contacts'][0]['health'],'report_time_unknown')
-        hass.states['binary_sensor.door_a'].last_reported=now+timedelta(seconds=1)
+        c.last_reported=now+timedelta(days=1)
+        self.assertTrue(self.observe(cfg)['eco_active'])
+        c.state='unknown'
+        self.assertEqual(self.observe(cfg)['contacts'][0]['health'],'unknown')
         self.assertFalse(self.observe(cfg)['eco_active'])
     def test_local_vacancy_must_be_stable_at_live_gate(self):
         self.assertTrue(self.observe()['eco_active'])
@@ -294,11 +304,11 @@ class Settings(unittest.TestCase):
         self.write('target_area','area_b');self.write('kind','exterior')
         self.assertIsNone(self.calls[-1]['climate_rooms']['area_a']['door_settings']['binary_sensor.door_a']['target_area'])
         with self.assertRaises(ValueError):self.write('target_area','area_b')
-    def test_timeout_is_opt_in_bounded_and_noop_write_is_suppressed(self):
-        for invalid in (True,float('nan'),-1,10081,'broken'):
-            with self.assertRaises(ValueError):self.write('report_timeout_minutes',invalid)
-        self.write('report_timeout_minutes',0);count=len(self.calls)
-        self.write('report_timeout_minutes',0)
+    def test_retired_timeout_cannot_be_configured_and_noop_write_is_suppressed(self):
+        with self.assertRaises(ValueError):
+            self.write('report_timeout_minutes',5)
+        self.write('kind','interior');count=len(self.calls)
+        self.write('kind','interior')
         self.assertEqual(count,len(self.calls))
 
 class MonitorAdapter(unittest.TestCase):

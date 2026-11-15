@@ -106,7 +106,6 @@ with sync_playwright() as pw:
                   ['number.sleep_heat','18','climate_profile_sleep_heat','Sleep · Heating target (°C)'],
                   ['select.door_target','Not connected','door_target_area','Interior door A · Connects to room'],
                   ['select.door_kind','Interior','door_kind','Interior door A · Door purpose'],
-                  ['number.door_report','0','door_report_timeout_minutes','Interior door A · Expected report timeout'],
                   ['select.door_coordination','Observe only','door_coordination','Interior door A · Device start coordination'],
                   ['select.door_energy','No energy meter','door_energy_meter','Interior door A · Measured energy meter']
                 ];
@@ -133,7 +132,7 @@ with sync_playwright() as pw:
                 card._hass.callService=async (...args)=>{native062.push(args);};
             }""",language)
             assert page.evaluate("card._openRoomSettings114('room0')")
-            page.wait_for_function('card._roomSettingsDialog114?.fullRegistry127?.length===8')
+            page.wait_for_function('card._roomSettingsDialog114?.fullRegistry127?.length===7')
             dialog=page.locator('dialog.hem-room-options114')
             group=dialog.locator('[data-hem-unified141="ventilation"]')
             expect(group.locator(':scope > summary strong')).to_have_text(HEADINGS[language])
@@ -149,7 +148,7 @@ with sync_playwright() as pw:
             assert paired.locator('[data-hem-full-row127]').evaluate_all(
                 'nodes=>nodes.map(n=>n.getAttribute("data-hem-full-row127"))') == [
                     'select.door_target','select.door_kind',
-                    'number.door_report','select.door_energy']
+                    'select.door_energy']
             assert dialog.locator('[data-hem-unified141="presence"] [data-hem-full-row127="select.door_target"]').count()==0
             for text in dialog.locator('.hem-full-label127 strong').all_text_contents():
                 assert 'Gästezimmer' not in text and 'Environment' not in text,text
@@ -159,8 +158,8 @@ with sync_playwright() as pw:
             door.locator('input[type=checkbox][value="binary_sensor.door_b"]').check()
             draft=page.evaluate('structuredClone(card._roomSettingsDialog114.draft)')
             # Door Eco and coordination were moved to individual controllers.
-            # The door-to-room link, purpose, meter and report timeout remain
-            # room-owned evidence, and stay independently editable.
+            # The door-to-room link, purpose and meter remain room-owned.
+            # Contact states never expire for lack of a heartbeat.
             target=paired.locator('[data-hem-full-row127="select.door_target"]')
             select=target.locator('select')
             select.focus()
@@ -184,11 +183,7 @@ with sync_playwright() as pw:
             meter.locator('select').dispatch_event('change')
             assert page.evaluate('native062.at(-1)')==['select','select_option',{
                 'entity_id':'select.door_energy','option':'Energy [sensor.energy]'}]
-            timeout=paired.locator('[data-hem-full-row127="number.door_report"]')
-            timeout.locator('input').fill('30')
-            timeout.locator('input').dispatch_event('change')
-            assert page.evaluate('native062.at(-1)')==['number','set_value',{
-                'entity_id':'number.door_report','value':30}]
+            assert paired.locator('[data-hem-full-row127="number.door_report"]').count()==0
             assert page.evaluate('card._roomSettingsDialog114.draft')==draft
             page.wait_for_function('card._roomSettingsDialog114?.optionsAutosave?.dirty.size===0')
             assert card_menu_open(page)
@@ -214,7 +209,7 @@ with sync_playwright() as pw:
                 document.body.appendChild(card);window.card=card;
                 card._hass={language,states:{'binary_sensor.door_a':{attributes:{friendly_name:'Door <script>bad()</script>'}}}};
                 card._installFolds87();
-                const report={boundary:'closed',eco_active:false,contacts:[{entity_id:'binary_sensor.door_a',kind:'interior',state:'closed',health:'report_expired'}],
+                const report={boundary:'closed',eco_active:false,contacts:[{entity_id:'binary_sensor.door_a',kind:'interior',state:'closed',health:'unavailable'}],
                   connections:[{other_area:'room1',other_name:'Bedroom <img src=x onerror=bad()>',state:'closed',kind:'interior',temperature_difference_c:5,
                     observations:{open:{samples:6,mean_absolute_temperature_difference_c:2},closed:{samples:8,mean_absolute_temperature_difference_c:5}}}],
                   advisories:[{code:'contact_unverified'},{code:'fresh_air_needed'},{code:'moisture_transfer_risk',related_area:'room1'}],

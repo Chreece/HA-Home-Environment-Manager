@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import ast
 from collections import Counter
+from datetime import datetime, timezone
 from pathlib import Path
 import sys
 import types
@@ -165,6 +166,12 @@ selected = {living: {"windows": ["binary_sensor.window", "binary_sensor.patio",
 custom = d.rooms(hass, [living], 60, source_selections=selected)
 assert {w.entity_id for w in custom[0].windows} == set(selected[living]["windows"])
 assert all(w.opened is False for w in custom[0].windows)
+# An unchanged physical window or explicitly enrolled patio door is not stale,
+# even if HA has seen no event for years.
+for entity in ("binary_sensor.window", "binary_sensor.patio"):
+    by_id[entity].last_changed = datetime(2019, 1, 1, tzinfo=timezone.utc)
+old_contacts = d.rooms(hass, [living], 1, source_selections=selected)[0].windows
+assert all(w.opened is False for w in old_contacts)
 by_id["binary_sensor.patio"].state = "on"
 assert next(w.opened for w in d.rooms(hass, [living], 60, source_selections=selected)[0].windows
             if w.entity_id == "binary_sensor.patio") is True

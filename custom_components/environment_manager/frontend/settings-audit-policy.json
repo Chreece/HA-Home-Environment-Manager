@@ -50,7 +50,6 @@
     "equipment_pid_adaptation_mode": "compatibility_tuning",
     "area_climate_operating_humidity_hysteresis_rh": "strategy_tuning",
     "area_climate_operating_cooling_dry_deferral_rh_points": "strategy_tuning",
-    "door_report_timeout_minutes": "optional_diagnostics",
     "door_energy_meter": "optional_diagnostics"
   },
   "advanced_options": {

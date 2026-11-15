@@ -293,7 +293,7 @@ class DoorContextMonitor:
             if not contacts and not report["connections"]:
                 environment.get(area, {}).pop("door_context", None)
                 continue
-            signature = tuple((c["entity_id"], c["kind"], c["target_area"], c["report_timeout_minutes"])
+            signature = tuple((c["entity_id"], c["kind"], c["target_area"])
                               for c in contacts) + (_source_signature(settings, area),)
             report["session"] = self._session(area, signature, report["boundary"], now)
             report["presence_recheck_hint"] = False
@@ -301,9 +301,6 @@ class DoorContextMonitor:
                 age = contact.get("state_age_seconds")
                 if contact.get("state") == "closed" and isinstance(age, (int, float)) and age < 120:
                     deadlines.append(now + 120 - age)
-                report_due = contact.get("report_due_epoch")
-                if contact.get("health") == "ok" and isinstance(report_due, (int, float)) and report_due > now:
-                    deadlines.append(report_due)
                 events = self._events.get(contact["entity_id"], ())
                 recent = [stamp for stamp, _ in events if 0 <= now - stamp <= 60]
                 if recent:
