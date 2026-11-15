@@ -34,7 +34,7 @@ if '--with-ha' not in sys.argv:
     module('homeassistant.helpers.dispatcher',async_dispatcher_connect=lambda *args:lambda:None)
     module('homeassistant.helpers.entity',EntityCategory=N(CONFIG='config',DIAGNOSTIC='diagnostic'))
 
-saved={'kind':'interior','target_area':None,'report_timeout_minutes':0,'coordination':'observe','energy_meter':None}
+saved={'kind':'interior','target_area':None,'coordination':'observe','energy_meter':None}
 calls=[]
 async def update(manager,area,entity,key,value):
     assert (area,entity)==('a','binary_sensor.door')
@@ -52,10 +52,10 @@ manager=N(entry=N(entry_id='entry'),settings={'climate_rooms':{'a':{}}},
               'contacts':[{'entity_id':'binary_sensor.door','health':'ok'}],
               'connected_rooms':['b'],'advisories':[{'code':'fresh_air_needed'}],
               'quiet_boundary':True,'presence_recheck_hint':False}}}))
-selects=entity.select_entities(manager);numbers=entity.number_entities(manager);sensors=entity.sensor_entities(manager)
-assert len(selects)==4 and len(numbers)==len(sensors)==1
-all_entities=[*selects,*numbers,*sensors]
-assert len({item._attr_unique_id for item in all_entities})==6
+selects=entity.select_entities(manager);sensors=entity.sensor_entities(manager)
+assert len(selects)==4 and len(sensors)==1 and not hasattr(entity,'number_entities')
+all_entities=[*selects,*sensors]
+assert len({item._attr_unique_id for item in all_entities})==5
 for item in all_entities:
     assert item._attr_device_info['identifiers']=={('environment_manager','entry_area_a')}
     # State publication is a boundary fixture; production entity properties,
@@ -90,10 +90,6 @@ assert coordination.extra_state_attributes['door_setting_key']=='coordination'
 assert energy.extra_state_attributes['door_setting_key']=='energy_meter'
 saved['kind']='exterior'
 assert connection.options==['Not connected']
-assert numbers[0].native_value==0
-asyncio.run(numbers[0].async_set_native_value(30))
-assert saved['report_timeout_minutes']==30
-assert numbers[0].extra_state_attributes['door_source_entity']=='binary_sensor.door'
 assert sensors[0].native_value=='closed'
 assert sensors[0].extra_state_attributes['advisory_only'] is True
 assert sensors[0].extra_state_attributes['advisory_codes']==['fresh_air_needed']
@@ -105,5 +101,5 @@ for locale,label in [('el','Συνδέεται με χώρο'),('de','Verbunden 
 manager.plan.environment.clear()
 assert sensors[0].native_value=='unknown'
 assert sensors[0].extra_state_attributes['contact_count']==0
-print('PASS: native door select/number/enum entities, identities, exact setters and EN/EL/DE'+
+print('PASS: native door select/enum entities, identities, exact setters and EN/EL/DE'+
       (' with actual Home Assistant base classes' if '--with-ha' in sys.argv else ' (offline boundaries)'))
