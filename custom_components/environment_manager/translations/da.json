@@ -1080,6 +1080,9 @@
         "description": "Tilstedeværelse · sensor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Indstil »indstillinger · kilde« kun for valgt rum. Ugyldige data blokerer handlingen."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Område · indstillinger",
         "data": {
           "edit_room_area": "Enheder"
+        },
+        "data_description": {
+          "edit_room_area": "Indstil »indstillinger · kilde« kun for valgt rum. Ugyldige data blokerer handlingen."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Tilstedeværelse · sensor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Indstil »indstillinger · kilde« kun for valgt rum. Ugyldige data blokerer handlingen."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Område · indstillinger",
         "data": {
           "edit_room_area": "Enheder"
+        },
+        "data_description": {
+          "edit_room_area": "Indstil »indstillinger · kilde« kun for valgt rum. Ugyldige data blokerer handlingen."
         }
       },
       "edit_room": {

@@ -1080,6 +1080,9 @@
         "description": "Obsazenost · senzor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Nastavte „nastavení · zdroj“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Oblast · nastavení",
         "data": {
           "edit_room_area": "Zařízení"
+        },
+        "data_description": {
+          "edit_room_area": "Nastavte „nastavení · zdroj“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Obsazenost · senzor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Nastavte „nastavení · zdroj“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Oblast · nastavení",
         "data": {
           "edit_room_area": "Zařízení"
+        },
+        "data_description": {
+          "edit_room_area": "Nastavte „nastavení · zdroj“ pouze pro zvolený pokoj. Chybějící či neplatná data blokují akci."
         }
       },
       "edit_room": {

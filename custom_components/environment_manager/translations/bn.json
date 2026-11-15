@@ -1080,6 +1080,9 @@
         "description": "উপস্থিতি · সেন্সর",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "“সেটিংস · উৎস” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।"
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "এলাকা · সেটিংস",
         "data": {
           "edit_room_area": "ডিভাইস"
+        },
+        "data_description": {
+          "edit_room_area": "“সেটিংস · উৎস” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।"
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "উপস্থিতি · সেন্সর",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "“সেটিংস · উৎস” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।"
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "এলাকা · সেটিংস",
         "data": {
           "edit_room_area": "ডিভাইস"
+        },
+        "data_description": {
+          "edit_room_area": "“সেটিংস · উৎস” শুধু নির্বাচিত ঘরে সেট করুন। অবৈধ তথ্য কাজ বন্ধ রাখে।"
         }
       },
       "edit_room": {

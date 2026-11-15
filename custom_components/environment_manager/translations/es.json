@@ -1080,6 +1080,9 @@
         "description": "Ocupación · sensor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Configura «ajustes · fuente» solo en la habitación seleccionada. Datos incompatibles o ausentes bloquean la acción."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Área · ajustes",
         "data": {
           "edit_room_area": "Dispositivos"
+        },
+        "data_description": {
+          "edit_room_area": "Configura «ajustes · fuente» solo en la habitación seleccionada. Datos incompatibles o ausentes bloquean la acción."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Ocupación · sensor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Configura «ajustes · fuente» solo en la habitación seleccionada. Datos incompatibles o ausentes bloquean la acción."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Área · ajustes",
         "data": {
           "edit_room_area": "Dispositivos"
+        },
+        "data_description": {
+          "edit_room_area": "Configura «ajustes · fuente» solo en la habitación seleccionada. Datos incompatibles o ausentes bloquean la acción."
         }
       },
       "edit_room": {
