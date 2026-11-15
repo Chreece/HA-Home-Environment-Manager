@@ -44,19 +44,13 @@ for key, options in expected.items():
             assert explanation.strip() != value, (locale, key, value)
             assert "<script" not in explanation.lower(), (locale, key, value)
 
-# Only the two retired room-navigation steps are missing historical form help;
-# their card-facing fallback is now explicit, in EN/EL/DE.
-legacy_navigation = {
-    ("room_occupancy", "room_occupancy_area"),
-    ("select_room", "edit_room_area"),
-}
+# Every legacy and current Form entry now has purpose text in the
+# canonical English and native Greek/German catalogs, including room navigation.
 for source in ("strings.json", "translations/en.json", "translations/el.json", "translations/de.json"):
     translated = json.loads((SRC / source).read_text(encoding="utf-8"))
     for family in ("config", "options"):
         for step, fields in translated[family].get("step", {}).items():
             for key in fields.get("data", {}):
-                if (step, key) in legacy_navigation:
-                    continue
                 text = fields.get("data_description", {}).get(key)
                 assert isinstance(text, str) and len(text.strip()) >= 20, (
                     source, family, step, key,
