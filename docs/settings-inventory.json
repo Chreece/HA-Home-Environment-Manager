@@ -1743,7 +1743,7 @@
       "same_property_options_alias": null,
       "catalog_path": "strings.json/entity/select/shade_window_entity",
       "literal_references": [
-        "custom_components/environment_manager/select.py:693"
+        "custom_components/environment_manager/select.py:698"
       ],
       "consumer_status": "runtime_and_dynamic_generation_not_exhaustively_proven"
     },
@@ -1784,7 +1784,7 @@
       "same_property_options_alias": null,
       "catalog_path": "strings.json/entity/select/shade_lux_entity",
       "literal_references": [
-        "custom_components/environment_manager/select.py:601"
+        "custom_components/environment_manager/select.py:606"
       ],
       "consumer_status": "runtime_and_dynamic_generation_not_exhaustively_proven"
     },
@@ -2775,7 +2775,7 @@
         "custom_components/environment_manager/const.py:74",
         "custom_components/environment_manager/device_controls.py:100",
         "custom_components/environment_manager/device_controls.py:104",
-        "custom_components/environment_manager/equipment_model.py:1299",
+        "custom_components/environment_manager/equipment_model.py:1314",
         "custom_components/environment_manager/mold_control_demand.py:131"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -3721,10 +3721,10 @@
       "literal_references": [
         "custom_components/environment_manager/const.py:25",
         "custom_components/environment_manager/equipment_feature_registration.py:32",
-        "custom_components/environment_manager/equipment_model.py:168",
-        "custom_components/environment_manager/equipment_model.py:169",
-        "custom_components/environment_manager/equipment_model.py:172",
-        "custom_components/environment_manager/equipment_model.py:173"
+        "custom_components/environment_manager/equipment_model.py:183",
+        "custom_components/environment_manager/equipment_model.py:184",
+        "custom_components/environment_manager/equipment_model.py:187",
+        "custom_components/environment_manager/equipment_model.py:188"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -4821,7 +4821,7 @@
         "custom_components/environment_manager/config_flow.py:836",
         "custom_components/environment_manager/device_controls.py:177",
         "custom_components/environment_manager/environment_extended.py:187",
-        "custom_components/environment_manager/equipment_model.py:1236",
+        "custom_components/environment_manager/equipment_model.py:1251",
         "custom_components/environment_manager/switch.py:117"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -7754,7 +7754,7 @@
         "custom_components/environment_manager/const.py:74",
         "custom_components/environment_manager/device_controls.py:100",
         "custom_components/environment_manager/device_controls.py:104",
-        "custom_components/environment_manager/equipment_model.py:1299",
+        "custom_components/environment_manager/equipment_model.py:1314",
         "custom_components/environment_manager/mold_control_demand.py:131"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -8955,7 +8955,7 @@
         "custom_components/environment_manager/config_flow.py:836",
         "custom_components/environment_manager/device_controls.py:177",
         "custom_components/environment_manager/environment_extended.py:187",
-        "custom_components/environment_manager/equipment_model.py:1236",
+        "custom_components/environment_manager/equipment_model.py:1251",
         "custom_components/environment_manager/switch.py:117"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -11857,10 +11857,10 @@
       "literal_references": [
         "custom_components/environment_manager/const.py:25",
         "custom_components/environment_manager/equipment_feature_registration.py:32",
-        "custom_components/environment_manager/equipment_model.py:168",
-        "custom_components/environment_manager/equipment_model.py:169",
-        "custom_components/environment_manager/equipment_model.py:172",
-        "custom_components/environment_manager/equipment_model.py:173"
+        "custom_components/environment_manager/equipment_model.py:183",
+        "custom_components/environment_manager/equipment_model.py:184",
+        "custom_components/environment_manager/equipment_model.py:187",
+        "custom_components/environment_manager/equipment_model.py:188"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
