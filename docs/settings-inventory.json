@@ -1743,7 +1743,7 @@
       "same_property_options_alias": null,
       "catalog_path": "strings.json/entity/select/shade_window_entity",
       "literal_references": [
-        "custom_components/environment_manager/select.py:698"
+        "custom_components/environment_manager/select.py:702"
       ],
       "consumer_status": "runtime_and_dynamic_generation_not_exhaustively_proven"
     },
@@ -1784,7 +1784,7 @@
       "same_property_options_alias": null,
       "catalog_path": "strings.json/entity/select/shade_lux_entity",
       "literal_references": [
-        "custom_components/environment_manager/select.py:606"
+        "custom_components/environment_manager/select.py:610"
       ],
       "consumer_status": "runtime_and_dynamic_generation_not_exhaustively_proven"
     },
