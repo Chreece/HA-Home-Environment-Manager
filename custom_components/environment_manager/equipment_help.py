@@ -621,7 +621,14 @@ def equipment_configuration_help(key: str, locale: str = "en", *, modes=None) ->
     """Describe one setting, using only supplied device modes when applicable."""
     language = str(locale or "en").replace("_", "-").casefold().split("-")[0]
     index = {"el": 1, "de": 2}.get(language, 0)
-    description = HELP.get(key, HELP["climate"])[index]
+    # An unknown future control must not receive the climate façade help: that
+    # would explain the wrong action and mislead the person editing it.
+    fallback = (
+        "Detailed behavior is not documented for this setting yet. Check the current device capability before editing.",
+        "Η συγκεκριμένη ρύθμιση δεν έχει ακόμη τεκμηριωμένη περιγραφή. Έλεγξε τις δυνατότητες της συσκευής πριν την αλλάξεις.",
+        "Für diese Einstellung liegt noch keine genaue Verhaltensbeschreibung vor. Vor dem Ändern die Gerätefähigkeit prüfen.",
+    )
+    description = HELP.get(key, fallback)[index]
     if key != "native_full_output" or modes is None:
         return description
     if __package__:

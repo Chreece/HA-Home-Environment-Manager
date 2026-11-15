@@ -1080,6 +1080,9 @@
         "description": "حضور · حسگر",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "«تنظیمات · منبع» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "ناحیه · تنظیمات",
         "data": {
           "edit_room_area": "دستگاه‌ها"
+        },
+        "data_description": {
+          "edit_room_area": "«تنظیمات · منبع» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "حضور · حسگر",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "«تنظیمات · منبع» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "ناحیه · تنظیمات",
         "data": {
           "edit_room_area": "دستگاه‌ها"
+        },
+        "data_description": {
+          "edit_room_area": "«تنظیمات · منبع» را فقط برای اتاق انتخاب‌شده تنظیم کنید. دادهٔ نامعتبر مانع اقدام می‌شود."
         }
       },
       "edit_room": {

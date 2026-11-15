@@ -1080,6 +1080,9 @@
         "description": "在室 · センサー",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "「設定 · 情報源」は選択した部屋だけに設定します。無効なデータでは操作を行いません。"
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "エリア · 設定",
         "data": {
           "edit_room_area": "デバイス"
+        },
+        "data_description": {
+          "edit_room_area": "「設定 · 情報源」は選択した部屋だけに設定します。無効なデータでは操作を行いません。"
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "在室 · センサー",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "「設定 · 情報源」は選択した部屋だけに設定します。無効なデータでは操作を行いません。"
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "エリア · 設定",
         "data": {
           "edit_room_area": "デバイス"
+        },
+        "data_description": {
+          "edit_room_area": "「設定 · 情報源」は選択した部屋だけに設定します。無効なデータでは操作を行いません。"
         }
       },
       "edit_room": {

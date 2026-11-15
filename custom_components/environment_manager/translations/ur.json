@@ -1080,6 +1080,9 @@
         "description": "موجودگی · سینسر",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "«ترتیبات · ماخذ» صرف منتخب کمرے میں مقرر کریں۔ غلط ڈیٹا عمل کو روکتا ہے۔"
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "علاقہ · ترتیبات",
         "data": {
           "edit_room_area": "آلات"
+        },
+        "data_description": {
+          "edit_room_area": "«ترتیبات · ماخذ» صرف منتخب کمرے میں مقرر کریں۔ غلط ڈیٹا عمل کو روکتا ہے۔"
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "موجودگی · سینسر",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "«ترتیبات · ماخذ» صرف منتخب کمرے میں مقرر کریں۔ غلط ڈیٹا عمل کو روکتا ہے۔"
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "علاقہ · ترتیبات",
         "data": {
           "edit_room_area": "آلات"
+        },
+        "data_description": {
+          "edit_room_area": "«ترتیبات · ماخذ» صرف منتخب کمرے میں مقرر کریں۔ غلط ڈیٹا عمل کو روکتا ہے۔"
         }
       },
       "edit_room": {

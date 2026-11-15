@@ -1080,6 +1080,9 @@
         "description": "Присъствие · сензор",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Задайте „настройки · източник“ само за избраната стая. Невалидните данни блокират действието."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Зона · настройки",
         "data": {
           "edit_room_area": "Устройства"
+        },
+        "data_description": {
+          "edit_room_area": "Задайте „настройки · източник“ само за избраната стая. Невалидните данни блокират действието."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Присъствие · сензор",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Задайте „настройки · източник“ само за избраната стая. Невалидните данни блокират действието."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Зона · настройки",
         "data": {
           "edit_room_area": "Устройства"
+        },
+        "data_description": {
+          "edit_room_area": "Задайте „настройки · източник“ само за избраната стая. Невалидните данни блокират действието."
         }
       },
       "edit_room": {

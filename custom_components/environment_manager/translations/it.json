@@ -1080,6 +1080,9 @@
         "description": "Sensori di presenza per stanza",
         "data": {
           "room_occupancy_area": "Stanza"
+        },
+        "data_description": {
+          "room_occupancy_area": "Configura «impostazioni · fonte» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Area · impostazioni",
         "data": {
           "edit_room_area": "Dispositivi"
+        },
+        "data_description": {
+          "edit_room_area": "Configura «impostazioni · fonte» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Sensori di presenza per stanza",
         "data": {
           "room_occupancy_area": "Stanza"
+        },
+        "data_description": {
+          "room_occupancy_area": "Configura «impostazioni · fonte» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Area · impostazioni",
         "data": {
           "edit_room_area": "Dispositivi"
+        },
+        "data_description": {
+          "edit_room_area": "Configura «impostazioni · fonte» solo per la stanza selezionata. Dati assenti o incompatibili bloccano l'azione."
         }
       },
       "edit_room": {

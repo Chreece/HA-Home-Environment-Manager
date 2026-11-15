@@ -1080,6 +1080,9 @@
         "description": "இருப்பு · உணரி",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "“அமைப்புகள் · மூலம்” ஐத் தேர்ந்த அறைக்கு மட்டும் அமைக்கவும். தவறான தரவு செயல்பாட்டைத் தடுக்கும்."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "பகுதி · அமைப்புகள்",
         "data": {
           "edit_room_area": "சாதனங்கள்"
+        },
+        "data_description": {
+          "edit_room_area": "“அமைப்புகள் · மூலம்” ஐத் தேர்ந்த அறைக்கு மட்டும் அமைக்கவும். தவறான தரவு செயல்பாட்டைத் தடுக்கும்."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "இருப்பு · உணரி",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "“அமைப்புகள் · மூலம்” ஐத் தேர்ந்த அறைக்கு மட்டும் அமைக்கவும். தவறான தரவு செயல்பாட்டைத் தடுக்கும்."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "பகுதி · அமைப்புகள்",
         "data": {
           "edit_room_area": "சாதனங்கள்"
+        },
+        "data_description": {
+          "edit_room_area": "“அமைப்புகள் · மூலம்” ஐத் தேர்ந்த அறைக்கு மட்டும் அமைக்கவும். தவறான தரவு செயல்பாட்டைத் தடுக்கும்."
         }
       },
       "edit_room": {

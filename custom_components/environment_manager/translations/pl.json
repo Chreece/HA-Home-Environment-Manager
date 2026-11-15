@@ -1080,6 +1080,9 @@
         "description": "Obecność · czujnik",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Ustaw „ustawienia · źródło” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Obszar · ustawienia",
         "data": {
           "edit_room_area": "Urządzenia"
+        },
+        "data_description": {
+          "edit_room_area": "Ustaw „ustawienia · źródło” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Obecność · czujnik",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Ustaw „ustawienia · źródło” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Obszar · ustawienia",
         "data": {
           "edit_room_area": "Urządzenia"
+        },
+        "data_description": {
+          "edit_room_area": "Ustaw „ustawienia · źródło” tylko dla wybranego pokoju. Brak danych lub niezgodność blokuje działanie."
         }
       },
       "edit_room": {

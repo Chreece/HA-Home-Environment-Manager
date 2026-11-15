@@ -1080,6 +1080,9 @@
         "description": "佔用 · 感測器",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "僅為選定房間設定「設定 · 來源」。資料無效或缺失將停止操作。"
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "區域 · 設定",
         "data": {
           "edit_room_area": "裝置"
+        },
+        "data_description": {
+          "edit_room_area": "僅為選定房間設定「設定 · 來源」。資料無效或缺失將停止操作。"
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "佔用 · 感測器",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "僅為選定房間設定「設定 · 來源」。資料無效或缺失將停止操作。"
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "區域 · 設定",
         "data": {
           "edit_room_area": "裝置"
+        },
+        "data_description": {
+          "edit_room_area": "僅為選定房間設定「設定 · 來源」。資料無效或缺失將停止操作。"
         }
       },
       "edit_room": {

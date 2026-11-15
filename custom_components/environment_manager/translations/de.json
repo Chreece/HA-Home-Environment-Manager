@@ -1080,6 +1080,9 @@
         "description": "Präsenzsensoren pro Raum",
         "data": {
           "room_occupancy_area": "Raum"
+        },
+        "data_description": {
+          "room_occupancy_area": "Wähle den Home-Assistant-Raum, dessen Anwesenheitsquellen du einrichten möchtest. Dadurch wird nur der bearbeitete Raum gewählt, keine Anwesenheit festgestellt."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Raumeinstellungen",
         "data": {
           "edit_room_area": "Raum"
+        },
+        "data_description": {
+          "edit_room_area": "Wähle den Home-Assistant-Raum, den du bearbeiten möchtest. Die Auswahl verschiebt weder Sensoren noch Geräte und ändert nicht automatisch die gespeicherten Einstellungen."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Präsenzsensoren pro Raum",
         "data": {
           "room_occupancy_area": "Raum"
+        },
+        "data_description": {
+          "room_occupancy_area": "Wähle den Home-Assistant-Raum, dessen Anwesenheitsquellen du einrichten möchtest. Dadurch wird nur der bearbeitete Raum gewählt, keine Anwesenheit festgestellt."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Raumeinstellungen",
         "data": {
           "edit_room_area": "Raum"
+        },
+        "data_description": {
+          "edit_room_area": "Wähle den Home-Assistant-Raum, den du bearbeiten möchtest. Die Auswahl verschiebt weder Sensoren noch Geräte und ändert nicht automatisch die gespeicherten Einstellungen."
         }
       },
       "edit_room": {

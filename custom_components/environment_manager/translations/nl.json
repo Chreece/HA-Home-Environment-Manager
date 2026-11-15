@@ -1080,6 +1080,9 @@
         "description": "Aanwezigheid · sensor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Stel ‘instellingen · bron’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Ruimte · instellingen",
         "data": {
           "edit_room_area": "Apparaten"
+        },
+        "data_description": {
+          "edit_room_area": "Stel ‘instellingen · bron’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Aanwezigheid · sensor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Stel ‘instellingen · bron’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Ruimte · instellingen",
         "data": {
           "edit_room_area": "Apparaten"
+        },
+        "data_description": {
+          "edit_room_area": "Stel ‘instellingen · bron’ alleen in voor de gekozen kamer. Ontbrekende of ongeschikte gegevens blokkeren de actie."
         }
       },
       "edit_room": {

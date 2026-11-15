@@ -1080,6 +1080,9 @@
         "description": "الإشغال · مستشعر",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "اضبط «الإعدادات · المصدر» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "منطقة · الإعدادات",
         "data": {
           "edit_room_area": "الأجهزة"
+        },
+        "data_description": {
+          "edit_room_area": "اضبط «الإعدادات · المصدر» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "الإشغال · مستشعر",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "اضبط «الإعدادات · المصدر» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "منطقة · الإعدادات",
         "data": {
           "edit_room_area": "الأجهزة"
+        },
+        "data_description": {
+          "edit_room_area": "اضبط «الإعدادات · المصدر» للغرفة المختارة فقط. البيانات غير الصالحة تمنع الإجراء."
         }
       },
       "edit_room": {

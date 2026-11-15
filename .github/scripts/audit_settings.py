@@ -21,7 +21,9 @@ def inventory():
     policy=json.loads(POLICY.read_text())
     paths={}
     for path in SOURCE.glob('*.py'):
-        if path.name.endswith('_catalog.py') or path.name.endswith('_help.py'):
+        if (path.name.endswith('_catalog.py') or path.name.endswith('_help.py')
+                or path.name == 'setting_option_explanations.py'):
+            # Explanatory translations are not runtime setting consumers.
             continue
         tree=ast.parse(path.read_text())
         for node in ast.walk(tree):

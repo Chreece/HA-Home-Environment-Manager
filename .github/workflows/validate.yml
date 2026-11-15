@@ -81,6 +81,8 @@ jobs:
         run: |
           python -I .github/tests/test_062b3_door_context.py
           python -I .github/tests/test_062b3_door_entities.py
+      - name: B22 plain-language explanations for all fixed native settings
+        run: python -I .github/tests/test_062b22_setting_info_catalog.py
       - name: B5 bounded door start coordination and measured energy intervals
         run: python -I .github/tests/test_062b5_door_coordination.py
       - name: B6 advancing door clocks and honest dispatch evidence
@@ -418,6 +420,8 @@ jobs:
           python -I .github/tests/test_062b19_eco2_classification.py
           python -I .github/tests/test_062b19_ai_agent_nonblocking.py
           python -I .github/tests/test_062b19_device_door_ui.py
+      - name: B22 readable setting help and option details in the real card
+        run: python -I .github/tests/test_062b22_setting_info_browser.py
       - name: B15 actual backend Home Options menu and UI step contract
         run: python -I .github/tests/test_061b15_home_options_contract.py
       - name: B14 unified Home and room settings, exact registry and Options saves

@@ -1080,6 +1080,9 @@
         "description": "Room occupancy sensors",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Choose the Home Assistant room whose occupancy sources you want to configure. This choice changes only which room you are editing; it does not itself report occupancy."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Room settings",
         "data": {
           "edit_room_area": "Room"
+        },
+        "data_description": {
+          "edit_room_area": "Choose the monitored Home Assistant room whose settings you want to edit. Selecting a room does not move any sensor or device, and does not change its saved settings."
         }
       },
       "edit_room": {
@@ -2295,6 +2301,9 @@
         "description": "Room occupancy sensors",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Choose the Home Assistant room whose occupancy sources you want to configure. This choice changes only which room you are editing; it does not itself report occupancy."
         }
       },
       "room_occupancy_sources": {
@@ -2344,6 +2353,9 @@
         "description": "Room settings",
         "data": {
           "edit_room_area": "Room"
+        },
+        "data_description": {
+          "edit_room_area": "Choose the monitored Home Assistant room whose settings you want to edit. Selecting a room does not move any sensor or device, and does not change its saved settings."
         }
       },
       "edit_room": {

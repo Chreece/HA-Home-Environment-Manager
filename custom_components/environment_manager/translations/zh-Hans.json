@@ -1080,6 +1080,9 @@
         "description": "占用 · 传感器",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "只为所选房间配置“设置 · 来源”。缺失或无效数据会阻止相关操作。"
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "区域 · 设置",
         "data": {
           "edit_room_area": "设备"
+        },
+        "data_description": {
+          "edit_room_area": "只为所选房间配置“设置 · 来源”。缺失或无效数据会阻止相关操作。"
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "占用 · 传感器",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "只为所选房间配置“设置 · 来源”。缺失或无效数据会阻止相关操作。"
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "区域 · 设置",
         "data": {
           "edit_room_area": "设备"
+        },
+        "data_description": {
+          "edit_room_area": "只为所选房间配置“设置 · 来源”。缺失或无效数据会阻止相关操作。"
         }
       },
       "edit_room": {

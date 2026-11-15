@@ -1080,6 +1080,9 @@
         "description": "การมีคนอยู่ · เซนเซอร์",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "ตั้งค่า “การตั้งค่า · แหล่งข้อมูล” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน"
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "พื้นที่ · การตั้งค่า",
         "data": {
           "edit_room_area": "อุปกรณ์"
+        },
+        "data_description": {
+          "edit_room_area": "ตั้งค่า “การตั้งค่า · แหล่งข้อมูล” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน"
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "การมีคนอยู่ · เซนเซอร์",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "ตั้งค่า “การตั้งค่า · แหล่งข้อมูล” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน"
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "พื้นที่ · การตั้งค่า",
         "data": {
           "edit_room_area": "อุปกรณ์"
+        },
+        "data_description": {
+          "edit_room_area": "ตั้งค่า “การตั้งค่า · แหล่งข้อมูล” เฉพาะห้องที่เลือก ข้อมูลไม่ถูกต้องจะยับยั้งการทำงาน"
         }
       },
       "edit_room": {

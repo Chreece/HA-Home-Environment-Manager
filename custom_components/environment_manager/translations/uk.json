@@ -1080,6 +1080,9 @@
         "description": "Присутність · датчик",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Налаштовуйте «налаштування · джерело» лише для вибраної кімнати. Недійсні дані блокують дію."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Зона · налаштування",
         "data": {
           "edit_room_area": "Пристрої"
+        },
+        "data_description": {
+          "edit_room_area": "Налаштовуйте «налаштування · джерело» лише для вибраної кімнати. Недійсні дані блокують дію."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Присутність · датчик",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Налаштовуйте «налаштування · джерело» лише для вибраної кімнати. Недійсні дані блокують дію."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Зона · налаштування",
         "data": {
           "edit_room_area": "Пристрої"
+        },
+        "data_description": {
+          "edit_room_area": "Налаштовуйте «налаштування · джерело» лише для вибраної кімнати. Недійсні дані блокують дію."
         }
       },
       "edit_room": {

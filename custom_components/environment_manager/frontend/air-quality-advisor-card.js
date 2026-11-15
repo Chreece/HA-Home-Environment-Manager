@@ -9491,6 +9491,49 @@
     }
     return presented;
   };
+  // Read-only, plain-language help for every native setting. Fixed enums can
+  // explain each available choice; dynamic native-source lists retain their
+  // actual source names instead of inventing device-specific behavior.
+  hemFull127._hemFullHelpBody127=function(field,scope){
+    const state=field.state,attributes=state?.attributes||{},language=this._language();
+    const help=(typeof attributes.configuration_help==="string"
+      ?attributes.configuration_help.trim():"")||settingHelpTextB9(this,"missing");
+    const words={
+      en:{choices:"What each option does",current:"Current choice",range:"Allowed range",step:"Step"},
+      el:{choices:"Τι κάνει κάθε επιλογή",current:"Τρέχουσα επιλογή",range:"Επιτρεπτό εύρος",step:"Βήμα"},
+      de:{choices:"Was jede Auswahl bewirkt",current:"Aktuelle Auswahl",range:"Zulässiger Bereich",step:"Schritt"}
+    }[language]||{choices:"What each option does",current:"Current choice",range:"Allowed range",step:"Step"};
+    const paragraphs=help.split(/\n\s*\n/).filter(x=>x.trim())
+      .map(text=>'<p>'+escape(text.trim())+'</p>').join("");
+    let specifics="";
+    if(field.domain==="select"){
+      const descriptions=attributes.option_help_locales?.[language]||
+        attributes.option_help_locales?.en||{};
+      const values=Array.isArray(attributes.options)
+        ?attributes.options.filter(value=>typeof value==="string"):[];
+      const explained=values.filter(value=>typeof descriptions[value]==="string"&&
+        descriptions[value].trim()).slice(0,20);
+      if(explained.length){
+        specifics='<section class="hem-full-options-help127" data-hem-option-help127>'+
+          '<strong class="hem-full-options-title127">'+escape(words.choices)+'</strong>'+
+          explained.map(value=>'<div class="hem-full-option-explain127" data-hem-option127="'+
+            escape(value)+'"><strong>'+escape(this._hemFullOptionLabel129(field,value))+
+            (value===state?.state?' <small>('+escape(words.current)+')</small>':"")+
+            '</strong><p>'+escape(descriptions[value])+'</p></div>').join("")+
+          '</section>';
+      }
+    }else if(field.domain==="number"&&
+        Number.isFinite(Number(attributes.min))&&Number.isFinite(Number(attributes.max))&&
+        attributes.min!==undefined&&attributes.max!==undefined){
+      const unit=typeof attributes.unit_of_measurement==="string"?
+        " "+attributes.unit_of_measurement:"";
+      specifics='<p class="hem-full-range127">'+escape(words.range)+": "+
+        escape(attributes.min)+" – "+escape(attributes.max)+escape(unit)+
+        (Number.isFinite(Number(attributes.step))&&Number(attributes.step)>0?
+          " · "+escape(words.step)+": "+escape(attributes.step):"")+'</p>';
+    }
+    return paragraphs+specifics;
+  };
   hemFull127._hemFullRow127=function(field,scope){
     const s=field.state,a=s?.attributes||{},value=s?.state,domain=field.domain;
     const live=!field.disabled&&s&&value!=="unavailable"&&(domain==="button"||value!=="unknown");
@@ -9520,7 +9563,7 @@
       input='<input type="time" data-hem-full-value127="'+escape(field.id)+'" '+
         'value="'+(enabled?escape(value.slice(0,5)):"")+'" '+(enabled?"":"disabled")+'>';
     }
-    const help=(typeof a.configuration_help==="string"?a.configuration_help.trim():"")||settingHelpTextB9(this,"missing");
+    const help=this._hemFullHelpBody127(field,scope);
     return '<div class="hem-full-row127" '+
       (scope==="device"&&field.pidReviewPairB18?'data-hem-pid-review-b18="'+escape(field.pidReviewActionB18)+'" ':"")+
       'data-hem-full-row127="'+escape(field.id)+'" '+
@@ -9530,7 +9573,7 @@
          escape(tr127(this,"help"))+'" aria-label="'+escape(tr127(this,"help")+' · '+field.label)+'">'+
          '<strong title="'+escape(field.id)+'">'+escape(field.label)+'</strong>'+
          this._icon("mdi:information-outline")+'</summary>'+
-         '<div class="hem-full-help-body127"><p>'+escape(help)+'</p></div></details>':
+         '<div class="hem-full-help-body127">'+help+'</div></details>':
          '<div class="hem-full-label127"><strong title="'+escape(field.id)+'">'+
          escape(field.label)+'</strong></div>')+
       '<div class="hem-full-editor127">'+input+
@@ -9581,9 +9624,13 @@
     if(oldHelp&&nextHelp){
       const title=oldHelp.querySelector('strong'),nextTitle=nextHelp.querySelector('strong');
       if(title&&nextTitle&&title.textContent!==nextTitle.textContent)title.textContent=nextTitle.textContent;
-      const text=oldHelp.querySelector('.hem-full-help-body127 p');
-      const newText=nextHelp.querySelector('.hem-full-help-body127 p');
-      if(text&&newText&&text.textContent!==newText.textContent)text.textContent=newText.textContent;
+      const oldBody=oldHelp.querySelector('.hem-full-help-body127');
+      const newBody=nextHelp.querySelector('.hem-full-help-body127');
+      // A language or option change updates all paragraphs without closing
+      // the info disclosure or replacing a focused select control.
+      if(oldBody&&newBody&&oldBody.innerHTML!==newBody.innerHTML){
+        oldBody.innerHTML=newBody.innerHTML;
+      }
     }
     const oldEditor=old.querySelector('.hem-full-editor127');
     const newEditor=next.querySelector('.hem-full-editor127');
@@ -9819,7 +9866,14 @@
     ".hem-full-help127 summary:focus-visible{outline:2px solid var(--aqa-blue);outline-offset:2px;border-radius:4px}",
     ".hem-full-help127 summary::-webkit-details-marker{display:none}",
     ".hem-full-help127 ha-icon{--mdc-icon-size:16px;width:18px;height:18px;flex:0 0 18px;color:var(--aqa-blue)}",
-    ".hem-full-help127 p{font-size:11px;line-height:1.5;white-space:pre-line;overflow-wrap:break-word;word-break:normal;margin:5px 0}",
+    ".hem-full-help127 p{font-size:12.5px;line-height:1.55;white-space:pre-line;overflow-wrap:break-word;word-break:normal;margin:7px 0}",
+    ".hem-full-options-help127{display:grid;gap:8px;min-width:0;padding:10px 0 3px;border-top:1px solid var(--aqa-edge);margin-top:9px}",
+    ".hem-full-options-title127{font-size:13px;line-height:1.4}",
+    ".hem-full-option-explain127{min-width:0;overflow-wrap:break-word;padding:0 0 0 8px;border-inline-start:2px solid var(--aqa-edge)}",
+    ".hem-full-option-explain127 strong{font-size:12px;display:block;line-height:1.4}",
+    ".hem-full-option-explain127 small{font-weight:400;opacity:.85}",
+    ".hem-full-option-explain127 p{margin:3px 0 0;font-size:12px}",
+    ".hem-full-range127{font-variant-numeric:tabular-nums;opacity:.86}",
     "</style>"].join("");};
   /* HEM_FULL_REGISTRY_SETTINGS127_END */
 
@@ -11964,17 +12018,23 @@
       name:"Name of this floor in Home Assistant. Renaming it does not change its rooms or settings.",
       level:"Optional whole-number floor level in Home Assistant. Negative levels can represent basements; leave blank when unspecified.",
       icon:"Optional Material Design icon for this floor, for example mdi:home-floor-1. Leave blank for the default icon.",
-      membership:"Select this room to assign its Home Assistant Area to this floor, moving it from another floor if necessary. Clearing it removes only its assignment to this floor."},
+      membership:"Select this room to assign its Home Assistant Area to this floor, moving it from another floor if necessary. Clearing it removes only its assignment to this floor.",
+      room_occupancy_area:"Choose the room whose presence sources you want to configure. The selection itself does not report occupancy or control a device.",
+      edit_room_area:"Choose which Home Assistant room to edit. Changing this selection does not move any sensor or change the room settings."},
     el:{missing:"Δεν υπάρχει πρόσθετη περιγραφή για αυτή τη ρύθμιση.",
       name:"Το όνομα αυτού του ορόφου στο Home Assistant. Η μετονομασία δεν αλλάζει τα δωμάτια ή τις ρυθμίσεις του.",
       level:"Προαιρετικός ακέραιος αριθμός επιπέδου στο Home Assistant. Αρνητικές τιμές μπορούν να δηλώνουν υπόγεια· άφησέ το κενό όταν δεν ορίζεται.",
       icon:"Προαιρετικό εικονίδιο Material Design για τον όροφο, π.χ. mdi:home-floor-1. Άφησέ το κενό για το προεπιλεγμένο εικονίδιο.",
-      membership:"Επίλεξε το δωμάτιο για να αντιστοιχίσεις τον χώρο του Home Assistant σε αυτόν τον όροφο, μεταφέροντάς τον από άλλον αν χρειάζεται. Η αποεπιλογή αφαιρεί μόνο την αντιστοίχιση σε αυτόν τον όροφο."},
+      membership:"Επίλεξε το δωμάτιο για να αντιστοιχίσεις τον χώρο του Home Assistant σε αυτόν τον όροφο, μεταφέροντάς τον από άλλον αν χρειάζεται. Η αποεπιλογή αφαιρεί μόνο την αντιστοίχιση σε αυτόν τον όροφο.",
+      room_occupancy_area:"Διάλεξε το δωμάτιο για το οποίο θέλεις να ρυθμίσεις πηγές παρουσίας. Η επιλογή δεν δηλώνει από μόνη της παρουσία και δεν ελέγχει συσκευές.",
+      edit_room_area:"Διάλεξε τον χώρο του Home Assistant που θέλεις να επεξεργαστείς. Η επιλογή δεν μετακινεί αισθητήρες ούτε αλλάζει από μόνη της τις ρυθμίσεις του χώρου."},
     de:{missing:"Für diese Einstellung ist keine zusätzliche Beschreibung verfügbar.",
       name:"Name dieser Etage in Home Assistant. Eine Umbenennung ändert weder ihre Räume noch deren Einstellungen.",
       level:"Optionale ganzzahlige Etagenhöhe in Home Assistant. Negative Werte können Kellergeschosse darstellen; bei unbekannter Höhe leer lassen.",
       icon:"Optionales Material-Design-Symbol dieser Etage, zum Beispiel mdi:home-floor-1. Für das Standardsymbol leer lassen.",
-      membership:"Diesen Raum auswählen, um seinen Home-Assistant-Bereich dieser Etage zuzuordnen und gegebenenfalls von einer anderen Etage zu verschieben. Abwählen entfernt nur die Zuordnung zu dieser Etage."}
+      membership:"Diesen Raum auswählen, um seinen Home-Assistant-Bereich dieser Etage zuzuordnen und gegebenenfalls von einer anderen Etage zu verschieben. Abwählen entfernt nur die Zuordnung zu dieser Etage.",
+      room_occupancy_area:"Raum auswählen, dessen Anwesenheitsquellen eingerichtet werden sollen. Die Auswahl selbst beweist keine Anwesenheit und steuert kein Gerät.",
+      edit_room_area:"Den Home-Assistant-Raum zur Bearbeitung auswählen. Dabei werden weder Sensoren verschoben noch Raumeinstellungen automatisch geändert."}
   };
   function settingHelpTextB9(card,key){
     return (settingHelpWordsB9[card._language()]||settingHelpWordsB9.en)[key];
@@ -11988,8 +12048,12 @@
       card._icon('mdi:information-outline')+'</button>';
   }
   function settingHelpPanelB9(card,scope,key,help){
+    const description=(typeof help==="string"&&help.trim())
+      ?help:settingHelpTextB9(card,key)||settingHelpTextB9(card,"missing");
+    const paragraphs=description.split(/\n\s*\n/).filter(text=>text.trim())
+      .map(text=>'<p>'+escape(text.trim())+'</p>').join("");
     return '<div id="'+escape(settingHelpIdB9(scope,key))+'" class="hem-setting-help-b9" '+
-      'data-setting-help-b9 hidden><p>'+escape(help||settingHelpTextB9(card,'missing'))+'</p></div>';
+      'data-setting-help-b9 hidden>'+paragraphs+'</div>';
   }
   function settingHelpHeadingB9(card,scope,key,label,help,heading){
     return '<div class="hem-setting-heading-b9">'+

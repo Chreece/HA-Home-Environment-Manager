@@ -1080,6 +1080,9 @@
         "description": "Ocupação · sensor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Configure «configurações · fonte» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "Área · configurações",
         "data": {
           "edit_room_area": "Dispositivos"
+        },
+        "data_description": {
+          "edit_room_area": "Configure «configurações · fonte» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "Ocupação · sensor",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "Configure «configurações · fonte» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "Área · configurações",
         "data": {
           "edit_room_area": "Dispositivos"
+        },
+        "data_description": {
+          "edit_room_area": "Configure «configurações · fonte» apenas no cômodo selecionado. Dados inválidos bloqueiam a ação."
         }
       },
       "edit_room": {

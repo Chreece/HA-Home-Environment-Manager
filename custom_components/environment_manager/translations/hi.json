@@ -1080,6 +1080,9 @@
         "description": "उपस्थिति · सेंसर",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "“सेटिंग · स्रोत” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।"
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "क्षेत्र · सेटिंग",
         "data": {
           "edit_room_area": "उपकरण"
+        },
+        "data_description": {
+          "edit_room_area": "“सेटिंग · स्रोत” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।"
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "उपस्थिति · सेंसर",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "“सेटिंग · स्रोत” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।"
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "क्षेत्र · सेटिंग",
         "data": {
           "edit_room_area": "उपकरण"
+        },
+        "data_description": {
+          "edit_room_area": "“सेटिंग · स्रोत” केवल चुने कमरे के लिए सेट करें। अमान्य डेटा कार्रवाई रोकता है।"
         }
       },
       "edit_room": {

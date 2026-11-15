@@ -1080,6 +1080,9 @@
         "description": "נוכחות · חיישן",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "הגדר „הגדרות · מקור” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה."
         }
       },
       "room_occupancy_sources": {
@@ -1129,6 +1132,9 @@
         "description": "אזור · הגדרות",
         "data": {
           "edit_room_area": "התקנים"
+        },
+        "data_description": {
+          "edit_room_area": "הגדר „הגדרות · מקור” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה."
         }
       },
       "edit_room": {
@@ -2297,6 +2303,9 @@
         "description": "נוכחות · חיישן",
         "data": {
           "room_occupancy_area": "Room"
+        },
+        "data_description": {
+          "room_occupancy_area": "הגדר „הגדרות · מקור” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה."
         }
       },
       "room_occupancy_sources": {
@@ -2346,6 +2355,9 @@
         "description": "אזור · הגדרות",
         "data": {
           "edit_room_area": "התקנים"
+        },
+        "data_description": {
+          "edit_room_area": "הגדר „הגדרות · מקור” רק בחדר שנבחר. נתונים חסרים או שגויים מונעים פעולה."
         }
       },
       "edit_room": {
