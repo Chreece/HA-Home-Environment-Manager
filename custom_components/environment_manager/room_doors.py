@@ -73,7 +73,7 @@ def _age_seconds(state: Any, now: datetime) -> float | None:
         age = (now - changed).total_seconds()
     except (OverflowError, TypeError):
         return None
-    return age if 0 <= age <= 3650 * 86400 else None
+    return age if math.isfinite(age) and age >= 0 else None
 
 
 def contact_options(config: Mapping | None, entity_id: str) -> dict:
@@ -85,22 +85,20 @@ def contact_options(config: Mapping | None, entity_id: str) -> dict:
     kind = item.get("kind", "interior")
     kind = kind if kind in ("interior", "fire", "exterior") else "unknown"
     target = item.get("target_area")
-    timeout = _numeric(item.get("report_timeout_minutes", 0), 0, 10080)
     coordination = item.get("coordination", "observe")
     meter = item.get("energy_meter")
     return {"coordination": coordination if coordination in ("observe", "conflicts", "shared") else "observe",
             "energy_meter": meter if isinstance(meter, str) and meter.startswith("sensor.") else None,
             "kind": kind,
-            "target_area": target if isinstance(target, str) and target else None,
-            "report_timeout_minutes": timeout}
+            "target_area": target if isinstance(target, str) and target else None}
 
 
 def contact_observation(hass: Any, area: str, entity_id: str,
                         config: Mapping | None, now: datetime) -> dict:
     """Distinguish time since a transition from a user-declared heartbeat.
 
-    An event-only contact may stay closed for weeks. That is not stale evidence
-    just because last_changed is old. Report expiry is strictly opt-in.
+    An event-only contact may remain open or closed indefinitely. A persisted
+    legacy report timeout is ignored: elapsed time is never evidence of failure.
     """
     from .discovery import entity_area, _device_class
     from .room_sources import native
@@ -128,20 +126,6 @@ def contact_observation(hass: Any, area: str, entity_id: str,
         if age is None:
             result["health"] = "invalid_timestamp"
             return result
-        timeout = opts["report_timeout_minutes"]
-        if timeout is None:
-            result["health"] = "invalid_timeout"
-            return result
-        if timeout > 0:
-            stamp = getattr(state, "last_reported", None) or getattr(state, "last_updated", None)
-            if not isinstance(stamp, datetime) or stamp.tzinfo is None:
-                result["health"] = "report_time_unknown"
-                return result
-            elapsed = (now - stamp).total_seconds()
-            result["report_due_epoch"] = stamp.timestamp() + timeout * 60 + 1
-            if not 0 <= elapsed <= timeout * 60:
-                result["health"] = "report_expired"
-                return result
         result.update(state="open" if state.state == "on" else "closed",
                       health="ok", state_age_seconds=age,
                       state_changed_epoch=state.last_changed.timestamp())
