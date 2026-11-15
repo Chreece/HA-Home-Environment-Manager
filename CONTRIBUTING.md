@@ -25,9 +25,14 @@ physical appliance must be supported by evidence from that appliance.
 
 ## Releases
 
-Set the intended beta version in `manifest.json` and add matching release
-notes in `.github/releases/v<VERSION>.md`. This is the deliberate release
-request. Validate on `dev`, then promote it to `main` after review.
+**Every completed HEM change intended for `main` includes a new beta release.**
+Bump `manifest.json` to the next unused beta and add matching notes in
+`.github/releases/v<VERSION>.md` before promotion. Treat a merge as complete
+only after the `main` push validation and **Publish validated beta** workflows
+succeed, and verify that the new prerelease tag and `environment_manager.zip`
+asset are published. If validation or publication fails, fix the problem and
+publish the next safe version rather than reusing or overwriting an existing tag.
+Validate on `dev`, then promote to `main` after review.
 
 The separate **Publish validated beta** workflow runs after a successful
 validation push on `main`. It verifies the exact commit, creates a prerelease
