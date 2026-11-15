@@ -92,7 +92,9 @@ for(const id of ids){
  const row=card._hemFullRow127(field,'device');
  assert.ok(row.includes('data-hem-full-row127="'+id+'"'),id+' missing from full-row rendering');
  assert.ok(row.includes('class="hem-full-help127"'),id+' lost its help disclosure');
- assert.ok(row.includes(encode(state.attributes.configuration_help.trim())),id+' wrong escaped help');
+ for(const paragraph of state.attributes.configuration_help.trim().split(/\n\s*\n/)){
+  assert.ok(row.includes(encode(paragraph.trim())),id+' wrong escaped help paragraph');
+ }
  assert.ok(!row.includes('<img src=x'),id+' rendered unsafe markup');
  if(domain==='select')assert.ok(row.includes('data-hem-full-value127="'+id+'"'));
  if(domain==='button')assert.ok(row.includes('data-hem-full-apply127="'+id+'"'));
@@ -175,7 +177,8 @@ with sync_playwright() as playwright:
         help_box = setting.locator('details.hem-full-help127')
         assert help_box.count() == 1, id
         assert help_box.locator(':scope > summary').count() == 1
-        assert states[id]['attributes']['configuration_help'].strip() in help_box.text_content()
+        for paragraph in states[id]['attributes']['configuration_help'].strip().split('\n\n'):
+            assert paragraph.strip() in help_box.text_content(), (id, paragraph)
         assert help_box.locator('img').count() == 0
     assert modal.locator('[data-hem-full-value127="select.method_cooler"]').input_value() == 'pid'
     assert modal.locator('[data-hem-full-value127="number.cooler_gain"]').count() == 1
