@@ -192,6 +192,158 @@ OPTION_TEXT = {
   }
 }
 
+# Source and room selectors use the same IDs as the corresponding entity values.
+OPTION_TEXT.update({
+  "area_manual_profile": {
+    "auto": [
+      "Return to HEM's normal profile selection based on home/room presence, sleep and the configured priorities.",
+      "Επιστρέφει στην αυτόματη επιλογή προφίλ από το HEM, με βάση παρουσία, ύπνο και τις προτεραιότητες που έχουν ρυθμιστεί.",
+      "Zur normalen HEM-Profilwahl anhand von Anwesenheit, Schlaf und eingestellten Prioritäten zurückkehren."
+    ],
+    "home": [
+      "Use this room's Home targets, rather than following the automatically selected profile.",
+      "Χρησιμοποιεί τους στόχους «Σπίτι» του δωματίου αντί για το προφίλ που θα επέλεγε αυτόματα το HEM.",
+      "Die Zuhause-Sollwerte dieses Raums statt des automatisch gewählten Profils verwenden."
+    ],
+    "comfort": [
+      "Use this room's configured Comfort targets.",
+      "Χρησιμοποιεί τους στόχους «Άνεση» που έχεις ορίσει για το δωμάτιο.",
+      "Die festgelegten Komfort-Sollwerte dieses Raums verwenden."
+    ],
+    "away": [
+      "Use the room's Away targets, independently of the currently detected home-presence profile.",
+      "Χρησιμοποιεί τους στόχους «Απουσία» του δωματίου, ανεξάρτητα από το αυτόματα αναγνωρισμένο προφίλ παρουσίας.",
+      "Die Abwesenheits-Sollwerte des Raums verwenden, unabhängig vom automatisch ermittelten Anwesenheitsprofil."
+    ],
+    "sleep": [
+      "Use the room's configured Sleep targets.",
+      "Χρησιμοποιεί τους στόχους «Ύπνος» του δωματίου.",
+      "Die festgelegten Schlaf-Sollwerte des Raums verwenden."
+    ],
+    "eco": [
+      "Use the room's configured Eco targets for lower consumption when allowed by safety rules.",
+      "Χρησιμοποιεί τους στόχους «Eco» του δωματίου για οικονομικότερη λειτουργία, όπου το επιτρέπουν οι προστασίες.",
+      "Die Eco-Sollwerte des Raums für sparsameren Betrieb verwenden, soweit die Schutzregeln dies erlauben."
+    ]
+  },
+  "area_pid_gain_source": {
+    "defaults": [
+      "Use HEM's predefined PID tuning values for this room supervisor; manually entered gains are not selected.",
+      "Χρησιμοποιεί τους προεπιλεγμένους συντελεστές PID για τον ελεγκτή του χώρου· δεν επιλέγει τις χειροκίνητες τιμές.",
+      "Verwendet die HEM-Standardwerte für den Raum-PID; manuell eingegebene Reglerwerte werden nicht ausgewählt."
+    ],
+    "manual": [
+      "Use the Kp, Ki and Kd values manually entered for this room, subject to the existing PID limits.",
+      "Χρησιμοποιεί τα Kp, Ki και Kd που έχεις συμπληρώσει για αυτόν τον χώρο, με τα ίδια όρια προστασίας PID.",
+      "Verwendet die für diesen Raum eingegebenen Kp-, Ki- und Kd-Werte unter den bisherigen PID-Grenzen."
+    ]
+  },
+  "home_global_policy_home_policy": {
+    "any_home": [
+      "If any selected person/tracker is verified at home, the household is Home. Away needs verified absence from all relevant sources.",
+      "Αν έστω ένα επιλεγμένο άτομο ή tracker επιβεβαιώνεται στο σπίτι, το σπίτι θεωρείται Home. Για Away πρέπει να έχει επιβεβαιωθεί η απουσία από όλες τις σχετικές πηγές.",
+      "Ist mindestens eine ausgewählte Person oder ein Tracker nachweislich zu Hause, gilt Home. Away erfordert bestätigte Abwesenheit aller maßgeblichen Quellen."
+    ],
+    "all_home": [
+      "Legacy compatibility choice. It currently follows the same conservative Home/Away rule as «Any home»; it does not require everybody to be home.",
+      "Επιλογή συμβατότητας παλαιών ρυθμίσεων. Σήμερα ακολουθεί τον ίδιο ασφαλή κανόνα Home/Away με το «Έστω ένας στο σπίτι»· ΔΕΝ απαιτεί να είναι όλοι μέσα.",
+      "Kompatibilitätsoption für ältere Einstellungen. Derzeit gilt dieselbe vorsichtige Home/Away-Regel wie bei »Mindestens eine Person da«; es müssen NICHT alle zu Hause sein."
+    ]
+  },
+  "area_climate_policy_unknown_occupancy": {
+    "occupied": [
+      "Legacy fallback: when local room occupancy is unknown, treat the room conservatively as occupied for the old room-level profile policy. This does not prove anyone is present.",
+      "Παλιά εφεδρική συμπεριφορά: όταν η παρουσία χώρου είναι άγνωστη, ο παλιός κανόνας προφίλ τον αντιμετωπίζει συντηρητικά ως κατειλημμένο. Δεν αποδεικνύει ότι βρίσκεται κάποιος εκεί.",
+      "Älterer Ersatzmodus: Bei unbekannter Raumbelegung behandelt die frühere Raumprofilregel den Raum vorsichtshalber als belegt. Dies beweist keine Anwesenheit."
+    ],
+    "hold": [
+      "Legacy fallback: when local occupancy is unknown, suspend that old room-profile decision instead of assuming someone is inside.",
+      "Παλιά εφεδρική συμπεριφορά: με άγνωστη παρουσία, αναστέλλει την παλιά απόφαση προφίλ χώρου αντί να υποθέτει ότι υπάρχει άτομο.",
+      "Älterer Ersatzmodus: Bei unbekannter Raumbelegung wird die frühere Raumprofilentscheidung ausgesetzt, statt Anwesenheit anzunehmen."
+    ]
+  },
+  "area_climate_policy_target_source": {
+    "temperature": [
+      "Use the configured fixed profile temperature targets without extra humidity/comfort adaptation.",
+      "Χρησιμοποιεί τις σταθερές θερμοκρασίες των προφίλ όπως έχουν οριστεί, χωρίς πρόσθετη προσαρμογή άνεσης βάσει υγρασίας.",
+      "Verwendet die festgelegten Temperatur-Sollwerte der Profile ohne zusätzliche Feuchte-/Komfortanpassung."
+    ],
+    "auto_comfort": [
+      "Adjust the comfort temperature band within configured limits using valid temperature and humidity evidence.",
+      "Προσαρμόζει τη ζώνη θερμικής άνεσης μέσα στα καθορισμένα όρια, με έγκυρες μετρήσεις θερμοκρασίας και υγρασίας.",
+      "Passt den Temperatur-Komfortbereich innerhalb der eingestellten Grenzen anhand gültiger Temperatur- und Feuchtemesswerte an."
+    ],
+    "pmv": [
+      "Use the advanced PMV comfort assessment only with all required valid inputs. Insufficient evidence cannot authorize a fabricated comfort target.",
+      "Χρησιμοποιεί την προηγμένη εκτίμηση PMV μόνο όταν υπάρχουν όλα τα απαιτούμενα έγκυρα δεδομένα. Ελλιπείς μετρήσεις δεν επιτρέπουν αυθαίρετο στόχο άνεσης.",
+      "Verwendet die erweiterte PMV-Komfortbewertung nur mit allen erforderlichen gültigen Daten. Fehlende Nachweise erlauben keine erfundenen Komfort-Sollwerte."
+    ]
+  },
+  "home_aqi_scale": {
+    "auto": [
+      "Recognize the AQI scale only when the source provider identifies it reliably; otherwise no unsupported numerical comparison is made.",
+      "Αναγνωρίζει την κλίμακα AQI μόνο όταν η πηγή προσφέρει αξιόπιστη αναγνώριση· διαφορετικά δεν γίνεται αυθαίρετη αριθμητική σύγκριση.",
+      "Erkennt die AQI-Skala nur, wenn der Anbieter sie verlässlich ausweist; sonst erfolgt kein unbelegter Zahlenvergleich."
+    ],
+    "not_configured": [
+      "Do not interpret this AQI source until its scale is identified. Other valid air-quality sources remain available.",
+      "Δεν ερμηνεύει αυτή την πηγή AQI μέχρι να αναγνωριστεί η κλίμακά της. Οι άλλες έγκυρες πηγές ποιότητας αέρα συνεχίζουν να χρησιμοποιούνται.",
+      "Interpretiert diese AQI-Quelle nicht, bis ihre Skala feststeht. Andere gültige Luftqualitätsquellen bleiben nutzbar."
+    ],
+    "us_epa": [
+      "Interpret this source as US EPA AQI only when you know the provider actually uses that scale.",
+      "Ερμηνεύει την πηγή ως αμερικανικό δείκτη US EPA AQI μόνο αν ξέρεις ότι ο πάροχος χρησιμοποιεί αυτή την κλίμακα.",
+      "Interpretiert die Quelle als US-EPA-AQI, nur wenn der Anbieter tatsächlich diese Skala verwendet."
+    ],
+    "eea_category": [
+      "Interpret this source using the European EEA category scale, only if the provider uses it.",
+      "Ερμηνεύει την πηγή με την ευρωπαϊκή κατηγορική κλίμακα EEA, μόνο αν ο πάροχος την χρησιμοποιεί.",
+      "Interpretiert diese Quelle nach der europäischen EEA-Kategorieskala, sofern der Anbieter sie verwendet."
+    ],
+    "custom": [
+      "Compare this source only against the custom source-specific AQI limit that you configure separately. Do not reuse a threshold from another scale.",
+      "Συγκρίνει την πηγή μόνο με το ειδικό όριο AQI που ορίζεις ξεχωριστά γι’ αυτή. Μην χρησιμοποιείς όριο άλλης κλίμακας.",
+      "Vergleicht die Quelle nur mit ihrem separat eingestellten individuellen AQI-Grenzwert. Keine Grenzen anderer Skalen übernehmen."
+    ]
+  },
+  "global_threshold_mode_max_age_mode": {
+    "auto": [
+      "Apply HEM's type-based freshness limits to numeric environmental/weather readings. Change-driven window/door contacts are not expired merely because they stay unchanged.",
+      "Εφαρμόζει τα προεπιλεγμένα χρονικά όρια στις αριθμητικές μετρήσεις περιβάλλοντος/καιρού. Οι επαφές θυρών/παραθύρων δεν λήγουν επειδή παραμένουν αμετάβλητες.",
+      "Verwendet typabhängige Aktualitätsgrenzen für Messwerte und Wetter. Tür-/Fensterkontakte verfallen nicht, nur weil sie lange unverändert bleiben."
+    ],
+    "custom": [
+      "Use your configured maximum reading age (minutes) for sampled environmental sources; unavailable/restored measurements remain invalid.",
+      "Χρησιμοποιεί το μέγιστο χρονικό όριο (σε λεπτά) που έχεις ορίσει για δειγματοληπτικές περιβαλλοντικές πηγές. Μη διαθέσιμες/επαναφερμένες μετρήσεις παραμένουν άκυρες.",
+      "Verwendet das festgelegte Höchstalter (Minuten) für abgetastete Umweltdaten. Nicht verfügbare/wiederhergestellte Messwerte bleiben ungültig."
+    ]
+  },
+  "home_global_policy_source_freshness_mode": {
+    "auto": [
+      "Use the conservative automatic age policy for sampled home-presence counters and tracker reports. Valid unchanged Home evidence is handled separately.",
+      "Χρησιμοποιεί τα συντηρητικά αυτόματα όρια παλαιότητας για μετρητές ατόμων και αναφορές παρουσίας. Η έγκυρη αμετάβλητη κατάσταση Home αντιμετωπίζεται ξεχωριστά.",
+      "Verwendet die vorsichtigen automatischen Aktualitätsgrenzen für Anwesenheitszähler und Tracker-Meldungen. Gültige unveränderte Home-Nachweise werden getrennt behandelt."
+    ],
+    "custom": [
+      "Use the configured maximum age for sampled home-presence reports, never treating missing or stale reports as proof that everyone left.",
+      "Χρησιμοποιεί το δικό σου χρονικό όριο στις δειγματοληπτικές αναφορές παρουσίας· άγνωστες ή παλιές αναφορές δεν αποδεικνύουν ότι έφυγαν όλοι.",
+      "Verwendet die eingestellte Gültigkeitsdauer für gemeldete Anwesenheitswerte; fehlende oder alte Meldungen beweisen niemals, dass alle abwesend sind."
+    ]
+  },
+  "area_climate_policy_occupancy_freshness_mode": {
+    "auto": [
+      "Use automatic freshness limits for numeric room occupancy counts. Valid binary room-presence states remain change-driven.",
+      "Χρησιμοποιεί αυτόματα όρια παλαιότητας για αριθμητικούς μετρητές παρουσίας. Οι έγκυρες δυαδικές καταστάσεις παρουσίας βασίζονται στις αλλαγές τους.",
+      "Verwendet automatische Grenzen für numerische Raumbelegungszähler. Gültige binäre Raumpräsenzzustände bleiben ereignisgesteuert."
+    ],
+    "custom": [
+      "Use your configured maximum reading age for numeric room occupancy counts. Unknown values cannot prove the room is empty.",
+      "Χρησιμοποιεί το χρονικό όριο που όρισες για αριθμητικούς μετρητές παρουσίας. Οι άγνωστες ενδείξεις δεν αποδεικνύουν ότι ο χώρος είναι άδειος.",
+      "Verwendet das eingestellte Höchstalter für numerische Raumbelegungszähler. Unbekannte Werte beweisen nicht, dass der Raum leer ist."
+    ]
+  }
+})
+
 def option_help_locales(key: str) -> dict[str, dict[str, str]]:
     """Return safe, static explanations keyed by native select option values."""
     options = OPTION_TEXT.get(OPTION_ALIASES.get(key, key), {})
