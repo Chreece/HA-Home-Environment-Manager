@@ -12,7 +12,7 @@ assert executable,'Chromium required'
 with sync_playwright() as p:
     browser=p.chromium.launch(executable_path=executable,headless=True,
                               args=['--no-sandbox','--disable-dev-shm-usage'])
-    for lang,needle in [('en','Prepare the home environment'),('de','Wohnumgebung'),('el','Προετοιμασία')]:
+    for lang,needle in [('en','Preparing home for arrival'),('de','Das Zuhause für die Ankunft vorbereiten'),('el','Προετοιμασία σπιτιού για την άφιξη')]:
         page=browser.new_page(viewport={'width':375,'height':950})
         errors=[]
         page.on('pageerror',lambda error:errors.append(str(error)))
@@ -35,9 +35,16 @@ with sync_playwright() as p:
         expect(action).to_be_enabled()
         assert not action.inner_text().strip(),(lang,'arrival label must not be visible')
         assert action.get_attribute('aria-label')
-        assert page.locator('.hem-arrival-help125').count()==0
+        # v0.7.1 exposes a real arrival-help bubble, not only an action tooltip.
+        assert page.locator('.hem-arrival-help125').count()==1
         assert needle in action.get_attribute('title')
         assert needle in action.get_attribute('aria-label')
+        help_button=page.locator('.hem-arrival-help125 details.hem-context76 > summary')
+        help_button.click()
+        popup=page.locator('.hem-floating-info87')
+        expect(popup).to_be_visible()
+        assert needle in popup.inner_text()
+        page.keyboard.press('Escape')
         assert page.evaluate('calls.length')==0
         for width in (320,375,665):
             page.set_viewport_size({'width':width,'height':950})
@@ -56,4 +63,4 @@ with sync_playwright() as p:
         assert not errors,errors
         page.close()
     browser.close()
-print('PASS: HEM b12 HEM header, icon-only arrival and localized tooltip in Chromium')
+print('PASS: HEM b12 HEM header, icon-only arrival and translated arrival tooltip and actual information bubble in Chromium')
