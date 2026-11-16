@@ -88,7 +88,7 @@ with sync_playwright() as pw:
         assert page.evaluate("card._averageDialog105.metric") == "mold"
         assert page.evaluate("card._averageDialog105.entity122") is None
         assert page.evaluate("card._averageDialog105.model114.points.length") == 3
-        assert "74.25" in popup.inner_text(), popup.inner_text()
+        assert "74.25" in popup.inner_text().replace(",", "."), popup.inner_text()
         assert popup.locator('[data-hem-source105]').count()==0, "A fake mold sensor appeared"
         popup.locator('[data-close-avg105]').click()
         row.locator('.hem-room-name87').click()
