@@ -522,8 +522,12 @@ class NativeDeviceFaultMonitor:
         for key in problems:
             if key in self._offline_notified or key in self._offline_tasks:
                 continue
-            self._offline_tasks[key] = self.hass.async_create_task(
-                self._announce_offline_after_delay(key)
+            # A 180-second debounce must not hold HA startup or shutdown.
+            # Tie it to the config-entry lifecycle for automatic cancellation.
+            self._offline_tasks[key] = self.manager.entry.async_create_background_task(
+                self.hass,
+                self._announce_offline_after_delay(key),
+                f"{DOMAIN} offline-device debounce {key}",
             )
 
     async def _announce_offline_after_delay(self, device_key: str) -> None:
