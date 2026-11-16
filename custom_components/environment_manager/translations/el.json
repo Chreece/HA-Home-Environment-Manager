@@ -3842,7 +3842,7 @@
         }
       },
       "arrival_preparation_timeout": {
-        "name": "Σπίτι - Προετοιμασία - Μέγιστος χρόνος",
+        "name": "Μέγιστος χρόνος προετοιμασίας άφιξης",
         "state_attributes": {
           "configuration_help": {
             "name": "Βοήθεια"
