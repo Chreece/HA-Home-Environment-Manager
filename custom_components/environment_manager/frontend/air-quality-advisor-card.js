@@ -2106,7 +2106,7 @@
       return (gr ? base[1] : de ? base[2] : base[0]) + limit;
     }
 
-    _metric(item, miniature = false) {
+    _metric(item, miniature = false, roomArea = null) {
       const metric = item.details?.fallback_for_mold
         ? `${this._t('humidity')} Ø (RH)`
         : item.metric==='unknown' ? this._unknownMetricName(item)
@@ -2150,7 +2150,11 @@
       const fromNative=!averaged && !item.details?.fallback_for_mold &&
         item.metric !== 'mold' && typeof item.entity_id==='string' &&
         /^sensor\.[a-z0-9_]+$/.test(item.entity_id);
-      const click=averaged && aggregate?.area_id
+      const moldTrend=item.metric==='mold'&&typeof roomArea==='string'&&
+        this._evidence105?.(roomArea,'mold');
+      const click=moldTrend
+        ? 'data-hem-average105="mold" data-average-area105="'+escape(roomArea)+'"'
+        : averaged && aggregate?.area_id
         ? 'data-hem-average105="'+escape(item.metric)+'" data-average-area105="'+escape(aggregate.area_id)+'"'
         : fromNative ? 'data-hem-source105="'+escape(item.entity_id)+'"' : '';
       return `<div class="metric ${miniature ? 'tiny' : ''} metric-${level}" data-room-metric114="${escape(item.metric)}" data-metric-source114="${escape(item.entity_id || '')}">
@@ -3048,7 +3052,7 @@
           ${this._editButton(room.area_id)}
           <span class="status-tag">${this._icon(ICON[status])}${escape(roomStatusLabel)}</span>
         </div>
-        ${this._config.show_metrics === false ? '' : details122.length ? `<div class="metric-grid">${shown.map((item) => item.overview_detail122?this._metricInfo122(item):this._metric(item)).join('')}</div>`
+        ${this._config.show_metrics === false ? '' : details122.length ? `<div class="metric-grid">${shown.map((item) => item.overview_detail122?this._metricInfo122(item,room.area_id):this._metric(item,false,room.area_id)).join('')}</div>`
           : readings.length || overview122?.metrics?.size ? '' : `<div class="empty-measurements">${this._icon('mdi:gauge-empty')} ${escape(this._t('missingIndoor'))}</div>`}
         ${button}
         ${expanded && this._config.show_metrics !== false
@@ -4679,7 +4683,7 @@
       return item.exceeded===true||calibrated?[{...item,overview_detail122:true}]:[];
     });
   };
-  proto87._metricInfo122=function(item){
+  proto87._metricInfo122=function(item,areaId=null){
     const title=this._metricName(item.metric),help=this._metricHelp(item);
     const source=[item.name,item.entity_id].filter(Boolean).join(' · ');
     const threshold=Number.isFinite(item.threshold)&&item.threshold>0
@@ -4689,9 +4693,13 @@
     // Keep the calibrated surface estimate beside its own threshold. A mold
     // warning/calibration tile must not look like a missing measurement when
     // the same available estimate is already visible in the room summary.
+    const moldTarget=item.metric==='mold' && typeof areaId==='string' &&
+      item.available===true && Number.isFinite(item.value) && this._evidence105?.(areaId,'mold');
     const moldValue=item.metric==='mold' && item.available===true && Number.isFinite(item.value)
-      ?'<span class="metric-number">'+escape(this._format(item.value))+' <small>'+
-        escape(item.unit||'%')+'</small></span>':'';
+      ?'<span class="metric-number'+(moldTarget?' hem-source-click105':'')+'" '+
+        (moldTarget?'data-hem-average105="mold" data-average-area105="'+escape(areaId)+
+          '" role="button" tabindex="0" title="'+escape(this._metricName('mold'))+' · trend"':'')+
+        '>'+escape(this._format(item.value))+' <small>'+escape(item.unit||'%')+'</small></span>':'';
     return '<div class="metric hem-metric-info122 metric-'+(item.exceeded?'attention':'safe')+'" '+
       'data-room-metric114="'+escape(item.metric)+'" data-metric-source114="'+escape(item.entity_id||'')+'" '+
       'data-overview-detail122="'+escape(item.metric)+'">'+
@@ -6256,18 +6264,21 @@
   const copy105={
     en:{average:'Average of',sensors:'sensors',trend:'Average trend',
       recent:'Recorded averages · up to 7 days',none:'Collecting history · fewer than two samples',
+      moldNote:'Recorded estimated surface humidity, not mold detection. Historical values reflect conditions and calibration at their recorded times.',
       sources:'Contributing sensors',physics:'Building physics',shades:'Covers',
       close:'Close trend',on:'On',off:'Off',open:'Open',closed:'Closed',
       unavailable:'Unavailable'},
     de:{average:'Mittelwert aus',sensors:'Sensoren',trend:'Mittelwertverlauf',
       recent:'Aufgezeichnete Mittelwerte · bis zu 7 Tage',
       none:'Verlauf wird erfasst · noch keine zwei Messpunkte',
+      moldNote:'Aufgezeichnete geschätzte Oberflächenfeuchte, kein Schimmelnachweis. Historische Werte gelten für die damaligen Bedingungen und Kalibrierungen.',
       sources:'Beitragende Sensoren',physics:'Bauphysik',shades:'Rollläden',
       close:'Verlauf schließen',on:'Ein',off:'Aus',open:'Offen',closed:'Geschlossen',
       unavailable:'Nicht verfügbar'},
     el:{average:'Μέσος όρος από',sensors:'αισθητήρες',trend:'Τάση μέσου όρου',
       recent:'Καταγεγραμμένοι μέσοι όροι · έως 7 ημέρες',
       none:'Συλλογή ιστορικού · λιγότερα από δύο σημεία',
+      moldNote:'Καταγεγραμμένη εκτίμηση υγρασίας ψυχρής επιφάνειας, όχι ανίχνευση μούχλας. Οι ιστορικές τιμές αφορούν τις τότε συνθήκες και τη βαθμονόμηση.',
       sources:'Συμμετέχοντες αισθητήρες',physics:'Φυσική κτιρίου',
       shades:'Σκίαστρα',close:'Κλείσιμο τάσης',on:'Ενεργό',off:'Ανενεργό',
       open:'Ανοιχτό',closed:'Κλειστό',unavailable:'Μη διαθέσιμο'},
@@ -6295,7 +6306,8 @@
   };
   proto105._evidence105=function(area,metric){
     const room=safeArray(this._dashboard105()?.rooms).find(v=>v?.area_id===area);
-    const value=room?.environment?.measurement_evidence?.[metric];
+    const value=metric==='mold' ? room?.environment?.mold_trend :
+      room?.environment?.measurement_evidence?.[metric];
     if(!room || !value || !Number.isFinite(value.value) ||
        !Number.isInteger(value.source_count) ||
        safeArray(value.source_ids).length!==value.source_count)return null;
@@ -6307,13 +6319,14 @@
     const ids=safeArray(evidence?.source_ids);
     const count=evidence?.source_count;
     const avg=count>=2&&ids.length===count;
+    const derivedMold=metric==='mold'&&this._evidence105(room.area_id,'mold')!==null;
     const native=(!avg && count===1 && ids.length===1 &&
       typeof ids[0]==='string'&&this._nativeAllowed105(ids[0]))
       ?ids[0]:null;
     // Some standalone device metrics are not part of a room-level mean.
     const original=!avg&&!native && typeof fallbackId==='string' &&
       this._nativeAllowed105(fallbackId)?fallbackId:null;
-    const action=avg
+    const action=derivedMold||avg
       ?'data-hem-average105="'+escape(metric)+'" data-average-area105="'+escape(room.area_id)+'"'
       :native||original?'data-hem-source105="'+escape(native||original)+'"':'';
     const badgeTitle=avg?word105(this,'average')+' '+count+' '+
@@ -6456,7 +6469,7 @@
   };
   proto105._openAverage105=function(area,metric){
     const evidence=this._evidence105(area,metric);
-    if(!evidence||evidence.value.source_count<2)return;
+    if(!evidence||(metric!=='mold'&&evidence.value.source_count<2))return;
     if(!this._averageDialog105?.entity122 && this._averageDialog105?.area===area &&
        this._averageDialog105?.metric===metric){
       this._closeAverage105();return;
@@ -6541,7 +6554,7 @@
         this._closeAverage105();event.preventDefault();return;
       }
       if((event.key==='Enter'||event.key===' ') &&
-         event.target?.matches?.('[data-hem-source105][role="button"]')){
+         event.target?.matches?.('[data-hem-source105][role="button"],[data-hem-average105][role="button"]')){
         event.preventDefault();event.target.click();
       }
     },true);
@@ -7026,8 +7039,10 @@
     const footer=evidence.entity_id?'<div class="hem-entity-history-footer122"><small>'+escape(ew122(this,'recent'))+
       '</small><button type="button" class="hem-average-source105" data-open-entity122="'+escape(evidence.entity_id)+
       '" title="'+escape(evidence.entity_id)+'">'+this._icon('mdi:open-in-new')+escape(ew122(this,'open'))+'</button></div>':
-      '<div class="hem-average-caption105">'+escape(word105(this,'average')+' '+value.source_count+' '+
-      word105(this,'sensors'))+'</div><div class="hem-average-sources105">'+sources+'</div>';
+      (metric==='mold'
+        ?'<div class="hem-average-caption105">'+escape(word105(this,'moldNote'))+'</div>'
+        :'<div class="hem-average-caption105">'+escape(word105(this,'average')+' '+value.source_count+' '+
+        word105(this,'sensors'))+'</div><div class="hem-average-sources105">'+sources+'</div>');
     return '<div class="hem-trend114" style="--hem-trend-accent114:'+accent+'">'+
       '<div class="hem-average-summary105"><div><strong>'+escape(title)+'</strong><small>'+escape(evidence.room.name||area)+
       '</small></div><span class="hem-trend-current114">'+escape(evidence.entity_id?ew122(this,'current'):tw114(this,'current'))+'<b>'+
@@ -7057,7 +7072,9 @@
       this._closeAverage105();return;
     }
     const evidence=saved.entity122?this._entityTrendEvidence122(saved):this._evidence105(saved.area,saved.metric);
-    if(!evidence||!saved.entity122&&(evidence.value.source_count<2||evidence.value.source_ids.join('|')!==saved.sources)){
+    if(!evidence||!saved.entity122&&
+        (saved.metric!=='mold'&&evidence.value.source_count<2||
+         evidence.value.source_ids.join('|')!==saved.sources)){
       this._closeAverage105();return;
     }
     if(saved.entity122&&evidence.unit!==saved.unit122&&saved.status122!=='loading'){
