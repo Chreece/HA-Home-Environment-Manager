@@ -8628,6 +8628,10 @@
     .card-heading h2{font-size:18px;white-space:nowrap}
     .hem-arrival124>.hem-arrival-action124{display:inline-grid;place-items:center;
       width:32px;min-width:32px;max-width:32px;height:32px;min-height:32px;padding:5px}
+    .hem-arrival-help125>.hem-context76{margin:0!important;padding:0!important}
+    .hem-arrival-help125>.hem-context76>summary{width:17px;height:26px;display:grid;place-items:center;
+      padding:0;list-style:none;cursor:pointer}
+    .hem-arrival-help125>.hem-context76>summary ha-icon{--mdc-icon-size:15px;width:15px;height:15px}
     .hem-arrival-help125{display:inline-block;position:relative;flex:0 0 17px;
       width:17px;height:26px;min-width:17px;min-height:26px}
     .hem-arrival-help125>summary{width:17px;height:26px;display:grid;place-items:center;
@@ -8775,7 +8779,11 @@
       ' aria-label="'+escape(source.controls.timeout.valid?durationTitle:words.unavailable)+'"'+
       ' title="'+escape(source.controls.timeout.valid?durationTitle:words.unavailable)+'"'+
       (!source.controls.timeout.valid?' disabled':'')+'>'+this._icon('mdi:timer-outline')+
-      '<span class="hem-arrival-minutes124">'+escape(duration)+'</span></button></div>';
+      '<span class="hem-arrival-minutes124">'+escape(duration)+'</span></button>'+
+      '<span class="hem-arrival-help125">'+this._info76(
+        'arrival-preparation:'+source.entry,words.prepare,
+        '<strong>'+escape(help.purpose)+'</strong><p>'+escape(help.details)+'</p>'
+      )+'</span></div>';
   };
   arrivalProto124._arrivalError124=function(){
     const error=this._arrivalSource124()?.error;
