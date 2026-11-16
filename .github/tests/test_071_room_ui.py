@@ -110,6 +110,28 @@ with sync_playwright() as pw:
         expect(note).to_be_visible()
         assert note.evaluate("el=>getComputedStyle(el).position")=="static"
         assert note.evaluate("el=>el.closest('details.hem-science-line071')!==null")
+        assert metric.get_attribute('data-hem-science072')
+        # Emulate repeated HA sensor updates that previously recreated and
+        # collapsed the user's expanded inline Building physics explanation.
+        for tick in range(6):
+            page.evaluate("""(tick) => {
+              const states={...card._hass.states};
+              const entity=states['sensor.hem'];
+              const dashboard=structuredClone(entity.attributes.dashboard);
+              const room=dashboard.rooms.find(item=>item.area_id==='living');
+              room.environment.moisture.drying_potential_g_kg=1.2+tick/10;
+              states['sensor.hem']={...entity,attributes:{...entity.attributes,dashboard}};
+              card._hass={...card._hass,states};
+              card._renderContent(true);
+            }""",tick)
+            assert metric.get_attribute('open') is not None, (language,tick)
+            expect(metric.locator('.hem-science-inline071')).to_be_visible()
+        assert physics.locator('details.hem-science-line071').nth(1).get_attribute('open') is None
+        # Closing is intentional and must remain closed after subsequent updates.
+        metric.locator(':scope > summary').click()
+        assert metric.get_attribute('open') is None
+        page.evaluate("card._renderContent(true)")
+        assert metric.get_attribute('open') is None
 
         covers=row.locator('details.hem-covers-fold105')
         assert covers.count()==1
