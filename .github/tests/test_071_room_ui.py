@@ -110,6 +110,22 @@ with sync_playwright() as pw:
         expect(note).to_be_visible()
         assert note.evaluate("el=>getComputedStyle(el).position")=="static"
         assert note.evaluate("el=>el.closest('details.hem-science-line071')!==null")
+        # Live HA updates must not dismiss a user-opened physics explanation.
+        page.evaluate("""() => {
+          const states={...card._hass.states};
+          const hem=states['sensor.hem'];
+          const rooms=structuredClone(hem.attributes.dashboard.rooms);
+          rooms[0].environment.moisture.drying_potential_g_kg=2.1;
+          states['sensor.hem']={...hem,attributes:{...hem.attributes,
+            dashboard:{...hem.attributes.dashboard,rooms}}};
+          card.hass={...card._hass,states};
+          card._renderContent(true);
+        }""")
+        metric=page.locator('[data-room-fold87="living"] details.hem-science-line071').first
+        assert metric.get_attribute("open") is not None, "Physics explanation closed after HA update"
+        expect(metric.locator('.hem-science-inline071')).to_be_visible()
+        metric.locator(':scope > summary').click()
+        assert metric.get_attribute("open") is None, "Physics explanation cannot be closed manually"
 
         covers=row.locator('details.hem-covers-fold105')
         assert covers.count()==1
