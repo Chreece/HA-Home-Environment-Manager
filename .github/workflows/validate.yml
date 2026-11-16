@@ -77,6 +77,8 @@ jobs:
         run: python -I .github/tests/test_062b23_mold_history.py
       - name: HEM startup burst coalescing and shade-only fast tick safety
         run: python -I .github/tests/test_070_startup_load.py
+      - name: v0.7.1 room data, arrival controls and read-only card disclosures
+        run: python -I .github/tests/test_071_room_ui.py
       - name: Native floor registry grouping without requiring any floors
         run: python -I .github/tests/test_061b20_floors.py --logic-only
       - name: B1 room doors, area authority, Eco safety and profile precedence
