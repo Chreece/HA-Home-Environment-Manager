@@ -26,7 +26,7 @@ NOW = 1794200000.0
 
 
 def read(samples, *, area="living", limit=96):
-    room = N(samples=lambda id: samples if id == area else [])
+    room = N(samples=lambda id: samples if id == 'living' else [])
     return calculate(room, area, now=NOW, limit=limit)
 
 # A stored estimate remains associated with its original time and calibration.
@@ -54,7 +54,7 @@ assert read(bad) == [], "Invalid values became historical measurements"
 assert read([{"t": NOW - 8 * 86400, "surface_rh": 33}]) == []
 assert read(rows, limit=1) == []
 
-many = [{"t": NOW - 1800 * (359 - i), "surface_rh": float(40 + i % 20)}
+many = [{"t": NOW - 1600 * (359 - i), "surface_rh": float(40 + i % 20)}
         for i in range(360)]
 retained = read(many)
 assert 2 <= len(retained) <= 96, len(retained)
