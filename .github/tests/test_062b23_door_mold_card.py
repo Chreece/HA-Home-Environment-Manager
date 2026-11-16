@@ -79,7 +79,7 @@ with sync_playwright() as pw:
         }""",{"language":language,"states":states})
         row = page.locator('[data-room-fold87="living"]')
         assert row.count()==1 and row.get_attribute("open") is None
-        compact = row.locator('[data-hem-average105="mold"][data-average-area105="living"]')
+        compact = row.locator(':scope > summary [data-hem-average105="mold"][data-average-area105="living"]')
         assert compact.count()==1, "Mold has data but is not a trend button"
         compact.click()
         assert row.get_attribute("open") is None, "Mold reading opened the room, not its trend"
