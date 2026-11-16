@@ -4828,8 +4828,12 @@
       '<span>'+ventNotes95.map(value=>escape(value)).join(' · ')+'</span></div>':'';
     if(roomStatus==='attention') alerts.push(this._roomAlert114(room,'attention',
       'mdi:alert-circle-outline',labels.attention,'warn'));
-    if(roomStatus==='unknown') alerts.push(this._roomAlert114(room,'missing',
-      'mdi:help-circle-outline',labels.unavailable,'muted'));
+    // Keep the existing missing-sensor diagnostic shortcut even when basic
+    // temperature or humidity evidence makes the room status partial/ready.
+    // Optional sensor outages must not relabel a room as "No data".
+    const hasMissingSensor=safeArray(room.readings).some(item=>item?.available!==true);
+    if(roomStatus==='unknown'||hasMissingSensor) alerts.push(this._roomAlert114(room,'missing',
+      'mdi:help-circle-outline',hasMissingSensor?this._hemText071('missing'):labels.unavailable,'muted'));
     if(safeArray(room.windows).some(win=>win.opened===true))
       alerts.push(this._roomAlert114(room,'windows','mdi:window-open-variant',
         this._t('windowOpen'),'warn'));
