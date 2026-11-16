@@ -25,19 +25,21 @@ physical appliance must be supported by evidence from that appliance.
 
 ## Releases
 
-**Every completed HEM change intended for `main` includes a new beta release.**
-Bump `manifest.json` to the next unused beta and add matching notes in
-`.github/releases/v<VERSION>.md` before promotion. Treat a merge as complete
-only after the `main` push validation and **Publish validated beta** workflows
+**Every completed HEM change intended for `main` includes a new versioned release.**
+For an explicitly approved stable milestone, use a SemVer version such as
+`0.7.0` (not `0.7`). For development releases use the next unused beta.
+Add matching notes in `.github/releases/v<VERSION>.md` before promotion. Treat a merge as complete
+only after the `main` push validation and **Publish validated HEM release** workflows
 succeed, and verify that the new prerelease tag and `environment_manager.zip`
-asset are published. If validation or publication fails, fix the problem and
+asset are published. Stable releases must have `prerelease=false` and
+the `make_latest=true` setting. If validation or publication fails, fix the problem and
 publish the next safe version rather than reusing or overwriting an existing tag.
 Validate on `dev`, then promote to `main` after review.
 
-The separate **Publish validated beta** workflow runs after a successful
+The separate **Publish validated HEM release** workflow runs after a successful
 validation push on `main`. It verifies the exact commit, creates a prerelease
-and installation ZIP for a new version, and checks the tag, manifest and
-uploaded and downloaded ZIP. Already published versions are never overwritten.
+for beta versions or a full, latest release for stable versions, and verifies
+the installation ZIP, tag, manifest, and uploaded/downloaded SHA256. Already published versions are never overwritten.
 A changed `main` head or failed validation prevents publication.
 
 Keep all releases and tags, including older prereleases. Publishing adds a new

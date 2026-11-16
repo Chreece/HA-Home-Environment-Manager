@@ -6,6 +6,7 @@ import hashlib
 from io import BytesIO
 import importlib.util
 import json
+import shutil
 from pathlib import Path
 import subprocess
 import tempfile
@@ -62,7 +63,7 @@ class FakeGitHub:
             self.asset = {
                 "id": 7, "name": name, "state": "uploaded", "size": len(data),
                 "digest": "sha256:" + ("0" * 64 if self.corrupt_digest else hashlib.sha256(data).hexdigest()),
-                "browser_download_url": f"https://github.com/{publisher.REPOSITORY}/releases/download/v{VERSION}/{name}",
+                "browser_download_url": f"https://github.com/{publisher.REPOSITORY}/releases/download/v{getattr(self, 'asset_version', VERSION)}/{name}",
             }
             self.created["assets"] = [self.asset]
             return deepcopy(self.asset)
@@ -71,7 +72,7 @@ class FakeGitHub:
         if method == "GET" and path == "/releases/assets/7":
             return deepcopy(self.asset)
         if method == "PATCH" and path == "/releases/2":
-            assert data.get("make_latest") == "legacy", data
+            assert data.get("make_latest") == ("legacy" if self.created.get("prerelease") else "true"), data
             self.created.update(data, published_at="2026-11-05T01:00:00Z")
             self.published = True
             self.tags[self.created["tag_name"]] = "0" * 40 if self.wrong_tag else self.sha
@@ -80,7 +81,7 @@ class FakeGitHub:
 
 
 class PublishReleaseTests(unittest.TestCase):
-    def test_current_beta_has_nonempty_matching_release_notes(self):
+    def test_current_version_has_nonempty_matching_release_notes(self):
         """A version bump must not reach main without a publishable notes file."""
         manifest = json.loads((ROOT / "custom_components/environment_manager/manifest.json").read_text())
         version = manifest["version"]
@@ -242,6 +243,47 @@ class PublishReleaseTests(unittest.TestCase):
             ("POST", "/releases/2/assets?name=environment_manager.zip"),
             ("PATCH", "/releases/2"),
         ])
+
+    def test_first_stable_release_is_not_a_prerelease_and_is_latest(self):
+        """Promote a real Git fixture to 0.7.0 without modifying old releases."""
+        stable = "0.7.0"
+        with tempfile.TemporaryDirectory() as directory:
+            checkout = Path(directory) / "stable-repo"
+            shutil.copytree(self.repo, checkout)
+            manifest = checkout / publisher.SOURCE / "manifest.json"
+            content = json.loads(manifest.read_text(encoding="utf-8"))
+            content["version"] = stable
+            manifest.write_text(json.dumps(content), encoding="utf-8")
+            notes = checkout / ".github/releases/v0.7.0.md"
+            notes.write_text("# HEM v0.7.0\\n\\nFirst stable release and verified ZIP.\\n", encoding="utf-8")
+            subprocess.check_call(["git", "-C", str(checkout), "add",
+                                   publisher.SOURCE + "manifest.json",
+                                   ".github/releases/v0.7.0.md"])
+            subprocess.check_call(["git", "-C", str(checkout),
+                                   "-c", "user.name=Offline fixture",
+                                   "-c", "user.email=fixture@example.invalid",
+                                   "-c", "commit.gpgsign=false",
+                                   "-c", "core.hooksPath=/dev/null",
+                                   "commit", "-qm", "Stable version"])
+            sha = subprocess.check_output(["git", "-C", str(checkout),
+                                           "rev-parse", "HEAD"]).decode().strip()
+            old = [release("0.6.2b23", identifier=40),
+                   release("0.6.0", identifier=41, prerelease=False)]
+            api = FakeGitHub(sha, initial=deepcopy(old))
+            api.asset_version = stable
+            with patch.object(publisher, "download_asset",
+                              side_effect=lambda *args: api.data):
+                publisher.publish(api, checkout, sha)
+            self.assertTrue(api.published)
+            self.assertFalse(api.created["prerelease"])
+            self.assertEqual(api.created["make_latest"], "true")
+            self.assertEqual(api.created["tag_name"], "v0.7.0")
+            self.assertEqual(api.items[:-1], old)
+            self.assertTrue(api.tags["v0.7.0"] == sha)
+            self.assertEqual(
+                json.loads(__import__("zipfile").ZipFile(BytesIO(api.data)).read("manifest.json"))["version"],
+                stable,
+            )
 
     def test_newer_release_during_upload_still_stops_publication(self):
         api = FakeGitHub(self.sha)
