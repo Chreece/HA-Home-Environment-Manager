@@ -2968,6 +2968,12 @@
           </div>
           ${this._climatePanel(room,overview122)}
           ${this._shadePanel(room)}
+          <div class="window-section">
+            <span class="field-label">${this._icon("mdi:window-closed-variant")}${escape(this._t("windows"))}</span>
+            ${safeArray(room.windows).length ? `<div class="window-list">${safeArray(room.windows).map(win=>this._window(win)).join("")}</div>`
+              : `<span class="subdued">${escape(this._t("noWindows"))}</span>`}
+          </div>
+          ${this._doorContext063?.(room)||''}
         </article>`;
       }
       const status = ['safe','attention','unknown'].includes(room.status) ? room.status : 'unknown';
@@ -3058,6 +3064,7 @@
           ${windows.length ? `<div class="window-list">${windows.map((window) => this._window(window)).join('')}</div>`
             : `<span class="subdued">${escape(this._t('noWindows'))}</span>`}
         </div>
+        ${this._doorContext063?.(room)||''}
         ${recommendation}
       </article>`;
     }
@@ -4809,7 +4816,6 @@
       '<div class="hem-room-ventilation95" role="status">'+
       this._icon('mdi:air-filter')+
       '<span>'+ventNotes95.map(value=>escape(value)).join(' · ')+'</span></div>':'';
-    const doorNote062=this._doorContext063(room);
     if(roomStatus==='attention') alerts.push(this._roomAlert114(room,'attention',
       'mdi:alert-circle-outline',labels.attention,'warn'));
     if(roomStatus==='unknown') alerts.push(this._roomAlert114(room,'missing',
@@ -4880,7 +4886,7 @@
       '<span class="hem-room-alerts87" aria-label="'+escape(labels.attention)+'">'+
       alerts.slice(0,4).join('')+'</span>'+
       this._icon(open?'mdi:chevron-up':'mdi:chevron-down')+
-      '</summary><div class="hem-room-body87">'+doorNote062+ventHeader95+
+      '</summary><div class="hem-room-body87">'+ventHeader95+
       this._roomIssueDetail114(room)+original+'</div></details>';
   };
 
