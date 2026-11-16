@@ -326,6 +326,55 @@ class EnvironmentHistory:
     def samples(self, area: str) -> list[dict]:
         return self.areas.get(area, [])
 
+    def mold_trend(self, area: str, *, now: float, limit: int = 96) -> list[dict]:
+        """Recorded calculated surface-RH values, never a synthetic sensor.
+
+        The 5-minute HEM snapshots keep the estimate that was available at
+        each timestamp. Historical estimates are not recalculated with today's
+        calibration. Preserve real outages, invalid readings and any gaps over
+        three expected sampling intervals even when chart rows are downsampled.
+        """
+        if (not isinstance(area, str) or type(now) not in (int, float)
+                or not math.isfinite(now) or type(limit) is not int or limit < 2):
+            return []
+        rows = [
+            p for p in self.samples(area)
+            if type(p.get("t")) in (int, float)
+            and math.isfinite(p["t"])
+            and now - 7 * DAY_S <= p["t"] <= now + 60
+        ]
+        valid = [
+            i for i, p in enumerate(rows)
+            if type(p.get("surface_rh")) in (int, float)
+            and math.isfinite(p["surface_rh"])
+            and 0 <= p["surface_rh"] <= 100
+        ]
+        if not valid:
+            return []
+        # Preserve first and last real sample, and a bounded set of others.
+        # A skipped unavailable sample must still split the next segment.
+        maximum = min(144, limit)
+        stride = max(1, math.ceil((len(valid) - 1) / (maximum - 1)))
+        kept = list(range(0, len(valid), stride))
+        if kept[-1] != len(valid) - 1:
+            kept.append(len(valid) - 1)
+        result: list[dict] = []
+        previous: int | None = None
+        for number in kept:
+            index = valid[number]
+            sample = rows[index]
+            point = {"t": round(float(sample["t"]), 3),
+                     "v": round(float(sample["surface_rh"]), 3)}
+            if previous is not None and (
+                any("surface_rh" not in rows[j] for j in range(previous + 1, index))
+                or any(rows[j]["t"] - rows[j - 1]["t"] > 900
+                       for j in range(previous + 1, index + 1))
+            ):
+                point["break_before"] = True
+            result.append(point)
+            previous = index
+        return result
+
     def record_qualified_radon_days(self, area: str, source: str, *, now: float) -> bool:
         """Accumulate up to 370 confirmed UTC 24h radon means, source-specific.
 
