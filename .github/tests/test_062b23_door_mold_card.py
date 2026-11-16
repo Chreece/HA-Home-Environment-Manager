@@ -93,14 +93,14 @@ with sync_playwright() as pw:
         popup.locator('[data-close-avg105]').click()
         row.locator('.hem-room-name87').click()
         assert row.get_attribute("open") is not None
-        window = row.locator('.window-section:not(.hem-room-door062)')
-        doors = row.locator('.window-section.hem-room-door062')
-        assert window.count()==doors.count()==1
-        assert window.evaluate("e=>e.nextElementSibling?.classList.contains('hem-room-door062')")
-        assert doors.locator('.window-list .window.hem-door-contact062.closed').count()==1
-        assert "Living room door" in doors.inner_text()
-        assert doors.locator('[data-hem-source105="binary_sensor.door"]').count()==1
-        doors.locator('[data-hem-source105="binary_sensor.door"]').click()
+        # v0.7.1 keeps both sensor types in one Windows & doors panel.
+        contacts = row.locator('.window-section.hem-windows-doors071')
+        assert contacts.count()==1
+        assert contacts.locator('.window-list .window.hem-door-contact071.closed').count()==1
+        assert "Living room door" in contacts.inner_text()
+        assert "Balcony window" in contacts.inner_text()
+        assert contacts.locator('[data-hem-source105="binary_sensor.door"]').count()==1
+        contacts.locator('[data-hem-source105="binary_sensor.door"]').click()
         assert page.evaluate("info")[-1] == "binary_sensor.door"
         assert row.get_attribute("open") is not None
         detailed = row.locator('.metric-number[data-hem-average105="mold"]')
@@ -119,4 +119,4 @@ with sync_playwright() as pw:
         assert not errors,errors
         page.close()
     browser.close()
-print("PASS B23: mold click opens recorded trend without unfolding; doors below windows, matching pills, EN/EL/DE, zero services")
+print("PASS B23: mold click opens recorded trend without unfolding; unified window/door icons, matching pills, EN/EL/DE, zero services")
