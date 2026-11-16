@@ -6667,14 +6667,14 @@
   let trendSequence114=0;
   const trendWords114={
     en:{all:'All',hours:'h',days:'d',range:'Time range',older:'Previous period',
-      newer:'Next period',latest:'Latest',current:'Current average',sample:'Recorded value',
+      newer:'Next period',latest:'Latest',current:'Current average',sample:'Recorded value',held:'Last recorded state (held)',
       empty:'No samples in this period',gap:'No recorded sample',one:'One recorded sample',
       low:'Low',high:'High',samples:'samples',chart:'Recorded average over time',
       help:'Drag or move across the chart to inspect. Arrow keys: samples · Page Up/Down: periods.',
       gapHelp:'Shaded gaps have no recorded values.',
       collecting:'History appears as measurements are recorded.'},
     de:{all:'Alle',hours:'Std.',days:'T.',range:'Zeitraum',older:'Vorheriger Zeitraum',
-      newer:'Nächster Zeitraum',latest:'Neueste',current:'Aktueller Mittelwert',sample:'Messwert',
+      newer:'Nächster Zeitraum',latest:'Neueste',current:'Aktueller Mittelwert',sample:'Messwert',held:'Letzter gespeicherter Zustand (unverändert)',
       empty:'Keine Messwerte in diesem Zeitraum',gap:'Kein aufgezeichneter Messwert',
       one:'Ein aufgezeichneter Messwert',low:'Min.',high:'Max.',samples:'Messpunkte',
       chart:'Aufgezeichneter Mittelwert im Zeitverlauf',
@@ -6683,7 +6683,7 @@
       collecting:'Der Verlauf erscheint mit den aufgezeichneten Messungen.'},
     el:{all:'Όλα',hours:'ώ.',days:'ημ.',range:'Χρονικό διάστημα',older:'Προηγούμενο διάστημα',
       newer:'Επόμενο διάστημα',latest:'Πρόσφατα',current:'Τρέχων μέσος όρος',
-      sample:'Καταγεγραμμένη τιμή',empty:'Δεν υπάρχουν μετρήσεις σε αυτό το διάστημα',
+      sample:'Καταγεγραμμένη τιμή',held:'Τελευταία γνωστή τιμή (αμετάβλητη)',empty:'Δεν υπάρχουν μετρήσεις σε αυτό το διάστημα',
       gap:'Δεν έχει καταγραφεί μέτρηση',one:'Μία καταγεγραμμένη μέτρηση',
       low:'Ελάχ.',high:'Μέγ.',samples:'μετρήσεις',chart:'Μέσος όρος στον χρόνο',
       help:'Σύρε ή κινήσου στο διάγραμμα. Βέλη: μετρήσεις · Page Up/Down: διαστήματα.',
@@ -6891,7 +6891,10 @@
   trend114._trendView114=function(evidence){
     const saved=this._averageDialog105;
     const data=trendPoints114(evidence.value,Boolean(evidence.entity_id)),points=data.points;
-    const first=points.length?data.first:0,last=points.length?data.last:0;
+    const eventHistory=Boolean(evidence.entity_id);
+    const first=points.length?data.first:0;
+    const heldUntil=eventHistory&&Number.isFinite(evidence.value.held_until)?evidence.value.held_until:null;
+    const last=points.length?Math.max(data.last,heldUntil??data.last):0;
     const state=saved.view114 ||= {
       range:last-first>21600?86400:0,end:null,cursor:null,
     };
@@ -6904,13 +6907,22 @@
     const viewStart=singleMoment?first-900:start;
     const viewEnd=singleMoment?first+900:
       end>viewStart?end:viewStart+1800;
-    const visible=points.filter(p=>p.t>=viewStart&&p.t<=viewEnd);
+    let visible=points.filter(p=>p.t>=viewStart&&p.t<=viewEnd);
+    // Recorder stores events, not a fresh sample every minute. Display the
+    // previous state at the viewport edge ONLY while the history and current
+    // native state prove it was held. This is a visual anchor, not a new sample.
+    if(eventHistory&&heldUntil!==null&&points.length&&viewStart>first){
+      const previous=points.filter(p=>p.t<viewStart).at(-1);
+      const discontinuous=data.gaps.some(([a,b])=>a<viewStart&&b>previous?.t);
+      if(previous&&!discontinuous&&!visible.some(p=>p.t===viewStart))
+        visible=[{t:viewStart,v:previous.v,carried_view:true},...visible];
+    }
     const width=Math.max(240,Math.min(800,saved.width114||
       Math.min(560,window.innerWidth-24)-32));
     const values=visible.map(p=>p.v),low=values.length?Math.min(...values):0;
     const high=values.length?Math.max(...values):1;
     const padding=Math.max((high-low)*.15,Math.abs(low)*.005,.1);
-    return { ...data,visible,first,last,start:viewStart,end:viewEnd,
+    return { ...data,visible,first,last,eventHistory,heldUntil,start:viewStart,end:viewEnd,
       width,left:48,right:width-14,top:18,bottom:164,min:low-padding,max:high+padding,
       older:!!state.range&&start>first,newer:!!state.range&&end<last,
       unit:evidence.entity_id?evidence.unit:saved.metric==='temperature'?'°C':saved.metric==='humidity'?'%':
@@ -6922,10 +6934,17 @@
   trend114._trendSelection114=function(model){
     const cursor=this._averageDialog105.view114.cursor;
     if(!model.visible.length)return {point:null,time:cursor??model.end,index:0};
-    const time=cursor??model.visible.at(-1).t;
-    // Even a short, explicitly observed outage is missing evidence. A
-    // sampling-cadence tolerance must not turn its interior into a reading.
+    const time=cursor??(model.eventHistory?model.end:model.visible.at(-1).t);
+    // Explicit unknown/unavailable readings always break the line.
     const gap=model.gaps.some(([a,b])=>time>a&&time<b);
+    if(model.eventHistory){
+      const latest=model.visible.filter(p=>p.t<=time).at(-1);
+      const outside=time<model.visible[0].t||
+        (model.heldUntil===null&&time>model.visible.at(-1).t);
+      return {point:gap||outside?null:latest||null,time,
+        held:!!latest&&(latest.carried===true||latest.carried_view===true||time>latest.t),
+        index:latest?Math.max(0,model.points.findIndex(p=>p.t===latest.t)):0};
+    }
     const nearest=model.visible.reduce((best,p)=>Math.abs(p.t-time)<Math.abs(best.t-time)?p:best);
     const outside=time<model.visible[0].t-model.cadence*.5||
       time>model.visible.at(-1).t+model.cadence*.5;
@@ -6948,7 +6967,7 @@
     const date=model.points.length?this._trendDate114(selected.time):'';
     text('[data-trend-value114]',display);
     text('[data-trend-time114]',date);
-    text('[data-trend-label114]',point?tw114(this,'sample'):tw114(this,'gap'));
+    text('[data-trend-label114]',point?(selected.held?tw114(this,'held'):tw114(this,'sample')):tw114(this,'gap'));
     root.querySelector('[data-trend-value114]')?.setAttribute('data-sample-time114',point?String(point.t):'');
     const stamp=root.querySelector('[data-trend-time114]');
     if(stamp){
@@ -7011,8 +7030,24 @@
       if(!prev||model.gaps.some(([a,b])=>prev.t<=a&&point.t>=b))segments.push([point]);
       else segment.push(point);
     }
-    const paths=segments.map(segment=>segment.map((point,i)=>
-      (i?'L':'M')+trendX114(model,point.t).toFixed(2)+' '+trendY114(model,point.v).toFixed(2)).join(' '));
+    const paths=segments.map((segment,group)=>{
+      let d='';
+      for(let i=0;i<segment.length;i++){
+        const point=segment[i],prev=segment[i-1];
+        const x=trendX114(model,point.t).toFixed(2),y=trendY114(model,point.v).toFixed(2);
+        if(!prev)d+='M'+x+' '+y;
+        else if(model.eventHistory)d+=' L'+x+' '+trendY114(model,prev.v).toFixed(2)+' L'+x+' '+y;
+        else d+=' L'+x+' '+y;
+      }
+      // The last known Recorder state remains active until the query end.
+      // Do not append a synthetic source event or bridge an unavailable state.
+      const last=segment.at(-1);
+      if(model.eventHistory&&group===segments.length-1&&model.heldUntil!==null&&
+          last&&model.end>last.t&&model.heldUntil>=model.end){
+        d+=' L'+trendX114(model,model.end).toFixed(2)+' '+trendY114(model,last.v).toFixed(2);
+      }
+      return d;
+    });
     const fill=segments.map((segment,i)=>segment.length>1?paths[i]+' L'+
       trendX114(model,segment.at(-1).t).toFixed(2)+' '+model.bottom+' L'+
       trendX114(model,segment[0].t).toFixed(2)+' '+model.bottom+' Z':'').join(' ');
