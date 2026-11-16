@@ -151,10 +151,12 @@ with sync_playwright() as playwright:
     physics.locator(':scope > summary').click()
     assert physics.get_attribute('open') is not None
     assert physics.locator('.science-grid').is_visible()
-    # Covers: native open/closed icon state + toggle ONLY when folded.
+    # v0.7.1: individual native cover states are shown only after unfolding.
+    # When folded, the summary shows a close cue only if it is recommended.
     covers=row.locator('details.hem-covers-fold105')
     assert covers.count()==1 and covers.get_attribute('open') is None
-    assert covers.locator('.hem-cover-state105').count()==2
+    assert covers.locator('.hem-cover-state105').count()==0
+    assert covers.locator('.hem-cover-source071').count()==0
     toggle=covers.locator('.hem-cover-toggle105')
     assert toggle.is_visible()
     toggle.click()
@@ -165,7 +167,13 @@ with sync_playwright() as playwright:
     covers.locator(':scope > summary').click()
     assert covers.get_attribute('open') is not None
     assert not toggle.is_visible()
-    assert covers.locator('[data-open-shade="cover.blind_a"]').is_visible()
+    assert covers.locator('.hem-cover-source071').count()==2
+    for entity, name in [('cover.blind_a','Living room blind A'),
+                         ('cover.blind_b','Living room blind B')]:
+        source=covers.locator('[data-open-shade="'+entity+'"]')
+        assert source.is_visible()
+        assert name in source.inner_text()
+        assert source.locator('ha-icon').count()==1
     covers.locator('[data-open-shade="cover.blind_a"]').click()
     assert page.evaluate('info')[-1]=='cover.blind_a'
     # Fold status survives a full HA card refresh and its DOM reconciler.
