@@ -272,6 +272,15 @@ def build_environment(
         ach = co2_decay_ach(samples, stamp, outdoor_co2)
         base_report = {
             "measurement_evidence": display,
+            # Recorded *derived* surface-RH estimates, never a native mold
+            # sensor or a contributor mean. Missing history stays missing.
+            "mold_trend": ({
+                "value": surface_rh,
+                "source_ids": [],
+                "source_count": 0,
+                "trend": history.mold_trend(room.area_id, now=stamp),
+            } if raw_mold and any(r.metric == "mold" for r in raw_mold.readings)
+              else None),
             "moisture": moisture,
             "thermal_comfort": comfort,
             "passive_cooling": cooling,
