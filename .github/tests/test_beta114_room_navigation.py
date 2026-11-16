@@ -461,12 +461,17 @@ def browser_checks(states):
         assert guidance.locator('[data-mold-value117="outdoor"]').inner_text() == 'Unavailable'
         mold.locator('[data-room-issue114="missing"]').click()
         assert not guidance.is_visible()
-        contact_detail = climate_only.locator('.hem-room-issue-detail114')
-        assert contact_detail.is_visible()
-        contact_detail.locator('[data-hem-source105="binary_sensor.climate_only_window"]').click()
+        # The climate-only room now has a real Windows section, just like
+        # rooms with devices. Keep the direct native-contact navigation gate:
+        # a stale, separately generated warning detail is not required.
+        window_section = climate_only.locator('.window-section:not(.hem-room-door062)')
+        assert window_section.is_visible(), 'Windows action did not reveal the climate-only Windows section'
+        native_contact = window_section.locator('[data-hem-source105="binary_sensor.climate_only_window"]')
+        assert native_contact.count() == 1, 'Climate-only window is not directly accessible'
+        native_contact.click()
         assert page.evaluate('info')[-1] == 'binary_sensor.climate_only_window'
         climate_only.locator('[data-room-issue114="windows"]').click()
-        assert not contact_detail.is_visible()
+        assert not window_section.is_visible(), 'Windows action failed to close the room'
         assert climate_only.get_attribute('open') is None
         climate_only.locator('[data-room-issue114="windows"]').click()
         output = os.environ.get('HEM_TEST_SCREENSHOT_DIR')
