@@ -195,12 +195,16 @@ def check_translations():
         SOURCE / "equipment_status.py"
     ).read_text()
     version = json.loads((SOURCE / "manifest.json").read_text())["version"]
-    # B23 remains a permanent regression gate across future patch series.
+    # B23 remains a permanent regression gate after stable promotion, too.
     from re import fullmatch
-    match = fullmatch(r"0\.6\.(\d+)b(\d+)", version)
-    assert match is not None, "Expected a canonical HEM 0.6.x beta version"
-    assert tuple(map(int, match.groups())) >= (1, 23), (
-        "This behavioral test must survive later patch-series betas"
+    match = fullmatch(r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:b(0|[1-9]\d*))?", version)
+    assert match is not None, "Expected a canonical stable or beta SemVer"
+    major, minor, patch = map(int, match.groups()[:3])
+    beta = match.group(4)
+    key = (major, minor, patch, 1 if beta is None else 0,
+           0 if beta is None else int(beta))
+    assert key >= (0, 6, 1, 0, 23), (
+        "This behavioral test must survive later beta and stable releases"
     )
 
 
