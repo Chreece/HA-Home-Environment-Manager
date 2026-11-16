@@ -5408,7 +5408,11 @@
     const editor=oldNode.matches?.('input,textarea,select') &&
       oldNode===oldNode.getRootNode()?.activeElement;
     for(const attribute of [...oldNode.attributes]){
-      if(!fresh.hasAttribute(attribute.name) && !editor)
+      // Keep user-expanded building physics explanations open through
+      // HA state updates. Their template starts closed on every render.
+      const preserveScienceOpen=attribute.name==='open' &&
+        oldNode.matches?.('details.hem-science-line071');
+      if(!fresh.hasAttribute(attribute.name) && !editor && !preserveScienceOpen)
         oldNode.removeAttribute(attribute.name);
     }
     for(const attribute of [...fresh.attributes]){
