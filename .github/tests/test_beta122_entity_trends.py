@@ -225,7 +225,7 @@ console.log('BETA122_ENTITY_HISTORY_REAL_SAMPLES_UNITS_GAPS_BOUNDS_SHARED_CHART=
   const message=pending[1].message;
   assert.equal(message.type,'history/history_during_period');
   assert.deepEqual(message.entity_ids,['sensor.humidity']);
-  assert.equal(message.include_start_time_state,false,'Recorder must not create a carry-in sample at query start');
+  assert.equal(message.include_start_time_state,true,'Recorder must preserve the last known state at the requested period start');
   assert.equal(message.significant_changes_only,false);
   assert.equal(message.minimal_response,false);
   assert.equal(message.no_attributes,false);
@@ -402,7 +402,7 @@ def browser_checks(data):
         request = page.evaluate("historyRequests[0].message")
         assert request["type"] == "history/history_during_period"
         assert request["entity_ids"] == ["sensor.humidity"]
-        assert request["include_start_time_state"] is False
+        assert request["include_start_time_state"] is True
         assert request["significant_changes_only"] is False
         assert request["minimal_response"] is False
         assert request["no_attributes"] is False
