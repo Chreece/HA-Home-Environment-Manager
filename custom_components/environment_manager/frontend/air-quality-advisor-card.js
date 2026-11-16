@@ -4696,8 +4696,8 @@
     const moldTarget=item.metric==='mold' && typeof areaId==='string' &&
       item.available===true && Number.isFinite(item.value) && this._evidence105?.(areaId,'mold');
     const moldValue=item.metric==='mold' && item.available===true && Number.isFinite(item.value)
-      ?'<span class="metric-number'+(moldTarget?' hem-source-click105':'')+'" '+
-        (moldTarget?'data-hem-average105="mold" data-average-area105="'+escape(areaId)+
+      ?'<span class="metric-number'+(moldTarget?' hem-source-click105':'')+'"'+
+        (moldTarget?' data-hem-average105="mold" data-average-area105="'+escape(areaId)+
           '" role="button" tabindex="0" title="'+escape(this._metricName('mold'))+' · trend"':'')+
         '>'+escape(this._format(item.value))+' <small>'+escape(item.unit||'%')+'</small></span>':'';
     return '<div class="metric hem-metric-info122 metric-'+(item.exceeded?'attention':'safe')+'" '+
@@ -6772,7 +6772,8 @@
     const latest=safeArray(saved.history122).at(-1);
     const currentValue=state.attributes?.restored===true?null:historyNumber122(state.state);
     const heldUntil=latest&&latest.v!==null&&currentValue===latest.v&&
-      Number.isFinite(saved.historyEnd122)?saved.historyEnd122:null;
+      Number.isFinite(saved.historyEnd122)&&saved.historyEnd122-latest.t>900
+        ?saved.historyEnd122:null;
     room=room||{name:this._t('outside'),readings:[]};
     return {entity_id:id,title:state.attributes?.friendly_name||id,unit,metric,
       room:{...room,readings:[{metric,unit}]},
