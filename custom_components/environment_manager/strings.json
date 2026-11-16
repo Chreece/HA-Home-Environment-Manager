@@ -1030,7 +1030,7 @@
           "device_co2_entity": "CO₂ · sensor",
           "device_pm25_entity": "PM2.5 · sensor",
           "device_fan_purpose": "control · Devices",
-          "device_sensor_verified": "sensor · Required",
+          "device_sensor_verified": "PM2.5 sensor verified",
           "device_fan_speed_percent": "Speed (%)",
           "device_humidity_target": "Humidity · target (%)",
           "device_sleep_humidity_target": "Sleep · Humidity · target (%)",
@@ -1058,7 +1058,7 @@
           "device_co2_entity": "Choose an actual CO₂ ppm source for extraction decisions, ideally verified NDIR. TVOC-derived eCO₂ is not equivalent to measured CO₂.",
           "device_pm25_entity": "Choose a real PM2.5 µg/m³ sensor in this room for purifier decisions. Unsupported indices or estimated particle levels are not accepted.",
           "device_fan_purpose": "Choose extraction (ventilating CO₂) or filtration (reducing PM2.5). The role determines which sensor and safety rules apply.",
-          "device_sensor_verified": "Attest the selected air sensor actually measures the stated physical quantity with appropriate units. An eCO₂ proxy is not verified CO₂.",
+          "device_sensor_verified": "Enable only if the selected PM2.5 source measures real airborne fine particles reliably. This confirms an existing sensor; it does not choose or install one. HEM still needs current valid PM2.5 readings and normal device-control permissions. If disabled, room-level PM2.5 verification may still permit automatic filtration; otherwise automatic filtration is blocked. This does not verify CO₂, eCO₂ or gases.",
           "device_fan_speed_percent": "Maximum selected percentage for an already-running supported fan when demand exists. It does not authorize turning the fan on.",
           "device_humidity_target": "Desired RH (%) while the room follows the normal humidifier profile, bounded by device capability. Avoid overly humid conditions that promote condensation.",
           "device_sleep_humidity_target": "Desired RH (%) when the selected room is confirmed sleeping. No sleep evidence means no unverified switch to sleep targets.",
@@ -2107,7 +2107,7 @@
           "device_co2_entity": "CO₂ · sensor",
           "device_pm25_entity": "PM2.5 · sensor",
           "device_fan_purpose": "control · Devices",
-          "device_sensor_verified": "sensor · Required",
+          "device_sensor_verified": "PM2.5 sensor verified",
           "device_fan_speed_percent": "Speed (%)",
           "device_humidity_target": "Humidity · target (%)",
           "device_sleep_humidity_target": "Sleep · Humidity · target (%)",
@@ -2135,7 +2135,7 @@
           "device_co2_entity": "Choose an actual CO₂ ppm source for extraction decisions, ideally verified NDIR. TVOC-derived eCO₂ is not equivalent to measured CO₂.",
           "device_pm25_entity": "Choose a real PM2.5 µg/m³ sensor in this room for purifier decisions. Unsupported indices or estimated particle levels are not accepted.",
           "device_fan_purpose": "Choose extraction (ventilating CO₂) or filtration (reducing PM2.5). The role determines which sensor and safety rules apply.",
-          "device_sensor_verified": "Attest the selected air sensor actually measures the stated physical quantity with appropriate units. An eCO₂ proxy is not verified CO₂.",
+          "device_sensor_verified": "Enable only if the selected PM2.5 source measures real airborne fine particles reliably. This confirms an existing sensor; it does not choose or install one. HEM still needs current valid PM2.5 readings and normal device-control permissions. If disabled, room-level PM2.5 verification may still permit automatic filtration; otherwise automatic filtration is blocked. This does not verify CO₂, eCO₂ or gases.",
           "device_fan_speed_percent": "Maximum selected percentage for an already-running supported fan when demand exists. It does not authorize turning the fan on.",
           "device_humidity_target": "Desired RH (%) while the room follows the normal humidifier profile, bounded by device capability. Avoid overly humid conditions that promote condensation.",
           "device_sleep_humidity_target": "Desired RH (%) when the selected room is confirmed sleeping. No sleep evidence means no unverified switch to sleep targets.",
@@ -3942,7 +3942,7 @@
         }
       },
       "equipment_sensor_verified": {
-        "name": "Sensor · {channel}Required",
+        "name": "Sensor · {channel}PM2.5 verified",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"
