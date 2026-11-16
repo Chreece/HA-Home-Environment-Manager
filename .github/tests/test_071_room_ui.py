@@ -134,7 +134,9 @@ with sync_playwright() as pw:
           card._roomsExpanded87=new Set(['living']);
           card._renderContent(true);
         }""")
-        assert "hem-room-unknown" in page.locator('[data-room-fold87="living"]').get_attribute("class")
+        rebuilt=page.locator('[data-room-fold87="living"]')
+        assert "hem-room-unknown" in rebuilt.get_attribute("class")
+        assert {"en":"No data","de":"Keine Daten","el":"Χωρίς δεδομένα"}[language] in rebuilt.locator('article .status-tag').inner_text()
         assert page.evaluate("card._roomInputs071(card._dashboard105().rooms[0])")=={
             "temperature":False,"humidity":False}
         assert page.evaluate("calls.length")==0
