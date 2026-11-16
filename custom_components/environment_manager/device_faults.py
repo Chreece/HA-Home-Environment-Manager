@@ -523,12 +523,16 @@ class NativeDeviceFaultMonitor:
             if key in self._offline_notified or key in self._offline_tasks:
                 continue
             # A 180-second debounce must not hold HA startup or shutdown.
-            # Tie it to the config-entry lifecycle for automatic cancellation.
-            self._offline_tasks[key] = self.manager.entry.async_create_background_task(
-                self.hass,
-                self._announce_offline_after_delay(key),
-                f"{DOMAIN} offline-device debounce {key}",
-            )
+            # Modern config entries own and cancel their background tasks.
+            # Minimal test doubles and older runtimes may lack this method;
+            # their fallback task remains explicitly cancelled in async_stop().
+            name = f"{DOMAIN} offline-device debounce {key}"
+            register = getattr(self.manager.entry, "async_create_background_task", None)
+            if callable(register):
+                task = register(self.hass, self._announce_offline_after_delay(key), name)
+            else:
+                task = asyncio.create_task(self._announce_offline_after_delay(key), name=name)
+            self._offline_tasks[key] = task
 
     async def _announce_offline_after_delay(self, device_key: str) -> None:
         """Require sustained unavailability and live notification authority."""
