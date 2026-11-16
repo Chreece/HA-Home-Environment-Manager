@@ -6939,11 +6939,22 @@
     // Explicit unknown/unavailable readings always break the line.
     const gap=model.gaps.some(([a,b])=>time>a&&time<b);
     if(model.eventHistory){
-      const latest=model.visible.filter(p=>p.t<=time).at(-1);
-      const outside=time<model.visible[0].t||
-        (model.heldUntil===null&&time>model.visible.at(-1).t);
-      return {point:gap||outside?null:latest||null,time,
-        held:!!latest&&(latest.carried===true||latest.carried_view===true||time>latest.t),
+      // Pointer positions are rounded to display pixels. Near an actual
+      // Recorder transition, snap to that recorded timestamp; otherwise
+      // select the preceding unchanged state (not the nearest future event).
+      // Never carry a state through an explicit unknown/unavailable interval.
+      const secondsPerPixel=(model.end-model.start)/Math.max(1,model.right-model.left);
+      const tolerance=Math.max(0.001,1.5*secondsPerPixel);
+      const nearest=model.visible.reduce((best,p)=>
+        !best||Math.abs(p.t-time)<Math.abs(best.t-time)?p:best,null);
+      const snapped=nearest&&Math.abs(nearest.t-time)<=tolerance?nearest:null;
+      const inspectedAt=snapped?snapped.t:time;
+      const latest=snapped||model.visible.filter(p=>p.t<=inspectedAt).at(-1);
+      const unavailable=model.gaps.some(([a,b])=>inspectedAt>a&&inspectedAt<b);
+      const outside=inspectedAt<model.visible[0].t||
+        (model.heldUntil===null&&inspectedAt>model.visible.at(-1).t);
+      return {point:unavailable||outside?null:latest||null,time:inspectedAt,
+        held:!!latest&&(latest.carried===true||latest.carried_view===true||inspectedAt>latest.t),
         index:latest?Math.max(0,model.points.findIndex(p=>p.t===latest.t)):0};
     }
     const nearest=model.visible.reduce((best,p)=>Math.abs(p.t-time)<Math.abs(best.t-time)?p:best);
