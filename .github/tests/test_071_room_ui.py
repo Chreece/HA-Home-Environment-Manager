@@ -83,7 +83,7 @@ with sync_playwright() as pw:
             "temperature":True, "humidity":False}
         combined=row.locator('.hem-windows-doors071')
         assert combined.count()==1
-        label=combined.locator('.hem-openings-heading071 .field-label').inner_text()
+        label=combined.locator('.hem-openings-heading071 .field-label').text_content().strip()
         assert label=={"en":"Windows & doors","de":"Fenster & Türen",
                        "el":"Παράθυρα & πόρτες"}[language], label
         assert combined.locator('.hem-room-door062').count()==1
@@ -136,7 +136,7 @@ with sync_playwright() as pw:
         }""")
         rebuilt=page.locator('[data-room-fold87="living"]')
         assert "hem-room-unknown" in rebuilt.get_attribute("class")
-        assert {"en":"No data","de":"Keine Daten","el":"Χωρίς δεδομένα"}[language] in rebuilt.locator('article .status-tag').inner_text()
+        assert {"en":"No data","de":"Keine Daten","el":"Χωρίς δεδομένα"}[language] in rebuilt.locator('article .status-tag').text_content().strip()
         assert page.evaluate("card._roomInputs071(card._dashboard105().rooms[0])")=={
             "temperature":False,"humidity":False}
         assert page.evaluate("calls.length")==0
