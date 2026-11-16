@@ -1984,7 +1984,7 @@
       "kind": "native_catalog",
       "platform": "switch",
       "key": "equipment_sensor_verified",
-      "name": "Sensor · {channel}Required",
+      "name": "Sensor · {channel}PM2.5 verified",
       "presentation": "primary",
       "reason": "retain",
       "same_property_options_alias": null,
@@ -6754,7 +6754,7 @@
       "surface": "config",
       "step": "device_settings",
       "key": "device_sensor_verified",
-      "name": "sensor · Required",
+      "name": "sensor · PM2.5 verified",
       "presentation": "retain",
       "catalog_path": "strings.json/config/step/device_settings/data/device_sensor_verified",
       "literal_references": [
@@ -10874,7 +10874,7 @@
       "surface": "options",
       "step": "device_settings",
       "key": "device_sensor_verified",
-      "name": "sensor · Required",
+      "name": "sensor · PM2.5 verified",
       "presentation": "retain",
       "catalog_path": "strings.json/options/step/device_settings/data/device_sensor_verified",
       "literal_references": [
