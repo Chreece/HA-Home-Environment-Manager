@@ -1030,7 +1030,7 @@
           "device_co2_entity": "CO₂ · Sensor",
           "device_pm25_entity": "PM2.5 · Sensor",
           "device_fan_purpose": "Steuerung · Geräte",
-          "device_sensor_verified": "Sensor · Erforderlich",
+          "device_sensor_verified": "PM2.5-Sensor · bestätigt",
           "device_fan_speed_percent": "Geschwindigkeit (%)",
           "device_humidity_target": "Luftfeuchtigkeit · Sollwert (%)",
           "device_sleep_humidity_target": "Schlaf · Luftfeuchtigkeit · Sollwert (%)",
@@ -1058,7 +1058,7 @@
           "device_co2_entity": "Eine passende Home-Assistant-Quelle für „CO₂ · Sensor“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "device_pm25_entity": "Eine passende Home-Assistant-Quelle für „PM2.5 · Sensor“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "device_fan_purpose": "„Steuerung · Geräte“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
-          "device_sensor_verified": "Für „Sensor · Erforderlich“ echte passende Messdaten verwenden. Schätzungen ersetzen keine kalibrierten Sensoren.",
+          "device_sensor_verified": "Bestätigt die PM2.5-Quelle für die automatische Partikelfilterung dieses Luftreinigers. EIN: nur aktivieren, wenn der passende Sensor im selben Raum echte PM2.5-Konzentrationen in µg/m³ misst; AQI-, eCO₂- und VOC-Schätzungen zählen nicht. AUS: ohne separate Bestätigung im Raum bleibt die automatische Filterung gesperrt. Diese Einstellung wählt keinen Sensor aus, startet kein Gerät und umgeht keine Schutzregeln.",
           "device_fan_speed_percent": "Dies ist ein Entscheidungswert für „Geschwindigkeit (%)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "device_humidity_target": "Dies ist ein Entscheidungswert für „Luftfeuchtigkeit · Sollwert (%)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "device_sleep_humidity_target": "Sollwert für „Schlaf · Luftfeuchtigkeit · Sollwert (%)“, wenn das passende Anwesenheits- oder Schlafprofil bestätigt ist. Unbekannt bedeutet nicht leer.",
@@ -2109,7 +2109,7 @@
           "device_co2_entity": "CO₂ · Sensor",
           "device_pm25_entity": "PM2.5 · Sensor",
           "device_fan_purpose": "Steuerung · Geräte",
-          "device_sensor_verified": "Sensor · Erforderlich",
+          "device_sensor_verified": "PM2.5-Sensor · bestätigt",
           "device_fan_speed_percent": "Geschwindigkeit (%)",
           "device_humidity_target": "Luftfeuchtigkeit · Sollwert (%)",
           "device_sleep_humidity_target": "Schlaf · Luftfeuchtigkeit · Sollwert (%)",
@@ -2137,7 +2137,7 @@
           "device_co2_entity": "Eine passende Home-Assistant-Quelle für „CO₂ · Sensor“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "device_pm25_entity": "Eine passende Home-Assistant-Quelle für „PM2.5 · Sensor“ wählen. Fehlende oder veraltete Werte verhindern die zugehörige Aktion.",
           "device_fan_purpose": "„Steuerung · Geräte“ nur im gewählten Raum konfigurieren. Fehlende oder inkompatible Daten verhindern die Aktion.",
-          "device_sensor_verified": "Für „Sensor · Erforderlich“ echte passende Messdaten verwenden. Schätzungen ersetzen keine kalibrierten Sensoren.",
+          "device_sensor_verified": "Bestätigt die PM2.5-Quelle für die automatische Partikelfilterung dieses Luftreinigers. EIN: nur aktivieren, wenn der passende Sensor im selben Raum echte PM2.5-Konzentrationen in µg/m³ misst; AQI-, eCO₂- und VOC-Schätzungen zählen nicht. AUS: ohne separate Bestätigung im Raum bleibt die automatische Filterung gesperrt. Diese Einstellung wählt keinen Sensor aus, startet kein Gerät und umgeht keine Schutzregeln.",
           "device_fan_speed_percent": "Dies ist ein Entscheidungswert für „Geschwindigkeit (%)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "device_humidity_target": "Dies ist ein Entscheidungswert für „Luftfeuchtigkeit · Sollwert (%)“. Er beeinflusst Empfehlungen, ist aber kein medizinischer Grenzwert.",
           "device_sleep_humidity_target": "Sollwert für „Schlaf · Luftfeuchtigkeit · Sollwert (%)“, wenn das passende Anwesenheits- oder Schlafprofil bestätigt ist. Unbekannt bedeutet nicht leer.",
@@ -3964,7 +3964,7 @@
         }
       },
       "equipment_sensor_verified": {
-        "name": "Sensor · {channel}Erforderlich",
+        "name": "Sensor · {channel}PM2.5-Messung bestätigt",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"
