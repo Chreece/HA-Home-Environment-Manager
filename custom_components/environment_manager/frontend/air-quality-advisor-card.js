@@ -3039,14 +3039,13 @@
       const availableCount = safeArray(room.readings).filter((item) =>
         item.available === true && typeof item.value === 'number'
       ).length;
-      const roomStatusLabel = status === 'unknown' && availableCount > 0
-        ? this._t('partial') : this._t(status);
+      const roomStatusLabel=this._t(status);
       const subheading = room.high_count > 0 ? this._t('indoorHigh')
         : status === 'unknown' && room.status_detail === 'mold_not_calibrated'
           ? this._t('moldNotCalibrated')
         : status === 'unknown' && room.status_detail === 'mold_inputs_unavailable'
           ? this._t('moldInputsUnavailable')
-        : status === 'unknown' && availableCount > 0
+        : status === 'partial'
           ? this._t('partial')
         : status === 'unknown' ? this._t('missingIndoor')
           : this._t('allOkay');
@@ -11439,8 +11438,15 @@
   };
   hem071._windowsDoors071=function(room){
     const windows=safeArray(room?.windows);
-    const items=windows.map(win=>this._window(win)
-      .replace(/<small>[\s\S]*?<\/small>/g,'')).join('');
+    const items=windows.map(win=>{
+      const state=win.opened===true?this._t('windowOpen'):
+        win.opened===false?this._t('windowClosed'):this._t('windowUnknown');
+      const label=[win.name||win.entity_id,state,win.entity_id].filter(Boolean).join(' · ');
+      return this._window(win)
+        .replace(/title="[^"]*"/,
+          'title="'+escape(label)+'" aria-label="'+escape(label)+'"')
+        .replace(/<small>[\s\S]*?<\/small>/g,'');
+    }).join('');
     const existing=this._doorContext063?.(room)||'';
     const doors=existing.replace(/<small>· [\s\S]*?<\/small>/g,'');
     const title=this._hemText071('openings');
