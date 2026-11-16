@@ -136,6 +136,9 @@ class Entry:
     entry_id="hem"
     data={}
     options={}
+    def async_create_background_task(self, hass, work, name):
+        """Model native HA config-entry background-task lifecycle in this fixture."""
+        return asyncio.create_task(work, name=name)
 class Manager:
     def __init__(self):
         self.hass=N(states=N(get=states.get),services=Services(),
