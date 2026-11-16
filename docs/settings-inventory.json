@@ -1476,7 +1476,7 @@
       "kind": "native_catalog",
       "platform": "number",
       "key": "arrival_preparation_timeout",
-      "name": "Home - Prepare - Max Time",
+      "name": "Max time for the arrival preparation",
       "presentation": "primary",
       "reason": "retain",
       "same_property_options_alias": null,
