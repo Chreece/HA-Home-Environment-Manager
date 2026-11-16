@@ -6711,17 +6711,25 @@
     const number=Number(value);
     return Number.isFinite(number)&&Math.abs(number)<=1e12?number:null;
   };
-  trend114._entityHistoryPoints122=function(result,entityId,start,end,unit){
-    const unique=new Map();
+  trend114._entityHistoryPoints122=function(result,entityId,start,end,unit,includeCarry=false){
+    const unique=new Map(),carriers=[];
     for(const row of safeArray(result?.[entityId])){
       if(!row||typeof row!=='object')continue;
-      const t=historyNumber122(row.lu??row.lc);
-      if(t===null||t<=0||t<start||t>end)continue;
+      const actual=historyNumber122(row.lu??row.lc);
+      if(actual===null||actual<=0||actual>end||actual<start&&!includeCarry)continue;
+      const t=Math.max(start,actual);
       const attrs=row.a&&typeof row.a==='object'?row.a:{};
       const differentUnit=typeof attrs.unit_of_measurement==='string'&&
         attrs.unit_of_measurement!==unit;
       const value=attrs.restored===true||differentUnit?null:historyNumber122(row.s);
-      unique.set(t,{t,v:value});
+      const previous=historyNumber122(row.lc);
+      const record={t,v:value,...(includeCarry&&(actual<start||t===start&&previous!==null&&previous<start)?{carried:true}:{})};
+      if(actual<start)carriers.push({actual,record});
+      else unique.set(t,record);
+    }
+    if(carriers.length&&!unique.has(start)){
+      const carry=carriers.reduce((latest,row)=>row.actual>latest.actual?row:latest);
+      unique.set(start,carry.record);
     }
     const rows=[...unique.values()].sort((a,b)=>a.t-b.t);
     if(rows.length<=1000)return rows;
@@ -6761,11 +6769,15 @@
     const metric=reading?.metric||Object.entries(room?.environment?.measurement_evidence||{})
       .find(([,value])=>safeArray(value?.source_ids).includes(id))?.[0]||state.attributes?.device_class||'value';
     const unit=state.attributes?.unit_of_measurement??reading?.unit??saved.unit122??'';
+    const latest=safeArray(saved.history122).at(-1);
+    const currentValue=state.attributes?.restored===true?null:historyNumber122(state.state);
+    const heldUntil=latest&&latest.v!==null&&currentValue===latest.v&&
+      Number.isFinite(saved.historyEnd122)?saved.historyEnd122:null;
     room=room||{name:this._t('outside'),readings:[]};
     return {entity_id:id,title:state.attributes?.friendly_name||id,unit,metric,
       room:{...room,readings:[{metric,unit}]},
-      value:{value:state.attributes?.restored===true?null:historyNumber122(state.state),
-        source_ids:[id],source_count:1,trend:saved.history122||[]}};
+      value:{value:currentValue,source_ids:[id],source_count:1,
+        trend:saved.history122||[],...(heldUntil!==null?{held_until:heldUntil}:{})}};
   };
   trend114._loadEntityTrend122=async function(saved,keepView=false){
     if(!saved?.entity122||this._averageDialog105!==saved)return;
@@ -6795,9 +6807,9 @@
         type:'history/history_during_period',entity_ids:[id],
         start_time:new Date(start*1000).toISOString(),end_time:new Date(end*1000).toISOString(),
         minimal_response:false,no_attributes:false,significant_changes_only:false,
-        // HA projects a carry-in state to the requested start timestamp.
-        // The inspector promises actual recorded sample times, so exclude it.
-        include_start_time_state:false,
+        // Recorder carries the last known state into the requested interval.
+        // A carry-in is a held state, not a fresh physical measurement.
+        include_start_time_state:true,
       }),timeout]);
       if(!current())return;
       // A unit setting changed while the request was in flight. Reload in
@@ -6805,7 +6817,8 @@
       if(this._entityTrendEvidence122(saved)?.unit!==saved.unit122){
         this._loadEntityTrend122(saved);return;
       }
-      saved.history122=this._entityHistoryPoints122(result,id,start,end,saved.unit122);
+      saved.history122=this._entityHistoryPoints122(result,id,start,end,saved.unit122,true);
+      saved.historyStart122=start;saved.historyEnd122=end;
       saved.status122=saved.history122.some(point=>point.v!==null)?'ready':'empty';
     }catch{
       if(!current())return;
@@ -6841,7 +6854,7 @@
     pop.focus({preventScroll:true});
     this._loadEntityTrend122(saved);
   };
-  const trendPoints114=value=>{
+  const trendPoints114=(value,eventHistory=false)=>{
     const points=new Map(),missing=[],times=[];
     for(const row of safeArray(value.trend).slice(-1000)){
       if(!row||!Number.isFinite(row.t)||row.t<=0||row.t>8640000000000)continue;
@@ -6858,7 +6871,7 @@
     const gaps=[];
     for(let i=1;i<ordered.length;i++){
       const a=ordered[i-1].t,b=ordered[i].t;
-      if(ordered[i].break_before||b-a>cadence*2.5||missing.some(t=>t>a&&t<b))gaps.push([a,b]);
+      if(ordered[i].break_before||(!eventHistory&&b-a>cadence*2.5)||missing.some(t=>t>a&&t<b))gaps.push([a,b]);
     }
     const first=times.length?Math.min(...times):0,last=times.length?Math.max(...times):0;
     if(ordered.length&&first<ordered[0].t)gaps.unshift([first,ordered[0].t]);
@@ -6877,7 +6890,7 @@
   };
   trend114._trendView114=function(evidence){
     const saved=this._averageDialog105;
-    const data=trendPoints114(evidence.value),points=data.points;
+    const data=trendPoints114(evidence.value,Boolean(evidence.entity_id)),points=data.points;
     const first=points.length?data.first:0,last=points.length?data.last:0;
     const state=saved.view114 ||= {
       range:last-first>21600?86400:0,end:null,cursor:null,
