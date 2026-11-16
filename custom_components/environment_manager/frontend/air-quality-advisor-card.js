@@ -2314,12 +2314,13 @@
       const lines = [];
       const add = (label, value, topic = '') => {
         const help = this._scienceHelp(topic);
-        lines.push('<div class="science-line"><span>' + escape(label) +
-          ' <details class="metric-help"><summary aria-label="' + escape(label) +
-          ' '+escape(this._l65('information'))+'" title="' + escape(help) + '">' +
-          this._icon('mdi:information-outline') +
-          '</summary><div class="metric-help-content" role="note">' +
-          escape(help) + '</div></details></span><strong>' + escape(value) + '</strong></div>');
+        lines.push('<details class="science-line hem-science-line071">'+
+          '<summary class="hem-science-summary071" aria-label="'+
+          escape(label+' '+this._l65('information'))+'">'+
+          '<span>'+escape(label)+'</span><strong>'+escape(value)+'</strong>'+
+          this._icon('mdi:information-outline')+'</summary>'+
+          '<div class="hem-science-inline071" role="note">'+escape(help)+
+          '</div></details>');
       };
       if (m.status === 'drying' || m.status === 'humidifying' || m.status === 'neutral') {
         add(m.status === 'drying' ? labels.drying :
@@ -2933,11 +2934,16 @@
       const list=covers.map((entityId)=>{
         const state=this._hass?.states?.[entityId];
         const title=state?.attributes?.friendly_name || entityId;
+        const current=state?.state||'unavailable';
         const result=report.covers?.[entityId];
-        return '<button type="button" class="shade-source" data-open-shade="'+
+        const glyph=({open:'mdi:blinds-open',closed:'mdi:blinds',
+          opening:'mdi:blinds-open',closing:'mdi:blinds'})[current]||
+          'mdi:help-circle-outline';
+        const full=title+' · '+current+(result?' · '+result:'');
+        return '<button type="button" class="shade-source hem-cover-source071" data-open-shade="'+
           escape(entityId)+'" data-shade-area="'+escape(room.area_id)+'" '+
-          'title="'+escape(entityId)+'">'+escape(title)+
-          ' · '+escape(result||state?.state||'unknown')+'</button>';
+          'title="'+escape(full)+'" aria-label="'+escape(full)+'">'+
+          this._icon(glyph)+'<span>'+escape(title)+'</span></button>';
       }).join('');
       const details=[
         typeof report.temperature_c==='number' ? words[5]+' '+
@@ -2952,8 +2958,9 @@
         value==='manual_override'||value==='legacy_manual_hold');
       return '<section class="shade-panel" aria-label="'+escape(words[0])+'">'+
         '<div class="shade-heading">'+this._icon('mdi:blinds')+
-        '<strong>'+escape(words[0])+'</strong>'+toggle+'</div>'+
-        '<small>'+escape(words[4])+'</small>'+
+        '<strong>'+escape(words[0])+'</strong>'+toggle+
+        this._info76('cover-explainer071:'+room.area_id,words[0],
+          '<p>'+escape(words[4])+'</p>')+'</div>'+
         '<div class="shade-status">'+escape(words[7])+': '+escape(status)+
         (details?' · '+escape(details):'')+'</div>'+
         (manual?'<small role="status">'+escape(words[9])+'</small>':'')+
@@ -2972,15 +2979,13 @@
           </div>
           ${this._climatePanel(room,overview122)}
           ${this._shadePanel(room)}
-          <div class="window-section">
-            <span class="field-label">${this._icon("mdi:window-closed-variant")}${escape(this._t("windows"))}</span>
-            ${safeArray(room.windows).length ? `<div class="window-list">${safeArray(room.windows).map(win=>this._window(win)).join("")}</div>`
-              : `<span class="subdued">${escape(this._t("noWindows"))}</span>`}
-          </div>
-          ${this._doorContext063?.(room)||''}
+          ${this._windowsDoors071(room)}
         </article>`;
       }
-      const status = ['safe','attention','unknown'].includes(room.status) ? room.status : 'unknown';
+      const availability071=this._roomInputs071(room);
+      const status=room.status==='attention'?'attention':
+        !availability071.temperature&&!availability071.humidity?'unknown':
+        room.status==='safe'?'safe':'partial';
       const readings = safeArray(room.readings);
       const details122 = this._roomDetailReadings122(room,overview122);
       const windows = safeArray(room.windows);
@@ -3034,14 +3039,13 @@
       const availableCount = safeArray(room.readings).filter((item) =>
         item.available === true && typeof item.value === 'number'
       ).length;
-      const roomStatusLabel = status === 'unknown' && availableCount > 0
-        ? this._t('partial') : this._t(status);
+      const roomStatusLabel=this._t(status);
       const subheading = room.high_count > 0 ? this._t('indoorHigh')
         : status === 'unknown' && room.status_detail === 'mold_not_calibrated'
           ? this._t('moldNotCalibrated')
         : status === 'unknown' && room.status_detail === 'mold_inputs_unavailable'
           ? this._t('moldInputsUnavailable')
-        : status === 'unknown' && availableCount > 0
+        : status === 'partial'
           ? this._t('partial')
         : status === 'unknown' ? this._t('missingIndoor')
           : this._t('allOkay');
@@ -3052,6 +3056,7 @@
           ${this._editButton(room.area_id)}
           <span class="status-tag">${this._icon(ICON[status])}${escape(roomStatusLabel)}</span>
         </div>
+        ${this._roomMissingInfo071(room)}
         ${this._config.show_metrics === false ? '' : details122.length ? `<div class="metric-grid">${shown.map((item) => item.overview_detail122?this._metricInfo122(item,room.area_id):this._metric(item,false,room.area_id)).join('')}</div>`
           : readings.length || overview122?.metrics?.size ? '' : `<div class="empty-measurements">${this._icon('mdi:gauge-empty')} ${escape(this._t('missingIndoor'))}</div>`}
         ${button}
@@ -3063,12 +3068,7 @@
         ${this._config.show_science === false ? '' : this._environmentReport(room)}
         ${rhFallback}
         ${warningList}
-        <div class="window-section">
-          <span class="field-label">${this._icon('mdi:window-closed-variant')}${escape(this._t('windows'))}</span>
-          ${windows.length ? `<div class="window-list">${windows.map((window) => this._window(window)).join('')}</div>`
-            : `<span class="subdued">${escape(this._t('noWindows'))}</span>`}
-        </div>
-        ${this._doorContext063?.(room)||''}
+        ${this._windowsDoors071(room)}
         ${recommendation}
       </article>`;
     }
@@ -4775,8 +4775,10 @@
     const active=devices.map(entry=>({entry,state:_deviceState87(entry,this._hass)}))
       .filter(item=>item.state.active);
     const temp=overview122.temperature,humidity=overview122.humidity;
+    const availability071=this._roomInputs071(room);
     const roomStatus=room.status==='attention'?'attention':
-      room.status==='safe'?'safe':'unknown';
+      !availability071.temperature&&!availability071.humidity?'unknown':
+      room.status==='safe'?'safe':'partial';
     const alerts=[];
     // Display-only: room ventilation opportunity uses NO virtual CO2/AQI
     // readings. Native window-temperature guidance uses measured °C and
@@ -4826,8 +4828,12 @@
       '<span>'+ventNotes95.map(value=>escape(value)).join(' · ')+'</span></div>':'';
     if(roomStatus==='attention') alerts.push(this._roomAlert114(room,'attention',
       'mdi:alert-circle-outline',labels.attention,'warn'));
-    if(roomStatus==='unknown') alerts.push(this._roomAlert114(room,'missing',
-      'mdi:help-circle-outline',labels.unavailable,'muted'));
+    // Keep the existing missing-sensor diagnostic shortcut even when basic
+    // temperature or humidity evidence makes the room status partial/ready.
+    // Optional sensor outages must not relabel a room as "No data".
+    const hasMissingSensor=safeArray(room.readings).some(item=>item?.available!==true);
+    if(roomStatus==='unknown'||hasMissingSensor) alerts.push(this._roomAlert114(room,'missing',
+      'mdi:help-circle-outline',hasMissingSensor?this._hemText071('missing'):labels.unavailable,'muted'));
     if(safeArray(room.windows).some(win=>win.opened===true))
       alerts.push(this._roomAlert114(room,'windows','mdi:window-open-variant',
         this._t('windowOpen'),'warn'));
@@ -6376,16 +6382,13 @@
       return {id,name:state?.attributes?.friendly_name||id,
         status:state?.state||'unavailable'};
     });
-    const statusSummary=states.slice(0,4).map(item=>{
-      const icon=({
-        open:'mdi:blinds-open',closed:'mdi:blinds',
-        opening:'mdi:blinds-open',closing:'mdi:blinds',
-      })[item.status]||'mdi:help-circle-outline';
-      return '<span class="hem-cover-state105" title="'+escape(item.name+
-        ' · '+item.status)+'" aria-label="'+escape(item.name+
-        ' · '+item.status)+'">'+this._icon(icon)+'</span>';
-    }).join('')+(states.length>4?'<span class="hem-cover-extra105">+'+
-      (states.length-4)+'</span>':'');
+    const needsClose=report.close_reason==='closing_recommended'&&
+      states.some(item=>item.status==='open'||item.status==='opening');
+    const statusSummary=needsClose&&!open
+      ?'<span class="hem-cover-close071" title="'+
+        escape(this._hemText071('closeCover'))+'" aria-label="'+
+        escape(this._hemText071('closeCover'))+'">'+
+        this._icon('mdi:arrow-down-bold-circle-outline')+'</span>':'';
     const toggle=managed?'<button type="button" class="hem-cover-toggle105 shade-toggle" '+
       'data-shade-switch="'+escape(managed.id)+'" data-shade-area="'+escape(room.area_id)+
       '" aria-label="'+escape(word105(this,'shades')+' · '+(enabled?word105(this,'on'):word105(this,'off')))+
@@ -8613,7 +8616,7 @@
   /* HEM_TEXT_BOUNDARIES123_END */
 
   /* HEM_BRANDING125_START */
-  const ARRIVAL_HELP125={"ar":"تهيئة بيئة المنزل قبل الوصول","bg":"Подгответе домашната среда преди пристигане","bn":"পৌঁছানোর আগে বাড়ির পরিবেশ প্রস্তুত করুন","cs":"Připravit domácí prostředí před příjezdem","da":"Klargør hjemmets indeklima før ankomst","de":"Wohnumgebung vor der Ankunft vorbereiten","el":"Προετοιμασία του περιβάλλοντος του σπιτιού πριν από την άφιξη","en":"Prepare the home environment before arrival","es":"Preparar el ambiente del hogar antes de llegar","fa":"آماده‌سازی محیط خانه پیش از رسیدن","fi":"Valmistele kodin olosuhteet ennen saapumista","fr":"Préparer l’environnement de la maison avant l’arrivée","he":"הכנת סביבת הבית לפני ההגעה","hi":"आने से पहले घर का वातावरण तैयार करें","hr":"Pripremi uvjete u domu prije dolaska","hu":"Készítse elő az otthoni környezetet érkezés előtt","id":"Siapkan kondisi rumah sebelum tiba","it":"Prepara l’ambiente domestico prima dell’arrivo","ja":"帰宅前に室内環境を整える","ko":"도착 전에 집안 환경 준비하기","nb":"Klargjør inneklimaet før ankomst","nl":"Bereid het binnenklimaat voor aankomst voor","pl":"Przygotuj warunki w domu przed przyjazdem","pt-BR":"Preparar o ambiente da casa antes da chegada","pt":"Preparar o ambiente da casa antes da chegada","ro":"Pregătește mediul din locuință înainte de sosire","ru":"Подготовить домашний микроклимат перед прибытием","sk":"Pripraviť domáce prostredie pred príchodom","sr":"Припреми услове у дому пре доласка","sv":"Förbered hemmiljön före ankomst","ta":"வீட்டிற்கு வருவதற்கு முன் சூழலைத் தயாரிக்கவும்","th":"เตรียมสภาพแวดล้อมในบ้านก่อนเดินทางมาถึง","tr":"Eve gelmeden önce ev ortamını hazırlayın","uk":"Підготувати домашній мікроклімат до прибуття","ur":"آمد سے پہلے گھر کا ماحول تیار کریں","vi":"Chuẩn bị môi trường trong nhà trước khi về","zh-Hans":"抵达前准备好家居环境","zh-Hant":"抵達前準備好居家環境"};
+  const ARRIVAL_HELP125={"ar":"تهيئة بيئة المنزل قبل الوصول","bg":"Подгответе домашната среда преди пристигане","bn":"পৌঁছানোর আগে বাড়ির পরিবেশ প্রস্তুত করুন","cs":"Připravit domácí prostředí před příjezdem","da":"Klargør hjemmets indeklima før ankomst","de":"Vorbereitung des Hauses zur Ankunft: geeignete Geräte verwenden das Zuhause-Profil, nur wenn niemand zu Hause ist.","el":"Προετοιμασία άφιξης: οι κατάλληλες συσκευές μπαίνουν στη λειτουργία «Στο σπίτι», μόνο όταν απουσιάζουν όλοι.","en":"Preparing home for arrival, all devices will get into Home mode, available when no one is home","es":"Preparar el ambiente del hogar antes de llegar","fa":"آماده‌سازی محیط خانه پیش از رسیدن","fi":"Valmistele kodin olosuhteet ennen saapumista","fr":"Préparer l’environnement de la maison avant l’arrivée","he":"הכנת סביבת הבית לפני ההגעה","hi":"आने से पहले घर का वातावरण तैयार करें","hr":"Pripremi uvjete u domu prije dolaska","hu":"Készítse elő az otthoni környezetet érkezés előtt","id":"Siapkan kondisi rumah sebelum tiba","it":"Prepara l’ambiente domestico prima dell’arrivo","ja":"帰宅前に室内環境を整える","ko":"도착 전에 집안 환경 준비하기","nb":"Klargjør inneklimaet før ankomst","nl":"Bereid het binnenklimaat voor aankomst voor","pl":"Przygotuj warunki w domu przed przyjazdem","pt-BR":"Preparar o ambiente da casa antes da chegada","pt":"Preparar o ambiente da casa antes da chegada","ro":"Pregătește mediul din locuință înainte de sosire","ru":"Подготовить домашний микроклимат перед прибытием","sk":"Pripraviť domáce prostredie pred príchodom","sr":"Припреми услове у дому пре доласка","sv":"Förbered hemmiljön före ankomst","ta":"வீட்டிற்கு வருவதற்கு முன் சூழலைத் தயாரிக்கவும்","th":"เตรียมสภาพแวดล้อมในบ้านก่อนเดินทางมาถึง","tr":"Eve gelmeden önce ev ortamını hazırlayın","uk":"Підготувати домашній мікроклімат до прибуття","ur":"آمد سے پہلے گھر کا ماحول تیار کریں","vi":"Chuẩn bị môi trường trong nhà trước khi về","zh-Hans":"抵达前准备好家居环境","zh-Hant":"抵達前準備好居家環境"};
   const ARRIVAL_DETAIL125={"en":"While everyone is away, eligible automatic devices temporarily use Home targets. Preparation stops on arrival, cancellation or timeout, with device safety rules preserved.","de":"Solange alle abwesend sind, verwenden geeignete automatische Geräte vorübergehend die Zuhause-Ziele. Bei Ankunft, Abbruch oder Zeitablauf endet die Vorbereitung; alle Geräteschutzregeln gelten weiter.","el":"Όταν όλοι απουσιάζουν, οι κατάλληλες αυτόματες συσκευές χρησιμοποιούν προσωρινά τους στόχους «Στο σπίτι». Η προετοιμασία λήγει με την άφιξη, την ακύρωση ή τον χρόνο αναμονής, ενώ οι κανόνες προστασίας παραμένουν ενεργοί."};
   const brandingProto125=AirQualityAdvisorCard.prototype;
   brandingProto125._hemMark125=function(){return "<svg viewBox=\"0 0 128 128\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\" focusable=\"false\"><defs><linearGradient id=\"hem-brand125-bg\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop stop-color=\"#0e7395\"/><stop offset=\"1\" stop-color=\"#072c52\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"120\" height=\"120\" rx=\"26\" fill=\"url(#hem-brand125-bg)\"/><path d=\"M25 58 64 25l39 33M32 57v45h64V57\" fill=\"none\" stroke=\"#e9fcff\" stroke-width=\"6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"43\" y=\"61\" width=\"32\" height=\"40\" rx=\"2\" fill=\"none\" stroke=\"#e9fcff\" stroke-width=\"5\"/><path d=\"M59 62v38M44 81h30\" fill=\"none\" stroke=\"#e9fcff\" stroke-width=\"4\"/><path d=\"M71 69q20 12 41-2M71 84q20 12 41-2M71 98q20 10 41-2\" fill=\"none\" stroke=\"#4ae0d8\" stroke-width=\"5\" stroke-linecap=\"round\"/></svg>";};
@@ -8655,7 +8658,7 @@
    */
   const ARRIVAL_TEXT124={
     en:{prepare:'Prepare for arrival',preparing:'Preparing',cancel:'Cancel arrival preparation',
-      paused:'Paused',ending:'Finishing',minute:'min',duration:'Home - Prepare - Max Time',
+      paused:'Paused',ending:'Finishing',minute:'min',duration:'Max time for the arrival preparation',
       remaining:'Time remaining',edit:'Edit the timeout for the next preparation.',
       away:'Temporarily use Home settings while everyone is away.',
       home:'Someone is home right now. Preparation is temporarily disabled until everyone is confirmed away.',
@@ -8667,7 +8670,7 @@
       reasonPreparing:'Home settings for arrival preparation',
       reasonChanged:'Arrival preparation changed; recalculating device control'},
     de:{prepare:'Ankunft vorbereiten',preparing:'Vorbereitung',cancel:'Ankunftsvorbereitung abbrechen',
-      paused:'Pausiert',ending:'Wird beendet',minute:'Min.',duration:'Zuhause - Vorbereiten - Maximale Dauer',
+      paused:'Pausiert',ending:'Wird beendet',minute:'Min.',duration:'Maximale Zeit für die Ankunftsvorbereitung',
       remaining:'Verbleibende Zeit',edit:'Dauer für die nächste Vorbereitung ändern.',
       away:'Vorübergehend die Einstellungen für Zuhause verwenden, während alle abwesend sind.',
       home:'Es ist gerade jemand zu Hause. Die Vorbereitung ist vorübergehend deaktiviert, bis alle nachweislich abwesend sind.',
@@ -8679,7 +8682,7 @@
       reasonPreparing:'Einstellungen für Zuhause zur Ankunftsvorbereitung',
       reasonChanged:'Ankunftsvorbereitung geändert; Gerätesteuerung wird neu berechnet'},
     el:{prepare:'Προετοιμασία άφιξης',preparing:'Προετοιμασία',cancel:'Ακύρωση προετοιμασίας άφιξης',
-      paused:'Σε παύση',ending:'Ολοκλήρωση',minute:'λεπ.',duration:'Σπίτι - Προετοιμασία - Μέγιστος χρόνος',
+      paused:'Σε παύση',ending:'Ολοκλήρωση',minute:'λεπ.',duration:'Μέγιστος χρόνος προετοιμασίας άφιξης',
       remaining:'Χρόνος που απομένει',edit:'Αλλαγή του χρονικού ορίου για την επόμενη προετοιμασία.',
       away:'Προσωρινή χρήση των ρυθμίσεων Στο σπίτι ενώ όλοι απουσιάζουν.',
       home:'Κάποιος βρίσκεται στο σπίτι. Η προετοιμασία δεν μπορεί προσωρινά να ξεκινήσει· θα είναι διαθέσιμη μόλις επιβεβαιωθεί ότι όλοι απουσιάζουν.',
@@ -8760,7 +8763,7 @@
     const minutes=source.active&&source.remaining!==null?Math.ceil(source.remaining/60):source.timeout;
     const duration=minutes===null?'—':this._format(minutes)+' '+words.minute;
     const configured=source.timeout===null?'—':this._format(source.timeout)+' '+words.minute;
-    const durationName=source.controls.timeout.state?.attributes?.friendly_name || words.duration;
+    const durationName=words.duration;
     const durationTitle=(source.active?words.remaining+': '+duration+'. ':'')+
       durationName+': '+configured+'. '+words.edit;
     const help=this._arrivalHelp125();
@@ -11315,7 +11318,9 @@
     if(notices.length)body+='<strong>'+escape(words.advice)+'</strong>';
     for(const notice of notices){
       const related=links.find(link=>link.other_area===notice.related_area)?.other_name;
-      body+=paragraph((words[notice.code]||words.unknown)+(related?' · '+related:''));
+      const direction=this._doorInstruction071(report,notice,links);
+      body+=paragraph((direction?direction+' — ':'')+
+        (words[notice.code]||words.unknown)+(related?' · '+related:''));
     }
     if(report.quiet_boundary)body+=paragraph(words.quiet);
     if(report.presence_recheck_hint)body+=paragraph(words.review);
@@ -11371,6 +11376,131 @@
       '</div>';
   };
   /* HEM_DOOR_CONTEXT063_END */
+
+
+  /* HEM_STABLE_071_START: UI only; never grants equipment control. */
+  const hem071=AirQualityAdvisorCard.prototype;
+  const COPY071={
+    en:{openings:'Windows & doors',missing:'Missing measurements',
+      temp:'Temperature',rh:'Humidity',optional:'Optional sensors unavailable',
+      required:'Temperature and humidity are the basic room measurements; all other sensors are optional.',
+      partial:'Existing measurements remain usable when others are missing.',
+      closeCover:'Close covers recommended for the current conditions',
+      fire:'Close the fire/safety door if safe, following fire regulations.',
+      moistureOpen:'Close the interior door to limit moisture transfer into the cooler room.',
+      moistureClosed:'Keep the interior door closed to limit moisture transfer.',
+      air:'Open an interior door only if a safe ventilation route is verified; otherwise ventilate locally.',
+      humid:'Use local extraction or dehumidification; do not open doors to spread humid air.'},
+    de:{openings:'Fenster & Türen',missing:'Fehlende Messwerte',
+      temp:'Temperatur',rh:'Luftfeuchtigkeit',optional:'Optionale Sensoren nicht verfügbar',
+      required:'Temperatur und Luftfeuchtigkeit sind die Basisdaten des Raums; alle übrigen Sensoren sind optional.',
+      partial:'Verfügbare Messwerte bleiben nutzbar, auch wenn andere fehlen.',
+      closeCover:'Rollos nach aktuellen Bedingungen schließen',
+      fire:'Brand-/Sicherheitstür schließen, sofern sicher, und Brandschutzvorschriften beachten.',
+      moistureOpen:'Innentür schließen, um Feuchtetransport in den kühleren Raum zu begrenzen.',
+      moistureClosed:'Innentür geschlossen halten, um Feuchtetransport zu begrenzen.',
+      air:'Innentür nur bei überprüft sicherem Luftweg öffnen; sonst lokal lüften.',
+      humid:'Lokal entlüften oder entfeuchten; die feuchte Luft nicht über offene Türen verbreiten.'},
+    el:{openings:'Παράθυρα & πόρτες',missing:'Μετρήσεις που λείπουν',
+      temp:'Θερμοκρασία',rh:'Υγρασία',optional:'Προαιρετικοί αισθητήρες μη διαθέσιμοι',
+      required:'Η θερμοκρασία και η υγρασία είναι οι βασικές μετρήσεις χώρου. Όλοι οι άλλοι αισθητήρες είναι προαιρετικοί.',
+      partial:'Οι διαθέσιμες μετρήσεις παραμένουν χρήσιμες όταν λείπουν άλλες.',
+      closeCover:'Προτείνεται κλείσιμο των σκιάστρων λόγω των τρεχουσών συνθηκών',
+      fire:'Κλείσε την πόρτα πυρασφάλειας εφόσον είναι ασφαλές, σύμφωνα με τους κανόνες πυροπροστασίας.',
+      moistureOpen:'Κλείσε την εσωτερική πόρτα για να περιορίσεις τη μεταφορά υγρασίας στον ψυχρότερο χώρο.',
+      moistureClosed:'Κράτησε κλειστή την εσωτερική πόρτα για να περιορίσεις τη μεταφορά υγρασίας.',
+      air:'Άνοιξε εσωτερική πόρτα μόνο αν έχει επιβεβαιωθεί ασφαλής διαδρομή αερισμού· αλλιώς αέρισε τοπικά.',
+      humid:'Χρησιμοποίησε τοπικό εξαερισμό ή αφύγρανση· μην ανοίγεις πόρτες για να μεταφέρεις υγρασία.'}
+  };
+  hem071._hemText071=function(key){
+    return (COPY071[this._language()]||COPY071.en)[key];
+  };
+  hem071._roomInputs071=function(room){
+    const summary=this._roomGlance122(room);
+    return {temperature:Number.isFinite(summary?.temperature),
+            humidity:Number.isFinite(summary?.humidity)};
+  };
+  hem071._roomMissingInfo071=function(room){
+    if(!room||room.climate_only===true)return '';
+    const inputs=this._roomInputs071(room);
+    const required=[];
+    if(!inputs.temperature)required.push(this._hemText071('temp'));
+    if(!inputs.humidity)required.push(this._hemText071('rh'));
+    const optional=[...new Set(safeArray(room.readings)
+      .filter(v=>v&&v.available!==true&&!['temperature','humidity'].includes(v.metric))
+      .map(v=>String(v.name||this._metricName(v.metric)||v.metric)).filter(Boolean))].slice(0,20);
+    if(!required.length&&!optional.length)return '';
+    const title=this._hemText071('missing');
+    const visible=required.length?required.join(', '):this._hemText071('optional');
+    const explanation='<p>'+escape(this._hemText071('required'))+'</p>'+
+      (required.length?'<p>'+escape(title+': '+required.join(', '))+'</p>':'')+
+      (optional.length?'<p>'+escape(this._hemText071('optional')+': '+optional.join(' · '))+'</p>':'')+
+      '<p>'+escape(this._hemText071('partial'))+'</p>';
+    return '<div class="hem-room-missing071" role="group">'+
+      '<span>'+escape(title+': '+visible)+'</span>'+
+      this._info76('room-missing071:'+room.area_id,title,explanation)+'</div>';
+  };
+  hem071._windowsDoors071=function(room){
+    const windows=safeArray(room?.windows);
+    const items=windows.map(win=>{
+      const state=win.opened===true?this._t('windowOpen'):
+        win.opened===false?this._t('windowClosed'):this._t('windowUnknown');
+      const label=[win.name||win.entity_id,state,win.entity_id].filter(Boolean).join(' · ');
+      return this._window(win)
+        .replace(/title="[^"]*"/,
+          'title="'+escape(label)+'" aria-label="'+escape(label)+'"')
+        .replace(/<small>[\s\S]*?<\/small>/g,'');
+    }).join('');
+    const existing=this._doorContext063?.(room)||'';
+    const doors=existing.replace(/<small>· [\s\S]*?<\/small>/g,'');
+    const title=this._hemText071('openings');
+    return '<div class="window-section hem-windows-doors071" role="group" aria-label="'+
+      escape(title)+'"><div class="hem-openings-heading071"><span class="field-label">'+
+      this._icon('mdi:window-open-variant')+escape(title)+'</span></div>'+
+      (items?'<div class="window-list">'+items+'</div>':
+        doors?'':'<span class="subdued">'+escape(this._t('noWindows'))+'</span>')+
+      doors+'</div>';
+  };
+  hem071._doorInstruction071=function(report,notice,links){
+    if(!notice||typeof notice.code!=='string')return '';
+    if(notice.code==='fire_door_open')return this._hemText071('fire');
+    if(notice.code==='moisture_transfer_risk'){
+      const link=safeArray(links).find(v=>v.other_area===notice.related_area&&v.kind==='interior');
+      if(link?.state==='open')return this._hemText071('moistureOpen');
+      if(link?.state==='closed')return this._hemText071('moistureClosed');
+    }
+    if(notice.code==='fresh_air_needed')return this._hemText071('air');
+    if(notice.code==='remove_moisture_locally')return this._hemText071('humid');
+    return '';
+  };
+  const priorStyles071=hem071._styles;
+  hem071._styles=function(){return priorStyles071.call(this)+[
+    '<style>',
+    '.hem-windows-doors071{position:relative;display:flex;flex-direction:column;gap:6px}',
+    '.hem-windows-doors071 .hem-openings-heading071{padding-inline-end:27px}',
+    '.hem-windows-doors071 .hem-openings-heading071 .field-label{margin-bottom:0}',
+    '.hem-windows-doors071 .hem-room-door062.window-section{display:contents!important;margin:0!important;padding:0!important;border:0!important}',
+    '.hem-windows-doors071 .hem-room-door062 .hem-door-head062{position:absolute;top:8px;right:0;display:flex;align-items:center}',
+    '.hem-windows-doors071 .hem-door-head062 .field-label{display:none!important}',
+    '.hem-windows-doors071 .window-list{display:flex;gap:6px;flex-wrap:wrap}',
+    '.hem-room-missing071{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin:6px 0;font-size:11px;color:var(--aqa-muted)}',
+    '.hem-room-missing071>span{min-width:0;overflow-wrap:anywhere}',
+    '.hem-science-line071{display:block!important;min-width:0;padding:6px 0}',
+    '.hem-science-summary071{display:flex;align-items:center;gap:6px;list-style:none;cursor:pointer;min-width:0}',
+    '.hem-science-summary071::-webkit-details-marker{display:none}',
+    '.hem-science-summary071>span{flex:1;min-width:0;overflow-wrap:anywhere}',
+    '.hem-science-summary071>strong{flex:0 0 auto;max-width:42%;white-space:normal;text-align:end}',
+    '.hem-science-summary071>ha-icon{flex:0 0 16px;--mdc-icon-size:15px;color:var(--aqa-blue)}',
+    '.hem-science-line071[open] .hem-science-inline071{position:static!important;box-shadow:none;width:auto;max-width:none;padding:8px 10px;margin:6px 0 0;border:1px solid var(--aqa-edge);border-radius:8px;white-space:normal;color:inherit;background:var(--aqa-surface);font-size:11px}',
+    '.hem-cover-source071{display:inline-flex;align-items:center;gap:5px}',
+    '.hem-cover-source071 ha-icon{--mdc-icon-size:17px;flex:0 0 17px}',
+    '.hem-cover-close071{display:inline-flex;align-items:center;color:var(--aqa-amber)}',
+    '.hem-cover-close071 ha-icon{--mdc-icon-size:18px}',
+    '.hem-covers-expanded105 .shade-heading{display:flex;align-items:center;gap:5px;flex-wrap:wrap}',
+    '.hem-covers-expanded105 .shade-heading .hem-context76{margin-inline-start:5px}',
+    '</style>'
+  ].join('');};
+  /* HEM_STABLE_071_END */
 
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);

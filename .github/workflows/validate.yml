@@ -371,6 +371,8 @@ jobs:
           python -I .github/tests/test_062b10_source_validation.py
       - name: B23 actual card door position and mold trend click
         run: python -I .github/tests/test_062b23_door_mold_card.py
+      - name: v0.7.1 unified openings, missing data, door actions, science and covers
+        run: python -I .github/tests/test_071_room_ui.py
       - name: B9 on-demand setting help in every menu
         run: python -I .github/tests/test_062b9_settings_help.py
       - name: B8 settings inventory, advanced presentation and exact duplicate aliases

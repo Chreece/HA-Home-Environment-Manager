@@ -96,8 +96,9 @@ with sync_playwright() as pw:
         window = row.locator('.window-section:not(.hem-room-door062)')
         doors = row.locator('.window-section.hem-room-door062')
         assert window.count()==doors.count()==1
-        assert window.evaluate("e=>e.nextElementSibling?.classList.contains('hem-room-door062')")
+        assert window.evaluate("e=>e.classList.contains('hem-windows-doors071')&&e.contains(e.querySelector('.hem-room-door062'))")
         assert doors.locator('.window-list .window.hem-door-contact062.closed').count()==1
+        assert window.locator('.window-list .window small').count()==0, "State is carried by icon, not redundant text"
         assert "Living room door" in doors.inner_text()
         assert doors.locator('[data-hem-source105="binary_sensor.door"]').count()==1
         doors.locator('[data-hem-source105="binary_sensor.door"]').click()
