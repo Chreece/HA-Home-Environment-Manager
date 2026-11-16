@@ -128,6 +128,18 @@ assert.ok(!markup.includes('hem-cover-close071'),'No false close-needed indicati
 
 assert.ok(card._arrivalHelp125().purpose.includes('all devices will get into Home mode'));
 assert.equal(card._arrivalWords124().duration,'Max time for the arrival preparation');
+card._info76=(key,label,body)=>'<details class="hem-context76" data-detail-id="'+key+'">'+body+'</details>';
+card._arrivalSource124=()=>({
+  entry:'entry',owner:'entry',action:'prepare',owned:true,active:false,expired:false,
+  homeStatus:'away',canStart:true,timeout:60,remaining:null,pending:false,
+  controls:{prepare:{valid:true,owned:true,id:'button.prepare'},
+    cancel:{valid:true,owned:true,id:'button.cancel'},
+    timeout:{valid:true,owned:true,id:'number.timeout',state:null}}
+});
+markup=card._arrivalHeader124();
+assert.ok(markup.includes('hem-arrival-help125')&&markup.includes('hem-context76'));
+assert.ok(markup.includes('all devices will get into Home mode'),'Actual info bubble uses the user-facing purpose');
+assert.ok(markup.includes('Max time for the arrival preparation'));
 console.log('PASS 0.7.1 card: merged contacts, state icons, inline disclosures, cover urgency and arrival labels');
 """
 subprocess.run(["node","-e",js_test,str(SRC/"frontend/air-quality-advisor-card.js")],
