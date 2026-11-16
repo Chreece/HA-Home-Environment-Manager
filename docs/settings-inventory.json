@@ -2598,7 +2598,7 @@
       "literal_references": [
         "custom_components/environment_manager/const.py:61",
         "custom_components/environment_manager/environment.py:161",
-        "custom_components/environment_manager/environment.py:311",
+        "custom_components/environment_manager/environment.py:320",
         "custom_components/environment_manager/environment_history.py:19"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -7577,7 +7577,7 @@
       "literal_references": [
         "custom_components/environment_manager/const.py:61",
         "custom_components/environment_manager/environment.py:161",
-        "custom_components/environment_manager/environment.py:311",
+        "custom_components/environment_manager/environment.py:320",
         "custom_components/environment_manager/environment_history.py:19"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"

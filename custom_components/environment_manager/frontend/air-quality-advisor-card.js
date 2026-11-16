@@ -2106,7 +2106,7 @@
       return (gr ? base[1] : de ? base[2] : base[0]) + limit;
     }
 
-    _metric(item, miniature = false) {
+    _metric(item, miniature = false, roomArea = null) {
       const metric = item.details?.fallback_for_mold
         ? `${this._t('humidity')} Ø (RH)`
         : item.metric==='unknown' ? this._unknownMetricName(item)
@@ -2150,7 +2150,11 @@
       const fromNative=!averaged && !item.details?.fallback_for_mold &&
         item.metric !== 'mold' && typeof item.entity_id==='string' &&
         /^sensor\.[a-z0-9_]+$/.test(item.entity_id);
-      const click=averaged && aggregate?.area_id
+      const moldTrend=item.metric==='mold'&&typeof roomArea==='string'&&
+        this._evidence105?.(roomArea,'mold');
+      const click=moldTrend
+        ? 'data-hem-average105="mold" data-average-area105="'+escape(roomArea)+'"'
+        : averaged && aggregate?.area_id
         ? 'data-hem-average105="'+escape(item.metric)+'" data-average-area105="'+escape(aggregate.area_id)+'"'
         : fromNative ? 'data-hem-source105="'+escape(item.entity_id)+'"' : '';
       return `<div class="metric ${miniature ? 'tiny' : ''} metric-${level}" data-room-metric114="${escape(item.metric)}" data-metric-source114="${escape(item.entity_id || '')}">
@@ -2968,6 +2972,12 @@
           </div>
           ${this._climatePanel(room,overview122)}
           ${this._shadePanel(room)}
+          <div class="window-section">
+            <span class="field-label">${this._icon("mdi:window-closed-variant")}${escape(this._t("windows"))}</span>
+            ${safeArray(room.windows).length ? `<div class="window-list">${safeArray(room.windows).map(win=>this._window(win)).join("")}</div>`
+              : `<span class="subdued">${escape(this._t("noWindows"))}</span>`}
+          </div>
+          ${this._doorContext063?.(room)||''}
         </article>`;
       }
       const status = ['safe','attention','unknown'].includes(room.status) ? room.status : 'unknown';
@@ -3042,7 +3052,7 @@
           ${this._editButton(room.area_id)}
           <span class="status-tag">${this._icon(ICON[status])}${escape(roomStatusLabel)}</span>
         </div>
-        ${this._config.show_metrics === false ? '' : details122.length ? `<div class="metric-grid">${shown.map((item) => item.overview_detail122?this._metricInfo122(item):this._metric(item)).join('')}</div>`
+        ${this._config.show_metrics === false ? '' : details122.length ? `<div class="metric-grid">${shown.map((item) => item.overview_detail122?this._metricInfo122(item,room.area_id):this._metric(item,false,room.area_id)).join('')}</div>`
           : readings.length || overview122?.metrics?.size ? '' : `<div class="empty-measurements">${this._icon('mdi:gauge-empty')} ${escape(this._t('missingIndoor'))}</div>`}
         ${button}
         ${expanded && this._config.show_metrics !== false
@@ -3058,6 +3068,7 @@
           ${windows.length ? `<div class="window-list">${windows.map((window) => this._window(window)).join('')}</div>`
             : `<span class="subdued">${escape(this._t('noWindows'))}</span>`}
         </div>
+        ${this._doorContext063?.(room)||''}
         ${recommendation}
       </article>`;
     }
@@ -4672,7 +4683,7 @@
       return item.exceeded===true||calibrated?[{...item,overview_detail122:true}]:[];
     });
   };
-  proto87._metricInfo122=function(item){
+  proto87._metricInfo122=function(item,areaId=null){
     const title=this._metricName(item.metric),help=this._metricHelp(item);
     const source=[item.name,item.entity_id].filter(Boolean).join(' · ');
     const threshold=Number.isFinite(item.threshold)&&item.threshold>0
@@ -4682,9 +4693,13 @@
     // Keep the calibrated surface estimate beside its own threshold. A mold
     // warning/calibration tile must not look like a missing measurement when
     // the same available estimate is already visible in the room summary.
+    const moldTarget=item.metric==='mold' && typeof areaId==='string' &&
+      item.available===true && Number.isFinite(item.value) && this._evidence105?.(areaId,'mold');
     const moldValue=item.metric==='mold' && item.available===true && Number.isFinite(item.value)
-      ?'<span class="metric-number">'+escape(this._format(item.value))+' <small>'+
-        escape(item.unit||'%')+'</small></span>':'';
+      ?'<span class="metric-number'+(moldTarget?' hem-source-click105':'')+'"'+
+        (moldTarget?' data-hem-average105="mold" data-average-area105="'+escape(areaId)+
+          '" role="button" tabindex="0" title="'+escape(this._metricName('mold'))+' · trend"':'')+
+        '>'+escape(this._format(item.value))+' <small>'+escape(item.unit||'%')+'</small></span>':'';
     return '<div class="metric hem-metric-info122 metric-'+(item.exceeded?'attention':'safe')+'" '+
       'data-room-metric114="'+escape(item.metric)+'" data-metric-source114="'+escape(item.entity_id||'')+'" '+
       'data-overview-detail122="'+escape(item.metric)+'">'+
@@ -4809,7 +4824,6 @@
       '<div class="hem-room-ventilation95" role="status">'+
       this._icon('mdi:air-filter')+
       '<span>'+ventNotes95.map(value=>escape(value)).join(' · ')+'</span></div>':'';
-    const doorNote062=this._doorContext063(room);
     if(roomStatus==='attention') alerts.push(this._roomAlert114(room,'attention',
       'mdi:alert-circle-outline',labels.attention,'warn'));
     if(roomStatus==='unknown') alerts.push(this._roomAlert114(room,'missing',
@@ -4880,7 +4894,7 @@
       '<span class="hem-room-alerts87" aria-label="'+escape(labels.attention)+'">'+
       alerts.slice(0,4).join('')+'</span>'+
       this._icon(open?'mdi:chevron-up':'mdi:chevron-down')+
-      '</summary><div class="hem-room-body87">'+doorNote062+ventHeader95+
+      '</summary><div class="hem-room-body87">'+ventHeader95+
       this._roomIssueDetail114(room)+original+'</div></details>';
   };
 
@@ -6250,18 +6264,21 @@
   const copy105={
     en:{average:'Average of',sensors:'sensors',trend:'Average trend',
       recent:'Recorded averages · up to 7 days',none:'Collecting history · fewer than two samples',
+      moldNote:'Recorded estimated surface humidity, not mold detection. Historical values reflect conditions and calibration at their recorded times.',
       sources:'Contributing sensors',physics:'Building physics',shades:'Covers',
       close:'Close trend',on:'On',off:'Off',open:'Open',closed:'Closed',
       unavailable:'Unavailable'},
     de:{average:'Mittelwert aus',sensors:'Sensoren',trend:'Mittelwertverlauf',
       recent:'Aufgezeichnete Mittelwerte · bis zu 7 Tage',
       none:'Verlauf wird erfasst · noch keine zwei Messpunkte',
+      moldNote:'Aufgezeichnete geschätzte Oberflächenfeuchte, kein Schimmelnachweis. Historische Werte gelten für die damaligen Bedingungen und Kalibrierungen.',
       sources:'Beitragende Sensoren',physics:'Bauphysik',shades:'Rollläden',
       close:'Verlauf schließen',on:'Ein',off:'Aus',open:'Offen',closed:'Geschlossen',
       unavailable:'Nicht verfügbar'},
     el:{average:'Μέσος όρος από',sensors:'αισθητήρες',trend:'Τάση μέσου όρου',
       recent:'Καταγεγραμμένοι μέσοι όροι · έως 7 ημέρες',
       none:'Συλλογή ιστορικού · λιγότερα από δύο σημεία',
+      moldNote:'Καταγεγραμμένη εκτίμηση υγρασίας ψυχρής επιφάνειας, όχι ανίχνευση μούχλας. Οι ιστορικές τιμές αφορούν τις τότε συνθήκες και τη βαθμονόμηση.',
       sources:'Συμμετέχοντες αισθητήρες',physics:'Φυσική κτιρίου',
       shades:'Σκίαστρα',close:'Κλείσιμο τάσης',on:'Ενεργό',off:'Ανενεργό',
       open:'Ανοιχτό',closed:'Κλειστό',unavailable:'Μη διαθέσιμο'},
@@ -6283,12 +6300,14 @@
       safeArray(room.readings).some(v=>v?.entity_id===id &&
         !v?.details?.fallback_for_mold && v?.metric!=='mold') ||
       safeArray(room.windows).some(v=>v?.entity_id===id) ||
+       safeArray(room.environment?.door_context?.contacts).some(v=>v?.entity_id===id) ||
       Object.values(room.environment?.measurement_evidence||{}).some(v=>
         safeArray(v?.source_ids).includes(id)));
   };
   proto105._evidence105=function(area,metric){
     const room=safeArray(this._dashboard105()?.rooms).find(v=>v?.area_id===area);
-    const value=room?.environment?.measurement_evidence?.[metric];
+    const value=metric==='mold' ? room?.environment?.mold_trend :
+      room?.environment?.measurement_evidence?.[metric];
     if(!room || !value || !Number.isFinite(value.value) ||
        !Number.isInteger(value.source_count) ||
        safeArray(value.source_ids).length!==value.source_count)return null;
@@ -6300,13 +6319,14 @@
     const ids=safeArray(evidence?.source_ids);
     const count=evidence?.source_count;
     const avg=count>=2&&ids.length===count;
+    const derivedMold=metric==='mold'&&this._evidence105(room.area_id,'mold')!==null;
     const native=(!avg && count===1 && ids.length===1 &&
       typeof ids[0]==='string'&&this._nativeAllowed105(ids[0]))
       ?ids[0]:null;
     // Some standalone device metrics are not part of a room-level mean.
     const original=!avg&&!native && typeof fallbackId==='string' &&
       this._nativeAllowed105(fallbackId)?fallbackId:null;
-    const action=avg
+    const action=derivedMold||avg
       ?'data-hem-average105="'+escape(metric)+'" data-average-area105="'+escape(room.area_id)+'"'
       :native||original?'data-hem-source105="'+escape(native||original)+'"':'';
     const badgeTitle=avg?word105(this,'average')+' '+count+' '+
@@ -6449,7 +6469,7 @@
   };
   proto105._openAverage105=function(area,metric){
     const evidence=this._evidence105(area,metric);
-    if(!evidence||evidence.value.source_count<2)return;
+    if(!evidence||(metric!=='mold'&&evidence.value.source_count<2))return;
     if(!this._averageDialog105?.entity122 && this._averageDialog105?.area===area &&
        this._averageDialog105?.metric===metric){
       this._closeAverage105();return;
@@ -6534,7 +6554,7 @@
         this._closeAverage105();event.preventDefault();return;
       }
       if((event.key==='Enter'||event.key===' ') &&
-         event.target?.matches?.('[data-hem-source105][role="button"]')){
+         event.target?.matches?.('[data-hem-source105][role="button"],[data-hem-average105][role="button"]')){
         event.preventDefault();event.target.click();
       }
     },true);
@@ -6647,14 +6667,14 @@
   let trendSequence114=0;
   const trendWords114={
     en:{all:'All',hours:'h',days:'d',range:'Time range',older:'Previous period',
-      newer:'Next period',latest:'Latest',current:'Current average',sample:'Recorded value',
+      newer:'Next period',latest:'Latest',current:'Current average',sample:'Recorded value',held:'Last recorded state (held)',
       empty:'No samples in this period',gap:'No recorded sample',one:'One recorded sample',
       low:'Low',high:'High',samples:'samples',chart:'Recorded average over time',
       help:'Drag or move across the chart to inspect. Arrow keys: samples · Page Up/Down: periods.',
       gapHelp:'Shaded gaps have no recorded values.',
       collecting:'History appears as measurements are recorded.'},
     de:{all:'Alle',hours:'Std.',days:'T.',range:'Zeitraum',older:'Vorheriger Zeitraum',
-      newer:'Nächster Zeitraum',latest:'Neueste',current:'Aktueller Mittelwert',sample:'Messwert',
+      newer:'Nächster Zeitraum',latest:'Neueste',current:'Aktueller Mittelwert',sample:'Messwert',held:'Letzter gespeicherter Zustand (unverändert)',
       empty:'Keine Messwerte in diesem Zeitraum',gap:'Kein aufgezeichneter Messwert',
       one:'Ein aufgezeichneter Messwert',low:'Min.',high:'Max.',samples:'Messpunkte',
       chart:'Aufgezeichneter Mittelwert im Zeitverlauf',
@@ -6663,7 +6683,7 @@
       collecting:'Der Verlauf erscheint mit den aufgezeichneten Messungen.'},
     el:{all:'Όλα',hours:'ώ.',days:'ημ.',range:'Χρονικό διάστημα',older:'Προηγούμενο διάστημα',
       newer:'Επόμενο διάστημα',latest:'Πρόσφατα',current:'Τρέχων μέσος όρος',
-      sample:'Καταγεγραμμένη τιμή',empty:'Δεν υπάρχουν μετρήσεις σε αυτό το διάστημα',
+      sample:'Καταγεγραμμένη τιμή',held:'Τελευταία γνωστή τιμή (αμετάβλητη)',empty:'Δεν υπάρχουν μετρήσεις σε αυτό το διάστημα',
       gap:'Δεν έχει καταγραφεί μέτρηση',one:'Μία καταγεγραμμένη μέτρηση',
       low:'Ελάχ.',high:'Μέγ.',samples:'μετρήσεις',chart:'Μέσος όρος στον χρόνο',
       help:'Σύρε ή κινήσου στο διάγραμμα. Βέλη: μετρήσεις · Page Up/Down: διαστήματα.',
@@ -6691,17 +6711,25 @@
     const number=Number(value);
     return Number.isFinite(number)&&Math.abs(number)<=1e12?number:null;
   };
-  trend114._entityHistoryPoints122=function(result,entityId,start,end,unit){
-    const unique=new Map();
+  trend114._entityHistoryPoints122=function(result,entityId,start,end,unit,includeCarry=false){
+    const unique=new Map(),carriers=[];
     for(const row of safeArray(result?.[entityId])){
       if(!row||typeof row!=='object')continue;
-      const t=historyNumber122(row.lu??row.lc);
-      if(t===null||t<=0||t<start||t>end)continue;
+      const actual=historyNumber122(row.lu??row.lc);
+      if(actual===null||actual<=0||actual>end||actual<start&&!includeCarry)continue;
+      const t=Math.max(start,actual);
       const attrs=row.a&&typeof row.a==='object'?row.a:{};
       const differentUnit=typeof attrs.unit_of_measurement==='string'&&
         attrs.unit_of_measurement!==unit;
       const value=attrs.restored===true||differentUnit?null:historyNumber122(row.s);
-      unique.set(t,{t,v:value});
+      const previous=historyNumber122(row.lc);
+      const record={t,v:value,...(includeCarry&&(actual<start||t===start&&previous!==null&&previous<start)?{carried:true}:{})};
+      if(actual<start)carriers.push({actual,record});
+      else unique.set(t,record);
+    }
+    if(carriers.length&&!unique.has(start)){
+      const carry=carriers.reduce((latest,row)=>row.actual>latest.actual?row:latest);
+      unique.set(start,carry.record);
     }
     const rows=[...unique.values()].sort((a,b)=>a.t-b.t);
     if(rows.length<=1000)return rows;
@@ -6741,11 +6769,16 @@
     const metric=reading?.metric||Object.entries(room?.environment?.measurement_evidence||{})
       .find(([,value])=>safeArray(value?.source_ids).includes(id))?.[0]||state.attributes?.device_class||'value';
     const unit=state.attributes?.unit_of_measurement??reading?.unit??saved.unit122??'';
+    const latest=safeArray(saved.history122).at(-1);
+    const currentValue=state.attributes?.restored===true?null:historyNumber122(state.state);
+    const heldUntil=latest&&latest.v!==null&&currentValue===latest.v&&
+      Number.isFinite(saved.historyEnd122)&&saved.historyEnd122-latest.t>900
+        ?saved.historyEnd122:null;
     room=room||{name:this._t('outside'),readings:[]};
     return {entity_id:id,title:state.attributes?.friendly_name||id,unit,metric,
       room:{...room,readings:[{metric,unit}]},
-      value:{value:state.attributes?.restored===true?null:historyNumber122(state.state),
-        source_ids:[id],source_count:1,trend:saved.history122||[]}};
+      value:{value:currentValue,source_ids:[id],source_count:1,
+        trend:saved.history122||[],...(heldUntil!==null?{held_until:heldUntil}:{})}};
   };
   trend114._loadEntityTrend122=async function(saved,keepView=false){
     if(!saved?.entity122||this._averageDialog105!==saved)return;
@@ -6775,9 +6808,9 @@
         type:'history/history_during_period',entity_ids:[id],
         start_time:new Date(start*1000).toISOString(),end_time:new Date(end*1000).toISOString(),
         minimal_response:false,no_attributes:false,significant_changes_only:false,
-        // HA projects a carry-in state to the requested start timestamp.
-        // The inspector promises actual recorded sample times, so exclude it.
-        include_start_time_state:false,
+        // Recorder carries the last known state into the requested interval.
+        // A carry-in is a held state, not a fresh physical measurement.
+        include_start_time_state:true,
       }),timeout]);
       if(!current())return;
       // A unit setting changed while the request was in flight. Reload in
@@ -6785,7 +6818,8 @@
       if(this._entityTrendEvidence122(saved)?.unit!==saved.unit122){
         this._loadEntityTrend122(saved);return;
       }
-      saved.history122=this._entityHistoryPoints122(result,id,start,end,saved.unit122);
+      saved.history122=this._entityHistoryPoints122(result,id,start,end,saved.unit122,true);
+      saved.historyStart122=start;saved.historyEnd122=end;
       saved.status122=saved.history122.some(point=>point.v!==null)?'ready':'empty';
     }catch{
       if(!current())return;
@@ -6821,7 +6855,7 @@
     pop.focus({preventScroll:true});
     this._loadEntityTrend122(saved);
   };
-  const trendPoints114=value=>{
+  const trendPoints114=(value,eventHistory=false)=>{
     const points=new Map(),missing=[],times=[];
     for(const row of safeArray(value.trend).slice(-1000)){
       if(!row||!Number.isFinite(row.t)||row.t<=0||row.t>8640000000000)continue;
@@ -6838,7 +6872,7 @@
     const gaps=[];
     for(let i=1;i<ordered.length;i++){
       const a=ordered[i-1].t,b=ordered[i].t;
-      if(ordered[i].break_before||b-a>cadence*2.5||missing.some(t=>t>a&&t<b))gaps.push([a,b]);
+      if(ordered[i].break_before||(!eventHistory&&b-a>cadence*2.5)||missing.some(t=>t>a&&t<b))gaps.push([a,b]);
     }
     const first=times.length?Math.min(...times):0,last=times.length?Math.max(...times):0;
     if(ordered.length&&first<ordered[0].t)gaps.unshift([first,ordered[0].t]);
@@ -6857,8 +6891,11 @@
   };
   trend114._trendView114=function(evidence){
     const saved=this._averageDialog105;
-    const data=trendPoints114(evidence.value),points=data.points;
-    const first=points.length?data.first:0,last=points.length?data.last:0;
+    const data=trendPoints114(evidence.value,Boolean(evidence.entity_id)),points=data.points;
+    const eventHistory=Boolean(evidence.entity_id);
+    const first=points.length?data.first:0;
+    const heldUntil=eventHistory&&Number.isFinite(evidence.value.held_until)?evidence.value.held_until:null;
+    const last=points.length?Math.max(data.last,heldUntil??data.last):0;
     const state=saved.view114 ||= {
       range:last-first>21600?86400:0,end:null,cursor:null,
     };
@@ -6871,13 +6908,22 @@
     const viewStart=singleMoment?first-900:start;
     const viewEnd=singleMoment?first+900:
       end>viewStart?end:viewStart+1800;
-    const visible=points.filter(p=>p.t>=viewStart&&p.t<=viewEnd);
+    let visible=points.filter(p=>p.t>=viewStart&&p.t<=viewEnd);
+    // Recorder stores events, not a fresh sample every minute. Display the
+    // previous state at the viewport edge ONLY while the history and current
+    // native state prove it was held. This is a visual anchor, not a new sample.
+    if(eventHistory&&heldUntil!==null&&points.length&&viewStart>first){
+      const previous=points.filter(p=>p.t<viewStart).at(-1);
+      const discontinuous=data.gaps.some(([a,b])=>a<viewStart&&b>previous?.t);
+      if(previous&&!discontinuous&&!visible.some(p=>p.t===viewStart))
+        visible=[{t:viewStart,v:previous.v,carried_view:true},...visible];
+    }
     const width=Math.max(240,Math.min(800,saved.width114||
       Math.min(560,window.innerWidth-24)-32));
     const values=visible.map(p=>p.v),low=values.length?Math.min(...values):0;
     const high=values.length?Math.max(...values):1;
     const padding=Math.max((high-low)*.15,Math.abs(low)*.005,.1);
-    return { ...data,visible,first,last,start:viewStart,end:viewEnd,
+    return { ...data,visible,first,last,eventHistory,heldUntil,start:viewStart,end:viewEnd,
       width,left:48,right:width-14,top:18,bottom:164,min:low-padding,max:high+padding,
       older:!!state.range&&start>first,newer:!!state.range&&end<last,
       unit:evidence.entity_id?evidence.unit:saved.metric==='temperature'?'°C':saved.metric==='humidity'?'%':
@@ -6889,10 +6935,28 @@
   trend114._trendSelection114=function(model){
     const cursor=this._averageDialog105.view114.cursor;
     if(!model.visible.length)return {point:null,time:cursor??model.end,index:0};
-    const time=cursor??model.visible.at(-1).t;
-    // Even a short, explicitly observed outage is missing evidence. A
-    // sampling-cadence tolerance must not turn its interior into a reading.
+    const time=cursor??(model.eventHistory?model.end:model.visible.at(-1).t);
+    // Explicit unknown/unavailable readings always break the line.
     const gap=model.gaps.some(([a,b])=>time>a&&time<b);
+    if(model.eventHistory){
+      // Pointer positions are rounded to display pixels. Near an actual
+      // Recorder transition, snap to that recorded timestamp; otherwise
+      // select the preceding unchanged state (not the nearest future event).
+      // Never carry a state through an explicit unknown/unavailable interval.
+      const secondsPerPixel=(model.end-model.start)/Math.max(1,model.right-model.left);
+      const tolerance=Math.max(0.001,1.5*secondsPerPixel);
+      const nearest=model.visible.reduce((best,p)=>
+        !best||Math.abs(p.t-time)<Math.abs(best.t-time)?p:best,null);
+      const snapped=nearest&&Math.abs(nearest.t-time)<=tolerance?nearest:null;
+      const inspectedAt=snapped?snapped.t:time;
+      const latest=snapped||model.visible.filter(p=>p.t<=inspectedAt).at(-1);
+      const unavailable=model.gaps.some(([a,b])=>inspectedAt>a&&inspectedAt<b);
+      const outside=inspectedAt<model.visible[0].t||
+        (model.heldUntil===null&&inspectedAt>model.visible.at(-1).t);
+      return {point:unavailable||outside?null:latest||null,time:inspectedAt,
+        held:!!latest&&(latest.carried===true||latest.carried_view===true||inspectedAt>latest.t),
+        index:latest?Math.max(0,model.points.findIndex(p=>p.t===latest.t)):0};
+    }
     const nearest=model.visible.reduce((best,p)=>Math.abs(p.t-time)<Math.abs(best.t-time)?p:best);
     const outside=time<model.visible[0].t-model.cadence*.5||
       time>model.visible.at(-1).t+model.cadence*.5;
@@ -6915,7 +6979,7 @@
     const date=model.points.length?this._trendDate114(selected.time):'';
     text('[data-trend-value114]',display);
     text('[data-trend-time114]',date);
-    text('[data-trend-label114]',point?tw114(this,'sample'):tw114(this,'gap'));
+    text('[data-trend-label114]',point?(selected.held?tw114(this,'held'):tw114(this,'sample')):tw114(this,'gap'));
     root.querySelector('[data-trend-value114]')?.setAttribute('data-sample-time114',point?String(point.t):'');
     const stamp=root.querySelector('[data-trend-time114]');
     if(stamp){
@@ -6978,8 +7042,24 @@
       if(!prev||model.gaps.some(([a,b])=>prev.t<=a&&point.t>=b))segments.push([point]);
       else segment.push(point);
     }
-    const paths=segments.map(segment=>segment.map((point,i)=>
-      (i?'L':'M')+trendX114(model,point.t).toFixed(2)+' '+trendY114(model,point.v).toFixed(2)).join(' '));
+    const paths=segments.map((segment,group)=>{
+      let d='';
+      for(let i=0;i<segment.length;i++){
+        const point=segment[i],prev=segment[i-1];
+        const x=trendX114(model,point.t).toFixed(2),y=trendY114(model,point.v).toFixed(2);
+        if(!prev)d+='M'+x+' '+y;
+        else if(model.eventHistory)d+=' L'+x+' '+trendY114(model,prev.v).toFixed(2)+' L'+x+' '+y;
+        else d+=' L'+x+' '+y;
+      }
+      // The last known Recorder state remains active until the query end.
+      // Do not append a synthetic source event or bridge an unavailable state.
+      const last=segment.at(-1);
+      if(model.eventHistory&&group===segments.length-1&&model.heldUntil!==null&&
+          last&&model.end>last.t&&model.heldUntil>=model.end){
+        d+=' L'+trendX114(model,model.end).toFixed(2)+' '+trendY114(model,last.v).toFixed(2);
+      }
+      return d;
+    });
     const fill=segments.map((segment,i)=>segment.length>1?paths[i]+' L'+
       trendX114(model,segment.at(-1).t).toFixed(2)+' '+model.bottom+' L'+
       trendX114(model,segment[0].t).toFixed(2)+' '+model.bottom+' Z':'').join(' ');
@@ -7019,8 +7099,10 @@
     const footer=evidence.entity_id?'<div class="hem-entity-history-footer122"><small>'+escape(ew122(this,'recent'))+
       '</small><button type="button" class="hem-average-source105" data-open-entity122="'+escape(evidence.entity_id)+
       '" title="'+escape(evidence.entity_id)+'">'+this._icon('mdi:open-in-new')+escape(ew122(this,'open'))+'</button></div>':
-      '<div class="hem-average-caption105">'+escape(word105(this,'average')+' '+value.source_count+' '+
-      word105(this,'sensors'))+'</div><div class="hem-average-sources105">'+sources+'</div>';
+      (metric==='mold'
+        ?'<div class="hem-average-caption105">'+escape(word105(this,'moldNote'))+'</div>'
+        :'<div class="hem-average-caption105">'+escape(word105(this,'average')+' '+value.source_count+' '+
+        word105(this,'sensors'))+'</div><div class="hem-average-sources105">'+sources+'</div>');
     return '<div class="hem-trend114" style="--hem-trend-accent114:'+accent+'">'+
       '<div class="hem-average-summary105"><div><strong>'+escape(title)+'</strong><small>'+escape(evidence.room.name||area)+
       '</small></div><span class="hem-trend-current114">'+escape(evidence.entity_id?ew122(this,'current'):tw114(this,'current'))+'<b>'+
@@ -7050,7 +7132,9 @@
       this._closeAverage105();return;
     }
     const evidence=saved.entity122?this._entityTrendEvidence122(saved):this._evidence105(saved.area,saved.metric);
-    if(!evidence||!saved.entity122&&(evidence.value.source_count<2||evidence.value.source_ids.join('|')!==saved.sources)){
+    if(!evidence||!saved.entity122&&
+        (saved.metric!=='mold'&&evidence.value.source_count<2||
+         evidence.value.source_ids.join('|')!==saved.sources)){
       this._closeAverage105();return;
     }
     if(saved.entity122&&evidence.unit!==saved.unit122&&saved.status122!=='loading'){
@@ -11164,28 +11248,33 @@
   const roomDoorStyles062=AirQualityAdvisorCard.prototype._styles;
   AirQualityAdvisorCard.prototype._styles=function(){return roomDoorStyles062.call(this)+[
     "<style>",
-    ".hem-room-door062{display:flex;align-items:center;gap:7px;min-width:0;margin:4px 0 7px;padding:6px 9px;border:1px solid var(--aqa-edge);border-radius:8px;font-size:11px;line-height:1.4;color:var(--aqa-muted)}",
-    ".hem-room-door062 span{flex:1;min-width:0;overflow-wrap:break-word;word-break:normal}",
-    ".hem-room-door062 ha-icon{--mdc-icon-size:16px;flex:0 0 16px}",
+    ".hem-room-door062{min-width:0;padding-top:11px;display:block}",
+    ".hem-door-head062{display:flex;align-items:center;gap:8px;min-width:0;margin-bottom:7px}",
+    ".hem-door-head062 .field-label{flex:1;min-width:0}",
+    ".hem-door-head062 .hem-context76{margin-inline-start:auto}",
+    ".hem-door-context062{font-size:11px;line-height:1.5;color:var(--aqa-muted);margin:6px 0 0}",
+    ".hem-door-contact062{max-width:100%;overflow-wrap:anywhere}",
+    ".hem-room-door062 .window-list{min-width:0}",
+    ".hem-room-door062 .window ha-icon{--mdc-icon-size:16px;flex:0 0 16px}",
     "</style>"
   ].join("");};
 
 
   /* HEM_DOOR_CONTEXT063_START: passive evidence; no new write authority. */
   const HEM_DOOR_WORDS063={
-    en:{title:'Door connections and evidence',open:'Open',closed:'Closed',settling:'Confirming closure',unknown:'Unknown',not_configured:'No local contacts',eco:'Door Eco eligible',
+    en:{doors:'Doors',title:'Door connections and evidence',open:'Open',closed:'Closed',settling:'Confirming closure',unknown:'Unknown',not_configured:'No local contacts',eco:'Door Eco eligible',
       contacts:'Contacts',connections:'Room connections',paths:'Possible path to an open outdoor window',quiet:'Closed boundary around a verified sleeping room',review:'Door activity: reassess presence; no entry/exit direction inferred',
       session:'Observed this session',gap:'Unobserved',minutes:'min',limits:'An open door is only a possible air path. Closed does not mean airtight. These diagnostics do not change occupancy, operate equipment, or estimate energy savings.',
       thermal:'Observed mean temperature difference',samples:'samples',observational:'Descriptive observations only; not measured airflow, thermal conductance or causal savings.',
       interior:'Interior',fire:'Fire/safety',exterior:'Exterior',ok:'Verified report',wrong_area:'Area assignment changed',wrong_class:'No longer a door contact',not_native:'Not a native source',missing:'Contact missing',unavailable:'Unavailable',restored:'Restored; live evidence required',invalid_timestamp:'Invalid transition time',invalid_timeout:'Invalid reporting interval',report_time_unknown:'Report time unknown',report_expired:'Expected report overdue',
       contact_unverified:'A contact is not verified. Do not assume all doors are closed.',fire_door_open:'A fire/safety door reports open. Follow the building’s fire-door rules; do not prop it open for ventilation.',invalid_connection:'A configured room connection is missing or invalid.',fresh_air_needed:'CO₂ is above the configured threshold. Assess fresh-air ventilation; ordinary particle filtration does not remove CO₂.',remove_moisture_locally:'Humidity is elevated. Assess local extraction or dehumidification rather than spreading moisture to other rooms.',moisture_transfer_risk:'Moist air may raise humidity in the cooler connected room. Avoid using warmer room air to heat it.',door_activity_while_away:'A door changed while the household was reported away. Verify the event; this is not proof of intrusion.',contact_chattering:'Several rapid contact transitions were observed. Check alignment, radio link and the contact.',advice:'Advisory information'},
-    el:{title:'Συνδέσεις και ενδείξεις θυρών',open:'Ανοιχτή',closed:'Κλειστή',settling:'Επιβεβαίωση κλεισίματος',unknown:'Άγνωστη',not_configured:'Χωρίς τοπικές επαφές',eco:'Επιτρέπεται Eco πόρτας',
+    el:{doors:'Πόρτες',title:'Συνδέσεις και ενδείξεις θυρών',open:'Ανοιχτή',closed:'Κλειστή',settling:'Επιβεβαίωση κλεισίματος',unknown:'Άγνωστη',not_configured:'Χωρίς τοπικές επαφές',eco:'Επιτρέπεται Eco πόρτας',
       contacts:'Επαφές',connections:'Συνδέσεις χώρων',paths:'Πιθανή διαδρομή προς ανοιχτό εξωτερικό παράθυρο',quiet:'Κλειστό όριο γύρω από χώρο με επιβεβαιωμένο ύπνο',review:'Κίνηση πόρτας: επανέλεγχος παρουσίας, χωρίς υπόθεση εισόδου ή εξόδου',
       session:'Παρατήρηση σε αυτή τη συνεδρία',gap:'Χωρίς παρατήρηση',minutes:'λεπτά',limits:'Ανοιχτή πόρτα σημαίνει μόνο πιθανή διαδρομή αέρα. Κλειστή δεν σημαίνει αεροστεγής. Οι ενδείξεις δεν αλλάζουν την παρουσία, δεν ελέγχουν συσκευές και δεν εκτιμούν εξοικονόμηση ενέργειας.',
       thermal:'Παρατηρούμενη μέση διαφορά θερμοκρασίας',samples:'δείγματα',observational:'Περιγραφικές παρατηρήσεις, όχι μέτρηση ροής αέρα, θερμικής αγωγιμότητας ή αιτιώδους εξοικονόμησης.',
       interior:'Εσωτερική',fire:'Πυράντοχη/ασφαλείας',exterior:'Εξωτερική',ok:'Επιβεβαιωμένη αναφορά',wrong_area:'Άλλαξε η αντιστοίχιση χώρου',wrong_class:'Δεν είναι πλέον επαφή πόρτας',not_native:'Μη εγγενής πηγή',missing:'Λείπει η επαφή',unavailable:'Μη διαθέσιμη',restored:'Επαναφορά· απαιτείται ζωντανή ένδειξη',invalid_timestamp:'Μη έγκυρος χρόνος αλλαγής',invalid_timeout:'Μη έγκυρο διάστημα αναφοράς',report_time_unknown:'Άγνωστος χρόνος αναφοράς',report_expired:'Εκπρόθεσμη αναμενόμενη αναφορά',
       contact_unverified:'Μια επαφή δεν είναι επιβεβαιωμένη. Δεν θεωρούνται όλες οι πόρτες κλειστές.',fire_door_open:'Πυράντοχη πόρτα αναφέρει ότι είναι ανοιχτή. Ακολούθησε τους κανόνες πυρασφάλειας· μην τη στηρίζεις ανοιχτή για αερισμό.',invalid_connection:'Λείπει ή δεν είναι έγκυρη μια σύνδεση χώρων.',fresh_air_needed:'Το CO₂ υπερβαίνει το ρυθμισμένο όριο. Έλεγξε τον αερισμό με εξωτερικό αέρα· το συνηθισμένο φίλτρο σωματιδίων δεν αφαιρεί CO₂.',remove_moisture_locally:'Αυξημένη υγρασία. Έλεγξε τοπική απαγωγή ή αφύγρανση αντί να μεταφέρεις υγρασία σε άλλους χώρους.',moisture_transfer_risk:'Ο υγρός αέρας μπορεί να αυξήσει την υγρασία στον ψυχρότερο συνδεδεμένο χώρο. Απόφυγε τη θέρμανσή του με αέρα άλλου χώρου.',door_activity_while_away:'Μια πόρτα άλλαξε ενώ το σπίτι αναφερόταν σε απουσία. Έλεγξε το συμβάν· δεν είναι απόδειξη εισβολής.',contact_chattering:'Παρατηρήθηκαν πολλές γρήγορες αλλαγές επαφής. Έλεγξε ευθυγράμμιση, ασύρματη σύνδεση και αισθητήρα.',advice:'Συμβουλευτικές πληροφορίες'},
-    de:{title:'Türverbindungen und Nachweise',open:'Offen',closed:'Geschlossen',settling:'Schließen wird bestätigt',unknown:'Unbekannt',not_configured:'Keine lokalen Kontakte',eco:'Tür-Eco zulässig',
+    de:{doors:'Türen',title:'Türverbindungen und Nachweise',open:'Offen',closed:'Geschlossen',settling:'Schließen wird bestätigt',unknown:'Unbekannt',not_configured:'Keine lokalen Kontakte',eco:'Tür-Eco zulässig',
       contacts:'Kontakte',connections:'Raumverbindungen',paths:'Möglicher Weg zu einem offenen Außenfenster',quiet:'Geschlossene Grenze um einen nachweislich schlafenden Raum',review:'Türaktivität: Anwesenheit erneut prüfen; keine Eintritts-/Austrittsrichtung ableiten',
       session:'In dieser Sitzung beobachtet',gap:'Unbeobachtet',minutes:'Min.',limits:'Eine offene Tür ist nur ein möglicher Luftweg. Geschlossen bedeutet nicht luftdicht. Diese Angaben ändern keine Anwesenheit, schalten keine Geräte und schätzen keine Energieeinsparung.',
       thermal:'Beobachtete mittlere Temperaturdifferenz',samples:'Messpunkte',observational:'Nur beschreibende Beobachtungen, kein gemessener Luftstrom, Wärmeleitwert oder kausaler Einspareffekt.',
@@ -11258,11 +11347,28 @@
       words.unknown+' '+numeric(report.session.unknown_minutes),
       words.gap+' '+numeric(report.session.unobserved_minutes)
     ].join(' · ')+' '+words.minutes);
-    return '<div class="hem-room-door062" role="status">'+
-      this._icon(report.boundary==='open'?'mdi:door-open':'mdi:door-closed')+
-      '<span>'+escape(tr(report.boundary))+(report.eco_active?' · '+escape(words.eco):'')+
-      (notices.length?' · '+escape(words.advice)+': '+notices.length:'')+'</span>'+
-      this._info76('door-context:'+room.area_id,words.title,body)+'</div>';
+    const pills=contacts.map(contact=>{
+      const verified=contact.health==='ok';
+      const current=verified?contact.state:'unknown';
+      const klass=current==='open'?'opened':current==='closed'?'closed':'unknown';
+      const icon=current==='open'?'mdi:door-open':current==='closed'?'mdi:door-closed':'mdi:door';
+      const id=contact.entity_id,name=sourceName(id);
+      const label=name+' · '+tr(current)+(verified?'':' · '+tr(contact.health));
+      const native=verified&&this._nativeAllowed105?.(id);
+      return '<span class="window hem-door-contact062 '+klass+(native?' hem-source-click105':'')+'" '+
+        'title="'+escape(label)+'" aria-label="'+escape(label)+'" '+
+        (native?'data-hem-source105="'+escape(id)+'" role="button" tabindex="0"':'')+'>'+
+        this._icon(icon)+'<span>'+escape(name)+'</span><small>· '+escape(tr(current))+
+        (verified?'':' · '+escape(tr(contact.health)))+'</small></span>';
+    }).join('');
+    return '<div class="window-section hem-room-door062" data-room-doors062="'+escape(room.area_id)+'">'+
+      '<div class="hem-door-head062"><span class="field-label">'+this._icon('mdi:door-closed')+
+      escape(words.doors)+'</span>'+
+      this._info76('door-context:'+room.area_id,words.title,body)+'</div>'+
+      (pills?'<div class="window-list">'+pills+'</div>':
+        '<span class="subdued">'+escape(words.not_configured)+'</span>')+
+      (report.eco_active?'<div class="hem-door-context062">'+escape(words.eco)+'</div>':'')+
+      '</div>';
   };
   /* HEM_DOOR_CONTEXT063_END */
 
