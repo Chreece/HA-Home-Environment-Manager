@@ -260,7 +260,7 @@ HELP = {
      'Είναι επιβεβαίωση πηγής για σωματίδια, όχι μέτρηση ή βαθμονόμηση. Δεν μετατρέπει ένα φίλτρο σωματιδίων '
      'σε λύση για CO₂, VOC ή άλλα αέρια και δεν αλλάζει την επιβεβαίωση άλλης συσκευής.',
      'Nur einschalten, wenn die gewählte PM2.5-Quelle echte und zuverlässige Partikelwerte liefert. Die Einstellung bestätigt die Quelle, wählt oder installiert aber keinen Sensor. Sie gilt für die automatische '
-     'Partikelfilterung geeignet ist. HEM benötigt weiterhin aktuelle gültige Messwerte sowie die normalen '
+     'Partikelfilterung dieses Geräts. HEM benötigt weiterhin aktuelle gültige Messwerte sowie die normalen '
      'Regelungs- und Schaltfreigaben.\n'
      '\n'
      'Ausgeschaltet (Standard): Diese Bestätigung auf Geräteebene entfällt. Eine separate Bestätigung der '
