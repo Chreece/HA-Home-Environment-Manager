@@ -2314,7 +2314,14 @@
       const lines = [];
       const add = (label, value, topic = '') => {
         const help = this._scienceHelp(topic);
-        lines.push('<details class="science-line hem-science-line071">'+
+        // Keep the expanded explanation attached to the same physical metric
+        // through frequent HA updates. PM2.5/PM10 and day/night noise share
+        // help topics, so distinguish those by their translated metric label.
+        const identity=['pm','noise'].includes(topic)?topic+':'+label:(topic||label);
+        const scienceKey=String(room.area_id)+':'+identity;
+        const expanded=this._scienceOpen072?.has(scienceKey)===true;
+        lines.push('<details class="science-line hem-science-line071" '+
+          'data-hem-science072="'+escape(scienceKey)+'"'+(expanded?' open':'')+'>'+
           '<summary class="hem-science-summary071" aria-label="'+
           escape(label+' '+this._l65('information'))+'">'+
           '<span>'+escape(label)+'</span><strong>'+escape(value)+'</strong>'+
@@ -11501,6 +11508,47 @@
     '</style>'
   ].join('');};
   /* HEM_STABLE_071_END */
+
+  /* HEM_SCIENCE_PERSISTENCE072_START
+   * Native inline explanations are not floating bubbles. A sensor update
+   * must not close a disclosure the user opened, or reopen one they closed.
+   */
+  const scienceProto072=AirQualityAdvisorCard.prototype;
+  const scienceInstallBefore072=scienceProto072._installFolds87;
+  scienceProto072._installFolds87=function(){
+    scienceInstallBefore072.call(this);
+    const owner=this._config?.entity;
+    if(this._scienceOwner072!==owner){
+      this._scienceOwner072=owner;
+      this._scienceOpen072=new Set();
+    }
+    if(this._scienceListeners072)return;
+    this._scienceListeners072=true;
+    // Capture the user's intent immediately: native toggle is asynchronous,
+    // and an intervening HA redraw must not undo their click.
+    this.shadowRoot.addEventListener('click',event=>{
+      const summary=event.target?.closest?.('summary.hem-science-summary071');
+      const node=summary?.parentElement;
+      if(!node?.isConnected||
+         !node.matches?.('details.hem-science-line071[data-hem-science072]'))return;
+      const key=node.getAttribute('data-hem-science072');
+      if(!key)return;
+      if(node.open)this._scienceOpen072.delete(key);
+      else this._scienceOpen072.add(key);
+    },true);
+    // Also cover keyboard, programmatic, and assistive-technology changes.
+    // Detached old details must not overwrite state after reconciliation.
+    this.shadowRoot.addEventListener('toggle',event=>{
+      const node=event.target;
+      if(!node?.isConnected||
+         !node.matches?.('details.hem-science-line071[data-hem-science072]'))return;
+      const key=node.getAttribute('data-hem-science072');
+      if(!key)return;
+      if(node.open)this._scienceOpen072.add(key);
+      else this._scienceOpen072.delete(key);
+    },true);
+  };
+  /* HEM_SCIENCE_PERSISTENCE072_END */
 
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);
