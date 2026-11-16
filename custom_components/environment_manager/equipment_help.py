@@ -239,7 +239,7 @@ HELP = {
         "Η απαγωγή ακολουθεί το CO₂ για ανανέωση αέρα, ενώ η φίλτρανση ακολουθεί τα PM2.5 για απομάκρυνση σωματιδίων. Το Αυτόματα χρησιμοποιεί αποθηκευμένο ρόλο ή τον συμπεραίνει από αποκλειστικά CO₂ ή PM2.5 πηγές. Επίλεξε ρητά τον ρόλο όταν οι πηγές δεν τον προσδιορίζουν.",
         "Abluft erneuert Raumluft anhand des CO₂-Bedarfs; Filterung entfernt Partikel anhand von PM2.5. Automatisch verwendet eine gespeicherte Rolle oder leitet sie aus ausschließlich CO₂- bzw. PM2.5-Quellen ab. Bei uneindeutigen Quellen ist eine ausdrückliche Auswahl nötig.",
     ),
-    'sensor_verified': ("On: confirm that this device's selected PM2.5 measurement is suitable for automatic particle filtration. "
+    'sensor_verified': ("Enable this only when the selected PM2.5 source is a real, reliable particle measurement suitable for controlling this air filter. This confirms the source; it does not select or install a sensor. "
      "HEM still requires current valid readings and the device's normal control and power permissions.\n"
      '\n'
      "Off (default): remove this device-level confirmation. A separate confirmation on the room's PM2.5 source "
@@ -249,7 +249,7 @@ HELP = {
      'This is source verification for particle filtration, not a measurement or calibration. It does not make '
      "a particle filter a remedy for CO₂, VOCs or other gases and does not change another device's "
      'verification.',
-     'Ενεργό: επιβεβαιώνει ότι η επιλεγμένη μέτρηση PM2.5 είναι κατάλληλη για την αυτόματη φίλτρανση '
+     'Ενεργοποίησέ το μόνο αν η επιλεγμένη πηγή PM2.5 μετρά πραγματικά και αξιόπιστα αιωρούμενα σωματίδια. Η επιλογή επιβεβαιώνει την πηγή· δεν επιλέγει ούτε εγκαθιστά αισθητήρα. Ισχύει για την αυτόματη φίλτρανση '
      'σωματιδίων αυτής της συσκευής. Το HEM εξακολουθεί να απαιτεί πρόσφατες έγκυρες μετρήσεις και τις '
      'κανονικές άδειες ελέγχου και ισχύος.\n'
      '\n'
@@ -259,7 +259,7 @@ HELP = {
      '\n'
      'Είναι επιβεβαίωση πηγής για σωματίδια, όχι μέτρηση ή βαθμονόμηση. Δεν μετατρέπει ένα φίλτρο σωματιδίων '
      'σε λύση για CO₂, VOC ή άλλα αέρια και δεν αλλάζει την επιβεβαίωση άλλης συσκευής.',
-     'Eingeschaltet: Bestätigt, dass die ausgewählte PM2.5-Messung dieses Geräts für automatische '
+     'Nur einschalten, wenn die gewählte PM2.5-Quelle echte und zuverlässige Partikelwerte liefert. Die Einstellung bestätigt die Quelle, wählt oder installiert aber keinen Sensor. Sie gilt für die automatische '
      'Partikelfilterung geeignet ist. HEM benötigt weiterhin aktuelle gültige Messwerte sowie die normalen '
      'Regelungs- und Schaltfreigaben.\n'
      '\n'
