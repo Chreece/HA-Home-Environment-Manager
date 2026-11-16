@@ -6,6 +6,7 @@ only presents the result in the Home Assistant user's interface language.
 
 from __future__ import annotations
 
+import math
 from typing import Any
 
 from .const import UNIT_LABEL
@@ -88,8 +89,38 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
     # safe or complete the genuine pollutant evidence used by ventilation.
     air_readings = [item for item in readings
                     if item["metric"] not in ("illuminance", "eco2")]
-    known = any(item["available"] for item in air_readings)
-    incomplete_air = any(not item["available"] for item in air_readings)
+    # A room has usable environmental data when at least ONE core room
+    # measurement (temperature or relative humidity) is available.
+    # Optional pollutant, mold and contact sensors must not turn a measured
+    # room into "No data". Their unavailability is presented independently.
+    def usable_number(value: Any) -> bool:
+        return type(value) in (int, float) and math.isfinite(value)
+
+    climate = plan.environment.get(room.area_id, {}).get("climate_plan", {})
+    temp_available = any(usable_number(v) for v in (
+        evidence.get("temperature", {}).get("value"),
+        climate.get("temperature_c"),
+        *(item["value"] for item in readings
+          if item["metric"] in ("temperature", "temp") and item["available"]),
+    ))
+    rh_available = any(usable_number(v) for v in (
+        evidence.get("humidity", {}).get("value"),
+        *(item["value"] for item in readings
+          if item["metric"] == "humidity" and item["available"]),
+    ))
+    missing_measurements = []
+    if not temp_available:
+        missing_measurements.append({"metric": "temperature", "name": "Temperature",
+                                     "reason": "no_valid_core_measurement"})
+    if not rh_available:
+        missing_measurements.append({"metric": "humidity", "name": "Humidity",
+                                     "reason": "no_valid_core_measurement"})
+    for item in readings:
+        if not item["available"] and item["metric"] not in ("temperature", "temp", "humidity"):
+            missing_measurements.append({
+                "metric": item["metric"], "name": item["name"],
+                "entity_id": item["entity_id"], "reason": "configured_source_unavailable",
+            })
     opened = [item for item in room.windows if item.opened is True]
     incomplete_windows = not room.windows or any(item.opened is None for item in room.windows)
     recommended = next((rec for rec in
@@ -104,12 +135,11 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
     radon = extended.get("radon", {})
     evidence_high = ((hcho.get("status") == "ready" and hcho.get("above_who_100ug_m3"))
                      or (radon.get("status") == "annual_screening" and radon.get("above_reference")))
-    if climate_only:
-        # A room enabled only for HVAC must never appear as air-quality safe.
-        status = "unknown"
-    elif high or evidence_high or (recommended and recommended.action == "close"):
+    if high or evidence_high or (recommended and recommended.action == "close"):
+        # Real hazards and urgent closure remain actionable even without both
+        # core room readings; never conceal a hazard as missing data.
         status = "attention"
-    elif not known or incomplete_air or incomplete_windows:
+    elif not temp_available and not rh_available:
         status = "unknown"
     else:
         status = "safe"
@@ -138,14 +168,9 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
         None,
     )
     if status == "unknown":
-        if mold_data_status == "needs_calibration":
-            status_detail = "mold_not_calibrated"
-        elif mold_data_status == "inputs_unavailable":
-            status_detail = "mold_inputs_unavailable"
-        elif known:
-            status_detail = "partial_indoor_data"
-        else:
-            status_detail = "no_indoor_data"
+        status_detail = "no_core_room_data"
+    elif missing_measurements or incomplete_windows:
+        status_detail = "partial_indoor_data"
     else:
         status_detail = None
 
@@ -155,6 +180,9 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
         "climate_only": climate_only,
         "status": status,
         "status_detail": status_detail,
+        "core_measurements": {"temperature": temp_available, "humidity": rh_available},
+        "missing_measurements": missing_measurements,
+        "window_data_incomplete": incomplete_windows,
         "mold_warnings": mold_warnings,
         "environment": plan.environment.get(room.area_id, {}),
         "rh_fallback": (
