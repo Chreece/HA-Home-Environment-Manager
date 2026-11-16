@@ -156,7 +156,8 @@ with sync_playwright() as playwright:
     covers=row.locator('details.hem-covers-fold105')
     assert covers.count()==1 and covers.get_attribute('open') is None
     assert covers.locator('.hem-cover-state105').count()==0
-    assert covers.locator('.hem-cover-source071').count()==0
+    assert covers.locator('.hem-cover-source071').count()==2
+    assert not covers.locator('.hem-cover-source071').first.is_visible()
     toggle=covers.locator('.hem-cover-toggle105')
     assert toggle.is_visible()
     toggle.click()
