@@ -34,9 +34,9 @@ def values_for(obj, key):
 
 
 for locale, name_fragment, help_fragment in (
-    ("en", "PM2.5 verified", "OFF (default)"),
+    ("en", "PM2.5 verified", "Off (default)"),
     ("el", "Επιβεβαιωμένη μέτρηση PM2.5", "Ανενεργό"),
-    ("de", "PM2.5-Messung bestätigt", "Aus (Standard)"),
+    ("de", "PM2.5-Messung bestätigt", "Ausgeschaltet (Standard)"),
 ):
     native = NAMES[locale]["sensor_verified"]
     assert name_fragment in native and "{channel}" in native
@@ -44,10 +44,10 @@ for locale, name_fragment, help_fragment in (
     assert "PM2.5" in details and help_fragment in details
     assert len(details.split("\n\n")) >= 4
     assert all(term in details for term in (
-        ("ON:", "OFF (default)", "room's PM2.5 source")
+        ("On:", "Off (default)", "room's PM2.5 source")
         if locale == "en" else
         ("Ενεργό", "Ανενεργό", "δωματίου") if locale == "el"
-        else ("Ein:", "Aus (Standard)", "Raum")
+        else ("Eingeschaltet:", "Ausgeschaltet (Standard)", "Raum")
     ))
     json_file = CC / ("strings.json" if locale == "en" else f"translations/{locale}.json")
     source = json.loads(json_file.read_text(encoding="utf-8"))
