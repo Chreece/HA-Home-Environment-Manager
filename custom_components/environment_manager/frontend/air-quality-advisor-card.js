@@ -2315,13 +2315,13 @@
       const add = (label, value, topic = '') => {
         const help = this._scienceHelp(topic);
         // Inline disclosure: no floating metric-help portal or clipped bubble.
-        lines.push('<div class="science-line"><span>' + escape(label) +
+        lines.push('<div class="hem-science-item071"><div class="science-line"><span>' + escape(label) +
           '</span><strong>' + escape(value) + '</strong></div>' +
           '<details class="hem-science-help071"><summary aria-label="' +
           escape(label)+' '+escape(this._l65('information'))+'">' +
           this._icon('mdi:information-outline')+
           '</summary><div class="hem-science-help-content071" role="note">'+
-          escape(help)+'</div></details>');
+          escape(help)+'</div></details></div>');
       };
       if (m.status === 'drying' || m.status === 'humidifying' || m.status === 'neutral') {
         add(m.status === 'drying' ? labels.drying :
@@ -13040,6 +13040,7 @@
     .hem-room-missing071>summary ha-icon{--mdc-icon-size:16px;color:var(--aqa-blue)}
     .hem-room-missing-content071{display:block;margin:5px 0 0;font-size:12px;
       line-height:1.5;overflow-wrap:anywhere;color:var(--aqa-muted)}
+    .hem-science-item071{min-width:0;overflow-wrap:anywhere}
     .hem-science-help071{min-width:0;margin:-3px 0 8px;padding:0 6px 4px}
     .hem-science-help071>summary{display:inline-flex;cursor:pointer;align-items:center;
       list-style:none;color:var(--aqa-blue);padding:2px;min-height:20px}
