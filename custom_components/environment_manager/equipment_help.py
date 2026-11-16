@@ -239,37 +239,49 @@ HELP = {
         "Η απαγωγή ακολουθεί το CO₂ για ανανέωση αέρα, ενώ η φίλτρανση ακολουθεί τα PM2.5 για απομάκρυνση σωματιδίων. Το Αυτόματα χρησιμοποιεί αποθηκευμένο ρόλο ή τον συμπεραίνει από αποκλειστικά CO₂ ή PM2.5 πηγές. Επίλεξε ρητά τον ρόλο όταν οι πηγές δεν τον προσδιορίζουν.",
         "Abluft erneuert Raumluft anhand des CO₂-Bedarfs; Filterung entfernt Partikel anhand von PM2.5. Automatisch verwendet eine gespeicherte Rolle oder leitet sie aus ausschließlich CO₂- bzw. PM2.5-Quellen ab. Bei uneindeutigen Quellen ist eine ausdrückliche Auswahl nötig.",
     ),
-    'sensor_verified': ("On: confirm that this device's selected PM2.5 measurement is suitable for automatic particle filtration. "
-     "HEM still requires current valid readings and the device's normal control and power permissions.\n"
-     '\n'
-     "Off (default): remove this device-level confirmation. A separate confirmation on the room's PM2.5 source "
-     'may still satisfy the requirement; otherwise automatic filtration remains blocked until the source is '
-     'verified.\n'
-     '\n'
-     'This is source verification for particle filtration, not a measurement or calibration. It does not make '
-     "a particle filter a remedy for CO₂, VOCs or other gases and does not change another device's "
-     'verification.',
-     'Ενεργό: επιβεβαιώνει ότι η επιλεγμένη μέτρηση PM2.5 είναι κατάλληλη για την αυτόματη φίλτρανση '
-     'σωματιδίων αυτής της συσκευής. Το HEM εξακολουθεί να απαιτεί πρόσφατες έγκυρες μετρήσεις και τις '
-     'κανονικές άδειες ελέγχου και ισχύος.\n'
-     '\n'
-     'Ανενεργό (προεπιλογή): αφαιρεί αυτή την επιβεβαίωση σε επίπεδο συσκευής. Ξεχωριστή επιβεβαίωση της πηγής '
-     'PM2.5 του δωματίου μπορεί ακόμη να καλύπτει την απαίτηση· διαφορετικά η αυτόματη φίλτρανση μένει σε '
-     'αναμονή μέχρι να επιβεβαιωθεί η πηγή.\n'
-     '\n'
-     'Είναι επιβεβαίωση πηγής για σωματίδια, όχι μέτρηση ή βαθμονόμηση. Δεν μετατρέπει ένα φίλτρο σωματιδίων '
-     'σε λύση για CO₂, VOC ή άλλα αέρια και δεν αλλάζει την επιβεβαίωση άλλης συσκευής.',
-     'Eingeschaltet: Bestätigt, dass die ausgewählte PM2.5-Messung dieses Geräts für automatische '
-     'Partikelfilterung geeignet ist. HEM benötigt weiterhin aktuelle gültige Messwerte sowie die normalen '
-     'Regelungs- und Schaltfreigaben.\n'
-     '\n'
-     'Ausgeschaltet (Standard): Diese Bestätigung auf Geräteebene entfällt. Eine separate Bestätigung der '
-     'PM2.5-Quelle des Raums kann die Voraussetzung weiterhin erfüllen; andernfalls bleibt die automatische '
-     'Filterung bis zur Quellenbestätigung gesperrt.\n'
-     '\n'
-     'Dies bestätigt eine Quelle für Partikelfilterung und ist keine Messung oder Kalibrierung. Ein '
-     'Partikelfilter wird dadurch nicht zur Abhilfe für CO₂, VOC oder andere Gase; die Bestätigung anderer '
-     'Geräte bleibt unverändert.'),
+    'sensor_verified': (
+        "What this switch does: it confirms that the PM2.5 source chosen for THIS purifier "
+        "is a real, suitable particle-concentration measurement in µg/m³. This does not "
+        "select, install or calibrate a sensor; an AQI index, eCO₂ or VOC estimate is "
+        "not a substitute. Only enable it after checking the sensor and its room.\n\n"
+        "On: confirm the selected PM2.5 source for this device. HEM may then use fresh, "
+        "valid particle measurements for automatic filtration, provided all normal "
+        "controller, window, presence and hardware safety conditions allow it. "
+        "Turning this on does not itself start the purifier.\n\n"
+        "Off (default): this device does not confirm the source. The room's PM2.5 source may still "
+        "be verified separately; otherwise HEM blocks automatic particle filtration. "
+        "You do not need to turn this on when the room's source is already verified.\n\n"
+        "This setting is for particle filtration, not CO₂ extraction or gas removal. "
+        "It does not override the device's native controls, safety limits or permissions.",
+        "Τι κάνει: επιβεβαιώνεις ότι η πηγή PM2.5 που έχει επιλεγεί για ΑΥΤΟΝ τον "
+        "καθαριστή αέρα μετρά πραγματική συγκέντρωση σωματιδίων σε µg/m³. "
+        "Δεν επιλέγει, δεν εγκαθιστά και δεν βαθμονομεί αισθητήρα. "
+        "Δείκτες AQI ή εκτιμήσεις eCO₂/VOC δεν αποτελούν κατάλληλη μέτρηση.\n\n"
+        "Ενεργό: δηλώνεις ότι έλεγξες την πηγή PM2.5 και την αντιστοίχισή της στον χώρο. "
+        "Το HEM μπορεί να τη χρησιμοποιήσει για αυτόματη φίλτρανση μόνο με πρόσφατες, "
+        "έγκυρες μετρήσεις και με σεβασμό στις άδειες ελέγχου, τα παράθυρα, "
+        "την παρουσία και τις προστασίες της συσκευής. Δεν ενεργοποιεί μόνο του τον καθαριστή.\n\n"
+        "Ανενεργό (προεπιλογή): δεν παρέχεις επιβεβαίωση από τη συγκεκριμένη συσκευή. "
+        "Αν η πηγή PM2.5 έχει ήδη επιβεβαιωθεί στις ρυθμίσεις του δωματίου, "
+        "δεν χρειάζεται να ενεργοποιήσεις αυτόν τον διακόπτη. Διαφορετικά, "
+        "η αυτόματη φίλτρανση παραμένει σε αναμονή.\n\n"
+        "Αφορά μόνο τη φίλτρανση σωματιδίων, όχι τον εξαερισμό CO₂ ή την απομάκρυνση αερίων. "
+        "Δεν παρακάμπτει δικαιώματα, εγγενείς χειρισμούς ή κανόνες ασφαλείας.",
+        "Was diese Option bedeutet: Sie bestätigen, dass die für DIESEN Luftreiniger "
+        "gewählte PM2.5-Quelle tatsächlich eine geeignete Partikelkonzentration in µg/m³ "
+        "misst. Sie wählt, installiert oder kalibriert keinen Sensor. "
+        "AQI-Indizes sowie eCO₂- oder VOC-Schätzungen sind kein Ersatz.\n\n"
+        "Eingeschaltet: Bestätigen Sie erst nach Prüfung die PM2.5-Quelle und ihre Raumzuordnung. "
+        "HEM darf aktuelle gültige Messwerte dann für die automatische Partikelfilterung "
+        "nutzen, sofern Steuerfreigaben, Fenster-, Anwesenheits- und Geräteschutzregeln "
+        "dies zulassen. Der Schalter startet den Luftreiniger nicht.\n\n"
+        "Ausgeschaltet (Standard): Auf Geräteebene liegt keine Bestätigung vor. Wurde die PM2.5-Quelle "
+        "bereits im Raum bestätigt, ist dieser Schalter nicht nötig; andernfalls "
+        "bleibt die automatische Partikelfilterung gesperrt.\n\n"
+        "Die Einstellung gilt nur für Partikelfilterung, nicht für CO₂-Abluft "
+        "oder die Entfernung von Gasen. Sie umgeht keine Berechtigungen, "
+        "nativen Bedienelemente oder Schutzvorgaben.",
+    ),
     "particle_cadr_m3h": (
         "Enter the purifier's rated clean-air delivery for particles at the relevant fan speed, in m³/h. HEM combines it with room volume for filtration estimates. Zero means unconfigured; CADR does not measure fresh-air ventilation or CO₂ removal.",
         "Δώσε την ονομαστική παροχή καθαρού αέρα για σωματίδια στη σχετική ταχύτητα, σε m³/h. Συνδυάζεται με τον όγκο δωματίου για εκτιμήσεις φίλτρανσης. Το μηδέν σημαίνει μη ρυθμισμένο· το CADR δεν μετρά αερισμό ή απομάκρυνση CO₂.",
