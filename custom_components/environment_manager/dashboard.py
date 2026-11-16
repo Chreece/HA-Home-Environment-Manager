@@ -122,7 +122,7 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
                 "entity_id": item["entity_id"], "reason": "configured_source_unavailable",
             })
     opened = [item for item in room.windows if item.opened is True]
-    incomplete_windows = not room.windows or any(item.opened is None for item in room.windows)
+    incomplete_windows = bool(room.windows) and any(item.opened is None for item in room.windows)
     recommended = next((rec for rec in
                         (*plan.recommendations,*plan.climate_recommendations)
                         if rec.area_id == room.area_id), None)
