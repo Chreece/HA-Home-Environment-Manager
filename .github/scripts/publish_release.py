@@ -1,5 +1,6 @@
-"""Publish only a newly versioned, validated main beta; preserve release history.
+"""Publish only newly versioned, validated main releases; preserve release history.
 
+Stable versions publish as latest; beta versions remain prereleases.
 Authenticated requests never follow redirects. Asset downloads are separate,
 unauthenticated HTTPS requests. Existing releases, assets and tags remain intact
 throughout publication; an interrupted draft requires explicit review.
@@ -65,7 +66,7 @@ def version_key(value):
 def validate_release_history(releases, version):
     """Refuse newer releases or unrecognized published versions without mutation."""
     target = version_key(version)
-    require(target is not None and target[3] == 0, "A canonical beta version is required")
+    require(target is not None, "A canonical SemVer version is required")
     for release in releases:
         key = version_key(release.get("tag_name"))
         if key is None:
@@ -165,7 +166,7 @@ class GitHub:
         request = Request("https://" + host + "/repos/" + REPOSITORY + path,
                           data=payload, method=method, headers={
             "Authorization": "Bearer " + self._token,
-            "Accept": "application/vnd.github+json", "User-Agent": "hem-beta-publisher",
+            "Accept": "application/vnd.github+json", "User-Agent": "hem-release-publisher",
             "X-GitHub-Api-Version": "2022-11-28",
             "Content-Type": "application/zip" if upload else "application/json",
         })
@@ -219,10 +220,10 @@ def tag_commit(api, tag):
     raise ReleaseError("Tag nesting limit reached")
 
 
-def verified_asset(api, release_id, tag, sha, name, digest, size, *, published):
+def verified_asset(api, release_id, tag, sha, name, digest, size, *, published, prerelease=True):
     release = api.request("GET", f"/releases/{release_id}")
     require(release.get("tag_name") == tag and release.get("draft") is (not published)
-            and release.get("prerelease") is True
+            and release.get("prerelease") is prerelease
             and release.get("target_commitish") == sha, "Release identity or publication state changed")
     require(not published or bool(release.get("published_at")), "Release is not published")
     assets = release.get("assets", [])
@@ -274,7 +275,7 @@ def download_asset(asset, tag, name, size):
 
 
 def verify_existing_release(api, repo, sha, version, releases):
-    """Recheck an already-published beta without replacing tags or assets.
+    """Recheck an already-published release without replacing tags or assets.
 
     Repeated main validations must never report green merely because a
     public release exists. The current integration package must be byte-for-byte
@@ -285,20 +286,20 @@ def verify_existing_release(api, repo, sha, version, releases):
     tag = "v" + version
     matching = [item for item in releases if item.get("tag_name") == tag]
     require(len(matching) == 1 and matching[0].get("draft") is False,
-            "Expected exactly one already-published beta")
+            "Expected exactly one already-published release")
     published_sha = tag_commit(api, tag)
-    require(isinstance(published_sha, str), "Published beta tag is missing")
+    require(isinstance(published_sha, str), "Published release tag is missing")
     main_head(api, sha)
     data = package(repo, sha, version)
     digest = hashlib.sha256(data).hexdigest()
     asset = verified_asset(api, matching[0]["id"], tag, published_sha,
                            "environment_manager.zip", digest, len(data),
-                           published=True)
+                           published=True, prerelease=version_key(version)[3] == 0)
     downloaded = download_asset(asset, tag, "environment_manager.zip", len(data))
     require(hashlib.sha256(downloaded).hexdigest() == digest,
             "Already published ZIP SHA256 differs from validated package")
     inspect_zip(downloaded, version)
-    print("Verified already-published beta:", tag, published_sha, "SHA256", digest)
+    print("Verified already-published release:", tag, published_sha, "SHA256", digest)
 
 
 def publish(api, repo, sha):
@@ -306,9 +307,10 @@ def publish(api, repo, sha):
     version = manifest.get("version")
     key = version_key(version)
     require(manifest.get("domain") == "environment_manager", "Unexpected integration domain")
-    if key is None or key[3] != 0 or version.startswith("v"):
-        print("No canonical beta version to publish")
+    if key is None or version.startswith("v"):
+        print("No canonical SemVer version to publish")
         return
+    prerelease = key[3] == 0
     releases = api.releases()
     if not is_new_version(releases, version):
         verify_existing_release(api, repo, sha, version, releases)
@@ -323,21 +325,24 @@ def publish(api, repo, sha):
     main_head(api, sha)
     draft = api.request("POST", "/releases", {
         "tag_name": tag, "target_commitish": sha, "name": tag, "body": notes,
-        "draft": True, "prerelease": True, "make_latest": "legacy",
+        "draft": True, "prerelease": prerelease, "make_latest": "legacy",
     })
     release_id = draft["id"]
     api.request("POST", f"/releases/{release_id}/assets?name=" + quote(name, safe=""),
                 data, upload=True)
-    verified_asset(api, release_id, tag, sha, name, digest, len(data), published=False)
+    verified_asset(api, release_id, tag, sha, name, digest, len(data),
+                   published=False, prerelease=prerelease)
     main_head(api, sha)
     validate_release_history(api.releases(), version)
     api.request("PATCH", f"/releases/{release_id}",
-                {"draft": False, "prerelease": True, "make_latest": "legacy"})
-    asset = verified_asset(api, release_id, tag, sha, name, digest, len(data), published=True)
+                {"draft": False, "prerelease": prerelease,
+                 "make_latest": "legacy" if prerelease else "true"})
+    asset = verified_asset(api, release_id, tag, sha, name, digest, len(data),
+                           published=True, prerelease=prerelease)
     downloaded = download_asset(asset, tag, name, len(data))
     require(hashlib.sha256(downloaded).hexdigest() == digest, "Published download SHA256 mismatch")
     inspect_zip(downloaded, version)
-    print("Verified published beta:", tag, sha, "SHA256", digest)
+    print("Verified published release:", tag, sha, "SHA256", digest)
 
 
 def main():
@@ -371,5 +376,5 @@ if __name__ == "__main__":
     except Exception as error:
         # Do not print urllib exceptions, response bodies, headers or tokens.
         message = str(error) if isinstance(error, ReleaseError) else type(error).__name__
-        print("::error::Beta publication stopped: " + message, file=sys.stderr)
+        print("::error::Release publication stopped: " + message, file=sys.stderr)
         sys.exit(1)

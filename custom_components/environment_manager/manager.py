@@ -78,6 +78,8 @@ class AirQualityManager:
         self._tracked: set[str] = set()
         self._unsubs: list[Any] = []
         self._source_refresh_handle = None
+        # Startup bursts are coalesced until HA is fully RUNNING.
+        self._startup_refresh_pending = False
         self._wake_boundary = None
         self._wake_boundary_unsub = None
         # Timers are per room; unrelated sensor changes must not postpone
@@ -1062,18 +1064,41 @@ class AirQualityManager:
 
     @callback
     def _queue_source_refresh(self) -> None:
-        """Coalesce source/registry bursts without a polling loop or delay.
+        """Coalesce startup event bursts without delaying live control events.
 
-        Command-time physical safety checks still read current HA states.
-        One room-plan rebuild sees the last state of every source in this
-        loop turn instead of rebuilding all rooms for every startup event.
+        Before CoreState.running the equipment controller is fail-closed, but
+        hundreds of native and registry sources can appear in separate loop
+        turns. Coalesce their *dashboard* rebuilds for at most 750 ms.
+        Native availability and fault observers run immediately beforehand.
+        Once HA is running, a tracked source change is always queued for the
+        next loop turn, including when a startup rebuild is still pending.
         """
-        if self._active and self._source_refresh_handle is None:
-            self._source_refresh_handle = self.hass.loop.call_soon(self._flush_source_refresh)
+        if not self._active:
+            return
+        state = getattr(getattr(self.hass, "state", None), "value",
+                        getattr(self.hass, "state", None))
+        starting = isinstance(state, str) and state.lower() == "starting"
+        if self._source_refresh_handle is not None:
+            if starting or not self._startup_refresh_pending:
+                return
+            # HA became RUNNING: do not inherit startup's shorter deadline
+            # for newly live safety evidence.
+            self._source_refresh_handle.cancel()
+            self._source_refresh_handle = None
+        self._startup_refresh_pending = starting
+        if starting:
+            self._source_refresh_handle = self.hass.loop.call_later(
+                0.75, self._flush_source_refresh,
+            )
+        else:
+            self._source_refresh_handle = self.hass.loop.call_soon(
+                self._flush_source_refresh,
+            )
 
     @callback
     def _flush_source_refresh(self) -> None:
         self._source_refresh_handle = None
+        self._startup_refresh_pending = False
         if self._active:
             self._recalculate()
 
@@ -1115,15 +1140,25 @@ class AirQualityManager:
         # even when no physical climate equipment is selected in this room.
         from .shade_cooling import cover_config
         from .room_sources import selected as selected_room
-        if any(cover_config(self.settings, area, cover)["enabled"]
-               for area in self.settings.get(CONF_AREAS, [])
-               for cover in (selected_room(self.settings, area, "shades") or ())):
-            self._recalculate()
-            return
+        shade_clock = any(cover_config(self.settings, area, cover)["enabled"]
+                          for area in self.settings.get(CONF_AREAS, [])
+                          for cover in (selected_room(self.settings, area, "shades") or ()))
         if claimed_sources(self):
             # Per-device control requires fresh occupancy/outdoor plans at every
             # 30-second decision boundary, independently of notification timing.
             self._recalculate()
+            return
+        if shade_clock:
+            # Shade-only homes need the current solar clock every 30 seconds,
+            # not a full indoor-environment rebuild. The shade controller
+            # evaluates current sun, weather, window and temperature evidence
+            # itself and still enforces its durable movement safety.
+            # Preserve existing full refresh for combined legacy controllers.
+            active_legacy, _ = equipment_legacy_settings(self)
+            if isinstance(active_legacy, dict) and active_legacy:
+                self._recalculate()
+            else:
+                self.shading.schedule()
             return
         settings, _ = equipment_legacy_settings(self)
         if not isinstance(settings,dict) or not settings:
@@ -1239,6 +1274,7 @@ class AirQualityManager:
         if self._source_refresh_handle is not None:
             self._source_refresh_handle.cancel()
             self._source_refresh_handle = None
+        self._startup_refresh_pending = False
         if not self._active:
             return
         new_plan = self.window_open_wait.prepare(self._capture())
@@ -1520,6 +1556,7 @@ class AirQualityManager:
         if self._source_refresh_handle is not None:
             self._source_refresh_handle.cancel()
             self._source_refresh_handle = None
+        self._startup_refresh_pending = False
         self.away_windows.stop()
         self.ventilation.clear()
         self.window_open_wait.stop()
