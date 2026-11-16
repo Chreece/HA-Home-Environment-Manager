@@ -12,7 +12,7 @@ assert executable,'Chromium required'
 with sync_playwright() as p:
     browser=p.chromium.launch(executable_path=executable,headless=True,
                               args=['--no-sandbox','--disable-dev-shm-usage'])
-    for lang,needle in [('en','Prepare the home environment'),('de','Wohnumgebung'),('el','Προετοιμασία')]:
+    for lang,needle in [('en','Preparing home for arrival'),('de','Vorbereitung des Hauses'),('el','Προετοιμασία άφιξης')]:
         page=browser.new_page(viewport={'width':375,'height':950})
         errors=[]
         page.on('pageerror',lambda error:errors.append(str(error)))
