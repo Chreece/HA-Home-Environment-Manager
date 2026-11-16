@@ -221,7 +221,7 @@ with sync_playwright() as pw:
                 card.shadowRoot.innerHTML=card._styles()+'<div style="padding:12px"><ha-card class="hem-portal-ready87">'+
                     card._doorContext063({area_id:'room0',environment:{door_context:report}})+'</ha-card></div>';
             }""",language)
-            trigger=page.locator('home-environment-manager-card .hem-room-door062 details > summary')
+            trigger=page.locator('home-environment-manager-card .hem-door-detail071 details > summary')
             expect(trigger).to_have_count(1)
             trigger.click()
             popup=page.locator('.hem-floating-info87')
