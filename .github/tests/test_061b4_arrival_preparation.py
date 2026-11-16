@@ -578,8 +578,8 @@ class NativeEntityTests(ArrivalCase):
             self.assertEqual(control._attr_device_info["identifiers"], {(arrival.DOMAIN, "entry")})
             self.assertEqual(control.extra_state_attributes["entry_id"], "entry")
             self.assertTrue(control.extra_state_attributes.get("configuration_help"))
-        self.assertIn("Home targets after", timeout.extra_state_attributes["configuration_help"])
-        self.assertIn("maximum Home-mode period", timeout.extra_state_attributes["configuration_help"])
+        self.assertIn("Maximum time to prepare home conditions for arrival", timeout.extra_state_attributes["configuration_help"])
+        self.assertIn("Home targets for at most this many minutes", timeout.extra_state_attributes["configuration_help"])
         batches = []
         groups.async_add_grouped_entities(
             context.manager, lambda entities, **options: batches.append((tuple(entities), options)), controls,
