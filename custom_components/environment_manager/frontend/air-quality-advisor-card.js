@@ -11372,6 +11372,124 @@
   };
   /* HEM_DOOR_CONTEXT063_END */
 
+
+  /* HEM_STABLE_071_START: UI only; never grants equipment control. */
+  const hem071=AirQualityAdvisorCard.prototype;
+  const COPY071={
+    en:{openings:'Windows & doors',missing:'Missing measurements',
+      temp:'Temperature',rh:'Humidity',optional:'Optional sensors unavailable',
+      required:'Temperature and humidity are the basic room measurements; all other sensors are optional.',
+      partial:'Existing measurements remain usable when others are missing.',
+      closeCover:'Close covers recommended for the current conditions',
+      fire:'Close the fire/safety door if safe, following fire regulations.',
+      moistureOpen:'Close the interior door to limit moisture transfer into the cooler room.',
+      moistureClosed:'Keep the interior door closed to limit moisture transfer.',
+      air:'Open an interior door only if a safe ventilation route is verified; otherwise ventilate locally.',
+      humid:'Use local extraction or dehumidification; do not open doors to spread humid air.'},
+    de:{openings:'Fenster & Türen',missing:'Fehlende Messwerte',
+      temp:'Temperatur',rh:'Luftfeuchtigkeit',optional:'Optionale Sensoren nicht verfügbar',
+      required:'Temperatur und Luftfeuchtigkeit sind die Basisdaten des Raums; alle übrigen Sensoren sind optional.',
+      partial:'Verfügbare Messwerte bleiben nutzbar, auch wenn andere fehlen.',
+      closeCover:'Rollos nach aktuellen Bedingungen schließen',
+      fire:'Brand-/Sicherheitstür schließen, sofern sicher, und Brandschutzvorschriften beachten.',
+      moistureOpen:'Innentür schließen, um Feuchtetransport in den kühleren Raum zu begrenzen.',
+      moistureClosed:'Innentür geschlossen halten, um Feuchtetransport zu begrenzen.',
+      air:'Innentür nur bei überprüft sicherem Luftweg öffnen; sonst lokal lüften.',
+      humid:'Lokal entlüften oder entfeuchten; die feuchte Luft nicht über offene Türen verbreiten.'},
+    el:{openings:'Παράθυρα & πόρτες',missing:'Μετρήσεις που λείπουν',
+      temp:'Θερμοκρασία',rh:'Υγρασία',optional:'Προαιρετικοί αισθητήρες μη διαθέσιμοι',
+      required:'Η θερμοκρασία και η υγρασία είναι οι βασικές μετρήσεις χώρου. Όλοι οι άλλοι αισθητήρες είναι προαιρετικοί.',
+      partial:'Οι διαθέσιμες μετρήσεις παραμένουν χρήσιμες όταν λείπουν άλλες.',
+      closeCover:'Προτείνεται κλείσιμο των σκιάστρων λόγω των τρεχουσών συνθηκών',
+      fire:'Κλείσε την πόρτα πυρασφάλειας εφόσον είναι ασφαλές, σύμφωνα με τους κανόνες πυροπροστασίας.',
+      moistureOpen:'Κλείσε την εσωτερική πόρτα για να περιορίσεις τη μεταφορά υγρασίας στον ψυχρότερο χώρο.',
+      moistureClosed:'Κράτησε κλειστή την εσωτερική πόρτα για να περιορίσεις τη μεταφορά υγρασίας.',
+      air:'Άνοιξε εσωτερική πόρτα μόνο αν έχει επιβεβαιωθεί ασφαλής διαδρομή αερισμού· αλλιώς αέρισε τοπικά.',
+      humid:'Χρησιμοποίησε τοπικό εξαερισμό ή αφύγρανση· μην ανοίγεις πόρτες για να μεταφέρεις υγρασία.'}
+  };
+  hem071._hemText071=function(key){
+    return (COPY071[this._language()]||COPY071.en)[key];
+  };
+  hem071._roomInputs071=function(room){
+    const summary=this._roomGlance122(room);
+    return {temperature:Number.isFinite(summary?.temperature),
+            humidity:Number.isFinite(summary?.humidity)};
+  };
+  hem071._roomMissingInfo071=function(room){
+    if(!room||room.climate_only===true)return '';
+    const inputs=this._roomInputs071(room);
+    const required=[];
+    if(!inputs.temperature)required.push(this._hemText071('temp'));
+    if(!inputs.humidity)required.push(this._hemText071('rh'));
+    const optional=[...new Set(safeArray(room.readings)
+      .filter(v=>v&&v.available!==true&&!['temperature','humidity'].includes(v.metric))
+      .map(v=>String(v.name||this._metricName(v.metric)||v.metric)).filter(Boolean))].slice(0,20);
+    if(!required.length&&!optional.length)return '';
+    const title=this._hemText071('missing');
+    const visible=required.length?required.join(', '):this._hemText071('optional');
+    const explanation='<p>'+escape(this._hemText071('required'))+'</p>'+
+      (required.length?'<p>'+escape(title+': '+required.join(', '))+'</p>':'')+
+      (optional.length?'<p>'+escape(this._hemText071('optional')+': '+optional.join(' · '))+'</p>':'')+
+      '<p>'+escape(this._hemText071('partial'))+'</p>';
+    return '<div class="hem-room-missing071" role="group">'+
+      '<span>'+escape(title+': '+visible)+'</span>'+
+      this._info76('room-missing071:'+room.area_id,title,explanation)+'</div>';
+  };
+  hem071._windowsDoors071=function(room){
+    const windows=safeArray(room?.windows);
+    const items=windows.map(win=>this._window(win)
+      .replace(/<small>[\s\S]*?<\/small>/g,'')).join('');
+    const existing=this._doorContext063?.(room)||'';
+    const doors=existing.replace(/<small>· [\s\S]*?<\/small>/g,'');
+    const title=this._hemText071('openings');
+    return '<div class="window-section hem-windows-doors071" role="group" aria-label="'+
+      escape(title)+'"><div class="hem-openings-heading071"><span class="field-label">'+
+      this._icon('mdi:window-open-variant')+escape(title)+'</span></div>'+
+      (items?'<div class="window-list">'+items+'</div>':
+        doors?'':'<span class="subdued">'+escape(this._t('noWindows'))+'</span>')+
+      doors+'</div>';
+  };
+  hem071._doorInstruction071=function(report,notice,links){
+    if(!notice||typeof notice.code!=='string')return '';
+    if(notice.code==='fire_door_open')return this._hemText071('fire');
+    if(notice.code==='moisture_transfer_risk'){
+      const link=safeArray(links).find(v=>v.other_area===notice.related_area&&v.kind==='interior');
+      if(link?.state==='open')return this._hemText071('moistureOpen');
+      if(link?.state==='closed')return this._hemText071('moistureClosed');
+    }
+    if(notice.code==='fresh_air_needed')return this._hemText071('air');
+    if(notice.code==='remove_moisture_locally')return this._hemText071('humid');
+    return '';
+  };
+  const priorStyles071=hem071._styles;
+  hem071._styles=function(){return priorStyles071.call(this)+[
+    '<style>',
+    '.hem-windows-doors071{position:relative;display:flex;flex-direction:column;gap:6px}',
+    '.hem-windows-doors071 .hem-openings-heading071{padding-inline-end:27px}',
+    '.hem-windows-doors071 .hem-openings-heading071 .field-label{margin-bottom:0}',
+    '.hem-windows-doors071 .hem-room-door062.window-section{display:contents!important;margin:0!important;padding:0!important;border:0!important}',
+    '.hem-windows-doors071 .hem-room-door062 .hem-door-head062{position:absolute;top:8px;right:0;display:flex;align-items:center}',
+    '.hem-windows-doors071 .hem-door-head062 .field-label{display:none!important}',
+    '.hem-windows-doors071 .window-list{display:flex;gap:6px;flex-wrap:wrap}',
+    '.hem-room-missing071{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin:6px 0;font-size:11px;color:var(--aqa-muted)}',
+    '.hem-room-missing071>span{min-width:0;overflow-wrap:anywhere}',
+    '.hem-science-line071{display:block!important;min-width:0;padding:6px 0}',
+    '.hem-science-summary071{display:flex;align-items:center;gap:6px;list-style:none;cursor:pointer;min-width:0}',
+    '.hem-science-summary071::-webkit-details-marker{display:none}',
+    '.hem-science-summary071>span{flex:1;min-width:0;overflow-wrap:anywhere}',
+    '.hem-science-summary071>strong{flex:0 0 auto;max-width:42%;white-space:normal;text-align:end}',
+    '.hem-science-summary071>ha-icon{flex:0 0 16px;--mdc-icon-size:15px;color:var(--aqa-blue)}',
+    '.hem-science-line071[open] .hem-science-inline071{position:static!important;box-shadow:none;width:auto;max-width:none;padding:8px 10px;margin:6px 0 0;border:1px solid var(--aqa-edge);border-radius:8px;white-space:normal;color:inherit;background:var(--aqa-surface);font-size:11px}',
+    '.hem-cover-source071{display:inline-flex;align-items:center;gap:5px}',
+    '.hem-cover-source071 ha-icon{--mdc-icon-size:17px;flex:0 0 17px}',
+    '.hem-cover-close071{display:inline-flex;align-items:center;color:var(--aqa-amber)}',
+    '.hem-cover-close071 ha-icon{--mdc-icon-size:18px}',
+    '.hem-covers-expanded105 .shade-heading{display:flex;align-items:center;gap:5px;flex-wrap:wrap}',
+    '.hem-covers-expanded105 .shade-heading .hem-context76{margin-inline-start:5px}',
+    '</style>'
+  ].join('');};
+  /* HEM_STABLE_071_END */
+
   if (!customElements.get('air-quality-advisor-card')) customElements.define('air-quality-advisor-card',AirQualityAdvisorCard);
   if (!customElements.get('air-quality-advisor-card-editor')) customElements.define('air-quality-advisor-card-editor',AirQualityAdvisorCardEditor);
   // New brand alias; old Lovelace YAML configurations keep working unmodified.
