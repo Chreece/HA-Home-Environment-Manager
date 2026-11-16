@@ -6289,6 +6289,7 @@
       safeArray(room.readings).some(v=>v?.entity_id===id &&
         !v?.details?.fallback_for_mold && v?.metric!=='mold') ||
       safeArray(room.windows).some(v=>v?.entity_id===id) ||
+       safeArray(room.environment?.door_context?.contacts).some(v=>v?.entity_id===id) ||
       Object.values(room.environment?.measurement_evidence||{}).some(v=>
         safeArray(v?.source_ids).includes(id)));
   };
@@ -11170,28 +11171,33 @@
   const roomDoorStyles062=AirQualityAdvisorCard.prototype._styles;
   AirQualityAdvisorCard.prototype._styles=function(){return roomDoorStyles062.call(this)+[
     "<style>",
-    ".hem-room-door062{display:flex;align-items:center;gap:7px;min-width:0;margin:4px 0 7px;padding:6px 9px;border:1px solid var(--aqa-edge);border-radius:8px;font-size:11px;line-height:1.4;color:var(--aqa-muted)}",
-    ".hem-room-door062 span{flex:1;min-width:0;overflow-wrap:break-word;word-break:normal}",
-    ".hem-room-door062 ha-icon{--mdc-icon-size:16px;flex:0 0 16px}",
+    ".hem-room-door062{min-width:0;padding-top:11px;display:block}",
+    ".hem-door-head062{display:flex;align-items:center;gap:8px;min-width:0;margin-bottom:7px}",
+    ".hem-door-head062 .field-label{flex:1;min-width:0}",
+    ".hem-door-head062 .hem-context76{margin-inline-start:auto}",
+    ".hem-door-context062{font-size:11px;line-height:1.5;color:var(--aqa-muted);margin:6px 0 0}",
+    ".hem-door-contact062{max-width:100%;overflow-wrap:anywhere}",
+    ".hem-room-door062 .window-list{min-width:0}",
+    ".hem-room-door062 .window ha-icon{--mdc-icon-size:16px;flex:0 0 16px}",
     "</style>"
   ].join("");};
 
 
   /* HEM_DOOR_CONTEXT063_START: passive evidence; no new write authority. */
   const HEM_DOOR_WORDS063={
-    en:{title:'Door connections and evidence',open:'Open',closed:'Closed',settling:'Confirming closure',unknown:'Unknown',not_configured:'No local contacts',eco:'Door Eco eligible',
+    en:{doors:'Doors',title:'Door connections and evidence',open:'Open',closed:'Closed',settling:'Confirming closure',unknown:'Unknown',not_configured:'No local contacts',eco:'Door Eco eligible',
       contacts:'Contacts',connections:'Room connections',paths:'Possible path to an open outdoor window',quiet:'Closed boundary around a verified sleeping room',review:'Door activity: reassess presence; no entry/exit direction inferred',
       session:'Observed this session',gap:'Unobserved',minutes:'min',limits:'An open door is only a possible air path. Closed does not mean airtight. These diagnostics do not change occupancy, operate equipment, or estimate energy savings.',
       thermal:'Observed mean temperature difference',samples:'samples',observational:'Descriptive observations only; not measured airflow, thermal conductance or causal savings.',
       interior:'Interior',fire:'Fire/safety',exterior:'Exterior',ok:'Verified report',wrong_area:'Area assignment changed',wrong_class:'No longer a door contact',not_native:'Not a native source',missing:'Contact missing',unavailable:'Unavailable',restored:'Restored; live evidence required',invalid_timestamp:'Invalid transition time',invalid_timeout:'Invalid reporting interval',report_time_unknown:'Report time unknown',report_expired:'Expected report overdue',
       contact_unverified:'A contact is not verified. Do not assume all doors are closed.',fire_door_open:'A fire/safety door reports open. Follow the building’s fire-door rules; do not prop it open for ventilation.',invalid_connection:'A configured room connection is missing or invalid.',fresh_air_needed:'CO₂ is above the configured threshold. Assess fresh-air ventilation; ordinary particle filtration does not remove CO₂.',remove_moisture_locally:'Humidity is elevated. Assess local extraction or dehumidification rather than spreading moisture to other rooms.',moisture_transfer_risk:'Moist air may raise humidity in the cooler connected room. Avoid using warmer room air to heat it.',door_activity_while_away:'A door changed while the household was reported away. Verify the event; this is not proof of intrusion.',contact_chattering:'Several rapid contact transitions were observed. Check alignment, radio link and the contact.',advice:'Advisory information'},
-    el:{title:'Συνδέσεις και ενδείξεις θυρών',open:'Ανοιχτή',closed:'Κλειστή',settling:'Επιβεβαίωση κλεισίματος',unknown:'Άγνωστη',not_configured:'Χωρίς τοπικές επαφές',eco:'Επιτρέπεται Eco πόρτας',
+    el:{doors:'Πόρτες',title:'Συνδέσεις και ενδείξεις θυρών',open:'Ανοιχτή',closed:'Κλειστή',settling:'Επιβεβαίωση κλεισίματος',unknown:'Άγνωστη',not_configured:'Χωρίς τοπικές επαφές',eco:'Επιτρέπεται Eco πόρτας',
       contacts:'Επαφές',connections:'Συνδέσεις χώρων',paths:'Πιθανή διαδρομή προς ανοιχτό εξωτερικό παράθυρο',quiet:'Κλειστό όριο γύρω από χώρο με επιβεβαιωμένο ύπνο',review:'Κίνηση πόρτας: επανέλεγχος παρουσίας, χωρίς υπόθεση εισόδου ή εξόδου',
       session:'Παρατήρηση σε αυτή τη συνεδρία',gap:'Χωρίς παρατήρηση',minutes:'λεπτά',limits:'Ανοιχτή πόρτα σημαίνει μόνο πιθανή διαδρομή αέρα. Κλειστή δεν σημαίνει αεροστεγής. Οι ενδείξεις δεν αλλάζουν την παρουσία, δεν ελέγχουν συσκευές και δεν εκτιμούν εξοικονόμηση ενέργειας.',
       thermal:'Παρατηρούμενη μέση διαφορά θερμοκρασίας',samples:'δείγματα',observational:'Περιγραφικές παρατηρήσεις, όχι μέτρηση ροής αέρα, θερμικής αγωγιμότητας ή αιτιώδους εξοικονόμησης.',
       interior:'Εσωτερική',fire:'Πυράντοχη/ασφαλείας',exterior:'Εξωτερική',ok:'Επιβεβαιωμένη αναφορά',wrong_area:'Άλλαξε η αντιστοίχιση χώρου',wrong_class:'Δεν είναι πλέον επαφή πόρτας',not_native:'Μη εγγενής πηγή',missing:'Λείπει η επαφή',unavailable:'Μη διαθέσιμη',restored:'Επαναφορά· απαιτείται ζωντανή ένδειξη',invalid_timestamp:'Μη έγκυρος χρόνος αλλαγής',invalid_timeout:'Μη έγκυρο διάστημα αναφοράς',report_time_unknown:'Άγνωστος χρόνος αναφοράς',report_expired:'Εκπρόθεσμη αναμενόμενη αναφορά',
       contact_unverified:'Μια επαφή δεν είναι επιβεβαιωμένη. Δεν θεωρούνται όλες οι πόρτες κλειστές.',fire_door_open:'Πυράντοχη πόρτα αναφέρει ότι είναι ανοιχτή. Ακολούθησε τους κανόνες πυρασφάλειας· μην τη στηρίζεις ανοιχτή για αερισμό.',invalid_connection:'Λείπει ή δεν είναι έγκυρη μια σύνδεση χώρων.',fresh_air_needed:'Το CO₂ υπερβαίνει το ρυθμισμένο όριο. Έλεγξε τον αερισμό με εξωτερικό αέρα· το συνηθισμένο φίλτρο σωματιδίων δεν αφαιρεί CO₂.',remove_moisture_locally:'Αυξημένη υγρασία. Έλεγξε τοπική απαγωγή ή αφύγρανση αντί να μεταφέρεις υγρασία σε άλλους χώρους.',moisture_transfer_risk:'Ο υγρός αέρας μπορεί να αυξήσει την υγρασία στον ψυχρότερο συνδεδεμένο χώρο. Απόφυγε τη θέρμανσή του με αέρα άλλου χώρου.',door_activity_while_away:'Μια πόρτα άλλαξε ενώ το σπίτι αναφερόταν σε απουσία. Έλεγξε το συμβάν· δεν είναι απόδειξη εισβολής.',contact_chattering:'Παρατηρήθηκαν πολλές γρήγορες αλλαγές επαφής. Έλεγξε ευθυγράμμιση, ασύρματη σύνδεση και αισθητήρα.',advice:'Συμβουλευτικές πληροφορίες'},
-    de:{title:'Türverbindungen und Nachweise',open:'Offen',closed:'Geschlossen',settling:'Schließen wird bestätigt',unknown:'Unbekannt',not_configured:'Keine lokalen Kontakte',eco:'Tür-Eco zulässig',
+    de:{doors:'Türen',title:'Türverbindungen und Nachweise',open:'Offen',closed:'Geschlossen',settling:'Schließen wird bestätigt',unknown:'Unbekannt',not_configured:'Keine lokalen Kontakte',eco:'Tür-Eco zulässig',
       contacts:'Kontakte',connections:'Raumverbindungen',paths:'Möglicher Weg zu einem offenen Außenfenster',quiet:'Geschlossene Grenze um einen nachweislich schlafenden Raum',review:'Türaktivität: Anwesenheit erneut prüfen; keine Eintritts-/Austrittsrichtung ableiten',
       session:'In dieser Sitzung beobachtet',gap:'Unbeobachtet',minutes:'Min.',limits:'Eine offene Tür ist nur ein möglicher Luftweg. Geschlossen bedeutet nicht luftdicht. Diese Angaben ändern keine Anwesenheit, schalten keine Geräte und schätzen keine Energieeinsparung.',
       thermal:'Beobachtete mittlere Temperaturdifferenz',samples:'Messpunkte',observational:'Nur beschreibende Beobachtungen, kein gemessener Luftstrom, Wärmeleitwert oder kausaler Einspareffekt.',
@@ -11264,11 +11270,28 @@
       words.unknown+' '+numeric(report.session.unknown_minutes),
       words.gap+' '+numeric(report.session.unobserved_minutes)
     ].join(' · ')+' '+words.minutes);
-    return '<div class="hem-room-door062" role="status">'+
-      this._icon(report.boundary==='open'?'mdi:door-open':'mdi:door-closed')+
-      '<span>'+escape(tr(report.boundary))+(report.eco_active?' · '+escape(words.eco):'')+
-      (notices.length?' · '+escape(words.advice)+': '+notices.length:'')+'</span>'+
-      this._info76('door-context:'+room.area_id,words.title,body)+'</div>';
+    const pills=contacts.map(contact=>{
+      const verified=contact.health==='ok';
+      const current=verified?contact.state:'unknown';
+      const klass=current==='open'?'opened':current==='closed'?'closed':'unknown';
+      const icon=current==='open'?'mdi:door-open':current==='closed'?'mdi:door-closed':'mdi:door';
+      const id=contact.entity_id,name=sourceName(id);
+      const label=name+' · '+tr(current)+(verified?'':' · '+tr(contact.health));
+      const native=verified&&this._nativeAllowed105?.(id);
+      return '<span class="window hem-door-contact062 '+klass+(native?' hem-source-click105':'')+'" '+
+        'title="'+escape(label)+'" aria-label="'+escape(label)+'" '+
+        (native?'data-hem-source105="'+escape(id)+'" role="button" tabindex="0"':'')+'>'+
+        this._icon(icon)+'<span>'+escape(name)+'</span><small>· '+escape(tr(current))+
+        (verified?'':' · '+escape(tr(contact.health)))+'</small></span>';
+    }).join('');
+    return '<div class="window-section hem-room-door062" data-room-doors062="'+escape(room.area_id)+'">'+
+      '<div class="hem-door-head062"><span class="field-label">'+this._icon('mdi:door-closed')+
+      escape(words.doors)+'</span>'+
+      this._info76('door-context:'+room.area_id,words.title,body)+'</div>'+
+      (pills?'<div class="window-list">'+pills+'</div>':
+        '<span class="subdued">'+escape(words.not_configured)+'</span>')+
+      (report.eco_active?'<div class="hem-door-context062">'+escape(words.eco)+'</div>':'')+
+      '</div>';
   };
   /* HEM_DOOR_CONTEXT063_END */
 
