@@ -130,6 +130,50 @@ const actual=new Map(dense.filter(p=>Number.isFinite(Number(p.s))).map(p=>[p.lu,
 for(const p of bounded.filter(p=>Number.isFinite(p.v)))assert.equal(p.v,actual.get(p.t));
 assert.ok(bounded.some(p=>p.v===null||p.break_before),'Sampling erased a source outage');
 
+// A Recorder entity may keep the SAME value for days. This is not an outage.
+const sparse=[{t,v:70.123},{t:t+3*86400,v:71.125}];
+const sparseSaved=card._averageDialog105={entity122:id,history122:sparse,
+  historyEnd122:t+3*86400,status122:'ready',unit122:'°F',
+  area:'living',metric:'temperature',width114:480,
+  view114:{range:0,end:null,cursor:t+86400}};
+card._averageBody105('living','temperature',card._entityTrendEvidence122(sparseSaved));
+assert.deepEqual(sparseSaved.model114.gaps,[],
+  'Unchanged valid Recorder state was incorrectly rendered as a missing interval');
+assert.equal(card._trendSelection114(sparseSaved.model114).point.v,70.123);
+assert.equal(card._trendSelection114(sparseSaved.model114).held,true);
+const carried=card._entityHistoryPoints122({[id]:[
+  {s:'70.123',lu:t-86400,a:{unit_of_measurement:'°F'}},
+  {s:'70.125',lu:t+3600,a:{unit_of_measurement:'°F'}},
+]},id,t,t+7200,'°F',true);
+assert.equal(carried[0].t,t);
+assert.equal(carried[0].v,70.123);
+assert.equal(carried[0].carried,true);
+assert.equal(card._entityHistoryPoints122({[id]:[
+  {s:'70.123',lu:t-86400,a:{unit_of_measurement:'°F'}},
+]},id,t,t+7200,'°F').length,0);
+// The current state proves the last Recorder value remained unchanged to the
+// query end. Visually extend it; do not invent source events or sample counts.
+const holding=card._averageDialog105={entity122:id,history122:[{t,v:70.123}],
+  historyEnd122:t+36*3600,status122:'ready',unit122:'°F',
+  area:'living',metric:'temperature',width114:480};
+const evidenceHeld=card._entityTrendEvidence122(holding);
+assert.equal(evidenceHeld.value.held_until,t+36*3600);
+const heldHtml=card._averageBody105('living','temperature',evidenceHeld);
+assert.equal(holding.model114.points.length,1,'A held value became synthetic samples');
+assert.deepEqual(holding.model114.gaps,[]);
+assert.equal(holding.model114.last,t+36*3600);
+assert.equal(card._trendSelection114(holding.model114).point.v,70.123);
+assert.equal(card._trendSelection114(holding.model114).held,true);
+assert.ok(heldHtml.includes('hem-avg-line105'));
+// Explicit unavailability STILL splits a Recorder chart across any interval.
+const outage=card._averageDialog105={entity122:id,history122:[
+    {t,v:70.123},{t:t+2*3600,v:null},{t:t+4*3600,v:71.125}],
+  status122:'ready',unit122:'°F',area:'living',metric:'temperature',
+  width114:480,view114:{range:0,end:null,cursor:t+3*3600}};
+card._averageBody105('living','temperature',card._entityTrendEvidence122(outage));
+assert.ok(outage.model114.gaps.length>=1);
+assert.equal(card._trendSelection114(outage.model114).point,null);
+
 const history=Array.from({length:97},(_,i)=>({t:t+i*3600,v:70.123+(i%12)/10}));
 const saved=card._averageDialog105={entity122:id,history122:history,status122:'ready',
   unit122:'°F',area:'living',metric:'temperature',width114:480};
