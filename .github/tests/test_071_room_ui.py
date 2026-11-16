@@ -124,7 +124,11 @@ with sync_playwright() as pw:
         assert disclosure.count()==1
         assert disclosure.locator('.hem-context-body76').is_hidden()
         disclosure.locator('summary').click()
-        expect(disclosure.locator('.hem-context-body76')).to_be_visible()
+        # HEM renders opened help in a top-layer portal and hides the
+        # in-card content template to avoid clipping on mobile.
+        floating=page.locator('.hem-floating-info87')
+        expect(floating).to_be_visible()
+        assert floating.inner_text().strip()
 
         page.evaluate("""() => {
           const room=card._hass.states['sensor.hem'].attributes.dashboard.rooms[0];
