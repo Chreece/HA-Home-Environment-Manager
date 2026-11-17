@@ -12,7 +12,7 @@ assert executable,'Chromium required'
 with sync_playwright() as p:
     browser=p.chromium.launch(executable_path=executable,headless=True,
                               args=['--no-sandbox','--disable-dev-shm-usage'])
-    for lang,needle in [('en','Preparing home for arrival'),('de','Vorbereitung des Hauses'),('el','Προετοιμασία άφιξης')]:
+    for lang,needle in [('en','Automatic devices use Home targets'),('de','Automatische Geräte nutzen Zuhause-Ziele'),('el','Οι αυτόματες συσκευές χρησιμοποιούν στόχους')]:
         page=browser.new_page(viewport={'width':375,'height':950})
         errors=[]
         page.on('pageerror',lambda error:errors.append(str(error)))
@@ -38,6 +38,7 @@ with sync_playwright() as p:
         assert page.locator('.hem-arrival-help125').count()==0
         assert needle in action.get_attribute('title')
         assert needle in action.get_attribute('aria-label')
+        assert len(action.get_attribute('title')) < 240
         assert page.evaluate('calls.length')==0
         for width in (320,375,665):
             page.set_viewport_size({'width':width,'height':950})

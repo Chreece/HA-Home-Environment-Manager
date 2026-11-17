@@ -8623,14 +8623,12 @@
   /* HEM_TEXT_BOUNDARIES123_END */
 
   /* HEM_BRANDING125_START */
-  const ARRIVAL_HELP125={"ar":"تهيئة بيئة المنزل قبل الوصول","bg":"Подгответе домашната среда преди пристигане","bn":"পৌঁছানোর আগে বাড়ির পরিবেশ প্রস্তুত করুন","cs":"Připravit domácí prostředí před příjezdem","da":"Klargør hjemmets indeklima før ankomst","de":"Vorbereitung des Hauses zur Ankunft: geeignete Geräte verwenden das Zuhause-Profil, nur wenn niemand zu Hause ist.","el":"Προετοιμασία άφιξης: οι κατάλληλες συσκευές μπαίνουν στη λειτουργία «Στο σπίτι», μόνο όταν απουσιάζουν όλοι.","en":"Preparing home for arrival, all devices will get into Home mode, available when no one is home","es":"Preparar el ambiente del hogar antes de llegar","fa":"آماده‌سازی محیط خانه پیش از رسیدن","fi":"Valmistele kodin olosuhteet ennen saapumista","fr":"Préparer l’environnement de la maison avant l’arrivée","he":"הכנת סביבת הבית לפני ההגעה","hi":"आने से पहले घर का वातावरण तैयार करें","hr":"Pripremi uvjete u domu prije dolaska","hu":"Készítse elő az otthoni környezetet érkezés előtt","id":"Siapkan kondisi rumah sebelum tiba","it":"Prepara l’ambiente domestico prima dell’arrivo","ja":"帰宅前に室内環境を整える","ko":"도착 전에 집안 환경 준비하기","nb":"Klargjør inneklimaet før ankomst","nl":"Bereid het binnenklimaat voor aankomst voor","pl":"Przygotuj warunki w domu przed przyjazdem","pt-BR":"Preparar o ambiente da casa antes da chegada","pt":"Preparar o ambiente da casa antes da chegada","ro":"Pregătește mediul din locuință înainte de sosire","ru":"Подготовить домашний микроклимат перед прибытием","sk":"Pripraviť domáce prostredie pred príchodom","sr":"Припреми услове у дому пре доласка","sv":"Förbered hemmiljön före ankomst","ta":"வீட்டிற்கு வருவதற்கு முன் சூழலைத் தயாரிக்கவும்","th":"เตรียมสภาพแวดล้อมในบ้านก่อนเดินทางมาถึง","tr":"Eve gelmeden önce ev ortamını hazırlayın","uk":"Підготувати домашній мікроклімат до прибуття","ur":"آمد سے پہلے گھر کا ماحول تیار کریں","vi":"Chuẩn bị môi trường trong nhà trước khi về","zh-Hans":"抵达前准备好家居环境","zh-Hant":"抵達前準備好居家環境"};
-  const ARRIVAL_DETAIL125={"en":"While everyone is away, eligible automatic devices temporarily use Home targets. Preparation stops on arrival, cancellation or timeout, with device safety rules preserved.","de":"Solange alle abwesend sind, verwenden geeignete automatische Geräte vorübergehend die Zuhause-Ziele. Bei Ankunft, Abbruch oder Zeitablauf endet die Vorbereitung; alle Geräteschutzregeln gelten weiter.","el":"Όταν όλοι απουσιάζουν, οι κατάλληλες αυτόματες συσκευές χρησιμοποιούν προσωρινά τους στόχους «Στο σπίτι». Η προετοιμασία λήγει με την άφιξη, την ακύρωση ή τον χρόνο αναμονής, ενώ οι κανόνες προστασίας παραμένουν ενεργοί."};
+  const ARRIVAL_HELP125={"ar":"تهيئة بيئة المنزل قبل الوصول","bg":"Подгответе домашната среда преди пристигане","bn":"পৌঁছানোর আগে বাড়ির পরিবেশ প্রস্তুত করুন","cs":"Připravit domácí prostředí před příjezdem","da":"Klargør hjemmets indeklima før ankomst","de":"Automatische Geräte nutzen Zuhause-Ziele bis zur Ankunft, zum Abbruch oder Zeitablauf. Verfügbar, wenn alle abwesend sind.","el":"Οι αυτόματες συσκευές χρησιμοποιούν στόχους «Στο σπίτι» μέχρι την άφιξη, ακύρωση ή λήξη χρόνου. Διαθέσιμο όταν όλοι απουσιάζουν.","en":"Automatic devices use Home targets until arrival, cancellation or timeout. Available while everyone is away.","es":"Preparar el ambiente del hogar antes de llegar","fa":"آماده‌سازی محیط خانه پیش از رسیدن","fi":"Valmistele kodin olosuhteet ennen saapumista","fr":"Préparer l’environnement de la maison avant l’arrivée","he":"הכנת סביבת הבית לפני ההגעה","hi":"आने से पहले घर का वातावरण तैयार करें","hr":"Pripremi uvjete u domu prije dolaska","hu":"Készítse elő az otthoni környezetet érkezés előtt","id":"Siapkan kondisi rumah sebelum tiba","it":"Prepara l’ambiente domestico prima dell’arrivo","ja":"帰宅前に室内環境を整える","ko":"도착 전에 집안 환경 준비하기","nb":"Klargjør inneklimaet før ankomst","nl":"Bereid het binnenklimaat voor aankomst voor","pl":"Przygotuj warunki w domu przed przyjazdem","pt-BR":"Preparar o ambiente da casa antes da chegada","pt":"Preparar o ambiente da casa antes da chegada","ro":"Pregătește mediul din locuință înainte de sosire","ru":"Подготовить домашний микроклимат перед прибытием","sk":"Pripraviť domáce prostredie pred príchodom","sr":"Припреми услове у дому пре доласка","sv":"Förbered hemmiljön före ankomst","ta":"வீட்டிற்கு வருவதற்கு முன் சூழலைத் தயாரிக்கவும்","th":"เตรียมสภาพแวดล้อมในบ้านก่อนเดินทางมาถึง","tr":"Eve gelmeden önce ev ortamını hazırlayın","uk":"Підготувати домашній мікроклімат до прибуття","ur":"آمد سے پہلے گھر کا ماحول تیار کریں","vi":"Chuẩn bị môi trường trong nhà trước khi về","zh-Hans":"抵达前准备好家居环境","zh-Hant":"抵達前準備好居家環境"};
   const brandingProto125=AirQualityAdvisorCard.prototype;
   brandingProto125._hemMark125=function(){return "<svg viewBox=\"0 0 128 128\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\" focusable=\"false\"><defs><linearGradient id=\"hem-brand125-bg\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop stop-color=\"#0e7395\"/><stop offset=\"1\" stop-color=\"#072c52\"/></linearGradient></defs><rect x=\"4\" y=\"4\" width=\"120\" height=\"120\" rx=\"26\" fill=\"url(#hem-brand125-bg)\"/><path d=\"M25 58 64 25l39 33M32 57v45h64V57\" fill=\"none\" stroke=\"#e9fcff\" stroke-width=\"6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"43\" y=\"61\" width=\"32\" height=\"40\" rx=\"2\" fill=\"none\" stroke=\"#e9fcff\" stroke-width=\"5\"/><path d=\"M59 62v38M44 81h30\" fill=\"none\" stroke=\"#e9fcff\" stroke-width=\"4\"/><path d=\"M71 69q20 12 41-2M71 84q20 12 41-2M71 98q20 10 41-2\" fill=\"none\" stroke=\"#4ae0d8\" stroke-width=\"5\" stroke-linecap=\"round\"/></svg>";};
   brandingProto125._arrivalHelp125=function(){
     const lang=this._language();
-    return {purpose:ARRIVAL_HELP125[lang]||ARRIVAL_HELP125.en,
-      details:ARRIVAL_DETAIL125[lang]||ARRIVAL_DETAIL125.en};
+    return {purpose:ARRIVAL_HELP125[lang]||ARRIVAL_HELP125.en};
   };
   const priorStyles125=brandingProto125._styles;
   brandingProto125._styles=function(){return priorStyles125.call(this)+`<style>
@@ -8668,8 +8666,8 @@
       paused:'Paused',ending:'Finishing',minute:'min',duration:'Max time for the arrival preparation',
       remaining:'Time remaining',edit:'Edit the timeout for the next preparation.',
       away:'Temporarily use Home settings while everyone is away.',
-      home:'Someone is home right now. Preparation is temporarily disabled until everyone is confirmed away.',
-      unknown:'Waiting for confirmed home presence. Preparation is available only while away.',
+      home:'Someone is home right now. Available when everyone is confirmed away.',
+      unknown:'Home presence is unknown. Available only while away.',
       suspended:'Preparation is paused while home presence is unknown. The timeout continues.',
       expired:'The preparation timeout has ended. Waiting for the home status to refresh.',
       unavailable:'Arrival controls are unavailable for this home. Check the Home Environment device.',
@@ -8680,8 +8678,8 @@
       paused:'Pausiert',ending:'Wird beendet',minute:'Min.',duration:'Maximale Zeit für die Ankunftsvorbereitung',
       remaining:'Verbleibende Zeit',edit:'Dauer für die nächste Vorbereitung ändern.',
       away:'Vorübergehend die Einstellungen für Zuhause verwenden, während alle abwesend sind.',
-      home:'Es ist gerade jemand zu Hause. Die Vorbereitung ist vorübergehend deaktiviert, bis alle nachweislich abwesend sind.',
-      unknown:'Warte auf einen bestätigten Anwesenheitsstatus. Die Vorbereitung ist nur bei Abwesenheit verfügbar.',
+      home:'Es ist gerade jemand zu Hause. Verfügbar, sobald alle abwesend sind.',
+      unknown:'Anwesenheit unbekannt. Nur bei bestätigter Abwesenheit verfügbar.',
       suspended:'Die Vorbereitung pausiert bei unbekanntem Anwesenheitsstatus. Die Zeit läuft weiter.',
       expired:'Die Vorbereitungszeit ist abgelaufen. Warte auf die Aktualisierung des Hausstatus.',
       unavailable:'Die Ankunftssteuerung ist für dieses Zuhause nicht verfügbar. Prüfe das Gerät Home Environment.',
@@ -8692,8 +8690,8 @@
       paused:'Σε παύση',ending:'Ολοκλήρωση',minute:'λεπ.',duration:'Μέγιστος χρόνος προετοιμασίας άφιξης',
       remaining:'Χρόνος που απομένει',edit:'Αλλαγή του χρονικού ορίου για την επόμενη προετοιμασία.',
       away:'Προσωρινή χρήση των ρυθμίσεων Στο σπίτι ενώ όλοι απουσιάζουν.',
-      home:'Κάποιος βρίσκεται στο σπίτι. Η προετοιμασία δεν μπορεί προσωρινά να ξεκινήσει· θα είναι διαθέσιμη μόλις επιβεβαιωθεί ότι όλοι απουσιάζουν.',
-      unknown:'Αναμονή για επιβεβαιωμένη παρουσία στο σπίτι. Η προετοιμασία είναι διαθέσιμη μόνο κατά την απουσία.',
+      home:'Κάποιος βρίσκεται στο σπίτι. Διαθέσιμο όταν επιβεβαιωθεί ότι όλοι απουσιάζουν.',
+      unknown:'Άγνωστη παρουσία στο σπίτι. Διαθέσιμο μόνο με επιβεβαιωμένη απουσία.',
       suspended:'Η προετοιμασία είναι σε παύση όσο η παρουσία στο σπίτι είναι άγνωστη. Το χρονικό όριο συνεχίζει να μετρά.',
       expired:'Το χρονικό όριο προετοιμασίας έληξε. Αναμονή για ενημέρωση της κατάστασης του σπιτιού.',
       unavailable:'Τα χειριστήρια άφιξης δεν είναι διαθέσιμα για αυτό το σπίτι. Ελέγξτε τη συσκευή Home Environment.',
@@ -8711,17 +8709,28 @@
     return key?this._arrivalWords124()[key]:arrivalStatusBefore124.call(this,code);
   };
   arrivalProto124._arrivalSource124=function(){
-    const payload=this._dashboard105()?.arrival_preparation;
+    const dashboard=this._dashboard105(),payload=dashboard?.arrival_preparation;
     if(!payload||typeof payload!=='object')return null;
     const [owner,ownerState]=this._state(),hass=this._hass,registry=hass?.entities||{};
     const entry=typeof payload.entry_id==='string'?payload.entry_id:null;
     const ownerDevice=registry[owner]?.device_id;
     // Older HA entity summaries omit config_entry_id. In that case use the
     // registry result only when its hub is exactly this sensor's device.
-    const ownerEntry=registry[owner]?.config_entry_id||(
+    const registryEntry=registry[owner]?.config_entry_id||(
       ownerDevice&&ownerDevice===this._homeDeviceId&&this._configEntryOwner114===owner
         ?this._configEntryId114:null);
-    const owned=Boolean(owner&&ownerState&&ownerState.state!=='unavailable'&&entry&&ownerEntry===entry);
+    // The dashboard API verifies the recommendation sensor against HA's
+    // registry and read permissions. Its owner is authoritative even when
+    // HA omits the optional frontend entity map (e.g. during a reconnect).
+    // Only accept the response bound to this sensor and this connection;
+    // embedded legacy data still needs the original registry verification.
+    const apiOwner=this._dashboardEntity===owner&&dashboard===this._dashboardData&&
+      this._dashboardContext?.entityId===owner&&
+      this._dashboardContext?.connection===hass?.connection&&
+      typeof dashboard?.owner_entry_id==='string'?dashboard.owner_entry_id:null;
+    const ownerEntry=apiOwner||registryEntry;
+    const owned=Boolean(owner&&ownerState&&ownerState.state!=='unavailable'&&entry&&
+      ownerEntry===entry&&(!registryEntry||registryEntry===entry));
     const controls={};
     for(const role of ['prepare','cancel','timeout']){
       const id=payload.entity_ids?.[role],state=hass?.states?.[id];
@@ -8774,7 +8783,10 @@
     const durationTitle=(source.active?words.remaining+': '+duration+'. ':'')+
       durationName+': '+configured+'. '+words.edit;
     const help=this._arrivalHelp125();
-    const actionTitle=actionName+'. '+(source.pending?words.requesting:reason)+'. '+help.purpose;
+    const explanation=source.pending?words.requesting:
+      source.active&&source.homeStatus!=='unknown'&&!source.expired&&control.valid?'':
+      available&&!source.active?help.purpose:reason;
+    const actionTitle=actionName+(explanation?'. '+explanation:'');
     return '<div class="hem-arrival124'+(source.active?' is-active':'')+'"'+
       ' data-arrival-status124="'+(source.expired?'expired':source.active?
         (source.homeStatus==='unknown'?'paused':'active'):source.homeStatus==='away'?'away':
