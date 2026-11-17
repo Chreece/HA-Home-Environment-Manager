@@ -377,6 +377,8 @@ jobs:
         run: |
           python -I .github/tests/test_071_room_ui.py
           python -I .github/tests/test_072_science_and_sensor_help.py
+      - name: v0.7.3 arrival ownership without optional frontend metadata and compact help
+        run: python -I .github/tests/test_073_arrival_ownership.py
       - name: B9 on-demand setting help in every menu
         run: python -I .github/tests/test_062b9_settings_help.py
       - name: B8 settings inventory, advanced presentation and exact duplicate aliases
