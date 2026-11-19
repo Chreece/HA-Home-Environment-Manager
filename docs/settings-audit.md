@@ -1,24 +1,61 @@
-# Settings simplification: source-verified implementation
+# HEM card setting levels
 
-Baseline: `365f81082111b6bcd0fb2b1976eee60805ddc8b7` (v0.6.2b7).
+Baseline: `cbdf94b1db46d477d7ba24dc575cd37b70363554` (v0.7.4b2).
 
-The external Deep Research report was not retrievable during implementation.
-This is an independently verified, non-destructive presentation pass, not a
-claim that all recommendations in that report have been implemented.
+The Home, room and device settings menus use three cumulative levels.
+`frontend/settings-audit-policy.json` assigns levels to exact setting
+identities, with Basic as the fallback for an unrecognized new setting.
 
-## Decisions implemented
+## Classification
 
-| Decision | Implementation | Evidence and compatibility |
-|---|---|---|
-| Keep everyday control and safety settings visible | Methods, targets/profiles, presence, sleep, source selectors, window protection, minimum ON/OFF, maximum runtime, watchdog and recovery actions remain in the normal view | Explicit policy allowlist; unknown new keys remain visible. No runtime changes. |
-| Fold specialist tuning, not its behaviour | Advanced view contains PID numeric/plant/capacity tuning, PMV model inputs, specialist reference values, legacy tuning defaults and optional door diagnostics | `frontend/settings-audit-policy.json` records 51 exact native/dynamic identities. Saved values remain active, with no changes to registry availability. |
-| Fold source-format details | Four Home form fields are Advanced: pollen scale/high threshold and occupied/sleep room attribute names | Their source selectors remain visible. These fields are still searchable/editable; no automatic inference. |
-| Remove duplicate Home editors | Use the existing Home Options editor for source age, away cooldown and household presence policy | Native and Options setters address the same `occupancy_global` key. Hidden native entities remain intact for automations. A missing/unsupported form preserves the native fallback. |
-| Make every setting discoverable | Search matches meaningful label, help and entity ID, including Advanced fields. Per-dialog Advanced checkbox reveals all classified settings | UI-only controls send no HA service or registry/configuration write. No new persisted preference. |
-| Preserve editing and errors | Pending/failed edits remain visible through filters. Search preserves accordion state and does not recreate source editors | b7 queue, validation, target identity and confirmation behaviour are retained. |
-| Leave Floor settings simple | Name, level, icon and room assignment are all useful; no extra tier is added to the small Floor form | Existing b7 autosave is unchanged. |
+| Minimum level | Settings available |
+|---|---|
+| Basic | Source and device setup; operating methods, modes and targets; presence, sleep and quiet preferences; announcements; window and door protection; device ON/OFF minimums, maximum runtime, supply cooldown, target/fan bounds, watchdog and recovery; calibration choice and Approve/Discard actions. |
+| Advanced | All Basic settings, plus device Kp/Ki/Kd, PID sampling and PWM cycles, pollutant threshold customization, strategy hysteresis, room volume and rated purifier CADR, optional lux shading refinements, announcement repetition/AI wording and door start coordination. |
+| Expert | All lower levels, plus process-model constants, IMC lambda, fan-capacity curves and their direct calibration actions, PMV inputs and method selection, specialist radon/pollen references, legacy room tuning and door-energy diagnostics. |
 
-## Verified duplicate properties
+A field's minimum level does not depend on its translated name, entity ID or
+current value. Per-mode fields use their published setting key, so Heat, Cool,
+Dry and other supported modes follow the same classification. Target profiles
+remain Basic in every mode.
+
+### Dependencies that stay together
+
+- Source attribute names stay beside the occupied-room and sleeping-room
+  source selectors at Basic.
+- A custom freshness policy and its custom age field stay Basic for Home,
+  room and outdoor measurements. The age editor still appears only when the
+  corresponding validity policy is Custom.
+- AQI scale and a custom scale's limit stay Basic.
+- Model constants and the direct **Apply Calibration** action are Expert.
+  Adaptive **Approve suggestion** and **Discard suggestion** remain Basic.
+- Door type and connected room stay Basic. They identify physical boundaries
+  and exclusions; optional start coordination is Advanced and measured energy
+  comparisons are Expert.
+- The small Floor form remains fully available for name, level, icon and room
+  membership.
+
+## Selection, search and editing
+
+The level is a presentation preference shared by the Home, room and device
+menus for the current Home Assistant user in this browser. Higher levels
+include every setting from lower levels. Choosing a level does not edit
+integration configuration or control a device.
+
+Search respects the selected level. Matching settings at a higher level are
+counted so the user can choose a broader view. Unsaved, saving and failed edits
+remain visible until they are resolved; filtering does not discard drafts or
+replace their inputs. Empty categories are hidden, and clearing search restores
+the user's normal accordion state.
+
+The previous checkbox had no durable preference. An already-open legacy
+dialog with its Advanced checkbox selected maps to Expert so its previously
+visible controls are retained. New dialogs start at Basic unless the browser
+has a saved level for that Home Assistant user.
+
+## Existing duplicate handling
+
+The existing Home aliases remain exact identity mappings. For example:
 
 | Native metadata key | Existing Home Options field | Stored property |
 |---|---|---|
@@ -26,40 +63,38 @@ claim that all recommendations in that report have been implemented.
 | `global_occupancy_away_cooldown_minutes` | `general_away_cooldown_minutes` | `occupancy_global.away_cooldown_minutes` |
 | `home_global_policy_home_policy` | `general_home_policy` | `occupancy_global.home_policy` |
 
-Definitions/consumers: `number.py:ConfigNumber`, `select.py:ConfigSelect`,
-`device_controls.py:update_device_setting`, and `room_setup.py:async_step_setup_general`.
-The new aliases use exact registry/setting identities, not translated labels.
+The card keeps the native fallback when the matching adapted Options field is
+unavailable. Source freshness aliases added after the original audit remain in
+the same policy. Home occupancy, room presence, global ventilation limits,
+room targets and device overrides continue to represent their own properties.
 
-## Similar names that are NOT treated as duplicates
+## Inventory and verification
 
-- Home occupancy and local room presence have different authorities.
-- Global ventilation thresholds, room operating targets and device/profile
-  overrides feed different decisions. They are not merged.
-- Door closed/open evidence does not establish occupancy or airtight isolation.
-- Minimum ON/OFF, maximum ON and supply cooldown protect different transitions.
-- Manual PID gains, learned-model inputs, per-mode values and legacy fallback
-  values are not interchangeable. They remain available in Advanced.
-- A legacy translation or a missing literal search result does not prove dead
-  code. Dynamic generation and historical option flows require separate tracing.
+The explicit policy classifies:
 
-## Inventory and remaining audit work
+| Scope | Basic | Advanced | Expert |
+|---|---:|---:|---:|
+| Native setting identities, including dynamic families | 125 | 36 | 46 |
+| Home Options field keys | 33 | 18 | 2 |
+| Room source groups | 8 | 0 | 0 |
 
-`settings-inventory.json` contains 175 static native setting catalog entries,
-718 config/options form-label occurrences (including duplicates and legacy
-steps), five per-door identities and 18 dynamic target identities. These are
-**catalog counts, not a count of controls displayed to one user or device**.
-The file records classification, source navigation references and explicit
-verification limitations. The full dynamic consumer graph and legacy step
-reachability have not been exhaustively proved. No field is deleted as dead
-on the basis of this catalog scan.
+The 207 native identities comprise 178 static catalog entries, seven additional
+device identities, four door identities and 18 per-mode target identities.
+The inventory also lists 722 config/Options label occurrences for source
+navigation, including duplicated and historical forms. These are **catalog
+counts, not counts of controls displayed on one device or in one menu**.
 
-Regenerate with `python .github/scripts/audit_settings.py`; CI verifies that
-both this inventory and the embedded frontend policy match the source.
+Only the card's adapted General and room Options forms receive these filters.
+Initial setup and native Home Assistant Options pages remain unchanged.
+Their inventory entries are marked `native_flow_unchanged`; a label alone
+does not prove that a historical flow is reachable.
 
-## Compatibility and scope
+Run `python .github/scripts/audit_settings.py` to regenerate
+`docs/settings-inventory.json`, then use `--check` to verify it. The audit
+requires the embedded card policy to match the JSON source, every known key
+to have a level, required setup/safety identities to remain Basic, device
+manual gains to remain Advanced, and model inputs/actions to remain Expert.
 
-No stored value, default, unique/entity ID, actuator permission, native entity,
-backend validation, PID, physical dwell, controller recovery, registry
-assignment or Announcement Hub routing is changed. No configuration migration
-or automatic user-server installation is performed. Advanced hides editors,
-not active behaviour. No performance or energy-savings claims are made.
+Setting levels change visibility. Saved values, native entities, authorization,
+validation, calibration and physical protection rules keep their existing
+behavior.

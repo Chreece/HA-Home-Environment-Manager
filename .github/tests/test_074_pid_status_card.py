@@ -1,7 +1,7 @@
-"""Visible PID gains and truthful, mode-scoped learning status on the real card.
+"""Level-scoped PID editors and truthful learning status on the real card.
 
 The Node part executes production filtering/model/rendering helpers without a
-browser. The Chromium part checks default visibility and repeated HA redraws.
+browser. Chromium checks cumulative levels and repeated HA redraws.
 All state and service transports are local fixtures; no device is contacted.
 """
 from __future__ import annotations
@@ -45,12 +45,16 @@ const status={selected_operating_mode:'dry',control_method:'pid',pid_calibration
  pid_last_calibration:{at:1795082400,operating_mode:'dry',previous_gains:{kp:40,ki:3,kd:0},applied_gains:{kp:44,ki:3.3,kd:0}}};
 for(const method of ['manual','adaptive_suggest','adaptive_auto']){
  for(const f of fields(method).filter(f=>['kp','ki','kd'].includes(f.state.attributes.setting_key))){
-  assert.equal(audit.auditLevelB8(f),'primary');
-  assert.equal(Boolean(audit.auditVisibleB8({settingsAudit:{advanced:false,query:''}},f)),true);
+  assert.equal(audit.auditLevelB8(f),'advanced');
+  assert.equal(Boolean(audit.auditVisibleB8({settingsAudit:{level:'basic',query:''}},f)),false);
+  assert.equal(Boolean(audit.auditVisibleB8({settingsAudit:{level:'advanced',query:''}},f)),true);
+  assert.equal(Boolean(audit.auditVisibleB8({settingsAudit:{level:'expert',query:''}},f)),true);
  }
 }
-const advanced=field('dry','pid_process_gain',2);
-assert.equal(Boolean(audit.auditVisibleB8({settingsAudit:{advanced:false,query:''}},advanced)),false);
+const expert=field('dry','pid_process_gain',2);
+assert.equal(audit.auditLevelB8(expert),'expert');
+assert.equal(Boolean(audit.auditVisibleB8({settingsAudit:{level:'advanced',query:''}},expert)),false);
+assert.equal(Boolean(audit.auditVisibleB8({settingsAudit:{level:'expert',query:''}},expert)),true);
 for(const lang of ['en','el','de','fr']){
  const models=api.pidStatusModels074(fields(),status,lang);
  const active=models.find(m=>m.mode==='dry'),inactive=models.find(m=>m.mode==='heat');
@@ -226,7 +230,14 @@ def browser_checks():
             modal = page.locator(".hem-controller-options126")
             pid = modal.locator('[data-hem-full-category127="pid"]')
             pid.locator(":scope > summary").click()
-            expect(modal.locator('[data-settings-advanced-b8]')).not_to_be_checked()
+            level = modal.locator('[data-settings-level-b8]')
+            expect(level).to_have_value('basic')
+            for key in ("kp", "ki", "kd"):
+                expect(pid.locator(f'[data-hem-full-row127="number.dry_{key}"]')).to_be_hidden()
+                expect(pid.locator(f'[data-hem-full-row127="number.heat_{key}"]')).to_be_hidden()
+            expect(pid.locator('[data-hem-pid-mode074="dry"]')).to_be_visible()
+            expect(pid.locator('[data-hem-pid-review-b18="approve"]')).to_be_visible()
+            level.select_option('advanced')
             for key in ("kp", "ki", "kd"):
                 expect(pid.locator(f'[data-hem-full-row127="number.dry_{key}"]')).to_be_visible()
                 expect(pid.locator(f'[data-hem-full-row127="number.heat_{key}"]')).to_be_visible()
@@ -342,7 +353,7 @@ def browser_checks():
             assert not errors, errors
             page.close()
         browser.close()
-    print("PASS: default visible Kp/Ki/Kd, active/inactive mode evidence, proposal/history, stable redraws, EN/EL/DE at 320/390/760px")
+    print("PASS: Advanced Kp/Ki/Kd, Basic status/review actions, active/inactive mode evidence, proposal/history, stable redraws, EN/EL/DE at 320/390/760px")
 
 
 if __name__ == "__main__":

@@ -9369,17 +9369,31 @@
   };
   const hemRenderNativeRows062=(card,holder,rows,scope)=>{
     if(holder.matches(":focus-within"))return;
-    const opened=new Set([...holder.querySelectorAll("[data-hem-full-row127]")]
-      .filter(row=>row.querySelector(".hem-full-help127[open]"))
-      .map(row=>row.getAttribute("data-hem-full-row127")));
-    const html=rows.map(field=>card._hemFullRow127(field,scope)).join("");
-    if(holder.innerHTML!==html){
-      holder.innerHTML=html;
-      for(const row of holder.querySelectorAll("[data-hem-full-row127]")){
-        const help=row.querySelector(".hem-full-help127");
-        if(help&&opened.has(row.getAttribute("data-hem-full-row127")))help.open=true;
-      }
+    // Visibility, help and save feedback deliberately mutate the rendered
+    // DOM. Comparing it with source HTML would recreate every editor after
+    // a level/search change. Reuse the device menu's keyed row updates.
+    const fresh=document.createElement("div");
+    fresh.innerHTML=rows.map(field=>card._hemFullRow127(field,scope)).join("");
+    const activeIds=new Set(),ordered=[];
+    for(const next of fresh.querySelectorAll(":scope > [data-hem-full-row127]")){
+      const id=next.getAttribute("data-hem-full-row127");activeIds.add(id);
+      let current=[...holder.children].find(row=>row.getAttribute("data-hem-full-row127")===id);
+      if(current)hemSyncNativeRowB10(current,next);
+      else{current=next.cloneNode(true);holder.appendChild(current);}
+      ordered.push(current);
     }
+    for(const row of [...holder.children]){
+      if(activeIds.has(row.getAttribute("data-hem-full-row127")))continue;
+      if(row.matches(":active,:focus-within")||row.querySelector(":active")){
+        row.querySelectorAll("input,select,button").forEach(input=>input.disabled=true);
+        continue;
+      }
+      row.remove();
+    }
+    if(!holder.querySelector(":active"))ordered.forEach((row,index)=>{
+      const current=holder.children[index];
+      if(current!==row)holder.insertBefore(row,current||null);
+    });
   };
   /* HEM_SETTINGS_LABELS062B2_END */
 
@@ -12165,35 +12179,122 @@
 
   /* HEM_SETTINGS_AUDIT_B8_START
    * Presentation only. Exact setting identities, never translated label guesses.
-   * Fold specialist tuning, not native entities, stored values or safety policy.
+   * Levels are cumulative; filtering never edits a saved controller setting.
    */
-  const auditPolicyB8={"version":1,"advanced":{"area_area_environment_enable_pmv":"comfort_model","area_area_environment_air_speed_m_s":"comfort_model","area_area_environment_met":"comfort_model","area_area_environment_clo":"comfort_model","area_area_science_radiant_temperature_entity":"comfort_model","area_area_science_air_speed_entity":"comfort_model","area_climate_operating_comfort_adjustment_max_c":"comfort_model","area_area_environment_radon_reference_bq_m3":"specialist_reference","global_environment_pollen_high_from":"specialist_reference","global_environment_pollen_max_scale":"specialist_reference","equipment_sample_seconds":"controller_tuning","equipment_cycle_seconds":"controller_tuning","equipment_pid_process_gain":"controller_tuning","equipment_pid_time_constant_minutes":"controller_tuning","equipment_pid_dead_time_minutes":"controller_tuning","equipment_pid_lambda_minutes":"controller_tuning","equipment_pid_fan_capacity_mode":"controller_tuning","equipment_pid_fan_capacity_for_mode":"controller_tuning","equipment_pid_capacity_speed_1":"controller_tuning","equipment_pid_capacity_speed_2":"controller_tuning","equipment_pid_capacity_speed_3":"controller_tuning","equipment_pid_capacity_output_1":"controller_tuning","equipment_pid_capacity_output_2":"controller_tuning","equipment_pid_capacity_output_3":"controller_tuning","equipment_pid_capacity_stage_1":"controller_tuning","equipment_pid_capacity_stage_2":"controller_tuning","equipment_pid_capacity_stage_3":"controller_tuning","equipment_pid_capacity_stage_4":"controller_tuning","area_pid_kp":"compatibility_tuning","area_pid_ki":"compatibility_tuning","area_pid_kd":"compatibility_tuning","area_pid_offset_c":"compatibility_tuning","area_pid_sample_seconds":"compatibility_tuning","area_pid_max_change_c":"compatibility_tuning","area_pid_min_change_c":"compatibility_tuning","area_pid_gain_source":"compatibility_tuning","area_direct_tuning_kp":"compatibility_tuning","area_direct_tuning_ki":"compatibility_tuning","area_direct_tuning_kd":"compatibility_tuning","area_direct_tuning_sample_seconds":"compatibility_tuning","area_direct_tuning_max_demand_change":"compatibility_tuning","area_direct_tuning_min_demand_change":"compatibility_tuning","area_area_environment_particle_cadr_m3h":"compatibility_tuning","equipment_pid_adaptation_mode":"compatibility_tuning","area_climate_operating_humidity_hysteresis_rh":"strategy_tuning","area_climate_operating_cooling_dry_deferral_rh_points":"strategy_tuning","door_energy_meter":"optional_diagnostics"},"advanced_options":{"pollen_high_from":"specialist_reference","pollen_max_scale":"specialist_reference","general_occupied_rooms_attribute":"source_format","general_sleep_rooms_attribute":"source_format"},"home_aliases":{"global_occupancy_source_stale_minutes":"general_source_stale_minutes","global_occupancy_away_cooldown_minutes":"general_away_cooldown_minutes","home_global_policy_home_policy":"general_home_policy","home_global_policy_source_freshness_mode":"general_source_freshness_mode","home_global_threshold_mode_max_age_mode":"global_threshold_max_age_mode","global_threshold_max_age_minutes":"global_threshold_max_age_minutes"}};
+  const auditPolicyB8={"version":2,"levels":["basic","advanced","expert"],"native_levels":{"area_area_environment_air_speed_m_s":"expert","area_area_environment_clo":"expert","area_area_environment_co2_target_ppm":"advanced","area_area_environment_enable_pmv":"expert","area_area_environment_met":"expert","area_area_environment_particle_cadr_m3h":"expert","area_area_environment_radon_reference_bq_m3":"expert","area_area_environment_room_volume_m3":"advanced","area_area_environment_sleep_room":"basic","area_area_science_air_speed_entity":"expert","area_area_science_radiant_temperature_entity":"expert","area_climate_operating_comfort_adjustment_max_c":"expert","area_climate_operating_cooling_dry_deferral_rh_points":"advanced","area_climate_operating_extraction_speed_percent":"basic","area_climate_operating_humidity_high_rh":"basic","area_climate_operating_humidity_hysteresis_rh":"advanced","area_climate_operating_humidity_low_rh":"basic","area_climate_operating_occupancy_stale_minutes":"basic","area_climate_operating_pm25_action_ug_m3":"advanced","area_climate_operating_purifier_speed_percent":"basic","area_climate_operating_sleep_active":"basic","area_climate_operating_sleep_schedule_enabled":"basic","area_climate_operating_unoccupied_delay_minutes":"basic","area_climate_operating_window_efficiency_notify":"basic","area_climate_policy_away_policy":"basic","area_climate_policy_occupancy_freshness_mode":"basic","area_climate_policy_target_source":"expert","area_climate_policy_unknown_occupancy":"basic","area_climate_profile_away_cool":"basic","area_climate_profile_away_heat":"basic","area_climate_profile_away_humidity":"basic","area_climate_profile_comfort_cool":"basic","area_climate_profile_comfort_heat":"basic","area_climate_profile_comfort_humidity":"basic","area_climate_profile_eco_cool":"basic","area_climate_profile_eco_heat":"basic","area_climate_profile_eco_humidity":"basic","area_climate_profile_home_cool":"basic","area_climate_profile_home_heat":"basic","area_climate_profile_home_humidity":"basic","area_climate_profile_sleep_cool":"basic","area_climate_profile_sleep_heat":"basic","area_climate_profile_sleep_humidity":"basic","area_climate_sleep_end":"basic","area_climate_sleep_start":"basic","area_device_target_fan_speed_percent":"basic","area_direct_tuning_kd":"expert","area_direct_tuning_ki":"expert","area_direct_tuning_kp":"expert","area_direct_tuning_max_demand_change":"expert","area_direct_tuning_min_demand_change":"expert","area_direct_tuning_sample_seconds":"expert","area_manual_profile":"basic","area_mold_surface_critical_temperature_c":"basic","area_pid_gain_source":"expert","area_pid_kd":"expert","area_pid_ki":"expert","area_pid_kp":"expert","area_pid_max_change_c":"expert","area_pid_max_setpoint_c":"basic","area_pid_min_change_c":"expert","area_pid_min_setpoint_c":"basic","area_pid_offset_c":"expert","area_pid_sample_seconds":"expert","area_pid_target_c":"basic","area_recalculate_mold":"basic","area_room_equipment_limit_fan_max_percentage":"basic","area_room_equipment_limit_fan_min_percentage":"basic","area_room_equipment_limit_humidity_max_limit":"basic","area_room_equipment_limit_humidity_min_limit":"basic","area_room_equipment_limit_temperature_max_limit":"basic","area_room_equipment_limit_temperature_min_limit":"basic","area_shading_close_above_c":"basic","area_shading_enabled":"basic","area_shading_min_sun_elevation":"advanced","arrival_preparation_timeout":"basic","cancel_arrival_preparation":"basic","door_coordination":"advanced","door_energy_meter":"expert","door_kind":"basic","door_target_area":"basic","equipment_announce_before_start":"basic","equipment_announce_device_errors":"basic","equipment_control_mode":"basic","equipment_cycle_seconds":"advanced","equipment_door_closed_eco":"basic","equipment_door_start_coordination":"advanced","equipment_fan_max_percentage":"basic","equipment_fan_min_percentage":"basic","equipment_fan_mode":"basic","equipment_fan_purpose":"basic","equipment_kd":"advanced","equipment_ki":"advanced","equipment_kp":"advanced","equipment_max_on_seconds":"basic","equipment_min_off_seconds":"basic","equipment_min_on_seconds":"basic","equipment_native_full_output":"basic","equipment_off_state_watchdog_mode":"basic","equipment_particle_cadr_m3h":"advanced","equipment_pause_on_window_open":"basic","equipment_pid_adaptation_mode":"expert","equipment_pid_apply_calibration":"expert","equipment_pid_apply_fan_capacity":"expert","equipment_pid_calibration_method":"basic","equipment_pid_capacity_output_1":"expert","equipment_pid_capacity_output_2":"expert","equipment_pid_capacity_output_3":"expert","equipment_pid_capacity_speed_1":"expert","equipment_pid_capacity_speed_2":"expert","equipment_pid_capacity_speed_3":"expert","equipment_pid_capacity_stage_1":"expert","equipment_pid_capacity_stage_2":"expert","equipment_pid_capacity_stage_3":"expert","equipment_pid_capacity_stage_4":"expert","equipment_pid_dead_time_minutes":"expert","equipment_pid_fan_capacity_for_mode":"expert","equipment_pid_fan_capacity_mode":"expert","equipment_pid_lambda_minutes":"expert","equipment_pid_process_gain":"expert","equipment_pid_review_approve":"basic","equipment_pid_review_discard":"basic","equipment_pid_time_constant_minutes":"expert","equipment_power_switch_cooldown_seconds":"basic","equipment_power_switch_entity":"basic","equipment_presence_requirement":"basic","equipment_preset":"basic","equipment_quiet_fan_mode":"basic","equipment_quiet_occupied":"basic","equipment_quiet_percentage":"basic","equipment_quiet_sleep":"basic","equipment_resume":"basic","equipment_sample_seconds":"advanced","equipment_sensor_verified":"basic","equipment_sleep_behavior":"basic","equipment_sleep_when_everyone_asleep":"basic","equipment_swing_horizontal_mode":"basic","equipment_swing_mode":"basic","equipment_target_away_cool":"basic","equipment_target_away_heat":"basic","equipment_target_away_humidity":"basic","equipment_target_comfort_cool":"basic","equipment_target_comfort_heat":"basic","equipment_target_comfort_humidity":"basic","equipment_target_eco_cool":"basic","equipment_target_eco_heat":"basic","equipment_target_eco_humidity":"basic","equipment_target_home_cool":"basic","equipment_target_home_heat":"basic","equipment_target_home_humidity":"basic","equipment_target_manual_cool":"basic","equipment_target_manual_heat":"basic","equipment_target_manual_humidity":"basic","equipment_target_sleep_cool":"basic","equipment_target_sleep_heat":"basic","equipment_target_sleep_humidity":"basic","equipment_window_open_timeout_minutes":"basic","global_environment_pollen_high_from":"expert","global_environment_pollen_max_scale":"expert","global_occupancy_away_cooldown_minutes":"basic","global_occupancy_source_stale_minutes":"basic","global_setting_announcement_repeat_minutes":"advanced","global_setting_window_open_timeout_minutes":"basic","global_threshold_indoor_aqi":"advanced","global_threshold_indoor_co2":"advanced","global_threshold_indoor_humidity":"advanced","global_threshold_indoor_mold":"advanced","global_threshold_indoor_pm10":"advanced","global_threshold_indoor_pm25":"advanced","global_threshold_indoor_voc":"advanced","global_threshold_indoor_voc_parts":"advanced","global_threshold_max_age_minutes":"basic","global_threshold_max_outdoor_humidity":"basic","global_threshold_max_outdoor_temp":"basic","global_threshold_max_wind_kmh":"basic","global_threshold_min_outdoor_temp":"basic","global_threshold_mode_max_age_mode":"basic","global_threshold_outdoor_aqi":"advanced","global_threshold_outdoor_co2":"advanced","global_threshold_outdoor_no2":"advanced","global_threshold_outdoor_o3":"advanced","global_threshold_outdoor_pm10":"advanced","global_threshold_outdoor_pm25":"advanced","global_threshold_outdoor_so2":"advanced","global_threshold_outdoor_voc":"advanced","global_threshold_outdoor_voc_parts":"advanced","home_ai_rewrite_announcements":"advanced","home_aqi_custom_limit":"basic","home_aqi_scale":"basic","home_automatic_notifications":"basic","home_automatic_tts":"basic","home_away_open_window_alert":"basic","home_global_environment_pollen_avoid_ventilation":"basic","home_global_occupancy_away_cooldown_minutes":"basic","home_global_policy_home_policy":"basic","home_global_policy_source_freshness_mode":"basic","home_language":"basic","home_shade_announce_before_movement":"basic","home_use_announcement_hub":"basic","prepare_for_arrival":"basic","shade_announce":"basic","shade_auto_control":"basic","shade_close_above_c":"basic","shade_lux_enabled":"advanced","shade_lux_entity":"advanced","shade_min_lux":"advanced","shade_window_entity":"basic"},"home_option_levels":{"ai_conversation_agent":"advanced","away_open_window_alert":"basic","away_windows_delivery_channels":"basic","away_windows_target_people":"basic","general_away_cooldown_minutes":"basic","general_home_policy":"basic","general_home_trackers":"basic","general_occupied_rooms_attribute":"basic","general_occupied_rooms_entity":"basic","general_room_occupancy_sensors":"basic","general_sleep_rooms_attribute":"basic","general_sleep_rooms_entity":"basic","general_source_freshness_mode":"basic","general_source_stale_minutes":"basic","general_wake_alarm_entity":"basic","general_wake_lead_minutes_entity":"basic","global_threshold_indoor_aqi":"advanced","global_threshold_indoor_co2":"advanced","global_threshold_indoor_humidity":"advanced","global_threshold_indoor_mold":"advanced","global_threshold_indoor_pm10":"advanced","global_threshold_indoor_pm25":"advanced","global_threshold_indoor_voc":"advanced","global_threshold_indoor_voc_parts":"advanced","global_threshold_max_age_minutes":"basic","global_threshold_max_age_mode":"basic","global_threshold_max_outdoor_humidity":"basic","global_threshold_max_outdoor_temp":"basic","global_threshold_max_wind_kmh":"basic","global_threshold_min_outdoor_temp":"basic","global_threshold_outdoor_aqi":"advanced","global_threshold_outdoor_co2":"advanced","global_threshold_outdoor_no2":"advanced","global_threshold_outdoor_o3":"advanced","global_threshold_outdoor_pm10":"advanced","global_threshold_outdoor_pm25":"advanced","global_threshold_outdoor_so2":"advanced","global_threshold_outdoor_voc":"advanced","global_threshold_outdoor_voc_parts":"advanced","language":"basic","media_players":"basic","notify_entities":"basic","outdoor_sensors":"basic","pollen_avoid_ventilation":"basic","pollen_entities":"basic","pollen_high_from":"expert","pollen_max_scale":"expert","tts_engine":"basic","use_announcement_hub":"basic","use_mold_indicator":"basic","weather_entities":"basic","weather_warnings":"basic","window_open_timeout_minutes":"basic"},"room_option_levels":{"windows":"basic","door_sensors":"basic","air_quality":"basic","temperature":"basic","humidity":"basic","climate_devices":"basic","shades":"basic","occupancy_sensors":"basic"},"home_aliases":{"global_occupancy_source_stale_minutes":"general_source_stale_minutes","global_occupancy_away_cooldown_minutes":"general_away_cooldown_minutes","home_global_policy_home_policy":"general_home_policy","home_global_policy_source_freshness_mode":"general_source_freshness_mode","home_global_threshold_mode_max_age_mode":"global_threshold_max_age_mode","global_threshold_max_age_minutes":"global_threshold_max_age_minutes"},"always_basic":{"native":["area_climate_operating_occupancy_stale_minutes","area_climate_operating_unoccupied_delay_minutes","area_climate_policy_away_policy","area_climate_policy_occupancy_freshness_mode","area_climate_policy_unknown_occupancy","area_pid_max_setpoint_c","area_pid_min_setpoint_c","area_pid_target_c","area_room_equipment_limit_humidity_max_limit","area_room_equipment_limit_humidity_min_limit","area_room_equipment_limit_temperature_max_limit","area_room_equipment_limit_temperature_min_limit","arrival_preparation_timeout","cancel_arrival_preparation","door_kind","door_target_area","equipment_announce_device_errors","equipment_control_mode","equipment_door_closed_eco","equipment_fan_max_percentage","equipment_fan_min_percentage","equipment_fan_purpose","equipment_max_on_seconds","equipment_min_off_seconds","equipment_min_on_seconds","equipment_native_full_output","equipment_off_state_watchdog_mode","equipment_pause_on_window_open","equipment_pid_calibration_method","equipment_pid_review_approve","equipment_pid_review_discard","equipment_power_switch_cooldown_seconds","equipment_power_switch_entity","equipment_presence_requirement","equipment_preset","equipment_quiet_fan_mode","equipment_quiet_occupied","equipment_quiet_percentage","equipment_quiet_sleep","equipment_resume","equipment_sensor_verified","equipment_sleep_behavior","equipment_sleep_when_everyone_asleep","equipment_target_away_cool","equipment_target_away_heat","equipment_target_away_humidity","equipment_target_comfort_cool","equipment_target_comfort_heat","equipment_target_comfort_humidity","equipment_target_eco_cool","equipment_target_eco_heat","equipment_target_eco_humidity","equipment_target_home_cool","equipment_target_home_heat","equipment_target_home_humidity","equipment_target_manual_cool","equipment_target_manual_heat","equipment_target_manual_humidity","equipment_target_sleep_cool","equipment_target_sleep_heat","equipment_target_sleep_humidity","global_occupancy_source_stale_minutes","global_threshold_max_age_minutes","global_threshold_max_outdoor_humidity","global_threshold_max_outdoor_temp","global_threshold_max_wind_kmh","global_threshold_min_outdoor_temp","global_threshold_mode_max_age_mode","home_aqi_custom_limit","home_aqi_scale","home_global_policy_source_freshness_mode","prepare_for_arrival"],"home_options":["away_open_window_alert","away_windows_delivery_channels","away_windows_target_people","general_away_cooldown_minutes","general_home_policy","general_home_trackers","general_occupied_rooms_attribute","general_occupied_rooms_entity","general_room_occupancy_sensors","general_sleep_rooms_attribute","general_sleep_rooms_entity","general_source_freshness_mode","general_source_stale_minutes","general_wake_alarm_entity","general_wake_lead_minutes_entity","global_threshold_max_age_minutes","global_threshold_max_age_mode","global_threshold_max_outdoor_humidity","global_threshold_max_outdoor_temp","global_threshold_max_wind_kmh","global_threshold_min_outdoor_temp","language","media_players","notify_entities","outdoor_sensors","pollen_avoid_ventilation","pollen_entities","tts_engine","use_announcement_hub","use_mold_indicator","weather_entities","weather_warnings","window_open_timeout_minutes"],"room_options":["windows","door_sensors","air_quality","temperature","humidity","climate_devices","shades","occupancy_sensors"]},"dynamic_native":{"door_coordination":"door_entities.py:select_entities","door_energy_meter":"door_entities.py:select_entities","door_kind":"door_entities.py:select_entities","door_target_area":"door_entities.py:select_entities","equipment_door_closed_eco":"switch.py:EquipmentQuietSwitch","equipment_door_start_coordination":"select.py:EquipmentSelect","equipment_fan_mode":"equipment_model.py:mode_descriptor","equipment_power_switch_cooldown_seconds":"equipment_model.py:NUMBER_FIELDS","equipment_preset":"equipment_model.py:mode_descriptor","equipment_swing_horizontal_mode":"equipment_model.py:mode_descriptor","equipment_swing_mode":"equipment_model.py:mode_descriptor","equipment_target_away_cool":"equipment_mode_entities.py:scoped_fields/target_field","equipment_target_away_heat":"equipment_mode_entities.py:scoped_fields/target_field","equipment_target_away_humidity":"equipment_mode_entities.py:scoped_fields/target_field","equipment_target_comfort_cool":"equipment_mode_entities.py:scoped_fields/target_field","equipment_target_comfort_heat":"equipment_mode_entities.py:scoped_fields/target_field","equipment_target_comfort_humidity":"equipment_mode_entities.py:scoped_fields/target_field","equipment_target_eco_cool":"equipment_mode_entities.py:scoped_fields/target_field","equipment_target_eco_heat":"equipment_mode_entities.py:scoped_fields/target_field","equipment_target_eco_humidity":"equipment_mode_entities.py:scoped_fields/target_field","equipment_target_home_cool":"equipment_mode_entities.py:scoped_fields/target_field","equipment_target_home_heat":"equipment_mode_entities.py:scoped_fields/target_field","equipment_target_home_humidity":"equipment_mode_entities.py:scoped_fields/target_field","equipment_target_manual_cool":"equipment_mode_entities.py:scoped_fields/target_field","equipment_target_manual_heat":"equipment_mode_entities.py:scoped_fields/target_field","equipment_target_manual_humidity":"equipment_mode_entities.py:scoped_fields/target_field","equipment_target_sleep_cool":"equipment_mode_entities.py:scoped_fields/target_field","equipment_target_sleep_heat":"equipment_mode_entities.py:scoped_fields/target_field","equipment_target_sleep_humidity":"equipment_mode_entities.py:scoped_fields/target_field"}};
   const auditWordsB8={
-    en:{search:'Find a setting',advanced:'Show advanced settings',showing:'Shown',total:'total',empty:'No settings match. Clear the search or show advanced settings.',help:'Advanced settings include specialist models, controller tuning and optional diagnostics. Existing values and protections remain active.'},
-    el:{search:'Αναζήτηση ρύθμισης',advanced:'Εμφάνιση προηγμένων ρυθμίσεων',showing:'Εμφανίζονται',total:'σύνολο',empty:'Δεν βρέθηκαν ρυθμίσεις. Καθάρισε την αναζήτηση ή εμφάνισε τις προηγμένες ρυθμίσεις.',help:'Οι προηγμένες ρυθμίσεις περιλαμβάνουν ειδικά μοντέλα, συντονισμό ελεγκτών και προαιρετικά διαγνωστικά. Οι υπάρχουσες τιμές και οι προστασίες παραμένουν ενεργές.'},
-    de:{search:'Einstellung suchen',advanced:'Erweiterte Einstellungen anzeigen',showing:'Angezeigt',total:'gesamt',empty:'Keine passenden Einstellungen. Suche leeren oder erweiterte Einstellungen anzeigen.',help:'Erweiterte Einstellungen enthalten Spezialmodelle, Reglerabstimmung und optionale Diagnosen. Gespeicherte Werte und Schutzfunktionen bleiben aktiv.'}
+    en:{search:'Find a setting',level:'Level',levelLabel:'Settings level',basic:'Basic',advanced:'Advanced',expert:'Expert',showing:'Shown',total:'total',empty:'No matching settings at this level. Clear the search or choose another level.',help:'Higher levels include the lower levels. Changing the level only changes which settings are shown.',hidden:'More matches: {count}. Select {level} to show them.'},
+    el:{search:'Αναζήτηση ρύθμισης',level:'Επίπεδο',levelLabel:'Επίπεδο ρυθμίσεων',basic:'Βασικές',advanced:'Προηγμένες',expert:'Εξειδικευμένες',showing:'Εμφανίζονται',total:'σύνολο',empty:'Δεν βρέθηκαν ρυθμίσεις σε αυτό το επίπεδο. Καθάρισε την αναζήτηση ή επίλεξε άλλο επίπεδο.',help:'Κάθε επίπεδο περιλαμβάνει και τις ρυθμίσεις των προηγούμενων. Η επιλογή αλλάζει μόνο ποιες ρυθμίσεις εμφανίζονται.',hidden:'Επιπλέον αποτελέσματα: {count}. Επίλεξε «{level}» για να τα δεις.'},
+    de:{search:'Einstellung suchen',level:'Stufe',levelLabel:'Einstellungsstufe',basic:'Basis',advanced:'Erweitert',expert:'Experten',showing:'Angezeigt',total:'gesamt',empty:'Keine passenden Einstellungen auf dieser Stufe. Suche leeren oder eine andere Stufe wählen.',help:'Höhere Stufen enthalten auch die Einstellungen der niedrigeren Stufen. Die Auswahl ändert nur die Anzeige.',hidden:'Weitere Treffer: {count}. Wähle „{level}“, um sie anzuzeigen.'}
   };
   const auditWords=card=>auditWordsB8[card._language()]||auditWordsB8.en;
   const auditText=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase();
+  const auditRanksB8={basic:0,advanced:1,expert:2};
+  const auditValidLevelB8=value=>typeof value==='string'&&Object.prototype.hasOwnProperty.call(auditRanksB8,value);
+  const auditSelectedLevelB8=saved=>auditValidLevelB8(saved.settingsAudit?.level)?saved.settingsAudit.level:
+    saved.settingsAudit?.advanced===true?'expert':'basic';
+  const auditAllowedB8=(saved,level)=>auditRanksB8[auditValidLevelB8(level)?level:'basic']<=auditRanksB8[auditSelectedLevelB8(saved)];
   const auditKeyB8=field=>{
     const a=field.state?.attributes||{};
     if(a.door_setting_key)return 'door_'+a.door_setting_key;
     if(a.settings_scope==='operating_mode'&&typeof a.setting_key==='string')return 'equipment_'+a.setting_key;
     return field.reg?.translation_key||a.setting_key||'';
   };
-  const auditLevelB8=field=>field.domain==='button'?'primary':
-    Object.prototype.hasOwnProperty.call(auditPolicyB8.advanced,auditKeyB8(field))?'advanced':'primary';
-  const auditMatchesB8=(saved,label)=>!saved.settingsAudit?.query||auditText(label).includes(auditText(saved.settingsAudit.query));
+  const auditLevelB8=field=>{
+    const level=auditPolicyB8.native_levels[auditKeyB8(field)];
+    return auditValidLevelB8(level)?level:'basic';
+  };
+  const auditOptionLevelB8=(key,scope)=>{
+    const level=(scope==='home'?auditPolicyB8.home_option_levels:auditPolicyB8.room_option_levels)[key];
+    return auditValidLevelB8(level)?level:'basic';
+  };
+  const auditMatchesB8=(saved,label)=>{
+    const query=auditText(saved.settingsAudit?.query).trim();
+    return !query||auditText(label).includes(query);
+  };
   const auditKeepB8=(saved,field)=>{
     const edit=saved.nativeEdits?.get(field.id);
     return Boolean(edit&&edit.phase!=='saved');
   };
   const auditVisibleB8=(saved,field)=>auditKeepB8(saved,field)||
     (auditMatchesB8(saved,[field.label,field.id,field.state?.attributes?.configuration_help].join(' '))&&
-     (auditLevelB8(field)==='primary'||saved.settingsAudit?.advanced||saved.settingsAudit?.query));
+     auditAllowedB8(saved,auditLevelB8(field)));
+  const auditFormKeepB8=(saved,key,row)=>Boolean(saved.optionsAutosave?.dirty?.has(key)||
+    saved.clientErrors?.has(key)||[...row.querySelectorAll('[role="alert"]')].some(item=>!item.hidden&&item.textContent.trim()));
+  const auditHasFocusB8=(row,focus)=>{
+    for(let current=focus;current;current=current.getRootNode?.()?.host){
+      if(row.contains(current))return true;
+    }
+    return false;
+  };
+
+  // One display preference per HA user and integration in this browser.
+  // Unknown user identities remain session-only. Storage failures retain
+  // the current choice in memory; they never interrupt a settings menu.
+  const auditPreferencePrefixB8='hem.settings-level.v1:';
+  const auditPreferencesB8=new Map();
+  let auditStorageBoundB8=false;
+  const auditPreferenceKeyB8=(card,saved)=>{
+    const user=card._hass?.user?.id,entry=saved?.entryId;
+    return typeof user==='string'&&user&&typeof entry==='string'&&entry?
+      auditPreferencePrefixB8+encodeURIComponent(user)+':'+encodeURIComponent(entry):null;
+  };
+  const auditPreferenceOwnerB8=(card,saved)=>{
+    const key=auditPreferenceKeyB8(card,saved);
+    if(key)return {cache:auditPreferencesB8,key,storageKey:key};
+    card._settingsAuditMemoryB8 ||= new Map();
+    return {cache:card._settingsAuditMemoryB8,key:'session:'+String(saved?.entryId||''),storageKey:null};
+  };
+  const auditBindStorageB8=()=>{
+    if(auditStorageBoundB8||typeof globalThis.addEventListener!=='function')return;
+    auditStorageBoundB8=true;
+    globalThis.addEventListener('storage',event=>{
+      if(event.key===null){auditPreferencesB8.clear();return;}
+      if(typeof event.key!=='string'||!event.key.startsWith(auditPreferencePrefixB8))return;
+      if(auditValidLevelB8(event.newValue))auditPreferencesB8.set(event.key,{level:event.newValue,explicit:true});
+      else auditPreferencesB8.delete(event.key);
+    });
+  };
+  const auditReadLevelB8=(card,saved)=>{
+    saved.settingsAudit ||= {query:''};
+    const state=saved.settingsAudit,owner=auditPreferenceOwnerB8(card,saved);
+    auditBindStorageB8();
+    let preference=owner.cache.get(owner.key);
+    if(!preference){
+      let stored=null;
+      if(owner.storageKey){try{stored=globalThis.localStorage?.getItem(owner.storageKey);}catch{}}
+      preference={level:auditValidLevelB8(stored)?stored:'basic',explicit:auditValidLevelB8(stored)};
+      owner.cache.set(owner.key,preference);
+    }
+    // The old checkbox was dialog-local. It can seed the new shared level,
+    // but it cannot override a stored or newly selected level from any menu.
+    if(!preference.explicit&&!state.preferenceKey&&state.advanced===true)preference.level='expert';
+    state.level=preference.level;state.preferenceKey=owner.key;
+    if(typeof state.query!=='string')state.query='';
+    delete state.advanced;
+    return preference.level;
+  };
+  const auditRememberLevelB8=(card,saved,level)=>{
+    if(!auditValidLevelB8(level))return auditReadLevelB8(card,saved);
+    const owner=auditPreferenceOwnerB8(card,saved);
+    owner.cache.set(owner.key,{level,explicit:true});
+    if(owner.storageKey){try{globalThis.localStorage?.setItem(owner.storageKey,level);}catch{}}
+    return auditReadLevelB8(card,saved);
+  };
   const auditProto=AirQualityAdvisorCard.prototype;
   auditProto._settingsAuditPolicyB8=function(){return auditPolicyB8;};
   auditProto._settingsAuditLevelB8=function(field){return auditLevelB8(field);};
+  auditProto._settingsAuditOptionLevelB8=function(key,scope){return auditOptionLevelB8(key,scope);};
+  auditProto._settingsAuditPreferenceKeyB8=function(saved){return auditPreferenceKeyB8(this,saved);};
+  auditProto._settingsAuditSelectedLevelB8=function(saved){return auditReadLevelB8(this,saved);};
+  auditProto._settingsAuditSetLevelB8=function(saved,level){
+    const selected=auditRememberLevelB8(this,saved,level);
+    for(const scope of ['home','room','device']){
+      const current=settingsDialog(this,scope);
+      if(current&&current.entryId===saved.entryId)this._settingsAuditApplyB8(current,scope);
+    }
+    return selected;
+  };
   const auditFieldsBefore=auditProto._hemFullFields127;
   auditProto._hemFullFields127=function(saved,scope){
     const fields=auditFieldsBefore.call(this,saved,scope);
@@ -12211,72 +12312,88 @@
     const saved=settingsDialog(this,scope);
     const html=auditRowBefore.call(this,field,scope);
     if(!saved)return html;
-    return html.replace('<div ', '<div data-settings-tier-b8="'+auditLevelB8(field)+'" '+
-      (auditVisibleB8(saved,field)?'':'hidden ') );
+    // Keep source markup stable across display preferences. The synchronous
+    // audit pass owns hidden state after each render, before the next paint.
+    return html.replace('<div ', '<div data-settings-tier-b8="'+auditLevelB8(field)+'" ');
   };
   auditProto._settingsAuditApplyB8=function(saved,scope){
     if(!this._hemFullContext127(saved,scope))return;
-    saved.settingsAudit ||= {advanced:false,query:''};
-    const words=auditWords(this), node=saved.node;
+    const selected=auditReadLevelB8(this,saved),words=auditWords(this),node=saved.node;
     let bar=node.querySelector('[data-settings-tools-b8]');
     if(!bar){
       bar=document.createElement('section');bar.className='hem-settings-tools-b8';
       bar.setAttribute('data-settings-tools-b8','');
       bar.innerHTML='<input type="search" data-settings-search-b8 maxlength="100">'+
-        '<label><input type="checkbox" data-settings-advanced-b8><span></span></label>'+
-        '<small data-settings-count-b8 role="status" aria-live="polite"></small>';
+        '<label><span data-settings-level-label-b8></span><select data-settings-level-b8>'+
+        '<option value="basic"></option><option value="advanced"></option><option value="expert"></option></select></label>'+
+        '<small data-settings-count-b8 role="status" aria-live="polite"></small>'+
+        '<small data-settings-hidden-matches-b8 role="status" aria-live="polite" hidden></small>';
       const body=node.querySelector(scope==='device'?'.hem-controller-body126':
         scope==='home'?'[data-hem-home-form-groups128]':'[data-room-options-groups114]');
       if(!body)return;
       body.before(bar);
-      const search=bar.querySelector('input[type="search"]'),advanced=bar.querySelector('input[type="checkbox"]');
-      search.value=saved.settingsAudit.query;advanced.checked=saved.settingsAudit.advanced;
+      const search=bar.querySelector('[data-settings-search-b8]'),level=bar.querySelector('[data-settings-level-b8]');
+      search.value=saved.settingsAudit.query;
       search.addEventListener('input',()=>{
         saved.settingsAudit.query=search.value.slice(0,100);this._settingsAuditApplyB8(saved,scope);
       });
-      advanced.addEventListener('change',()=>{
-        saved.settingsAudit.advanced=advanced.checked;this._settingsAuditApplyB8(saved,scope);
-      });
+      level.addEventListener('change',()=>{this._settingsAuditSetLevelB8(saved,level.value);});
+      // A field retained solely because it had focus can be filtered once
+      // focus leaves it. Pending/failed edits retain their independent guard.
+      node.addEventListener('focusout',()=>Promise.resolve().then(()=>{
+        if(!saved.settingsClosed&&saved.node?.isConnected)this._settingsAuditApplyB8(saved,scope);
+      }));
     }
-    const search=bar.querySelector('input[type="search"]'),advanced=bar.querySelector('input[type="checkbox"]');
+    const search=bar.querySelector('[data-settings-search-b8]'),level=bar.querySelector('[data-settings-level-b8]');
     search.placeholder=words.search;search.setAttribute('aria-label',words.search);
-    advanced.nextElementSibling.textContent=words.advanced;advanced.parentElement.title=words.help;
+    bar.querySelector('[data-settings-level-label-b8]').textContent=words.level;
+    level.setAttribute('aria-label',words.levelLabel);level.setAttribute('aria-description',words.help);
+    level.title=words.help;level.value=selected;
+    for(const option of level.options)option.textContent=words[option.value];
     const fields=new Map(this._hemFullFields127(saved,scope).map(f=>[f.id,f]));
-    let visible=0,total=0,advancedCount=0;
-    const focus=_roomOptionsDeepFocus114();
+    let visible=0,total=0,hiddenMatches=0,hiddenLevel='basic';
+    const hasQuery=Boolean(saved.settingsAudit.query.trim()),focus=_roomOptionsDeepFocus114();
+    const count=(row,tier,matches,keep)=>{
+      total++;visible+=!row.hidden;
+      if(hasQuery&&matches&&!auditAllowedB8(saved,tier)&&!keep){
+        hiddenMatches++;if(auditRanksB8[tier]>auditRanksB8[hiddenLevel])hiddenLevel=tier;
+      }
+    };
     for(const row of node.querySelectorAll('[data-hem-full-row127]')){
       const field=fields.get(row.getAttribute('data-hem-full-row127'));if(!field)continue;
-      const level=auditLevelB8(field);row.setAttribute('data-settings-tier-b8',level);
-      row.hidden=!row.contains(focus)&&!auditVisibleB8(saved,field);
-      total++;visible+=!row.hidden;advancedCount+=level==='advanced';
+      const tier=auditLevelB8(field),keep=auditHasFocusB8(row,focus)||auditKeepB8(saved,field);
+      const matches=auditMatchesB8(saved,[field.label,field.id,field.state?.attributes?.configuration_help].join(' '));
+      row.setAttribute('data-settings-tier-b8',tier);row.hidden=!keep&&!(matches&&auditAllowedB8(saved,tier));
+      count(row,tier,matches,keep);
     }
     for(const row of node.querySelectorAll('[data-hem-home-field128]')){
-      const key=row.getAttribute('data-hem-home-field128'),level=auditPolicyB8.advanced_options[key]?'advanced':'primary';
-      const pending=saved.optionsAutosave?.dirty?.has(key)||row.querySelector('[role="alert"]');
-      const text=row.textContent+' '+key;
-      row.hidden=!row.contains(focus)&&!pending&&!(auditMatchesB8(saved,text)&&
-        (level==='primary'||saved.settingsAudit.advanced||saved.settingsAudit.query));
-      row.setAttribute('data-settings-tier-b8',level);
-      total++;visible+=!row.hidden;advancedCount+=level==='advanced';
+      const key=row.getAttribute('data-hem-home-field128'),tier=auditOptionLevelB8(key,'home');
+      const keep=auditHasFocusB8(row,focus)||auditFormKeepB8(saved,key,row),matches=auditMatchesB8(saved,row.textContent+' '+key);
+      row.hidden=!keep&&!(matches&&auditAllowedB8(saved,tier));row.setAttribute('data-settings-tier-b8',tier);
+      count(row,tier,matches,keep);
     }
     for(const row of node.querySelectorAll('[data-room-options-group114]')){
-      const key=row.getAttribute('data-room-options-group114');
-      row.hidden=!row.contains(focus)&&!saved.optionsAutosave?.dirty?.has(key)&&
-        !auditMatchesB8(saved,row.textContent+' '+key);
-      total++;visible+=!row.hidden;
+      const key=row.getAttribute('data-room-options-group114'),tier=auditOptionLevelB8(key,'room');
+      const keep=auditHasFocusB8(row,focus)||auditFormKeepB8(saved,key,row),matches=auditMatchesB8(saved,row.textContent+' '+key);
+      row.hidden=!keep&&!(matches&&auditAllowedB8(saved,tier));row.setAttribute('data-settings-tier-b8',tier);
+      count(row,tier,matches,keep);
     }
-    advanced.parentElement.hidden=advancedCount===0;
-    advanced.nextElementSibling.textContent=words.advanced+' ('+advancedCount+')';
-    bar.querySelector('[data-settings-count-b8]').textContent=words.showing+' '+visible+' / '+total+' '+words.total;
-    // Hide empty categories, never move source controls or lose their listeners.
+    const shown=bar.querySelector('[data-settings-count-b8]');
+    shown.textContent=visible+' / '+total;
+    shown.setAttribute('aria-label',words.showing+' '+visible+' / '+total+' '+words.total);
+    shown.title=words.showing+' '+visible+' / '+total+' '+words.total;
+    const hidden=bar.querySelector('[data-settings-hidden-matches-b8]');
+    hidden.textContent=words.hidden.replace('{count}',String(hiddenMatches)).replace('{level}',words[hiddenLevel]);
+    hidden.hidden=hiddenMatches===0;
+    // Hide empty categories, never move source controls or lose listeners.
     for(const group of node.querySelectorAll('[data-hem-unified141]')){
       const rows=[...group.querySelectorAll('[data-hem-full-row127],[data-hem-home-field128],[data-room-options-group114]')];
       if(!rows.length)continue;
       group.hidden=rows.every(row=>row.hidden);
       const count=group.querySelector(':scope > summary .hem-room-options-count114');
       if(count)count.textContent=String(rows.filter(row=>!row.hidden).length);
-      // Search expands matches without changing the user's normal accordion state.
-      if(saved.settingsAudit.query){
+      // Search expands matches without changing the normal accordion state.
+      if(hasQuery){
         saved.settingsAudit.expanded ||= new Map();
         const key=group.getAttribute('data-hem-unified141');
         if(!saved.settingsAudit.expanded.has(key))saved.settingsAudit.expanded.set(key,group.open);
@@ -12285,7 +12402,7 @@
         group.open=saved.settingsAudit.expanded.get(group.getAttribute('data-hem-unified141'));
       }
     }
-    if(!saved.settingsAudit.query)saved.settingsAudit.expanded=null;
+    if(!hasQuery)saved.settingsAudit.expanded=null;
     let empty=node.querySelector('[data-settings-empty-b8]');
     if(!empty){empty=document.createElement('p');empty.setAttribute('data-settings-empty-b8','');empty.className='hem-full-notice127';bar.after(empty);}
     empty.textContent=words.empty;empty.hidden=visible>0||total===0;
@@ -12297,11 +12414,15 @@
   };
   const auditStylesBefore=auditProto._styles;
   auditProto._styles=function(){return auditStylesBefore.call(this)+'<style>'+
-    '[data-settings-tier-b8][hidden],[data-hem-unified141][hidden],[data-room-options-group114][hidden],[data-settings-empty-b8][hidden],.hem-settings-tools-b8 label[hidden]{display:none!important}'+
+    '[data-settings-tier-b8][hidden],[data-hem-unified141][hidden],[data-room-options-group114][hidden],[data-settings-empty-b8][hidden],[data-settings-hidden-matches-b8][hidden]{display:none!important}'+
     '.hem-settings-tools-b8{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:10px 14px;border-bottom:1px solid var(--aqa-edge);min-width:0}'+
     '.hem-settings-tools-b8 input[type=search]{flex:1 1 180px;min-width:0;max-width:100%;box-sizing:border-box;padding:8px;border:1px solid var(--aqa-edge);border-radius:8px;background:var(--secondary-background-color,#292929);color:inherit}'+
-    '.hem-settings-tools-b8 label{display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer}'+
+    '.hem-settings-tools-b8 label{display:flex;align-items:center;gap:6px;font-size:12px;min-width:0;max-width:100%}'+
+    '.hem-settings-tools-b8 [data-settings-level-label-b8]{flex:0 0 auto}'+
+    '.hem-settings-tools-b8 select{min-width:10.5em;max-width:100%;padding:7px 5px;border:1px solid var(--aqa-edge);border-radius:8px;background:var(--secondary-background-color,#292929);color:inherit;font:inherit}'+
+    '.hem-settings-tools-b8 select:focus-visible{outline:2px solid var(--primary-color,#03a9f4);outline-offset:2px}'+
     '.hem-settings-tools-b8 small{font-size:11px;color:var(--aqa-muted)}'+
+    '.hem-settings-tools-b8 [data-settings-hidden-matches-b8]{flex:1 0 100%;min-width:0;white-space:normal;overflow-wrap:break-word;word-break:normal}'+
     '</style>';};
   /* HEM_SETTINGS_AUDIT_B8_END */
 
@@ -13030,9 +13151,16 @@
       .hem-room-options114 .hem-settings-tools-b8>label span{
         overflow-wrap:break-word;word-break:normal;
       }
-      .hem-room-options114 .hem-settings-tools-b8>small{
+      .hem-room-options114 .hem-settings-tools-b8>[data-settings-count-b8]{
         grid-column:2;grid-row:2;justify-self:end;
         font-size:12px;white-space:nowrap;
+      }
+      .hem-room-options114 .hem-settings-tools-b8>[data-settings-hidden-matches-b8]{
+        grid-column:1 / -1;grid-row:3;justify-self:stretch;
+        font-size:12px;white-space:normal;min-width:0;
+      }
+      .hem-room-options114 .hem-settings-tools-b8 select{
+        flex:1 1 auto;min-width:10.5em;max-width:100%;min-height:36px;
       }
       /* The Home toolbar has two actions. Keep both visible rather than
          forcing the search box offscreen on 320px phones. */
@@ -13041,7 +13169,8 @@
         justify-content:flex-start;flex-wrap:wrap;
       }
       .hem-home-options128 .hem-settings-tools-b8>label{grid-row:3}
-      .hem-home-options128 .hem-settings-tools-b8>small{grid-row:3}
+      .hem-home-options128 .hem-settings-tools-b8>[data-settings-count-b8]{grid-row:3}
+      .hem-home-options128 .hem-settings-tools-b8>[data-settings-hidden-matches-b8]{grid-row:4}
       .hem-room-options114 .hem-unified141{margin-bottom:5px}
       .hem-room-options114 .hem-room-options-group114>summary{
         min-height:48px;padding:8px 9px;gap:8px;

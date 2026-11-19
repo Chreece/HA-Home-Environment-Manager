@@ -78,7 +78,7 @@ with sync_playwright() as pw:
         assert page.evaluate('card._openHomeSettings128()')
         page.wait_for_function('card._homeSettingsDialog128?.fields?.length===6')
         dialog=page.locator('dialog.hem-home-options128')
-        dialog.locator('[data-settings-advanced-b8]').check()
+        dialog.locator('[data-settings-level-b8]').select_option('expert')
         page.evaluate("card._homeSettingsDialog128.node.querySelectorAll('[data-hem-unified141]').forEach(n=>n.open=true)")
         before=page.evaluate('JSON.stringify({writes,optionWrites,homeData,committed})')
         assert dialog.locator('.hem-home-helper128').count()==0

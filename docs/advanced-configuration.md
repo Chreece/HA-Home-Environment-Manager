@@ -6,6 +6,31 @@ This guide documents HEM's more detailed setup choices, prerequisites, safety ch
 
 ---
 
+## Choose how many settings to show
+
+The HEM card's Home, room and device settings menus have a **Settings level**
+selector. Each level includes the settings below it:
+
+| Level | What it adds |
+|---|---|
+| **Basic** | Everyday controls, source setup, modes and targets, presence/sleep preferences, safety limits, watchdog/recovery and calibration approval actions. |
+| **Advanced** | Manual device Kp/Ki/Kd, PID sampling/cycle adjustments, detailed thresholds, optional strategy and announcement refinements. |
+| **Expert** | Process-model constants, custom fan-capacity curves, their calibration actions and specialist comfort/reference inputs. |
+
+The selected level is remembered for your Home Assistant user in this browser
+and follows you between the three menus. It changes which editors you see;
+your saved settings keep their values and remain active. Search follows the
+selected level and reports matches hidden at higher levels. A pending or
+failed edit remains visible so you can finish it or correct its error.
+
+Use **Advanced** to edit a device's PID gains. Calibration status and adaptive
+Approve/Discard actions are available at Basic. Choose **Expert** for manual
+plant-model calibration or custom fan-capacity inputs. Initial setup and the
+native Home Assistant Options flow retain their existing controls.
+
+For the exact classification and its source audit, see
+[HEM card setting levels](settings-audit.md).
+
 ## First setup
 
 ### 1. Prepare your Home Assistant areas
