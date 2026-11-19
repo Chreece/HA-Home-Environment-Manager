@@ -238,7 +238,10 @@ class PassiveObserver:
             if self.on or self.off:
                 self._reject("observation_clock_or_gap")
             self.interrupt()
-        if self.last_t is not None and at - self.last_t < sample_seconds * 0.7:
+        # Sampling throttles repeated measurements, never a verified physical
+        # edge. Dropping a short OFF interval would merge separate ON runs.
+        if (self.last_t is not None and on == self.last_on
+                and at - self.last_t < sample_seconds * 0.7):
             return False
         before = self.last_on
         self.last_on, self.last_t = on, at
@@ -261,7 +264,13 @@ class PassiveObserver:
             self.on.clear()
             self.baseline = None
             self.off.append((at, float(value)))
-            self.off = self.off[-8:]
+            # Retain a complete baseline by elapsed time, including its
+            # boundary sample and at least four readings for the drift check.
+            # Eight samples cannot span 15 minutes at the supported 120s
+            # interval (and accepted jitter can make that span shorter still).
+            self.off = self.off[-MAX_POINTS:]
+            while len(self.off) > 4 and self.off[1][0] <= at - MIN_OFF_S:
+                self.off.pop(0)
             return completed
         if not owned:
             # Exclude manual starts and all unacknowledged/unowned power.
@@ -371,10 +380,16 @@ def bounded_gains(current: dict, proposed: dict) -> dict[str, float] | None:
         old, wanted = float(old), float(wanted)
         if not lower <= old <= upper or not lower <= wanted <= upper:
             return None
-        limit = max(0.001 if key == "ki" else 0.01,
-                    AUTO_MAX_RELATIVE_CHANGE * max(old, lower))
+        # A fixed minimum step can exceed the advertised relative bound by
+        # orders of magnitude. A zero integral gain stays zero: enabling I
+        # is an explicit manual choice, not a hidden adaptation bootstrap.
+        limit = AUTO_MAX_RELATIVE_CHANGE * old
         next_value = max(old - limit, min(old + limit, wanted))
-        result[key] = round(max(lower, min(upper, next_value)), 5)
+        rounded = round(max(lower, min(upper, next_value)), 8)
+        # Rounding itself must not move a very small gain beyond its limit.
+        low = max(lower, old - limit, min(old, wanted))
+        high = min(upper, old + limit, max(old, wanted))
+        result[key] = max(low, min(high, rounded))
     # SIMC intentionally recommends PI. Keep existing Kd until the operator
     # explicitly changes derivative policy rather than silently zeroing it.
     result["kd"] = current.get("kd")

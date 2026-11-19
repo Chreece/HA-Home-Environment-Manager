@@ -78,6 +78,13 @@ def extract(path, names, scope, *, constants=()):
 maths = load_pure("pid_math", "pid_math.py")
 phase = load_pure("pid_phase", "pid_phase.py")
 load_pure("dry_mode", "dry_mode.py")
+if (ROOT / "pid_learning_status.py").exists():
+    # The real controller status now includes this pure learning snapshot.
+    # Load its pure dependencies without importing any Home Assistant runtime.
+    load_pure("pid_calibration", "pid_calibration.py")
+    load_pure("pid_passive", "pid_passive.py")
+    load_pure("pid_review", "pid_review.py")
+    load_pure("pid_learning_status", "pid_learning_status.py")
 model = module(f"{PACKAGE}.equipment_model")
 model.__dict__.update(dataclass=dataclass, math=math, finite=maths.finite,
                       target_from_unit=maths.target_from_unit,

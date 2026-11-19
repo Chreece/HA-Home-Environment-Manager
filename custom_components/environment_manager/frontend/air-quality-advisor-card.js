@@ -12167,7 +12167,7 @@
    * Presentation only. Exact setting identities, never translated label guesses.
    * Fold specialist tuning, not native entities, stored values or safety policy.
    */
-  const auditPolicyB8={"version":1,"advanced":{"area_area_environment_enable_pmv":"comfort_model","area_area_environment_air_speed_m_s":"comfort_model","area_area_environment_met":"comfort_model","area_area_environment_clo":"comfort_model","area_area_science_radiant_temperature_entity":"comfort_model","area_area_science_air_speed_entity":"comfort_model","area_climate_operating_comfort_adjustment_max_c":"comfort_model","area_area_environment_radon_reference_bq_m3":"specialist_reference","global_environment_pollen_high_from":"specialist_reference","global_environment_pollen_max_scale":"specialist_reference","equipment_kp":"controller_tuning","equipment_ki":"controller_tuning","equipment_kd":"controller_tuning","equipment_sample_seconds":"controller_tuning","equipment_cycle_seconds":"controller_tuning","equipment_pid_process_gain":"controller_tuning","equipment_pid_time_constant_minutes":"controller_tuning","equipment_pid_dead_time_minutes":"controller_tuning","equipment_pid_lambda_minutes":"controller_tuning","equipment_pid_fan_capacity_mode":"controller_tuning","equipment_pid_fan_capacity_for_mode":"controller_tuning","equipment_pid_capacity_speed_1":"controller_tuning","equipment_pid_capacity_speed_2":"controller_tuning","equipment_pid_capacity_speed_3":"controller_tuning","equipment_pid_capacity_output_1":"controller_tuning","equipment_pid_capacity_output_2":"controller_tuning","equipment_pid_capacity_output_3":"controller_tuning","equipment_pid_capacity_stage_1":"controller_tuning","equipment_pid_capacity_stage_2":"controller_tuning","equipment_pid_capacity_stage_3":"controller_tuning","equipment_pid_capacity_stage_4":"controller_tuning","area_pid_kp":"compatibility_tuning","area_pid_ki":"compatibility_tuning","area_pid_kd":"compatibility_tuning","area_pid_offset_c":"compatibility_tuning","area_pid_sample_seconds":"compatibility_tuning","area_pid_max_change_c":"compatibility_tuning","area_pid_min_change_c":"compatibility_tuning","area_pid_gain_source":"compatibility_tuning","area_direct_tuning_kp":"compatibility_tuning","area_direct_tuning_ki":"compatibility_tuning","area_direct_tuning_kd":"compatibility_tuning","area_direct_tuning_sample_seconds":"compatibility_tuning","area_direct_tuning_max_demand_change":"compatibility_tuning","area_direct_tuning_min_demand_change":"compatibility_tuning","area_area_environment_particle_cadr_m3h":"compatibility_tuning","equipment_pid_adaptation_mode":"compatibility_tuning","area_climate_operating_humidity_hysteresis_rh":"strategy_tuning","area_climate_operating_cooling_dry_deferral_rh_points":"strategy_tuning","door_energy_meter":"optional_diagnostics"},"advanced_options":{"pollen_high_from":"specialist_reference","pollen_max_scale":"specialist_reference","general_occupied_rooms_attribute":"source_format","general_sleep_rooms_attribute":"source_format"},"home_aliases":{"global_occupancy_source_stale_minutes":"general_source_stale_minutes","global_occupancy_away_cooldown_minutes":"general_away_cooldown_minutes","home_global_policy_home_policy":"general_home_policy","home_global_policy_source_freshness_mode":"general_source_freshness_mode","home_global_threshold_mode_max_age_mode":"global_threshold_max_age_mode","global_threshold_max_age_minutes":"global_threshold_max_age_minutes"}};
+  const auditPolicyB8={"version":1,"advanced":{"area_area_environment_enable_pmv":"comfort_model","area_area_environment_air_speed_m_s":"comfort_model","area_area_environment_met":"comfort_model","area_area_environment_clo":"comfort_model","area_area_science_radiant_temperature_entity":"comfort_model","area_area_science_air_speed_entity":"comfort_model","area_climate_operating_comfort_adjustment_max_c":"comfort_model","area_area_environment_radon_reference_bq_m3":"specialist_reference","global_environment_pollen_high_from":"specialist_reference","global_environment_pollen_max_scale":"specialist_reference","equipment_sample_seconds":"controller_tuning","equipment_cycle_seconds":"controller_tuning","equipment_pid_process_gain":"controller_tuning","equipment_pid_time_constant_minutes":"controller_tuning","equipment_pid_dead_time_minutes":"controller_tuning","equipment_pid_lambda_minutes":"controller_tuning","equipment_pid_fan_capacity_mode":"controller_tuning","equipment_pid_fan_capacity_for_mode":"controller_tuning","equipment_pid_capacity_speed_1":"controller_tuning","equipment_pid_capacity_speed_2":"controller_tuning","equipment_pid_capacity_speed_3":"controller_tuning","equipment_pid_capacity_output_1":"controller_tuning","equipment_pid_capacity_output_2":"controller_tuning","equipment_pid_capacity_output_3":"controller_tuning","equipment_pid_capacity_stage_1":"controller_tuning","equipment_pid_capacity_stage_2":"controller_tuning","equipment_pid_capacity_stage_3":"controller_tuning","equipment_pid_capacity_stage_4":"controller_tuning","area_pid_kp":"compatibility_tuning","area_pid_ki":"compatibility_tuning","area_pid_kd":"compatibility_tuning","area_pid_offset_c":"compatibility_tuning","area_pid_sample_seconds":"compatibility_tuning","area_pid_max_change_c":"compatibility_tuning","area_pid_min_change_c":"compatibility_tuning","area_pid_gain_source":"compatibility_tuning","area_direct_tuning_kp":"compatibility_tuning","area_direct_tuning_ki":"compatibility_tuning","area_direct_tuning_kd":"compatibility_tuning","area_direct_tuning_sample_seconds":"compatibility_tuning","area_direct_tuning_max_demand_change":"compatibility_tuning","area_direct_tuning_min_demand_change":"compatibility_tuning","area_area_environment_particle_cadr_m3h":"compatibility_tuning","equipment_pid_adaptation_mode":"compatibility_tuning","area_climate_operating_humidity_hysteresis_rh":"strategy_tuning","area_climate_operating_cooling_dry_deferral_rh_points":"strategy_tuning","door_energy_meter":"optional_diagnostics"},"advanced_options":{"pollen_high_from":"specialist_reference","pollen_max_scale":"specialist_reference","general_occupied_rooms_attribute":"source_format","general_sleep_rooms_attribute":"source_format"},"home_aliases":{"global_occupancy_source_stale_minutes":"general_source_stale_minutes","global_occupancy_away_cooldown_minutes":"general_away_cooldown_minutes","home_global_policy_home_policy":"general_home_policy","home_global_policy_source_freshness_mode":"general_source_freshness_mode","home_global_threshold_mode_max_age_mode":"global_threshold_max_age_mode","global_threshold_max_age_minutes":"global_threshold_max_age_minutes"}};
   const auditWordsB8={
     en:{search:'Find a setting',advanced:'Show advanced settings',showing:'Shown',total:'total',empty:'No settings match. Clear the search or show advanced settings.',help:'Advanced settings include specialist models, controller tuning and optional diagnostics. Existing values and protections remain active.'},
     el:{search:'Αναζήτηση ρύθμισης',advanced:'Εμφάνιση προηγμένων ρυθμίσεων',showing:'Εμφανίζονται',total:'σύνολο',empty:'Δεν βρέθηκαν ρυθμίσεις. Καθάρισε την αναζήτηση ή εμφάνισε τις προηγμένες ρυθμίσεις.',help:'Οι προηγμένες ρυθμίσεις περιλαμβάνουν ειδικά μοντέλα, συντονισμό ελεγκτών και προαιρετικά διαγνωστικά. Οι υπάρχουσες τιμές και οι προστασίες παραμένουν ενεργές.'},
@@ -13111,6 +13111,227 @@
   /* HEM_FRESHNESS_POLICY_B11_END */
 
 
+  /* HEM_PID_STATUS074_START
+   * Read-only evidence belongs beside the gains. Runtime evidence describes
+   * one active mode; never attach it to another mode's saved parameters.
+   */
+  const HEM_PID_WORDS074={
+    en:{title:'PID status',current:'Current gains',saved:'Saved gains',method:'Calibration',
+      cycles:'accepted cycles',pending:'Proposed change · awaiting approval',last:'Last applied',
+      never:'No calibration has been applied',historyUnknown:'Applied values were not recorded',
+      unavailable:'Live learning status is unavailable',unknown:'Unavailable',generic:'Device',
+      rejection:'Last rejected cycle',suggest:'Gains change only after you approve a proposal.',
+      automatic:'Automatic changes are limited to 10% per update, at least 24 hours apart.',
+      methods:{manual:'Manual',imc_lambda:'IMC / Lambda',cohen_coon:'Cohen–Coon',
+        adaptive_suggest:'Adaptive · suggest and approve',adaptive_auto:'Adaptive · automatic'},
+      states:{disabled:'Adaptive learning is off',inactive:'Inactive for this mode',
+        unsupported:'Adaptive learning is not supported',waiting:'Waiting for usable evidence',
+        collecting:'Learning from normal operation',ready_for_review:'Proposal ready for approval',
+        waiting_for_safe_off:'Waiting for the device to switch off safely',
+        cooldown:'Waiting before the next adjustment',applied:'Calibration applied',
+        no_change:'Current gains retained'},
+      phases:{observing_on_response:'Observing the running device',
+        collecting_stable_off_baseline:'Observing a stable baseline while off',
+        awaiting_verified_off:'Waiting for confirmed OFF'},
+      modes:{heat:'Heating',cool:'Cooling',dry:'Dehumidification',humidify:'Humidification',
+        fan_only:'Fan',filtration:'Filtration',extraction:'Extraction',heat_cool:'Heating / cooling'}},
+    el:{title:'Κατάσταση PID',current:'Τρέχουσες τιμές',saved:'Αποθηκευμένες τιμές',method:'Βαθμονόμηση',
+      cycles:'αποδεκτοί κύκλοι',pending:'Προτεινόμενη αλλαγή · αναμονή έγκρισης',last:'Τελευταία εφαρμογή',
+      never:'Δεν έχει εφαρμοστεί βαθμονόμηση',historyUnknown:'Οι τιμές που εφαρμόστηκαν δεν έχουν καταγραφεί',
+      unavailable:'Δεν είναι διαθέσιμη η τρέχουσα κατάσταση εκμάθησης',unknown:'Μη διαθέσιμο',generic:'Συσκευή',
+      rejection:'Τελευταίος κύκλος που απορρίφθηκε',suggest:'Οι τιμές αλλάζουν μόνο αφού εγκρίνεις μια πρόταση.',
+      automatic:'Οι αυτόματες αλλαγές περιορίζονται στο 10% ανά εφαρμογή, με τουλάχιστον 24 ώρες μεταξύ τους.',
+      methods:{manual:'Χειροκίνητη',imc_lambda:'IMC / Lambda',cohen_coon:'Cohen–Coon',
+        adaptive_suggest:'Προσαρμοστική · πρόταση και έγκριση',adaptive_auto:'Προσαρμοστική · αυτόματη'},
+      states:{disabled:'Η προσαρμοστική εκμάθηση είναι κλειστή',inactive:'Ανενεργή για αυτή τη λειτουργία',
+        unsupported:'Δεν υποστηρίζεται προσαρμοστική εκμάθηση',waiting:'Αναμονή κατάλληλων μετρήσεων',
+        collecting:'Εκμάθηση από την κανονική λειτουργία',ready_for_review:'Υπάρχει πρόταση για έγκριση',
+        waiting_for_safe_off:'Αναμονή για ασφαλή διακοπή λειτουργίας της συσκευής',
+        cooldown:'Αναμονή πριν από την επόμενη προσαρμογή',applied:'Η βαθμονόμηση εφαρμόστηκε',
+        no_change:'Διατηρούνται οι τρέχουσες τιμές'},
+      phases:{observing_on_response:'Παρακολούθηση της συσκευής όσο λειτουργεί',
+        collecting_stable_off_baseline:'Μέτρηση σταθερής αρχικής κατάστασης με τη συσκευή κλειστή',
+        awaiting_verified_off:'Αναμονή επιβεβαίωσης ότι η συσκευή είναι κλειστή'},
+      modes:{heat:'Θέρμανση',cool:'Ψύξη',dry:'Αφύγρανση',humidify:'Ύγρανση',
+        fan_only:'Ανεμιστήρας',filtration:'Φιλτράρισμα',extraction:'Απαγωγή αέρα',heat_cool:'Θέρμανση / ψύξη'}},
+    de:{title:'PID-Status',current:'Aktuelle Werte',saved:'Gespeicherte Werte',method:'Kalibrierung',
+      cycles:'akzeptierte Zyklen',pending:'Vorgeschlagene Änderung · Bestätigung ausstehend',last:'Zuletzt angewendet',
+      never:'Bisher wurde keine Kalibrierung angewendet',historyUnknown:'Die angewendeten Werte wurden nicht aufgezeichnet',
+      unavailable:'Der aktuelle Lernstatus ist nicht verfügbar',unknown:'Nicht verfügbar',generic:'Gerät',
+      rejection:'Zuletzt verworfener Zyklus',suggest:'Werte ändern sich erst, wenn du einen Vorschlag bestätigst.',
+      automatic:'Automatische Änderungen sind auf 10 % je Anpassung begrenzt, mit mindestens 24 Stunden Abstand.',
+      methods:{manual:'Manuell',imc_lambda:'IMC / Lambda',cohen_coon:'Cohen–Coon',
+        adaptive_suggest:'Adaptiv · Vorschlag mit Bestätigung',adaptive_auto:'Adaptiv · automatisch'},
+      states:{disabled:'Adaptives Lernen ist ausgeschaltet',inactive:'Für diese Betriebsart inaktiv',
+        unsupported:'Adaptives Lernen wird nicht unterstützt',waiting:'Warten auf geeignete Messwerte',
+        collecting:'Lernen im normalen Betrieb',ready_for_review:'Vorschlag zur Bestätigung bereit',
+        waiting_for_safe_off:'Warten, bis das Gerät sicher ausgeschaltet ist',
+        cooldown:'Wartezeit bis zur nächsten Anpassung',applied:'Kalibrierung angewendet',
+        no_change:'Aktuelle Werte beibehalten'},
+      phases:{observing_on_response:'Gerät im Betrieb beobachten',
+        collecting_stable_off_baseline:'Stabilen Ausgangswert bei ausgeschaltetem Gerät erfassen',
+        awaiting_verified_off:'Warten auf bestätigten AUS-Zustand'},
+      modes:{heat:'Heizen',cool:'Kühlen',dry:'Entfeuchten',humidify:'Befeuchten',
+        fan_only:'Lüfter',filtration:'Filtration',extraction:'Abluft',heat_cool:'Heizen / Kühlen'}}
+  };
+  // Each reason is an explanation for the operator, not an internal enum label.
+  const HEM_PID_REASONS074={
+    manual_calibration:['The selected method does not learn automatically.','Η επιλεγμένη μέθοδος δεν εκτελεί αυτόματη εκμάθηση.','Das gewählte Verfahren lernt nicht automatisch.'],
+    pid_not_active:['PID control is not selected for this mode.','Δεν έχει επιλεγεί έλεγχος PID για αυτή τη λειτουργία.','Für diese Betriebsart ist keine PID-Regelung gewählt.'],
+    controller_inactive:['The controller is not active.','Ο ελεγκτής δεν είναι ενεργός.','Der Regler ist nicht aktiv.'],
+    unsupported_operating_mode:['This operating mode cannot supply suitable learning cycles.','Αυτή η λειτουργία δεν παρέχει κατάλληλους κύκλους εκμάθησης.','Diese Betriebsart liefert keine geeigneten Lernzyklen.'],
+    unsupported_output:['Passive learning requires a supported ON/OFF output.','Η παθητική εκμάθηση απαιτεί υποστηριζόμενη έξοδο με έλεγχο ανοίγματος και κλεισίματος.','Passives Lernen benötigt einen unterstützten Ein/Aus-Ausgang.'],
+    device_unavailable:['The physical device is unavailable.','Η φυσική συσκευή δεν είναι διαθέσιμη.','Das physische Gerät ist nicht verfügbar.'],
+    single_feedback_sensor_required:['Learning requires one reliable feedback sensor.','Η εκμάθηση χρειάζεται έναν αξιόπιστο αισθητήρα ανάδρασης.','Zum Lernen wird ein einzelner zuverlässiger Rückmeldesensor benötigt.'],
+    verified_activity_required:['The device must confirm when it is running and when it is off.','Η συσκευή πρέπει να επιβεβαιώνει πότε λειτουργεί και πότε είναι κλειστή.','Das Gerät muss seinen Betriebs- und AUS-Zustand bestätigen.'],
+    permissions_required:['The required control permissions have not been enabled.','Δεν έχουν ενεργοποιηθεί τα απαιτούμενα δικαιώματα ελέγχου.','Die erforderlichen Steuerungsfreigaben fehlen.'],
+    pending_command:['A device command is awaiting confirmation.','Μια εντολή προς τη συσκευή περιμένει επιβεβαίωση.','Eine Geräteanweisung wartet auf Bestätigung.'],
+    controller_paused:['Learning is paused with the controller.','Η εκμάθηση έχει παύσει μαζί με τον ελεγκτή.','Das Lernen pausiert zusammen mit dem Regler.'],
+    waiting_for_complete_cycles:['More complete, suitable operating cycles are needed.','Χρειάζονται περισσότεροι πλήρεις και κατάλληλοι κύκλοι λειτουργίας.','Weitere vollständige, geeignete Betriebszyklen werden benötigt.'],
+    off_baseline_not_stable_or_too_short:['The readings while off were not stable for long enough.','Οι μετρήσεις με τη συσκευή κλειστή δεν έμειναν σταθερές για αρκετή ώρα.','Die Messwerte im AUS-Zustand waren nicht lange genug stabil.'],
+    insufficient_on_samples:['Too few measurements were collected while running.','Συλλέχθηκαν πολύ λίγες μετρήσεις όσο λειτουργούσε η συσκευή.','Im Betrieb wurden zu wenige Messwerte erfasst.'],
+    on_cycle_too_short:['The running period was too short to identify the response.','Η συσκευή λειτούργησε πολύ λίγο για να εκτιμηθεί η απόκρισή της.','Die Laufzeit war zu kurz, um die Reaktion zu bestimmen.'],
+    response_too_small:['The measured change was too small for reliable tuning.','Η μεταβολή ήταν πολύ μικρή για αξιόπιστη βαθμονόμηση.','Die gemessene Änderung war für eine zuverlässige Abstimmung zu klein.'],
+    response_outside_physical_limits:['The measured response was outside the accepted range.','Η μετρημένη απόκριση ήταν εκτός του αποδεκτού εύρους.','Die gemessene Reaktion lag außerhalb des zulässigen Bereichs.'],
+    no_stable_plateau:['The response had not settled to a stable level.','Η απόκριση δεν είχε σταθεροποιηθεί.','Die Reaktion hatte sich noch nicht auf einen stabilen Wert eingependelt.'],
+    sensor_jump:['A sudden sensor jump made this cycle unsuitable.','Μια απότομη μεταβολή του αισθητήρα έκανε τον κύκλο ακατάλληλο.','Ein plötzlicher Messwertsprung machte diesen Zyklus ungeeignet.'],
+    response_model_fit_rejected:['The measurements did not fit the response model reliably.','Οι μετρήσεις δεν ταίριαζαν αρκετά καλά στο μοντέλο απόκρισης.','Die Messwerte passten nicht zuverlässig zum Reaktionsmodell.'],
+    observation_clock_or_gap:['A clock change or measurement gap interrupted this cycle.','Αλλαγή ώρας ή κενό στις μετρήσεις διέκοψε αυτόν τον κύκλο.','Eine Zeitänderung oder Messlücke unterbrach diesen Zyklus.'],
+    unsafe_or_invalid_observation:['The cycle was interrupted because its measurements or conditions were unsuitable.','Ο κύκλος διακόπηκε επειδή οι μετρήσεις ή οι συνθήκες δεν ήταν κατάλληλες.','Der Zyklus wurde wegen ungeeigneter Messwerte oder Bedingungen unterbrochen.'],
+    unowned_native_output:['This run was not confirmed as controlled by HEM.','Δεν επιβεβαιώθηκε ότι αυτή η λειτουργία της συσκευής ελεγχόταν από το HEM.','Für diesen Lauf wurde keine Steuerung durch HEM bestätigt.'],
+    inconsistent_plant_response:['The accepted cycles show inconsistent responses.','Οι αποδεκτοί κύκλοι δείχνουν ασυνεπή απόκριση.','Die akzeptierten Zyklen zeigen uneinheitliche Reaktionen.'],
+    identified_gains_outside_safe_bounds:['The calculated gains exceed the permitted limits.','Οι υπολογισμένες τιμές υπερβαίνουν τα επιτρεπτά όρια.','Die berechneten Werte überschreiten die zulässigen Grenzen.'],
+    recommendation_pending:['Review the proposed values before approving them.','Έλεγξε τις προτεινόμενες τιμές πριν τις εγκρίνεις.','Die vorgeschlagenen Werte vor der Bestätigung prüfen.'],
+    waiting_for_safe_off:['The values will only be applied after the device is confirmed off.','Οι τιμές θα εφαρμοστούν μόνο όταν επιβεβαιωθεί ότι η συσκευή είναι κλειστή.','Die Werte werden erst nach bestätigtem AUS-Zustand übernommen.'],
+    calibration_cooldown:['The minimum interval between automatic adjustments has not elapsed.','Δεν έχει περάσει το ελάχιστο διάστημα μεταξύ αυτόματων προσαρμογών.','Der Mindestabstand zwischen automatischen Anpassungen ist noch nicht erreicht.'],
+    new_cycles_required:['New accepted cycles are needed after the previous adjustment.','Χρειάζονται νέοι αποδεκτοί κύκλοι μετά την προηγούμενη προσαρμογή.','Nach der letzten Anpassung werden neue akzeptierte Zyklen benötigt.'],
+    applied:['The displayed calibration has been saved.','Η εμφανιζόμενη βαθμονόμηση έχει αποθηκευτεί.','Die angezeigte Kalibrierung wurde gespeichert.'],
+    no_gain_change:['No useful bounded change is available.','Δεν προκύπτει χρήσιμη αλλαγή εντός των επιτρεπτών ορίων.','Es liegt keine sinnvolle Änderung innerhalb der Grenzen vor.']
+  };
+  const pidWords074=language=>HEM_PID_WORDS074[language]||HEM_PID_WORDS074.en;
+  const pidReason074=(language,reason)=>HEM_PID_REASONS074[reason]?.[
+    language==='el'?1:language==='de'?2:0]||'';
+  const pidNumber074=value=>typeof value==='number'&&Number.isFinite(value)?value:
+    typeof value==='string'&&value.trim()&&Number.isFinite(Number(value))?Number(value):null;
+  const pidGains074=(gains,language)=>['kp','ki','kd'].map(key=>{
+    const value=pidNumber074(gains?.[key]);
+    return key[0].toUpperCase()+key.slice(1)+' '+(value===null?'—':
+      new Intl.NumberFormat(language,{maximumFractionDigits:6}).format(value));
+  }).join(' · ');
+  function pidStatusModels074(fields,status,language){
+    const words=pidWords074(language),groups=new Map();
+    for(const field of fields){
+      const a=field.state?.attributes||{};
+      const key=a.setting_key||String(field.reg?.translation_key||'').replace(/^equipment_/,'');
+      if(!['kp','ki','kd','pid_calibration_method','control_mode'].includes(key))continue;
+      const mode=a.settings_scope==='operating_mode'?a.operating_mode:null;
+      if(mode!==null&&(typeof mode!=='string'||!mode))continue;
+      if(!groups.has(mode))groups.set(mode,{mode,fields:{}});
+      const group=groups.get(mode);
+      // Ambiguous duplicate keys cannot supply a gain or an authoritative method.
+      group.fields[key]=Object.prototype.hasOwnProperty.call(group.fields,key)?null:field;
+    }
+    const pidGroups=[...groups.values()].filter(group=>['kp','ki','kd','pid_calibration_method']
+      .some(key=>group.fields[key]));
+    const scoped=pidGroups.some(group=>group.mode!==null);
+    const diagnostic=status.pid_learning_status;
+    const activeMode=diagnostic?.operating_mode||status.selected_operating_mode||status.last_evaluated_mode;
+    return pidGroups.map(group=>{
+      const matches=group.mode!==null?group.mode===activeMode:!scoped;
+      const method=group.fields.pid_calibration_method?.state?.state||
+        (matches?status.pid_calibration_method:null);
+      const methodKnown=Object.prototype.hasOwnProperty.call(words.methods,method);
+      const adaptive=method==='adaptive_suggest'||method==='adaptive_auto';
+      const control=group.fields.control_mode?.state?.state;
+      const isPid=control?control==='pid':matches&&status.control_method==='pid';
+      const actual=matches&&isPid?status.pid_control_parameters:null;
+      const gains=Object.fromEntries(['kp','ki','kd'].map(key=>[key,
+        pidNumber074(actual?.[key])??pidNumber074(group.fields[key]?.state?.state)]));
+      const learning=matches&&diagnostic&&(!diagnostic.operating_mode||diagnostic.operating_mode===group.mode||!scoped)
+        ?diagnostic:null;
+      let state=learning?.status;
+      if(!matches&&activeMode)state='inactive';
+      else if(control&&control!=='pid')state='inactive';
+      else if(!adaptive&&methodKnown)state='disabled';
+      const progress=matches&&adaptive?status.pid_learning_progress:null;
+      const review=matches&&isPid&&method==='adaptive_suggest'&&status.pid_review?.state==='pending'&&
+        (!status.pid_review.operating_mode||status.pid_review.operating_mode===group.mode||!scoped)
+        ?status.pid_review:null;
+      const last=matches&&status.pid_last_calibration&&
+        (!status.pid_last_calibration.operating_mode||status.pid_last_calibration.operating_mode===group.mode||!scoped)
+        ?status.pid_last_calibration:null;
+      const phase=adaptive&&words.phases[progress?.phase]||'';
+      const reason=pidReason074(language,learning?.reason);
+      const rejection=progress?.last_rejection_reason!==learning?.reason?
+        pidReason074(language,progress?.last_rejection_reason):'';
+      return {mode:group.mode||'device',title:words.modes[group.mode]||words.generic,
+        current:Boolean(actual),gains,method:words.methods[method]||words.unknown,
+        note:method==='adaptive_suggest'?words.suggest:method==='adaptive_auto'?words.automatic:'',
+        state:words.states[state]?state:'unknown',stateLabel:words.states[state]||words.unavailable,
+        reason,phase,rejection,cycles:adaptive&&matches?pidNumber074(learning?.valid_cycles??progress?.valid_cycles):null,
+        required:adaptive&&matches?pidNumber074(learning?.required_cycles??
+          (method==='adaptive_suggest'?3:progress?.required_for_auto)):null,
+        review,last,showHistory:matches&&Object.prototype.hasOwnProperty.call(status,'pid_last_calibration')&&
+          (!status.pid_last_calibration||Boolean(last)),active:matches};
+    }).sort((a,b)=>Number(b.active)-Number(a.active)||a.title.localeCompare(b.title,language));
+  }
+  function pidStatusHtml074(models,language,timeZone){
+    const words=pidWords074(language);
+    const row=(label,value,attribute='')=>'<div class="hem-pid-status-row074" '+attribute+'><b>'+escape(label)+
+      '</b><span>'+escape(value)+'</span></div>';
+    return models.map(model=>{
+      const lines=[row(words.method,model.method),row(model.current?words.current:words.saved,pidGains074(model.gains,language))];
+      if(model.cycles!==null&&model.required!==null)
+        lines.push(row(words.cycles,model.cycles+' / '+model.required));
+      if(model.review&&model.review.current&&model.review.apply)
+        lines.push(row(words.pending,pidGains074(model.review.current,language)+' → '+pidGains074(model.review.apply,language),
+          'data-hem-pid-proposal074'));
+      if(model.showHistory){
+        let stamp='';const at=pidNumber074(model.last?.at);
+        if(at!==null&&at>0){
+          try{stamp=new Intl.DateTimeFormat(language,{dateStyle:'medium',timeStyle:'short',
+            ...(timeZone?{timeZone}:{} )}).format(new Date(at*1000));}catch{}
+        }
+        if(model.last){
+          const values=model.last.previous_gains&&model.last.applied_gains?
+            pidGains074(model.last.previous_gains,language)+' → '+pidGains074(model.last.applied_gains,language):words.historyUnknown;
+          lines.push(row(words.last,[stamp,values].filter(Boolean).join(' · '),'data-hem-pid-last074'));
+        }else lines.push('<p data-hem-pid-last074>'+escape(words.never)+'</p>');
+      }
+      const detail=[model.reason,model.phase].filter(Boolean).join(' · ');
+      return '<section class="hem-pid-mode-status074" data-hem-pid-mode074="'+escape(model.mode)+
+        '" data-hem-pid-state074="'+escape(model.state)+'"><h4>'+escape(model.title)+' · PID</h4>'+
+        '<p class="hem-pid-state074">'+escape(model.stateLabel)+'</p>'+
+        (detail?'<p>'+escape(detail)+'</p>':'')+lines.join('')+
+        (model.rejection?'<p>'+escape(words.rejection+': '+model.rejection)+'</p>':'')+
+        (model.note?'<p class="hem-pid-note074">'+escape(model.note)+'</p>':'')+'</section>';
+    }).join('');
+  }
+  AirQualityAdvisorCard.prototype._hemPidStatusRender074=function(saved,scope){
+    if(scope!=='device')return;
+    const context=this._hemFullContext127(saved,scope);
+    if(!context)return;
+    const group=saved.node.querySelector('[data-hem-full-category127="pid"]');
+    if(!group)return;
+    const status=context.controller?.statusInfo?.state?.attributes||{};
+    const models=pidStatusModels074(this._hemFullFields127(saved,scope),status,this._language());
+    let panel=group.querySelector(':scope > [data-hem-pid-status074]');
+    if(!models.length){panel?.remove();return;}
+    if(!panel){
+      panel=document.createElement('section');panel.className='hem-pid-status074';
+      panel.setAttribute('data-hem-pid-status074','');group.querySelector(':scope > summary')?.after(panel);
+    }
+    panel.setAttribute('aria-label',pidWords074(this._language()).title);
+    const html=pidStatusHtml074(models,this._language(),this._hass?.config?.time_zone);
+    if(panel.innerHTML!==html)panel.innerHTML=html;
+  };
+  const pidRenderBefore074=AirQualityAdvisorCard.prototype._hemFullRender127;
+  AirQualityAdvisorCard.prototype._hemFullRender127=function(saved,scope){
+    const result=pidRenderBefore074.call(this,saved,scope);
+    this._hemPidStatusRender074(saved,scope);return result;
+  };
+  /* HEM_PID_STATUS074_END */
+
   /* HEM_DEVICE_PID_PRESENTATION_B18_START */
   const devicePidCssB18=AirQualityAdvisorCard.prototype._styles;
   AirQualityAdvisorCard.prototype._styles=function(){
@@ -13120,6 +13341,14 @@
       '.hem-controller-options126 [data-hem-full-category127="pid"]>.hem-full-rows127>.hem-full-row127{grid-column:1/-1}',
       '.hem-controller-options126 [data-hem-full-category127="pid"]>.hem-full-rows127>.hem-full-row127[data-hem-pid-review-b18]{grid-column:auto;min-width:0}',
       '.hem-controller-options126 [data-hem-pid-review-b18] .hem-full-editor127 button{min-height:40px;min-width:0;width:100%;white-space:normal}',
+      '.hem-pid-status074{display:grid;gap:7px;padding:3px 10px 10px;min-width:0}',
+      '.hem-pid-mode-status074{border:1px solid var(--aqa-edge);border-radius:8px;padding:10px;min-width:0}',
+      '.hem-pid-mode-status074 h4{font-size:13px;margin:0 0 5px}',
+      '.hem-pid-mode-status074 p{font-size:12px;line-height:1.5;margin:4px 0;overflow-wrap:break-word}',
+      '.hem-pid-state074{font-weight:600}',
+      '.hem-pid-note074{color:var(--aqa-muted)}',
+      '.hem-pid-status-row074{display:flex;flex-wrap:wrap;gap:3px 9px;margin:5px 0;font-size:12px;line-height:1.45;min-width:0}',
+      '.hem-pid-status-row074 b{flex:1 1 105px}.hem-pid-status-row074 span{flex:2 1 160px;min-width:0;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}',
       '@media(max-width:340px){.hem-controller-options126 [data-hem-full-category127="pid"]>.hem-full-rows127>.hem-full-row127[data-hem-pid-review-b18]{grid-column:1/-1}}',
       "</style>"
     ].join("");

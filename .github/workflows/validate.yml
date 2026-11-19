@@ -292,6 +292,12 @@ jobs:
           python -I .github/tests/test_beta64_sleep_idle.py
       - name: B19 PID evidence, source-bound learning progress and unchanged anti-windup
         run: python -I .github/tests/test_061b19_pid_evidence.py
+      - name: PID learning observations, truthful progress and queued calibration context
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_074_pid_learning_math.py
+          python -I .github/tests/test_074_pid_learning_runtime.py
+          python -I .github/tests/test_074_pid_adaptation_scope.py
       - name: Actual Beta82 menu entrypoints, per-room and consolidated General settings
         run: |
           set -euo pipefail
@@ -379,6 +385,8 @@ jobs:
           python -I .github/tests/test_072_science_and_sensor_help.py
       - name: v0.7.3 arrival ownership without optional frontend metadata and compact help
         run: python -I .github/tests/test_073_arrival_ownership.py
+      - name: Visible PID gains and mode-specific calibration status in Chromium
+        run: python -I .github/tests/test_074_pid_status_card.py
       - name: B9 on-demand setting help in every menu
         run: python -I .github/tests/test_062b9_settings_help.py
       - name: B8 settings inventory, advanced presentation and exact duplicate aliases

@@ -53,6 +53,8 @@ SETUP=r"""data=>{
       {pid_calibration_role:'single_authoritative_method',options:['manual','adaptive_suggest']});
   add('number.generic_kp','kp','1.2',null,{min:0,max:100,step:.1});
   add('number.dry_kp','kp','1.2','dry',{min:0,max:100,step:.1});
+  add('number.dry_ki','ki','0.03','dry',{min:0,max:100,step:.001});
+  add('number.dry_kd','kd','0','dry',{min:0,max:100,step:.001});
   add('number.dry_target','target_manual_humidity','60','dry',{min:30,max:85,step:1});
   window.deviceRegistry=registry;
   card._hass={language:'el',states,user:{is_admin:true},entities:{
@@ -90,20 +92,26 @@ with sync_playwright() as pw:
   controller.locator('[data-open-controller-device122]').click()
   modal=page.locator(".hem-controller-options126")
   expect(modal).to_be_visible()
-  page.wait_for_function("card._hemControllerDialog126?.fullRegistry127?.length===12")
+  page.wait_for_function("card._hemControllerDialog126?.fullRegistry127?.length===14")
   page.evaluate("(lang)=>card._hass.language=lang",lang)
   page.evaluate("card._hemFullRender127(card._hemControllerDialog126,'device')")
   for id in ("button.generic_approve","button.generic_discard",
              "button.generic_apply","select.generic_method","number.generic_kp"):
    assert modal.locator(f'[data-hem-full-row127="{id}"]').count()==0,id
   for id in ("button.dry_approve","button.dry_discard","button.dry_apply",
-             "select.dry_method","number.dry_kp","button.fan_apply","number.dry_target"):
+             "select.dry_method","number.dry_kp","number.dry_ki","number.dry_kd",
+             "button.fan_apply","number.dry_target"):
    assert modal.locator(f'[data-hem-full-row127="{id}"]').count()==1,id
   # A humidity target is not a PID-calibration parameter.
   assert modal.locator('[data-hem-full-category127="mode"] [data-hem-full-row127="number.dry_target"]').count()==1
   assert modal.locator('[data-hem-full-category127="pid"] [data-hem-full-row127="number.dry_target"]').count()==0
   words=LANG[lang];pid=modal.locator('[data-hem-full-category127="pid"]')
   pid.locator(":scope > summary").click()
+  # Presence in the DOM was insufficient: the old Advanced filter hid all
+  # three gains even inside the opened PID section.
+  expect(modal.locator('[data-settings-advanced-b8]')).not_to_be_checked()
+  for key in ('kp','ki','kd'):
+   expect(pid.locator(f'[data-hem-full-row127="number.dry_{key}"]')).to_be_visible()
   assert words[0] in pid.locator('[data-hem-full-row127="button.dry_approve"]').inner_text()
   assert words[1] in pid.locator('[data-hem-full-row127="button.dry_discard"]').inner_text()
   assert words[2] in pid.locator('[data-hem-full-row127="button.fan_apply"]').inner_text()
