@@ -31,8 +31,10 @@ cfg={"control_mode":"pid","pid_adaptation_mode":"bounded","requested_mode":"heat
      "kp":20.,"ki":0.2,"kd":0.,"pid_last_calibration":None}
 cap=N(primary="climate.unit")
 state=N(state="off",attributes={})
+source_context=passive.identity("room", [cap.primary], cap.primary,
+    "heat", "temperature", "sensor.room", "home", 21., None, None)
 record={"pid_passive":{
-  "context":"valid-heat-room-controller",
+  "context":source_context,
   "cycles":[{"at":now-2920+i*700,"gain":4.,"tau":28.,"dead":10.,"r2":.99}
             for i in range(5)],
   "summary":{"confidence":"high","status":"validated",
@@ -48,11 +50,15 @@ settings=lambda manager,spec:cfg
 state_map={"climate.unit":state}
 model=N(settings=settings,capabilities=lambda manager,spec:cap,
         permission=lambda manager,spec,c:(True,True),
-        plan_for=lambda manager,spec:{})
+        plan_for=lambda manager,spec:{},
+        targets=lambda *args:{"heat":21.,"cool":26.,"humidity":50.},
+        profile_name=lambda *args:"home")
 ns={
     "model":model,"STARTUP_SECONDS":300,
     "AUTO_INTERVAL_S":passive.AUTO_INTERVAL_S,
     "passive_bounded_gains":passive.bounded_gains,
+    "passive_identity":passive.identity,
+    "finite":lambda value,low,high: value if type(value) in (int,float) and low<=value<=high else None,
     "output_off":lambda s:s.state=="off",
 }
 exec(source,ns)
@@ -67,14 +73,31 @@ class GuardRuntime:
     def clock(self):return now
     def _current_spec(self,spec):return True
     def _gate(self,*args,**kwargs):return None
+    def measurements(self,*args):return {"temperature":20.,"temperature_entity":"sensor.room"}
 runtime=GuardRuntime()
-spec=N(identifier="unit")
-proof=(source_context,now-120,{"kp":20.,"ki":0.2,"kd":0.})
+spec=N(identifier="unit",area_id="room",source_entities=(cap.primary,))
+proof=(source_context,now-120,{"kp":20.,"ki":0.2,"kd":0.},None)
 candidate={"kp":22.,"ki":0.22,"kd":0.,
            "pid_last_calibration":{"method":"passive_imc_lambda",
-                                   "cycle_at":now-120}}
+                                   "cycle_at":now-120,"operating_mode":"heat",
+                                   "previous_gains":dict(proof[2]),
+                                   "applied_gains":{"kp":22.,"ki":.22,"kd":0.}}}
 def allowed():return guard(runtime,spec,candidate,proof)
 assert allowed(),"valid high-confidence fully-OFF cycle should allow bounded gains"
+# A multi-endpoint device is not quiescent while its auxiliary fan runs,
+# even if the climate endpoint is OFF and no HEM power ownership remains.
+spec.source_entities=(cap.primary,"fan.unit")
+state_map["fan.unit"]=N(state="on",attributes={})
+combined_context=passive.identity("room",list(spec.source_entities),cap.primary,
+    "heat","temperature","sensor.room","home",21.,None,None)
+record["pid_passive"]["context"]=combined_context
+proof=(combined_context,*proof[1:])
+assert not allowed(),"an active auxiliary endpoint must block automatic tuning"
+state_map["fan.unit"].state="off"
+assert allowed(),"all native endpoints OFF can be verified without switching them"
+spec.source_entities=(cap.primary,)
+record["pid_passive"]["context"]=source_context
+proof=(source_context,*proof[1:])
 state.state="heat"
 assert not allowed(),"running physical output must block tuning"
 state.state="off"

@@ -222,6 +222,7 @@ class EquipmentRuntime:
         # into HA Recorder or its entity attributes. Only a handful of
         # completed, verified cycle statistics are saved on completion.
         self._pid_passive_observers: dict[str, PassiveObserver] = {}
+        self._pid_learning_holds: dict[str, dict] = {}
         self._pid_passive_tasks: dict[str, asyncio.Task] = {}
         # Mathematical performance observers are session-only and never save
         # raw samples or influence any PID gain, authorization or device output.
@@ -800,6 +801,7 @@ class EquipmentRuntime:
             await asyncio.gather(*tasks, return_exceptions=True)
         self._pid_passive_tasks.clear()
         self._pid_passive_observers.clear()
+        self._pid_learning_holds.clear()
         getattr(self, "_pid_performance", {}).clear()
         if self._ready:
             await self._save()
@@ -1287,7 +1289,7 @@ class EquipmentRuntime:
     ) -> bool:
         """Fail closed under the per-controller update lock, with no IO."""
         try:
-            context, cycle_at, previous = proof
+            context, cycle_at, previous, operating_mode = proof
             cfg = model.settings(self.manager, spec)
             record = self.records.get(spec.identifier, {})
             saved = record.get("pid_passive", {})
@@ -1299,6 +1301,7 @@ class EquipmentRuntime:
                     or cfg.get("control_mode") != "pid"
                     or cfg.get("pid_adaptation_mode") != "bounded"
                     or cfg.get("pid_calibration_method", "adaptive_auto") != "adaptive_auto"
+                    or cfg.get("operating_mode") != operating_mode
                     or cfg.get("requested_mode") not in ("heat", "cool", "dry")
                     or self.clock() - self._started < STARTUP_SECONDS
                     or cap is None or native is None or not output_off(native)
@@ -1318,6 +1321,11 @@ class EquipmentRuntime:
                     or not all(c["at"] <= self.clock()
                                for c in saved.get("cycles", []))):
                 return False
+            for source in spec.source_entities:
+                source_state = self.hass.states.get(source)
+                if (source_state is None or not output_off(source_state)
+                        or source_state.attributes.get("hvac_action") not in (None, "off", "idle")):
+                    return False
             soft, power = model.permission(self.manager, spec, cap)
             if not (soft and power):
                 return False
@@ -1325,6 +1333,34 @@ class EquipmentRuntime:
             # a stale proposal cannot act on a newly changed physical system.
             plan = model.plan_for(self.manager, spec)
             if self._gate(spec, cap, cfg, plan, cfg["requested_mode"]) is not None:
+                return False
+            # The application task runs after the observing tick releases its
+            # lock. A mode, sensor, target or fan setting may have changed in
+            # that interval even when both profiles have identical gains.
+            # Reconstruct the live plant identity, as explicit approval does;
+            # comparing the saved context only to itself is insufficient.
+            targets = model.targets(self.manager, spec, cap, cfg, plan)
+            measured = self.measurements(spec, cap)
+            direction = cfg["requested_mode"]
+            metric = "humidity" if direction == "dry" else "temperature"
+            goal = targets.get("humidity" if metric == "humidity" else direction)
+            source_ids = measured.get(metric + "_selected_entities")
+            feedback = (
+                source_ids[0] if isinstance(source_ids, list) and len(source_ids) == 1
+                else None
+            ) if source_ids is not None else measured.get(metric + "_entity")
+            if (not isinstance(feedback, str) or not feedback.startswith("sensor.")
+                    or finite(goal, -40 if metric == "temperature" else 0,
+                              80 if metric == "temperature" else 100) is None
+                    or finite(measured.get(metric), -40 if metric == "temperature" else 0,
+                              80 if metric == "temperature" else 100) is None):
+                return False
+            if passive_identity(
+                spec.area_id, list(spec.source_entities), cap.primary,
+                direction, metric, feedback, model.profile_name(cfg, plan),
+                round(float(goal), 2), native.attributes.get("fan_mode"),
+                native.attributes.get("percentage"),
+            ) != context:
                 return False
             last = cfg.get("pid_last_calibration")
             if isinstance(last, dict) and last.get("method") == "passive_imc_lambda":
@@ -1344,7 +1380,10 @@ class EquipmentRuntime:
             evidence = changes["pid_last_calibration"]
             return (isinstance(evidence, dict)
                     and evidence.get("method") == "passive_imc_lambda"
-                    and evidence.get("cycle_at") == cycle_at)
+                    and evidence.get("cycle_at") == cycle_at
+                    and evidence.get("operating_mode") == (operating_mode or direction)
+                    and evidence.get("previous_gains") == previous
+                    and evidence.get("applied_gains") == expected)
         except (AttributeError, KeyError, ValueError, TypeError):
             return False
 
@@ -1483,6 +1522,9 @@ class EquipmentRuntime:
                 "confidence": review["confidence"],
                 "model_target": review["recommended"],
                 "previous_gains": dict(review["current"]),
+                "applied_gains": dict(review["apply"]),
+                "operating_mode": (operating_mode or review.get("operating_mode")
+                                   or model.settings(self.manager, spec).get("requested_mode")),
                 "rate_limit": "approved_10_percent_step",
             },
         }
@@ -1722,14 +1764,21 @@ class EquipmentRuntime:
                         rerun = self._setpoint_rerun = set()
                     rerun.add(spec.identifier)
             return
-        edit_lock = asyncio.Lock() if operating_mode is not None else self._lock(spec.identifier)
+        calibration_update = passive_auto is not None or passive_review is not None
+        # Inactive-mode preference edits need not wait for an actuator command.
+        # A learned-gain application, however, must share the controller lock
+        # even when its settings are scoped to a mode.
+        edit_lock = (asyncio.Lock() if operating_mode is not None and not calibration_update
+                     else self._lock(spec.identifier))
         async with edit_lock:
             if not self._ready:
                 raise HomeAssistantError("Controller state storage is unavailable")
             if not self._current_spec(spec):
                 raise HomeAssistantError("Controller sources are no longer assigned to this area")
-            if (passive_auto is not None and
-                    not self._pid_passive_auto_authorized(spec, changes, passive_auto)):
+            if (passive_auto is not None and (
+                    not isinstance(passive_auto, tuple) or len(passive_auto) != 4
+                    or operating_mode != passive_auto[3]
+                    or not self._pid_passive_auto_authorized(spec, changes, passive_auto))):
                 raise HomeAssistantError("Passive PID gain change is no longer safe or validated")
             if (passive_review is not None and
                     not self._pid_review_authorized(spec, changes, passive_review)):
@@ -2208,6 +2257,14 @@ class EquipmentRuntime:
                         not self._pid_review_authorized(spec, changes, passive_review)):
                     raise HomeAssistantError("PID review changed before saving gains")
                 self.hass.config_entries.async_update_entry(self.manager.entry, options=options)
+                if calibration_update:
+                    # A successful write must be the effective gains for the
+                    # intended profile, not merely a stored fallback value.
+                    applied = model.settings(self.manager, spec)
+                    if (applied.get("operating_mode") != operating_mode
+                            or any(applied.get(key) != changes.get(key)
+                                   for key in ("kp", "ki", "kd", "pid_last_calibration"))):
+                        raise HomeAssistantError("PID calibration was not applied to the active operating mode")
             active_edit = not inactive_edit or self.active_control_mode(spec) == operating_mode
             if active_edit:
                 from .pid_restart import control_intent, reset_logical_cycle
@@ -2318,20 +2375,39 @@ class EquipmentRuntime:
         delivery: its actual hvac_action must confirm the physical activity.
         """
         key = spec.identifier
+        from .pid_learning_status import eligibility
+
+        def hold(reason: str | None) -> None:
+            # Volatile explanation only: no per-sample Store writes and no
+            # change to controller authority or the physical output decision.
+            holds = getattr(self, "_pid_learning_holds", None)
+            if holds is None:
+                holds = self._pid_learning_holds = {}
+            previous = holds.get(key)
+            if reason is None:
+                holds.pop(key, None)
+            else:
+                holds[key] = {
+                    "operating_mode": cfg.get("operating_mode") or cfg.get("requested_mode"),
+                    "reason": reason,
+                }
+            if previous != holds.get(key):
+                self._presentation_updates.request(key)
+
         if cfg.get("pid_calibration_method", "adaptive_suggest") not in (
             "adaptive_suggest", "adaptive_auto"
         ):
             self._pid_passive_observers.pop(key, None)
+            hold(None)
             return
-        if (cfg.get("control_mode") != "pid"
-                or cfg.get("requested_mode") not in ("heat", "cool", "dry")
-                or mode != cfg["requested_mode"]
-                or metric not in ("temperature", "humidity")
-                or cap.domain not in ("climate", "humidifier", "switch", "input_boolean")
-                or not (soft and power)):
+        blocked = eligibility(cfg, cap.domain)
+        if (blocked or mode != cfg.get("requested_mode")
+                or metric not in ("temperature", "humidity") or not (soft and power)):
             observer = self._pid_passive_observers.get(key)
             if observer is not None:
                 observer.interrupt()
+            hold(blocked[1] if blocked else "permissions_required"
+                 if not (soft and power) else "unsupported_operating_mode")
             return
         # Never mix sensor means whose membership changes when a sensor drops
         # out; use exactly one verified physical feedback entity.
@@ -2344,6 +2420,7 @@ class EquipmentRuntime:
             observer = self._pid_passive_observers.get(key)
             if observer is not None:
                 observer.interrupt()
+            hold("single_feedback_sensor_required")
             return
         valid = (
             not record.get("pending") and not record.get("paused")
@@ -2356,8 +2433,17 @@ class EquipmentRuntime:
         if cap.domain == "climate" and is_on:
             expected = {"heat": "heating", "cool": "cooling", "dry": "drying"}[mode]
             valid = valid and action == expected
+        elif cap.domain == "climate" and action not in (None, "off", "idle"):
+            # A contradictory native OFF + heating/cooling/drying report is
+            # not a verified inactive baseline or a completed normal cycle.
+            valid = False
         if cap.domain == "humidifier" and mode != "dry":
             valid = False
+        hold(None if valid else "controller_inactive" if not (self._active and self._ready)
+             else "controller_paused" if record.get("paused")
+             else "pending_command" if (record.get("pending")
+                  or (record.get("upstream") or {}).get("pending"))
+             else "verified_activity_required")
         # Source identity, operating direction, target, preset and fan
         # settings are tied to a model. All context changes revoke the
         # old response evidence; no cross-room or cross-mode learning.
@@ -2371,6 +2457,11 @@ class EquipmentRuntime:
         if isinstance(saved, dict) and saved.get("context") != context:
             record.pop("pid_passive", None)
             self._pid_passive_observers.pop(key, None)
+            review = record.get("pid_passive_review")
+            if isinstance(review, dict) and review.get("state") == "pending":
+                from .pid_review import async_clear_review
+                review["state"] = "expired"
+                self.hass.async_create_task(async_clear_review(self.hass, self.manager, spec))
             await self._save()
             saved = None
         observer = self._pid_passive_observers.get(key)
@@ -2429,7 +2520,10 @@ class EquipmentRuntime:
             # A separate task waits for the controller's existing per-device
             # lock. No nested lock/deadlock, no service or forced OFF cycle.
             task = self.hass.async_create_task(
-                self._pid_passive_apply(spec, context, summary["last_cycle_at"])
+                self._pid_passive_apply(
+                    spec, context, summary["last_cycle_at"],
+                    operating_mode=cfg.get("operating_mode"),
+                )
             )
             self._pid_passive_tasks[key] = task
             task.add_done_callback(
@@ -2439,6 +2533,7 @@ class EquipmentRuntime:
 
     async def _pid_passive_apply(
         self, spec: model.ManagedDevice, context: str, cycle_at: float,
+        *, operating_mode: str | None = None,
     ) -> None:
         """Optionally apply ≤10% PI gain changes after independent validation.
 
@@ -2447,6 +2542,8 @@ class EquipmentRuntime:
         """
         try:
             cfg = model.settings(self.manager, spec)
+            if cfg.get("operating_mode") != operating_mode:
+                return
             record = self.records.get(spec.identifier, {})
             evidence = record.get("pid_passive", {})
             summary = evidence.get("summary", {}) if isinstance(evidence, dict) else {}
@@ -2466,9 +2563,12 @@ class EquipmentRuntime:
                     "cycles": summary["valid_cycles"],
                     "model": summary["identified_model"],
                     "previous_gains": {k: cfg[k] for k in ("kp", "ki", "kd")},
+                    "applied_gains": dict(new),
+                    "operating_mode": operating_mode or cfg["requested_mode"],
                     "rate_limit": "10_percent_per_24h",
                 },
-            }, passive_auto=(context, cycle_at, {k: cfg[k] for k in ("kp","ki","kd")}))
+            }, passive_auto=(context, cycle_at, {k: cfg[k] for k in ("kp","ki","kd")},
+                             operating_mode), operating_mode=operating_mode)
         except asyncio.CancelledError:
             raise
         except (HomeAssistantError, ValueError, KeyError, TypeError):
@@ -6291,6 +6391,38 @@ class EquipmentRuntime:
                 return  # No targets, fan, swing or mode control during hold.
         current_target = condition(self, spec, cap)
         if current_target is not None and current_target["needed"] is False and (power or owned):
+            # A normal target-satisfied stop/idle period is vital evidence.
+            # Observe the actual native state BEFORE any OFF command; never
+            # fabricate OFF from zero demand or a successful service return.
+            # This path otherwise returns before the ordinary observer below.
+            passive = getattr(self, "_pid_passive_observe", None)
+            if passive is not None:
+                learning_gate = self._gate(
+                    spec, cap, cfg, plan, current_target["mode"], automatic=auto,
+                )
+                if learning_gate is None:
+                    await passive(
+                        spec, cfg, cap, plan, target, measured, record, state,
+                        current_target["mode"], current_target["metric"],
+                        current_target["target"], soft, power,
+                    )
+                    diagnostic_sample = getattr(self, "_observe_pid_performance", None)
+                    if callable(diagnostic_sample):
+                        diagnostic_sample(
+                            spec, cfg, cap, state, measured, current_target["metric"],
+                            current_target["target"], current_target["mode"],
+                            current_target["increasing"], model.profile_name(cfg, plan),
+                        )
+                else:
+                    observer = getattr(self, "_pid_passive_observers", {}).get(spec.identifier)
+                    if observer is not None:
+                        observer.interrupt()
+                    holds = getattr(self, "_pid_learning_holds", None)
+                    if isinstance(holds, dict):
+                        holds[spec.identifier] = {
+                            "operating_mode": cfg.get("operating_mode") or cfg.get("requested_mode"),
+                            "reason": "controller_paused", "detail": learning_gate,
+                        }
             await remember_cutoff(self, spec, current_target)
             # Reaching the target ends this logical PID pulse immediately.
             # Physical OFF retains native minimum-ON, defrost and the user's
@@ -6344,6 +6476,12 @@ class EquipmentRuntime:
         if mode is None:
             mode = state.state if cap.domain == "climate" else next((v for v in cap.modes if v != "off"), "off")
         if why := self._gate(spec, cap, cfg, plan, mode, automatic=auto):
+            holds = getattr(self, "_pid_learning_holds", None)
+            if isinstance(holds, dict):
+                holds[spec.identifier] = {
+                    "operating_mode": cfg.get("operating_mode") or cfg.get("requested_mode"),
+                    "reason": "controller_paused", "detail": why,
+                }
             reset = getattr(self, "_reset_pid_cycle", None)
             if callable(reset) and why != "startup_warmup":
                 await reset(spec, why)

@@ -50,6 +50,7 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         from .pid_math import finite
+        from .pid_learning_status import context_mode, snapshot as learning_snapshot
         from .equipment_native_target import diagnostics as native_target_diagnostics
         runtime = self._manager.equipment
         cfg = self.controller_settings
@@ -118,7 +119,31 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
         perf_tracker = getattr(runtime, "_pid_performance", {}).get(self._spec.identifier)
         learning_tracker = getattr(runtime, "_pid_passive_observers", {}).get(self._spec.identifier)
         perf = perf_tracker.snapshot() if perf_tracker is not None else None
-        learning = learning_tracker.progress() if learning_tracker is not None else None
+        active_learning_mode = cfg.get("operating_mode") or cfg.get("requested_mode")
+        learning = (learning_tracker.progress() if learning_tracker is not None
+                    and context_mode(getattr(learning_tracker, "context", None)) == active_learning_mode
+                    else None)
+        review = record.get("pid_passive_review")
+        review = review if isinstance(review, dict) else {}
+        review_mode = review.get("operating_mode") or context_mode(review.get("context"))
+        saved_learning = record.get("pid_passive")
+        saved_learning = saved_learning if isinstance(saved_learning, dict) else {}
+        saved_summary = saved_learning.get("summary")
+        saved_summary = saved_summary if isinstance(saved_summary, dict) else {}
+        if (review_mode != active_learning_mode or (
+                review.get("state") == "pending" and (
+                    review.get("context") != saved_learning.get("context")
+                    or review.get("cycle_at") != saved_summary.get("last_cycle_at")
+                ))):
+            review = {}
+        learning_status = learning_snapshot(
+            cfg=cfg, domain=getattr(native_cap, "domain", None), record=record,
+            progress=learning, observer_context=getattr(learning_tracker, "context", None),
+            hold=getattr(runtime, "_pid_learning_holds", {}).get(self._spec.identifier),
+            observed=observed, native_state=physical.get(primary),
+            active=bool(getattr(runtime, "_active", False)),
+            ready=bool(getattr(runtime, "_ready", False)), now=now,
+        )
         # Surface both pieces of an externally powered controller. The HA
         # native appliance may be unavailable precisely BECAUSE the supply
         # is OFF. Neither observation implies that the logical controller
@@ -268,22 +293,22 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "pid_learning_progress": (learning if cfg.get("pid_calibration_method")
                                       in ("adaptive_suggest", "adaptive_auto")
                                       and cfg.get("control_mode") == "pid" else None),
+            "pid_learning_status": learning_status,
             "pid_calibration_method": cfg.get("pid_calibration_method", "manual"),
             "pid_last_calibration": cfg.get("pid_last_calibration"),
             # Compatibility field derived from the one selected method.
             "pid_adaptation_mode": cfg.get("pid_adaptation_mode", "disabled"),
             "pid_review": {
-                key: record.get("pid_passive_review", {}).get(key)
+                key: review.get(key)
                 for key in ("state","current","apply","recommended",
-                            "confidence","valid_cycles","cycle_at")
-            } if isinstance(record.get("pid_passive_review"), dict)
+                            "confidence","valid_cycles","cycle_at","operating_mode")
+            } if review
               else {"state":"none"},
             # Small read-only evidence summary. Raw measurements remain
             # bounded in memory and never inflate recorder attributes.
             "pid_passive_learning": (
-                (record.get("pid_passive", {})
-                 if isinstance(record.get("pid_passive"), dict)
-                 else {}).get("summary")
+                (saved_summary if context_mode(saved_learning.get("context"))
+                 == active_learning_mode else None)
                 or {"status": "disabled" if cfg.get("pid_adaptation_mode") == "disabled"
                     else "collecting", "confidence": "insufficient",
                     "valid_cycles": 0, "required_for_auto": 5}

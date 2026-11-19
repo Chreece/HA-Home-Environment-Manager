@@ -35,7 +35,7 @@ with sync_playwright() as pw:
       card._hass.states[id]={state:value,attributes:{min:0,max:100,step:1,friendly_name:key,...attrs}};
       registry.push({entity_id:id,translation_key:key,device_id:device,unique_id:'entry0_area_room0_'+id.replace('.','_'),platform:'environment_manager',config_entry_id:'entry0'});
     };
-    auditAdd('number.pid_gain','equipment_kp','10',{friendly_name:'Proportional gain',settings_scope:'operating_mode',setting_key:'kp'});
+    auditAdd('number.pid_gain','area_pid_kp','10',{friendly_name:'Proportional gain'});
     auditAdd('number.met','area_area_environment_met','1',{friendly_name:'Activity MET'});
     auditAdd('number.radon','area_area_environment_radon_reference_bq_m3','50',{});
     auditAdd('number.min_on','equipment_min_on_seconds','5',{friendly_name:'Minimum ON time'});
