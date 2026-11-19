@@ -145,9 +145,9 @@ def check_options(browser):
  assert modal.locator('[data-hem-home-input128="pollen_entities"][value="sensor.birch_index"]').count()==1
  assert modal.locator('[data-settings-refresh-b10]').is_enabled()
  # First half of the wake pair is held, not submitted.
- # Reopen all enclosing categories, including the b8 Advanced tier, before
+ # Reopen all enclosing categories at the complete Expert level before
  # triggering a genuine user edit; a hidden element cannot receive a click.
- modal.locator('[data-settings-advanced-b8]').check()
+ modal.locator('[data-settings-level-b8]').select_option('expert')
  page.evaluate("card._homeSettingsDialog128.node.querySelectorAll('details').forEach(n=>n.open=true)")
  modal.locator('[data-hem-home-input128="general_wake_alarm_entity"]').evaluate("n=>{for(let p=n;p;p=p.parentElement)if(p.tagName==='DETAILS')p.open=true}")
  modal.locator('[data-hem-home-input128="general_wake_alarm_entity"]').select_option('sensor.alarm')

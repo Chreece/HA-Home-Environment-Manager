@@ -60,13 +60,13 @@ The HEM card gives you a useful overview without opening several integrations.
 
 HEM keeps shared policies separate from local decisions.
 
-| Settings level | What you can configure |
+| Settings scope | What you can configure |
 | --- | --- |
 | **Home** | Outdoor weather and pollution sources, monitored rooms, global ventilation limits, household presence, arrival preparation and announcement delivery. |
 | **Room** | Indoor temperature and humidity sources, air-quality thresholds, window and door contacts, sleep and occupancy behavior, room-specific comfort targets, ventilation and shading choices. |
 | **Individual device** | Its available control modes, Automatic/Manual/PID method, per-profile targets, sensors, quiet fan settings, minimum operating times, power protections, window behavior and device-error notifications. |
 
-All three levels are accessible through grouped, searchable settings in the card. Advanced controls are available when needed, without crowding everyday settings. You can refresh source choices as your Home Assistant setup changes.
+All three scopes are accessible through grouped, searchable settings in the card. Choose **Basic**, **Advanced** or **Expert** to control how many settings are shown. Basic includes everyday controls and required setup; Advanced adds manual PID gains and detailed adjustments; Expert adds specialist models and capacity tuning. Each level includes the previous levels. You can refresh source choices as your Home Assistant setup changes.
 
 ### Climate control and PID, device by device
 

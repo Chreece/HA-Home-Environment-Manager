@@ -144,7 +144,7 @@ with sync_playwright() as pw:
             assert order==['windows','door_sensors','eco','shades'],order
             assert page.evaluate('native062.length')==0
             paired=group.locator('[data-hem-door-eco062]')
-            dialog.locator("[data-settings-advanced-b8]").check()
+            dialog.locator("[data-settings-level-b8]").select_option('expert')
             assert paired.locator('[data-hem-full-row127]').evaluate_all(
                 'nodes=>nodes.map(n=>n.getAttribute("data-hem-full-row127"))') == [
                     'select.door_target','select.door_kind',

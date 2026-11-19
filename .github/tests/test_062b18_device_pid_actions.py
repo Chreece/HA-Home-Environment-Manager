@@ -107,11 +107,18 @@ with sync_playwright() as pw:
   assert modal.locator('[data-hem-full-category127="pid"] [data-hem-full-row127="number.dry_target"]').count()==0
   words=LANG[lang];pid=modal.locator('[data-hem-full-category127="pid"]')
   pid.locator(":scope > summary").click()
-  # Presence in the DOM was insufficient: the old Advanced filter hid all
-  # three gains even inside the opened PID section.
-  expect(modal.locator('[data-settings-advanced-b8]')).not_to_be_checked()
+  # Everyday review actions remain available while manual gain editors
+  # belong to the Advanced level. View changes issue no HA writes.
+  level=modal.locator('[data-settings-level-b8]')
+  expect(level).to_have_value('basic')
+  for key in ('kp','ki','kd'):
+   expect(pid.locator(f'[data-hem-full-row127="number.dry_{key}"]')).to_be_hidden()
+  expect(pid.locator('[data-hem-pid-review-b18="approve"]')).to_be_visible()
+  expect(pid.locator('[data-hem-pid-review-b18="discard"]')).to_be_visible()
+  level.select_option('advanced')
   for key in ('kp','ki','kd'):
    expect(pid.locator(f'[data-hem-full-row127="number.dry_{key}"]')).to_be_visible()
+  level.select_option('expert')
   assert words[0] in pid.locator('[data-hem-full-row127="button.dry_approve"]').inner_text()
   assert words[1] in pid.locator('[data-hem-full-row127="button.dry_discard"]').inner_text()
   assert words[2] in pid.locator('[data-hem-full-row127="button.fan_apply"]').inner_text()

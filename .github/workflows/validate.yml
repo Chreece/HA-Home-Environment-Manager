@@ -400,6 +400,8 @@ jobs:
         run: |
           python -I .github/scripts/audit_settings.py --check
           python -I .github/tests/test_062b8_settings_audit.py
+      - name: Cumulative settings levels, preference isolation and safe filtering
+        run: python -I .github/tests/test_074b3_settings_levels.py
       - name: B7 direct settings saves and pending-value preservation
         run: |
           python -I .github/tests/test_062b7_autosave.py

@@ -114,6 +114,9 @@ with sync_playwright() as pw:
   assert eco.count()==sync.count()==1
   assert modal.locator('[data-hem-full-row127="switch.no_door"]').count()==0
   section.locator(":scope > summary").click()
+  expect(eco).to_be_visible()
+  expect(sync).to_be_hidden()
+  modal.locator('[data-settings-level-b8]').select_option('advanced')
   assert LABELS[lang][0] in eco.inner_text()
   assert LABELS[lang][1] in sync.inner_text()
   assert LABELS[lang][2] in sync.locator("select").inner_text()
