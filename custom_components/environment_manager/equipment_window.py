@@ -24,7 +24,8 @@ def _stamp(state: Any, now: float) -> float | None:
     return value if math.isfinite(value) and 0 <= value <= now else None
 
 
-def evaluate(runtime: Any, spec: Any, cfg: dict | None = None) -> dict:
+def evaluate(runtime: Any, spec: Any, cfg: dict | None = None, *,
+             read_only: bool = False) -> dict:
     """Return fresh hold/stop evidence; disabled/no contacts never invent OPEN.
 
     An unknown contact is not CLOSED. A real open -> closed transition needs
@@ -33,7 +34,11 @@ def evaluate(runtime: Any, spec: Any, cfg: dict | None = None) -> dict:
     """
     cfg = model.settings(runtime.manager, spec) if cfg is None else cfg
     cache = getattr(runtime, "_window_policy_cache", None)
-    if cache is None:
+    if read_only:
+        # Button/status previews may calculate fresh evidence but must not
+        # establish or advance the controller's window-closure baseline.
+        cache = dict(cache) if isinstance(cache, dict) else {}
+    elif cache is None:
         cache = runtime._window_policy_cache = {}
     previous = cache.get(spec.identifier, {})
     enabled = cfg.get(POLICY_KEY, True) is True

@@ -223,7 +223,14 @@ class EquipmentRuntime:
         # completed, verified cycle statistics are saved on completion.
         self._pid_passive_observers: dict[str, PassiveObserver] = {}
         self._pid_learning_holds: dict[str, dict] = {}
+        # Volatile continuity proof. Integer generations cannot collide when
+        # several native events arrive within one wall-clock timestamp.
+        self._pid_learning_generation: dict[str, int] = {}
+        self._pid_learning_edges: dict[str, int] = {}
+        self._pid_learning_observed_edges: dict[str, dict[str, int]] = {}
         self._pid_passive_tasks: dict[str, asyncio.Task] = {}
+        self._pid_review_tasks: dict[str, asyncio.Task] = {}
+        self._pid_review_notice_attempts: dict[str, tuple] = {}
         # Mathematical performance observers are session-only and never save
         # raw samples or influence any PID gain, authorization or device output.
         self._pid_performance: dict[str, Any] = {}
@@ -657,6 +664,9 @@ class EquipmentRuntime:
     async def async_start(self) -> None:
         self._active = True
         self._started = self.clock()
+        for name in ("_pid_learning_generation", "_pid_learning_edges",
+                     "_pid_learning_observed_edges", "_pid_review_notice_attempts"):
+            getattr(self, name, {}).clear()
         self._ha_running_since = None
         getattr(self, "_startup_source_observed", {}).clear()
         getattr(self, "_startup_source_since", {}).clear()
@@ -757,6 +767,10 @@ class EquipmentRuntime:
                     record["restart_power_verification"] = True
                     record.pop("paused", None)
             await self._save()
+            maintain_reviews = getattr(self, "_pid_review_maintenance", None)
+            if callable(maintain_reviews):
+                for spec in model.specs(self.manager):
+                    await maintain_reviews(spec)
         except Exception:
             self._ready = False
             _LOGGER.exception("Equipment controller storage unavailable; new control stays inactive")
@@ -800,6 +814,15 @@ class EquipmentRuntime:
         if tasks:
             await asyncio.gather(*tasks, return_exceptions=True)
         self._pid_passive_tasks.clear()
+        notices = tuple(getattr(self, "_pid_review_tasks", {}).values())
+        for task in notices:
+            task.cancel()
+        if notices:
+            await asyncio.gather(*notices, return_exceptions=True)
+        getattr(self, "_pid_review_tasks", {}).clear()
+        for name in ("_pid_learning_generation", "_pid_learning_edges",
+                     "_pid_learning_observed_edges", "_pid_review_notice_attempts"):
+            getattr(self, name, {}).clear()
         self._pid_passive_observers.clear()
         self._pid_learning_holds.clear()
         getattr(self, "_pid_performance", {}).clear()
@@ -1284,12 +1307,144 @@ class EquipmentRuntime:
                     return "Existing power owner must reconcile this device OFF before transfer"
         return None
 
+    def _pid_learning_context(self, spec: model.ManagedDevice, cfg=None, cap=None,
+                              plan=None) -> str | None:
+        """Resolve the current physical learning context without writes or IO."""
+        try:
+            cfg = model.settings(self.manager, spec) if cfg is None else cfg
+            cap = model.capabilities(self.manager, spec) if cap is None else cap
+            if cap is None or cfg.get("requested_mode") not in ("heat", "cool", "dry"):
+                return None
+            state = self.hass.states.get(cap.primary)
+            if state is None or state.state in ("unknown", "unavailable"):
+                return None
+            plan = model.plan_for(self.manager, spec) if plan is None else plan
+            targets = model.targets(self.manager, spec, cap, cfg, plan)
+            measured = self.measurements(spec, cap)
+            direction = cfg["requested_mode"]
+            metric = "humidity" if direction == "dry" else "temperature"
+            goal = targets.get("humidity" if metric == "humidity" else direction)
+            sources = measured.get(metric + "_selected_entities")
+            feedback = (sources[0] if isinstance(sources, list) and len(sources) == 1
+                        else None) if sources is not None else measured.get(metric + "_entity")
+            lower, upper = (-40, 80) if metric == "temperature" else (0, 100)
+            if (not isinstance(feedback, str) or not feedback.startswith("sensor.")
+                    or finite(goal, lower, upper) is None
+                    or finite(measured.get(metric), lower, upper) is None):
+                return None
+            return passive_identity(
+                spec.area_id, list(spec.source_entities), cap.primary,
+                direction, metric, feedback, model.profile_name(cfg, plan),
+                round(float(goal), 2), state.attributes.get("fan_mode"),
+                state.attributes.get("percentage"),
+            )
+        except (AttributeError, KeyError, ValueError, TypeError):
+            return None
+
+    async def _pid_review_maintenance(self, spec: model.ManagedDevice, *,
+                                      context: str | None = None, notify: bool = True) -> None:
+        """Reconcile persisted review outcomes and expiry without hardware work."""
+        if not self._active or not self._ready or not self._current_spec(spec):
+            return
+        from .pid_learning_store import prune
+        from .pid_review import review_projection
+        record = self._record(spec)
+        now = self.clock()
+        changed = prune(record, now)
+        review = record.get("pid_passive_review")
+        if isinstance(review, dict):
+            cfg = model.settings(self.manager, spec)
+            review_cfg = cfg
+            mode = review.get("operating_mode")
+            # An interrupted application may belong to a now-inactive mode.
+            # Reconcile its exact saved receipt before expiring old context.
+            if mode and hasattr(model, "settings_for_mode"):
+                try:
+                    review_cfg = model.settings_for_mode(self.manager, spec, mode)
+                except (HomeAssistantError, ValueError, KeyError, TypeError):
+                    pass
+            if context is None:
+                context = self._pid_learning_context(spec, cfg=cfg)
+            projected = review_projection(review, review_cfg, now, context=context,
+                                          saved=record.get("pid_passive", {}))
+            if projected != review:
+                record["pid_passive_review"] = projected
+                changed = True
+        if changed:
+            await self._save()
+            self._presentation_updates.request(spec.identifier)
+        if notify:
+            self._schedule_pid_review_notice(spec)
+
+    def _schedule_pid_review_notice(self, spec: model.ManagedDevice) -> None:
+        """Replay unsent/uncleared notices with one tracked task per device."""
+        if not self._active or not self._ready or not self._current_spec(spec):
+            return
+        review = self.records.get(spec.identifier, {}).get("pid_passive_review")
+        if not isinstance(review, dict) or not isinstance(review.get("id"), str):
+            return
+        pending = review.get("state") == "pending"
+        if (pending and review.get("notified_at") is not None
+                or not pending and review.get("notification_cleared") is True):
+            return
+        tasks = getattr(self, "_pid_review_tasks", None)
+        if tasks is None:
+            tasks = self._pid_review_tasks = {}
+        if spec.identifier in tasks:
+            return
+        attempts = getattr(self, "_pid_review_notice_attempts", None)
+        if attempts is None:
+            attempts = self._pid_review_notice_attempts = {}
+        marker = (review["id"], review.get("state"))
+        last = attempts.get(spec.identifier)
+        if last is not None and last[0] == marker and 0 <= self.clock() - last[1] < 300:
+            return
+        attempts[spec.identifier] = (marker, self.clock())
+        task = self.hass.async_create_task(self._deliver_pid_review_notice(spec, marker))
+        tasks[spec.identifier] = task
+        def finished(done):
+            if tasks.get(spec.identifier) is done:
+                tasks.pop(spec.identifier, None)
+        task.add_done_callback(finished)
+
+    async def _deliver_pid_review_notice(self, spec: model.ManagedDevice, marker: tuple) -> None:
+        from .pid_review import async_publish_review, async_clear_review
+        try:
+            if not self._active or not self._ready or not self._current_spec(spec):
+                return
+            review = self.records.get(spec.identifier, {}).get("pid_passive_review")
+            if not isinstance(review, dict) or (review.get("id"), review.get("state")) != marker:
+                return
+            if marker[1] == "pending":
+                delivered = await async_publish_review(self.hass, self.manager, spec, dict(review))
+            else:
+                delivered = await async_clear_review(self.hass, self.manager, spec)
+            if (not delivered or not self._active or not self._ready
+                    or not self._current_spec(spec)):
+                return
+            async with self._lock(spec.identifier):
+                if not self._active or not self._ready or not self._current_spec(spec):
+                    return
+                latest = self.records.get(spec.identifier, {}).get("pid_passive_review")
+                if isinstance(latest, dict) and (latest.get("id"), latest.get("state")) == marker:
+                    if marker[1] == "pending":
+                        latest["notified_at"] = self.clock()
+                    else:
+                        latest["notification_cleared"] = True
+                    await self._save()
+        except asyncio.CancelledError:
+            raise
+        except (HomeAssistantError, ValueError, KeyError, TypeError, AttributeError):
+            _LOGGER.debug("PID review notification remains pending for %s", spec.identifier,
+                          exc_info=True)
+
     def _pid_passive_auto_authorized(
         self, spec: model.ManagedDevice, changes: dict, proof: tuple,
     ) -> bool:
         """Fail closed under the per-controller update lock, with no IO."""
         try:
-            context, cycle_at, previous, operating_mode = proof
+            from .pid_review import calibration_hold, tuning_signature
+            context, cycle_at, previous, operating_mode, continuity = proof
             cfg = model.settings(self.manager, spec)
             record = self.records.get(spec.identifier, {})
             saved = record.get("pid_passive", {})
@@ -1302,6 +1457,11 @@ class EquipmentRuntime:
                     or cfg.get("pid_adaptation_mode") != "bounded"
                     or cfg.get("pid_calibration_method", "adaptive_auto") != "adaptive_auto"
                     or cfg.get("operating_mode") != operating_mode
+                    or not isinstance(continuity, dict)
+                    or continuity.get("generation") != getattr(
+                        self, "_pid_learning_generation", {}).get(spec.identifier, 0)
+                    or continuity.get("tuning_settings") != tuning_signature(cfg)
+                    or calibration_hold(record, cfg, self.hass.states.get) is not None
                     or cfg.get("requested_mode") not in ("heat", "cool", "dry")
                     or self.clock() - self._started < STARTUP_SECONDS
                     or cap is None or native is None or not output_off(native)
@@ -1389,6 +1549,7 @@ class EquipmentRuntime:
 
     def _pid_review_authorized(
         self, spec: model.ManagedDevice, changes: dict, token: str,
+        *, read_only: bool = False,
     ) -> bool:
         """Approve only the exact still-current model, gains and native OFF.
 
@@ -1396,7 +1557,7 @@ class EquipmentRuntime:
         after storage yields. No physical service is issued by this path.
         """
         from .equipment_power_switch import observed_output_off
-        from .pid_review import is_pending
+        from .pid_review import is_pending, review_projection, calibration_hold
         try:
             cfg = model.settings(self.manager, spec)
             record = self.records.get(spec.identifier, {})
@@ -1412,6 +1573,8 @@ class EquipmentRuntime:
                     or cfg.get("requested_mode") not in ("heat","cool","dry")
                     or now-self._started < STARTUP_SECONDS
                     or not is_pending(review) or review["id"] != token
+                    or review_projection(review, cfg, now, saved=saved).get("state") != "pending"
+                    or calibration_hold(record, cfg, self.hass.states.get) is not None
                     or not isinstance(saved, dict)
                     or saved.get("context") != review["context"]
                     or summary.get("last_cycle_at") != review["cycle_at"]
@@ -1471,6 +1634,7 @@ class EquipmentRuntime:
                 return False
             if self._gate(
                 spec,cap,cfg,plan,direction,
+                **({"read_only": True} if read_only else {}),
             ) is not None:
                 return False
             evidence = changes.get("pid_last_calibration")
@@ -1489,12 +1653,16 @@ class EquipmentRuntime:
         *, operating_mode: str | None = None,
     ) -> bool:
         """Approve or discard one pending suggestion. Stale tokens do nothing."""
-        from .pid_review import is_pending, async_clear_review
+        from .pid_review import is_pending, can_discard, async_clear_review
         if decision not in ("approve","discard"):
             return False
+        maintain = getattr(self, "_pid_review_maintenance", None)
+        if callable(maintain):
+            async with self._lock(spec.identifier):
+                await maintain(spec, notify=False)
         record = self._record(spec)
         review = record.get("pid_passive_review")
-        if not is_pending(review) or (
+        if not (can_discard(review) if decision == "discard" else is_pending(review)) or (
             token is not None and review["id"] != token
         ) or (operating_mode is not None and review.get("operating_mode") != operating_mode):
             return False
@@ -1504,11 +1672,17 @@ class EquipmentRuntime:
                 latest = record.get("pid_passive_review")
                 if (not self._active or not self._ready
                         or not self._current_spec(spec)
-                        or not is_pending(latest) or latest["id"] != token):
+                        or not can_discard(latest) or latest["id"] != token):
                     return False
                 latest["state"] = "discarded"
+                latest["reason"] = "recommendation_discarded"
+                latest.pop("notification_cleared", None)
                 await self._save()
-            await async_clear_review(self.hass,self.manager,spec)
+            schedule_notice = getattr(self, "_schedule_pid_review_notice", None)
+            if callable(schedule_notice):
+                schedule_notice(spec)
+            else:
+                await async_clear_review(self.hass,self.manager,spec)
             self._presentation_updates.request(spec.identifier)
             return True
 
@@ -1539,8 +1713,14 @@ class EquipmentRuntime:
             latest = record.get("pid_passive_review")
             if is_pending(latest) and latest["id"] == token:
                 latest["state"] = "applied"
+                latest["reason"] = "applied"
+                latest.pop("notification_cleared", None)
                 await self._save()
-        await async_clear_review(self.hass,self.manager,spec)
+        schedule_notice = getattr(self, "_schedule_pid_review_notice", None)
+        if callable(schedule_notice):
+            schedule_notice(spec)
+        else:
+            await async_clear_review(self.hass,self.manager,spec)
         self._presentation_updates.request(spec.identifier)
         return True
 
@@ -1776,7 +1956,7 @@ class EquipmentRuntime:
             if not self._current_spec(spec):
                 raise HomeAssistantError("Controller sources are no longer assigned to this area")
             if (passive_auto is not None and (
-                    not isinstance(passive_auto, tuple) or len(passive_auto) != 4
+                    not isinstance(passive_auto, tuple) or len(passive_auto) != 5
                     or operating_mode != passive_auto[3]
                     or not self._pid_passive_auto_authorized(spec, changes, passive_auto))):
                 raise HomeAssistantError("Passive PID gain change is no longer safe or validated")
@@ -2273,19 +2453,21 @@ class EquipmentRuntime:
                     # An actual active change starts new controller math. A
                     # repeated save of the same value keeps its logical phase.
                     await self._save()
-            if active_edit and passive_auto is None and passive_review is None and (
-                    old["control_mode"] != new["control_mode"]
-                    or any(k in changes and old.get(k) != new.get(k)
-                           for k in ("kp", "ki", "kd", "pid_calibration_method"))):
-                # Manual or classical tuning supersedes old passive proposals.
-                self._pid_passive_observers.pop(spec.identifier, None)
-                record.pop("pid_passive", None)
-                if record.pop("pid_passive_review", None) is not None:
-                    from .pid_review import async_clear_review
-                    self.hass.async_create_task(
-                        async_clear_review(self.hass,self.manager,spec)
-                    )
-                await self._save()
+            if passive_auto is None and passive_review is None and any(
+                    k in changes and old.get(k) != new.get(k) for k in ("kp", "ki", "kd")):
+                # A deliberate gain edit supersedes that mode's old learning.
+                # Changing only Suggest/Auto or pausing control preserves the
+                # identified plant models; pending recommendations are separately
+                # revalidated against method, timing and the exact current gains.
+                from .pid_learning_store import invalidate
+                edited_mode = operating_mode or old.get("operating_mode") or old.get("requested_mode")
+                if active_edit:
+                    self._pid_passive_observers.pop(spec.identifier, None)
+                if invalidate(record, edited_mode):
+                    await self._save()
+            maintain = getattr(self, "_pid_review_maintenance", None)
+            if callable(maintain):
+                await maintain(spec)
             if deferred_supply is not None:
                 record["queued_power_switch"] = deferred_supply
                 await self._save()
@@ -2376,6 +2558,24 @@ class EquipmentRuntime:
         """
         key = spec.identifier
         from .pid_learning_status import eligibility
+        from .pid_learning_store import activate, remember
+        from .pid_review import calibration_hold, tuning_signature
+
+        def interrupt(reason: str) -> None:
+            stop = getattr(self, "_interrupt_pid_learning", None)
+            if callable(stop):
+                stop(spec, reason)
+            else:
+                observer = self._pid_passive_observers.get(key)
+                if observer is not None:
+                    observer.interrupt()
+
+        # A tick can await native reconciliation before reaching learning.
+        # HA State snapshots are immutable: never acknowledge an event edge
+        # against the older snapshot captured before that await.
+        if self.hass.states.get(cap.primary) is not state:
+            interrupt("observation_interrupted")
+            return
 
         def hold(reason: str | None) -> None:
             # Volatile explanation only: no per-sample Store writes and no
@@ -2403,9 +2603,7 @@ class EquipmentRuntime:
         blocked = eligibility(cfg, cap.domain)
         if (blocked or mode != cfg.get("requested_mode")
                 or metric not in ("temperature", "humidity") or not (soft and power)):
-            observer = self._pid_passive_observers.get(key)
-            if observer is not None:
-                observer.interrupt()
+            interrupt("learning_not_eligible")
             hold(blocked[1] if blocked else "permissions_required"
                  if not (soft and power) else "unsupported_operating_mode")
             return
@@ -2417,15 +2615,12 @@ class EquipmentRuntime:
         else:
             feedback = measured.get(metric + "_entity")
         if not isinstance(feedback, str) or not feedback.startswith("sensor."):
-            observer = self._pid_passive_observers.get(key)
-            if observer is not None:
-                observer.interrupt()
+            interrupt("single_feedback_sensor_required")
             hold("single_feedback_sensor_required")
             return
+        blocked_reason = calibration_hold(record, cfg, self.hass.states.get)
         valid = (
-            not record.get("pending") and not record.get("paused")
-            and not (record.get("upstream") or {}).get("pending")
-            and cfg.get("requested_mode") == mode
+            blocked_reason is None and cfg.get("requested_mode") == mode
             and self._active and self._ready
         )
         action = state.attributes.get("hvac_action")
@@ -2439,35 +2634,32 @@ class EquipmentRuntime:
             valid = False
         if cap.domain == "humidifier" and mode != "dry":
             valid = False
+        if not valid:
+            interrupt(blocked_reason or "verified_activity_required")
         hold(None if valid else "controller_inactive" if not (self._active and self._ready)
-             else "controller_paused" if record.get("paused")
-             else "pending_command" if (record.get("pending")
-                  or (record.get("upstream") or {}).get("pending"))
-             else "verified_activity_required")
+             else blocked_reason or "verified_activity_required")
         # Source identity, operating direction, target, preset and fan
-        # settings are tied to a model. All context changes revoke the
-        # old response evidence; no cross-room or cross-mode learning.
+        # settings are tied to a model. Restore only an exact matching
+        # completed ledger; never carry partial samples between contexts.
         context = passive_identity(
             spec.area_id, list(spec.source_entities), cap.primary,
             mode, metric, feedback, model.profile_name(cfg, plan),
             round(float(goal), 2),
             state.attributes.get("fan_mode"), state.attributes.get("percentage"),
         )
+        changed = activate(record, context, self.clock(), metric, cfg["sample_seconds"])
         saved = record.get("pid_passive")
-        if isinstance(saved, dict) and saved.get("context") != context:
-            record.pop("pid_passive", None)
-            self._pid_passive_observers.pop(key, None)
-            review = record.get("pid_passive_review")
-            if isinstance(review, dict) and review.get("state") == "pending":
-                from .pid_review import async_clear_review
-                review["state"] = "expired"
-                self.hass.async_create_task(async_clear_review(self.hass, self.manager, spec))
-            await self._save()
-            saved = None
         observer = self._pid_passive_observers.get(key)
-        if observer is None:
-            observer = self._pid_passive_observers[key] = PassiveObserver(saved)
+        if observer is None or observer.context != context:
+            observer = self._pid_passive_observers[key] = PassiveObserver(saved, now=self.clock())
         before_learning = observer.progress()
+        observed = getattr(self, "_pid_learning_observed", None)
+        generation = observed(spec) if callable(observed) else getattr(
+            self, "_pid_learning_generation", {}).get(key, 0)
+        continuity = {"generation": generation, "tuning_settings": tuning_signature(cfg)}
+        previous_gains = {k: cfg[k] for k in ("kp", "ki", "kd")}
+        # No await between acknowledging observed edges and consuming the
+        # exact state/measurement snapshot. Later changes revoke this proof.
         complete = observer.observe(
             context=context, at=self.clock(), value=measured.get(metric),
             on=is_on, owned=bool(record.get("power", {}).get(cap.primary)),
@@ -2477,40 +2669,38 @@ class EquipmentRuntime:
         if observer.progress() != before_learning:
             self._presentation_updates.request(key)
         if not complete:
+            if changed:
+                await self._save()
+            maintain = getattr(self, "_pid_review_maintenance", None)
+            if callable(maintain):
+                await maintain(spec, context=context)
             return
         summary = observer.summary(metric=metric, sample_seconds=cfg["sample_seconds"])
         # The persisted record has only six short numerical summaries, not the
         # raw temperature/humidity history. Write at most once per cycle.
-        record["pid_passive"] = {**observer.ledger(), "summary": summary}
+        remember(record, {**observer.ledger(), "summary": summary}, self.clock())
+        summary = record["pid_passive"]["summary"]
         await self._save()
         self._presentation_updates.request(key)
         if cfg["pid_calibration_method"] == "adaptive_suggest":
-            from .pid_review import proposal_for, async_publish_review, async_clear_review
+            from .pid_review import proposal_for
             latest = record.get("pid_passive_review")
             if (isinstance(latest, dict)
                     and latest.get("cycle_at") != summary.get("last_cycle_at")
                     and summary.get("status") not in ("suggestion_only", "validated")):
-                record.pop("pid_passive_review", None)
+                latest.update(state="expired", reason="recommendation_stale")
                 await self._save()
-                self.hass.async_create_task(
-                    async_clear_review(self.hass,self.manager,spec)
-                )
-                latest = None
             if (not isinstance(latest, dict)
                     or latest.get("cycle_at") != summary.get("last_cycle_at")):
                 review = proposal_for(cfg,summary,context,self.clock())
                 if review is not None:
-                    review["operating_mode"] = cfg.get("operating_mode", mode)
+                    review["operating_mode"] = cfg.get("operating_mode") or mode
                     record["pid_passive_review"] = review
                     await self._save()
-                    # Notification delivery is an independent task, never a
-                    # prerequisite for native PID control or physical power.
-                    self.hass.async_create_task(
-                        async_publish_review(
-                            self.hass,self.manager,spec,dict(review)
-                        )
-                    )
                     self._presentation_updates.request(key)
+        maintain = getattr(self, "_pid_review_maintenance", None)
+        if callable(maintain):
+            await maintain(spec, context=context)
         if (cfg["pid_calibration_method"] == "adaptive_auto"
                 and summary.get("confidence") == "high"
                 and summary.get("status") == "validated"
@@ -2523,6 +2713,7 @@ class EquipmentRuntime:
                 self._pid_passive_apply(
                     spec, context, summary["last_cycle_at"],
                     operating_mode=cfg.get("operating_mode"),
+                    continuity=continuity, previous_gains=previous_gains,
                 )
             )
             self._pid_passive_tasks[key] = task
@@ -2533,7 +2724,8 @@ class EquipmentRuntime:
 
     async def _pid_passive_apply(
         self, spec: model.ManagedDevice, context: str, cycle_at: float,
-        *, operating_mode: str | None = None,
+        *, operating_mode: str | None = None, continuity: dict | None = None,
+        previous_gains: dict | None = None,
     ) -> None:
         """Optionally apply ≤10% PI gain changes after independent validation.
 
@@ -2541,9 +2733,16 @@ class EquipmentRuntime:
         evidence *inside* the existing controller lock before saving.
         """
         try:
+            from .pid_review import tuning_signature
             cfg = model.settings(self.manager, spec)
             if cfg.get("operating_mode") != operating_mode:
                 return
+            if previous_gains is not None and any(
+                    cfg.get(k) != previous_gains.get(k) for k in ("kp", "ki", "kd")):
+                return
+            if continuity is None:
+                continuity = {"generation": getattr(self, "_pid_learning_generation", {}).get(
+                    spec.identifier, 0), "tuning_settings": tuning_signature(cfg)}
             record = self.records.get(spec.identifier, {})
             evidence = record.get("pid_passive", {})
             summary = evidence.get("summary", {}) if isinstance(evidence, dict) else {}
@@ -2568,7 +2767,7 @@ class EquipmentRuntime:
                     "rate_limit": "10_percent_per_24h",
                 },
             }, passive_auto=(context, cycle_at, {k: cfg[k] for k in ("kp","ki","kd")},
-                             operating_mode), operating_mode=operating_mode)
+                             operating_mode, continuity), operating_mode=operating_mode)
         except asyncio.CancelledError:
             raise
         except (HomeAssistantError, ValueError, KeyError, TypeError):
@@ -3664,9 +3863,9 @@ class EquipmentRuntime:
                 uncertain = True
         return True if uncertain else False
 
-    def _window_policy(self, spec, cfg=None):
+    def _window_policy(self, spec, cfg=None, *, read_only: bool = False):
         from .equipment_window import evaluate
-        return evaluate(self, spec, cfg)
+        return evaluate(self, spec, cfg, **({"read_only": True} if read_only else {}))
 
     def _stop_policy_verified(
         self, spec: model.ManagedDevice, cap: model.Capabilities, kind: str,
@@ -3759,7 +3958,8 @@ class EquipmentRuntime:
             self._status(spec, "retired_outputs_reconciled")
 
     def _gate(self, spec: model.ManagedDevice, cap: model.Capabilities, cfg: dict, plan: dict,
-              mode: str, *, automatic: bool = True, window_stop: bool = False) -> str | None:
+              mode: str, *, automatic: bool = True, window_stop: bool = False,
+              read_only: bool = False) -> str | None:
         if not self._active or not self._ready:
             return "controller_inactive"
         if not self._current_spec(spec):
@@ -3774,13 +3974,15 @@ class EquipmentRuntime:
                     and record.get("source_device_id") == spec.source_device_id
                     and record.get("area") == spec.area_id and record.get("pending")):
                 return "other_endpoint_acknowledgement_pending"
-        if self._record(spec).get("paused"):
+        current_record = self.records.get(spec.identifier, {}) if read_only else self._record(spec)
+        if current_record.get("paused"):
             return "controller_paused"
         # A verified active physical output finishes the optional door-start
         # episode. Unknown/reconnect/idle timestamps cannot renew its budget.
         budget = getattr(self, "_door_start_budget", None)
         current_native = self.hass.states.get(cap.primary)
-        if budget is not None and current_native is not None and not output_off(current_native):
+        if (not read_only and budget is not None and current_native is not None
+                and not output_off(current_native)):
             if current_native.state not in ("unknown", "unavailable") and not current_native.attributes.get("restored"):
                 budget.records.pop(spec.identifier, None)
         if cfg["control_mode"] == "existing":
@@ -3790,7 +3992,7 @@ class EquipmentRuntime:
         if native is not None and native.attributes.get("hvac_action") == "defrosting":
             return "native_defrost_protection"
         if cfg.get("pause_on_window_open", False):
-            window = self._window_policy(spec, cfg)
+            window = self._window_policy(spec, cfg, **({"read_only": True} if read_only else {}))
             if window["blocked"] and not window_stop:
                 return window["status"]
         # The per-controller live window policy above is authoritative.
@@ -3817,7 +4019,10 @@ class EquipmentRuntime:
                     return reason
             if getattr(self.manager, "window_open_wait", None) is not None:
                 from .window_open_wait import managed_start_hold
-                if waiting := managed_start_hold(self, spec, cap, cfg, mode):
+                if waiting := managed_start_hold(
+                    self, spec, cap, cfg, mode,
+                    **({"read_only": True} if read_only else {}),
+                ):
                     return waiting["status"]
             if cap.domain == "fan" or mode == "fan_only" or set(cap.modes) == {"off", "fan_only"}:
                 dev = effective_device(self.manager, spec, cap.primary)
@@ -5765,6 +5970,48 @@ class EquipmentRuntime:
                      settings_saved=True)
         return True
 
+    def _interrupt_pid_learning(self, spec_or_identifier: Any, reason: str) -> None:
+        """Discard unfinished samples and revoke queued automatic proof only.
+
+        Accepted numerical cycles and reviews remain in the durable record.
+        This never changes physical ownership, command journals or dwell, and
+        never writes storage. The next complete cycle can use earlier valid
+        learning without joining samples across this interruption.
+        """
+        identifier = getattr(spec_or_identifier, "identifier", spec_or_identifier)
+        if not isinstance(identifier, str):
+            return
+        generations = getattr(self, "_pid_learning_generation", None)
+        if generations is None:
+            generations = self._pid_learning_generation = {}
+        generations[identifier] = generations.get(identifier, 0) + 1
+        observer = getattr(self, "_pid_passive_observers", {}).get(identifier)
+        if observer is not None:
+            unfinished = bool(observer.on or observer.off or observer.last_t is not None)
+            observer.interrupt()
+            if unfinished:
+                logger = globals().get("_LOGGER")
+                if callable(getattr(logger, "debug", None)):
+                    logger.debug("PID observation interrupted for %s: %s", identifier, reason)
+                updates = getattr(self, "_presentation_updates", None)
+                if updates is not None:
+                    updates.request(identifier)
+
+    def _pid_learning_observed(self, spec: model.ManagedDevice) -> int:
+        """Consume native edges immediately before one synchronous sample.
+
+        Events that arrive during the subsequent Store await remain unseen;
+        they can therefore invalidate the captured application generation.
+        """
+        edges = getattr(self, "_pid_learning_edges", {})
+        observed = getattr(self, "_pid_learning_observed_edges", None)
+        if observed is None:
+            observed = self._pid_learning_observed_edges = {}
+        observed[spec.identifier] = {
+            entity: edges.get(entity, 0) for entity in spec.source_entities
+        }
+        return getattr(self, "_pid_learning_generation", {}).get(spec.identifier, 0)
+
     def observe_native_availability(
         self, entity_id: str, old: Any, new: Any,
     ) -> None:
@@ -5782,6 +6029,61 @@ class EquipmentRuntime:
                 None, "unavailable", "unknown"
             )
         )
+        interrupt_learning = getattr(self, "_interrupt_pid_learning", None)
+        if (callable(interrupt_learning)
+                and entity_id.startswith(("climate.", "humidifier.", "switch.",
+                                          "input_boolean.", "fan."))):
+            old_live, new_live = live(old), live(new)
+            normal_edge = bool(old_live and new_live
+                               and output_off(old) != output_off(new))
+            edges = getattr(self, "_pid_learning_edges", None)
+            if edges is None:
+                edges = self._pid_learning_edges = {}
+            if normal_edge:
+                edges[entity_id] = edges.get(entity_id, 0) + 1
+            # A single native ON or OFF is the boundary we need to learn.
+            # Multiple edges between samples, a hidden offline period, a
+            # mode change while running, or changed native effort invalidate
+            # that unfinished response even if the latest state looks normal.
+            discontinuity = None
+            if not old_live or not new_live:
+                discontinuity = "native_availability_changed"
+            elif not normal_edge and old.state != new.state:
+                discontinuity = "native_operating_mode_changed"
+            elif old_live and new_live:
+                old_attrs, new_attrs = old.attributes, new.attributes
+                if any(old_attrs.get(key) != new_attrs.get(key)
+                       for key in ("fan_mode", "percentage")):
+                    discontinuity = "native_output_settings_changed"
+                elif (not normal_edge and any(
+                        old_attrs.get(key) != new_attrs.get(key) for key in (
+                            "temperature", "target_temp_low", "target_temp_high",
+                            "humidity", "preset_mode", "swing_mode",
+                            "swing_horizontal_mode", "mode",
+                        ))):
+                    # Native control edits can precede the next manual-override
+                    # reconciliation while a calibration task waits for its
+                    # lock. Revoke that proof immediately. Attribute changes
+                    # accompanying one normal ON/OFF edge remain its boundary;
+                    # environmental feedback attributes are not control edits.
+                    discontinuity = "native_control_settings_changed"
+                elif (not output_off(old) and not output_off(new)
+                      and old_attrs.get("hvac_action") != new_attrs.get("hvac_action")):
+                    discontinuity = "native_activity_changed"
+            for spec in model.specs(self.manager):
+                if entity_id in spec.source_entities:
+                    seen = getattr(self, "_pid_learning_observed_edges", {}).get(
+                        spec.identifier, {}
+                    ).get(entity_id, 0)
+                    reason = discontinuity or (
+                        "unobserved_native_output_edges"
+                        if normal_edge and edges[entity_id] - seen > 1 else None
+                    )
+                    if reason is not None:
+                        interrupt_learning(spec, reason)
+                elif model.settings(self.manager, spec).get("power_switch_entity") == entity_id:
+                    if not old_live or not new_live or old.state != new.state:
+                        interrupt_learning(spec, "upstream_supply_changed")
         if (entity_id.startswith(("climate.", "humidifier."))
                 and live(old) and live(new)
                 and old.state == "off" and new.state != "off"):
@@ -6114,762 +6416,787 @@ class EquipmentRuntime:
         return {"ready": True}
 
     async def tick(self, spec: model.ManagedDevice) -> None:
-        if not self._active or not self._ready:
-            return
-        self._invalidated.discard(spec.identifier)
-        record = self._record(spec)
-        # The production runtime always defines _startup_readiness. Older
-        # source-extracted PID test harnesses intentionally bind only tick()
-        # and simulate their own ready native device.
-        readiness_fn = getattr(self, "_startup_readiness", None)
-        readiness = readiness_fn(spec) if callable(readiness_fn) else {"ready": True}
-        if not readiness["ready"]:
-            reset = getattr(self, "_reset_pid_cycle", None)
-            if callable(reset) and readiness.get("reason") == "native_source_unavailable":
-                await reset(spec, "native_source_unavailable")
-            self._status(
-                spec, "waiting_for_physical_device",
-                reason=readiness["reason"],
-                startup_settle_remaining_seconds=readiness.get("remaining_seconds"),
-                readiness_until=readiness.get("until"),
-                readiness_source_entity_ids=readiness.get("source_entity_ids"),
-                configured_control_method=model.settings(
-                    self.manager, spec
-                ).get("control_mode"),
-                automatic_selected=model.settings(
-                    self.manager, spec
-                ).get("control_mode") in ("automatic", "pid"),
-            )
-            return
-        refresh_mode = getattr(self, "_refresh_operating_mode", None)
-        if callable(refresh_mode):
-            await refresh_mode(spec)
-        from .equipment_setpoint_sequence import prepare_automatic_retry, progress_stop
-        await prepare_automatic_retry(self, spec)
-        if await progress_stop(self, spec):
-            return
-        if record.get("queued_power_switch"):
-            if await self._apply_queued_power_switch(spec):
+        interrupt_learning = getattr(self, "_interrupt_pid_learning", None)
+        learning_observed = False
+        interruption_reason = "controller_wait"
+        try:
+            if not self._active or not self._ready:
                 return
-        if record.get("restart_power_verification"):
-            if not await self._verify_restart_power(spec):
-                return
-        requested = record.get("automatic_continue_requested")
-        if (not isinstance(requested, dict)
-                and record.get("paused") in (
-                    "physical_acknowledgement_missing", "restart_reconciliation_required")
-                and not record.get("operating_mode_selection_required")
-                and model.settings(self.manager, spec).get("control_mode")
-                    in ("automatic", "pid")):
-            # Recover a Beta97-era stale ACK pause even before a user opens
-            # the card. Selecting Auto remains an independent preference;
-            # output is still gated on the exact original native evidence.
-            # Resolve the active scoped method here too: an interrupted
-            # intent may have been restored before that mode was available,
-            # and its legacy flat method is not its recovery preference.
-            method = model.settings(self.manager, spec)["control_mode"]
-            record["automatic_continue_requested"] = {
-                "at": self.clock(), "method": method,
-                "awaiting_physical_verification": True,
-            }
-            await self._save()
-            requested = record["automatic_continue_requested"]
-        if isinstance(requested, dict):
-            # A newly restored HA entity is observed but never spammed.
-            # A real offline→online transition earns at most one bounded
-            # reconnect retry per episode, with the unchanged safety gate.
-            gate = self._automatic_recovery_gate(spec)
-            if (not gate["ready"]
-                    and gate.get("reason")
-                        == "previous_command_not_yet_confirmed"):
-                if await self._retry_after_verified_reconnect(spec):
-                    return
-            if not gate["ready"]:
+            self._invalidated.discard(spec.identifier)
+            record = self._record(spec)
+            maintenance = getattr(self, "_pid_review_maintenance", None)
+            if callable(maintenance):
+                await maintenance(spec)
+            # The production runtime always defines _startup_readiness. Older
+            # source-extracted PID test harnesses intentionally bind only tick()
+            # and simulate their own ready native device.
+            readiness_fn = getattr(self, "_startup_readiness", None)
+            readiness = readiness_fn(spec) if callable(readiness_fn) else {"ready": True}
+            if not readiness["ready"]:
+                reset = getattr(self, "_reset_pid_cycle", None)
+                if callable(reset) and readiness.get("reason") == "native_source_unavailable":
+                    await reset(spec, "native_source_unavailable")
                 self._status(
-                    spec, "awaiting_physical_acknowledgement",
-                    reason=gate["reason"],
-                    readiness_remaining_seconds=gate.get("remaining_seconds"),
-                    automatic_selected=True, settings_saved=True,
-                    requested_native_state=gate.get("requested_native_state"),
-                    observed_native_state=gate.get("observed_native_state"),
-                    recovery_detail=(
-                        "Settings saved. HEM will apply them after verifying "
-                        "the earlier physical command. No repeated clicks."
-                    ),
+                    spec, "waiting_for_physical_device",
+                    reason=readiness["reason"],
+                    startup_settle_remaining_seconds=readiness.get("remaining_seconds"),
+                    readiness_until=readiness.get("until"),
+                    readiness_source_entity_ids=readiness.get("source_entity_ids"),
+                    configured_control_method=model.settings(
+                        self.manager, spec
+                    ).get("control_mode"),
+                    automatic_selected=model.settings(
+                        self.manager, spec
+                    ).get("control_mode") in ("automatic", "pid"),
                 )
                 return
-            self._schedule_automatic_reconciliation(spec)
-            self._status(
-                spec, "awaiting_evaluation",
-                reason="automatic_reconciliation_scheduled",
-                automatic_selected=True, settings_saved=True,
-            )
-            return
-        if record.get("paused"):
-            reset = getattr(self, "_reset_pid_cycle", None)
-            if callable(reset):
-                await reset(spec, record["paused"])
-            self._status(spec, "paused", reason=record["paused"])
-            return
-        if not self._current_spec(spec):
-            await self._retired(spec)
-            return
-        if record.get("operating_mode_selection_required"):
-            reset = getattr(self, "_reset_pid_cycle", None)
-            if callable(reset):
-                await reset(spec, record["operating_mode_selection_required"])
-            self._status(spec, "awaiting_evaluation",
-                         reason=record["operating_mode_selection_required"])
-            return
-        # A smart supply may make the downstream device unavailable when it
-        # is intentionally OFF. Its own source-bound, durable controller
-        # therefore runs BEFORE the native-device availability gate.
-        from .equipment_power_switch import before_tick as power_switch_before_tick
-        if await power_switch_before_tick(self, spec):
-            return
-        # The physical device must be available before ANY capability,
-        # occupancy, target, measurement or PID calculation is performed.
-        if not model.sources_available(self.manager, spec):
-            reset = getattr(self, "_reset_pid_cycle", None)
-            if callable(reset):
-                await reset(spec, "native_source_unavailable")
-            self._status(spec, "waiting_for_physical_device", reason="native_source_unavailable")
-            return
-        cfg = model.settings(self.manager, spec)
-        if hasattr(model, "raw_settings"):
-            raw_mode_settings = model.raw_settings(self.manager, spec)
-            explicit_mode = raw_mode_settings.get("requested_mode")
-            live_cap = model.capabilities(self.manager, spec)
-            if (raw_mode_settings.get("mode_settings_version") == 1 and explicit_mode is not None
-                    and live_cap is not None and explicit_mode not in live_cap.modes):
-                reset = getattr(self, "_reset_pid_cycle", None)
-                if callable(reset):
-                    await reset(spec, "native_power_mode_unsupported")
-                self._status(spec, "native_power_mode_unsupported", requested_native_mode=explicit_mode)
+            refresh_mode = getattr(self, "_refresh_operating_mode", None)
+            if callable(refresh_mode):
+                await refresh_mode(spec)
+            from .equipment_setpoint_sequence import prepare_automatic_retry, progress_stop
+            await prepare_automatic_retry(self, spec)
+            if await progress_stop(self, spec):
                 return
-        sync_intent = getattr(self, "_sync_pid_intent", None)
-        if callable(sync_intent):
-            await sync_intent(spec, cfg)
-        if cfg["control_mode"] != "pid":
-            self._profile_wake.pop(spec.identifier, None)
-        cap = model.capabilities(self.manager, spec)
-        if cap is None:
-            self._status(spec, "physical_capabilities_unavailable")
-            return
-        # Cache only observed real native capabilities, permitting future
-        # switch power-up from still-verified room sensors after outlet OFF.
-        # This cache NEVER authorizes native calls while that source is down.
-        actual_capabilities = asdict(cap)
-        if record.get("capabilities") != actual_capabilities:
-            record["capabilities"] = actual_capabilities
-            await self._save()
-        if hasattr(model, "raw_settings"):
-            from .device_activation import authority_context
-            capability_authority = authority_context(self.manager, spec)
-            if record.get("capabilities_authority") != capability_authority:
-                record["capabilities_authority"] = capability_authority
-                await self._save()
-        # The device may have just returned to HA and still be applying its
-        # own startup presets. Do not classify manual operation, adopt native
-        # output ownership or issue HVAC services until 30 seconds after the
-        # verified native source is back. The upstream supply safety stage
-        # above continues to run independently.
-        settle_fn = getattr(self, "_native_settle_remaining", None)
-        settle = settle_fn(spec) if callable(settle_fn) else 0.0
-        if settle is None or settle > 0:
-            self._status(spec, "waiting_for_physical_device",
-                         reason="native_restore_settling"
-                         if settle is not None else "native_source_unavailable",
-                         reconnect_settle_remaining_seconds=(
-                             round(settle) if settle is not None else None
-                         ))
-            return
-        # Native discovery after a HEM-owned supply ON must not fabricate
-        # another OFF period or indefinitely reject the same just-powered
-        # device as an unrelated unowned manual source.
-        if not await self._reconcile_native_after_supply_wake(spec, cap):
-            return
-        if not await self._reconcile(spec):
-            return
-        state = self.hass.states.get(cap.primary)
-        if state is None or state.state in ("unknown", "unavailable"):
-            self._status(spec, "waiting_for_physical_device", reason="native_source_unavailable",
-                         readiness_source_entity_ids=[cap.primary])
-            return
-        record["baseline"].setdefault(cap.primary, snapshot(state))
-        await self._observe_native_running(spec, cap, state)
-        # OFF monitoring is independent of PID. Only a genuine journaled
-        # HEM shutdown is eligible, for heat/cool/humidify/dry effects.
-        # Keep the normal control path unaffected if the monitor is absent.
-        if record.get("thermal_off_watch"):
-            try:
-                from .off_state_runtime import watchdog_tick
-                if await watchdog_tick(self, spec, cap, state):
+            if record.get("queued_power_switch"):
+                if await self._apply_queued_power_switch(spec):
                     return
-            except asyncio.CancelledError:
-                raise
-            except ImportError:
-                # Missing/partial monitoring components cannot disable HVAC.
-                pass
-            except Exception:
-                # A monitoring bug must never disable the real HVAC controller.
-                logger = globals().get("_LOGGER")
-                if logger is not None:
-                    logger.exception("Off-state thermal monitor failed for %s", spec.identifier)
-        plan = model.plan_for(self.manager, spec)
-        presentation = getattr(self, "_presentation_context", None)
-        if isinstance(presentation, dict):
-            context = (model.profile_name(cfg, plan), plan.get("sleeping"),
-                       plan.get("sleep_schedule_evidence"), plan.get("occupancy"),
-                       plan.get("away"))
-            if presentation.get(spec.identifier) != context:
-                presentation[spec.identifier] = context
-                # Sleep -> Home can leave demand/status unchanged (e.g. the
-                # same RH target). Still refresh this device's effective
-                # preset and sleep evidence without waking every room's UI.
-                self._presentation_updates.request(spec.identifier)
-        target = model.targets(self.manager, spec, cap, cfg, plan)
-        mode = cfg.get("requested_mode")
-        auto = cfg["control_mode"] in ("automatic", "pid")
-        measured = self.measurements(spec, cap)
-        soft, power = model.permission(self.manager, spec, cap)
-        owned = record["power"].get(cap.primary)
-        if cfg["control_mode"] == "off" or cfg.get("requested_mode") == "off":
-            reset = getattr(self, "_reset_pid_cycle", None)
-            if callable(reset):
-                await reset(spec, "requested_native_off")
-            if not output_off(state):
-                await self._power(spec, cap, "off", automatic=False, shutdown=bool(owned))
-            else:
-                self._status(spec, "off")
-            return
-        from .equipment_pid_safety import condition, remember_cutoff, status_details
-        if self._stop_policy_verified(spec, cap, "sleep"):
-            reset = getattr(self, "_reset_pid_cycle", None)
-            if callable(reset):
-                await reset(spec, "sleep_room_control_paused")
-            # A sleeping room with Pause selected is OFF, not just deprived
-            # of PID/setpoint updates. Never re-tune its fan or targets while
-            # sleeping. Respect the native minimum ON/defrost interlocks,
-            # then let a controller-owned upstream relay idle out separately.
-            self._memory.pop(spec.identifier, None)
-            self._fan_allocations.pop(spec.identifier, None)
-            if record.pop("pid_checkpoint", None) is not None:
+            if record.get("restart_power_verification"):
+                if not await self._verify_restart_power(spec):
+                    return
+            requested = record.get("automatic_continue_requested")
+            if (not isinstance(requested, dict)
+                    and record.get("paused") in (
+                        "physical_acknowledgement_missing", "restart_reconciliation_required")
+                    and not record.get("operating_mode_selection_required")
+                    and model.settings(self.manager, spec).get("control_mode")
+                        in ("automatic", "pid")):
+                # Recover a Beta97-era stale ACK pause even before a user opens
+                # the card. Selecting Auto remains an independent preference;
+                # output is still gated on the exact original native evidence.
+                # Resolve the active scoped method here too: an interrupted
+                # intent may have been restored before that mode was available,
+                # and its legacy flat method is not its recovery preference.
+                method = model.settings(self.manager, spec)["control_mode"]
+                record["automatic_continue_requested"] = {
+                    "at": self.clock(), "method": method,
+                    "awaiting_physical_verification": True,
+                }
                 await self._save()
-            if output_off(state):
-                self._status(spec, "sleep_room_control_paused",
-                             reason="native_output_off_during_sleep")
+                requested = record["automatic_continue_requested"]
+            if isinstance(requested, dict):
+                # A newly restored HA entity is observed but never spammed.
+                # A real offline→online transition earns at most one bounded
+                # reconnect retry per episode, with the unchanged safety gate.
+                gate = self._automatic_recovery_gate(spec)
+                if (not gate["ready"]
+                        and gate.get("reason")
+                            == "previous_command_not_yet_confirmed"):
+                    if await self._retry_after_verified_reconnect(spec):
+                        return
+                if not gate["ready"]:
+                    self._status(
+                        spec, "awaiting_physical_acknowledgement",
+                        reason=gate["reason"],
+                        readiness_remaining_seconds=gate.get("remaining_seconds"),
+                        automatic_selected=True, settings_saved=True,
+                        requested_native_state=gate.get("requested_native_state"),
+                        observed_native_state=gate.get("observed_native_state"),
+                        recovery_detail=(
+                            "Settings saved. HEM will apply them after verifying "
+                            "the earlier physical command. No repeated clicks."
+                        ),
+                    )
+                    return
+                self._schedule_automatic_reconciliation(spec)
+                self._status(
+                    spec, "awaiting_evaluation",
+                    reason="automatic_reconciliation_scheduled",
+                    automatic_selected=True, settings_saved=True,
+                )
                 return
-            if not power and not owned:
-                self._status(spec, "power_control_not_commissioned",
-                             reason="sleep_shutdown_needs_native_power_grant")
-                return
-            await self._power(
-                spec, cap, "off", automatic=False, shutdown=bool(owned),
-                policy_stop="sleep",
-            )
-            return
-        if cfg.get("pause_on_window_open", False) and cfg["control_mode"] not in ("existing", "off"):
-            window = self._window_policy(spec, cfg)
-            if window["blocked"]:
+            if record.get("paused"):
                 reset = getattr(self, "_reset_pid_cycle", None)
                 if callable(reset):
-                    await reset(spec, window["status"])
+                    await reset(spec, record["paused"])
+                self._status(spec, "paused", reason=record["paused"])
+                return
+            if not self._current_spec(spec):
+                await self._retired(spec)
+                return
+            if record.get("operating_mode_selection_required"):
+                reset = getattr(self, "_reset_pid_cycle", None)
+                if callable(reset):
+                    await reset(spec, record["operating_mode_selection_required"])
+                self._status(spec, "awaiting_evaluation",
+                             reason=record["operating_mode_selection_required"])
+                return
+            # A smart supply may make the downstream device unavailable when it
+            # is intentionally OFF. Its own source-bound, durable controller
+            # therefore runs BEFORE the native-device availability gate.
+            from .equipment_power_switch import before_tick as power_switch_before_tick
+            if await power_switch_before_tick(self, spec):
+                return
+            # The physical device must be available before ANY capability,
+            # occupancy, target, measurement or PID calculation is performed.
+            if not model.sources_available(self.manager, spec):
+                reset = getattr(self, "_reset_pid_cycle", None)
+                if callable(reset):
+                    await reset(spec, "native_source_unavailable")
+                self._status(spec, "waiting_for_physical_device", reason="native_source_unavailable")
+                return
+            cfg = model.settings(self.manager, spec)
+            if hasattr(model, "raw_settings"):
+                raw_mode_settings = model.raw_settings(self.manager, spec)
+                explicit_mode = raw_mode_settings.get("requested_mode")
+                live_cap = model.capabilities(self.manager, spec)
+                if (raw_mode_settings.get("mode_settings_version") == 1 and explicit_mode is not None
+                        and live_cap is not None and explicit_mode not in live_cap.modes):
+                    reset = getattr(self, "_reset_pid_cycle", None)
+                    if callable(reset):
+                        await reset(spec, "native_power_mode_unsupported")
+                    self._status(spec, "native_power_mode_unsupported", requested_native_mode=explicit_mode)
+                    return
+            sync_intent = getattr(self, "_sync_pid_intent", None)
+            if callable(sync_intent):
+                await sync_intent(spec, cfg)
+            if cfg["control_mode"] != "pid":
+                self._profile_wake.pop(spec.identifier, None)
+            cap = model.capabilities(self.manager, spec)
+            if cap is None:
+                self._status(spec, "physical_capabilities_unavailable")
+                return
+            # Cache only observed real native capabilities, permitting future
+            # switch power-up from still-verified room sensors after outlet OFF.
+            # This cache NEVER authorizes native calls while that source is down.
+            actual_capabilities = asdict(cap)
+            if record.get("capabilities") != actual_capabilities:
+                record["capabilities"] = actual_capabilities
+                await self._save()
+            if hasattr(model, "raw_settings"):
+                from .device_activation import authority_context
+                capability_authority = authority_context(self.manager, spec)
+                if record.get("capabilities_authority") != capability_authority:
+                    record["capabilities_authority"] = capability_authority
+                    await self._save()
+            # The device may have just returned to HA and still be applying its
+            # own startup presets. Do not classify manual operation, adopt native
+            # output ownership or issue HVAC services until 30 seconds after the
+            # verified native source is back. The upstream supply safety stage
+            # above continues to run independently.
+            settle_fn = getattr(self, "_native_settle_remaining", None)
+            settle = settle_fn(spec) if callable(settle_fn) else 0.0
+            if settle is None or settle > 0:
+                self._status(spec, "waiting_for_physical_device",
+                             reason="native_restore_settling"
+                             if settle is not None else "native_source_unavailable",
+                             reconnect_settle_remaining_seconds=(
+                                 round(settle) if settle is not None else None
+                             ))
+                return
+            # Native discovery after a HEM-owned supply ON must not fabricate
+            # another OFF period or indefinitely reject the same just-powered
+            # device as an unrelated unowned manual source.
+            if not await self._reconcile_native_after_supply_wake(spec, cap):
+                return
+            if not await self._reconcile(spec):
+                return
+            state = self.hass.states.get(cap.primary)
+            if state is None or state.state in ("unknown", "unavailable"):
+                self._status(spec, "waiting_for_physical_device", reason="native_source_unavailable",
+                             readiness_source_entity_ids=[cap.primary])
+                return
+            record["baseline"].setdefault(cap.primary, snapshot(state))
+            await self._observe_native_running(spec, cap, state)
+            # OFF monitoring is independent of PID. Only a genuine journaled
+            # HEM shutdown is eligible, for heat/cool/humidify/dry effects.
+            # Keep the normal control path unaffected if the monitor is absent.
+            if record.get("thermal_off_watch"):
+                try:
+                    from .off_state_runtime import watchdog_tick
+                    if await watchdog_tick(self, spec, cap, state):
+                        return
+                except asyncio.CancelledError:
+                    raise
+                except ImportError:
+                    # Missing/partial monitoring components cannot disable HVAC,
+                    # but its uncertain interval cannot join a learned response.
+                    if callable(interrupt_learning):
+                        interrupt_learning(spec, "off_state_monitor_unavailable")
+                except Exception:
+                    # A monitoring bug must never disable the real HVAC controller.
+                    if callable(interrupt_learning):
+                        interrupt_learning(spec, "off_state_monitor_failed")
+                    logger = globals().get("_LOGGER")
+                    if logger is not None:
+                        logger.exception("Off-state thermal monitor failed for %s", spec.identifier)
+            plan = model.plan_for(self.manager, spec)
+            presentation = getattr(self, "_presentation_context", None)
+            if isinstance(presentation, dict):
+                context = (model.profile_name(cfg, plan), plan.get("sleeping"),
+                           plan.get("sleep_schedule_evidence"), plan.get("occupancy"),
+                           plan.get("away"))
+                if presentation.get(spec.identifier) != context:
+                    presentation[spec.identifier] = context
+                    # Sleep -> Home can leave demand/status unchanged (e.g. the
+                    # same RH target). Still refresh this device's effective
+                    # preset and sleep evidence without waking every room's UI.
+                    self._presentation_updates.request(spec.identifier)
+            target = model.targets(self.manager, spec, cap, cfg, plan)
+            mode = cfg.get("requested_mode")
+            auto = cfg["control_mode"] in ("automatic", "pid")
+            measured = self.measurements(spec, cap)
+            soft, power = model.permission(self.manager, spec, cap)
+            owned = record["power"].get(cap.primary)
+            if cfg["control_mode"] == "off" or cfg.get("requested_mode") == "off":
+                reset = getattr(self, "_reset_pid_cycle", None)
+                if callable(reset):
+                    await reset(spec, "requested_native_off")
+                if not output_off(state):
+                    await self._power(spec, cap, "off", automatic=False, shutdown=bool(owned))
+                else:
+                    self._status(spec, "off")
+                return
+            from .equipment_pid_safety import condition, remember_cutoff, status_details
+            if self._stop_policy_verified(spec, cap, "sleep"):
+                reset = getattr(self, "_reset_pid_cycle", None)
+                if callable(reset):
+                    await reset(spec, "sleep_room_control_paused")
+                # A sleeping room with Pause selected is OFF, not just deprived
+                # of PID/setpoint updates. Never re-tune its fan or targets while
+                # sleeping. Respect the native minimum ON/defrost interlocks,
+                # then let a controller-owned upstream relay idle out separately.
                 self._memory.pop(spec.identifier, None)
                 self._fan_allocations.pop(spec.identifier, None)
                 if record.pop("pid_checkpoint", None) is not None:
                     await self._save()
-                if (window["stop_requested"] and not output_off(state)
-                        and (power or owned)):
-                    await self._power(
-                        spec, cap, "off", automatic=False, shutdown=bool(owned),
-                        policy_stop="window",
-                    )
-                else:
-                    self._status(spec, window["status"],
-                                 window_resume_remaining_seconds=window["remaining_seconds"])
-                return  # No targets, fan, swing or mode control during hold.
-        current_target = condition(self, spec, cap)
-        if current_target is not None and current_target["needed"] is False and (power or owned):
-            # A normal target-satisfied stop/idle period is vital evidence.
-            # Observe the actual native state BEFORE any OFF command; never
-            # fabricate OFF from zero demand or a successful service return.
-            # This path otherwise returns before the ordinary observer below.
-            passive = getattr(self, "_pid_passive_observe", None)
-            if passive is not None:
-                learning_gate = self._gate(
-                    spec, cap, cfg, plan, current_target["mode"], automatic=auto,
-                )
-                if learning_gate is None:
-                    await passive(
-                        spec, cfg, cap, plan, target, measured, record, state,
-                        current_target["mode"], current_target["metric"],
-                        current_target["target"], soft, power,
-                    )
-                    diagnostic_sample = getattr(self, "_observe_pid_performance", None)
-                    if callable(diagnostic_sample):
-                        diagnostic_sample(
-                            spec, cfg, cap, state, measured, current_target["metric"],
-                            current_target["target"], current_target["mode"],
-                            current_target["increasing"], model.profile_name(cfg, plan),
-                        )
-                else:
-                    observer = getattr(self, "_pid_passive_observers", {}).get(spec.identifier)
-                    if observer is not None:
-                        observer.interrupt()
-                    holds = getattr(self, "_pid_learning_holds", None)
-                    if isinstance(holds, dict):
-                        holds[spec.identifier] = {
-                            "operating_mode": cfg.get("operating_mode") or cfg.get("requested_mode"),
-                            "reason": "controller_paused", "detail": learning_gate,
-                        }
-            await remember_cutoff(self, spec, current_target)
-            # Reaching the target ends this logical PID pulse immediately.
-            # Physical OFF retains native minimum-ON, defrost and the user's
-            # optional reverse-setpoint grace; never cut the supply directly.
-            if not output_off(state):
+                if output_off(state):
+                    self._status(spec, "sleep_room_control_paused",
+                                 reason="native_output_off_during_sleep")
+                    return
+                if not power and not owned:
+                    self._status(spec, "power_control_not_commissioned",
+                                 reason="sleep_shutdown_needs_native_power_grant")
+                    return
                 await self._power(
                     spec, cap, "off", automatic=False, shutdown=bool(owned),
-                    policy_stop="target",
+                    policy_stop="sleep",
                 )
-            else:
-                self._status(spec, "within_target_band", **status_details(record))
-            return
-        if (auto and power and not output_off(state)
-                and self._stop_policy_verified(spec, cap, "idle")):
-            # PID integral or PWM phase cannot keep an appliance energized
-            # once independent fresh measured demand is decisively FALSE.
-            # Native OFF still enforces the minimum runtime. The optional
-            # external supply remains on until a *separate* idle cooldown.
-            await self._power(
-                spec, cap, "off", automatic=False, shutdown=bool(owned),
-                policy_stop="idle",
-            )
-            return
-        if auto and power and not owned and not output_off(state):
-            self._status(spec, "running_device_requires_off_before_automatic_power_ownership")
-            return
-        if owned and not power:
-            await self._power(spec, cap, "off", automatic=auto, shutdown=True)
-            return
-        if owned and self.clock()-owned["since"] >= owned["max_on"]:
-            await self._power(spec, cap, "off", automatic=auto, shutdown=True)
-            return
-        if cfg["control_mode"] == "existing":
-            return
-        if cfg["control_mode"] == "manual" and not (
-            cfg.get("requested_mode") or cfg.get("profile_targets") or cfg.get("profile_fans")
-            or cfg["preset"] != "none" or cfg.get("fan_mode")
-            or cfg.get("swing_mode") or cfg.get("swing_horizontal_mode")
-        ):
-            self._status(spec, "manual_no_request")
-            return
-        if auto and not (cfg.get("operating_mode") and mode in cap.modes) and not (
-                cfg["control_mode"] == "pid" and mode in cap.modes and mode != "off"):
-            from .dry_mode import automatic_mode
-            room = model.room_config(self.manager, spec)
-            mode = automatic_mode(
-                cap, state, measured, target,
-                dedicated_dry=room.get("dry_climate_entity") == cap.primary,
-                pid=cfg["control_mode"] == "pid",
-            )
-        if mode is None:
-            mode = state.state if cap.domain == "climate" else next((v for v in cap.modes if v != "off"), "off")
-        if why := self._gate(spec, cap, cfg, plan, mode, automatic=auto):
-            holds = getattr(self, "_pid_learning_holds", None)
-            if isinstance(holds, dict):
-                holds[spec.identifier] = {
-                    "operating_mode": cfg.get("operating_mode") or cfg.get("requested_mode"),
-                    "reason": "controller_paused", "detail": why,
-                }
-            reset = getattr(self, "_reset_pid_cycle", None)
-            if callable(reset) and why != "startup_warmup":
-                await reset(spec, why)
-            elif why == "startup_warmup":
-                # The fixed startup ON gate is not changed control intent.
-                # Preserve the verified restart checkpoint/served pulse;
-                # no PWM callback or native ON may skip this warmup below.
-                cancel_pwm = getattr(self, "_cancel_pid_pwm_evaluation", None)
-                if callable(cancel_pwm):
-                    cancel_pwm(spec)
-            if why in ("window_request_pending", "window_open_wait"):
-                # Deferred output is not delivered PID effort. Discard the
-                # old integral/phase instead of integrating an idle plant.
-                self._memory.pop(spec.identifier, None)
-                self._fan_allocations.pop(spec.identifier, None)
-                if record.pop("pid_checkpoint", None) is not None:
-                    await self._save()
-                waiting = self.manager.window_open_wait.status(spec.area_id, cap.primary)
-                self._status(spec, why,
-                             window_open_wait_remaining_seconds=waiting["remaining_seconds"],
-                             window_open_wait_until=waiting.get("expires_at"))
-            else:
-                self._status(spec, why)
-            if owned and state.state != "off":
-                await self._power(spec, cap, "off", automatic=auto, shutdown=True)
-            return
-        await remember_cutoff(self, spec, current_target)
-        demand, metric, increasing, goal, wanted = None, None, False, None, None
-        pwm_info = None
-        measured_fan_allocation = None
-        self._fan_allocations.pop(spec.identifier, None)
-        if cap.domain == "fan" or mode == "fan_only" or set(cap.modes) == {"off", "fan_only"}:
-            from .device_activation import effective_device
-            dev = effective_device(self.manager, spec, cap.primary)
-            room = model.room_config(self.manager, spec)
-            extraction = dev.get("fan_purpose") == "extraction"
-            metric = "co2" if extraction else "pm25"
-            goal = plan.get("air_actions", {}).get("thresholds", {}).get(
-                "co2_operational_ppm" if extraction else "pm25_short_term_action_ug_m3")
-        elif cap.domain == "humidifier" or mode == "dry":
-            metric, goal, increasing = "humidity", target["humidity"], cap.humidifying
-        elif mode in ("heat", "cool"):
-            metric, goal, increasing = "temperature", target[mode], mode == "heat"
-        elif mode in ("heat_cool", "auto") and (cap.temperature or cap.temperature_range):
-            # Native range/AUTO owns its thermal direction. We only qualify
-            # an outside-band ON; never implement simultaneous heating/cooling.
-            value = measured["temperature"]
-            metric, increasing = "temperature", value is not None and value < target["heat"]
-            goal = target["heat"] if increasing else target["cool"]
-        if auto and metric:
-            value = measured[metric]
-            if value is None or finite(goal, 0, 20000) is None:
-                reset = getattr(self, "_reset_pid_cycle", None)
-                if callable(reset):
-                    await reset(spec, "control_measurement_missing_or_stale")
-                self._status(spec, "control_measurement_missing_or_stale")
-                if owned:
-                    await self._power(spec, cap, "off", automatic=True, shutdown=True)
                 return
-            error = (goal-value) if increasing else (value-goal)
-            if cfg["control_mode"] == "pid" and mode in ("heat_cool", "auto") and cap.domain == "climate":
-                self._status(spec, "select_single_direction_for_pid")
-                return
-            diagnostic_sample = getattr(self, "_observe_pid_performance", None)
-            if callable(diagnostic_sample):
-                diagnostic_sample(
-                    spec, cfg, cap, state, measured, metric, goal,
-                    mode, increasing, model.profile_name(cfg, plan),
-                )
-            if cfg["control_mode"] == "pid":
-                feedback = {
-                    "metric": metric, "source": measured.get(metric + "_source"),
-                    "entity": measured.get(metric + "_entity"),
-                    "selected_entities": sorted(measured.get(metric + "_selected_entities") or ()),
-                }
-                old_feedback = record.get("pid_feedback_identity")
-                if old_feedback != feedback:
-                    if isinstance(old_feedback, dict):
-                        reset = getattr(self, "_reset_pid_cycle", None)
-                        if callable(reset):
-                            await reset(spec, "control_feedback_sources_changed")
-                    record["pid_feedback_identity"] = feedback
-                    await self._save()
-                # Older standalone production-tick regression harnesses
-                # compile only tick() without the new observer methods.
-                # The real runtime always has the passive observer; treating
-                # it as an optional diagnostic keeps the actuator path pure.
+            if cfg.get("pause_on_window_open", False) and cfg["control_mode"] not in ("existing", "off"):
+                window = self._window_policy(spec, cfg)
+                if window["blocked"]:
+                    reset = getattr(self, "_reset_pid_cycle", None)
+                    if callable(reset):
+                        await reset(spec, window["status"])
+                    self._memory.pop(spec.identifier, None)
+                    self._fan_allocations.pop(spec.identifier, None)
+                    if record.pop("pid_checkpoint", None) is not None:
+                        await self._save()
+                    if (window["stop_requested"] and not output_off(state)
+                            and (power or owned)):
+                        await self._power(
+                            spec, cap, "off", automatic=False, shutdown=bool(owned),
+                            policy_stop="window",
+                        )
+                    else:
+                        self._status(spec, window["status"],
+                                     window_resume_remaining_seconds=window["remaining_seconds"])
+                    return  # No targets, fan, swing or mode control during hold.
+            current_target = condition(self, spec, cap)
+            if current_target is not None and current_target["needed"] is False and (power or owned):
+                # A normal target-satisfied stop/idle period is vital evidence.
+                # Observe the actual native state BEFORE any OFF command; never
+                # fabricate OFF from zero demand or a successful service return.
+                # This path otherwise returns before the ordinary observer below.
                 passive = getattr(self, "_pid_passive_observe", None)
                 if passive is not None:
-                    await passive(
-                        spec, cfg, cap, plan, target, measured, record, state,
-                        mode, metric, goal, soft, power,
+                    learning_gate = self._gate(
+                        spec, cap, cfg, plan, current_target["mode"], automatic=auto,
                     )
-                from .pid_phase import phase_decision, sampled_binary_pwm_plan
-                previous, memory, anchor = self._memory.get(
-                    spec.identifier, (None, None, self.clock())
-                )
-                restored_pid = False
-                if previous is None:
-                    restore = getattr(self, "_resume_pid_checkpoint", None)
-                    if callable(restore):
-                        recovered = restore(
-                            spec, record, cfg, value, goal, increasing
+                    if learning_gate is None:
+                        await passive(
+                            spec, cfg, cap, plan, target, measured, record, state,
+                            current_target["mode"], current_target["metric"],
+                            current_target["target"], soft, power,
                         )
-                        if recovered is not None:
-                            previous, memory, anchor = recovered
-                            restored_pid = True
-                profile = model.profile_name(cfg, plan)
-                on_min, off_min, _ = model.timing(self.manager, spec, cap)
-                signature, rebased, priority_wake = phase_decision(
-                    previous, metric=metric, target=goal, increasing=increasing,
-                    profile=profile, mode=mode, preset=cfg["preset"],
-                    kp=cfg["kp"], ki=cfg["ki"], kd=cfg["kd"],
-                    cycle_s=cfg["cycle_seconds"],
-                    min_on_s=on_min, min_off_s=off_min, measured=value,
+                        learning_observed = True
+                        diagnostic_sample = getattr(self, "_observe_pid_performance", None)
+                        if callable(diagnostic_sample):
+                            diagnostic_sample(
+                                spec, cfg, cap, state, measured, current_target["metric"],
+                                current_target["target"], current_target["mode"],
+                                current_target["increasing"], model.profile_name(cfg, plan),
+                            )
+                    else:
+                        observer = getattr(self, "_pid_passive_observers", {}).get(spec.identifier)
+                        if observer is not None:
+                            observer.interrupt()
+                        holds = getattr(self, "_pid_learning_holds", None)
+                        if isinstance(holds, dict):
+                            holds[spec.identifier] = {
+                                "operating_mode": cfg.get("operating_mode") or cfg.get("requested_mode"),
+                                "reason": "controller_paused", "detail": learning_gate,
+                            }
+                await remember_cutoff(self, spec, current_target)
+                # Reaching the target ends this logical PID pulse immediately.
+                # Physical OFF retains native minimum-ON, defrost and the user's
+                # optional reverse-setpoint grace; never cut the supply directly.
+                if not output_off(state):
+                    await self._power(
+                        spec, cap, "off", automatic=False, shutdown=bool(owned),
+                        policy_stop="target",
+                    )
+                else:
+                    self._status(spec, "within_target_band", **status_details(record))
+                return
+            if (auto and power and not output_off(state)
+                    and self._stop_policy_verified(spec, cap, "idle")):
+                # PID integral or PWM phase cannot keep an appliance energized
+                # once independent fresh measured demand is decisively FALSE.
+                # Native OFF still enforces the minimum runtime. The optional
+                # external supply remains on until a *separate* idle cooldown.
+                await self._power(
+                    spec, cap, "off", automatic=False, shutdown=bool(owned),
+                    policy_stop="idle",
                 )
-                if rebased:
-                    memory, anchor = None, self.clock()
+                return
+            if auto and power and not owned and not output_off(state):
+                self._status(spec, "running_device_requires_off_before_automatic_power_ownership")
+                return
+            if owned and not power:
+                await self._power(spec, cap, "off", automatic=auto, shutdown=True)
+                return
+            if owned and self.clock()-owned["since"] >= owned["max_on"]:
+                await self._power(spec, cap, "off", automatic=auto, shutdown=True)
+                return
+            if cfg["control_mode"] == "existing":
+                return
+            if cfg["control_mode"] == "manual" and not (
+                cfg.get("requested_mode") or cfg.get("profile_targets") or cfg.get("profile_fans")
+                or cfg["preset"] != "none" or cfg.get("fan_mode")
+                or cfg.get("swing_mode") or cfg.get("swing_horizontal_mode")
+            ):
+                self._status(spec, "manual_no_request")
+                return
+            if auto and not (cfg.get("operating_mode") and mode in cap.modes) and not (
+                    cfg["control_mode"] == "pid" and mode in cap.modes and mode != "off"):
+                from .dry_mode import automatic_mode
+                room = model.room_config(self.manager, spec)
+                mode = automatic_mode(
+                    cap, state, measured, target,
+                    dedicated_dry=room.get("dry_climate_entity") == cap.primary,
+                    pid=cfg["control_mode"] == "pid",
+                )
+            if mode is None:
+                mode = state.state if cap.domain == "climate" else next((v for v in cap.modes if v != "off"), "off")
+            if why := self._gate(spec, cap, cfg, plan, mode, automatic=auto):
+                holds = getattr(self, "_pid_learning_holds", None)
+                if isinstance(holds, dict):
+                    holds[spec.identifier] = {
+                        "operating_mode": cfg.get("operating_mode") or cfg.get("requested_mode"),
+                        "reason": "controller_paused", "detail": why,
+                    }
+                reset = getattr(self, "_reset_pid_cycle", None)
+                if callable(reset) and why != "startup_warmup":
+                    await reset(spec, why)
+                elif why == "startup_warmup":
+                    # The fixed startup ON gate is not changed control intent.
+                    # Preserve the verified restart checkpoint/served pulse;
+                    # no PWM callback or native ON may skip this warmup below.
                     cancel_pwm = getattr(self, "_cancel_pid_pwm_evaluation", None)
                     if callable(cancel_pwm):
                         cancel_pwm(spec)
-                    record.pop("pid_pwm_run", None)
-                    # A new comfort demand starts a fresh logical phase.
-                    # Keep the one-time wake request until the physical output
-                    # is seen ON or its bounded validity window expires. This
-                    # survives a minimum-OFF hold without resetting that hold.
-                    self._profile_wake.pop(spec.identifier, None)
-                    if (priority_wake and power and output_off(state)
-                            and cap.domain in ("climate", "switch", "input_boolean")):
-                        self._profile_wake[spec.identifier] = {
-                            "profile": profile, "mode": mode,
-                            "until": self.clock() + max(
-                                off_min + cfg["sample_seconds"],
-                                cfg["cycle_seconds"],
-                            ),
-                        }
-                memory = model.pid_step(
-                    value, goal, self.clock(), increasing=increasing,
-                    kp=cfg["kp"], ki=cfg["ki"], kd=cfg["kd"],
-                    sample=cfg["sample_seconds"], memory=memory,
-                )
-                self._memory[spec.identifier] = (signature, memory, anchor)
-                persist = getattr(self, "_checkpoint_pid", None)
-                if callable(persist):
-                    await persist(spec, record, cfg, signature, memory, anchor)
-                demand = memory.demand
-                if (cfg.get("pid_fan_capacity_mode") == "measured"
-                        and cap.domain in ("climate", "humidifier")
-                        and cap.fan_entity and cap.fan_modes and demand > 0):
-                    # Only the calibrated HVAC direction and the *exact*
-                    # same physical endpoint and fan may use the model.
-                    # A separate accessory fan that is currently OFF cannot
-                    # be assumed to produce the measured capacity.
-                    saved_models = cfg.get("pid_fan_capacity_models") or {}
-                    saved_curve = saved_models.get(mode) if isinstance(saved_models, dict) else None
-                    fan_state = self.hass.states.get(cap.fan_entity)
-                    native_ready = (cap.fan_entity == cap.primary or
-                                    fan_state is not None and
-                                    fan_state.state not in ("off", "unknown", "unavailable"))
-                    valid = (native_ready and isinstance(saved_curve, dict)
-                             and saved_curve.get("sources") == list(spec.source_entities)
-                             and fan_capacity_model_is_valid(
-                                 saved_curve, mode=mode,
-                                 physical_entity=cap.primary,
-                                 fan_entity=cap.fan_entity,
-                                 percentage=cap.fan_percentage,
-                                 advertised_modes=cap.fan_modes))
-                    if valid:
-                        quiet_context = self._quiet_context(spec, cfg, plan)
-                        if quiet_context is not None:
-                            limits = model.device_limits(self.manager, spec, cap)
-                            measured_fan_allocation = allocate_fan_capacity(
-                                demand, saved_curve, quiet=quiet_context,
-                                quiet_mode=cfg.get("quiet_fan_mode"),
-                                quiet_percentage=cfg["quiet_percentage"],
-                                fan_min_percentage=limits["fan_min_percentage"],
-                                fan_max_percentage=limits["fan_max_percentage"],
+                if why in ("window_request_pending", "window_open_wait"):
+                    # Deferred output is not delivered PID effort. Discard the
+                    # old integral/phase instead of integrating an idle plant.
+                    self._memory.pop(spec.identifier, None)
+                    self._fan_allocations.pop(spec.identifier, None)
+                    if record.pop("pid_checkpoint", None) is not None:
+                        await self._save()
+                    waiting = self.manager.window_open_wait.status(spec.area_id, cap.primary)
+                    self._status(spec, why,
+                                 window_open_wait_remaining_seconds=waiting["remaining_seconds"],
+                                 window_open_wait_until=waiting.get("expires_at"))
+                else:
+                    self._status(spec, why)
+                if owned and state.state != "off":
+                    await self._power(spec, cap, "off", automatic=auto, shutdown=True)
+                return
+            await remember_cutoff(self, spec, current_target)
+            demand, metric, increasing, goal, wanted = None, None, False, None, None
+            pwm_info = None
+            measured_fan_allocation = None
+            self._fan_allocations.pop(spec.identifier, None)
+            if cap.domain == "fan" or mode == "fan_only" or set(cap.modes) == {"off", "fan_only"}:
+                from .device_activation import effective_device
+                dev = effective_device(self.manager, spec, cap.primary)
+                room = model.room_config(self.manager, spec)
+                extraction = dev.get("fan_purpose") == "extraction"
+                metric = "co2" if extraction else "pm25"
+                goal = plan.get("air_actions", {}).get("thresholds", {}).get(
+                    "co2_operational_ppm" if extraction else "pm25_short_term_action_ug_m3")
+            elif cap.domain == "humidifier" or mode == "dry":
+                metric, goal, increasing = "humidity", target["humidity"], cap.humidifying
+            elif mode in ("heat", "cool"):
+                metric, goal, increasing = "temperature", target[mode], mode == "heat"
+            elif mode in ("heat_cool", "auto") and (cap.temperature or cap.temperature_range):
+                # Native range/AUTO owns its thermal direction. We only qualify
+                # an outside-band ON; never implement simultaneous heating/cooling.
+                value = measured["temperature"]
+                metric, increasing = "temperature", value is not None and value < target["heat"]
+                goal = target["heat"] if increasing else target["cool"]
+            if auto and metric:
+                value = measured[metric]
+                if value is None or finite(goal, 0, 20000) is None:
+                    reset = getattr(self, "_reset_pid_cycle", None)
+                    if callable(reset):
+                        await reset(spec, "control_measurement_missing_or_stale")
+                    self._status(spec, "control_measurement_missing_or_stale")
+                    if owned:
+                        await self._power(spec, cap, "off", automatic=True, shutdown=True)
+                    return
+                error = (goal-value) if increasing else (value-goal)
+                if cfg["control_mode"] == "pid" and mode in ("heat_cool", "auto") and cap.domain == "climate":
+                    self._status(spec, "select_single_direction_for_pid")
+                    return
+                diagnostic_sample = getattr(self, "_observe_pid_performance", None)
+                if callable(diagnostic_sample):
+                    diagnostic_sample(
+                        spec, cfg, cap, state, measured, metric, goal,
+                        mode, increasing, model.profile_name(cfg, plan),
+                    )
+                if cfg["control_mode"] == "pid":
+                    feedback = {
+                        "metric": metric, "source": measured.get(metric + "_source"),
+                        "entity": measured.get(metric + "_entity"),
+                        "selected_entities": sorted(measured.get(metric + "_selected_entities") or ()),
+                    }
+                    old_feedback = record.get("pid_feedback_identity")
+                    if old_feedback != feedback:
+                        if isinstance(old_feedback, dict):
+                            reset = getattr(self, "_reset_pid_cycle", None)
+                            if callable(reset):
+                                await reset(spec, "control_feedback_sources_changed")
+                        record["pid_feedback_identity"] = feedback
+                        await self._save()
+                    # Older standalone production-tick regression harnesses
+                    # compile only tick() without the new observer methods.
+                    # The real runtime always has the passive observer; treating
+                    # it as an optional diagnostic keeps the actuator path pure.
+                    passive = getattr(self, "_pid_passive_observe", None)
+                    if passive is not None:
+                        await passive(
+                            spec, cfg, cap, plan, target, measured, record, state,
+                            mode, metric, goal, soft, power,
+                        )
+                        learning_observed = True
+                    from .pid_phase import phase_decision, sampled_binary_pwm_plan
+                    previous, memory, anchor = self._memory.get(
+                        spec.identifier, (None, None, self.clock())
+                    )
+                    restored_pid = False
+                    if previous is None:
+                        restore = getattr(self, "_resume_pid_checkpoint", None)
+                        if callable(restore):
+                            recovered = restore(
+                                spec, record, cfg, value, goal, increasing
                             )
-                            if measured_fan_allocation:
+                            if recovered is not None:
+                                previous, memory, anchor = recovered
+                                restored_pid = True
+                    profile = model.profile_name(cfg, plan)
+                    on_min, off_min, _ = model.timing(self.manager, spec, cap)
+                    signature, rebased, priority_wake = phase_decision(
+                        previous, metric=metric, target=goal, increasing=increasing,
+                        profile=profile, mode=mode, preset=cfg["preset"],
+                        kp=cfg["kp"], ki=cfg["ki"], kd=cfg["kd"],
+                        cycle_s=cfg["cycle_seconds"],
+                        min_on_s=on_min, min_off_s=off_min, measured=value,
+                    )
+                    if rebased:
+                        memory, anchor = None, self.clock()
+                        cancel_pwm = getattr(self, "_cancel_pid_pwm_evaluation", None)
+                        if callable(cancel_pwm):
+                            cancel_pwm(spec)
+                        record.pop("pid_pwm_run", None)
+                        # A new comfort demand starts a fresh logical phase.
+                        # Keep the one-time wake request until the physical output
+                        # is seen ON or its bounded validity window expires. This
+                        # survives a minimum-OFF hold without resetting that hold.
+                        self._profile_wake.pop(spec.identifier, None)
+                        if (priority_wake and power and output_off(state)
+                                and cap.domain in ("climate", "switch", "input_boolean")):
+                            self._profile_wake[spec.identifier] = {
+                                "profile": profile, "mode": mode,
+                                "until": self.clock() + max(
+                                    off_min + cfg["sample_seconds"],
+                                    cfg["cycle_seconds"],
+                                ),
+                            }
+                    memory = model.pid_step(
+                        value, goal, self.clock(), increasing=increasing,
+                        kp=cfg["kp"], ki=cfg["ki"], kd=cfg["kd"],
+                        sample=cfg["sample_seconds"], memory=memory,
+                    )
+                    self._memory[spec.identifier] = (signature, memory, anchor)
+                    persist = getattr(self, "_checkpoint_pid", None)
+                    if callable(persist):
+                        await persist(spec, record, cfg, signature, memory, anchor)
+                    demand = memory.demand
+                    if (cfg.get("pid_fan_capacity_mode") == "measured"
+                            and cap.domain in ("climate", "humidifier")
+                            and cap.fan_entity and cap.fan_modes and demand > 0):
+                        # Only the calibrated HVAC direction and the *exact*
+                        # same physical endpoint and fan may use the model.
+                        # A separate accessory fan that is currently OFF cannot
+                        # be assumed to produce the measured capacity.
+                        saved_models = cfg.get("pid_fan_capacity_models") or {}
+                        saved_curve = saved_models.get(mode) if isinstance(saved_models, dict) else None
+                        fan_state = self.hass.states.get(cap.fan_entity)
+                        native_ready = (cap.fan_entity == cap.primary or
+                                        fan_state is not None and
+                                        fan_state.state not in ("off", "unknown", "unavailable"))
+                        valid = (native_ready and isinstance(saved_curve, dict)
+                                 and saved_curve.get("sources") == list(spec.source_entities)
+                                 and fan_capacity_model_is_valid(
+                                     saved_curve, mode=mode,
+                                     physical_entity=cap.primary,
+                                     fan_entity=cap.fan_entity,
+                                     percentage=cap.fan_percentage,
+                                     advertised_modes=cap.fan_modes))
+                        if valid:
+                            quiet_context = self._quiet_context(spec, cfg, plan)
+                            if quiet_context is not None:
+                                limits = model.device_limits(self.manager, spec, cap)
+                                measured_fan_allocation = allocate_fan_capacity(
+                                    demand, saved_curve, quiet=quiet_context,
+                                    quiet_mode=cfg.get("quiet_fan_mode"),
+                                    quiet_percentage=cfg["quiet_percentage"],
+                                    fan_min_percentage=limits["fan_min_percentage"],
+                                    fan_max_percentage=limits["fan_max_percentage"],
+                                )
+                                if measured_fan_allocation:
+                                    self._fan_allocations[spec.identifier] = {
+                                        "status": "capacity_limited" if
+                                            measured_fan_allocation.unmet_demand_percent > 0
+                                            else "capacity_compensated",
+                                        **measured_fan_allocation.snapshot(),
+                                        "direction": mode,
+                                    }
+                            else:
                                 self._fan_allocations[spec.identifier] = {
-                                    "status": "capacity_limited" if
-                                        measured_fan_allocation.unmet_demand_percent > 0
-                                        else "capacity_compensated",
-                                    **measured_fan_allocation.snapshot(),
+                                    "status": "quiet_context_unknown",
                                     "direction": mode,
                                 }
                         else:
                             self._fan_allocations[spec.identifier] = {
-                                "status": "quiet_context_unknown",
+                                "status": "model_source_or_mode_not_ready",
                                 "direction": mode,
                             }
+                    # Use ONE modulation dimension for continuously adjustable
+                    # standalone fans. Never multiply a PID percentage by a
+                    # second PWM duty. Binary valves/heaters retain safe slow PWM.
+                    if (cap.domain == "fan" or mode == "fan_only") and cap.fan_percentage:
+                        min_speed = model.device_limits(self.manager, spec, cap)["fan_min_percentage"]
+                        wanted = percentage_output_requested(demand, min_percentage=min_speed)
+                    elif (cap.domain == "fan" or mode == "fan_only") and ordered_fan_stages(cap.fan_modes):
+                        wanted = demand > 0
                     else:
-                        self._fan_allocations[spec.identifier] = {
-                            "status": "model_source_or_mode_not_ready",
-                            "direction": mode,
-                        }
-                # Use ONE modulation dimension for continuously adjustable
-                # standalone fans. Never multiply a PID percentage by a
-                # second PWM duty. Binary valves/heaters retain safe slow PWM.
-                if (cap.domain == "fan" or mode == "fan_only") and cap.fan_percentage:
-                    min_speed = model.device_limits(self.manager, spec, cap)["fan_min_percentage"]
-                    wanted = percentage_output_requested(demand, min_percentage=min_speed)
-                elif (cap.domain == "fan" or mode == "fan_only") and ordered_fan_stages(cap.fan_modes):
-                    wanted = demand > 0
-                else:
-                    duty_demand = (
-                        measured_fan_allocation.compensated_duty_percent
-                        if measured_fan_allocation else demand
-                    )
-                    sampled = getattr(self, "_sampled_pid_pwm", None)
-                    if callable(sampled) and power and cap.domain not in ("number", "input_number"):
-                        pwm_info, anchor = await sampled(
-                            spec, cap, cfg, mode, signature, memory, anchor,
-                            duty_demand, on_min, off_min,
-                            restored=restored_pid and not rebased,
+                        duty_demand = (
+                            measured_fan_allocation.compensated_duty_percent
+                            if measured_fan_allocation else demand
                         )
-                    else:
-                        pwm_info = sampled_binary_pwm_plan(
-                            duty_demand, self.clock() - anchor, cfg["cycle_seconds"],
-                            on_min, off_min, starting=output_off(state), served_elapsed=None,
-                        )
-                    wanted = pwm_info["wanted"]
-                    recovery = self._profile_wake.get(spec.identifier)
-                    if recovery:
-                        still_qualified = (
-                            self.clock() <= recovery["until"]
-                            and recovery["profile"] == profile
-                            and recovery["mode"] == mode
-                            and metric == "temperature"
-                            and error >= 0.5
-                            and demand > 0
-                            and power
-                            and output_off(state)
-                        )
-                        if still_qualified:
-                            # A brief priority pulse is permissible after a
-                            # MORE demanding comfort profile, even when its
-                            # proportional PWM duty is below minimum ON time.
-                            # _power() separately checks actual off-min dwell,
-                            # grants, ACK, opposite-mode and live room policy.
-                            wanted = True
+                        sampled = getattr(self, "_sampled_pid_pwm", None)
+                        if callable(sampled) and power and cap.domain not in ("number", "input_number"):
+                            pwm_info, anchor = await sampled(
+                                spec, cap, cfg, mode, signature, memory, anchor,
+                                duty_demand, on_min, off_min,
+                                restored=restored_pid and not rebased,
+                            )
                         else:
-                            self._profile_wake.pop(spec.identifier, None)
-            else:
-                # Hysteresis preserves current output until the opposite boundary.
-                band = .3 if metric == "temperature" else 2 if metric == "humidity" else 50 if metric == "co2" else 2
-                wanted = error > band or not output_off(state) and error > -band
-            quiet_correction = getattr(self, "_quiet_fan_correction_required", None)
-            keep_running = (
-                not power or wanted is not False or isinstance(owned, dict)
-                and 0 <= self.clock() - owned["since"] < owned["min_on"]
-            )
-            if (not output_off(state) and keep_running and callable(quiet_correction)
-                    and quiet_correction(spec, cap, cfg, plan)):
-                # Quiet fan correction precedes an optional full-output
-                # setpoint. A currently eligible OFF still takes priority;
-                # this only adjusts a native output that must remain ON.
-                if await self._fan(spec, cap, cfg, plan,
-                                   demand if cfg["control_mode"] == "pid" else None,
-                                   True, measured_fan_allocation.speed
-                                   if measured_fan_allocation else None):
-                    return
-                if spec.identifier in self._invalidated:
-                    return
-            # HEM_B102_NATIVE_PID_FOLLOWTHROUGH
-            # A climate can ACK HEAT/COOL with its previous antifrost setpoint
-            # (e.g. 4/5°C). For a commissioned, already HEM-owned physical ON,
-            # correct the native setpoint BEFORE an unrelated PWM OFF-phase
-            # minimum-ON hold returns early. The real PID demand must remain
-            # positive; never energize an OFF device or delay a permitted OFF.
-            # All startup, sleep, window, quiet, manual, availability, identity
-            # and foreign-owner gates above have already passed. _native_target
-            # dispatches only through the existing durable _send/ACK path.
-            if (
-                cfg["control_mode"] == "pid"
-                and power and cap.domain == "climate" and cap.temperature
-                and mode in ("heat", "cool") and state.state == mode
-                and isinstance(owned, dict)
-                and demand is not None and demand > 0 and error > 0
-                and (
-                    wanted is True or (
-                        wanted is False
-                        and isinstance(owned.get("since"), (int, float))
-                        and isinstance(owned.get("min_on"), (int, float))
-                        and 0 <= self.clock() - owned["since"] < owned["min_on"]
-                    )
+                            pwm_info = sampled_binary_pwm_plan(
+                                duty_demand, self.clock() - anchor, cfg["cycle_seconds"],
+                                on_min, off_min, starting=output_off(state), served_elapsed=None,
+                            )
+                        wanted = pwm_info["wanted"]
+                        recovery = self._profile_wake.get(spec.identifier)
+                        if recovery:
+                            still_qualified = (
+                                self.clock() <= recovery["until"]
+                                and recovery["profile"] == profile
+                                and recovery["mode"] == mode
+                                and metric == "temperature"
+                                and error >= 0.5
+                                and demand > 0
+                                and power
+                                and output_off(state)
+                            )
+                            if still_qualified:
+                                # A brief priority pulse is permissible after a
+                                # MORE demanding comfort profile, even when its
+                                # proportional PWM duty is below minimum ON time.
+                                # _power() separately checks actual off-min dwell,
+                                # grants, ACK, opposite-mode and live room policy.
+                                wanted = True
+                            else:
+                                self._profile_wake.pop(spec.identifier, None)
+                else:
+                    # Hysteresis preserves current output until the opposite boundary.
+                    band = .3 if metric == "temperature" else 2 if metric == "humidity" else 50 if metric == "co2" else 2
+                    wanted = error > band or not output_off(state) and error > -band
+                quiet_correction = getattr(self, "_quiet_fan_correction_required", None)
+                keep_running = (
+                    not power or wanted is not False or isinstance(owned, dict)
+                    and 0 <= self.clock() - owned["since"] < owned["min_on"]
                 )
-            ):
-                if (await self._native_target(
-                    spec, cap, mode, target, None, True
-                )) is not False:
+                if (not output_off(state) and keep_running and callable(quiet_correction)
+                        and quiet_correction(spec, cap, cfg, plan)):
+                    # Quiet fan correction precedes an optional full-output
+                    # setpoint. A currently eligible OFF still takes priority;
+                    # this only adjusts a native output that must remain ON.
+                    if await self._fan(spec, cap, cfg, plan,
+                                       demand if cfg["control_mode"] == "pid" else None,
+                                       True, measured_fan_allocation.speed
+                                       if measured_fan_allocation else None):
+                        return
+                    if spec.identifier in self._invalidated:
+                        return
+                # HEM_B102_NATIVE_PID_FOLLOWTHROUGH
+                # A climate can ACK HEAT/COOL with its previous antifrost setpoint
+                # (e.g. 4/5°C). For a commissioned, already HEM-owned physical ON,
+                # correct the native setpoint BEFORE an unrelated PWM OFF-phase
+                # minimum-ON hold returns early. The real PID demand must remain
+                # positive; never energize an OFF device or delay a permitted OFF.
+                # All startup, sleep, window, quiet, manual, availability, identity
+                # and foreign-owner gates above have already passed. _native_target
+                # dispatches only through the existing durable _send/ACK path.
+                if (
+                    cfg["control_mode"] == "pid"
+                    and power and cap.domain == "climate" and cap.temperature
+                    and mode in ("heat", "cool") and state.state == mode
+                    and isinstance(owned, dict)
+                    and demand is not None and demand > 0 and error > 0
+                    and (
+                        wanted is True or (
+                            wanted is False
+                            and isinstance(owned.get("since"), (int, float))
+                            and isinstance(owned.get("min_on"), (int, float))
+                            and 0 <= self.clock() - owned["since"] < owned["min_on"]
+                        )
+                    )
+                ):
+                    if (await self._native_target(
+                        spec, cap, mode, target, None, True
+                    )) is not False:
+                        return
+                    if spec.identifier in self._invalidated:
+                        return
+                if power and (cap.domain != "number" and cap.domain != "input_number"):
+                    desired = mode if wanted else "off"
+                    if wanted and output_off(state) and cap.fan_modes and (
+                        cfg.get("quiet_sleep") or cfg.get("quiet_occupied")
+                    ) and self._quiet_context(spec, cfg, plan) is None:
+                        self._status(spec, "quiet_context_unknown")
+                        return  # Never power on into an unknown quiet context.
+                    if (state.state == "off") != (desired == "off") or cap.domain == "climate" and state.state != desired:
+                        await self._power(spec, cap, desired, automatic=True)
+                        return
+            elif not auto and mode != state.state and (cap.domain == "climate" or (mode == "off") != (state.state == "off")):
+                await self._power(spec, cap, mode, automatic=False)
+                return
+            if cap.domain in ("number", "input_number") and auto:
+                if not power or metric is None:
+                    self._status(spec, "proportional_output_not_commissioned")
+                    return
+                value = 100. if demand is None and wanted else demand or 0.
+                attrs = state.attributes
+                current = finite(state.state, 0, 100)
+                if attrs.get("unit_of_measurement") != "%" or attrs.get("min") != 0 or attrs.get("max") != 100 or current is None:
+                    self._status(spec, "proportional_output_not_verified")
+                    return
+                on_min, off_min, _ = model.timing(self.manager, spec, cap)
+                if current == 0 and value > 0:
+                    stamp = record["off_at"].setdefault(cap.primary, self.clock())
+                    if self.clock()-stamp < off_min:
+                        self._status(spec, "minimum_off_hold")
+                        return
+                if value == 0 and current > 0:
+                    await self._power(spec, cap, "off", automatic=True, shutdown=bool(owned))
+                    return
+                if self.clock()-record.get("output_at", 0) < cfg["sample_seconds"]:
+                    return
+                value = round(max(current-10, min(current+10, value)), 1)
+                step = finite(attrs.get("step", 1), .01, 10)
+                if step is None:
+                    return
+                value = max(0., min(100., round(value/step)*step))
+                if abs(value-current) >= step:
+                    if await self._send(spec, cap, cap.primary, "set_value", {"value": value},
+                                        {"state": str(value)}, power=True, mode=mode, automatic=True):
+                        record["output_at"] = self.clock()
+                    return
+            if auto and output_off(state) and not power:
+                self._status(spec, "native_off_no_power_permission")
+                return
+            if auto or cfg.get("profile_targets", {}).get(model.profile_name(cfg, plan)) or cfg["preset"] != "none":
+                if (await self._native_target(spec, cap, mode, target, demand if not power else None, auto)) is not False:
                     return
                 if spec.identifier in self._invalidated:
                     return
-            if power and (cap.domain != "number" and cap.domain != "input_number"):
-                desired = mode if wanted else "off"
-                if wanted and output_off(state) and cap.fan_modes and (
-                    cfg.get("quiet_sleep") or cfg.get("quiet_occupied")
-                ) and self._quiet_context(spec, cfg, plan) is None:
-                    self._status(spec, "quiet_context_unknown")
-                    return  # Never power on into an unknown quiet context.
-                if (state.state == "off") != (desired == "off") or cap.domain == "climate" and state.state != desired:
-                    await self._power(spec, cap, desired, automatic=True)
-                    return
-        elif not auto and mode != state.state and (cap.domain == "climate" or (mode == "off") != (state.state == "off")):
-            await self._power(spec, cap, mode, automatic=False)
-            return
-        if cap.domain in ("number", "input_number") and auto:
-            if not power or metric is None:
-                self._status(spec, "proportional_output_not_commissioned")
-                return
-            value = 100. if demand is None and wanted else demand or 0.
-            attrs = state.attributes
-            current = finite(state.state, 0, 100)
-            if attrs.get("unit_of_measurement") != "%" or attrs.get("min") != 0 or attrs.get("max") != 100 or current is None:
-                self._status(spec, "proportional_output_not_verified")
-                return
-            on_min, off_min, _ = model.timing(self.manager, spec, cap)
-            if current == 0 and value > 0:
-                stamp = record["off_at"].setdefault(cap.primary, self.clock())
-                if self.clock()-stamp < off_min:
-                    self._status(spec, "minimum_off_hold")
-                    return
-            if value == 0 and current > 0:
-                await self._power(spec, cap, "off", automatic=True, shutdown=bool(owned))
-                return
-            if self.clock()-record.get("output_at", 0) < cfg["sample_seconds"]:
-                return
-            value = round(max(current-10, min(current+10, value)), 1)
-            step = finite(attrs.get("step", 1), .01, 10)
-            if step is None:
-                return
-            value = max(0., min(100., round(value/step)*step))
-            if abs(value-current) >= step:
-                if await self._send(spec, cap, cap.primary, "set_value", {"value": value},
-                                    {"state": str(value)}, power=True, mode=mode, automatic=True):
-                    record["output_at"] = self.clock()
-                return
-        if auto and output_off(state) and not power:
-            self._status(spec, "native_off_no_power_permission")
-            return
-        if auto or cfg.get("profile_targets", {}).get(model.profile_name(cfg, plan)) or cfg["preset"] != "none":
-            if (await self._native_target(spec, cap, mode, target, demand if not power else None, auto)) is not False:
+            if await self._fan(spec, cap, cfg, plan,
+                               demand if auto and cfg["control_mode"] == "pid" else None,
+                               auto, measured_fan_allocation.speed
+                               if measured_fan_allocation else None):
                 return
             if spec.identifier in self._invalidated:
                 return
-        if await self._fan(spec, cap, cfg, plan,
-                           demand if auto and cfg["control_mode"] == "pid" else None,
-                           auto, measured_fan_allocation.speed
-                           if measured_fan_allocation else None):
-            return
-        if spec.identifier in self._invalidated:
-            return
-        for key, service in (("swing_mode", "set_swing_mode"), ("swing_horizontal_mode", "set_swing_horizontal_mode")):
-            if cfg.get(key) is not None and state.attributes.get(key) != cfg[key]:
-                if await self._send(spec, cap, cap.primary, service, {key: cfg[key]}, {"attributes": {key: cfg[key]}}, automatic=auto):
-                    return
-        status = "controlling" if auto else "manual"
-        if auto and wanted is False and output_off(state):
-            # A selected PID method is not necessarily energizing the device:
-            # expose duty-cycle idle vs ordinary deadband, without changing a
-            # single actuator command, timer, protection, or ownership decision.
-            status = ("pid_output_inactive" if cfg["control_mode"] == "pid"
-                      and demand is not None and demand > 0
-                      else "within_target_band")
-        self._status(
-            spec, status, demand_percent=demand,
-            profile=model.profile_name(cfg, plan),
-            mode=mode, temperature=measured["temperature"],
-            humidity=measured["humidity"],
-            # Neutral PID scheduling diagnostics, NOT an actuator failure.
-            pid_control_metric=metric if cfg["control_mode"] == "pid" else None,
-            pid_control_target=goal if cfg["control_mode"] == "pid" and metric else None,
-            pid_control_measurement=(
-                measured.get(metric) if cfg["control_mode"] == "pid" and metric else None
-            ),
-            pid_pwm_state=pwm_info["state"] if pwm_info else None,
-            pid_pwm_effective_cycle_seconds=(
-                pwm_info["effective_cycle_seconds"] if pwm_info else None
-            ),
-            pid_pwm_next_window_seconds=(
-                pwm_info["next_window_seconds"] if pwm_info else None
-            ),
-            pid_pwm_next_window_at=(
-                pwm_info.get("next_window_at", self.clock() + pwm_info["next_window_seconds"])
-                if pwm_info and pwm_info["next_window_seconds"] is not None else None
-            ),
-            pid_pwm_last_confirmed_on_at=pwm_info.get("last_confirmed_on_at") if pwm_info else None,
-            pid_pwm_last_confirmed_off_at=pwm_info.get("last_confirmed_off_at") if pwm_info else None,
-            pid_pwm_wait_reason=pwm_info.get("wait_reason", pwm_info["state"]) if pwm_info else None,
-        )
+            for key, service in (("swing_mode", "set_swing_mode"), ("swing_horizontal_mode", "set_swing_horizontal_mode")):
+                if cfg.get(key) is not None and state.attributes.get(key) != cfg[key]:
+                    if await self._send(spec, cap, cap.primary, service, {key: cfg[key]}, {"attributes": {key: cfg[key]}}, automatic=auto):
+                        return
+            status = "controlling" if auto else "manual"
+            if auto and wanted is False and output_off(state):
+                # A selected PID method is not necessarily energizing the device:
+                # expose duty-cycle idle vs ordinary deadband, without changing a
+                # single actuator command, timer, protection, or ownership decision.
+                status = ("pid_output_inactive" if cfg["control_mode"] == "pid"
+                          and demand is not None and demand > 0
+                          else "within_target_band")
+            self._status(
+                spec, status, demand_percent=demand,
+                profile=model.profile_name(cfg, plan),
+                mode=mode, temperature=measured["temperature"],
+                humidity=measured["humidity"],
+                # Neutral PID scheduling diagnostics, NOT an actuator failure.
+                pid_control_metric=metric if cfg["control_mode"] == "pid" else None,
+                pid_control_target=goal if cfg["control_mode"] == "pid" and metric else None,
+                pid_control_measurement=(
+                    measured.get(metric) if cfg["control_mode"] == "pid" and metric else None
+                ),
+                pid_pwm_state=pwm_info["state"] if pwm_info else None,
+                pid_pwm_effective_cycle_seconds=(
+                    pwm_info["effective_cycle_seconds"] if pwm_info else None
+                ),
+                pid_pwm_next_window_seconds=(
+                    pwm_info["next_window_seconds"] if pwm_info else None
+                ),
+                pid_pwm_next_window_at=(
+                    pwm_info.get("next_window_at", self.clock() + pwm_info["next_window_seconds"])
+                    if pwm_info and pwm_info["next_window_seconds"] is not None else None
+                ),
+                pid_pwm_last_confirmed_on_at=pwm_info.get("last_confirmed_on_at") if pwm_info else None,
+                pid_pwm_last_confirmed_off_at=pwm_info.get("last_confirmed_off_at") if pwm_info else None,
+                pid_pwm_wait_reason=pwm_info.get("wait_reason", pwm_info["state"]) if pwm_info else None,
+            )
+        except BaseException:
+            # Cancellation or a failed evaluation cannot splice a later
+            # response onto samples whose intervening state was unverified.
+            learning_observed = False
+            interruption_reason = "evaluation_interrupted"
+            raise
+        finally:
+            if (callable(interrupt_learning)
+                    and (not learning_observed
+                         or spec.identifier in self._invalidated
+                         or self.records.get(spec.identifier, {}).get("paused"))):
+                interrupt_learning(spec, interruption_reason)

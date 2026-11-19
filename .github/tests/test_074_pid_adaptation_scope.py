@@ -13,6 +13,7 @@ import importlib
 import json
 from pathlib import Path
 import runpy
+from types import SimpleNamespace as N
 import unittest
 
 
@@ -29,6 +30,7 @@ production.AUTO_INTERVAL_S = passive.AUTO_INTERVAL_S
 METHODS = (
     "_pid_passive_apply", "_pid_passive_auto_authorized",
     "_pid_review_authorized", "async_review_pid",
+    "_interrupt_pid_learning", "observe_native_availability",
 )
 fixture["base"]["extract"](
     ROOT / "custom_components/environment_manager/equipment_runtime.py",
@@ -201,6 +203,42 @@ class AdaptationScopeTests(unittest.IsolatedAsyncioTestCase):
         await asyncio.wait_for(task, 1)
         self.assertEqual(runtime.raw(), before)
         self.assertEqual(runtime.calls, [])
+
+    async def test_native_control_edit_revokes_waiting_automatic_gain_application(self):
+        controls = (
+            ("temperature", 19.), ("target_temp_low", 17.),
+            ("target_temp_high", 25.), ("humidity", 45.),
+            ("preset_mode", "eco"), ("swing_mode", "vertical"),
+            ("swing_horizontal_mode", "left"), ("mode", "eco"),
+        )
+        for field, value in controls:
+            with self.subTest(field=field):
+                runtime = AdaptiveRuntime(profile=profile())
+                context, cycle_at, mode = runtime.evidence()
+                before = deepcopy(runtime.raw())
+                continuity = {
+                    "generation": getattr(runtime, "_pid_learning_generation", {}).get(SPEC.identifier, 0),
+                    "tuning_settings": review.tuning_signature(runtime.cfg),
+                }
+                previous = {key: runtime.cfg[key] for key in ("kp", "ki", "kd")}
+                async with runtime._lock(SPEC.identifier):
+                    task = asyncio.create_task(runtime._pid_passive_apply(
+                        SPEC, context, cycle_at, operating_mode=mode,
+                        continuity=continuity, previous_gains=previous,
+                    ))
+                    await asyncio.sleep(0)
+                    self.assertFalse(task.done())
+                    old = deepcopy(runtime.state)
+                    runtime.state.attributes[field] = value
+                    runtime.state.context = N(id="native-user-edit", user_id="fixture-user", parent_id=None)
+                    self.assertEqual(runtime.state.state, "off")
+                    runtime.observe_native_availability(PRIMARY, old, runtime.state)
+                    self.assertGreater(runtime._pid_learning_generation[SPEC.identifier],
+                                       continuity["generation"])
+                await asyncio.wait_for(task, 1)
+                self.assertEqual(runtime.raw(), before,
+                                 "A native edit must revoke queued proof before manual reconciliation runs")
+                self.assertEqual(runtime.calls, [])
 
     async def test_explicit_approval_scoped_and_legacy_preserve_effective_evidence(self):
         for scoped in (False, True):

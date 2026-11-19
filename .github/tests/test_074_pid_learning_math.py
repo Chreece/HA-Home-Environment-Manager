@@ -32,6 +32,7 @@ def load(name):
 
 load("pid_calibration")
 passive = load("pid_passive")
+review_helper = load("pid_review")
 status = load("pid_learning_status")
 
 
@@ -145,16 +146,30 @@ class LearningStatusTests(unittest.TestCase):
         return dict(
             cfg={"control_mode": "pid", "requested_mode": "heat", "operating_mode": "heat",
                  "pid_calibration_method": "adaptive_auto" if automatic else "adaptive_suggest",
-                 "kp": 10., "ki": .1, "kd": 0.},
+                 "kp": 10., "ki": .1, "kd": 0., "sample_seconds": 300.,
+                 "cycle_seconds": 3600., "min_on_seconds": 600.,
+                 "min_off_seconds": 600., "max_on_seconds": 7200.,
+                 "power_switch_entity": None, "power_switch_cooldown_seconds": 300.},
             domain="climate", record={}, progress=None, observer_context=None,
             hold=None, observed={}, native_state="off", active=True, ready=True, now=self.NOW,
+            live_context=self.context(),
         )
 
     def model(self, mode="heat"):
         return {"context": self.context(mode), "cycles": [], "summary": {
-            "status": "validated", "valid_cycles": 5, "last_cycle_at": self.NOW - 300,
+            "status": "validated", "confidence": "high", "valid_cycles": 5,
+            "last_cycle_at": self.NOW - 300,
             "suggested_gains": {"kp": 20., "ki": .2, "kd": 0.},
         }}
+
+    def pending_review(self, args):
+        saved = self.model()
+        proposal = review_helper.proposal_for(args["cfg"], saved["summary"],
+                                              saved["context"], self.NOW - 100)
+        self.assertIsNotNone(proposal)
+        proposal["operating_mode"] = "heat"
+        args["record"].update(pid_passive=saved, pid_passive_review=proposal)
+        return proposal
 
     def test_eligibility_reports_unsupported_outputs_and_unselected_pid(self):
         cases = (
@@ -176,6 +191,8 @@ class LearningStatusTests(unittest.TestCase):
     def test_suggest_and_automatic_have_distinct_cycle_requirements(self):
         for automatic, required in ((False, 3), (True, 5)):
             args = self.arguments(automatic)
+            args["record"]["pid_passive"] = self.model()
+            args["record"]["pid_passive"]["summary"]["valid_cycles"] = 2
             args.update(progress={"valid_cycles": 2}, observer_context=self.context())
             result = status.snapshot(**args)
             self.assertEqual(result["valid_cycles"], 2)
@@ -189,6 +206,11 @@ class LearningStatusTests(unittest.TestCase):
             ({"ready": False}, "controller_inactive"),
             ({"record": {"pending": {"expected": "off"}}}, "pending_command"),
             ({"record": {"upstream": {"pending": {"expected": "on"}}}}, "pending_command"),
+            ({"record": {"upstream": {"paused": "manual_override"}}}, "upstream_controller_paused"),
+            ({"record": {"unconfirmed_native_target": {"target": 21.}}}, "pending_command"),
+            ({"record": {"native_setpoint_stop": {"target": 21.}}}, "pending_command"),
+            ({"record": {"restart_power_verification": {"pending": True}}}, "pending_command"),
+            ({"record": {"thermal_off_warning": {"at": self.NOW}}}, "verified_activity_required"),
             ({"record": {"paused": "physical_manual_override"}}, "controller_paused"),
             ({"observed": {"status": "window_open_wait"}}, "controller_paused"),
             ({"hold": {"operating_mode": "heat", "reason": "single_feedback_sensor_required"}},
@@ -242,15 +264,102 @@ class LearningStatusTests(unittest.TestCase):
 
     def test_current_review_is_visible_but_same_mode_stale_context_is_not_ready(self):
         args = self.arguments()
-        args["record"] = {"pid_passive": self.model(), "pid_passive_review": {
-            "operating_mode": "heat", "state": "pending", "context": self.context(),
-            "cycle_at": self.NOW - 300,
-        }}
+        self.pending_review(args)
         self.assertEqual(status.snapshot(**args)["status"], "ready_for_review")
         args["record"]["pid_passive_review"]["context"] = self.context(sensor="sensor.old")
         self.assertNotEqual(status.snapshot(**args)["status"], "ready_for_review")
         args["record"].pop("pid_passive")
         self.assertNotEqual(status.snapshot(**args)["status"], "ready_for_review")
+
+    def test_review_expiry_boundary_and_discard_are_explained_without_mutation(self):
+        args = self.arguments()
+        proposal = self.pending_review(args)
+        proposal["created_at"] = self.NOW - review_helper.REVIEW_MAX_AGE_S
+        self.assertEqual(status.snapshot(**args)["status"], "ready_for_review")
+        args["now"] += .001
+        before = deepcopy(args)
+        result = status.snapshot(**args)
+        self.assertEqual((result["status"], result["reason"]),
+                         ("collecting", "recommendation_expired"))
+        self.assertEqual(args, before)
+        proposal["state"] = "discarded"
+        result = status.snapshot(**args)
+        self.assertEqual(result["reason"], "recommendation_discarded")
+        self.assertNotEqual(result["status"], "ready_for_review")
+
+    def test_timing_or_gain_changes_invalidate_displayed_readiness(self):
+        for key in review_helper.TUNING_FIELDS:
+            with self.subTest(key=key):
+                args = self.arguments()
+                self.pending_review(args)
+                args["cfg"][key] = ("switch.other" if key == "power_switch_entity"
+                                    else args["cfg"][key] + 60.)
+                result = status.snapshot(**args)
+                self.assertEqual(result["reason"], "tuning_settings_changed")
+                self.assertNotEqual(result["status"], "ready_for_review")
+        args = self.arguments()
+        self.pending_review(args)
+        args["cfg"]["kp"] = 12.
+        self.assertEqual(status.snapshot(**args)["reason"], "recommendation_stale")
+
+    def test_missing_or_changed_live_context_cannot_be_ready(self):
+        args = self.arguments()
+        self.pending_review(args)
+        args["live_context"] = None
+        before = deepcopy(args)
+        unresolved = status.snapshot(**args)
+        self.assertEqual(unresolved["status"], "waiting")
+        self.assertFalse(unresolved["context_verified"])
+        self.assertEqual(unresolved["valid_cycles"], 0)
+        self.assertEqual(args, before, "Temporary loss of context must not expire saved evidence")
+        args["live_context"] = self.context()
+        recovered = status.snapshot(**args)
+        self.assertEqual(recovered["status"], "ready_for_review")
+        self.assertTrue(recovered["context_verified"])
+        self.assertEqual(recovered["valid_cycles"], 5)
+        args["live_context"] = self.context(sensor="sensor.replacement")
+        result = status.snapshot(**args)
+        self.assertEqual(result["reason"], "recommendation_stale")
+        self.assertEqual(result["valid_cycles"], 0)
+
+    def test_pruned_saved_evidence_outranks_old_paused_observer_count(self):
+        args = self.arguments()
+        args["record"]["pid_passive"] = self.model()
+        args["record"]["pid_passive"]["summary"].update(valid_cycles=2, status="collecting")
+        args.update(progress={"valid_cycles": 5}, observer_context=self.context())
+        self.assertEqual(status.snapshot(**args)["valid_cycles"], 2)
+        args["record"].pop("pid_passive")
+        self.assertEqual(status.snapshot(**args)["valid_cycles"], 0)
+
+    def test_committed_gains_and_exact_history_reconcile_stale_pending_flag(self):
+        args = self.arguments()
+        proposal = self.pending_review(args)
+        args["cfg"].update(proposal["apply"])
+        args["cfg"]["pid_last_calibration"] = {
+            "method": "passive_approved_imc_lambda", "proposal_id": proposal["id"],
+            "cycle_at": proposal["cycle_at"], "operating_mode": "heat", "at": self.NOW - 30.,
+            "previous_gains": dict(proposal["current"]), "applied_gains": dict(proposal["apply"]),
+        }
+        before = deepcopy(args)
+        self.assertEqual(status.snapshot(**args)["status"], "applied")
+        self.assertEqual(args, before)
+        args["cfg"]["kp"] += 1.
+        self.assertNotEqual(status.snapshot(**args)["status"], "applied")
+        self.assertEqual(status.snapshot(**args)["reason"], "recommendation_stale")
+
+    def test_retained_cycles_after_interruption_need_new_complete_evidence(self):
+        args = self.arguments()
+        args["record"]["pid_passive"] = self.model()
+        args.update(observer_context=self.context(), progress={
+            "valid_cycles": 5, "fresh_cycle_required": True,
+        })
+        result = status.snapshot(**args)
+        self.assertEqual((result["status"], result["reason"], result["valid_cycles"]),
+                         ("collecting", "new_cycle_required", 5))
+        # Existing exact proposals retain user approval authority after an
+        # ordinary pause; only calculating a NEW proposal needs a fresh cycle.
+        self.pending_review(args)
+        self.assertEqual(status.snapshot(**args)["status"], "ready_for_review")
 
     def test_cooldown_then_two_new_cycles_and_safe_off_are_reported(self):
         args = self.arguments(automatic=True)

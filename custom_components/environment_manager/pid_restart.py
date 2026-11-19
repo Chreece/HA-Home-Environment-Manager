@@ -109,6 +109,12 @@ def reset_logical_cycle(runtime: Any, spec: Any, reason: str) -> bool:
     command journals and committed shutdown sequences are deliberately absent
     from this list. Repeating an unchanged hold performs no storage write.
     """
+    # Even a round trip through a hold or changed intent revokes automatic
+    # learning proof captured before it. This volatile generation is not a
+    # storage change and does not alter the physical safety history below.
+    interrupt = getattr(runtime, "_interrupt_pid_learning", None)
+    if callable(interrupt):
+        interrupt(spec, reason)
     changed = False
     cancel = getattr(runtime, "_cancel_pid_pwm_evaluation", None)
     if callable(cancel):

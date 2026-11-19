@@ -10,6 +10,9 @@ import math
 from typing import Any
 
 from .pid_passive import AUTO_INTERVAL_S, AUTO_MIN_CYCLES, bounded_gains
+from .pid_review import (
+    calibration_hold, is_pending, review_application_matches, review_projection,
+)
 
 ADAPTIVE = ("adaptive_suggest", "adaptive_auto")
 SUPPORTED_MODES = ("heat", "cool", "dry")
@@ -46,19 +49,26 @@ def _finite(value: Any) -> bool:
 def snapshot(*, cfg: dict, domain: str | None, record: dict,
              progress: dict | None, observer_context: str | None,
              hold: dict | None, observed: dict, native_state: str | None,
-             active: bool, ready: bool, now: float) -> dict:
+             active: bool, ready: bool, now: float,
+             live_context: str | None = None, state_lookup=None) -> dict:
     """Describe this active mode without leaking another mode's evidence."""
     method = cfg.get("pid_calibration_method", "manual")
     mode = cfg.get("operating_mode") or cfg.get("requested_mode")
     saved = record.get("pid_passive")
     saved = saved if isinstance(saved, dict) else {}
-    summary = saved.get("summary") if context_mode(saved.get("context")) == mode else {}
+    context_verified = isinstance(live_context, str) and context_mode(live_context) == mode
+    context_matches = (context_verified and saved.get("context") == live_context)
+    summary = saved.get("summary") if context_matches else {}
     summary = summary if isinstance(summary, dict) else {}
-    progress = progress if context_mode(observer_context) == mode and isinstance(progress, dict) else {}
-    count = progress.get("valid_cycles", summary.get("valid_cycles", 0))
+    progress = (progress if context_verified and observer_context == live_context
+                and isinstance(progress, dict) else {})
+    # Completed cycles are persisted before presentation. Maintenance can
+    # prune those records while a paused observer still has an older count.
+    count = summary.get("valid_cycles", 0)
     result = {
         "status": "collecting", "reason": "waiting_for_complete_cycles",
         "eligible": False, "operating_mode": mode,
+        "context_verified": context_verified,
         "valid_cycles": count if type(count) is int and count >= 0 else 0,
         "required_cycles": AUTO_MIN_CYCLES if method == "adaptive_auto" else 3,
     }
@@ -73,12 +83,8 @@ def snapshot(*, cfg: dict, domain: str | None, record: dict,
     if native_state in (None, "unknown", "unavailable"):
         return finish("waiting", "device_unavailable")
     result["eligible"] = True
-    if record.get("paused"):
-        return finish("waiting", "controller_paused")
-    upstream = record.get("upstream")
-    upstream = upstream if isinstance(upstream, dict) else {}
-    if record.get("pending") or upstream.get("pending"):
-        return finish("waiting", "pending_command")
+    if blocked := calibration_hold(record, cfg, state_lookup):
+        return finish("waiting", blocked)
     state = str(observed.get("status", ""))
     if (state.startswith(("window_", "sleep_room_", "waiting_for_"))
             or state in ("paused", "control_measurement_missing_or_stale",
@@ -88,13 +94,19 @@ def snapshot(*, cfg: dict, domain: str | None, record: dict,
             and hold.get("reason")):
         return finish("waiting", hold["reason"])
 
-    review = record.get("pid_passive_review")
-    if (method == "adaptive_suggest" and isinstance(review, dict)
-            and review.get("operating_mode") == mode and review.get("state") == "pending"
-            and review.get("context") == saved.get("context")
-            and review.get("cycle_at") == summary.get("last_cycle_at")
-            and (observer_context is None or observer_context == review.get("context"))):
-        return finish("ready_for_review", "recommendation_pending")
+    raw_review = record.get("pid_passive_review")
+    review_mode = (raw_review.get("operating_mode") or context_mode(raw_review.get("context"))
+                   if isinstance(raw_review, dict) else None)
+    review = (review_projection(raw_review, cfg, now, context=live_context, saved=saved)
+              if review_mode == mode else {"state": "none"})
+    if method == "adaptive_suggest":
+        # The configuration write may have committed before the review's
+        # bookkeeping was saved. Exact history + effective gains outrank a
+        # leftover pending flag, and cannot offer the same change twice.
+        if review_application_matches(raw_review, cfg) and review_mode == mode:
+            return finish("applied", "applied")
+        if review.get("state") in ("expired", "discarded"):
+            return finish("collecting", review.get("reason") or "recommendation_stale")
 
     last = cfg.get("pid_last_calibration")
     last = last if isinstance(last, dict) else {}
@@ -106,12 +118,30 @@ def snapshot(*, cfg: dict, domain: str | None, record: dict,
             return finish("cooldown", "calibration_cooldown",
                           next_application_at=at + AUTO_INTERVAL_S)
         old_cycle = last.get("cycle_at")
-        cycles = saved.get("cycles", []) if context_mode(saved.get("context")) == mode else []
+        cycles = saved.get("cycles", []) if context_matches else []
         if _finite(old_cycle) and isinstance(cycles, list) and sum(
             isinstance(c, dict) and _finite(c.get("at")) and c["at"] > old_cycle
             for c in cycles
         ) < 2:
             return finish("collecting", "new_cycles_required")
+
+    if method == "adaptive_suggest" and review.get("state") == "pending":
+        if not is_pending(review):
+            return finish("collecting", "recommendation_stale")
+        if live_context is None:
+            return finish("waiting", "unsafe_or_invalid_observation")
+        if (review.get("context") != live_context
+                or summary.get("confidence") not in ("medium", "high")
+                or review.get("confidence") not in ("medium", "high")):
+            return finish("collecting", "recommendation_stale")
+        if native_state != "off" or record.get("power"):
+            return finish("waiting_for_safe_off", "waiting_for_safe_off")
+        return finish("ready_for_review", "recommendation_pending")
+
+    # A still-valid user proposal survives an ordinary pause/restart. Fresh
+    # complete evidence is required to calculate a new proposal or auto tune.
+    if progress.get("fresh_cycle_required") is True and result["valid_cycles"] > 0:
+        return finish("collecting", "new_cycle_required")
 
     proposed = summary.get("suggested_gains")
     if isinstance(proposed, dict) and summary.get("status") in ("validated", "suggestion_only"):
@@ -124,7 +154,4 @@ def snapshot(*, cfg: dict, domain: str | None, record: dict,
         return finish("collecting", summary["status"])
     if progress.get("last_rejection_reason"):
         return finish("collecting", progress["last_rejection_reason"])
-    if (last and method == "adaptive_suggest" and isinstance(review, dict)
-            and review.get("state") == "applied" and review.get("operating_mode") == mode):
-        return finish("applied", "applied")
     return result

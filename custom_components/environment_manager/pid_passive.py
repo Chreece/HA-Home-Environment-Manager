@@ -37,7 +37,10 @@ def identity(*values: Any) -> str:
 
 
 def _finite(v: Any) -> bool:
-    return type(v) in (int, float) and math.isfinite(v)
+    try:
+        return type(v) in (int, float) and math.isfinite(v)
+    except OverflowError:
+        return False
 
 
 def _fit_episode(
@@ -146,7 +149,7 @@ def _rejection_reason(
 class PassiveObserver:
     """One in-memory sampler and a compact, restart-safe cycle ledger."""
 
-    def __init__(self, saved: dict | None = None):
+    def __init__(self, saved: dict | None = None, *, now: float | None = None):
         self.context: str | None = None
         self.cycles: list[dict] = []
         self.off: list[tuple[float, float]] = []
@@ -156,6 +159,7 @@ class PassiveObserver:
         self.last_t: float | None = None
         self.proposal: dict | None = None
         self.status: str = "collecting"
+        self.fresh_cycle_required = True
         # Volatile operator diagnostics, never consulted by tuning or actuation.
         self.last_rejection_reason: str | None = None
         self.rejection_counts: dict[str, int] = {}
@@ -165,7 +169,7 @@ class PassiveObserver:
             if isinstance(ctx, str) and isinstance(rows, list):
                 self.context = ctx
                 self.cycles = [
-                    dict(row) for row in rows[-MAX_CYCLES:]
+                    dict(row) for row in (rows if now is not None else rows[-MAX_CYCLES:])
                     if isinstance(row, dict)
                     and all(_finite(row.get(k)) for k in
                             ("at", "gain", "tau", "dead", "r2"))
@@ -173,6 +177,47 @@ class PassiveObserver:
                 # A persisted model is never sufficient to auto-act after
                 # restart without new, live, complete OFF->ON->OFF evidence.
                 self.status = "collecting"
+        if now is not None:
+            self.prune(now)
+
+    def prune(self, now: float) -> bool:
+        """Keep only bounded, valid past cycle evidence; never partial samples.
+
+        A model can age out during an idle period or after a restart. Waiting
+        for another accepted cycle before expiring it would leave stale
+        confidence in diagnostics indefinitely. No clock is inferred here.
+        """
+        if not _finite(now) or now < 0:
+            return False
+        rows = {}
+        for row in self.cycles:
+            if (not isinstance(row, dict)
+                    or not all(_finite(row.get(k)) for k in
+                               ("at", "gain", "tau", "dead", "r2"))
+                    or not 0 <= row["at"] <= now
+                    or now - row["at"] > MAX_AGE_S
+                    # These are the outer bounds already enforced by the
+                    # fitter, including the larger humidity response limit.
+                    or not 0 < row["gain"] <= max(v[1] for v in METRICS.values())
+                    or not 0 < row["tau"] <= 240
+                    or not 0 <= row["dead"] <= 30
+                    or not 0 <= row["r2"] <= 1):
+                continue
+            compact = {k: row[k] for k in ("at", "gain", "tau", "dead", "r2")}
+            duration = row.get("duration_minutes")
+            if _finite(duration) and duration >= MIN_ON_S / 60:
+                compact["duration_minutes"] = duration
+            # A persisted duplicate is not a second independent episode.
+            rows[row["at"]] = compact
+        cycles = [rows[stamp] for stamp in sorted(rows)[-MAX_CYCLES:]]
+        if cycles == self.cycles:
+            return False
+        self.cycles = cycles
+        self.proposal = None
+        self.status = "collecting"
+        if not cycles:
+            self.fresh_cycle_required = True
+        return True
 
     def _reject(self, reason: str) -> None:
         self.last_rejection_reason = reason
@@ -200,6 +245,7 @@ class PassiveObserver:
             "last_rejection_reason": self.last_rejection_reason,
             "rejection_counts": dict(self.rejection_counts),
             "raw_history_saved": False,
+            "fresh_cycle_required": self.fresh_cycle_required,
         }
 
     def interrupt(self) -> None:
@@ -208,6 +254,7 @@ class PassiveObserver:
         self.baseline = None
         self.last_on = None
         self.last_t = None
+        self.fresh_cycle_required = True
 
     def observe(
         self, *, context: str, at: float, value: float | None,
@@ -215,6 +262,7 @@ class PassiveObserver:
         sample_seconds: float, safe: bool,
     ) -> bool:
         """Return True ONLY for one newly accepted completed natural cycle."""
+        self.prune(at)
         if context != self.context:
             self.context = context
             self.last_rejection_reason = None
@@ -260,6 +308,7 @@ class PassiveObserver:
                         if at >= cycle["at"] and at - cycle["at"] <= MAX_AGE_S
                     ][-MAX_CYCLES + 1:] + [episode]
                     self.status = "model_updated"
+                    self.fresh_cycle_required = False
                     completed = True
             self.on.clear()
             self.baseline = None

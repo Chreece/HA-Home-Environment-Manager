@@ -17,14 +17,17 @@ fixture = runpy.run_path(str(ROOT / ".github/tests/test_beta111_pid_target_cutof
 production, model = fixture["production"], fixture["model"]
 load_pure = fixture["fixture"]["load_pure"]
 passive = load_pure("pid_passive", "pid_passive.py")
+load_pure("pid_learning_store", "pid_learning_store.py")
 production.PassiveObserver = passive.PassiveObserver
 production.passive_identity = passive.identity
 tree = ast.parse((ROOT / "equipment_runtime.py").read_text())
 cls = next(n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == "EquipmentRuntime")
-observer_method = next(n for n in cls.body if isinstance(n, ast.AsyncFunctionDef)
-                       and n.name == "_pid_passive_observe")
-exec(compile(ast.Module(body=[observer_method], type_ignores=[]),
-             "production passive observation", "exec"), production.__dict__)
+LEARNING_METHODS = ("_pid_passive_observe", "_interrupt_pid_learning", "_pid_learning_observed")
+for name in LEARNING_METHODS:
+    method = next(n for n in cls.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
+                  and n.name == name)
+    exec(compile(ast.Module(body=[method], type_ignores=[]),
+                 "production passive observation", "exec"), production.__dict__)
 
 
 def attach(runtime):
@@ -33,8 +36,12 @@ def attach(runtime):
     runtime._pid_passive_observers = {}
     runtime._pid_passive_tasks = {}
     runtime._pid_learning_holds = {}
+    runtime._pid_learning_generation = {}
+    runtime._pid_learning_edges = {}
+    runtime._pid_learning_observed_edges = {}
     runtime._presentation_updates = N(request=lambda *_: None)
-    runtime._pid_passive_observe = MethodType(production._pid_passive_observe, runtime)
+    for name in LEARNING_METHODS:
+        setattr(runtime, name, MethodType(getattr(production, name), runtime))
     original_measurements = runtime.measurements
 
     def measurements(spec, cap):

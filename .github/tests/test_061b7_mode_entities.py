@@ -50,6 +50,7 @@ class ModeEntities(unittest.IsolatedAsyncioTestCase):
             'mode_settings': {'heat': {'control_mode': 'pid', 'kp': 12},
                               'cool': {'control_mode': 'manual', 'kp': 22}}}
         self.m.equipment.active_control_mode = lambda spec: 'heat'
+        self.m.equipment.clock = lambda: 100000.
         self.writes, self.actions = [], []
         async def write(spec, changes, *, operating_mode=None):
             self.writes.append((spec.identifier, deepcopy(changes), operating_mode))

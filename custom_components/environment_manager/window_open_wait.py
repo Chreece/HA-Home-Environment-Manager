@@ -740,7 +740,7 @@ class WindowOpeningWait:
             } for item in selected],
         }
 
-    def hold(self, area: str, entity: str) -> dict | None:
+    def hold(self, area: str, entity: str, *, read_only: bool = False) -> dict | None:
         """Recheck live consent, demand and room contacts before every write."""
         episode = self._rooms.get(area, {}).get(entity)
         if (episode is None or not self._active(episode, self.clock())
@@ -754,6 +754,25 @@ class WindowOpeningWait:
                 or demand.needed is not True or demand.effect != episode.target.effect
                 or self._covered(demand, self._immediate_coverage(demands))):
             return None
+        if read_only:
+            # Preview the current shorter consent without consuming an
+            # episode, cancelling/replacing its timer, or waking a controller.
+            timeout = min(episode.timeout_seconds, demand.timeout_seconds)
+            until = (min(episode.until, episode.since + timeout)
+                     if episode.phase == "window_open_wait" else episode.until)
+            now = self.clock()
+            if now >= until:
+                return None
+            result = self.status(area, entity)
+            remaining = max(0, math.ceil(until - now))
+            result.update(timeout_seconds=timeout, expires_at=until,
+                          remaining_seconds=remaining)
+            result["device_waits"] = [
+                {**row, "timeout_seconds": timeout, "expires_at": until,
+                 "remaining_seconds": remaining}
+                for row in result["device_waits"]
+            ]
+            return result
         if demand.timeout_seconds < episode.timeout_seconds:
             episode.timeout_seconds = demand.timeout_seconds
             if episode.phase == "window_open_wait":
@@ -829,7 +848,8 @@ class WindowOpeningWait:
 
 
 def managed_start_hold(runtime: Any, spec: Any, cap: Any, cfg: dict,
-                       mode: str | None = None, *, supply: bool = False) -> dict | None:
+                       mode: str | None = None, *, supply: bool = False,
+                       read_only: bool = False) -> dict | None:
     """Only an opted-in idle indoor remedy can wait; OFF/running never do."""
     waiter = getattr(runtime.manager, "window_open_wait", None)
     if (waiter is None or cfg.get("control_mode") not in ("automatic", "pid")
@@ -850,7 +870,8 @@ def managed_start_hold(runtime: Any, spec: Any, cap: Any, cfg: dict,
             return None
     elif not _idle(native):
         return None
-    return waiter.hold(spec.area_id, cap.primary)
+    return waiter.hold(spec.area_id, cap.primary,
+                       **({"read_only": True} if read_only else {}))
 
 
 def legacy_start_hold(hass: Any, entry_id: str | None, area: str, entity: str,
