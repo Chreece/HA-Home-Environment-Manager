@@ -88,6 +88,8 @@ with sync_playwright() as pw:
   before=page.evaluate('JSON.stringify({writes,committed,homeData})')
   page.evaluate('window.gainNode=card._roomSettingsDialog114.node.querySelector(\'[data-hem-full-value127="number.pid_gain"]\')')
   level.select_option('advanced');page.evaluate('card._renderContent(true)')
+  # An ordinary HA refresh keeps native controls alive after a view change.
+  assert page.evaluate('gainNode===card._roomSettingsDialog114.node.querySelector(\'[data-hem-full-value127="number.pid_gain"]\')'), 'Changing the level must not invalidate native editor identity on refresh'
   assert modal.locator('[data-hem-full-row127="number.pid_gain"]').get_attribute('hidden') is None
   assert modal.locator('[data-hem-full-row127="number.met"]').get_attribute('hidden') is not None
   level.select_option('expert')

@@ -9369,17 +9369,31 @@
   };
   const hemRenderNativeRows062=(card,holder,rows,scope)=>{
     if(holder.matches(":focus-within"))return;
-    const opened=new Set([...holder.querySelectorAll("[data-hem-full-row127]")]
-      .filter(row=>row.querySelector(".hem-full-help127[open]"))
-      .map(row=>row.getAttribute("data-hem-full-row127")));
-    const html=rows.map(field=>card._hemFullRow127(field,scope)).join("");
-    if(holder.innerHTML!==html){
-      holder.innerHTML=html;
-      for(const row of holder.querySelectorAll("[data-hem-full-row127]")){
-        const help=row.querySelector(".hem-full-help127");
-        if(help&&opened.has(row.getAttribute("data-hem-full-row127")))help.open=true;
-      }
+    // Visibility, help and save feedback deliberately mutate the rendered
+    // DOM. Comparing it with source HTML would recreate every editor after
+    // a level/search change. Reuse the device menu's keyed row updates.
+    const fresh=document.createElement("div");
+    fresh.innerHTML=rows.map(field=>card._hemFullRow127(field,scope)).join("");
+    const activeIds=new Set(),ordered=[];
+    for(const next of fresh.querySelectorAll(":scope > [data-hem-full-row127]")){
+      const id=next.getAttribute("data-hem-full-row127");activeIds.add(id);
+      let current=[...holder.children].find(row=>row.getAttribute("data-hem-full-row127")===id);
+      if(current)hemSyncNativeRowB10(current,next);
+      else{current=next.cloneNode(true);holder.appendChild(current);}
+      ordered.push(current);
     }
+    for(const row of [...holder.children]){
+      if(activeIds.has(row.getAttribute("data-hem-full-row127")))continue;
+      if(row.matches(":active,:focus-within")||row.querySelector(":active")){
+        row.querySelectorAll("input,select,button").forEach(input=>input.disabled=true);
+        continue;
+      }
+      row.remove();
+    }
+    if(!holder.querySelector(":active"))ordered.forEach((row,index)=>{
+      const current=holder.children[index];
+      if(current!==row)holder.insertBefore(row,current||null);
+    });
   };
   /* HEM_SETTINGS_LABELS062B2_END */
 
@@ -12298,9 +12312,9 @@
     const saved=settingsDialog(this,scope);
     const html=auditRowBefore.call(this,field,scope);
     if(!saved)return html;
-    auditReadLevelB8(this,saved);
-    return html.replace('<div ', '<div data-settings-tier-b8="'+auditLevelB8(field)+'" '+
-      (auditVisibleB8(saved,field)?'':'hidden ') );
+    // Keep source markup stable across display preferences. The synchronous
+    // audit pass owns hidden state after each render, before the next paint.
+    return html.replace('<div ', '<div data-settings-tier-b8="'+auditLevelB8(field)+'" ');
   };
   auditProto._settingsAuditApplyB8=function(saved,scope){
     if(!this._hemFullContext127(saved,scope))return;

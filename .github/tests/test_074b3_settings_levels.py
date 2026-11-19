@@ -132,7 +132,21 @@ for(const [key,level] of Object.entries(policy.home_option_levels))
 for(const [key,level] of Object.entries(policy.room_option_levels))
  assert.equal(alice._settingsAuditOptionLevelB8(key,'room'),level,key);
 assert.equal(alice._settingsAuditOptionLevelB8('future_option','home'),'basic');
-console.log('PASS: '+cases+' native tier comparisons; exact scoped identities; source/safety/action essentials; level-aware search; pending edits; persisted per-user/entry preference; migration and denied-storage fallback');
+// Native row markup describes the field; the audit pass owns visibility.
+// Changing a view must not introduce a different source row on HA refresh.
+const rowSaved={entryId:'entry0'};alice._roomSettingsDialog114=rowSaved;
+const renderField=field('equipment_kp','number',{min:0,max:100,step:1});
+let initialMarkup;
+for(const level of policy.levels){
+ alice._settingsAuditSetLevelB8(rowSaved,level);
+ for(const query of ['', 'A setting', 'unmatched search']){
+  rowSaved.settingsAudit.query=query;
+  const markup=alice._hemFullRow127(renderField,'room');
+  initialMarkup??=markup;
+  assert.equal(markup,initialMarkup,'View filtering must leave native row rendering unchanged');
+ }
+}
+console.log('PASS: '+cases+' native tier comparisons; exact scoped identities; source/safety/action essentials; level-aware search; stable native row rendering; pending edits; persisted per-user/entry preference; migration and denied-storage fallback');
 """
 
 
@@ -166,7 +180,9 @@ DECORATE = r"""({language,user})=>{
     ...scoped,setting_key:'control_mode',options:['existing','automatic','pid','manual','off']});
   for(const role of ['approve','discard'])add('button.device_'+role,'equipment_pid_review_'+role,
     'unknown','level-device',{...scoped,setting_key:'pid_review_'+role,pid_review_role:role});
-  for(const [name,value] of [['global_threshold_indoor_co2',1000],['pollen_high_from',3]]){
+  // Pollen thresholds form a validated pair; include both actual Options
+  // fields so the rejected-save case reaches the transport boundary.
+  for(const [name,value] of [['global_threshold_indoor_co2',1000],['pollen_high_from',3],['pollen_max_scale',5]]){
     homeData[name]=value;homeForm.data_schema.push({name,default:value,
       selector:{number:{min:0,max:2000,step:1}}});
   }
@@ -223,7 +239,7 @@ def browser_checks():
                 assert page.evaluate(expressions[scope]), scope
                 page.wait_for_function(f"card.{properties[scope]}?.fullRegistry127?.length===registry.length")
                 if scope == "home":
-                    page.wait_for_function("card._homeSettingsDialog128?.fields?.length===6")
+                    page.wait_for_function("card._homeSettingsDialog128?.fields?.length===7")
                 page.evaluate(f"card.{properties[scope]}.node.querySelectorAll('details').forEach(node=>node.open=true)")
                 return page.locator(dialogs[scope]), properties[scope]
 
