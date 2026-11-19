@@ -25,6 +25,7 @@ const start=src.indexOf('  const HEM_PID_WORDS074=');
 const end=src.indexOf('  AirQualityAdvisorCard.prototype._hemPidStatusRender074=',start);
 assert(start>0&&end>start);
 const api=new Function('escape',src.slice(start,end)+'\nreturn {pidStatusModels074,pidStatusHtml074,HEM_PID_REASONS074,HEM_PID_WORDS074};')(escape);
+const NOW=Date.now()/1000;
 const auditStart=src.indexOf('  const auditPolicyB8='),auditEnd=src.indexOf('  const auditProto=',auditStart);
 const audit=new Function(src.slice(auditStart,auditEnd)+'\nreturn {auditPolicyB8,auditLevelB8,auditVisibleB8};')();
 assert.deepEqual(audit.auditPolicyB8,JSON.parse(fs.readFileSync(process.argv[2],'utf8')));
@@ -39,7 +40,8 @@ const status={selected_operating_mode:'dry',control_method:'pid',pid_calibration
  pid_control_parameters:{kp:44,ki:3.3,kd:0},
  pid_learning_status:{status:'collecting',reason:'waiting_for_complete_cycles',operating_mode:'dry',valid_cycles:2,required_cycles:5},
  pid_learning_progress:{phase:'observing_on_response',valid_cycles:2,required_for_auto:5,last_rejection_reason:'on_cycle_too_short'},
- pid_review:{state:'pending',operating_mode:'dry',current:{kp:40,ki:3,kd:0},apply:{kp:44,ki:3.3,kd:0}},
+ pid_review:{state:'pending',operating_mode:'dry',created_at:NOW-100,expires_at:NOW-100+48*3600,
+   current:{kp:40,ki:3,kd:0},apply:{kp:44,ki:3.3,kd:0}},
  pid_last_calibration:{at:1795082400,operating_mode:'dry',previous_gains:{kp:40,ki:3,kd:0},applied_gains:{kp:44,ki:3.3,kd:0}}};
 for(const method of ['manual','adaptive_suggest','adaptive_auto']){
  for(const f of fields(method).filter(f=>['kp','ki','kd'].includes(f.state.attributes.setting_key))){
@@ -79,14 +81,80 @@ html=api.pidStatusHtml074(api.pidStatusModels074(fields(),{},'en'),'en','UTC');
 assert(html.includes('Live learning status is unavailable'));assert(!html.includes('No calibration has been applied'));
 // Suggest mode reports its own threshold, not the five-cycle auto threshold.
 const suggest=structuredClone(status);suggest.pid_calibration_method='adaptive_suggest';
-suggest.pid_learning_status.required_cycles=3;
+suggest.pid_learning_status={...suggest.pid_learning_status,required_cycles:3,
+ status:'ready_for_review',reason:'recommendation_pending'};
+suggest.pid_review.current={...suggest.pid_control_parameters};
+suggest.pid_review.apply={kp:48.4,ki:3.63,kd:0};
 model=api.pidStatusModels074(fields('adaptive_suggest'),suggest,'en').find(m=>m.mode==='dry');
 assert.equal(model.required,3);assert(model.note.includes('only after'));
 assert(model.review);assert(api.pidStatusHtml074([model],'en','UTC').includes('data-hem-pid-proposal074'));
+// Missing feedback identity must hide a retained context's evidence, even if
+// a delayed snapshot still contains its old Ready state/count/phase/proposal.
+// Rendering remains read-only, so resolving the same sensor can show it again.
+for(const language of ['en','el','de']){
+ const sample=structuredClone(suggest);
+ sample.pid_learning_status={...sample.pid_learning_status,context_verified:false,valid_cycles:5};
+ sample.pid_learning_progress.valid_cycles=6;
+ const before=JSON.stringify(sample);
+ model=api.pidStatusModels074(fields('adaptive_suggest'),sample,language,NOW).find(m=>m.mode==='dry');
+ assert.equal(model.state,'waiting');assert.equal(model.review,null);assert.equal(model.cycles,null);
+ assert.equal(model.phase,'');assert.equal(model.rejection,'');
+ html=api.pidStatusHtml074([model],language,'UTC');
+ assert(!html.includes('data-hem-pid-proposal074'));
+ assert(!html.includes(api.HEM_PID_WORDS074[language].cycles));
+ assert(!html.includes(api.HEM_PID_WORDS074[language].phases.observing_on_response));
+ assert.equal(JSON.stringify(sample),before,'Hiding evidence must not discard a stored proposal');
+ sample.pid_learning_status={...sample.pid_learning_status,context_verified:true,valid_cycles:3};
+ model=api.pidStatusModels074(fields('adaptive_suggest'),sample,language,NOW).find(m=>m.mode==='dry');
+ assert.equal(model.state,'ready_for_review');assert.deepEqual(model.review,suggest.pid_review);
+ assert.equal(model.cycles,3,'The current persisted summary outranks the paused observer count');
+ sample.pid_learning_status={...sample.pid_learning_status,status:'collecting',valid_cycles:0,
+  reason:'waiting_for_complete_cycles'};
+ sample.pid_review={state:'none'};
+ model=api.pidStatusModels074(fields('adaptive_suggest'),sample,language,NOW).find(m=>m.mode==='dry');
+ assert.equal(model.cycles,0,'An empty persisted summary cannot borrow expired observer cycles');
+}
+// Lifecycle explanations replace stale readiness in the same compact panel.
+for(const language of ['en','el','de'])for(const reason of ['recommendation_expired',
+ 'recommendation_discarded','recommendation_stale','tuning_settings_changed','new_cycle_required',
+ 'observation_interrupted','saved_context_resumed']){
+ const sample=structuredClone(suggest);
+ sample.pid_learning_status={...sample.pid_learning_status,status:'collecting',reason};
+ sample.pid_review={state:reason==='recommendation_discarded'?'discarded':'expired',reason,operating_mode:'dry'};
+ model=api.pidStatusModels074(fields('adaptive_suggest'),sample,language).find(m=>m.mode==='dry');
+ assert.equal(model.state,'collecting');assert.equal(model.review,null);assert(model.reason.length>12);
+ html=api.pidStatusHtml074([model],language,'UTC');
+ assert(!html.includes('data-hem-pid-proposal074'));assert(!html.includes(reason));
+}
+// Age and current-gain checks also cover a delayed, formerly-ready HA snapshot.
+for(const change of [
+ sample=>sample.pid_review.created_at=NOW-48*3600-.001,
+ sample=>delete sample.pid_review.created_at,
+ sample=>sample.pid_review.created_at=NOW+60,
+ sample=>sample.pid_control_parameters.kp+=1,
+ sample=>sample.pid_review={state:'expired',reason:'tuning_settings_changed',operating_mode:'dry'},
+]){
+ const sample=structuredClone(suggest);change(sample);
+ model=api.pidStatusModels074(fields('adaptive_suggest'),sample,'en',NOW).find(m=>m.mode==='dry');
+ assert.equal(model.state,'collecting');assert.equal(model.review,null);
+}
+const atExpiry=structuredClone(suggest);
+atExpiry.pid_review.created_at=NOW-48*3600;atExpiry.pid_review.expires_at=NOW;
+assert.equal(api.pidStatusModels074(fields('adaptive_suggest'),atExpiry,'en',NOW)
+ .find(m=>m.mode==='dry').state,'ready_for_review');
+const applied=structuredClone(suggest);
+applied.pid_learning_status={...applied.pid_learning_status,status:'applied',reason:'applied'};
+applied.pid_review={...applied.pid_review,state:'applied',reason:'applied'};
+applied.pid_last_calibration={at:NOW,operating_mode:'dry',
+ previous_gains:applied.pid_review.current,applied_gains:applied.pid_review.apply};
+applied.pid_control_parameters={...applied.pid_review.apply};
+model=api.pidStatusModels074(fields('adaptive_suggest'),applied,'en').find(m=>m.mode==='dry');
+assert.equal(model.state,'applied');assert.equal(model.review,null);
+assert(api.pidStatusHtml074([model],'en','UTC').includes('48.4'));
 // Every advertised state has plain-language EN/EL/DE text and no raw enum.
 for(const lang of ['en','el','de'])for(const state of Object.keys(api.HEM_PID_WORDS074.en.states)){
- const sample=structuredClone(status);sample.pid_learning_status.status=state;
- model=api.pidStatusModels074(fields(),sample,lang).find(m=>m.mode==='dry');
+ const sample=structuredClone(state==='ready_for_review'?suggest:status);sample.pid_learning_status.status=state;
+ model=api.pidStatusModels074(fields(state==='ready_for_review'?'adaptive_suggest':'adaptive_auto'),sample,lang).find(m=>m.mode==='dry');
  assert.equal(model.state,state);assert.equal(model.stateLabel,api.HEM_PID_WORDS074[lang].states[state]);
 }
 console.log('PASS: production visibility, effective versus saved gains, mode isolation, proposal/history provenance, all statuses and EN/EL/DE fallback');
@@ -142,7 +210,8 @@ def browser_checks():
                 pid_control_parameters:{kp:1.2,ki:.03,kd:0},
                 pid_learning_status:{status:'ready_for_review',reason:'recommendation_pending',operating_mode:'dry',valid_cycles:3,required_cycles:3},
                 pid_learning_progress:{phase:'awaiting_verified_off',valid_cycles:3,required_for_auto:5},
-                pid_review:{state:'pending',operating_mode:'dry',current:{kp:1.2,ki:.03,kd:0},apply:{kp:1.32,ki:.033,kd:0}},
+                pid_review:{state:'pending',operating_mode:'dry',created_at:Date.now()/1000-100,
+                  expires_at:Date.now()/1000-100+48*3600,current:{kp:1.2,ki:.03,kd:0},apply:{kp:1.32,ki:.033,kd:0}},
                 pid_last_calibration:{at:1795082400,operating_mode:'dry',previous_gains:{kp:1,ki:.025,kd:0},applied_gains:{kp:1.2,ki:.03,kd:0}}};
               states['sensor.pid_status']={state:'controlling',attributes:pidStatus};
               // HA publishes a new states mapping. In-place mutation would
@@ -169,6 +238,92 @@ def browser_checks():
             expect(active.locator("[data-hem-pid-last074]")).to_contain_text("→")
             expect(inactive).to_have_attribute("data-hem-pid-state074", "inactive")
             assert inactive.locator("[data-hem-pid-proposal074],[data-hem-pid-last074]").count() == 0
+            # The real card replaces stale Ready/proposed values without
+            # rebuilding the form or multiplying settings/actions.
+            page.evaluate("""()=>{
+              window.pidReviewFixture={...pidStatus.pid_review};
+              window.kpInput=card._hemControllerDialog126.node.querySelector('[data-hem-full-value127="number.dry_kp"]');
+            }""")
+            cycle_label, phase_text = {
+                "en": ("accepted cycles", "Waiting for confirmed OFF"),
+                "el": ("αποδεκτοί κύκλοι", "Αναμονή επιβεβαίωσης ότι η συσκευή είναι κλειστή"),
+                "de": ("akzeptierte Zyklen", "Warten auf bestätigten AUS-Zustand"),
+            }[language]
+            page.evaluate("""()=>{
+              window.pidStatus={...pidStatus,pid_learning_status:{...pidStatus.pid_learning_status,
+                context_verified:false,valid_cycles:5},pid_learning_progress:{...pidStatus.pid_learning_progress,
+                valid_cycles:6}};
+              window.pidUnresolvedBefore=JSON.stringify(pidStatus);
+              card._hass={...card._hass,states:{...card._hass.states,
+                'sensor.pid_status':{state:'controlling',attributes:pidStatus}}};
+              card._hemFullRender127(card._hemControllerDialog126,'device');
+            }""")
+            expect(active).to_have_attribute("data-hem-pid-state074", "waiting")
+            assert active.locator("[data-hem-pid-proposal074]").count() == 0
+            assert active.locator(".hem-pid-status-row074").filter(has_text=cycle_label).count() == 0
+            expect(active).not_to_contain_text(phase_text)
+            assert page.evaluate("JSON.stringify(pidStatus)===pidUnresolvedBefore")
+            assert page.evaluate("JSON.stringify(pidStatus.pid_review)===JSON.stringify(pidReviewFixture)")
+            assert page.evaluate("kpInput===card._hemControllerDialog126.node.querySelector('[data-hem-full-value127=\"number.dry_kp\"]')")
+            # The original pending proposal survives ordinary sensor recovery.
+            # The fresh saved count remains authoritative over old progress.
+            page.evaluate("""()=>{
+              window.pidStatus={...pidStatus,pid_learning_status:{...pidStatus.pid_learning_status,
+                context_verified:true,valid_cycles:3}};
+              card._hass={...card._hass,states:{...card._hass.states,
+                'sensor.pid_status':{state:'controlling',attributes:pidStatus}}};
+              card._hemFullRender127(card._hemControllerDialog126,'device');
+            }""")
+            expect(active).to_have_attribute("data-hem-pid-state074", "ready_for_review")
+            expect(active.locator("[data-hem-pid-proposal074]")).to_be_visible()
+            expect(active.locator(".hem-pid-status-row074").filter(has_text=cycle_label)).to_contain_text("3 / 3")
+            expect(active).to_contain_text(phase_text)
+            assert page.evaluate("kpInput===card._hemControllerDialog126.node.querySelector('[data-hem-full-value127=\"number.dry_kp\"]')")
+            lifecycle_words = {
+                "en": ("expired after 48 hours", "proposal was discarded", "Timing settings changed", "new complete cycle"),
+                "el": ("έληξε μετά από 48 ώρες", "πρόταση απορρίφθηκε", "ρυθμίσεις χρονισμού άλλαξαν", "νέος πλήρης κύκλος"),
+                "de": ("nach 48 Stunden abgelaufen", "Vorschlag wurde verworfen", "Zeiteinstellungen wurden geändert", "neuer vollständiger Zyklus"),
+            }[language]
+            for reason, review_state, expected_text in zip(
+                ("recommendation_expired", "recommendation_discarded", "tuning_settings_changed", "new_cycle_required"),
+                ("expired", "discarded", "expired", "none"), lifecycle_words,
+            ):
+                page.evaluate("""({reason,reviewState})=>{
+                  window.pidStatus={...pidStatus,pid_learning_status:{...pidStatus.pid_learning_status,
+                    status:'collecting',reason},pid_review:{...pidReviewFixture,state:reviewState,reason}};
+                  const states={...card._hass.states,'sensor.pid_status':{state:'controlling',attributes:pidStatus}};
+                  for(const scope of ['dry','generic']){
+                    states['button.'+scope+'_approve']={...states['button.'+scope+'_approve'],state:'unavailable'};
+                    states['button.'+scope+'_discard']={...states['button.'+scope+'_discard'],
+                      state:reviewState==='expired'?'unknown':'unavailable'};
+                  }
+                  card._hass={...card._hass,states};
+                  card._hemFullRender127(card._hemControllerDialog126,'device');
+                }""", {"reason": reason, "reviewState": review_state})
+                expect(active).to_have_attribute("data-hem-pid-state074", "collecting")
+                expect(active).to_contain_text(expected_text)
+                assert active.locator("[data-hem-pid-proposal074]").count() == 0
+                expect(pid.locator('[data-hem-pid-review-b18="approve"] button[data-hem-full-apply127]')).to_be_disabled()
+                for key in ("kp", "ki", "kd"):
+                    expect(pid.locator(f'[data-hem-full-row127="number.dry_{key}"]')).to_be_visible()
+                    assert pid.locator(f'[data-hem-full-row127="number.dry_{key}"]').count() == 1
+                assert page.evaluate("kpInput===card._hemControllerDialog126.node.querySelector('[data-hem-full-value127=\"number.dry_kp\"]')")
+                assert pid.locator("[data-hem-pid-status074]").count() == 1
+                assert modal.evaluate("node=>node.scrollWidth<=node.clientWidth+1")
+            page.evaluate("""()=>{
+              window.pidStatus={...pidStatus,pid_learning_status:{...pidStatus.pid_learning_status,
+                status:'applied',reason:'applied'},pid_review:{...pidReviewFixture,state:'applied',reason:'applied'},
+                pid_control_parameters:{...pidReviewFixture.apply},pid_last_calibration:{
+                  at:Date.now()/1000,operating_mode:'dry',previous_gains:pidReviewFixture.current,
+                  applied_gains:pidReviewFixture.apply}};
+              card._hass={...card._hass,states:{...card._hass.states,
+                'sensor.pid_status':{state:'controlling',attributes:pidStatus}}};
+              card._hemFullRender127(card._hemControllerDialog126,'device');
+            }""")
+            expect(active).to_have_attribute("data-hem-pid-state074", "applied")
+            expect(active.locator("[data-hem-pid-last074]")).to_contain_text("→")
+            assert active.locator("[data-hem-pid-proposal074]").count() == 0
+            expect(inactive).to_have_attribute("data-hem-pid-state074", "inactive")
             # Refresh status in place; keep the PID accordion and native inputs.
             page.evaluate("""()=>{window.kpInput=card._hemControllerDialog126.node.querySelector('[data-hem-full-value127="number.dry_kp"]');
               if(!kpInput)throw Error('Missing visible gain input');

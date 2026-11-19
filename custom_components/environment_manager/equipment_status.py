@@ -51,6 +51,7 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
     def extra_state_attributes(self) -> dict[str, Any]:
         from .pid_math import finite
         from .pid_learning_status import context_mode, snapshot as learning_snapshot
+        from .pid_review import review_projection
         from .equipment_native_target import diagnostics as native_target_diagnostics
         runtime = self._manager.equipment
         cfg = self.controller_settings
@@ -123,19 +124,28 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
         learning = (learning_tracker.progress() if learning_tracker is not None
                     and context_mode(getattr(learning_tracker, "context", None)) == active_learning_mode
                     else None)
-        review = record.get("pid_passive_review")
-        review = review if isinstance(review, dict) else {}
-        review_mode = review.get("operating_mode") or context_mode(review.get("context"))
         saved_learning = record.get("pid_passive")
         saved_learning = saved_learning if isinstance(saved_learning, dict) else {}
         saved_summary = saved_learning.get("summary")
         saved_summary = saved_summary if isinstance(saved_summary, dict) else {}
-        if (review_mode != active_learning_mode or (
-                review.get("state") == "pending" and (
-                    review.get("context") != saved_learning.get("context")
-                    or review.get("cycle_at") != saved_summary.get("last_cycle_at")
-                ))):
-            review = {}
+        context_reader = getattr(runtime, "_pid_learning_context", None)
+        live_learning_context = (context_reader(self._spec, cfg=cfg, cap=native_cap, plan=plan)
+                                 if callable(context_reader) else None)
+        if (live_learning_context is None
+                or getattr(learning_tracker, "context", None) != live_learning_context):
+            learning = None
+        review = record.get("pid_passive_review")
+        review_mode = (review.get("operating_mode") or context_mode(review.get("context"))
+                       if isinstance(review, dict) else None)
+        review = (review_projection(review, cfg, now, context=live_learning_context,
+                                    saved=saved_learning)
+                  if review_mode == active_learning_mode else {"state": "none"})
+        if live_learning_context is None and review.get("state") == "pending":
+            # A missing sensor is not permanent proposal expiry. Keep the
+            # stored review for recovery, but do not present unverified gains
+            # as a proposal for the currently selected physical context.
+            review = {"state": "none", "reason": "unsafe_or_invalid_observation",
+                      "operating_mode": active_learning_mode}
         learning_status = learning_snapshot(
             cfg=cfg, domain=getattr(native_cap, "domain", None), record=record,
             progress=learning, observer_context=getattr(learning_tracker, "context", None),
@@ -143,6 +153,8 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             observed=observed, native_state=physical.get(primary),
             active=bool(getattr(runtime, "_active", False)),
             ready=bool(getattr(runtime, "_ready", False)), now=now,
+            live_context=live_learning_context,
+            state_lookup=self._manager.hass.states.get,
         )
         # Surface both pieces of an externally powered controller. The HA
         # native appliance may be unavailable precisely BECAUSE the supply
@@ -301,14 +313,16 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             "pid_review": {
                 key: review.get(key)
                 for key in ("state","current","apply","recommended",
-                            "confidence","valid_cycles","cycle_at","operating_mode")
+                            "confidence","valid_cycles","cycle_at","operating_mode",
+                            "created_at","expires_at","reason")
             } if review
               else {"state":"none"},
             # Small read-only evidence summary. Raw measurements remain
             # bounded in memory and never inflate recorder attributes.
             "pid_passive_learning": (
                 (saved_summary if context_mode(saved_learning.get("context"))
-                 == active_learning_mode else None)
+                 == active_learning_mode and live_learning_context is not None
+                 and saved_learning.get("context") == live_learning_context else None)
                 or {"status": "disabled" if cfg.get("pid_adaptation_mode") == "disabled"
                     else "collecting", "confidence": "insufficient",
                     "valid_cycles": 0, "required_for_auto": 5}

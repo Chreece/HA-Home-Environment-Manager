@@ -320,19 +320,60 @@ class EquipmentPIDReviewButton(EquipmentEntity, ButtonEntity):
             return None
         return review
 
+    def _review_status(self):
+        """Read the same current-context lifecycle as the status sensor."""
+        from .pid_review import review_projection
+        runtime = self._manager.equipment
+        cfg = self.controller_settings
+        raw = self._review()
+        record = runtime.records.get(self._spec.identifier, {})
+        saved = record.get("pid_passive")
+        saved = saved if isinstance(saved, dict) else {}
+        reader = getattr(runtime, "_pid_learning_context", None)
+        context = reader(self._spec, cfg=cfg) if callable(reader) else None
+        return raw, review_projection(raw, cfg, runtime.clock(), context=context,
+                                      saved=saved), cfg, context
+
     @property
     def available(self):
-        from .pid_review import is_pending
-        return (self.controller_settings["control_mode"] == "pid"
-                and self.controller_settings["pid_calibration_method"] == "adaptive_suggest"
-                and is_pending(self._review()))
+        from .pid_review import can_discard, is_pending
+        runtime = self._manager.equipment
+        if not getattr(runtime, "_active", False) or not getattr(runtime, "_ready", False):
+            return False
+        raw, review, cfg, context = self._review_status()
+        if self._action == "discard":
+            # Expiry withdraws authority to apply, not the user's ability to
+            # dismiss an old proposal. A reconciled application is consumed.
+            return review.get("state") != "applied" and can_discard(raw)
+        if (cfg.get("control_mode") != "pid"
+                or cfg.get("pid_calibration_method") != "adaptive_suggest"
+                or context is None or not is_pending(review)
+                or not isinstance(review.get("apply"), dict)
+                or not isinstance(review.get("current"), dict)):
+            return False
+        authorize = getattr(runtime, "_pid_review_authorized", None)
+        if not callable(authorize):
+            return False
+        # Reuse the read-only execution guard so enabled Approve also means
+        # current physical OFF, permissions and recovery gates are satisfied.
+        changes = {**review["apply"], "pid_last_calibration": {
+            "method": "passive_approved_imc_lambda", "proposal_id": review["id"],
+            "cycle_at": review.get("cycle_at"), "previous_gains": review["current"],
+            "applied_gains": review["apply"],
+            "operating_mode": review.get("operating_mode") or cfg.get("operating_mode")
+                              or cfg.get("requested_mode"),
+        }}
+        return bool(authorize(self._spec, changes, review["id"], read_only=True))
 
     @property
     def extra_state_attributes(self):
         from .pid_review import is_pending
-        review = self._review()
+        _, review, _, _ = self._review_status()
         return {**super().extra_state_attributes,
                 "pid_review_role": self._action,
+                "review_state": review.get("state", "none"),
+                "review_reason": review.get("reason"),
+                "expires_at": review.get("expires_at"),
                 "pending": is_pending(review),
                 "current_gains": review.get("current") if is_pending(review) else None,
                 "next_gains": review.get("apply") if is_pending(review) else None,

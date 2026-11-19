@@ -298,6 +298,13 @@ jobs:
           python -I .github/tests/test_074_pid_learning_math.py
           python -I .github/tests/test_074_pid_learning_runtime.py
           python -I .github/tests/test_074_pid_adaptation_scope.py
+      - name: PID interruption recovery, context history and proposal lifecycle
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_074b2_pid_contexts.py
+          python -I .github/tests/test_074b2_pid_interruptions.py
+          python -I .github/tests/test_074b2_pid_review_lifecycle.py
+          python -I .github/tests/test_074b2_pid_review_controls.py
       - name: Actual Beta82 menu entrypoints, per-room and consolidated General settings
         run: |
           set -euo pipefail

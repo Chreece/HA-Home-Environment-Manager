@@ -62,6 +62,7 @@ review={
     "apply":{"kp":22.,"ki":.22,"kd":3.},
     "recommended":{"kp":80.,"ki":1.,"kd":0.},
     "confidence":"medium","valid_cycles":3,
+    "operating_mode":"heat","tuning_settings":helper.tuning_signature(cfg),
 }
 record={
     "pid_passive_review":review,"power":{}, "pending":None,
@@ -96,6 +97,7 @@ changes={
     "pid_last_calibration":{
         "method":"passive_approved_imc_lambda","proposal_id":token,
         "cycle_at":now-200,"previous_gains":review["current"],
+        "applied_gains":review["apply"],"operating_mode":"heat",
     },
 }
 notifications=[]
@@ -123,6 +125,7 @@ class Fixture:
             raise RuntimeError("unsafe")
         self.config_changes.append(new)
         cfg.update((key,new[key]) for key in ("kp","ki","kd"))
+        cfg["pid_last_calibration"]=new["pid_last_calibration"]
 runtime=Fixture()
 
 assert guard(runtime,spec,changes,token)

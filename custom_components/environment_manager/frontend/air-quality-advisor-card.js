@@ -13182,6 +13182,8 @@
     unsupported_operating_mode:['This operating mode cannot supply suitable learning cycles.','Αυτή η λειτουργία δεν παρέχει κατάλληλους κύκλους εκμάθησης.','Diese Betriebsart liefert keine geeigneten Lernzyklen.'],
     unsupported_output:['Passive learning requires a supported ON/OFF output.','Η παθητική εκμάθηση απαιτεί υποστηριζόμενη έξοδο με έλεγχο ανοίγματος και κλεισίματος.','Passives Lernen benötigt einen unterstützten Ein/Aus-Ausgang.'],
     device_unavailable:['The physical device is unavailable.','Η φυσική συσκευή δεν είναι διαθέσιμη.','Das physische Gerät ist nicht verfügbar.'],
+    upstream_device_unavailable:['The selected power supply is unavailable.','Η επιλεγμένη παροχή ρεύματος δεν είναι διαθέσιμη.','Die gewählte Stromversorgung ist nicht verfügbar.'],
+    upstream_controller_paused:['Learning is paused while the power supply is on hold.','Η εκμάθηση έχει παύσει όσο η παροχή ρεύματος βρίσκεται σε αναμονή.','Das Lernen pausiert, solange die Stromversorgung angehalten ist.'],
     single_feedback_sensor_required:['Learning requires one reliable feedback sensor.','Η εκμάθηση χρειάζεται έναν αξιόπιστο αισθητήρα ανάδρασης.','Zum Lernen wird ein einzelner zuverlässiger Rückmeldesensor benötigt.'],
     verified_activity_required:['The device must confirm when it is running and when it is off.','Η συσκευή πρέπει να επιβεβαιώνει πότε λειτουργεί και πότε είναι κλειστή.','Das Gerät muss seinen Betriebs- und AUS-Zustand bestätigen.'],
     permissions_required:['The required control permissions have not been enabled.','Δεν έχουν ενεργοποιηθεί τα απαιτούμενα δικαιώματα ελέγχου.','Die erforderlichen Steuerungsfreigaben fehlen.'],
@@ -13202,7 +13204,14 @@
     inconsistent_plant_response:['The accepted cycles show inconsistent responses.','Οι αποδεκτοί κύκλοι δείχνουν ασυνεπή απόκριση.','Die akzeptierten Zyklen zeigen uneinheitliche Reaktionen.'],
     identified_gains_outside_safe_bounds:['The calculated gains exceed the permitted limits.','Οι υπολογισμένες τιμές υπερβαίνουν τα επιτρεπτά όρια.','Die berechneten Werte überschreiten die zulässigen Grenzen.'],
     recommendation_pending:['Review the proposed values before approving them.','Έλεγξε τις προτεινόμενες τιμές πριν τις εγκρίνεις.','Die vorgeschlagenen Werte vor der Bestätigung prüfen.'],
-    waiting_for_safe_off:['The values will only be applied after the device is confirmed off.','Οι τιμές θα εφαρμοστούν μόνο όταν επιβεβαιωθεί ότι η συσκευή είναι κλειστή.','Die Werte werden erst nach bestätigtem AUS-Zustand übernommen.'],
+    recommendation_expired:['The proposal expired after 48 hours. A new accepted cycle is needed.','Η πρόταση έληξε μετά από 48 ώρες. Χρειάζεται ένας νέος αποδεκτός κύκλος.','Der Vorschlag ist nach 48 Stunden abgelaufen. Ein neuer akzeptierter Zyklus wird benötigt.'],
+    recommendation_discarded:['The proposal was discarded. A new accepted cycle is needed for another proposal.','Η πρόταση απορρίφθηκε. Χρειάζεται ένας νέος αποδεκτός κύκλος για νέα πρόταση.','Der Vorschlag wurde verworfen. Für einen neuen Vorschlag wird ein weiterer akzeptierter Zyklus benötigt.'],
+    recommendation_stale:['The proposal no longer matches the active settings. A new complete cycle is needed.','Η πρόταση δεν αντιστοιχεί πλέον στις ενεργές ρυθμίσεις. Χρειάζεται ένας νέος πλήρης κύκλος.','Der Vorschlag passt nicht mehr zu den aktiven Einstellungen. Ein neuer vollständiger Zyklus wird benötigt.'],
+    tuning_settings_changed:['Timing settings changed. The previous proposal was withdrawn; a new complete cycle is needed.','Οι ρυθμίσεις χρονισμού άλλαξαν. Η προηγούμενη πρόταση αποσύρθηκε· χρειάζεται ένας νέος πλήρης κύκλος.','Die Zeiteinstellungen wurden geändert. Der bisherige Vorschlag wurde zurückgenommen; ein neuer vollständiger Zyklus wird benötigt.'],
+    observation_interrupted:['The unfinished observation was discarded. Completed learning cycles are retained.','Η ημιτελής παρατήρηση απορρίφθηκε. Οι ολοκληρωμένοι κύκλοι εκμάθησης διατηρούνται.','Die unvollständige Beobachtung wurde verworfen. Abgeschlossene Lernzyklen bleiben erhalten.'],
+    saved_context_resumed:['Saved cycles for these settings were restored. A new complete cycle is needed.','Ανακτήθηκαν οι αποθηκευμένοι κύκλοι για αυτές τις ρυθμίσεις. Χρειάζεται ένας νέος πλήρης κύκλος.','Gespeicherte Zyklen für diese Einstellungen wurden wiederhergestellt. Ein neuer vollständiger Zyklus wird benötigt.'],
+    new_cycle_required:['A new complete cycle is needed before calibration can continue.','Χρειάζεται ένας νέος πλήρης κύκλος για να συνεχιστεί η βαθμονόμηση.','Ein neuer vollständiger Zyklus wird benötigt, bevor die Kalibrierung fortgesetzt werden kann.'],
+    waiting_for_safe_off:['New gains can only be applied while the device is confirmed off.','Οι νέες τιμές μπορούν να εφαρμοστούν μόνο όταν επιβεβαιωθεί ότι η συσκευή είναι κλειστή.','Neue Werte können nur bei bestätigtem AUS-Zustand des Geräts übernommen werden.'],
     calibration_cooldown:['The minimum interval between automatic adjustments has not elapsed.','Δεν έχει περάσει το ελάχιστο διάστημα μεταξύ αυτόματων προσαρμογών.','Der Mindestabstand zwischen automatischen Anpassungen ist noch nicht erreicht.'],
     new_cycles_required:['New accepted cycles are needed after the previous adjustment.','Χρειάζονται νέοι αποδεκτοί κύκλοι μετά την προηγούμενη προσαρμογή.','Nach der letzten Anpassung werden neue akzeptierte Zyklen benötigt.'],
     applied:['The displayed calibration has been saved.','Η εμφανιζόμενη βαθμονόμηση έχει αποθηκευτεί.','Die angezeigte Kalibrierung wurde gespeichert.'],
@@ -13218,7 +13227,11 @@
     return key[0].toUpperCase()+key.slice(1)+' '+(value===null?'—':
       new Intl.NumberFormat(language,{maximumFractionDigits:6}).format(value));
   }).join(' · ');
-  function pidStatusModels074(fields,status,language){
+  const pidSameGains074=(left,right)=>['kp','ki','kd'].every(key=>{
+    const value=pidNumber074(left?.[key]);
+    return value!==null&&value===pidNumber074(right?.[key]);
+  });
+  function pidStatusModels074(fields,status,language,now=Date.now()/1000){
     const words=pidWords074(language),groups=new Map();
     for(const field of fields){
       const a=field.state?.attributes||{};
@@ -13253,22 +13266,42 @@
       if(!matches&&activeMode)state='inactive';
       else if(control&&control!=='pid')state='inactive';
       else if(!adaptive&&methodKnown)state='disabled';
-      const progress=matches&&adaptive?status.pid_learning_progress:null;
-      const review=matches&&isPid&&method==='adaptive_suggest'&&status.pid_review?.state==='pending'&&
+      const contextVerified=learning?.context_verified!==false;
+      const progress=matches&&adaptive&&contextVerified?status.pid_learning_progress:null;
+      let reasonCode=learning?.reason;
+      let review=matches&&isPid&&contextVerified&&method==='adaptive_suggest'&&status.pid_review?.state==='pending'&&
         (!status.pid_review.operating_mode||status.pid_review.operating_mode===group.mode||!scoped)
         ?status.pid_review:null;
+      let invalidReviewReason=status.pid_review?.reason;
+      if(review){
+        const created=pidNumber074(review.created_at),expires=pidNumber074(review.expires_at);
+        if(created===null||now<created||now>Math.min(created+48*3600,expires??Infinity))
+          invalidReviewReason='recommendation_expired';
+        else if(!pidSameGains074(gains,review.current))invalidReviewReason='recommendation_stale';
+        else if(['recommendation_expired','recommendation_discarded','recommendation_stale',
+          'tuning_settings_changed','new_cycle_required'].includes(reasonCode))invalidReviewReason=reasonCode;
+        else invalidReviewReason=null;
+        if(invalidReviewReason)review=null;
+      }
+      // A delayed HA redraw must not keep an expired or superseded proposal
+      // labelled ready. The backend owns context/timing authorization; these
+      // checks also protect a previously rendered snapshot as its clock ages.
+      if(matches&&isPid&&method==='adaptive_suggest'&&state==='ready_for_review'&&!review){
+        state=contextVerified?'collecting':'waiting';
+        reasonCode=invalidReviewReason||(contextVerified?'recommendation_stale':'unsafe_or_invalid_observation');
+      }
       const last=matches&&status.pid_last_calibration&&
         (!status.pid_last_calibration.operating_mode||status.pid_last_calibration.operating_mode===group.mode||!scoped)
         ?status.pid_last_calibration:null;
       const phase=adaptive&&words.phases[progress?.phase]||'';
-      const reason=pidReason074(language,learning?.reason);
-      const rejection=progress?.last_rejection_reason!==learning?.reason?
+      const reason=pidReason074(language,reasonCode);
+      const rejection=progress?.last_rejection_reason!==reasonCode?
         pidReason074(language,progress?.last_rejection_reason):'';
       return {mode:group.mode||'device',title:words.modes[group.mode]||words.generic,
         current:Boolean(actual),gains,method:words.methods[method]||words.unknown,
         note:method==='adaptive_suggest'?words.suggest:method==='adaptive_auto'?words.automatic:'',
         state:words.states[state]?state:'unknown',stateLabel:words.states[state]||words.unavailable,
-        reason,phase,rejection,cycles:adaptive&&matches?pidNumber074(learning?.valid_cycles??progress?.valid_cycles):null,
+        reason,phase,rejection,cycles:adaptive&&matches&&contextVerified?pidNumber074(learning?.valid_cycles??progress?.valid_cycles):null,
         required:adaptive&&matches?pidNumber074(learning?.required_cycles??
           (method==='adaptive_suggest'?3:progress?.required_for_auto)):null,
         review,last,showHistory:matches&&Object.prototype.hasOwnProperty.call(status,'pid_last_calibration')&&

@@ -14,12 +14,13 @@ ROOT=Path(__file__).resolve().parents[2]
 pkg=ModuleType("hem_pid_runtime_test")
 pkg.__path__=[str(ROOT)]
 sys.modules[pkg.__name__]=pkg
-for name in ("pid_calibration","pid_passive"):
+for name in ("pid_calibration","pid_passive","pid_review"):
     spec=importlib.util.spec_from_file_location(pkg.__name__+"."+name,ROOT/(name+".py"))
     module=importlib.util.module_from_spec(spec)
     sys.modules[spec.name]=module
     spec.loader.exec_module(module)
 passive=sys.modules[pkg.__name__+".pid_passive"]
+review=sys.modules[pkg.__name__+".pid_review"]
 tree=ast.parse((ROOT/"equipment_runtime.py").read_text(encoding="utf-8"))
 klass=next(n for n in tree.body if isinstance(n,ast.ClassDef) and n.name=="EquipmentRuntime")
 method=next(n for n in klass.body if isinstance(n,ast.FunctionDef)
@@ -54,6 +55,8 @@ model=N(settings=settings,capabilities=lambda manager,spec:cap,
         targets=lambda *args:{"heat":21.,"cool":26.,"humidity":50.},
         profile_name=lambda *args:"home")
 ns={
+    "__name__":pkg.__name__+".equipment_runtime",
+    "__package__":pkg.__name__,
     "model":model,"STARTUP_SECONDS":300,
     "AUTO_INTERVAL_S":passive.AUTO_INTERVAL_S,
     "passive_bounded_gains":passive.bounded_gains,
@@ -76,7 +79,8 @@ class GuardRuntime:
     def measurements(self,*args):return {"temperature":20.,"temperature_entity":"sensor.room"}
 runtime=GuardRuntime()
 spec=N(identifier="unit",area_id="room",source_entities=(cap.primary,))
-proof=(source_context,now-120,{"kp":20.,"ki":0.2,"kd":0.},None)
+proof=(source_context,now-120,{"kp":20.,"ki":0.2,"kd":0.},None,
+       {"generation":0,"tuning_settings":review.tuning_signature(cfg)})
 candidate={"kp":22.,"ki":0.22,"kd":0.,
            "pid_last_calibration":{"method":"passive_imc_lambda",
                                    "cycle_at":now-120,"operating_mode":"heat",

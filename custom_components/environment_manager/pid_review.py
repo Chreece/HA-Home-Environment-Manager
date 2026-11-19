@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import logging
+import math
 import re
 import secrets
 from typing import Any
@@ -22,6 +23,108 @@ ADAPTIVE_METHODS = ("adaptive_suggest", "adaptive_auto")
 ALL_METHODS = (*CLASSICAL_METHODS, *ADAPTIVE_METHODS)
 ACTION_PREFIX = "HEM_PID_REVIEW_"
 _ACTION_PATTERN = re.compile(r"^HEM_PID_REVIEW_(APPROVE|DISCARD)_([a-f0-9]{32})$")
+REVIEW_MAX_AGE_S = 48 * 3600
+TUNING_FIELDS = ("sample_seconds", "cycle_seconds", "min_on_seconds",
+                 "min_off_seconds", "max_on_seconds", "power_switch_entity",
+                 "power_switch_cooldown_seconds")
+
+
+def calibration_hold(record: dict, cfg: dict, state_lookup=None) -> str | None:
+    """Shared read-only hold for learning and either calibrated-gain writer."""
+    if record.get("paused"):
+        return "controller_paused"
+    upstream = record.get("upstream")
+    upstream = upstream if isinstance(upstream, dict) else {}
+    if upstream.get("paused"):
+        return "upstream_controller_paused"
+    if (record.get("pending") or upstream.get("pending")
+            or record.get("unconfirmed_native_target")
+            or record.get("native_setpoint_stop")
+            or record.get("queued_power_switch")
+            or record.get("automatic_continue_requested")
+            or record.get("restart_power_verification")):
+        return "pending_command"
+    if record.get("thermal_off_warning"):
+        return "verified_activity_required"
+    selected = cfg.get("power_switch_entity")
+    if selected and selected != "none" and state_lookup is not None:
+        state = state_lookup(selected)
+        if state is None or getattr(state, "state", None) not in ("on", "off"):
+            return "upstream_device_unavailable"
+    return None
+
+
+def tuning_signature(cfg: dict) -> dict:
+    """Bind a recommendation to the sampling and physical timing it used."""
+    return {key: cfg.get(key) for key in TUNING_FIELDS}
+
+
+def review_application_matches(review: Any, cfg: dict) -> bool:
+    """Recognize the exact committed application after interrupted bookkeeping."""
+    if not isinstance(review, dict):
+        return False
+    last = cfg.get("pid_last_calibration")
+    applied = review.get("apply")
+    if not isinstance(last, dict) or not isinstance(applied, dict):
+        return False
+    return bool(
+        isinstance(review.get("id"), str)
+        and last.get("method") == "passive_approved_imc_lambda"
+        and last.get("proposal_id") == review["id"]
+        and last.get("cycle_at") == review.get("cycle_at")
+        and last.get("previous_gains") == review.get("current")
+        and last.get("applied_gains") == applied
+        and last.get("operating_mode") == review.get("operating_mode")
+        and all(type(applied.get(k)) in (int, float)
+                and math.isfinite(applied[k]) and cfg.get(k) == applied[k]
+                for k in ("kp", "ki", "kd"))
+    )
+
+
+def review_projection(review: Any, cfg: dict, now: float, *,
+                      context: str | None = None, saved: dict | None = None) -> dict:
+    """Read-only lifecycle shared by execution, card status and review buttons.
+
+    Missing legacy timing proof cannot authorize a saved recommendation under
+    new timing assumptions. Completed plant evidence remains independently
+    available for a newly calculated recommendation.
+    """
+    if not isinstance(review, dict):
+        return {"state": "none"}
+    result = dict(review)
+    if review_application_matches(review, cfg):
+        result.update(state="applied", reason="applied")
+        return result
+    if result.get("state") == "discarded":
+        result["reason"] = "recommendation_discarded"
+        return result
+    if not is_pending(review):
+        return result
+    created = review.get("created_at")
+    finite = lambda value: type(value) in (int, float) and math.isfinite(value)
+    reason = None
+    if not finite(created) or not finite(now) or not 0 <= now - created <= REVIEW_MAX_AGE_S:
+        reason = "recommendation_expired"
+    elif review.get("tuning_settings") != tuning_signature(cfg):
+        reason = "tuning_settings_changed"
+    elif (cfg.get("pid_calibration_method") != "adaptive_suggest"
+          or not isinstance(review.get("current"), dict)
+          or any(cfg.get(k) != review["current"].get(k) for k in ("kp", "ki", "kd"))):
+        reason = "recommendation_stale"
+    elif context is not None and context != review.get("context"):
+        reason = "recommendation_stale"
+    elif saved is not None:
+        summary = saved.get("summary") if isinstance(saved, dict) else None
+        if (not isinstance(saved, dict) or saved.get("context") != review.get("context")
+                or not isinstance(summary, dict)
+                or summary.get("last_cycle_at") != review.get("cycle_at")
+                or summary.get("status") not in ("suggestion_only", "validated")):
+            reason = "recommendation_stale"
+    if finite(created):
+        result["expires_at"] = created + REVIEW_MAX_AGE_S
+    if reason is not None:
+        result.update(state="expired", reason=reason)
+    return result
 
 
 def selected_method(raw: dict) -> str:
@@ -76,6 +179,8 @@ def proposal_for(cfg: dict, summary: dict, context: str, now: float) -> dict | N
         "confidence": summary["confidence"],
         "valid_cycles": summary["valid_cycles"],
         "metric": summary.get("metric"),
+        "tuning_settings": tuning_signature(cfg),
+        "operating_mode": cfg.get("operating_mode") or cfg.get("requested_mode"),
     }
 
 
@@ -83,6 +188,11 @@ def is_pending(review: Any) -> bool:
     return (isinstance(review, dict) and review.get("state") == "pending"
             and isinstance(review.get("id"), str)
             and bool(re.fullmatch(r"[a-f0-9]{32}", review["id"])))
+
+
+def can_discard(review: Any) -> bool:
+    return (isinstance(review, dict) and review.get("state") in ("pending", "expired")
+            and is_pending({**review, "state": "pending"}))
 
 
 def decode_mobile_action(action: Any) -> tuple[str, str] | None:
@@ -223,6 +333,7 @@ async def async_publish_review(hass: Any, manager: Any, spec: Any, review: dict)
     title = labels["title"]
     body = notification_text(spec, review, str(locale))
     sent = False
+    failed = False
     if hass.services.has_service("persistent_notification", "create"):
         try:
             await hass.services.async_call(
@@ -233,6 +344,7 @@ async def async_publish_review(hass: Any, manager: Any, spec: Any, review: dict)
             )
             sent = True
         except Exception:
+            failed = True
             _LOGGER.exception("HEM PID persistent recommendation notification failed")
     actions = [
         {"action": f"{ACTION_PREFIX}APPROVE_{review['id']}",
@@ -260,11 +372,16 @@ async def async_publish_review(hass: Any, manager: Any, spec: Any, review: dict)
                 )
             sent = True
         except Exception:
+            failed = True
             _LOGGER.exception("HEM PID actionable mobile notification failed: %s", target)
-    return sent
+    # A successful HA notice must not hide a failed configured mobile send.
+    # Retries replace the same notification IDs/tags at the runtime's bounded
+    # retry interval; only complete attempted delivery receives a receipt.
+    return sent and not failed
 
 
-async def async_clear_review(hass: Any, manager: Any, spec: Any) -> None:
+async def async_clear_review(hass: Any, manager: Any, spec: Any) -> bool:
+    cleared = True
     if hass.services.has_service("persistent_notification", "dismiss"):
         try:
             await hass.services.async_call(
@@ -273,6 +390,7 @@ async def async_clear_review(hass: Any, manager: Any, spec: Any) -> None:
                 }, blocking=True,
             )
         except Exception:
+            cleared = False
             _LOGGER.debug("Unable to clear PID review from HA notifications", exc_info=True)
     for kind, target in _mobile_targets(hass, manager):
         try:
@@ -290,4 +408,6 @@ async def async_clear_review(hass: Any, manager: Any, spec: Any) -> None:
                     "notify", target, data, blocking=True,
                 )
         except Exception:
+            cleared = False
             _LOGGER.debug("Unable to clear mobile PID review", exc_info=True)
+    return cleared
