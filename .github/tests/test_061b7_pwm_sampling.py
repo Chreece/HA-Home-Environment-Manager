@@ -29,6 +29,7 @@ class SampledRuntime(Runtime):
         super().__init__(**kwargs)
         self.scheduled = 0
         self._pid_pwm_wakeups = {}
+        self._pid_learning_holds = {}
         self._native_session_observations = {}
         self._presentation_updates.close = lambda: None
 
@@ -346,9 +347,11 @@ class TimerTests(unittest.IsolatedAsyncioTestCase):
         r._schedule_pid_pwm_evaluation(SPEC, r.now + 20)
         handle = r._pid_pwm_wakeups[SPEC.identifier][1]
         callback = handle._callback
+        r._pid_learning_holds[SPEC.identifier] = {"reason": "test_learning_hold"}
         await production.async_stop(r)
         self.assertTrue(handle.cancelled())
         self.assertFalse(r._pid_pwm_wakeups)
+        self.assertFalse(r._pid_learning_holds)
         callback()
         self.assertEqual(r.scheduled, 0)
 
