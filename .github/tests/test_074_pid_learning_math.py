@@ -202,6 +202,25 @@ class LearningStatusTests(unittest.TestCase):
                 self.assertEqual(result["reason"], reason)
                 self.assertNotEqual(result["status"], "collecting")
 
+    def test_malformed_restored_mappings_do_not_break_read_only_status(self):
+        for malformed in (None, "pending", ["pending"], 1, True):
+            with self.subTest(malformed=malformed):
+                args = self.arguments()
+                args["record"] = {
+                    "upstream": malformed,
+                    "pid_passive": {"context": self.context(), "summary": malformed},
+                    "pid_passive_review": {
+                        "operating_mode": "heat", "state": "pending",
+                        "context": self.context(), "cycle_at": self.NOW - 300,
+                    },
+                }
+                before = deepcopy(args)
+                result = status.snapshot(**args)
+                self.assertEqual(result["status"], "collecting")
+                self.assertEqual(result["valid_cycles"], 0)
+                self.assertNotEqual(result["reason"], "pending_command")
+                self.assertEqual(args, before)
+
     def test_other_modes_do_not_supply_progress_review_holds_or_last_application(self):
         args = self.arguments(automatic=True)
         args.update(

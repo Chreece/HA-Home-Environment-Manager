@@ -128,10 +128,12 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
         review_mode = review.get("operating_mode") or context_mode(review.get("context"))
         saved_learning = record.get("pid_passive")
         saved_learning = saved_learning if isinstance(saved_learning, dict) else {}
+        saved_summary = saved_learning.get("summary")
+        saved_summary = saved_summary if isinstance(saved_summary, dict) else {}
         if (review_mode != active_learning_mode or (
                 review.get("state") == "pending" and (
                     review.get("context") != saved_learning.get("context")
-                    or review.get("cycle_at") != (saved_learning.get("summary") or {}).get("last_cycle_at")
+                    or review.get("cycle_at") != saved_summary.get("last_cycle_at")
                 ))):
             review = {}
         learning_status = learning_snapshot(
@@ -305,7 +307,7 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             # Small read-only evidence summary. Raw measurements remain
             # bounded in memory and never inflate recorder attributes.
             "pid_passive_learning": (
-                (saved_learning.get("summary") if context_mode(saved_learning.get("context"))
+                (saved_summary if context_mode(saved_learning.get("context"))
                  == active_learning_mode else None)
                 or {"status": "disabled" if cfg.get("pid_adaptation_mode") == "disabled"
                     else "collecting", "confidence": "insufficient",

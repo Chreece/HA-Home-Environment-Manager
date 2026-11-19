@@ -248,6 +248,10 @@ async def tests():
     pid_stub=ModuleType('beta64_probe.pid_math')
     pid_stub.finite=b['finite']
     sys.modules[pid_stub.__name__]=pid_stub
+    # Status now imports the real pure adaptive-learning projection and its
+    # math dependencies. Keep HA transport isolated, but resolve these source
+    # modules instead of replacing their behavior with fixture placeholders.
+    sys.modules['beta64_probe'].__path__=[str(ROOT)]
     ns={'equipment':Model,
         '__package__':'beta64_probe',
         '__name__':'beta64_probe.equipment_status'}

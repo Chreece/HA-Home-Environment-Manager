@@ -145,7 +145,10 @@ def browser_checks():
                 pid_review:{state:'pending',operating_mode:'dry',current:{kp:1.2,ki:.03,kd:0},apply:{kp:1.32,ki:.033,kd:0}},
                 pid_last_calibration:{at:1795082400,operating_mode:'dry',previous_gains:{kp:1,ki:.025,kd:0},applied_gains:{kp:1.2,ki:.03,kd:0}}};
               states['sensor.pid_status']={state:'controlling',attributes:pidStatus};
-              card._statusStates65=null;card._renderContent(true);
+              // HA publishes a new states mapping. In-place mutation would
+              // leave the production controller cache pointing at the setup
+              // snapshot that did not contain the diagnostic sensor.
+              card._hass={...card._hass,states:{...states}};card._renderContent(true);
             }""", language)
             room = page.locator('[data-room-fold87="living"]')
             room.locator(":scope > summary").evaluate("node=>node.click()")
@@ -169,8 +172,11 @@ def browser_checks():
             # Refresh status in place; keep the PID accordion and native inputs.
             page.evaluate("""()=>{window.kpInput=card._hemControllerDialog126.node.querySelector('[data-hem-full-value127="number.dry_kp"]');
               if(!kpInput)throw Error('Missing visible gain input');
-              pidStatus.pid_learning_status.status='cooldown';pidStatus.pid_learning_status.reason='calibration_cooldown';
-              pidStatus.pid_review={state:'none'};card._hemFullRender127(card._hemControllerDialog126,'device');}""")
+              window.pidStatus={...pidStatus,pid_learning_status:{...pidStatus.pid_learning_status,
+                status:'cooldown',reason:'calibration_cooldown'},pid_review:{state:'none'}};
+              card._hass={...card._hass,states:{...card._hass.states,
+                'sensor.pid_status':{state:'controlling',attributes:pidStatus}}};
+              card._hemFullRender127(card._hemControllerDialog126,'device');}""")
             expect(active).to_have_attribute("data-hem-pid-state074", "cooldown")
             assert active.locator("[data-hem-pid-proposal074]").count() == 0
             assert page.evaluate("kpInput===card._hemControllerDialog126.node.querySelector('[data-hem-full-value127=\"number.dry_kp\"]')")

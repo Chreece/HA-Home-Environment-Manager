@@ -75,7 +75,9 @@ def snapshot(*, cfg: dict, domain: str | None, record: dict,
     result["eligible"] = True
     if record.get("paused"):
         return finish("waiting", "controller_paused")
-    if record.get("pending") or (record.get("upstream") or {}).get("pending"):
+    upstream = record.get("upstream")
+    upstream = upstream if isinstance(upstream, dict) else {}
+    if record.get("pending") or upstream.get("pending"):
         return finish("waiting", "pending_command")
     state = str(observed.get("status", ""))
     if (state.startswith(("window_", "sleep_room_", "waiting_for_"))
