@@ -147,7 +147,9 @@ for(const action of ['idle','off','unknown','',null]) {
 for(const state of ['off','unknown','unavailable']) {
   const card=make(),native={...card._hass.states['climate.heater'],state};
   replace(card,'climate.heater',native);
-  expect(card,'heat',['neutral','neutral','neutral','neutral']);
+  // B6 preserves a native active action reported while mode is Off as
+  // contradictory evidence. Unknown/unavailable still clears stale actions.
+  expect(card,'heat',[state==='off'?'conflict':'neutral','neutral','neutral','neutral']);
 }
 for(const action of ['idle','off','unknown',null]) {
   const card=make(),native=structuredClone(card._hass.states['climate.heater']);

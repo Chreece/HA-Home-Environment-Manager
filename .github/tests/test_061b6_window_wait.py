@@ -263,7 +263,8 @@ class DeviceConsentTests(unittest.TestCase):
         scope = {"__package__": b["PKG"], "authorized": lambda manager, spec: manager.authorized,
                  "settings": model.settings, "capabilities": model.capabilities,
                  "room_config": model.room_config, "device_config": profile}
-        for path, function in (("device_activation.py", "effective_device"),
+        for path, function in (("device_activation.py", "resolved_fan_purpose"),
+                               ("device_activation.py", "effective_device"),
                                ("equipment_model.py", "window_alternative_supported")):
             node = next(node for node in ast.parse((ROOT / path).read_text()).body
                         if isinstance(node, ast.FunctionDef) and node.name == function)

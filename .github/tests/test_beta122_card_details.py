@@ -116,6 +116,10 @@ function click(card,attrs,disabled=false){const target=button(attrs,disabled),ev
   preventDefault(){this.prevented=true;},stopImmediatePropagation(){this.stopped=true;}};
   card._installFolds87();card.shadowRoot.deliver('click',event);return event;}
 const cases=[];function test(name,run){cases.push({name,run});}
+// B6 retains the second header reading as a CSS-only narrow-card fallback.
+// Desktop complementary tiles must keep the existing four/More budget.
+const complementaryTiles=html=>[...html.matchAll(/<div\b[^>]*\bdata-room-metric114="[^"]*"[^>]*>/g)]
+  .filter(match=>!match[0].includes('hem-metric-narrow-b6'));
 
 test('physical device icon precedes native entity name and has no trailing icon',()=>{
   const {card,room,physical}=make(),html=card._controllerPanel(room);
@@ -188,7 +192,8 @@ test('announce control displays icon and state while retaining accessible purpos
 test('details use the same actual headline selection and retain complementary data',()=>{
   const {card,room}=make(),overview=card._roomGlance122(room),details=card._roomDetailReadings122(room,overview);
   assert.equal(JSON.stringify([...overview.metrics].sort()),JSON.stringify(['co2','humidity','pm25','temperature']));
-  assert.ok(!details.some(item=>['temperature','humidity','pm25'].includes(item.metric)));
+  assert.ok(!details.some(item=>!item.overview_narrow_b6&&['temperature','humidity','pm25'].includes(item.metric)));
+  assert.ok(details.find(item=>item.metric==='pm25').overview_narrow_b6);
   assert.ok(details.find(item=>item.metric==='co2').overview_detail122);
   for(const metric of ['pm10','illuminance','voc','noise','pressure'])assert.ok(details.some(item=>item.metric===metric));
   assert.ok(room.readings.every(item=>!item.overview_detail122),'Display must not mutate evidence');
@@ -196,13 +201,13 @@ test('details use the same actual headline selection and retain complementary da
 test('first expansion has four complementary tiles and More retains additional readings',()=>{
   const {card,room}=make();
   let html=card._room(room);
-  assert.equal((html.match(/data-room-metric114=/g)||[]).length,4);
+  assert.equal(complementaryTiles(html).length,4);
   assert.ok(html.includes('data-expand="living"'));
   assert.ok(html.includes('data-overview-detail122="co2"'));
   assert.ok(html.includes('<div class="hem-room-readings66"></div>'));
   assert.ok(html.includes('data-detail-id="room-info:living"'));
   card._expanded.add('living');html=card._room(room);
-  assert.equal((html.match(/data-room-metric114=/g)||[]).length,6);
+  assert.equal(complementaryTiles(html).length,6);
   const warning=card._metricInfo122(room.readings.find(item=>item.metric==='co2'));
   assert.ok(!warning.includes('metric-number')&&!warning.includes('role="progressbar"'));
   assert.ok(!warning.includes('1,600'));
@@ -329,11 +334,13 @@ def browser_checks(data):
         assert announce.get_attribute("title") == "Announce device errors"
         announce.click()
         assert page.evaluate("calls") == [["switch", "turn_off", {"entity_id": "switch.hem_announce"}]]
-        tiles = room.locator(".metric-grid > .metric")
+        tiles = room.locator(".metric-grid > .metric:not(.hem-metric-narrow-b6)")
         expect(tiles).to_have_count(4)
         assert room.locator('.metric-grid [data-room-metric114="temperature"]').count() == 0
         assert room.locator('.metric-grid [data-room-metric114="humidity"]').count() == 0
-        assert room.locator('.metric-grid [data-room-metric114="pm25"]').count() == 0
+        particle_fallback = room.locator('.metric-grid [data-room-metric114="pm25"]')
+        assert particle_fallback.count() == 1 and particle_fallback.is_hidden()
+        assert "hem-metric-narrow-b6" in particle_fallback.get_attribute("class")
         warning = room.locator('[data-overview-detail122="co2"]')
         # The English fixture uses grouped numbers. Assert the threshold's own
         # DOM text, not a raw-number substring that can match hidden help text.
@@ -375,6 +382,11 @@ def browser_checks(data):
             page.evaluate("card._renderContent(true)")
             assert page.evaluate("document.documentElement.scrollWidth") <= width
             expect(tiles).to_have_count(4)
+            if width <= 375:
+                expect(particle_fallback).to_be_visible()
+                expect(room.locator('.hem-room-glance87 [data-hem-source105="sensor.pm25"]')).to_be_hidden()
+            else:
+                expect(particle_fallback).to_be_hidden()
             expect(controller.locator('[data-open-controller-device122]')).to_be_visible()
             expect(heading.locator('[data-open-physical-device122]')).to_be_visible()
             for selector in (".hem-device-main87", ".hem-physical-heading122", ".metric-grid"):

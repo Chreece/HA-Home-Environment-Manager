@@ -322,6 +322,7 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
     def extra_state_attributes(self):
         cap = self._caps
         cfg = self.controller_settings
+        from .device_activation import resolved_fan_purpose
         from .operating_mode_catalog import operating_mode_ui_labels
         locale = self._manager.settings.get("language", "auto")
         if locale == "auto":
@@ -357,6 +358,8 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
                 # The exact native endpoint is exposed for the Lovelace link;
                 # do not infer the target from a Manager climate entity name.
                 "physical_primary_entity_id": cap.primary if cap else None,
+                "resolved_fan_purpose": resolved_fan_purpose(
+                    self._manager, self._spec, cap.primary if cap else None),
                 "controller_mode_selected": cfg["control_mode"] in ("automatic", "pid", "manual"),
                 "upstream_power_switch": cfg.get("power_switch_entity"),
                 "upstream_power_state": (self._manager.hass.states.get(cfg["power_switch_entity"]).state

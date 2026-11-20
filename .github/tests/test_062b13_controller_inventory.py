@@ -37,7 +37,11 @@ equipment.settings=lambda manager,spec:{
     "power_switch_entity":None,
 }
 equipment.operating_modes=lambda manager,spec:("heat",) if spec is specA else ("fan_only",)
+equipment.capabilities=lambda manager,spec:None
 sys.modules[equipment.__name__]=equipment
+activity=ModuleType(PACKAGE+".device_activation")
+activity.resolved_fan_purpose=lambda manager,spec,entity:None
+sys.modules[activity.__name__]=activity
 recordA=N(platform="environment_manager",config_entry_id="hem_entry",
           unique_id="entry_controller_trv_climate",disabled_by=None)
 recordB=N(platform="environment_manager",config_entry_id="hem_entry",
