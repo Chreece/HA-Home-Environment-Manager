@@ -10,7 +10,9 @@ from time import monotonic, time
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import EVENT_STATE_CHANGED
+from homeassistant.const import (
+    EVENT_HOMEASSISTANT_STARTED, EVENT_HOMEASSISTANT_STOP, EVENT_STATE_CHANGED,
+)
 from homeassistant.core import Event, HomeAssistant, callback
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.event import async_call_later, async_track_time_interval
@@ -64,8 +66,14 @@ from .presence_continuity import PresenceContinuity
 from .arrival_preparation import ArrivalPreparation, room_eligible
 from .room_ventilation import RoomVentilationMonitor, has_indoor_air_sensor, thermal_targets
 from .window_open_wait import WindowOpeningWait, pending_demands
+from .lifecycle import is_running, is_stopping, create_background_task
+from .notification_delivery import delivery_allowed, async_call_notification
 
 _LOGGER = logging.getLogger(__name__)
+STOP_TIMEOUT_SECONDS = 10.0
+STOP_CANCEL_GRACE_SECONDS = 0.25
+STARTUP_LOAD_CONCURRENCY = 4
+REGISTRY_REFRESH_SECONDS = 0.75
 
 
 class AirQualityManager:
@@ -78,6 +86,16 @@ class AirQualityManager:
         self._tracked: set[str] = set()
         self._unsubs: list[Any] = []
         self._source_refresh_handle = None
+        self._registry_refresh_handle = None
+        self._lifecycle_unsubs: list[Any] = []
+        self._stop_listener_unsub: Any | None = None
+        self._lifecycle_registered = False
+        self._stopping = False
+        self._shutdown_requested = False
+        self._quiesce_failed = False
+        self._stop_task: asyncio.Task[bool] | None = None
+        self._stop_pending: set[asyncio.Task[Any]] = set()
+        self._startup_tasks: set[asyncio.Task[Any]] = set()
         # Startup bursts are coalesced until HA is fully RUNNING.
         self._startup_refresh_pending = False
         self._wake_boundary = None
@@ -88,11 +106,13 @@ class AirQualityManager:
         self._pending_unsubs: dict[str, Any] = {}
         self._repeat_unsubs: dict[str, Any] = {}
         self._sending_actions: dict[str, tuple[str, str]] = {}
+        self._deferred_announcements: set[str] = set()
         self._last_sent: dict[str, float] = {}
         self._active = False
         self._tasks: set[asyncio.Task[Any]] = set()
         self._environment_history = EnvironmentHistory()
         self._environment_store: Any | None = None
+        self._environment_restored = False
         self.away_windows = AwayWindowAlert(self)
         self.presence_continuity = PresenceContinuity(self.hass, self.entry.entry_id)
         self.arrival_preparation = ArrivalPreparation(self)
@@ -815,8 +835,58 @@ class AirQualityManager:
             climate_recommendations=tuple(secondary),
         )
 
-    async def async_start(self) -> None:
-        """Track sensor changes and periodically recheck freshness and new entities."""
+    @callback
+    def async_register_lifecycle(self) -> None:
+        """Own full HA stop independently from config-entry unload/reload."""
+        if self._lifecycle_registered:
+            return
+        self._lifecycle_registered = True
+        self._stop_listener_unsub = self.hass.bus.async_listen_once(
+            EVENT_HOMEASSISTANT_STOP, self._on_ha_stop,
+        )
+        self._lifecycle_unsubs.extend((
+            self.hass.bus.async_listen_once(EVENT_HOMEASSISTANT_STARTED, self._on_ha_started),
+        ))
+
+    @callback
+    def _on_ha_stop(self, _event: Any = None) -> None:
+        if _event is not None:
+            # HA removes one-shot listeners before invoking their callback.
+            self._stop_listener_unsub = None
+        # Revoke scheduling synchronously, before any other stop listener can
+        # publish native changes or a previously armed timer can run.
+        self.quiesce(shutdown=True)
+        self.hass.async_create_task(
+            self.async_stop(shutdown=True),
+            f"{DOMAIN} bounded shutdown {self.entry.entry_id}",
+        )
+
+    @callback
+    def _on_ha_started(self, _event: Any = None) -> None:
+        if _event is None:
+            # A reload may replay this directly after HA is already running.
+            for unsubscribe in self._lifecycle_unsubs:
+                unsubscribe()
+        self._lifecycle_unsubs.clear()
+        if not self._active or self._stopping or not is_running(self.hass):
+            return
+        self.equipment.retry_pending_reviews()
+        self.faults.refresh()
+        deferred = tuple(self._deferred_announcements)
+        self._deferred_announcements.clear()
+        self._recalculate()
+        for area in deferred:
+            if area in self._pending_unsubs or area in self._sending_actions:
+                continue
+            current = self._active_actions.get(area)
+            request = next((rec for rec in
+                            (*self.plan.recommendations, *self.plan.climate_recommendations)
+                            if rec.area_id == area), None)
+            if current is not None and request is not None:
+                self._queue_automatic(area, *current, action=request.action)
+
+    async def _async_restore_environment(self) -> None:
+        """Load and sanitize presentation history outside the event loop."""
         # Home Assistant Store keeps bounded sensor samples through restart.
         # Pure-logic tests may stub HA without its storage package.
         try:
@@ -825,45 +895,86 @@ class AirQualityManager:
                 self.hass, 1, f"{DOMAIN}.environment_history_{self.entry.entry_id}"
             )
             stored = await self._environment_store.async_load()
-            self._environment_history = EnvironmentHistory.restore(stored)
+            history = await self.hass.async_add_executor_job(EnvironmentHistory.restore, stored)
+            if not self._stopping and not is_stopping(self.hass):
+                self._environment_history = history
+                self._environment_restored = True
         except ImportError:
             _LOGGER.debug("Home Assistant storage not available in test runtime")
         except Exception:
             _LOGGER.exception("Environment history could not be restored; starting empty")
-        # Restore source-bound absence evidence before building any room plan.
-        # Every recovered interval is live-revalidated during _capture.
-        await self.presence_continuity.async_start()
-        await self.arrival_preparation.async_start()
+
+    async def async_start(self) -> None:
+        """Restore independent stores with bounded parallelism before control."""
+        self.async_register_lifecycle()
+        if self._stopping or is_stopping(self.hass):
+            raise asyncio.CancelledError("Home Assistant is stopping")
         from .wake_alarm import async_start_wake
-        await async_start_wake(self.hass, self.entry.entry_id,
-                               self.settings.get(CONF_OCCUPANCY_GLOBAL, {}))
-        # Load latching PID manual overrides and expected targets first.
-        # If its storage fails, the PID controller remains fail-closed.
-        await self.pid.async_start()
-        await self.native_climate.async_start()
-        await self.direct_climate.async_start()
-        await self.native_humidity.async_start()
-        await self.humidity_power.async_start()
-        await self.secondary_climate.async_start()
-        await self.running_fans.async_start()
-        await self.fan_power.async_start()
-        await self.native_air_mode.async_start()
-        await self.equipment.async_start()
-        await self.shading.async_start()
+        operations = (
+            ("environment history", self._async_restore_environment),
+            ("presence", self.presence_continuity.async_start),
+            ("arrival preparation", self.arrival_preparation.async_start),
+            ("wake alarm", lambda: async_start_wake(
+                self.hass, self.entry.entry_id,
+                self.settings.get(CONF_OCCUPANCY_GLOBAL, {}))),
+            *((name, controller.async_start) for name, controller in self._controllers()
+              if name not in {"fault_monitor", "presence_continuity", "arrival_preparation"}),
+        )
+        semaphore = asyncio.Semaphore(STARTUP_LOAD_CONCURRENCY)
+        restore_tasks = {}
+
+        async def restore(name, operation):
+            # Arrival observes household occupancy as it restores its deadline.
+            # Preserve persisted absence continuity before that observation;
+            # other stores remain independent and may restore concurrently.
+            if name == "arrival preparation":
+                await restore_tasks["presence"]
+            async with semaphore:
+                if self._stopping or is_stopping(self.hass):
+                    raise asyncio.CancelledError("Home Assistant is stopping")
+                await operation()
+                if self._stopping or is_stopping(self.hass):
+                    raise asyncio.CancelledError("Home Assistant stopped during restoration")
+
+        for name, operation in operations:
+            restore_tasks[name] = asyncio.create_task(
+                restore(name, operation), name=f"HEM restore {name}",
+            )
+        tasks = set(restore_tasks.values())
+        self._startup_tasks.update(tasks)
+        try:
+            await asyncio.gather(*tasks)
+        except BaseException:
+            for task in tasks:
+                task.cancel()
+            # Setup cancellation cannot allow an unfinished restore to later
+            # reactivate this manager. The bounded stop path also owns these.
+            await asyncio.wait(tasks, timeout=STOP_CANCEL_GRACE_SECONDS)
+            raise
+        finally:
+            self._startup_tasks.difference_update(task for task in tasks if task.done())
+        if self._stopping or is_stopping(self.hass):
+            raise asyncio.CancelledError("Home Assistant stopped during setup")
         self._active = True
         self._unsubs.extend((
             self.hass.bus.async_listen(EVENT_STATE_CHANGED, self._on_state_changed),
             self.hass.bus.async_listen("entity_registry_updated", self._on_registry_changed),
             self.hass.bus.async_listen("device_registry_updated", self._on_registry_changed),
             self.hass.bus.async_listen("area_registry_updated", self._on_registry_changed),
-            async_track_time_interval(self.hass, self._on_interval, timedelta(minutes=5)),
-            async_track_time_interval(self.hass, self._on_fast_climate_interval, timedelta(seconds=30)),
+            async_track_time_interval(self.hass, self._on_interval, timedelta(minutes=5),
+                                      cancel_on_shutdown=True),
+            async_track_time_interval(self.hass, self._on_fast_climate_interval, timedelta(seconds=30),
+                                      cancel_on_shutdown=True),
         ))
         # Establish current native error states as a baseline. These are
         # visible immediately, but are not falsely announced as new faults
         # after every Home Assistant restart.
         self.faults.start()
         self._recalculate(initial=True)
+        # Integration reload after HA has already started has no future
+        # STARTED event. Replay optional notices only after restoration ends.
+        if is_running(self.hass):
+            self._on_ha_started()
 
     @callback
     def _shade_updated(self) -> None:
@@ -897,6 +1008,8 @@ class AirQualityManager:
         )
 
     async def async_climate_control(self, area:str, action:str) -> dict[str, Any]:
+        if not self._active or self._stopping or not is_running(self.hass):
+            return {"accepted": False, "reason": "home_assistant_not_running"}
         configured=self.settings.get(CONF_CLIMATE_ROOMS,{})
         if not isinstance(configured,dict) or not isinstance(configured.get(area),dict):
             return {"accepted":False,"reason":"room_not_configured"}
@@ -1020,11 +1133,15 @@ class AirQualityManager:
         async_dispatcher_send(self.hass,f"{SIGNAL_UPDATED}_{self.entry.entry_id}")
 
     async def async_pid_control(self, area: str, action: str) -> dict[str, Any]:
+        if not self._active or self._stopping or not is_running(self.hass):
+            return {"accepted": False, "reason": "home_assistant_not_running"}
         configs = self.settings.get(CONF_PID_ROOMS, {})
         return await self.pid.async_action(area, action, configs)
 
     @callback
     def _on_registry_changed(self, event: Event) -> None:
+        if not self._active or self._stopping or is_stopping(self.hass):
+            return
         # HA registers our own Room Environment and controller entities
         # during setup. Those registry writes must not re-trigger all room
         # calculations and resend every entity over the dispatcher.
@@ -1057,9 +1174,17 @@ class AirQualityManager:
                 return
         # Native registry membership may change when a manufacturer
         # integration adds its own diagnostic/error entity after startup.
-        fault_monitor = getattr(self, "faults", None)
-        if fault_monitor is not None:
-            fault_monitor.refresh()
+        if self._registry_refresh_handle is None:
+            self._registry_refresh_handle = self.hass.loop.call_later(
+                REGISTRY_REFRESH_SECONDS, self._flush_registry_refresh,
+            )
+
+    @callback
+    def _flush_registry_refresh(self) -> None:
+        self._registry_refresh_handle = None
+        if not self._active or self._stopping or is_stopping(self.hass):
+            return
+        self.faults.refresh()
         self._queue_source_refresh()
 
     @callback
@@ -1073,11 +1198,11 @@ class AirQualityManager:
         Once HA is running, a tracked source change is always queued for the
         next loop turn, including when a startup rebuild is still pending.
         """
-        if not self._active:
+        if not self._active or getattr(self, "_stopping", False) or is_stopping(self.hass):
             return
         state = getattr(getattr(self.hass, "state", None), "value",
                         getattr(self.hass, "state", None))
-        starting = isinstance(state, str) and state.lower() == "starting"
+        starting = isinstance(state, str) and state.lower() in {"starting", "not_running"}
         if self._source_refresh_handle is not None:
             if starting or not self._startup_refresh_pending:
                 return
@@ -1099,7 +1224,7 @@ class AirQualityManager:
     def _flush_source_refresh(self) -> None:
         self._source_refresh_handle = None
         self._startup_refresh_pending = False
-        if self._active:
+        if self._active and not getattr(self, "_stopping", False) and not is_stopping(self.hass):
             self._recalculate()
 
     @callback
@@ -1130,7 +1255,7 @@ class AirQualityManager:
     def _on_fast_climate_interval(self, _now: Any) -> None:
         # PWM edges require faster scheduling than the 5-minute air-quality
         # refresh. Use the last validated plan; _tick rechecks sensor freshness.
-        if not self._active:
+        if not self._active or getattr(self, "_stopping", False) or is_stopping(self.hass):
             return
         door_monitor = getattr(self, "door_context", None)
         if door_monitor is not None and door_monitor.should_refresh(time()):
@@ -1198,6 +1323,8 @@ class AirQualityManager:
 
     @callback
     def _on_state_changed(self, event: Event) -> None:
+        if not self._active or getattr(self, "_stopping", False) or is_stopping(self.hass):
+            return
         entity_id = event.data.get("entity_id")
         # Fault monitoring has its own exact device-registry source index,
         # independent of the environmental measurement selections.
@@ -1275,7 +1402,7 @@ class AirQualityManager:
             self._source_refresh_handle.cancel()
             self._source_refresh_handle = None
         self._startup_refresh_pending = False
-        if not self._active:
+        if not self._active or getattr(self, "_stopping", False) or is_stopping(self.hass):
             return
         new_plan = self.window_open_wait.prepare(self._capture())
         previous_plan = self.plan
@@ -1357,8 +1484,14 @@ class AirQualityManager:
     def _queue_automatic(
         self, area_id: str, action_key: str, reason_key: str, *, action: str
     ) -> None:
+        if not self._active or getattr(self, "_stopping", False) or is_stopping(self.hass):
+            return
         if not self._automatic_channels_enabled():
             return
+        if not is_running(self.hass):
+            self._deferred_announcements.add(area_id)
+            return
+        self._deferred_announcements.discard(area_id)
         request = next((rec for rec in
                         (*self.plan.recommendations,*self.plan.climate_recommendations)
                         if rec.area_id == area_id
@@ -1381,7 +1514,8 @@ class AirQualityManager:
     ) -> None:
         minutes = self.repeat_minutes
         if (
-            minutes == 0 or not self._active
+            minutes == 0 or not self._active or not is_running(self.hass)
+            or getattr(self, "_stopping", False)
             or not self._automatic_channels_enabled()
             or self._active_actions.get(area_id) != (action_key, reason_key)
             or area_id in self._repeat_unsubs
@@ -1410,7 +1544,10 @@ class AirQualityManager:
     ) -> None:
         """Re-evaluate at the deadline before announcing a persistent cause."""
         (self._repeat_unsubs if repeat else self._pending_unsubs).pop(area_id, None)
-        if not self._active:
+        if not self._active or getattr(self, "_stopping", False) or is_stopping(self.hass):
+            return
+        if not is_running(self.hass):
+            self._deferred_announcements.add(area_id)
             return
         self._recalculate()
         if (
@@ -1443,8 +1580,9 @@ class AirQualityManager:
             self._schedule_repeat(area_id, action_key, reason_key)
             return
         self._sending_actions[area_id] = (action_key,reason_key)
-        task = self.hass.async_create_task(
-            self._send_automatic(area_id, action_key, reason_key)
+        task = create_background_task(
+            self.hass, self.entry, self._send_automatic(area_id, action_key, reason_key),
+            f"{DOMAIN} room announcement {self.entry.entry_id} {area_id}",
         )
         self._tasks.add(task)
         task.add_done_callback(self._tasks.discard)
@@ -1542,25 +1680,8 @@ class AirQualityManager:
                 except Exception:
                     _LOGGER.exception("Could not cancel repeating announcement for %s",key)
 
-    async def async_stop(self) -> None:
-        """Unload every controller and HA listener, even after one failure.
-
-        A failed Store flush in one native HVAC controller must not prevent
-        unrelated fan, humidity, PID or sensor listeners from stopping. Never
-        convert a teardown failure into permission to re-energize equipment.
-        """
-        self._active = False
-        if self._wake_boundary_unsub is not None:
-            self._wake_boundary_unsub()
-        self._wake_boundary, self._wake_boundary_unsub = None, None
-        if self._source_refresh_handle is not None:
-            self._source_refresh_handle.cancel()
-            self._source_refresh_handle = None
-        self._startup_refresh_pending = False
-        self.away_windows.stop()
-        self.ventilation.clear()
-        self.window_open_wait.stop()
-        controllers = (
+    def _controllers(self) -> tuple:
+        return (
             ("fault_monitor",self.faults),
             ("equipment",self.equipment),
             ("shading",self.shading),
@@ -1575,46 +1696,121 @@ class AirQualityManager:
             ("fan_power",self.fan_power),
             ("native_air_mode",self.native_air_mode),
         )
-        try:
-            from .wake_alarm import async_stop_wake
-            outcomes = await asyncio.gather(
-                *(controller.async_stop() for _,controller in controllers),
-                async_stop_wake(self.hass, self.entry.entry_id),
-                return_exceptions=True,
+
+    @callback
+    def quiesce(self, *, shutdown: bool = False) -> None:
+        """Revoke scheduling immediately; retain journals and tasks for draining."""
+        self._active = False
+        self._stopping = True
+        self._shutdown_requested = self._shutdown_requested or shutdown
+
+        def release(name, operation):
+            try:
+                operation()
+            except Exception:
+                self._quiesce_failed = True
+                _LOGGER.exception("Could not stop HEM %s", name)
+
+        if self._wake_boundary_unsub is not None:
+            release("wake boundary", self._wake_boundary_unsub)
+        self._wake_boundary, self._wake_boundary_unsub = None, None
+        for attribute in ("_source_refresh_handle", "_registry_refresh_handle"):
+            handle = getattr(self, attribute, None)
+            if handle is not None:
+                release(attribute, handle.cancel)
+            setattr(self, attribute, None)
+        self._startup_refresh_pending = False
+        self._cancel_pending()
+        self._cancel_repeat()
+        self._deferred_announcements.clear()
+        self._active_actions.clear()
+        for unsubscribe in (*self._unsubs, *self._lifecycle_unsubs):
+            release("listener", unsubscribe)
+        self._unsubs.clear()
+        self._lifecycle_unsubs.clear()
+        # During an ordinary reload, keep the STOP listener until cleanup
+        # finishes so a concurrent full-HA stop can revoke reload safe-OFF work.
+        if self._shutdown_requested and self._stop_listener_unsub is not None:
+            release("stop listener", self._stop_listener_unsub)
+            self._stop_listener_unsub = None
+        release("away window alerts", self.away_windows.stop)
+        release("ventilation monitor", self.ventilation.clear)
+        release("window requests", self.window_open_wait.stop)
+        from .wake_alarm import quiesce_wake
+        release("wake alarm", lambda: quiesce_wake(
+            self.hass, self.entry.entry_id, shutdown=self._shutdown_requested,
+        ))
+        for name, controller in self._controllers():
+            try:
+                controller.quiesce(shutdown=self._shutdown_requested)
+            except Exception:
+                # Continue revoking every other controller on a partial failure.
+                self._quiesce_failed = True
+                _LOGGER.exception("Could not quiesce HEM controller %s", name)
+        for task in (*self._tasks, *self._startup_tasks):
+            if not task.done() and not task.cancelling():
+                task.cancel()
+
+    async def async_stop(self, *, shutdown: bool = False) -> bool:
+        """Share one bounded cleanup; failed teardown cannot permit replacement."""
+        self.quiesce(shutdown=shutdown)
+        if self._stop_task is None:
+            self._stop_task = asyncio.create_task(
+                self._async_finish_stop(), name=f"HEM teardown {self.entry.entry_id}",
             )
-            for (name,_),outcome in zip((*controllers, ("wake_alarm", None)),outcomes):
-                if isinstance(outcome,BaseException):
-                    _LOGGER.error(
-                        "Controller %s failed while unloading: %r",
-                        name,outcome,
-                    )
-        finally:
-            # Always release timers/listeners and cancel outstanding manager
-            # tasks, including if HA cancelled an in-progress unload.
-            self._cancel_pending()
-            self._cancel_repeat()
-            self._active_actions.clear()
-            for unsubscribe in tuple(self._unsubs):
-                try:
-                    unsubscribe()
-                except Exception:
-                    _LOGGER.exception("Could not release Home Assistant listener")
-            self._unsubs.clear()
-            pending=tuple(self._tasks)
+        return await asyncio.shield(self._stop_task)
+
+    async def _async_finish_stop(self) -> bool:
+        from .wake_alarm import async_stop_wake
+
+        async def flush_environment():
+            # A STOP during the initial load must never replace unread history
+            # with this manager's empty initial value.
+            if self._environment_store is not None and self._environment_restored:
+                await self._environment_store.async_save(self._environment_history.snapshot())
+
+        jobs = {
+            asyncio.create_task(controller.async_stop(shutdown=self._shutdown_requested),
+                                name=f"HEM stop {name}")
+            for name, controller in self._controllers()
+        }
+        jobs.update((
+            asyncio.create_task(async_stop_wake(self.hass, self.entry.entry_id),
+                                name="HEM stop wake alarm"),
+            asyncio.create_task(flush_environment(), name="HEM stop environment history"),
+            *self._tasks, *self._startup_tasks,
+        ))
+        self._stop_pending.update(jobs)
+        done, pending = await asyncio.wait(jobs, timeout=STOP_TIMEOUT_SECONDS)
+        complete = not pending and not self._quiesce_failed
+        if pending:
+            _LOGGER.error(
+                "HEM cleanup exceeded %.1fs; replacement is blocked. Pending: %s",
+                STOP_TIMEOUT_SECONDS, sorted(task.get_name() for task in pending),
+            )
             for task in pending:
                 task.cancel()
-            if pending:
-                await asyncio.gather(*pending,return_exceptions=True)
-            self._tasks.clear()
-            if self._environment_store is not None:
-                try:
-                    await self._environment_store.async_save(
-                        self._environment_history.snapshot()
-                    )
-                except Exception:
-                    _LOGGER.exception(
-                        "Could not flush bounded environment history"
-                    )
+            cancelled, pending = await asyncio.wait(pending, timeout=STOP_CANCEL_GRACE_SECONDS)
+            done.update(cancelled)
+        for task in done:
+            self._stop_pending.discard(task)
+            if not task.cancelled() and (error := task.exception()) is not None:
+                complete = False
+                _LOGGER.error("HEM cleanup task %s failed: %r", task.get_name(), error)
+        for task in pending:
+            # Retain late tasks and consume their result. Never start a new
+            # manager over a writer whose durable completion is uncertain.
+            def finished(result):
+                self._stop_pending.discard(result)
+                if not result.cancelled() and (error := result.exception()) is not None:
+                    _LOGGER.error("Late HEM cleanup failed: %r", error)
+            task.add_done_callback(finished)
+        self._tasks.difference_update(done)
+        self._startup_tasks.difference_update(done)
+        if self._stop_listener_unsub is not None and not pending:
+            self._stop_listener_unsub()
+            self._stop_listener_unsub = None
+        return complete
 
     def _targets_in_room(self, configured: list[str], area_id: str) -> list[str]:
         """Only configured room outputs or explicitly unassigned/general ones."""
@@ -1633,8 +1829,8 @@ class AirQualityManager:
         areas: list[str] | None = None,
     ) -> dict[str, Any]:
         """Deliver current recommendations, never operate motorized windows."""
-        import asyncio
-
+        if getattr(self, "_stopping", False) or not delivery_allowed(self.hass):
+            return {"submitted": 0, "reason": "Home Assistant is not running"}
         config = self.settings
         speech = (channels in ("tts", "both")) if channels != "auto" else bool(config.get(CONF_AUTO_TTS))
         visual = (channels in ("notification", "both")) if channels != "auto" else bool(config.get(CONF_AUTO_NOTIFY))
@@ -1650,6 +1846,8 @@ class AirQualityManager:
         errors: list[str] = []
         waiter = getattr(self,"window_open_wait",None)
         for rec in all_notices:
+            if getattr(self, "_stopping", False) or not delivery_allowed(self.hass):
+                break
             if areas is not None and rec.area_id not in areas:
                 continue
             # Other rooms may have changed during the preceding room's
@@ -1737,10 +1935,10 @@ class AirQualityManager:
             dispatched = False
             if can_notify:
                 try:
-                    await asyncio.wait_for(self.hass.services.async_call(
+                    await async_call_notification(self.hass,
                         "notify", "send_message", {"message": message, "title": title},
-                        target={"entity_id": notify_targets}, blocking=True,
-                    ), timeout=30)
+                        target={"entity_id": notify_targets},
+                    )
                     sent += 1
                     dispatched = True
                 except Exception as ex:
@@ -1756,10 +1954,10 @@ class AirQualityManager:
                             text_language=localized,
                         ),
                     }
-                    await asyncio.wait_for(self.hass.services.async_call(
+                    await async_call_notification(self.hass,
                         "tts", "speak", data,
-                        target={"entity_id": tts_engine}, blocking=True,
-                    ), timeout=30)
+                        target={"entity_id": tts_engine},
+                    )
                     sent += 1
                     dispatched = True
                 except Exception as ex:

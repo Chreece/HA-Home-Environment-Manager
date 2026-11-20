@@ -58,6 +58,7 @@ tts = importlib.import_module(PKG + ".tts_languages")
 logic = importlib.import_module(PKG + ".logic")
 messages = importlib.import_module(PKG + ".messages")
 hub = importlib.import_module(PKG + ".hub_delivery")
+delivery = importlib.import_module(PKG + ".notification_delivery")
 shade = importlib.import_module(PKG + ".shade_delivery")
 away = importlib.import_module(PKG + ".away_windows")
 faults = importlib.import_module(PKG + ".device_faults")
@@ -88,6 +89,8 @@ scope = {**vars(const), "__name__": PKG + ".manager_fixture", "Any": Any,
          "hub_available": hub.hub_available, "make_hub_payload": hub.make_hub_payload,
          "async_submit_hub": hub.async_submit_hub,
          "async_system_notification": hub.async_system_notification,
+         "delivery_allowed": delivery.delivery_allowed,
+         "async_call_notification": delivery.async_call_notification,
          "DEFAULT_AGENT": "default", "ai_effectively_enabled": lambda config: config.get("ai_rewrite", False),
          "async_rewrite_announcement": rewrite}
 exec(compile(ast.fix_missing_locations(ast.Module(body=[compiled_class], type_ignores=[])),
@@ -145,7 +148,7 @@ def fixture(language="auto", ha_language="en", provider_languages=None):
         windows=(logic.Window("binary_sensor.window", "Window · 窗", False),),
         reasons=(logic.Reason("inside_co2", "CO₂", "1200 ppm"),),
     ),), climate_recommendations=())
-    hass = manager.hass = N(config=N(language=ha_language), states=States(), rewrites=[],
+    hass = manager.hass = N(state="running", config=N(language=ha_language), states=States(), rewrites=[],
                            room_name="Zimmer · Δωμάτιο", hub_installed=False)
     hass.provider = N(supported_languages=list(provider_languages or ()), default_language="en_US")
     hass.data = {"tts_component": N(get_entity=lambda entity: hass.provider if entity == "tts.voice" else None)}

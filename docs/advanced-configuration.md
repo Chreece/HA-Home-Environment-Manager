@@ -6,6 +6,29 @@ This guide documents HEM's more detailed setup choices, prerequisites, safety ch
 
 ---
 
+## Home Assistant startup, restart and shutdown
+
+HEM restores saved controller state before enabling control. Up to four
+independent stores load concurrently; presence continuity finishes before
+arrival preparation reads household status. Environment-history sanitization
+runs in the executor. Saved review notices and automatic announcements wait
+until Home Assistant is running, and optional deliveries run as owned
+background tasks. Direct notification and TTS calls have a 10-second deadline;
+Announcement Hub retains its existing acknowledgment deadline.
+
+When Home Assistant starts stopping, HEM immediately disables new scheduling
+and cancels its timers and optional work. Controller cleanup and state flushes
+share a 10-second budget, followed by a brief cancellation drain. A full Home
+Assistant stop does not begin the legacy controller's reload-only safe-OFF
+sequence. An ordinary integration reload retains that sequence, but refuses
+to start a replacement manager if teardown fails or exceeds its budget.
+
+These limits cover HEM's cleanup, not the entire Home Assistant or host shutdown.
+Home Assistant can perform its final storage writes afterward. Physical devices
+may keep their last native state while Home Assistant is offline; HEM's device
+ownership, saved gains, minimum operating times and restart journals remain
+part of recovery when it starts again.
+
 ## Choose how many settings to show
 
 The HEM card's Home, room and device settings menus have a **Settings level**

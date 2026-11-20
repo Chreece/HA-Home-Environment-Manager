@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 from pathlib import Path
 from typing import Any
@@ -16,6 +17,7 @@ from homeassistant.helpers import config_validation as cv
 
 from .const import DOMAIN, PLATFORMS, LANGUAGES
 from .manager import AirQualityManager
+from .lifecycle import is_running, is_stopping, create_background_task
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
@@ -102,6 +104,16 @@ def _exact_room_manager(hass: HomeAssistant, area: str,
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    previous = getattr(entry, "runtime_data", None)
+    if (getattr(previous, "_stopping", False)
+            and not await previous.async_stop(shutdown=is_stopping(hass))):
+        # Failed setup can be retried without async_unload_entry. Keep its
+        # cleanup barrier so an unfinished writer cannot race a new manager.
+        from homeassistant.exceptions import ConfigEntryNotReady
+        raise ConfigEntryNotReady(
+            "Previous HEM cleanup did not finish; restart Home Assistant "
+            "before setting up HEM again"
+        )
     from .advanced_comfort import async_migrate_advanced_comfort
     async_migrate_advanced_comfort(hass, entry)
     from .room_hubs import async_sync_room_hubs, async_watch_room_hubs, home_subentry_id
@@ -114,12 +126,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # attempt to stop any earlier-started controllers. Leave the original
     # installation error visible and never register partial service routes.
     try:
+        manager.async_register_lifecycle()
         from .device_hierarchy import async_register_hierarchy
         async_register_hierarchy(hass, entry)
         await manager.async_start()
         await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+        if manager._stopping or is_stopping(hass):
+            raise asyncio.CancelledError("Home Assistant stopped during HEM setup")
     except BaseException:
-        await manager.async_stop()
+        await manager.async_stop(shutdown=is_stopping(hass))
         raise
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = manager
     entry.async_on_unload(async_watch_room_hubs(hass, entry))
@@ -133,9 +148,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     # HA's event bus calls @callback handlers on the event loop. Without it,
     # the synchronous function can run in the executor and cannot safely
-    # call hass.async_create_task for a guarded pending PID approval.
+    # create an owned background task for a guarded pending PID approval.
     @callback
     def _pid_mobile_review_action(event):
+        if manager._stopping or not is_running(hass):
+            return
         decision = decode_mobile_action(event.data.get("action"))
         if decision is None:
             return
@@ -145,11 +162,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 spec.identifier, {}
             ).get("pid_passive_review")
             if is_pending(review) and review.get("id") == token:
-                hass.async_create_task(
-                    manager.equipment.async_review_pid(
-                        spec, action, token=token
-                    )
+                task = create_background_task(
+                    hass, entry,
+                    manager.equipment.async_review_pid(spec, action, token=token),
+                    f"{DOMAIN} mobile PID review {entry.entry_id}",
                 )
+                manager._tasks.add(task)
+                task.add_done_callback(manager._tasks.discard)
                 return
 
     entry.async_on_unload(hass.bus.async_listen(
@@ -282,9 +301,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    if not await entry.runtime_data.async_stop():
+        return False
     if not await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         return False
-    await entry.runtime_data.async_stop()
     hass.data.get(DOMAIN, {}).pop(entry.entry_id, None)
     if not hass.data.get(DOMAIN):
         if hass.services.has_service(DOMAIN, "announce"):

@@ -174,9 +174,10 @@ async def run():
     ctrl = Controller()
     env = env_for(ctrl)
     env["__package__"] = "pid_bug_test"
-    async_action, async_stop, tick = extract(
-        "async_action", "async_stop", "_tick", env=env
+    async_action, quiesce, async_stop, tick = extract(
+        "async_action", "quiesce", "async_stop", "_tick", env=env
     )
+    Controller.quiesce = quiesce
     room = NS(windows=())
     cfg = {**settings, "two_devices": True}
 

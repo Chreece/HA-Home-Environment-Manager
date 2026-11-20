@@ -1,7 +1,7 @@
 """B14: prevent regression in HA callback and privileged identity guards.
 
 The mobile review handler is invoked by HA's async event bus, so it must be
-marked @callback before it calls hass.async_create_task. The dashboard owner
+marked @callback before it creates an owned background task. The dashboard owner
 must remain behind the pre-existing exact recommendation ACL check.
 """
 from __future__ import annotations
@@ -17,7 +17,9 @@ assert len(handlers)==1
 handler=handlers[0]
 assert any(isinstance(d,ast.Name) and d.id=="callback"
            for d in handler.decorator_list), "HA sync event listener must run on the event loop"
-assert any(isinstance(node,ast.Attribute) and node.attr=="async_create_task"
+assert any(isinstance(node,ast.Name) and node.id=="create_background_task"
+           for node in ast.walk(handler))
+assert any(isinstance(node,ast.Name) and node.id=="is_running"
            for node in ast.walk(handler))
 
 source=(ROOT/"dashboard_api.py").read_text(encoding="utf-8")

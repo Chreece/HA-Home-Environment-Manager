@@ -1,11 +1,12 @@
 """Exact manager callbacks: bounded source bursts and no self feedback."""
-import ast,asyncio,sys,json
+import ast,asyncio,sys,json,runpy
 from pathlib import Path
 from types import ModuleType,SimpleNamespace as N
 ROOT=Path(__file__).resolve().parents[2]
 pkg=ModuleType('schedule68');pkg.__path__=[];sys.modules[pkg.__name__]=pkg
 sources=ModuleType('schedule68.room_sources');sources.native=lambda hass,eid:not eid.startswith('sensor.hem_');sys.modules[sources.__name__]=sources
 ns={'__name__':'schedule68.manager','__package__':'schedule68','callback':lambda f:f,'Event':object}
+ns['is_stopping']=runpy.run_path(str(ROOT/'lifecycle.py'))['is_stopping']
 tree=ast.parse((ROOT/'manager.py').read_text());cls=next(n for n in tree.body if isinstance(n,ast.ClassDef) and n.name=='AirQualityManager')
 names=('_queue_source_refresh','_flush_source_refresh','_on_state_changed')
 nodes=[n for n in cls.body if isinstance(n,ast.FunctionDef) and n.name in names]
@@ -14,7 +15,7 @@ class Manager:
  pass
 for name in names:setattr(Manager,name,ns[name])
 async def main():
- m=Manager();m._active=True;m._source_refresh_handle=None;m.hass=N(loop=asyncio.get_running_loop())
+ m=Manager();m._active=True;m._source_refresh_handle=None;m.hass=N(state='running',loop=asyncio.get_running_loop())
  m._tracked={'sensor.native','sensor.hem_logical'};count=[];observations=[]
  m._recalculate=lambda:count.append(observations[-1])
  for i in range(10000):

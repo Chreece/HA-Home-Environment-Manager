@@ -24,6 +24,10 @@ from .occupancy_policy import _bool_presence, home_presence
 from .room_sources import native, selected
 from .languages import announcement_language, resolve_language
 from .announcement_text import AWAY_WINDOW_MESSAGES
+from .notification_delivery import (
+    NotificationDeliveryUnavailable, async_call_notification, delivery_allowed,
+)
+from .lifecycle import create_background_task
 
 _LOGGER = logging.getLogger(__name__)
 RETRY_SECONDS = 300
@@ -173,6 +177,8 @@ def compose_message(language: str, windows: tuple[tuple[str, str], ...]) -> tupl
 async def deliver_notice(manager: Any, windows: tuple[tuple[str, str], ...]) -> bool:
     """Dispatch only user-authorized person slots, never fall back to speakers."""
     hass = manager.hass
+    if not delivery_allowed(hass):
+        return False
     settings = manager.settings
     language = announcement_language(hass, settings.get(CONF_LANGUAGE, "auto"))
     title, text = compose_message(language, windows)
@@ -225,11 +231,13 @@ async def deliver_notice(manager: Any, windows: tuple[tuple[str, str], ...]) -> 
                 mobile.append(entity_id)
         if mobile:
             try:
-                await hass.services.async_call(
+                await async_call_notification(hass,
                     "notify", "send_message", {"title": title, "message": text},
-                    target={"entity_id": mobile}, blocking=True,
+                    target={"entity_id": mobile},
                 )
                 notified = True
+            except NotificationDeliveryUnavailable:
+                return False
             except asyncio.CancelledError:
                 raise
             except Exception as error:
@@ -258,13 +266,17 @@ class AwayWindowAlert:
 
     def stop(self) -> None:
         self._cancel_timer()
-        # Manager unload cancels all registered async send tasks.
+        # Keep the reference until its callback completes so manager teardown
+        # can drain it. A transport wait must not outlive the stop boundary.
+        if self._pending_task is not None:
+            self._pending_task.cancel()
         self._armed = False
         self._episode += 1
         self._sent.clear()
 
     def _schedule(self, seconds: int) -> None:
-        if self._timer is not None:
+        if (self._timer is not None or not getattr(self.manager, "_active", False)
+                or not delivery_allowed(self.manager.hass)):
             return
         if self._call_later is None:
             from homeassistant.helpers.event import async_call_later
@@ -273,7 +285,9 @@ class AwayWindowAlert:
 
     def observe(self, *, initial: bool = False) -> None:
         settings = self.manager.settings
-        if not getattr(self.manager, "_active", False) or settings.get(CONF_AWAY_WINDOWS_ALERT) is not True:
+        if (not getattr(self.manager, "_active", False)
+                or not delivery_allowed(self.manager.hass)
+                or settings.get(CONF_AWAY_WINDOWS_ALERT) is not True):
             self.stop()
             return
         current = confirmed_home_state(self.manager.hass, settings)
@@ -303,7 +317,8 @@ class AwayWindowAlert:
 
     def _fire(self, _now: Any) -> None:
         self._timer = None
-        if not getattr(self.manager, "_active", False):
+        if (not getattr(self.manager, "_active", False)
+                or not delivery_allowed(self.manager.hass)):
             return
         settings = self.manager.settings
         if settings.get(CONF_AWAY_WINDOWS_ALERT) is not True or not self._armed:
@@ -316,7 +331,10 @@ class AwayWindowAlert:
         if self._pending_task is not None:
             return
         episode = self._episode
-        task = self.manager.hass.async_create_task(self._deliver(opened, episode))
+        task = create_background_task(
+            self.manager.hass, self.manager.entry, self._deliver(opened, episode),
+            f"{DOMAIN} away-window notice",
+        )
         self._pending_task = task
         tasks = getattr(self.manager, "_tasks", None)
         if isinstance(tasks, set):
@@ -329,13 +347,15 @@ class AwayWindowAlert:
             if not done.cancelled() and done.exception() is not None:
                 _LOGGER.error("Away-window delivery task failed: %r", done.exception())
             # Recheck any extra opening that appeared while delivery ran.
-            if getattr(self.manager, "_active", False):
+            if (getattr(self.manager, "_active", False)
+                    and delivery_allowed(self.manager.hass)):
                 self.observe()
         task.add_done_callback(finished)
 
     async def _deliver(self, opened: tuple[tuple[str, str], ...], episode: int) -> None:
         # Recheck immediately before service calls, not just at initial timer.
-        if (self._episode != episode or not self._armed
+        if (not delivery_allowed(self.manager.hass)
+                or self._episode != episode or not self._armed
                 or confirmed_home_state(self.manager.hass, self.manager.settings) != "away"):
             return
         # Contacts can close during the debounce and async task scheduling.

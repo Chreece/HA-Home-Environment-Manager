@@ -21,7 +21,7 @@ Runtime, SPEC, PRIMARY, production, model = (
     f[key] for key in ('Runtime', 'SPEC', 'PRIMARY', 'production', 'model'))
 phase = importlib.import_module(f['PACKAGE'] + '.pid_phase')
 f['base']['extract'](ROOT / 'equipment_runtime.py',
-                     ('async_stop', '_verify_restart_power'), production.__dict__)
+                     ('quiesce', 'async_stop', '_verify_restart_power'), production.__dict__)
 
 
 class SampledRuntime(Runtime):
@@ -37,6 +37,7 @@ class SampledRuntime(Runtime):
         self.scheduled += 1  # Callback requests; tests explicitly run the locked work.
 
     _verify_restart_power = production._verify_restart_power
+    quiesce = production.quiesce
 
 
 class Driver:

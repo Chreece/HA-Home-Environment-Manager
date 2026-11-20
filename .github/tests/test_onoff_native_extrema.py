@@ -78,6 +78,8 @@ def extract(path, names, scope, *, constants=()):
 maths = load_pure("pid_math", "pid_math.py")
 phase = load_pure("pid_phase", "pid_phase.py")
 load_pure("dry_mode", "dry_mode.py")
+load_pure("lifecycle", "lifecycle.py")
+load_pure("notification_delivery", "notification_delivery.py")
 if (ROOT / "pid_learning_status.py").exists():
     # The real controller status now includes this pure learning snapshot.
     # Load its pure dependencies without importing any Home Assistant runtime.

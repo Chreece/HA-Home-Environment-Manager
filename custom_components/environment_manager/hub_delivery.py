@@ -13,6 +13,9 @@ from typing import Any
 
 from .ai_rewrite import DEFAULT_AGENT, ai_effectively_enabled
 from .const import CONF_AI_AGENT
+from .notification_delivery import (
+    NotificationDeliveryUnavailable, async_call_notification, delivery_allowed,
+)
 
 _LOGGER = logging.getLogger(__name__)
 HUB_DOMAIN = "announcement_hub"
@@ -122,16 +125,15 @@ async def async_submit_hub(hass: Any, payload: dict[str, Any]) -> bool:
     A rejection returns False but must NEVER make
     Advisor produce an additional native notification while Hub is live.
     """
-    if not hub_available(hass):
+    if not delivery_allowed(hass) or not hub_available(hass):
         return False
     try:
-        reply = await asyncio.wait_for(
-            hass.services.async_call(
-                "notify", HUB_ACTION, payload,
-                blocking=True, return_response=True,
-            ),
+        reply = await async_call_notification(hass,
+            "notify", HUB_ACTION, payload, return_response=True,
             timeout=HUB_RESPONSE_TIMEOUT,
         )
+    except NotificationDeliveryUnavailable:
+        return False
     except asyncio.CancelledError:
         raise
     except Exception as err:
@@ -153,19 +155,22 @@ async def async_submit_hub(hass: Any, payload: dict[str, Any]) -> bool:
 
 async def async_system_notification(hass: Any, title: str, message: str, area_id: str) -> bool:
     """Final, built-in visual fallback when configured direct outputs fail."""
+    if not delivery_allowed(hass):
+        return False
     if not hass.services.has_service("persistent_notification", "create"):
         _LOGGER.warning("No Home Assistant persistent_notification.create action for fallback")
         return False
     try:
-        await asyncio.wait_for(hass.services.async_call(
+        await async_call_notification(hass,
             "persistent_notification", "create",
             {
                 "title": title,
                 "message": message,
                 "notification_id": f"environment_manager_{area_id}",
             },
-            blocking=True,
-        ), timeout=30)
+        )
+    except NotificationDeliveryUnavailable:
+        return False
     except asyncio.CancelledError:
         raise
     except Exception as err:

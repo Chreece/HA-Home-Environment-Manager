@@ -19,6 +19,7 @@ fixture_module = runpy.run_path(str(Path(__file__).with_name(
     "test_061b5_announcement_delivery.py")))
 fixture = fixture_module["fixture"]
 logic, const, hub = (fixture_module[key] for key in ("logic","const","hub"))
+delivery = fixture_module["delivery"]
 
 
 class SubmissionProbe:
@@ -98,16 +99,16 @@ class WindowDeliveryTests(unittest.IsolatedAsyncioTestCase):
                 cancelled.append(True)
 
         manager.hass.services.async_call = stuck
-        real_wait_for = asyncio.wait_for
+        real_timeout = asyncio.timeout
         budgets = []
 
-        async def quick_deadline(awaitable,timeout):
+        def quick_deadline(timeout):
             budgets.append(timeout)
-            return await real_wait_for(awaitable,0.001)
+            return real_timeout(0.001)
 
-        with patch.object(asyncio,"wait_for",quick_deadline):
+        with patch.object(asyncio,"timeout",quick_deadline):
             outcome = await manager.async_announce(channels="tts")
-        self.assertEqual(budgets,[30])
+        self.assertEqual(budgets,[10])
         self.assertEqual(cancelled,[True])
         self.assertEqual(outcome["submitted"],0)
         self.assertEqual(manager.window_open_wait.failed,[rec])
@@ -148,6 +149,7 @@ class ManagerSchedulerTests(unittest.TestCase):
                  "callback":lambda fn:fn,"replace":replace,"Any":object,
                  "async_call_later":timer,"async_dispatcher_send":lambda *args:None,
                  "equipment_legacy_settings":lambda manager:({},{}),
+                 "is_stopping":delivery.is_stopping,"is_running":delivery.is_running,
                  "_LOGGER":fixture_module["logging"].getLogger("window_scheduler")}
         exec(compile(ast.fix_missing_locations(ast.Module(body=[compiled],type_ignores=[])),
                      str(ROOT/"manager.py"),"exec"),scope)
@@ -157,10 +159,12 @@ class ManagerSchedulerTests(unittest.TestCase):
             rec.area_id:{"window_open_wait":{"status":"window_request_pending"}}
         })
         manager.settings = {const.CONF_AUTO_TTS:True,const.CONF_REPEAT_MINUTES:0}
-        manager.hass = N()
+        manager.hass = N(state="running")
         manager.entry = N(entry_id="fixture")
         manager._source_refresh_handle = None
         manager._active = True
+        manager._stopping = False
+        manager._deferred_announcements = set()
         manager._active_actions = {}
         manager._pending_unsubs = {}
         manager._repeat_unsubs = {}

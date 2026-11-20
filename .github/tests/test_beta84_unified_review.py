@@ -70,7 +70,7 @@ class MockServices:
 
 async def notification_test():
     services=MockServices()
-    hass=NS(services=services)
+    hass=NS(state="running", services=services)
     manager=NS(entry=NS(entry_id="abc"),settings={
         "notify_entities":["notify.mobile_app_phone","notify.mobile_app_phone",
                            "notify.nonmobile","notify.mobile_app_tablet"],

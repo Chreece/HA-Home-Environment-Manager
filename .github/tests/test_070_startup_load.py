@@ -6,13 +6,17 @@ from __future__ import annotations
 
 import ast
 import asyncio
+import importlib
 from pathlib import Path
 import sys
 import time
 from types import ModuleType, SimpleNamespace as NS
 
 ROOT = Path(__file__).resolve().parents[2]
-PKG = ModuleType("hem070"); PKG.__path__ = []; sys.modules[PKG.__name__] = PKG
+PKG = ModuleType("hem070")
+PKG.__path__ = [str(ROOT / "custom_components/environment_manager")]
+sys.modules[PKG.__name__] = PKG
+lifecycle = importlib.import_module("hem070.lifecycle")
 sources = ModuleType("hem070.room_sources")
 sources.native = lambda hass, eid: eid == "sensor.native"
 sources.selected = lambda config, area, name: ("cover.test",) if name == "shades" else ()
@@ -22,6 +26,7 @@ shading.cover_config = lambda config, area, cover: {"enabled": True}
 sys.modules[shading.__name__] = shading
 scope = {"__name__": "hem070.manager", "__package__": "hem070",
          "callback": lambda fn: fn, "Event": object, "time": time.time,
+         "is_stopping": lifecycle.is_stopping,
          "CONF_AREAS": "areas",
          "claimed_sources": lambda m: m.settings.get("_claimed", False),
          "equipment_legacy_settings": lambda m: (m.settings.get("_legacy", {}), {})}
