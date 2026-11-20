@@ -1,6 +1,7 @@
 """Clock, HA-state adapter, active-episode and restart regressions."""
 from __future__ import annotations
 
+import asyncio
 from copy import deepcopy
 from datetime import datetime, timezone
 import importlib.util
@@ -230,6 +231,33 @@ class MemoryStore:
 
 
 class EntryLifecycle(unittest.IsolatedAsyncioTestCase):
+    async def test_interrupted_restore_cannot_overwrite_unread_wake_episode(self):
+        hass = NS(config=NS(time_zone='UTC'), states=States(), data={})
+        hass.states.put(ALARM, iso(RING))
+        hass.states.put(LEAD, '15')
+        entered = asyncio.Event()
+        key = 'environment_manager.wake_alarm_entry'
+        saved = {'pair': [ALARM, LEAD], 'active': {'room:saved': RING - 100}}
+        MemoryStore.by_key = {key: deepcopy(saved)}
+        store = MemoryStore(hass, 1, key)
+
+        async def blocked_load():
+            entered.set()
+            await asyncio.Event().wait()
+
+        store.async_load = blocked_load
+        module = ModuleType('homeassistant.helpers.storage')
+        module.Store = lambda *args, **kwargs: store
+        with patch.dict(sys.modules, {module.__name__: module}):
+            startup = asyncio.create_task(wa.async_start_wake(hass, 'entry', SETTINGS))
+            await entered.wait()
+            self.assertTrue(wa.wake_override(hass, SETTINGS, 'room:bedroom', True, now=RING - 5))
+            wa.quiesce_wake(hass, 'entry', shutdown=True)
+            startup.cancel()
+            await asyncio.gather(startup, return_exceptions=True)
+            await wa.async_stop_wake(hass, 'entry', shutdown=True)
+        self.assertEqual(MemoryStore.by_key[key], saved)
+
     async def test_entry_isolation_restart_and_source_bound_reset(self):
         module = ModuleType('homeassistant.helpers.storage'); module.Store = MemoryStore
         hass = NS(config=NS(time_zone='UTC'), states=States(), data={})

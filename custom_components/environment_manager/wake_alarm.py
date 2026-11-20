@@ -156,13 +156,15 @@ class WakeAlarm:
         self.active = {}  # scope -> previously triggered alarm instant
         self.armed = {}   # volatile: previously seen, eligible imminent/future alarm
         self.dirty = False
+        self._restored = store is None
 
     def snapshot(self):
         return {'pair': list(self.pair or ()), 'active': self.active.copy()}
 
     def changed(self):
         self.dirty = True
-        if self.store is not None:
+        if (self.store is not None and self._restored
+                and not getattr(self, '_stopping', False)):
             try:
                 self.store.async_delay_save(self.snapshot, 1)
             except Exception:
@@ -173,8 +175,12 @@ class WakeAlarm:
         if self.active.pop(scope, None) is not None:
             self.changed()
 
+    def quiesce(self, *, shutdown=False):
+        self._stopping = True
+
     async def restore(self, now):
         data = await self.store.async_load()
+        self._restored = True
         if not isinstance(data, dict):
             return
         active = data.get('active')
@@ -241,13 +247,21 @@ async def async_start_wake(hass, entry_id, settings):
         _LOGGER.exception('Could not restore wake alarm history')
 
 
-async def async_stop_wake(hass, entry_id):
+def quiesce_wake(hass, entry_id, *, shutdown=False):
+    tracker = hass.data.get(_TRACKERS, {}).get(entry_id)
+    if tracker is not None:
+        tracker.quiesce(shutdown=shutdown)
+
+
+async def async_stop_wake(hass, entry_id, *, shutdown=False):
     trackers = hass.data.get(_TRACKERS, {})
     tracker = trackers.pop(entry_id, None)
     if not trackers:
         hass.data.pop(_TRACKERS, None)
-    if tracker is not None and tracker.store is not None and tracker.dirty:
-        await tracker.store.async_save(tracker.snapshot())
+    if tracker is not None:
+        tracker.quiesce(shutdown=shutdown)
+        if tracker.store is not None and tracker._restored and tracker.dirty:
+            await tracker.store.async_save(tracker.snapshot())
 
 
 def wake_override(hass, settings, scope, raw_sleep, *, now=None):

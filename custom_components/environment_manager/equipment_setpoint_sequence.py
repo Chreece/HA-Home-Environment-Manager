@@ -474,7 +474,9 @@ async def native_dispatch_failed(runtime, spec, pending) -> None:
 
 def wake_at(runtime, spec, deadline: float) -> None:
     """Schedule an ordinary locked evaluation, never an actuator callback."""
-    if not callable(getattr(runtime, "schedule", None)):
+    if (not callable(getattr(runtime, "schedule", None))
+            or not getattr(runtime, "_active", False)
+            or getattr(getattr(runtime, "hass", None), "is_stopping", False)):
         return
     wakes = getattr(runtime, "_setpoint_wakeups", None)
     if wakes is None:
@@ -491,7 +493,8 @@ def wake_at(runtime, spec, deadline: float) -> None:
         if current is None or current[0] != deadline:
             return
         wakes.pop(spec.identifier, None)
-        if not runtime._active or not runtime._ready:
+        if (not runtime._active or not runtime._ready
+                or getattr(getattr(runtime, "hass", None), "is_stopping", False)):
             return
         task = getattr(runtime, "_tasks", {}).get(spec.identifier)
         if task is not None and not task.done():

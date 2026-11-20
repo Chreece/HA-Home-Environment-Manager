@@ -158,13 +158,21 @@ class NativeAirModeControl:
                 self._save()
         self._ready=True
 
-    async def async_stop(self)->None:
-        self._active=False
-        tasks=tuple(self._tasks.values())
-        for task in tasks:
-            task.cancel()
+    def quiesce(self, *, shutdown: bool = False) -> None:
+        """Revoke scheduling immediately and retain tasks until they are drained."""
+        self._active = False
+        stopped = self._stop_tasks = getattr(self, "_stop_tasks", set())
+        for task in tuple(self._tasks.values()):
+            stopped.add(task)
+            if not task.done() and not task.cancelling():
+                task.cancel()
+
+    async def async_stop(self, *, shutdown: bool = False) -> None:
+        self.quiesce(shutdown=shutdown)
+        tasks = tuple(self._stop_tasks)
         if tasks:
-            await asyncio.gather(*tasks,return_exceptions=True)
+            await asyncio.gather(*tasks, return_exceptions=True)
+        self._stop_tasks.clear()
         self._tasks.clear()
         self._dry_idle_since.clear()
         if self._ready and self._store is not None:
@@ -174,6 +182,7 @@ class NativeAirModeControl:
                 # A broken Store cannot justify new commands, but must not
                 # prevent other HA controllers from unloading cleanly.
                 _LOGGER.exception("Could not persist native DRY/FAN shutdown history")
+                raise
 
     async def command(self,area:str,action:str)->dict:
         if action not in ("pause","resume") or not self._ready:
@@ -217,6 +226,8 @@ class NativeAirModeControl:
         return {"accepted":True,"area":area,"action":action}
 
     def schedule(self,configs:dict,plans:dict)->None:
+        if getattr(self.hass, "is_stopping", False):
+            return
         if not self._active or not self._ready or not isinstance(configs,dict):
             return
         self._configured=configs

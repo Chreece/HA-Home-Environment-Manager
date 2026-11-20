@@ -102,25 +102,33 @@ class ClimatePidCoordinator:
                         self._expected[area] = entries
         self._store_ready = True
 
-    async def async_stop(self) -> None:
+    def quiesce(self, *, shutdown: bool = False) -> None:
+        """Latch interrupted output ownership before cancelling any PID task."""
         self._active = False
-        active = tuple(self._tasks.values())
         # An interrupted HA service call may still reach physical equipment
         # after cancellation. Persist a hold before cancelling so restart
         # cannot silently issue a second, unreconciled setpoint command.
+        stopped = self._stop_tasks = getattr(self, "_stop_tasks", set())
         for area, task in tuple(self._tasks.items()):
             if not task.done():
                 self._paused[area] = "shutdown_during_inflight_pid_cycle"
-        for task in active:
-            task.cancel()
+            stopped.add(task)
+            if not task.done() and not task.cancelling():
+                task.cancel()
+
+    async def async_stop(self, *, shutdown: bool = False) -> None:
+        self.quiesce(shutdown=shutdown)
+        active = tuple(self._stop_tasks)
         if active:
             await asyncio.gather(*active, return_exceptions=True)
+        self._stop_tasks.clear()
         self._tasks.clear()
         if self._store_ready and self._store is not None:
             try:
                 await self._store.async_save(self._snapshot())
             except Exception:
                 _LOGGER.exception("Could not save PID pause/command state")
+                raise
 
     def _snapshot(self) -> dict:
         return {"version": 1, "paused": self._paused, "expected": self._expected}
@@ -174,7 +182,8 @@ class ClimatePidCoordinator:
     def schedule(self, rooms: tuple, settings: dict[str, Any], *,
                  initial: bool = False) -> None:
         """Called by manager after capture. Never mutate HA state in this method."""
-        if not self._active or not isinstance(settings, dict):
+        if (not self._active or getattr(self.hass, "is_stopping", False)
+                or not isinstance(settings, dict)):
             return
         found = {r.area_id: r for r in rooms}
         active = {area: config for area, config in settings.items()

@@ -7,6 +7,7 @@ planning are stubbed. No Home Assistant service or physical device is used.
 from __future__ import annotations
 
 import ast
+import asyncio
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 import importlib
@@ -646,6 +647,32 @@ class HomeAuthorityTests(unittest.TestCase):
 
 
 class ContinuityTests(unittest.IsolatedAsyncioTestCase):
+    async def test_interrupted_restore_cannot_overwrite_unread_absence(self):
+        hass = Hass()
+        hass.put(ROOMS, "", changed_age=30)
+        entered = asyncio.Event()
+        saved = {"version": 1, "source_signature": "a" * 64,
+                 "verified_absence_since": NOW.timestamp() - 3600}
+        store = Store(saved)
+
+        async def blocked_load():
+            entered.set()
+            await asyncio.Event().wait()
+
+        store.async_load = blocked_load
+        instance = continuity.PresenceContinuity(hass, "entry", store=store)
+        startup = asyncio.create_task(instance.async_start())
+        await entered.wait()
+        # A status read may still observe fresh sources during restoration.
+        instance.context(room_config())
+        self.assertTrue(instance._dirty)
+        self.assertIsNone(store.pending)
+        instance.quiesce(shutdown=True)
+        startup.cancel()
+        await asyncio.gather(startup, return_exceptions=True)
+        await instance.async_stop(shutdown=True)
+        self.assertEqual(store.saved, saved)
+
     async def test_room_only_absence_survives_restart_only_after_fresh_revalidation(self):
         hass = Hass()
         config = room_config()

@@ -28,6 +28,10 @@ from . import equipment_model as model
 from .languages import announcement_language, resolve_language
 from .tts_languages import tts_language
 from .announcement_text import FAULT_LABELS
+from .notification_delivery import (
+    NotificationDeliveryUnavailable, async_call_notification, delivery_allowed,
+)
+from .lifecycle import create_background_task, is_stopping
 
 _LOGGER = logging.getLogger(__name__)
 _FAULT_END = re.compile(
@@ -370,14 +374,21 @@ class NativeDeviceFaultMonitor:
         self._offline_logged: set[str] = set()
 
     def start(self) -> None:
+        if is_stopping(self.hass):
+            return
         self.active = True
         self.refresh(baseline=True)
 
-    async def async_stop(self) -> None:
+    def quiesce(self, *, shutdown: bool = False) -> None:
+        """Stop scheduling immediately; retain task references for the drain."""
         self.active = False
         tasks = tuple(self._tasks) + tuple(self._offline_tasks.values())
         for task in tasks:
             task.cancel()
+
+    async def async_stop(self, *, shutdown: bool = False) -> None:
+        self.quiesce(shutdown=shutdown)
+        tasks = tuple(self._tasks) + tuple(self._offline_tasks.values())
         if tasks:
             await asyncio.gather(*tasks, return_exceptions=True)
         self._tasks.clear()
@@ -437,7 +448,7 @@ class NativeDeviceFaultMonitor:
         )
 
     def refresh(self, *, baseline: bool = False) -> None:
-        if not self.active:
+        if not self.active or is_stopping(self.hass):
             return
         try:
             specs, diagnostics, watched = self._fault_index()
@@ -495,7 +506,7 @@ class NativeDeviceFaultMonitor:
 
     def _sync_offline_alerts(self) -> None:
         """Start one debounced notice per physical outage, never per HA sample."""
-        if not self.active:
+        if not self.active or not delivery_allowed(self.hass):
             return
         problems = self._offline_problems()
         for key, task in tuple(self._offline_tasks.items()):
@@ -522,23 +533,19 @@ class NativeDeviceFaultMonitor:
         for key in problems:
             if key in self._offline_notified or key in self._offline_tasks:
                 continue
-            # A 180-second debounce must not hold HA startup or shutdown.
-            # Modern config entries own and cancel their background tasks.
-            # Minimal test doubles and older runtimes may lack this method;
-            # their fallback task remains explicitly cancelled in async_stop().
+            # A 180-second debounce starts only after HA is running and must
+            # not hold startup or shutdown. The monitor also owns cancellation.
             name = f"{DOMAIN} offline-device debounce {key}"
-            register = getattr(self.manager.entry, "async_create_background_task", None)
-            if callable(register):
-                task = register(self.hass, self._announce_offline_after_delay(key), name)
-            else:
-                task = asyncio.create_task(self._announce_offline_after_delay(key), name=name)
+            task = create_background_task(
+                self.hass, self.manager.entry, self._announce_offline_after_delay(key), name,
+            )
             self._offline_tasks[key] = task
 
     async def _announce_offline_after_delay(self, device_key: str) -> None:
         """Require sustained unavailability and live notification authority."""
         try:
             await asyncio.sleep(OFFLINE_NOTICE_DELAY_SECONDS)
-            if not self.active:
+            if not self.active or not delivery_allowed(self.hass):
                 return
             problem = self._offline_problems().get(device_key)
             if problem is None:
@@ -639,7 +646,8 @@ class NativeDeviceFaultMonitor:
                               "_presentation_updates", None)
             if updates is not None:
                 updates.request(identifier)
-        if (baseline or not fingerprint or fingerprint == previous
+        if (baseline or not delivery_allowed(self.hass)
+                or not fingerprint or fingerprint == previous
                 or not model.settings(self.manager, spec).get(
                     "announce_device_errors", True
                 )):
@@ -652,14 +660,16 @@ class NativeDeviceFaultMonitor:
         if self._seen_device_alerts.get(device_key) == device_signature:
             return
         self._seen_device_alerts[device_key] = device_signature
-        task = self.hass.async_create_task(
-            self._announce(spec, fingerprint, dict(report))
+        task = create_background_task(
+            self.hass, self.manager.entry,
+            self._announce(spec, fingerprint, dict(report)),
+            f"{DOMAIN} device fault {device_key}",
         )
         self._tasks.add(task)
         task.add_done_callback(self._tasks.discard)
 
     def state_changed(self, entity_id: Any) -> None:
-        if not self.active or not isinstance(entity_id, str):
+        if not self.active or is_stopping(self.hass) or not isinstance(entity_id, str):
             return
         watched = set(self._by_entity.get(entity_id, ()))
         if entity_id.startswith("switch."):
@@ -724,7 +734,7 @@ class NativeDeviceFaultMonitor:
 
     async def _announce(self, spec: Any, fingerprint: tuple,
                         report: dict) -> None:
-        if not self.active:
+        if not self.active or not delivery_allowed(self.hass):
             return
         if not model.settings(self.manager, spec).get(
                 "announce_device_errors", True):
@@ -755,6 +765,8 @@ async def _deliver_device_notice(manager: Any, spec: Any, title: str,
     selected/available.
     """
     hass, config = manager.hass, manager.settings
+    if not delivery_allowed(hass):
+        return False
     from .hub_delivery import hub_available, async_submit_hub, hub_ai_options
     if config.get(CONF_HUB) is True and hub_available(hass):
         # Hub owns AI, routing, occupancy, retry and visual/TTS fallback.
@@ -771,11 +783,13 @@ async def _deliver_device_notice(manager: Any, spec: Any, title: str,
     if (notify_targets
             and hass.services.has_service("notify", "send_message")):
         try:
-            await hass.services.async_call(
+            await async_call_notification(hass,
                 "notify", "send_message", {"title": title, "message": message},
-                target={"entity_id": notify_targets}, blocking=True,
+                target={"entity_id": notify_targets},
             )
             notified = True
+        except NotificationDeliveryUnavailable:
+            return False
         except asyncio.CancelledError:
             raise
         except Exception:
@@ -788,15 +802,17 @@ async def _deliver_device_notice(manager: Any, spec: Any, title: str,
         )
         if targets:
             try:
-                await hass.services.async_call(
+                await async_call_notification(hass,
                     "tts", "speak",
                     {"media_player_entity_id": targets, "message": message,
                      "language": tts_language(hass, tts_engine,
                                               config.get("language", "auto"),
                                               text_language=language)},
-                    target={"entity_id": tts_engine}, blocking=True,
+                    target={"entity_id": tts_engine},
                 )
                 notified = True
+            except NotificationDeliveryUnavailable:
+                return False
             except asyncio.CancelledError:
                 raise
             except Exception:
@@ -809,13 +825,15 @@ async def _deliver_device_notice(manager: Any, spec: Any, title: str,
             f"{manager.entry.entry_id}:{spec.source_device_id or spec.identifier}".encode()
         ).hexdigest()[:24]
         try:
-            await hass.services.async_call(
+            await async_call_notification(hass,
                 "persistent_notification", "create", {
                     "notification_id": f"hem_{kind}_{digest}",
                     "title": title, "message": message,
-                }, blocking=True,
+                },
             )
             notified = True
+        except NotificationDeliveryUnavailable:
+            return False
         except asyncio.CancelledError:
             raise
         except Exception:

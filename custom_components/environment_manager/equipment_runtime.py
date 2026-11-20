@@ -506,6 +506,9 @@ class EquipmentRuntime:
     def _schedule_pid_pwm_evaluation(self, spec: model.ManagedDevice,
                                      deadline: float | None) -> None:
         """Request a normal locked evaluation at one future PWM boundary."""
+        if getattr(self.hass, "is_stopping", False):
+            self._cancel_pid_pwm_evaluation(spec)
+            return
         now = self.clock()
         deadline = finite(deadline, 0, 1e13)
         if deadline is None or deadline <= now or not self._active or not self._ready:
@@ -524,7 +527,8 @@ class EquipmentRuntime:
             if current is None or current[1] is not handle:
                 return
             wakes.pop(spec.identifier, None)
-            if not self._active or not self._ready:
+            if (not self._active or not self._ready
+                    or getattr(self.hass, "is_stopping", False)):
                 return
             running = getattr(self, "_tasks", {}).get(spec.identifier)
             if running is not None and not running.done():
@@ -781,16 +785,20 @@ class EquipmentRuntime:
                             None, "restart_reconciliation_required")):
                     record["restart_power_verification"] = True
                     record.pop("paused", None)
-            await self._save()
+            # Restore all journals and sanitize reviews before one durable
+            # startup write. Optional notice delivery starts only after HA is
+            # running and the manager has completed entry setup.
             maintain_reviews = getattr(self, "_pid_review_maintenance", None)
             if callable(maintain_reviews):
                 for spec in model.specs(self.manager):
-                    await maintain_reviews(spec)
+                    await maintain_reviews(spec, notify=False, persist=False)
+            await self._save()
         except Exception:
             self._ready = False
             _LOGGER.exception("Equipment controller storage unavailable; new control stays inactive")
 
-    async def async_stop(self) -> None:
+    def quiesce(self, *, shutdown: bool = False) -> None:
+        """Revoke all scheduling synchronously without changing physical outputs."""
         self._door_start_budget = None
         self._active = False
         for _, handle in getattr(self, "_pid_pwm_wakeups", {}).values():
@@ -799,16 +807,24 @@ class EquipmentRuntime:
         from .equipment_setpoint_sequence import cancel_wakeups
         cancel_wakeups(self)
         self._presentation_updates.close()
-        tasks = tuple((*self._tasks.values(), *getattr(
-            self, "_automatic_recovery_tasks", {}
-        ).values()))
-        for task in tasks:
-            task.cancel()
+        stopped = self._stop_tasks = getattr(self, "_stop_tasks", set())
+        for name in ("_tasks", "_automatic_recovery_tasks", "_pid_passive_tasks",
+                     "_pid_adaptive_tasks", "_pid_review_tasks"):
+            for task in tuple(getattr(self, name, {}).values()):
+                stopped.add(task)
+                if not task.done() and not task.cancelling():
+                    task.cancel()
+
+    async def async_stop(self, *, shutdown: bool = False) -> None:
+        self.quiesce(shutdown=shutdown)
+        tasks = tuple(self._stop_tasks)
         if tasks:
             await asyncio.gather(*tasks, return_exceptions=True)
-        self._tasks.clear()
+        self._stop_tasks.clear()
+        for name in ("_tasks", "_automatic_recovery_tasks", "_pid_passive_tasks",
+                     "_pid_adaptive_tasks", "_pid_review_tasks"):
+            getattr(self, name, {}).clear()
         getattr(self, "_presentation_context", {}).clear()
-        getattr(self, "_automatic_recovery_tasks", {}).clear()
         self._profile_wake.clear()
         self._native_session_observations.clear()
         getattr(self, '_thermal_off_sessions', {}).clear()
@@ -823,26 +839,8 @@ class EquipmentRuntime:
         getattr(self, "_native_reconnect_epoch", {}).clear()
         getattr(self, "_native_settled_for", {}).clear()
         self._pid_offline_previews.clear()
-        tasks = tuple(self._pid_passive_tasks.values())
-        for task in tasks:
-            task.cancel()
-        if tasks:
-            await asyncio.gather(*tasks, return_exceptions=True)
-        self._pid_passive_tasks.clear()
-        adaptive_tasks = tuple(getattr(self, "_pid_adaptive_tasks", {}).values())
-        for task in adaptive_tasks:
-            task.cancel()
-        if adaptive_tasks:
-            await asyncio.gather(*adaptive_tasks, return_exceptions=True)
-        getattr(self, "_pid_adaptive_tasks", {}).clear()
         getattr(self, "_pid_adaptive_observers", {}).clear()
         getattr(self, "_pid_adaptive_samples", {}).clear()
-        notices = tuple(getattr(self, "_pid_review_tasks", {}).values())
-        for task in notices:
-            task.cancel()
-        if notices:
-            await asyncio.gather(*notices, return_exceptions=True)
-        getattr(self, "_pid_review_tasks", {}).clear()
         for name in ("_pid_learning_generation", "_pid_learning_edges",
                      "_pid_learning_observed_edges", "_pid_review_notice_attempts"):
             getattr(self, name, {}).clear()
@@ -1915,7 +1913,9 @@ class EquipmentRuntime:
             tasks = getattr(self, "_pid_adaptive_tasks", None)
             if tasks is None:
                 tasks = self._pid_adaptive_tasks = {}
-            if proof is not None and spec.identifier not in tasks:
+            if (proof is not None and spec.identifier not in tasks
+                    and self._active and self._ready
+                    and not getattr(self.hass, "is_stopping", False)):
                 proof["generation"] = sample["generation"]
                 task = self.hass.async_create_task(self._pid_adaptive_apply(spec, proof, rollback=rollback))
                 tasks[spec.identifier] = task
@@ -2081,7 +2081,8 @@ class EquipmentRuntime:
             return None
 
     async def _pid_review_maintenance(self, spec: model.ManagedDevice, *,
-                                      context: str | None = None, notify: bool = True) -> None:
+                                      context: str | None = None, notify: bool = True,
+                                      persist: bool = True) -> None:
         """Reconcile persisted review outcomes and expiry without hardware work."""
         if not self._active or not self._ready or not self._current_spec(spec):
             return
@@ -2120,15 +2121,25 @@ class EquipmentRuntime:
             if projected != review:
                 record["pid_passive_review"] = projected
                 changed = True
-        if changed:
+        if changed and persist:
             await self._save()
             self._presentation_updates.request(spec.identifier)
         if notify:
             self._schedule_pid_review_notice(spec)
 
+    def retry_pending_reviews(self) -> None:
+        """Resume durable notice delivery after HA and this entry are ready."""
+        from .lifecycle import is_running
+        if not self._active or not self._ready or not is_running(self.hass):
+            return
+        for spec in model.specs(self.manager):
+            self._schedule_pid_review_notice(spec)
+
     def _schedule_pid_review_notice(self, spec: model.ManagedDevice) -> None:
-        """Replay unsent/uncleared notices with one tracked task per device."""
-        if not self._active or not self._ready or not self._current_spec(spec):
+        """Replay unsent/uncleared notices without joining HA startup's drain."""
+        from .lifecycle import create_background_task, is_running
+        if (not self._active or not self._ready or not is_running(self.hass)
+                or not self._current_spec(spec)):
             return
         review = self.records.get(spec.identifier, {}).get("pid_passive_review")
         if not isinstance(review, dict) or not isinstance(review.get("id"), str):
@@ -2150,7 +2161,10 @@ class EquipmentRuntime:
         if last is not None and last[0] == marker and 0 <= self.clock() - last[1] < 300:
             return
         attempts[spec.identifier] = (marker, self.clock())
-        task = self.hass.async_create_task(self._deliver_pid_review_notice(spec, marker))
+        task = create_background_task(
+            self.hass, self.manager.entry, self._deliver_pid_review_notice(spec, marker),
+            f"{DOMAIN} PID review notice {spec.identifier}",
+        )
         tasks[spec.identifier] = task
         def finished(done):
             if tasks.get(spec.identifier) is done:
@@ -3517,7 +3531,9 @@ class EquipmentRuntime:
         maintain = getattr(self, "_pid_review_maintenance", None)
         if callable(maintain):
             await maintain(spec, context=context)
-        if (cfg["pid_calibration_method"] == "adaptive_auto"
+        if (self._active and self._ready
+                and not getattr(self.hass, "is_stopping", False)
+                and cfg["pid_calibration_method"] == "adaptive_auto"
                 and summary.get("confidence") == "high"
                 and summary.get("status") == "validated"
                 and output_off(state) and not record.get("power")
@@ -4514,7 +4530,8 @@ class EquipmentRuntime:
             self.schedule()
 
     def schedule(self) -> None:
-        if not self._active or not self._ready:
+        if (not self._active or not self._ready
+                or getattr(self.hass, "is_stopping", False)):
             return
         known = {spec.identifier: spec for spec in model.specs(self.manager)}
         for key, spec in known.items():
@@ -5780,6 +5797,8 @@ class EquipmentRuntime:
                     full_output_target: bool = False,
                     off_state_recovery: bool = False) -> bool:
         """Durable intent, exact target, live rechecks after *every* yield."""
+        if not self._active or getattr(self.hass, "is_stopping", False):
+            return False
         record = self._record(spec)
         if record.get("pending") or record.get("paused"):
             return False
@@ -6097,7 +6116,8 @@ class EquipmentRuntime:
         await self._save()
 
         def current() -> bool:
-            if (not self._active or not self._ready or record.get("paused")
+            if (not self._active or not self._ready
+                    or getattr(self.hass, "is_stopping", False) or record.get("paused")
                     or record.get("pending") is not pending):
                 return False
             if target_context and not native_target.retry_live(
@@ -7057,6 +7077,9 @@ class EquipmentRuntime:
         This task NEVER clears a pending command on a timer or assumes that
         an online entity proves a native command completed.
         """
+        if (not self._active or not self._ready
+                or getattr(self.hass, "is_stopping", False)):
+            return
         tasks = getattr(self, "_automatic_recovery_tasks", None)
         if tasks is None:
             tasks = self._automatic_recovery_tasks = {}
@@ -7284,7 +7307,8 @@ class EquipmentRuntime:
         native_ack_wait = False
         interruption_reason = "controller_wait"
         try:
-            if not self._active or not self._ready:
+            if (not self._active or not self._ready
+                    or getattr(self.hass, "is_stopping", False)):
                 return
             self._invalidated.discard(spec.identifier)
             record = self._record(spec)

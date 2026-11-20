@@ -138,7 +138,7 @@ class Entry:
     options={}
 class Manager:
     def __init__(self):
-        self.hass=N(states=N(get=states.get),services=Services(),
+        self.hass=N(state="running", states=N(get=states.get),services=Services(),
                     config=N(language="en"),config_entries=N())
         self.hass.async_create_task=lambda work:asyncio.create_task(work)
         self.entry=Entry()

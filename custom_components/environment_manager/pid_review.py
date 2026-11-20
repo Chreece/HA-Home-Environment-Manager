@@ -15,6 +15,9 @@ import secrets
 from typing import Any
 
 from .pid_passive import bounded_gains
+from .notification_delivery import (
+    NotificationDeliveryUnavailable, async_call_notification, delivery_allowed,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -378,7 +381,7 @@ async def async_publish_review(hass: Any, manager: Any, spec: Any, review: dict)
     Caller persists the exact pending review BEFORE dispatch. Failure to
     deliver never auto-approves a recommendation.
     """
-    if not is_pending(review):
+    if not delivery_allowed(hass) or not is_pending(review):
         return False
     locale = (manager.settings.get("language") or "auto")
     if locale == "auto":
@@ -390,13 +393,15 @@ async def async_publish_review(hass: Any, manager: Any, spec: Any, review: dict)
     failed = False
     if hass.services.has_service("persistent_notification", "create"):
         try:
-            await hass.services.async_call(
+            await async_call_notification(hass,
                 "persistent_notification", "create", {
                     "notification_id": notification_id(manager.entry.entry_id, spec.identifier),
                     "title": title, "message": body,
-                }, blocking=True,
+                },
             )
             sent = True
+        except NotificationDeliveryUnavailable:
+            return False
         except Exception:
             failed = True
             _LOGGER.exception("HEM PID persistent recommendation notification failed")
@@ -416,15 +421,17 @@ async def async_publish_review(hass: Any, manager: Any, spec: Any, review: dict)
                 },
             }
             if kind == "entity":
-                await hass.services.async_call(
+                await async_call_notification(hass,
                     "notify", "send_message", data,
-                    target={"entity_id": target}, blocking=True,
+                    target={"entity_id": target},
                 )
             else:
-                await hass.services.async_call(
-                    "notify", target, data, blocking=True,
+                await async_call_notification(hass,
+                    "notify", target, data,
                 )
             sent = True
+        except NotificationDeliveryUnavailable:
+            return False
         except Exception:
             failed = True
             _LOGGER.exception("HEM PID actionable mobile notification failed: %s", target)
@@ -435,14 +442,18 @@ async def async_publish_review(hass: Any, manager: Any, spec: Any, review: dict)
 
 
 async def async_clear_review(hass: Any, manager: Any, spec: Any) -> bool:
+    if not delivery_allowed(hass):
+        return False
     cleared = True
     if hass.services.has_service("persistent_notification", "dismiss"):
         try:
-            await hass.services.async_call(
+            await async_call_notification(hass,
                 "persistent_notification", "dismiss", {
                     "notification_id": notification_id(manager.entry.entry_id, spec.identifier)
-                }, blocking=True,
+                },
             )
+        except NotificationDeliveryUnavailable:
+            return False
         except Exception:
             cleared = False
             _LOGGER.debug("Unable to clear PID review from HA notifications", exc_info=True)
@@ -453,14 +464,16 @@ async def async_clear_review(hass: Any, manager: Any, spec: Any) -> bool:
                 "data": {"tag": mobile_tag(manager.entry.entry_id, spec.identifier)},
             }
             if kind == "entity":
-                await hass.services.async_call(
+                await async_call_notification(hass,
                     "notify", "send_message", data,
-                    target={"entity_id": target}, blocking=True,
+                    target={"entity_id": target},
                 )
             else:
-                await hass.services.async_call(
-                    "notify", target, data, blocking=True,
+                await async_call_notification(hass,
+                    "notify", target, data,
                 )
+        except NotificationDeliveryUnavailable:
+            return False
         except Exception:
             cleared = False
             _LOGGER.debug("Unable to clear mobile PID review", exc_info=True)

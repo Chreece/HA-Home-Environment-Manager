@@ -79,6 +79,7 @@ class PresenceContinuity:
         self._signature: str | None = None
         self._since: float | None = None
         self._dirty = False
+        self._restored = False
 
     def _snapshot(self) -> dict[str, Any]:
         return {
@@ -88,6 +89,7 @@ class PresenceContinuity:
         }
 
     async def async_start(self) -> None:
+        self._stopping = False
         try:
             if self._store is None:
                 from homeassistant.helpers.storage import Store
@@ -96,6 +98,7 @@ class PresenceContinuity:
                     f"environment_manager.presence_absence_{self.entry_id}",
                 )
             saved = await self._store.async_load()
+            self._restored = True
             if not isinstance(saved, dict) or saved.get("version") != DATA_VERSION:
                 return
             signature, since = saved.get("source_signature"), saved.get("verified_absence_since")
@@ -115,7 +118,8 @@ class PresenceContinuity:
 
     def _changed(self) -> None:
         self._dirty = True
-        if self._store is not None:
+        if (self._store is not None and self._restored
+                and not getattr(self, "_stopping", False)):
             try:
                 self._store.async_delay_save(self._snapshot, 1)
             except Exception:
@@ -158,7 +162,11 @@ class PresenceContinuity:
         # Away, but also cannot prove somebody returned in our absence.
         return config
 
-    async def async_stop(self) -> None:
-        if self._store is not None and self._dirty:
+    def quiesce(self, *, shutdown: bool = False) -> None:
+        self._stopping = True
+
+    async def async_stop(self, *, shutdown: bool = False) -> None:
+        self.quiesce(shutdown=shutdown)
+        if self._store is not None and self._restored and self._dirty:
             await self._store.async_save(self._snapshot())
             self._dirty = False

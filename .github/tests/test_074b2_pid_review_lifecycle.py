@@ -31,7 +31,7 @@ store = importlib.import_module(PACKAGE + ".pid_learning_store")
 production.PassiveObserver = passive.PassiveObserver
 METHODS = (
     "_record", "_save", "async_start", "_pid_learning_context",
-    "_pid_review_maintenance", "_schedule_pid_review_notice", "_deliver_pid_review_notice",
+    "_pid_review_maintenance", "retry_pending_reviews", "_schedule_pid_review_notice", "_deliver_pid_review_notice",
     "_pid_passive_observe", "_interrupt_pid_learning", "_pid_learning_observed",
 )
 fixture["fixture"]["base"]["extract"](
@@ -62,6 +62,9 @@ class LifecycleRuntime(fixture["AdaptiveRuntime"]):
         if supply:
             profile["power_switch_entity"] = "switch.supply"
         super().__init__(profile=profile)
+        self.hass.state = "running"
+        self.hass.is_stopping = False
+        self.hass.async_create_background_task = lambda coroutine, name: self.create_task(coroutine)
         self._save_lock = asyncio.Lock()
         self._store = MemoryStore(self)
         self._pid_review_tasks, self._pid_review_notice_attempts = {}, {}
@@ -151,10 +154,13 @@ class LifecycleRuntime(fixture["AdaptiveRuntime"]):
 
         storage = ModuleType("homeassistant.helpers.storage")
         storage.Store = RestartStore
+        self.hass.state = "starting"
         with patch.dict(sys.modules, {storage.__name__: storage}):
             await self.async_start()
         self.record = self.records[SPEC.identifier]
         assert self._ready, "Actual startup must successfully load and maintain the ledger"
+        self.hass.state = "running"
+        self.retry_pending_reviews()
         await self.drain()
 
     async def complete_natural_cycle(self):
@@ -192,6 +198,28 @@ for method in METHODS:
 
 
 class ReviewLifecycleTests(unittest.IsolatedAsyncioTestCase):
+    async def test_startup_saves_review_maintenance_once_and_defers_notice_until_running(self):
+        runtime = LifecycleRuntime()
+        await runtime.seed_review()
+        runtime.persisted.clear()
+        runtime.hass.state = "starting"
+        storage = ModuleType("homeassistant.helpers.storage")
+        storage.Store = lambda *args, **kwargs: runtime._store
+        with patch.dict(sys.modules, {storage.__name__: storage}):
+            await runtime.async_start()
+        runtime.record = runtime.records[SPEC.identifier]
+        self.assertTrue(runtime._ready)
+        self.assertEqual(len(runtime.persisted), 1)
+        self.assertEqual(runtime.notice_dispatches, [])
+        self.assertEqual(runtime._pid_review_tasks, {})
+        runtime.retry_pending_reviews()
+        self.assertEqual(runtime.notice_dispatches, [])
+        runtime.hass.state = "running"
+        runtime.retry_pending_reviews()
+        await runtime.drain()
+        self.assertEqual(len(runtime.notice_dispatches), 1)
+        self.assertEqual(runtime.hardware_calls, [])
+
     async def test_upstream_holds_block_both_real_auto_and_approved_writers(self):
         for method in ("adaptive_auto", "adaptive_suggest"):
             for hold in (None, "paused", "pending", "unavailable"):

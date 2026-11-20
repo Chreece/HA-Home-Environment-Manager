@@ -20,6 +20,9 @@ from .hub_delivery import hub_available, make_hub_payload, async_submit_hub, hub
 from .languages import announcement_language
 from .tts_languages import tts_language
 from .announcement_text import SHADE_MESSAGES
+from .notification_delivery import (
+    NotificationDeliveryUnavailable, async_call_notification, delivery_allowed,
+)
 
 MESSAGES = SHADE_MESSAGES
 
@@ -43,6 +46,8 @@ async def async_announce_before_move(
     entity_id: str | None = None, required: bool | None = None,
 ) -> bool:
     """Announce ONE room action before movement. Never send cover commands."""
+    if not delivery_allowed(manager.hass):
+        return False
     config = manager.settings
     announce = config.get(CONF_SHADE_ANNOUNCE) is True if required is None else required
     if not announce:
@@ -86,10 +91,12 @@ async def async_announce_before_move(
         receivers = _targets(manager, config.get(CONF_NOTIFY_TARGETS, []), area)
         if receivers and hass.services.has_service("notify", "send_message"):
             try:
-                await hass.services.async_call("notify", "send_message",
+                await async_call_notification(hass, "notify", "send_message",
                     {"title": title, "message": message},
-                    target={"entity_id": receivers}, blocking=True)
+                    target={"entity_id": receivers})
                 result = True
+            except NotificationDeliveryUnavailable:
+                return False
             except Exception:
                 pass
     if speech:
@@ -97,25 +104,28 @@ async def async_announce_before_move(
         players = _targets(manager, config.get(CONF_MEDIA_PLAYERS, []), area)
         if engine and players and hass.services.has_service("tts", "speak"):
             try:
-                await hass.services.async_call(
+                await async_call_notification(hass,
                     "tts", "speak",
                     {"media_player_entity_id": players, "message": message,
                      "language": tts_language(hass, engine, config.get(CONF_LANGUAGE, "auto"),
                                               text_language=lang)},
-                    target={"entity_id": engine}, blocking=True,
+                    target={"entity_id": engine},
                 )
                 result = True
+            except NotificationDeliveryUnavailable:
+                return False
             except Exception:
                 pass
     if not result and visual and hass.services.has_service("persistent_notification", "create"):
         try:
-            await hass.services.async_call(
+            await async_call_notification(hass,
                 "persistent_notification", "create",
                 {"title": title, "message": message,
                  "notification_id": f"environment_manager_shades_{area}_{action}"},
-                blocking=True,
             )
             result = True
+        except NotificationDeliveryUnavailable:
+            return False
         except Exception:
             return False
     return result

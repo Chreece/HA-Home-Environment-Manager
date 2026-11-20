@@ -342,7 +342,8 @@ class ShadeCoolingController:
         except Exception:
             _LOGGER.exception("Shade owner history not verified; do not move covers")
             self._ready = False
-        self._active = True
+        self._active = not (getattr(self, "_stopping", False)
+                            or getattr(self.hass, "is_stopping", False))
 
     def _status(self, area: str, value: str, **data):
         report = {"status": value, **data}
@@ -377,7 +378,8 @@ class ShadeCoolingController:
         return True
 
     def schedule(self) -> None:
-        if not self._ready or not self._active:
+        if (not self._ready or not self._active
+                or getattr(self.hass, "is_stopping", False)):
             return
         for area in self.manager.settings.get("areas", []):
             if not isinstance(area, str):
@@ -460,6 +462,8 @@ class ShadeCoolingController:
     async def _before_move(self, area: str, action: str, entity: str,
                            revision: int) -> bool:
         """Deliver per-cover notice if opted in, then recheck the authorization."""
+        if not self._active or getattr(self.hass, "is_stopping", False):
+            return False
         shade = cover_config(self.manager.settings, area, entity)
         if not shade["announce"]:
             return True
@@ -469,17 +473,20 @@ class ShadeCoolingController:
             ok = await async_announce_before_move(
                 self.manager, area=area, action=action,
                 entity_id=entity, required=True)
-        if not ok:
+        if not ok or not self._active or getattr(self.hass, "is_stopping", False):
             return False
         if self.announcement_grace_seconds:
             await asyncio.sleep(self.announcement_grace_seconds)
         latest = cover_config(self.manager.settings, area, entity)
-        return (area in self.manager.settings.get("areas", [])
+        return (self._active and not getattr(self.hass, "is_stopping", False)
+                and area in self.manager.settings.get("areas", [])
                 and entity in (selected(self.manager.settings, area, "shades") or ())
                 and latest["enabled"]
                 and latest["authorization_revision"] == revision)
 
     async def _tick(self, area: str):
+        if not self._active or getattr(self.hass, "is_stopping", False):
+            return
         settings = self.manager.settings
         if area not in settings.get("areas", []):
             return
@@ -688,7 +695,8 @@ class ShadeCoolingController:
                 )
                 fresh_reason, fresh_evidence, fresh_sun, _, fresh_temp, _ = self._inputs(
                     area, self.manager.settings, entity)
-                if (not self._ready or not latest_cfg["enabled"]
+                if (not self._active or getattr(self.hass, "is_stopping", False)
+                        or not self._ready or not latest_cfg["enabled"]
                         or latest_cfg["authorization_revision"] != revision
                         or not fresh_allowed or physical is None
                         or physical.state != "closed" or not fresh_evidence["window_safe"]
@@ -761,7 +769,8 @@ class ShadeCoolingController:
             )
             fresh_reason, fresh_evidence, _, _, _, _ = self._inputs(
                 area, self.manager.settings, entity)
-            if (not self._ready or not latest_cfg["enabled"]
+            if (not self._active or getattr(self.hass, "is_stopping", False)
+                    or not self._ready or not latest_cfg["enabled"]
                     or latest_cfg["authorization_revision"] != revision
                     or not fresh_allowed or physical is None
                     or lux_signature(latest_cfg) != evidence_signature
@@ -792,11 +801,19 @@ class ShadeCoolingController:
         )
         self._status(area, status, covers=outcomes, **details)
 
-    async def async_stop(self):
+    def quiesce(self, *, shutdown: bool = False) -> None:
         self._active = False
-        jobs = list(self._tasks.values())
-        for job in jobs:
-            job.cancel()
+        self._stopping = True
+        stopped = self._stop_tasks = getattr(self, "_stop_tasks", set())
+        for job in tuple(self._tasks.values()):
+            stopped.add(job)
+            if not job.done() and not job.cancelling():
+                job.cancel()
+
+    async def async_stop(self, *, shutdown: bool = False):
+        self.quiesce(shutdown=shutdown)
+        jobs = tuple(self._stop_tasks)
         if jobs:
             await asyncio.gather(*jobs, return_exceptions=True)
+        self._stop_tasks.clear()
         self._tasks.clear()

@@ -94,11 +94,21 @@ class NativeClimateControl:
         if self._store is not None:
             self._store.async_delay_save(self._snapshot,3)
 
-    async def async_stop(self):
-        self._active=False
-        tasks=list(self._tasks.values())
-        for task in tasks:task.cancel()
-        if tasks:await asyncio.gather(*tasks,return_exceptions=True)
+    def quiesce(self, *, shutdown: bool = False) -> None:
+        """Revoke scheduling immediately and retain tasks until they are drained."""
+        self._active = False
+        stopped = self._stop_tasks = getattr(self, "_stop_tasks", set())
+        for task in tuple(self._tasks.values()):
+            stopped.add(task)
+            if not task.done() and not task.cancelling():
+                task.cancel()
+
+    async def async_stop(self, *, shutdown: bool = False) -> None:
+        self.quiesce(shutdown=shutdown)
+        tasks = tuple(self._stop_tasks)
+        if tasks:
+            await asyncio.gather(*tasks, return_exceptions=True)
+        self._stop_tasks.clear()
         self._tasks.clear()
         if self.ready and self._store is not None:
             await self._store.async_save(self._snapshot())
@@ -134,6 +144,8 @@ class NativeClimateControl:
         return {"accepted":True,"area":area,"action":action}
 
     def schedule(self,config:dict,plans:dict,*,pid_rooms:dict|None=None):
+        if getattr(self.hass, "is_stopping", False):
+            return
         if not self._active or not self.ready or not isinstance(config,dict):
             return
         now=self.clock()

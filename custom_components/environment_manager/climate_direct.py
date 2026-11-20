@@ -85,6 +85,7 @@ class DirectClimateControl:
                 self.changed()
 
     async def async_start(self) -> None:
+        self._shutdown = False
         self._active = True
         self._started = self.clock()
         try:
@@ -143,23 +144,34 @@ class DirectClimateControl:
         if any(rec.get("phase") == "intent" for rec in self.expected.values()):
             self._persist()
 
-    async def async_stop(self) -> None:
-        # On Home Assistant reload, deenergize outputs owned by this direct
-        # non-compressor controller BEFORE leaving the feedback loop.
+    def quiesce(self, *, shutdown: bool = False) -> None:
+        """Cancel evaluation immediately; full HA stop never starts safe-OFF work."""
         self._active = False
+        self._shutdown = getattr(self, "_shutdown", False) or shutdown
+        stopped = self._stop_tasks = getattr(self, "_stop_tasks", set())
         running = tuple(self._tasks.values())
+        if self._shutdown:
+            running += tuple(self._retiring.values())
         for task in running:
-            task.cancel()
+            stopped.add(task)
+            if not task.done() and not task.cancelling():
+                task.cancel()
+
+    async def async_stop(self, *, shutdown: bool = False) -> None:
+        self.quiesce(shutdown=shutdown)
+        running = tuple(self._stop_tasks)
         if running:
             await asyncio.gather(*running, return_exceptions=True)
+        self._stop_tasks.clear()
         self._tasks.clear()
         # Do not abandon a scheduled safe-off when Home Assistant unloads
-        # during an options change or room removal.
-        if self._retiring:
+        # during an options change or room removal. Whole-HA shutdown instead
+        # preserves ownership for restart and never starts new device commands.
+        if self._retiring and not self._shutdown:
             await asyncio.gather(*tuple(self._retiring.values()),
                                  return_exceptions=True)
         self._retiring.clear()
-        if self._ready:
+        if self._ready and not self._shutdown:
             # A reconfigured area may have BOTH an old, not-yet-reconciled
             # output and a newly commissioned output. Check both separately.
             for profiles in (self._retired_config, self._last_config):
@@ -174,6 +186,7 @@ class DirectClimateControl:
                 await self._store.async_save(self._snapshot())
             except Exception:
                 _LOGGER.exception("Unable to save direct actuator state")
+                raise
 
     def _pause(self, area: str, reason: str) -> None:
         self.paused[area] = reason
@@ -183,6 +196,8 @@ class DirectClimateControl:
 
     async def _safe_off_owned(self, area:str,settings:dict,*,now:float)->bool:
         """Deenergize only outputs this controller is known to own."""
+        if getattr(self, "_shutdown", False) or getattr(self.hass, "is_stopping", False):
+            return False
         percentage=settings.get("controller")=="proportional"
         for entity in self._entities(settings):
             from .climate_entry_ownership import foreign_owner_hold
@@ -277,6 +292,8 @@ class DirectClimateControl:
         ))
 
     def _retire_room(self, area: str, previous: dict) -> None:
+        if not self._active or getattr(self.hass, "is_stopping", False):
+            return
         if area in self._retiring and not self._retiring[area].done():
             return
         # Cancel any in-flight ON task first. A write that was already
@@ -320,7 +337,8 @@ class DirectClimateControl:
     def schedule(self, config: dict, plans: dict, *,
                  pid_rooms: dict | None = None,
                  native_rooms: dict | None = None) -> None:
-        if not self._active or not isinstance(config, dict):
+        if (not self._active or getattr(self.hass, "is_stopping", False)
+                or not isinstance(config, dict)):
             return
         owner_counts: dict[str,int] = {}
         for settings in config.values():
@@ -401,6 +419,8 @@ class DirectClimateControl:
                     *, percentage: bool=False, now:float,
                     cfg:dict|None=None, report:dict|None=None)->bool:
         """Durably record ON intent before the first physical command."""
+        if getattr(self, "_shutdown", False) or getattr(self.hass, "is_stopping", False):
+            return False
         domain, service = (("number", "set_value") if percentage else
                            ("switch", "turn_on" if state is True else "turn_off"))
         data = {"value": float(state)} if percentage else {}
@@ -450,6 +470,8 @@ class DirectClimateControl:
                     self._pause(area, "direct_intent_revoked_before_dispatch")
                     return False
             try:
+                if getattr(self, "_shutdown", False) or getattr(self.hass, "is_stopping", False):
+                    return False
                 if not self.hass.services.has_service(domain,service):
                     raise RuntimeError(f"{domain}.{service} not available")
                 await asyncio.wait_for(self.hass.services.async_call(

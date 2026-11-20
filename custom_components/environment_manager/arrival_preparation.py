@@ -61,6 +61,8 @@ class ArrivalPreparation:
         self._schedule = schedule
         self._lock = asyncio.Lock()
         self._started = False
+        self._stopping = False
+        self._restored = False
         self._started_at: float | None = None
         self.expires_at: float | None = None
         self._generation = 0
@@ -152,6 +154,8 @@ class ArrivalPreparation:
         return had_deadline
 
     def _persist_later(self) -> None:
+        if not self._started or getattr(self.hass, "is_stopping", False):
+            return  # async_stop persists the final deadline after draining.
         async def save_current():
             async with self._lock:
                 if self._store is not None:
@@ -181,7 +185,8 @@ class ArrivalPreparation:
     def _arm_timer(self) -> None:
         if self._cancel_timer is not None:
             self._cancel_timer()
-        if self.expires_at is None or not self._started:
+        if (self.expires_at is None or not self._started
+                or getattr(self.hass, "is_stopping", False)):
             self._cancel_timer = None
             return
         if self._schedule is None:
@@ -193,7 +198,8 @@ class ArrivalPreparation:
         from homeassistant.core import callback
         @callback
         def expire(_now):
-            if (not self._started or self.expires_at != deadline
+            if (not self._started or getattr(self.hass, "is_stopping", False)
+                    or self.expires_at != deadline
                     or self._timer_generation != generation):
                 return
             self._cancel_timer = None
@@ -210,6 +216,8 @@ class ArrivalPreparation:
         )
 
     async def async_start(self) -> None:
+        if self._stopping or getattr(self.hass, "is_stopping", False):
+            return
         if self._store is None:
             try:
                 from homeassistant.helpers.storage import Store
@@ -221,6 +229,7 @@ class ArrivalPreparation:
             self._store = Store(self.hass, 1, f"{DOMAIN}.arrival_preparation_{self.entry_id}")
         try:
             stored = await self._store.async_load()
+            self._restored = True
         except Exception:
             _LOGGER.exception("Could not restore arrival preparation deadline")
             stored = None
@@ -230,6 +239,8 @@ class ArrivalPreparation:
             if (start is not None and end is not None and start <= now < end
                     and 0 < end - start <= MAX_TIMEOUT * 60):
                 self._started_at, self.expires_at = start, end
+        if self._stopping or getattr(self.hass, "is_stopping", False):
+            return
         self._started = True
         self.hass.data.setdefault(DATA_KEY, {})[self.entry_id] = self
         self.observe(self.home_status())
@@ -238,7 +249,8 @@ class ArrivalPreparation:
     async def async_prepare(self) -> None:
         from homeassistant.exceptions import HomeAssistantError
         async with self._lock:
-            if not self._started or self._store is None:
+            if (not self._started or self._store is None
+                    or getattr(self.hass, "is_stopping", False)):
                 raise HomeAssistantError("Arrival preparation is not ready")
             if self.home_status() != "away":
                 raise HomeAssistantError("Arrival preparation requires confirmed whole-home absence")
@@ -249,6 +261,7 @@ class ArrivalPreparation:
             try:
                 # Publish authority only after the original deadline is durable.
                 await self._store.async_save({"started_at": start, "expires_at": end})
+                self._restored = True
                 if (not self._started or generation != self._generation
                         or self.home_status() != "away" or self.clock() >= end):
                     await self._store.async_save(self._stored())
@@ -267,23 +280,38 @@ class ArrivalPreparation:
         async with self._lock:
             if self._store is not None:
                 await self._store.async_save(self._stored())
+                self._restored = True
 
-    async def async_stop(self) -> None:
+    def quiesce(self, *, shutdown: bool = False) -> None:
+        """Revoke the preparation before an in-flight persistence can publish it."""
+        if self._started:
+            self._generation += 1
         self._started = False
-        self._generation += 1
+        self._stopping = True
         if self._cancel_timer is not None:
             self._cancel_timer()
             self._cancel_timer = None
         registry = self.hass.data.get(DATA_KEY, {})
         if registry.get(self.entry_id) is self:
             registry.pop(self.entry_id, None)
+        stopped = self._stop_tasks = getattr(self, "_stop_tasks", set())
+        for task in tuple(self._tasks):
+            stopped.add(task)
+            if not task.done() and not task.cancelling():
+                task.cancel()
+
+    async def async_stop(self, *, shutdown: bool = False) -> None:
+        self.quiesce(shutdown=shutdown)
         # Preserve the absolute future deadline. Reload never renews it.
-        if self._tasks:
-            await asyncio.gather(*tuple(self._tasks), return_exceptions=True)
+        if self._stop_tasks:
+            await asyncio.gather(*tuple(self._stop_tasks), return_exceptions=True)
+        self._stop_tasks.clear()
+        self._tasks.clear()
         # An in-flight Prepare must finish or roll back its persisted intent
         # before a replacement manager can load the same entry-scoped Store.
         async with self._lock:
-            pass
+            if self._store is not None and self._restored:
+                await self._store.async_save(self._stored())
 
 
 def live_preparation(hass: Any, plan: dict, home_status: str, *,
