@@ -7671,14 +7671,17 @@
     .hem-room-glance87 .hem-room-metric107 .hem-avg-marker105>ha-icon{
       color:var(--aqa-blue);
     }
-    .hem-metric-narrow-b6,.hem-metric-narrow-value-b6{display:none}
+    /* Source-linked numbers are inline-flex. Keep narrow-only visibility
+     * more specific than that shared interaction rule at every breakpoint. */
+    .hem-room-body87 .hem-metric-narrow-b6,
+    .hem-room-body87 .metric .hem-metric-narrow-value-b6{display:none}
     @container hem-rooms107 (max-width:400px){
-      .hem-metric-narrow-b6{display:block}
-      .hem-metric-narrow-value-b6{display:inline}
+      .hem-room-body87 .hem-metric-narrow-b6{display:block}
+      .hem-room-body87 .metric .hem-metric-narrow-value-b6{display:inline-flex}
     }
     @media(max-width:420px){
-      .hem-metric-narrow-b6{display:block}
-      .hem-metric-narrow-value-b6{display:inline}
+      .hem-room-body87 .hem-metric-narrow-b6{display:block}
+      .hem-room-body87 .metric .hem-metric-narrow-value-b6{display:inline-flex}
     }
   </style>`;
   proto112._styles=function(){return oldStyles112.call(this)+css112;};
