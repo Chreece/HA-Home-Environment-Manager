@@ -15,6 +15,7 @@ from homeassistant.helpers import entity_registry as er
 from .const import DOMAIN
 from . import equipment_model as equipment
 from .device_hierarchy import configured_sources
+from .device_activation import resolved_fan_purpose
 
 
 def controller_inventory(manager: Any) -> list[dict[str, Any]]:
@@ -67,9 +68,17 @@ def controller_inventory(manager: Any) -> list[dict[str, Any]]:
         record = getattr(runtime, "records", {}).get(spec.identifier, {})
         record = record if isinstance(record, dict) else {}
         cached = record.get("capabilities")
-        primary = cached.get("primary") if isinstance(cached, dict) else None
+        cap = equipment.capabilities(manager, spec)
+        primary = cap.primary if cap is not None else None
+        if (primary not in source_ids and isinstance(cached, dict)
+                and record.get("sources") == list(source_ids)
+                and record.get("source_device_id") == spec.source_device_id
+                and record.get("area") == area):
+            primary = cached.get("primary")
         if primary not in source_ids:
             primary = source_ids[0] if len(source_ids) == 1 else None
+        upstream = settings.get("power_switch_entity")
+        supply = manager.hass.states.get(upstream) if upstream else None
 
         result.append({
             "controller_id": spec.identifier,
@@ -83,8 +92,10 @@ def controller_inventory(manager: Any) -> list[dict[str, Any]]:
             "supported_operating_modes": modes,
             "selected_operating_mode": mode,
             "native_primary_entity_id": primary,
+            "resolved_fan_purpose": resolved_fan_purpose(manager, spec, primary),
             "status_code": status.get("status"),
             "status_reason_code": status.get("reason"),
-            "upstream_power_switch": settings.get("power_switch_entity"),
+            "upstream_power_switch": upstream,
+            "upstream_power_state": supply.state if supply is not None else None,
         })
     return result

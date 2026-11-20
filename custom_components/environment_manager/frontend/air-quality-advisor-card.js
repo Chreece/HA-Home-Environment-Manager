@@ -1420,6 +1420,10 @@
             physical_source_state:'unavailable',
             controller_status:{status:a.status_code,reason:a.status_reason_code},
             upstream_power_switch:a.upstream_power_switch||null,
+            ...(Object.prototype.hasOwnProperty.call(a,'resolved_fan_purpose')
+              ?{resolved_fan_purpose:a.resolved_fan_purpose}:{}),
+            ...(Object.prototype.hasOwnProperty.call(a,'upstream_power_state')
+              ?{upstream_power_state:a.upstream_power_state}:{}),
           };
           physical.push([id,{...native,state:native?.state||'unavailable',
             attributes:offlineAttributes}]);
@@ -1431,6 +1435,26 @@
       // expose zero extra attributes, and hass.entities is optional. A
       // reconstructed climate facade is always display-only/unavailable.
       const inventory=safeArray(this._dashboard105?.()?.controllers);
+      // Registry/status recovery may already have reconstructed an unavailable
+      // facade. Enrich only its exact saved identity, cloning HA evidence and
+      // preserving an authoritative resolved null on a real facade.
+      physical=physical.map(([id,facade])=>{
+        const attrs=facade?.attributes||{};
+        if(Object.prototype.hasOwnProperty.call(attrs,'resolved_fan_purpose'))return [id,facade];
+        const record=inventory.find(row=>row?.climate_entity_id===id &&
+          row.controller_id===attrs.controller_id && row.area_id===area &&
+          (row.source_device_id??null)===(attrs.source_device_id??null) &&
+          Array.isArray(row.source_entity_ids) &&
+          JSON.stringify([...row.source_entity_ids].sort())===
+            JSON.stringify([...safeArray(attrs.source_entity_ids)].sort()) &&
+          (!row.native_primary_entity_id || !attrs.physical_primary_entity_id ||
+            row.native_primary_entity_id===attrs.physical_primary_entity_id));
+        if(!record || !Object.prototype.hasOwnProperty.call(record,'resolved_fan_purpose'))return [id,facade];
+        return [id,{...facade,attributes:{...attrs,resolved_fan_purpose:record.resolved_fan_purpose,
+          ...(attrs.upstream_power_switch===record.upstream_power_switch &&
+            !Object.prototype.hasOwnProperty.call(attrs,'upstream_power_state')
+            ?{upstream_power_state:record.upstream_power_state??null}:{})}}];
+      });
       const displayed=new Set(physical.map(([id])=>id));
       for(const record of inventory) {
         if(!record || record.area_id!==area ||
@@ -1465,6 +1489,9 @@
             (record.source_entity_ids.length===1?record.source_entity_ids[0]:null),
           physical_source_state:'unavailable',
           upstream_power_switch:record.upstream_power_switch||null,
+          upstream_power_state:record.upstream_power_state??null,
+          ...(Object.prototype.hasOwnProperty.call(record,'resolved_fan_purpose')
+            ?{resolved_fan_purpose:record.resolved_fan_purpose}:{}),
           controller_status:{status,reason:record.status_reason_code||'native_source_unavailable'},
           inventory_unavailable_source_entity_ids:safeArray(record.unavailable_source_entity_ids),
           inventory_unavailable_b13:true,
@@ -2012,20 +2039,35 @@
           state.attributes.pid_pwm_last_confirmed_on_at,state.attributes.pid_pwm_last_confirmed_off_at,
           state.attributes.pid_control_target,state.attributes.pid_control_measurement,
           this._hass?.entities?.[id]?.device_id,
+          Object.prototype.hasOwnProperty.call(state.attributes,'resolved_fan_purpose'),
+          state.attributes.resolved_fan_purpose,
         ]);
       // Activity color must update when a native device changes without a
       // corresponding HEM facade state change.
       const physicalIds=new Set(rows.flatMap(row=>
         Array.isArray(row[14])?row[14]:[]));
+      for(const row of rows) {
+        const supply=this._hass?.states?.[row[0]]?.attributes?.upstream_power_switch;
+        if(typeof supply==='string' && supply)physicalIds.add(supply);
+      }
+      // An unavailable facade can lose every attribute. Its authenticated
+      // inventory still owns membership and all native/supply subscriptions.
+      const inventory=safeArray(this._dashboard105?.()?.controllers).filter(record=>
+        record && typeof record.area_id==='string' &&
+        typeof record.controller_id==='string' && Array.isArray(record.source_entity_ids));
+      for(const record of inventory) {
+        for(const id of [...record.source_entity_ids,record.upstream_power_switch])
+          if(typeof id==='string' && id)physicalIds.add(id);
+      }
       const native=[...physicalIds].sort().map(id=>{
         const state=this._hass?.states?.[id];
         return [id,state?.state,state?.attributes?.hvac_action,state?.attributes?.action,
           state?.attributes?.device_class,state?.attributes?.percentage,
-          state?.attributes?.area_id,
+          state?.attributes?.area_id,state?.attributes?.hvac_modes,
           // A native integration rename must immediately update its heading.
           state?.attributes?.friendly_name,this._hass?.entities?.[id]?.device_id];
       });
-      return JSON.stringify([rows,native]);
+      return JSON.stringify([rows,native,inventory]);
     }
 
     _icon(icon, extraClass = '') {
@@ -2157,9 +2199,10 @@
         : averaged && aggregate?.area_id
         ? 'data-hem-average105="'+escape(item.metric)+'" data-average-area105="'+escape(aggregate.area_id)+'"'
         : fromNative ? 'data-hem-source105="'+escape(item.entity_id)+'"' : '';
-      return `<div class="metric ${miniature ? 'tiny' : ''} metric-${level}" data-room-metric114="${escape(item.metric)}" data-metric-source114="${escape(item.entity_id || '')}">
+      const activity=this._metricActivityHelpB6(item,roomArea);
+      return `<div class="metric ${miniature ? 'tiny' : ''} metric-${level} hem-activity-${activity.tone}${item.overview_narrow_b6?' hem-metric-narrow-b6':''}" data-room-metric114="${escape(item.metric)}" data-metric-source114="${escape(item.entity_id || '')}">
         <div class="metric-line">
-          <span class="metric-name">${this._icon(METRIC_ICON[item.metric] || 'mdi:gauge')}<span class="metric-title" title="${escape(fullSource || metric)}">${escape(metric)}</span><details class="metric-help"><summary aria-label="${escape(this._l65('information'))}: ${escape(metric)}" title="${escape(this._metricHelp(item))}">${this._icon('mdi:information-outline')}</summary><div class="metric-help-content" role="note">${escape(this._metricHelp(item))}</div></details></span>
+          <span class="metric-name" title="${escape(metric+(activity.text?' · '+activity.text:''))}">${this._icon(METRIC_ICON[item.metric] || 'mdi:gauge')}<span class="metric-title" title="${escape(fullSource || metric)}">${escape(metric)}</span><details class="metric-help"><summary aria-label="${escape(this._l65('information'))}: ${escape(metric)}" title="${escape(activity.help)}">${this._icon('mdi:information-outline')}</summary><div class="metric-help-content" role="note">${escape(activity.help)}</div></details></span>
           <span class="metric-number ${click ? 'hem-source-click105' : ''}" ${click}
              ${click ? 'role="button" tabindex="0" title="'+escape(averaged ? 'Average trend' : fullSource)+'"' : ''}>${escape(display)} <small>${escape(unit)}</small></span>
         </div>
@@ -3027,8 +3070,10 @@
           }).join('')}
         </div>` : '';
       const expanded = this._expanded.has(String(room.area_id));
-      const shown = expanded ? details122 : details122.slice(0,4);
-      const button = (details122.length > 4 || moldCalibration) &&
+      let detailCount122=0;
+      const shown = expanded ? details122 : details122.filter(item=>
+        item.overview_narrow_b6 || detailCount122++<4);
+      const button = (details122.filter(item=>!item.overview_narrow_b6).length > 4 || moldCalibration) &&
         this._config.show_metrics !== false ? `<button type="button" class="expand" data-expand="${escape(room.area_id)}"
         aria-expanded="${expanded}">${escape(this._t(expanded ? 'less' : 'more'))} ${this._icon(expanded ? 'mdi:chevron-up' : 'mdi:chevron-down')}</button>` : '';
       const urgent = room.action === 'close';
@@ -3855,8 +3900,8 @@
     return ['en','el'].includes(this._language()) ? originalScienceHelp65.call(this,topic) : this._l65('estimateHelp');
   };
   const originalMetric65=proto65._metric;
-  proto65._metric = function(item,miniature=false) {
-    const html=originalMetric65.call(this,item,miniature);
+  proto65._metric = function(item,miniature=false,roomArea=null) {
+    const html=originalMetric65.call(this,item,miniature,roomArea);
     if (item.metric!=='illuminance' || miniature) return html;
     const label=this._hass?.states?.[item.entity_id]?.attributes?.friendly_name || item.name;
     return label ? html.replace(/<\/div>\s*$/, '<small class="hem-source">'+escape(label)+'</small></div>') : html;
@@ -4474,10 +4519,9 @@
   };
   /* HEM_DEVICE_NAVIGATION122_END */
   /* HEM_ROOM_ACTIVITY112_START
-   * Read the original endpoints, not requested mode, PID demand or an ON
-   * supply plug. Humidifier `action` is distinct from powered-on `state`.
-   * Directional binary/valve colours require an observed nonzero output and
-   * the matching controller's observed, explicitly mapped physical mode.
+   * Read the selected native endpoints. A requested mode, PID demand or an
+   * ON supply is not evidence of activity. Keep unavailable, unreported and
+   * contradictory evidence in the existing measurement information bubble.
    */
   const _nativeActivities112 = (entry, hass) => {
     const a=entry.climate?.attributes || {};
@@ -4486,92 +4530,177 @@
     const declared=a.physical_primary_entity_id;
     if(typeof declared==='string' && declared && !sources.includes(declared))return [];
     const primary=declared || (sources.length===1?sources[0]:null);
+    // A null resolved role is deliberately unknown, not permission to revive
+    // an old selector. Older backends may still provide an explicit selector.
+    const purpose=Object.prototype.hasOwnProperty.call(a,'resolved_fan_purpose')
+      ?a.resolved_fan_purpose:entry.fanPurpose?.state;
+    const supply=a.upstream_power_switch;
+    const supplyState=typeof supply==='string' && supply
+      ?hass?.states?.[supply]?.state??a.upstream_power_state:null;
     const found=[];
-    const tones={heating:'heat',cooling:'cool',humidifying:'humidify',
-      drying:'dry',dehumidifying:'dry',fan:'fan',fan_only:'fan'};
+    const tones={heating:'heat',cooling:'cool',preheating:'preheat',defrosting:'defrost',
+      humidifying:'humidify',drying:'dry',dehumidifying:'dry',fan:'fan',fan_only:'fan'};
+    const channels=tone=>['heat','cool','preheat','defrost'].includes(tone)?['temperature']:
+      ['humidify','dry'].includes(tone)?['humidity']:
+      ['filtration','ventilation'].includes(tone)?[tone]:[];
     for(const id of sources.sort((left,right)=>Number(right===primary)-Number(left===primary))) {
       const state=hass?.states?.[id], attrs=state?.attributes||{};
-      if(!state || ['off','unavailable','unknown'].includes(state.state) ||
-          (typeof attrs.area_id==='string' && attrs.area_id!==a.area_id))continue;
+      if(typeof attrs.area_id==='string' && attrs.area_id!==a.area_id)continue;
       const domain=id.split('.')[0];
+      const role=id===primary && ['extraction','filtration'].includes(purpose)
+        ?purpose==='extraction'?'ventilation':'filtration':null;
       const rawAction=domain==='humidifier'?(attrs.action??attrs.hvac_action):attrs.hvac_action;
       const action=typeof rawAction==='string'?rawAction.trim().toLowerCase():null;
-      const fanTone=()=>id===primary && ['extraction','filtration'].includes(entry.fanPurpose?.state)
-        ?entry.fanPurpose.state==='extraction'?'ventilation':'filtration':'fan';
-      if(action!==null) {
-        if(['heating','cooling','drying','dehumidifying','fan','fan_only','humidifying'].includes(action))
-          found.push({active:true,entity:id,action,
-            tone:tones[action]==='fan'?fanTone():tones[action]});
-        continue; // An explicit IDLE/OFF/unknown action cannot fall back to ON.
+      const actionTone=Object.prototype.hasOwnProperty.call(tones,action)?tones[action]:null;
+      const modes=[...safeArray(attrs.hvac_modes),state?.state,
+        ...(id===primary?safeArray(a.supported_operating_modes):[])];
+      const possible=new Set();
+      if(domain==='humidifier')possible.add('humidity');
+      if(domain==='climate' || id===primary &&
+          ['switch','input_boolean','number','input_number'].includes(domain)) {
+        if(modes.some(mode=>['heat','cool','heat_cool','auto'].includes(mode)))possible.add('temperature');
+        if(modes.some(mode=>['dry','humidify'].includes(mode)))possible.add('humidity');
       }
-      if(['climate','humidifier'].includes(domain))continue;
-      if(domain==='fan' && state.state==='on') {
+      if(role)possible.add(role);
+      channels(actionTone).forEach(channel=>possible.add(channel));
+      const add=(item)=>{
+        const result={entity:id,action:action||'off',active:false,tone:'neutral',
+          channels:[...possible],...item};
+        if(supplyState==='off') {
+          result.reportedTone=result.active||result.tone==='conflict'
+            ?result.reportedTone||result.tone:null;
+          result.active=false;result.tone='neutral';result.status='supplyOff';
+        } else if(supply && (!supplyState || ['unknown','unavailable'].includes(supplyState))) {
+          result.powerUnknown=true;
+        }
+        found.push(result);
+      };
+      if(!state || ['unavailable','unknown'].includes(state.state)) {
+        add({status:'unavailable'});continue;
+      }
+      if(action!==null && action!=='') {
+        const tone=actionTone==='fan'?role||'fan':actionTone;
+        if(tone) {
+          const item={active:true,action,tone,channels:channels(tone)};
+          if(state.state==='off') {
+            // HA represents hvac_mode and hvac_action independently. Preserve
+            // the report without claiming an Off device is certainly active.
+            add({...item,active:false,tone:'conflict',reportedTone:tone,status:'offConflict'});
+          }else add(item);
+        } else add({status:action==='idle'?'idle':action==='off'?'off':'unreported'});
+        continue; // Explicit IDLE/OFF/unknown cannot fall back to powered ON.
+      }
+      if(['climate','humidifier'].includes(domain)) {
+        add({status:state.state==='off'?'off':'unreported'});continue;
+      }
+      if(domain==='fan') {
         const percentage=attrs.percentage;
-        if(percentage!==undefined && percentage!==null &&
-            (!Number.isFinite(Number(percentage)) || Number(percentage)<=0))continue;
-        found.push({active:true,entity:id,action:'fan',tone:fanTone()});
+        if(state.state==='off')add({status:'off'});
+        else if(state.state!=='on')add({status:'unreported'});
+        else if(percentage!==undefined && percentage!==null &&
+            (!Number.isFinite(Number(percentage)) || Number(percentage)<=0))
+          add({status:Number(percentage)===0?'idle':'unreported'});
+        else add({active:true,action:'fan',tone:role||'fan',channels:channels(role)});
         continue;
       }
       const binary=['switch','input_boolean'].includes(domain) && state.state==='on';
       const numeric=['number','input_number'].includes(domain) &&
         String(state.state).trim()!=='' && Number.isFinite(Number(state.state)) &&
         Number(state.state)>0 && Number(state.state)<=100;
-      if(!binary&&!numeric)continue;
+      if(!binary&&!numeric) {
+        add({status:state.state==='off'||Number(state.state)===0?'off':'unreported'});continue;
+      }
       const mapped=id===primary && a.physical_source_state===state.state &&
         ['heat','cool','dry'].includes(a.physical_hvac_mode)?a.physical_hvac_mode:null;
-      found.push({active:true,entity:id,action:'on',tone:mapped||'neutral',
+      add({active:true,action:'on',tone:mapped||'neutral',channels:channels(mapped),
         label:mapped?mapped+'Output':'output'});
     }
     return found;
   };
   const _deviceState87 = (entry,hass) => {
-    const found=_nativeActivities112(entry,hass);
+    const found=_nativeActivities112(entry,hass).filter(item=>item.active);
     return found.find(item=>!['fan','neutral'].includes(item.tone)) || found[0] ||
       {active:false,entity:null,action:'off',tone:'neutral'};
   };
   const _activityCopy112={
-    en:{heat:'Heating',cool:'Cooling',humidify:'Humidifying',dry:'Dehumidifying',
-      filtration:'Filtering air',ventilation:'Ventilating',fan:'Fan running',
-      neutral:'No reported device activity',output:'Output on',
-      heatOutput:'Heating output on',coolOutput:'Cooling output on',dryOutput:'Drying output on'},
-    de:{heat:'Heizt',cool:'Kühlt',humidify:'Befeuchtet',dry:'Entfeuchtet',
-      filtration:'Filtert Luft',ventilation:'Lüftet',fan:'Ventilator läuft',
-      neutral:'Keine gemeldete Geräteaktivität',output:'Ausgang eingeschaltet',
-      heatOutput:'Heizausgang eingeschaltet',coolOutput:'Kühlausgang eingeschaltet',dryOutput:'Entfeuchtungsausgang eingeschaltet'},
-    el:{heat:'Θερμαίνει',cool:'Ψύχει',humidify:'Υγραίνει',dry:'Αφυγραίνει',
-      filtration:'Φιλτράρει αέρα',ventilation:'Εξαερίζει',fan:'Ανεμιστήρας ενεργός',
-      neutral:'Δεν αναφέρεται δραστηριότητα συσκευών',output:'Έξοδος ενεργή',
-      heatOutput:'Έξοδος θέρμανσης ενεργή',coolOutput:'Έξοδος ψύξης ενεργή',dryOutput:'Έξοδος αφύγρανσης ενεργή'},
+    en:{heat:'Heating',cool:'Cooling',preheat:'Preheating',defrost:'Defrosting',
+      humidify:'Humidifying',dry:'Dehumidifying',filtration:'Filtering air',
+      ventilation:'Ventilating',fan:'Fan running',neutral:'No reported device activity',
+      output:'Output on',heatOutput:'Heating output on',coolOutput:'Cooling output on',dryOutput:'Drying output on',
+      idle:'Idle',off:'Off',unreported:'Current activity is not reported',
+      unavailable:'Device unavailable',supplyOff:'Power supply off',reported:'reported',
+      offConflict:'reported while set to Off',powerUnknown:'Power supply state unavailable',
+      activity:'Current device activity',related:'Related device activity'},
+    de:{heat:'Heizt',cool:'Kühlt',preheat:'Heizt vor',defrost:'Taut ab',
+      humidify:'Befeuchtet',dry:'Entfeuchtet',filtration:'Filtert Luft',
+      ventilation:'Lüftet',fan:'Ventilator läuft',neutral:'Keine gemeldete Geräteaktivität',
+      output:'Ausgang eingeschaltet',heatOutput:'Heizausgang eingeschaltet',coolOutput:'Kühlausgang eingeschaltet',dryOutput:'Entfeuchtungsausgang eingeschaltet',
+      idle:'Leerlauf',off:'Aus',unreported:'Aktuelle Aktivität wird nicht gemeldet',
+      unavailable:'Gerät nicht verfügbar',supplyOff:'Stromversorgung ausgeschaltet',reported:'gemeldet',
+      offConflict:'gemeldet, obwohl auf Aus gestellt',powerUnknown:'Status der Stromversorgung nicht verfügbar',
+      activity:'Aktuelle Geräteaktivität',related:'Zugehörige Geräteaktivität'},
+    el:{heat:'Θερμαίνει',cool:'Ψύχει',preheat:'Προθερμαίνει',defrost:'Κάνει απόψυξη',
+      humidify:'Υγραίνει',dry:'Αφυγραίνει',filtration:'Φιλτράρει αέρα',
+      ventilation:'Εξαερίζει',fan:'Ανεμιστήρας ενεργός',neutral:'Δεν αναφέρεται δραστηριότητα συσκευών',
+      output:'Έξοδος ενεργή',heatOutput:'Έξοδος θέρμανσης ενεργή',coolOutput:'Έξοδος ψύξης ενεργή',dryOutput:'Έξοδος αφύγρανσης ενεργή',
+      idle:'Αδράνεια',off:'Ανενεργό',unreported:'Δεν αναφέρεται η τρέχουσα δραστηριότητα',
+      unavailable:'Συσκευή μη διαθέσιμη',supplyOff:'Τροφοδοσία κλειστή',reported:'αναφέρεται',
+      offConflict:'αναφέρεται ενώ έχει οριστεί ανενεργό',powerUnknown:'Κατάσταση τροφοδοσίας μη διαθέσιμη',
+      activity:'Τρέχουσα δραστηριότητα συσκευών',related:'Σχετική δραστηριότητα συσκευών'},
   };
   const _activityText112=(card,items)=>{
     const words=_activityCopy112[card._language()]||_activityCopy112.en;
-    return [...new Set(items.map(item=>words[item.label||item.tone]||words.output))].join(' · ');
+    return [...new Set(items.map(item=>{
+      const action=words[item.label||item.reportedTone||item.tone]||words.output;
+      const text=item.status==='offConflict'?action+' '+words.offConflict:
+        item.status==='supplyOff'?(item.reportedTone?action+' '+words.reported+' · ':'')+words.supplyOff:
+        item.status?words[item.status]||words.unreported:action;
+      return text+(item.powerUnknown?' · '+words.powerUnknown:'');
+    }))].join(' · ');
+  };
+  const _activityTone112=items=>{
+    const tones=[...new Set(items.filter(item=>item.active||item.tone==='conflict')
+      .map(item=>item.tone).filter(tone=>tone!=='neutral'))];
+    return tones.length>1?'mixed':tones[0]||'neutral';
+  };
+  const _metricActivitiesB6=(metric,items)=>{
+    const key=metric==='temp'?'temperature':metric;
+    if(['temperature','humidity'].includes(key))
+      return items.filter(item=>safeArray(item.channels).includes(key));
+    // Thermal, moisture and airing actions are related context for this
+    // derived reading, never evidence of mold removal or risk reduction.
+    if(key==='mold')return items.filter(item=>safeArray(item.channels)
+      .some(channel=>['temperature','humidity','ventilation'].includes(channel)));
+    const particle=['pm1','pm25','pm4','pm10','aqi','pollen'].includes(key);
+    const gas=['co2','no2','o3','so2','co','tvoc','voc','voc_parts','hcho',
+      'formaldehyde','radon','voc_index'].includes(key);
+    return particle||gas?items.filter(item=>safeArray(item.channels).includes('ventilation')||
+      particle&&safeArray(item.channels).includes('filtration')):[];
   };
   const _physicalActivities89 = (devices,hass) => {
     const items=devices.flatMap(entry=>_nativeActivities112(entry,hass));
-    const tone=values=>{
-      const found=[...new Set(values.filter(value=>value!=='neutral'))];
-      return found.length>1?'mixed':found[0]||'neutral';
-    };
-    const thermal=items.filter(item=>['heat','cool'].includes(item.tone));
-    const humidity=items.filter(item=>['humidify','dry'].includes(item.tone));
-    // A companion fan running with a heater does not create a conflicting
-    // room activity; independent air treatment still has its own indication.
-    const directed=items.filter(item=>!['fan','neutral'].includes(item.tone));
-    return {temp:tone(thermal.map(item=>item.tone)),
-      humidity:tone(humidity.map(item=>item.tone)),
-      overall:tone((directed.length?directed:items).map(item=>item.tone)),
-      items,thermal,moisture:humidity,
-      ventilation:items.some(item=>item.tone==='ventilation'),
-      filtration:items.some(item=>item.tone==='filtration')};
+    const thermal=_metricActivitiesB6('temperature',items);
+    const humidity=_metricActivitiesB6('humidity',items);
+    const directed=items.filter(item=>item.active&&!['fan','neutral'].includes(item.tone));
+    return {temp:_activityTone112(thermal),humidity:_activityTone112(humidity),
+      overall:_activityTone112(directed.length?directed:items),items,thermal,moisture:humidity,
+      ventilation:items.some(item=>item.active&&item.tone==='ventilation'),
+      filtration:items.some(item=>item.active&&item.tone==='filtration')};
   };
-  const _airActivity112=(metric,activity)=>{
-    // Particle filtration must never imply that a purifier removes CO2.
-    if(['pm1','pm25','pm4','pm10','aqi','pollen'].includes(metric))
-      return activity.filtration?'filtration':activity.ventilation?'ventilation':'neutral';
-    if(['co2','no2','o3','so2','co','tvoc','voc','voc_parts','hcho','formaldehyde','radon','voc_index'].includes(metric))
-      return activity.ventilation?'ventilation':'neutral';
-    return 'neutral';
+  proto87._measurementActivityB6=function(metric,area,activity){
+    const evidence=activity || (typeof area==='string'
+      ?_physicalActivities89(this._managedControllers(area),this._hass):{items:[]});
+    const items=_metricActivitiesB6(String(metric||'').toLowerCase(),evidence.items);
+    const text=_activityText112(this,items);
+    const words=_activityCopy112[this._language()]||_activityCopy112.en;
+    return {tone:_activityTone112(items),text:metric==='mold'&&text?words.related+': '+text:text};
+  };
+  proto87._metricActivityHelpB6=function(item,area){
+    const activity=item.available===true&&Number.isFinite(item.value)
+      ?this._measurementActivityB6(item.metric,area):{tone:'neutral',text:''};
+    const words=_activityCopy112[this._language()]||_activityCopy112.en;
+    return {...activity,help:(activity.text?(item.metric==='mold'?'':words.activity+': ')+
+      activity.text+'. ':'')+this._metricHelp(item)};
   };
   /* HEM_ROOM_ACTIVITY112_END */
   const _airMetric89 = Object.freeze({
@@ -4681,17 +4810,30 @@
   };
   proto87._roomDetailReadings122=function(room,overview){
     const summary=overview||this._roomGlance122(room);
-    return safeArray(room.readings).flatMap(item=>{
+    const second=summary.extras?.[1];
+    const narrowKey=String(second?.metric||'').toLowerCase();
+    let narrowAdded=false;
+    const result=safeArray(room.readings).flatMap(item=>{
       const key=String(item.metric||'').toLowerCase();
       const represented=summary.metrics.has(key==='temp'?'temperature':key)&&
         item.available===true&&Number.isFinite(item.value);
       if(!represented)return [item];
       const calibrated=item.metric==='mold'&&Number.isFinite(item.details?.calibration_factor);
-      return item.exceeded===true||calibrated?[{...item,overview_detail122:true}]:[];
+      const narrow=key===narrowKey&&!narrowAdded&&item===second;
+      if(narrow)narrowAdded=true;
+      if(item.exceeded===true||calibrated)
+        return [{...item,overview_detail122:true,overview_narrow_value_b6:narrow}];
+      // The second header chip is hidden on narrow cards. Keep its reading
+      // and existing info bubble available in the expanded body at that same
+      // breakpoint, without duplicating it on wider cards.
+      return narrow?[{...item,overview_narrow_b6:true}]:[];
     });
+    if(second&&!narrowAdded)result.unshift({...second,overview_narrow_b6:true});
+    return result;
   };
   proto87._metricInfo122=function(item,areaId=null){
-    const title=this._metricName(item.metric),help=this._metricHelp(item);
+    const activity=this._metricActivityHelpB6(item,areaId);
+    const title=this._metricName(item.metric),help=activity.help;
     const source=[item.name,item.entity_id].filter(Boolean).join(' · ');
     const threshold=Number.isFinite(item.threshold)&&item.threshold>0
       ?this._t('limits')+' '+this._format(item.threshold)+' '+(item.unit||''):'';
@@ -4707,15 +4849,27 @@
         (moldTarget?' data-hem-average105="mold" data-average-area105="'+escape(areaId)+
           '" role="button" tabindex="0" title="'+escape(this._metricName('mold'))+' · trend"':'')+
         '>'+escape(this._format(item.value))+' <small>'+escape(item.unit||'%')+'</small></span>':'';
-    return '<div class="metric hem-metric-info122 metric-'+(item.exceeded?'attention':'safe')+'" '+
+    const aggregate=item.average_evidence;
+    const narrowAction=aggregate?.source_count>=2 && aggregate?.area_id
+      ?'data-hem-average105="'+escape(item.metric)+'" data-average-area105="'+escape(aggregate.area_id)+'"'
+      :typeof item.entity_id==='string' && /^sensor\.[a-z0-9_]+$/.test(item.entity_id)
+        ?'data-hem-source105="'+escape(item.entity_id)+'"':'';
+    const narrowValue=item.metric!=='mold' && item.overview_narrow_value_b6 &&
+      item.available===true && Number.isFinite(item.value)
+      ?'<span class="metric-number hem-metric-narrow-value-b6'+(narrowAction?' hem-source-click105':'')+'" '+
+        (narrowAction?narrowAction+' role="button" tabindex="0" title="'+escape(source||title)+'"':'')+'>'+
+        escape(this._format(item.value))+' <small>'+escape(item.unit||'')+'</small></span>':'';
+    return '<div class="metric hem-metric-info122 metric-'+(item.exceeded?'attention':'safe')+
+      ' hem-activity-'+activity.tone+'" '+
       'data-room-metric114="'+escape(item.metric)+'" data-metric-source114="'+escape(item.entity_id||'')+'" '+
       'data-overview-detail122="'+escape(item.metric)+'">'+
-      '<div class="metric-line"><span class="metric-name">'+this._icon(METRIC_ICON[item.metric]||'mdi:gauge')+
+      '<div class="metric-line"><span class="metric-name" title="'+
+      escape(title+(activity.text?' · '+activity.text:''))+'">'+this._icon(METRIC_ICON[item.metric]||'mdi:gauge')+
       '<span class="metric-title" title="'+escape(source||title)+'">'+escape(title)+'</span>'+
       '<details class="metric-help"><summary aria-label="'+escape(this._l65('information')+': '+title)+'" '+
       'title="'+escape(help)+'">'+this._icon('mdi:information-outline')+'</summary>'+
       '<div class="metric-help-content" role="note">'+escape(help)+
-      (calibration?this._moldCalibrationDetails(item):'')+'</div></details></span>'+moldValue+'</div>'+
+      (calibration?this._moldCalibrationDetails(item):'')+'</div></details></span>'+moldValue+narrowValue+'</div>'+
       (item.exceeded?'<small class="hem-metric-alert122">'+escape(this._t('indoorHigh'))+'</small>':'')+
       (threshold?'<div class="metric-limit">'+escape(threshold)+'</div>':'')+
       (calibration?'<div class="metric-limit">'+escape(calibration)+'</div>':'')+'</div>';
@@ -4743,7 +4897,11 @@
     if(!room || typeof room.area_id!=='string') return _room87.call(this,room);
     const devices=this._managedControllers(room.area_id);
     const overview122=this._roomGlance122(room,devices);
-    const original=_room87.call(this,room,overview122);
+    const narrowOnly=this._config.show_metrics!==false &&
+      room.climate_only===true && overview122.extras[1]
+      ?'<div class="metric-grid hem-metric-narrow-b6">'+
+        this._metric(overview122.extras[1],false,room.area_id)+'</div>':'';
+    const original=narrowOnly+_room87.call(this,room,overview122);
     const labels=_roomLabels87(this._language());
     const open=this._roomsExpanded87?.has(room.area_id)===true;
     const presence=this._roomPresence114(room);
@@ -4767,8 +4925,7 @@
       const measured=typeof evidence?.value==='number' &&
         Number.isFinite(evidence.value)?evidence.value:item.value;
       const formatted=this._format(measured,measured<10?1:0);
-      const tone=_airActivity112(metric,activity);
-      const actionText=tone==='neutral'?'':_activityText112(this,[{tone}]);
+      const {tone,text:actionText}=this._measurementActivityB6(metric,room.area_id,activity);
       const label=String(item.name||short)+' · '+formatted+
         (nativeUnit?' '+nativeUnit:'')+(actionText?' · '+actionText:'');
       const body=this._icon(icon)+
@@ -5315,8 +5472,10 @@
         this._icon(physical.active?'mdi:power':'mdi:power-standby')+
         escape(stateName)+'</span>'+
         '<span class="hem-device-measures87">'+
-        (temperature!==null?metric('mdi:thermometer',fmt(temperature,'°C'),labels.temperature,physicalTone.temp):'')+
-        (humidity!==null?metric('mdi:water-percent',fmt(humidity,'%'),labels.humidity,physicalTone.humidity):'')+
+        (temperature!==null?metric('mdi:thermometer',fmt(temperature,'°C'),labels.temperature+
+          (physicalTone.thermal.length?' · '+_activityText112(this,physicalTone.thermal):''),physicalTone.temp):'')+
+        (humidity!==null?metric('mdi:water-percent',fmt(humidity,'%'),labels.humidity+
+          (physicalTone.moisture.length?' · '+_activityText112(this,physicalTone.moisture):''),physicalTone.humidity):'')+
         (demand!==null?metric('mdi:gauge',fmt(demand,'%'),'PID','neutral'): '')+
         '</span><span class="hem-device-attention87">'+
         (activeFault?_iconHint87('mdi:alert-octagon-outline',issueText,'error'):'')+
@@ -7471,25 +7630,55 @@
   const css112=`<style>
     .hem-room-glance87 .hem-room-metric107>ha-icon,
     .hem-room-glance87 .hem-hint87.hem-activity-neutral>ha-icon,
-    .hem-room-glance87>ha-icon.hem-room-icon112{color:var(--aqa-muted)}
+    .hem-room-glance87>ha-icon.hem-room-icon112,
+    .metric.hem-activity-neutral .metric-name>ha-icon{color:var(--aqa-muted)}
     .hem-room-glance87 .hem-activity-heat>ha-icon,
-    .hem-room-glance87>ha-icon.hem-activity-heat{color:#f28a4b}
+    .hem-room-glance87>ha-icon.hem-activity-heat,
+    .metric.hem-activity-heat .metric-name>ha-icon{color:#f28a4b}
     .hem-room-glance87 .hem-activity-cool>ha-icon,
-    .hem-room-glance87>ha-icon.hem-activity-cool{color:#50baff}
+    .hem-room-glance87>ha-icon.hem-activity-cool,
+    .metric.hem-activity-cool .metric-name>ha-icon{color:#50baff}
+    .hem-room-glance87 .hem-activity-preheat>ha-icon,
+    .metric.hem-activity-preheat .metric-name>ha-icon,
+    .hem-device-reading87.hem-activity-preheat>ha-icon,
+    .hem-native-temp-preheat89 .hem-device-data ha-icon[icon="mdi:thermometer"]{color:#f2b34b}
+    .hem-room-glance87 .hem-activity-defrost>ha-icon,
+    .metric.hem-activity-defrost .metric-name>ha-icon,
+    .hem-device-reading87.hem-activity-defrost>ha-icon,
+    .hem-native-temp-defrost89 .hem-device-data ha-icon[icon="mdi:thermometer"]{color:#91bfff}
+    .hem-room-glance87 .hem-activity-conflict>ha-icon,
+    .metric.hem-activity-conflict .metric-name>ha-icon,
+    .hem-device-reading87.hem-activity-conflict>ha-icon,
+    .hem-native-temp-conflict89 .hem-device-data ha-icon[icon="mdi:thermometer"],
+    .hem-native-rh-conflict89 .hem-device-data ha-icon[icon="mdi:water-percent"]{color:#e58b84}
     .hem-room-glance87 .hem-activity-humidify>ha-icon,
-    .hem-room-glance87>ha-icon.hem-activity-humidify{color:#36cbb8}
+    .hem-room-glance87>ha-icon.hem-activity-humidify,
+    .metric.hem-activity-humidify .metric-name>ha-icon{color:#36cbb8}
     .hem-room-glance87 .hem-activity-dry>ha-icon,
-    .hem-room-glance87>ha-icon.hem-activity-dry{color:#e5ad44}
+    .hem-room-glance87>ha-icon.hem-activity-dry,
+    .metric.hem-activity-dry .metric-name>ha-icon{color:#e5ad44}
     .hem-room-glance87 .hem-activity-filtration>ha-icon,
     .hem-room-glance87 .hem-activity-fan>ha-icon,
     .hem-room-glance87>ha-icon.hem-activity-filtration,
-    .hem-room-glance87>ha-icon.hem-activity-fan{color:#49c98b}
+    .hem-room-glance87>ha-icon.hem-activity-fan,
+    .metric.hem-activity-filtration .metric-name>ha-icon{color:#49c98b}
     .hem-room-glance87 .hem-activity-ventilation>ha-icon,
-    .hem-room-glance87>ha-icon.hem-activity-ventilation{color:#4dc7d9}
+    .hem-room-glance87>ha-icon.hem-activity-ventilation,
+    .metric.hem-activity-ventilation .metric-name>ha-icon{color:#4dc7d9}
     .hem-room-glance87 .hem-activity-mixed>ha-icon,
-    .hem-room-glance87>ha-icon.hem-activity-mixed{color:#b8a3f8}
+    .hem-room-glance87>ha-icon.hem-activity-mixed,
+    .metric.hem-activity-mixed .metric-name>ha-icon{color:#b8a3f8}
     .hem-room-glance87 .hem-room-metric107 .hem-avg-marker105>ha-icon{
       color:var(--aqa-blue);
+    }
+    .hem-metric-narrow-b6,.hem-metric-narrow-value-b6{display:none}
+    @container hem-rooms107 (max-width:400px){
+      .hem-metric-narrow-b6{display:block}
+      .hem-metric-narrow-value-b6{display:inline}
+    }
+    @media(max-width:420px){
+      .hem-metric-narrow-b6{display:block}
+      .hem-metric-narrow-value-b6{display:inline}
     }
   </style>`;
   proto112._styles=function(){return oldStyles112.call(this)+css112;};

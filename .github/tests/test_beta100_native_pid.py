@@ -98,7 +98,10 @@ assert "grid-template-columns:repeat(3,minmax(0,1fr))" in card
 assert "const actualMode=observedNative" in card
 assert "dehumidifying:t.dry" in card
 assert "el:{heating:'Θερμαίνει',cooling:'Ψύχει',drying:'Αφυγραίνει'" in card
-assert "['heating','cooling','drying','dehumidifying','fan','fan_only','humidifying']" in card
+activity=card.split("/* HEM_ROOM_ACTIVITY112_START",1)[1].split("/* HEM_ROOM_ACTIVITY112_END",1)[0]
+for action in ('heating','cooling','drying','dehumidifying','fan','fan_only','humidifying',
+               'preheating','defrosting'):
+    assert action+':' in activity, action
 assert "HEM_COMPACT87_START" in card
 assert "_recoverUnexpectedScroll92" in card
 print("BETA100_NATIVE_ON_THEN_IMMEDIATE_EXTREMES_AND_NATIVE_ONLY_TELEMETRY=PASS")

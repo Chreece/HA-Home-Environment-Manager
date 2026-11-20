@@ -3159,7 +3159,7 @@
       "presentation": "native_flow_unchanged",
       "catalog_path": "strings.json/config/step/setup_room_sources/data/air_quality",
       "literal_references": [
-        "custom_components/environment_manager/device_activation.py:102",
+        "custom_components/environment_manager/device_activation.py:92",
         "custom_components/environment_manager/device_controls.py:244",
         "custom_components/environment_manager/device_controls.py:417",
         "custom_components/environment_manager/device_controls.py:435",
@@ -3179,8 +3179,8 @@
       "literal_references": [
         "custom_components/environment_manager/climate.py:222",
         "custom_components/environment_manager/climate.py:244",
-        "custom_components/environment_manager/climate.py:397",
-        "custom_components/environment_manager/climate.py:401",
+        "custom_components/environment_manager/climate.py:400",
+        "custom_components/environment_manager/climate.py:404",
         "custom_components/environment_manager/climate_commissioning.py:20",
         "custom_components/environment_manager/climate_commissioning.py:83"
       ],
@@ -3200,7 +3200,7 @@
         "custom_components/environment_manager/climate.py:243",
         "custom_components/environment_manager/climate.py:245",
         "custom_components/environment_manager/climate.py:262",
-        "custom_components/environment_manager/climate.py:418"
+        "custom_components/environment_manager/climate.py:421"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7207,7 +7207,7 @@
       "presentation": "native_flow_unchanged",
       "catalog_path": "strings.json/config/step/room_settings/data/air_quality",
       "literal_references": [
-        "custom_components/environment_manager/device_activation.py:102",
+        "custom_components/environment_manager/device_activation.py:92",
         "custom_components/environment_manager/device_controls.py:244",
         "custom_components/environment_manager/device_controls.py:417",
         "custom_components/environment_manager/device_controls.py:435",
@@ -7227,8 +7227,8 @@
       "literal_references": [
         "custom_components/environment_manager/climate.py:222",
         "custom_components/environment_manager/climate.py:244",
-        "custom_components/environment_manager/climate.py:397",
-        "custom_components/environment_manager/climate.py:401",
+        "custom_components/environment_manager/climate.py:400",
+        "custom_components/environment_manager/climate.py:404",
         "custom_components/environment_manager/climate_commissioning.py:20",
         "custom_components/environment_manager/climate_commissioning.py:83"
       ],
@@ -7248,7 +7248,7 @@
         "custom_components/environment_manager/climate.py:243",
         "custom_components/environment_manager/climate.py:245",
         "custom_components/environment_manager/climate.py:262",
-        "custom_components/environment_manager/climate.py:418"
+        "custom_components/environment_manager/climate.py:421"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7346,7 +7346,7 @@
       "presentation": "native_flow_unchanged",
       "catalog_path": "strings.json/config/step/edit_room/data/air_quality",
       "literal_references": [
-        "custom_components/environment_manager/device_activation.py:102",
+        "custom_components/environment_manager/device_activation.py:92",
         "custom_components/environment_manager/device_controls.py:244",
         "custom_components/environment_manager/device_controls.py:417",
         "custom_components/environment_manager/device_controls.py:435",
@@ -7366,8 +7366,8 @@
       "literal_references": [
         "custom_components/environment_manager/climate.py:222",
         "custom_components/environment_manager/climate.py:244",
-        "custom_components/environment_manager/climate.py:397",
-        "custom_components/environment_manager/climate.py:401",
+        "custom_components/environment_manager/climate.py:400",
+        "custom_components/environment_manager/climate.py:404",
         "custom_components/environment_manager/climate_commissioning.py:20",
         "custom_components/environment_manager/climate_commissioning.py:83"
       ],
@@ -7387,7 +7387,7 @@
         "custom_components/environment_manager/climate.py:243",
         "custom_components/environment_manager/climate.py:245",
         "custom_components/environment_manager/climate.py:262",
-        "custom_components/environment_manager/climate.py:418"
+        "custom_components/environment_manager/climate.py:421"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -11295,7 +11295,7 @@
       "presentation": "native_flow_unchanged",
       "catalog_path": "strings.json/options/step/setup_room_sources/data/air_quality",
       "literal_references": [
-        "custom_components/environment_manager/device_activation.py:102",
+        "custom_components/environment_manager/device_activation.py:92",
         "custom_components/environment_manager/device_controls.py:244",
         "custom_components/environment_manager/device_controls.py:417",
         "custom_components/environment_manager/device_controls.py:435",
@@ -11315,8 +11315,8 @@
       "literal_references": [
         "custom_components/environment_manager/climate.py:222",
         "custom_components/environment_manager/climate.py:244",
-        "custom_components/environment_manager/climate.py:397",
-        "custom_components/environment_manager/climate.py:401",
+        "custom_components/environment_manager/climate.py:400",
+        "custom_components/environment_manager/climate.py:404",
         "custom_components/environment_manager/climate_commissioning.py:20",
         "custom_components/environment_manager/climate_commissioning.py:83"
       ],
@@ -11336,7 +11336,7 @@
         "custom_components/environment_manager/climate.py:243",
         "custom_components/environment_manager/climate.py:245",
         "custom_components/environment_manager/climate.py:262",
-        "custom_components/environment_manager/climate.py:418"
+        "custom_components/environment_manager/climate.py:421"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -12188,7 +12188,7 @@
       "presentation": "native_flow_unchanged",
       "catalog_path": "strings.json/options/step/room_settings/data/air_quality",
       "literal_references": [
-        "custom_components/environment_manager/device_activation.py:102",
+        "custom_components/environment_manager/device_activation.py:92",
         "custom_components/environment_manager/device_controls.py:244",
         "custom_components/environment_manager/device_controls.py:417",
         "custom_components/environment_manager/device_controls.py:435",
@@ -12208,8 +12208,8 @@
       "literal_references": [
         "custom_components/environment_manager/climate.py:222",
         "custom_components/environment_manager/climate.py:244",
-        "custom_components/environment_manager/climate.py:397",
-        "custom_components/environment_manager/climate.py:401",
+        "custom_components/environment_manager/climate.py:400",
+        "custom_components/environment_manager/climate.py:404",
         "custom_components/environment_manager/climate_commissioning.py:20",
         "custom_components/environment_manager/climate_commissioning.py:83"
       ],
@@ -12229,7 +12229,7 @@
         "custom_components/environment_manager/climate.py:243",
         "custom_components/environment_manager/climate.py:245",
         "custom_components/environment_manager/climate.py:262",
-        "custom_components/environment_manager/climate.py:418"
+        "custom_components/environment_manager/climate.py:421"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -12327,7 +12327,7 @@
       "presentation": "basic",
       "catalog_path": "strings.json/options/step/edit_room/data/air_quality",
       "literal_references": [
-        "custom_components/environment_manager/device_activation.py:102",
+        "custom_components/environment_manager/device_activation.py:92",
         "custom_components/environment_manager/device_controls.py:244",
         "custom_components/environment_manager/device_controls.py:417",
         "custom_components/environment_manager/device_controls.py:435",
@@ -12347,8 +12347,8 @@
       "literal_references": [
         "custom_components/environment_manager/climate.py:222",
         "custom_components/environment_manager/climate.py:244",
-        "custom_components/environment_manager/climate.py:397",
-        "custom_components/environment_manager/climate.py:401",
+        "custom_components/environment_manager/climate.py:400",
+        "custom_components/environment_manager/climate.py:404",
         "custom_components/environment_manager/climate_commissioning.py:20",
         "custom_components/environment_manager/climate_commissioning.py:83"
       ],
@@ -12368,7 +12368,7 @@
         "custom_components/environment_manager/climate.py:243",
         "custom_components/environment_manager/climate.py:245",
         "custom_components/environment_manager/climate.py:262",
-        "custom_components/environment_manager/climate.py:418"
+        "custom_components/environment_manager/climate.py:421"
       ],
       "consumer_status": "card_adapts_options_form"
     },

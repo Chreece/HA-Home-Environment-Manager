@@ -142,6 +142,11 @@ jobs:
           python -I .github/tests/test_beta112_device_fan_limits.py
           python -I .github/tests/test_beta112_advanced_comfort.py
           python -I .github/tests/test_beta112_room_activity.py --logic-only
+      - name: Native activity evidence and resolved fan roles for every relevant reading
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_074b6_activity_metadata.py
+          python -I .github/tests/test_074b6_metric_activity.py --logic-only
       - name: Consistent profile humidity defaults and saved targets
         run: python -I .github/tests/test_beta116_humidity_defaults.py
       - name: Grouped setting names, translated options and purpose-specific help
@@ -411,6 +416,10 @@ jobs:
         run: python -I .github/tests/test_074_pid_status_card.py
       - name: Adaptive performance status, exact input and review outcomes in Chromium
         run: python -I .github/tests/test_074b4_pid_adaptive_card.py
+      - name: Relevant sensor icon colours, info bubbles and responsive activity visibility
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: python -I .github/tests/test_074b6_metric_activity.py
       - name: B9 on-demand setting help in every menu
         run: python -I .github/tests/test_062b9_settings_help.py
       - name: B8 settings inventory, advanced presentation and exact duplicate aliases

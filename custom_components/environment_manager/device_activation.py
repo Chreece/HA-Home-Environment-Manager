@@ -62,6 +62,42 @@ def authorized(manager, spec):
     )
 
 
+def resolved_fan_purpose(manager, spec, entity):
+    """Read the effective role of one exact endpoint without granting control.
+
+    Dashboard activity and physical planning share this precedence. A role
+    describes the selected equipment; it never proves that equipment is on.
+    Callers exposing controller metadata must pass its identified primary,
+    not a companion endpoint or an arbitrary device from the same room.
+    """
+    if not isinstance(entity, str) or not entity:
+        return None
+    from . import equipment_model as model
+    purpose = model.device_config(manager, spec, entity).get("fan_purpose")
+    configured = model.settings(manager, spec).get("fan_purpose")
+    if configured is not None and configured != "auto":
+        purpose = configured
+    if purpose in ("extraction", "filtration"):
+        return purpose
+
+    # Exact room assignments survive rooms measuring both CO2 and particles.
+    room = model.room_config(manager, spec)
+    if room.get("extraction_fan_entity") == entity:
+        return "extraction"
+    if room.get("purifier_fan_entity") == entity:
+        return "filtration"
+
+    from .room_sources import selected
+    from .discovery import supported_metric
+    ids = selected(manager.settings, spec.area_id, "air_quality")
+    metrics = {supported_metric(manager.hass, state, outdoor=False)
+               for source in ids or ()
+               if (state := manager.hass.states.get(source)) is not None}
+    if ("co2" in metrics) != ("pm25" in metrics):
+        return "extraction" if "co2" in metrics else "filtration"
+    return None
+
+
 def effective_device(manager, spec, entity, *, cap=None):
     from . import equipment_model as model
     original = model.device_config(manager, spec, entity)
@@ -87,23 +123,9 @@ def effective_device(manager, spec, entity, *, cap=None):
     for key in ("presence_requirement", "sleep_behavior", "fan_purpose", "sensor_verified"):
         if key in cfg and cfg[key] is not None and cfg[key] != "auto":
             result[key] = cfg[key]
-    if result.get("fan_purpose") not in ("extraction", "filtration"):
-        # An exact room assignment is stronger evidence than sensor-based
-        # inference. Rooms commonly measure both CO2 and particles; that
-        # must not erase their configured purifier or extraction role.
-        room = model.room_config(manager, spec)
-        if room.get("extraction_fan_entity") == entity:
-            result["fan_purpose"] = "extraction"
-        elif room.get("purifier_fan_entity") == entity:
-            result["fan_purpose"] = "filtration"
-    if result.get("fan_purpose") not in ("extraction", "filtration"):
-        from .room_sources import selected
-        from .discovery import supported_metric
-        ids = selected(manager.settings, spec.area_id, "air_quality")
-        metrics = {supported_metric(manager.hass, state, outdoor=False)
-                   for entity in ids or () if (state := manager.hass.states.get(entity)) is not None}
-        if ("co2" in metrics) != ("pm25" in metrics):
-            result["fan_purpose"] = "extraction" if "co2" in metrics else "filtration"
+    purpose = resolved_fan_purpose(manager, spec, entity)
+    if purpose is not None:
+        result["fan_purpose"] = purpose
     return result
 
 
