@@ -4176,7 +4176,7 @@
           "imc_lambda": "IMC / λ",
           "cohen_coon": "Cohen-Coon",
           "adaptive_suggest": "Adaptiv · Vorschlag mit Bestätigung",
-          "adaptive_auto": "Adaptiv · Automatisch (max. 10 %/Tag)"
+          "adaptive_auto": "Adaptiv · Automatisch (max. 10 % je Anpassung)"
         },
         "state_attributes": {
           "configuration_help": {

@@ -1,4 +1,4 @@
-"""Read-only, mode-bound explanation of passive PID calibration.
+"""Read-only, mode-bound explanations of PID calibration.
 
 This module never observes hardware, schedules work, or authorizes a change.
 It describes the existing evidence, including why learning cannot progress.
@@ -17,6 +17,75 @@ from .pid_review import (
 ADAPTIVE = ("adaptive_suggest", "adaptive_auto")
 SUPPORTED_MODES = ("heat", "cool", "dry")
 SUPPORTED_DOMAINS = ("climate", "humidifier", "switch", "input_boolean")
+
+PERFORMANCE_STATUSES = frozenset((
+    "disabled", "inactive", "waiting", "collecting", "retained", "limited",
+    "candidate", "verifying", "verified", "rollback", "applied",
+    "evaluating", "reverted", "ready_for_review", "no_change", "unsupported",
+))
+
+
+def adaptive_snapshot(*, cfg: dict, payload: dict | None) -> dict:
+    """Project the runtime's current performance evidence without authorizing it.
+
+    The runtime resolves the same input and actuator used by PID. This layer
+    must not fall back to a passive cycle ledger or invent elapsed progress
+    when the current observation cannot be verified.
+    """
+    mode = cfg.get("operating_mode") or cfg.get("requested_mode")
+    result = {
+        "schema_version": 1, "engine": "performance", "operating_mode": mode,
+        "status": "waiting", "reason": "awaiting_observation",
+        "context_verified": False,
+    }
+    if cfg.get("pid_calibration_method") not in ADAPTIVE:
+        return {**result, "status": "disabled", "reason": "manual_calibration"}
+    if cfg.get("control_mode") != "pid":
+        return {**result, "status": "inactive", "reason": "pid_not_active"}
+    if not isinstance(payload, dict):
+        return result
+    if payload.get("operating_mode") != mode:
+        return {**result, "reason": "context_changed"}
+    state = payload.get("status")
+    result["status"] = (state if isinstance(state, str) and state in PERFORMANCE_STATUSES
+                        else "waiting")
+    reason = payload.get("reason")
+    result["reason"] = (reason if isinstance(reason, str) and reason
+                        else "awaiting_observation")
+    result["context_verified"] = payload.get("context_verified") is True
+    # Current inputs remain useful diagnostics even while learning is paused.
+    # Copy containers so presentation cannot mutate a live observer snapshot.
+    for key in ("algorithm", "metric", "unit", "increasing", "measured", "target", "band",
+                "target_semantics", "actuator_kind", "output_kind", "physical_activity",
+                "outcome", "last_change", "last_application"):
+        if key in payload:
+            value = payload[key]
+            result[key] = dict(value) if isinstance(value, dict) else value
+    for key in ("feedback", "constraints"):
+        value = payload.get(key)
+        if isinstance(value, dict):
+            result[key] = {name: list(item) if isinstance(item, (tuple, list))
+                           else item for name, item in value.items()}
+        elif isinstance(value, (tuple, list)):
+            result[key] = list(value)
+    if result["context_verified"]:
+        result["fresh_evidence"] = payload.get("fresh_evidence") is True
+        if isinstance(payload.get("evidence_id"), str):
+            result["evidence_id"] = payload["evidence_id"]
+        if _finite(payload.get("evidence_at")):
+            result["evidence_at"] = payload["evidence_at"]
+        for key in ("samples", "observed_seconds"):
+            value = payload.get(key)
+            if _finite(value) and value >= 0:
+                result[key] = value
+        for key in ("performance", "model", "candidate", "verification", "review"):
+            value = payload.get(key)
+            if isinstance(value, dict):
+                result[key] = dict(value)
+    elif result["status"] in ("candidate", "ready_for_review", "verifying",
+                               "verified", "retained", "rollback", "evaluating"):
+        result.update(status="waiting", reason="context_changed")
+    return result
 
 
 def eligibility(cfg: dict, domain: str | None) -> tuple[str, str] | None:

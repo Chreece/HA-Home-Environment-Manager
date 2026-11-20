@@ -327,9 +327,10 @@ class EquipmentPIDReviewButton(EquipmentEntity, ButtonEntity):
         cfg = self.controller_settings
         raw = self._review()
         record = runtime.records.get(self._spec.identifier, {})
-        saved = record.get("pid_passive")
+        performance = isinstance(raw, dict) and raw.get("algorithm") == "performance_v1"
+        saved = record.get("pid_adaptive" if performance else "pid_passive")
         saved = saved if isinstance(saved, dict) else {}
-        reader = getattr(runtime, "_pid_learning_context", None)
+        reader = getattr(runtime, "_pid_adaptive_context" if performance else "_pid_learning_context", None)
         context = reader(self._spec, cfg=cfg) if callable(reader) else None
         return raw, review_projection(raw, cfg, runtime.clock(), context=context,
                                       saved=saved), cfg, context
@@ -351,6 +352,9 @@ class EquipmentPIDReviewButton(EquipmentEntity, ButtonEntity):
                 or not isinstance(review.get("apply"), dict)
                 or not isinstance(review.get("current"), dict)):
             return False
+        if review.get("algorithm") == "performance_v1":
+            authorize = getattr(runtime, "_pid_adaptive_review_authorized", None)
+            return bool(callable(authorize) and authorize(self._spec, review["id"]))
         authorize = getattr(runtime, "_pid_review_authorized", None)
         if not callable(authorize):
             return False

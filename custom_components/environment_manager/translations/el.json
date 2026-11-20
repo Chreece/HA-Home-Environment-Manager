@@ -4176,7 +4176,7 @@
           "imc_lambda": "IMC / λ",
           "cohen_coon": "Cohen-Coon",
           "adaptive_suggest": "Προσαρμοστικό · Πρόταση με έγκριση",
-          "adaptive_auto": "Προσαρμοστικό · Αυτόματη ρύθμιση (έως 10%/ημέρα)"
+          "adaptive_auto": "Προσαρμοστικό · Αυτόματα (έως 10% ανά προσαρμογή)"
         },
         "state_attributes": {
           "configuration_help": {

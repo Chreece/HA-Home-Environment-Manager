@@ -509,8 +509,45 @@ For a first adaptive setup, **PID · Calibration → Adaptive · Suggest & appro
 learns from normal operation. Review the proposed gains and confidence, then
 choose **Approve** or **Discard**. If approval is held, the proposal remains
 pending. Resolve the displayed condition and press **Approve** again.
-**Adaptive · Automatic (max 10%/day)** is a separate opt-in mode that applies
-bounded adjustments automatically.
+**Adaptive · Automatic (max 10% per change)** is a separate opt-in mode that
+applies validated, bounded adjustments automatically.
+
+Adaptive calibration uses the **same supplied measurement that drives PID**:
+temperature, humidity, CO₂ or PM2.5, including the exact room average and its
+contributing sensors. An additional feedback sensor is not required. Device
+state and acknowledged output establish what the actuator actually did; they
+do not replace the controlled measurement.
+
+The observer assesses normal measurements from short cycles and continuously
+modulating outputs. There is no fixed 75-minute ON requirement or daily tuning
+timer. Observations must still contain enough fresh samples and useful output
+variation to identify a response; a flat or noisy trace cannot establish which
+new gains would improve it. **Good control retains the current gains.** For
+CO₂ and particle limits, measurements below the limit count as success.
+Performance information updates with fresh reports. Model identification
+starts after at least 32 qualified reports, which can span several short
+cycles. The current implementation tests bounded Kp/Ki adjustments and preserves
+Kd and any deliberately disabled zero gains.
+
+When improvement is justified, a small candidate is checked against a local
+response model, independent validation observations and HEM's actual PID and
+actuator constraints. The observer distinguishes tuning problems from stale
+measurements, limited capacity, dwell limits and unconfirmed actuation. Normal
+calibration does not force an experimental cycle or shorten device protections.
+For supported native thermostats without running-activity reports, confirmed
+HEM commands and their acknowledged full-output targets provide an explicitly
+labelled command-response input. This does not represent measured physical
+power. Unconfirmed commands remain a hold.
+
+Only one gain trial is evaluated at a time. Switching outputs apply at a safe,
+confirmed OFF boundary; continuous outputs preserve the current PID demand
+when transferring to the new gains. Comparable subsequent observations decide
+whether to retain the change or restore the previous gains. Changing sources,
+targets, modes, controller settings or manual gains invalidates incompatible
+evidence. A restart preserves completed evidence and committed changes but
+starts a fresh observation segment, so time offline never counts as measured
+response. The card explains whether HEM is observing, retaining good gains,
+waiting for a constraint, proposing a change or verifying an applied trial.
 
 For a measured model, choose **IMC / λ** or **Cohen-Coon**, enter the measured
 process gain, time constant, dead time and λ where applicable, then use
