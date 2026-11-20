@@ -439,14 +439,16 @@ class _FlowMixin(ReconfigureRoomsMixin, RoomSetupMixin, CompactOptionsMixin):
                    if not is_pressure_sensor(self.hass, entity)]
         errors: dict[str, str] = {}
         if user_input is not None:
-            selected = user_input.get(CONF_OUTDOOR, [])
+            selected = user_input.get(CONF_OUTDOOR)
             known = {item["value"] for item in choices}
-            if selected and all(value in known for value in selected):
+            # Outdoor AQI is optional. An empty selection is valid here;
+            # runtime evidence requirements still decide any airing advice.
+            if isinstance(selected, list) and all(
+                isinstance(value, str) and value in known for value in selected
+            ):
                 self._values[CONF_OUTDOOR] = selected
                 return await self._advance("weather")
             errors["base"] = "invalid_outdoor"
-        elif not choices:
-            errors["base"] = "no_outdoor"
         return self.async_show_form(
             step_id="outdoor",
             data_schema=probatio.Schema({

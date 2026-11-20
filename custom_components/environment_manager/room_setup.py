@@ -473,7 +473,10 @@ class RoomSetupMixin:
             first_pollen_max = 0
         defaults = {
             CONF_WEATHER: self._values.get(CONF_WEATHER, [x["value"] for x in options[CONF_WEATHER]]),
-            CONF_OUTDOOR: self._values.get(CONF_OUTDOOR, [x["value"] for x in options[CONF_OUTDOOR]]),
+            # Discovery proves a supported measurement kind, not that a
+            # source measures outdoor air. Require an explicit first choice;
+            # preserve every existing list, including an intentionally empty one.
+            CONF_OUTDOOR: self._values.get(CONF_OUTDOOR, []),
             CONF_WARNINGS: self._values.get(CONF_WARNINGS, []),
             CONF_NOTIFY_TARGETS: self._values.get(CONF_NOTIFY_TARGETS, []),
             CONF_MEDIA_PLAYERS: self._values.get(CONF_MEDIA_PLAYERS, []),

@@ -274,4 +274,6 @@ def global_aqi(reading: Any, profile: dict, *, hass: Any = None) -> dict:
     evidence = resolve_scale(hass, profile, reading.entity_id)
     result = aqi_category(reading.value, evidence["scale"],
                           custom_limit=evidence.get("custom_limit"))
-    return {**result, "scale_source": evidence["scale_source"]}
+    # An invalid value or missing custom limit must not erase the explicitly
+    # selected/provider-verified scale from the source's diagnostic metadata.
+    return {**evidence, **result}
