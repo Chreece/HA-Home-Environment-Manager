@@ -192,8 +192,11 @@ assert unknown_plan.outdoor_safe and not unknown_plan.outside_reasons,unknown_pl
 assert unknown_plan.unavailable_outdoor==(other.entity_id,),unknown_plan
 unknown_view=dash.dashboard_snapshot(unknown_plan,const.DEFAULT_THRESHOLDS)['outdoor']
 assert unknown_view['status']=='partial' and not unknown_view['data_complete'],unknown_view
-assert unknown_view['blockers']==[] and unknown_view['unavailable_sensors']==[other.entity_id],unknown_view
+assert unknown_view['blockers']==[] and unknown_view['unavailable_sensors']==[],unknown_view
+assert unknown_view['unevaluated_aqi_sensors']==[other.entity_id],unknown_view
 assert unknown_view['readings'][0]['available'] is False,unknown_view
+assert unknown_view['readings'][0]['value_available'] is True,unknown_view
+assert unknown_view['readings'][0]['evaluation_status']=='configuration_required',unknown_view
 assert unknown_view['readings'][0]['exceeded'] is False,unknown_view
 
 # Real physical pollutant evidence remains independently authoritative,

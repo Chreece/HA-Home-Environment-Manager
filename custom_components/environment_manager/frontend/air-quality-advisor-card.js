@@ -2251,10 +2251,58 @@
         title="${escape(full)}" aria-label="${escape(full)}">${this._icon('mdi:alert-circle-outline')}<span class="hem-outside-blocker-label123">${escape(name + (detail ? measured ? ' ·' : ' · ' + detail : ''))}</span>${measured ? ` <span class="hem-outside-blocker-value123">${escape(detail)}</span>` : ''}</span>`;
     }
 
+    _outsideReadingB7(item) {
+      // A fresh numeric index and a verified AQI scale are separate evidence.
+      // Never fill a missing backend value from a possibly stale HA state.
+      const numeric=typeof item.value==='number' && Number.isFinite(item.value);
+      const aqi=item.metric==='aqi',details=item.details?.aqi||{};
+      const hasValue=Object.prototype.hasOwnProperty.call(item,'value_available')
+        ?item.value_available===true&&numeric:numeric&&item.available===true;
+      const known=['ready','configuration_required','invalid','unavailable'];
+      const status=known.includes(item.evaluation_status)?item.evaluation_status:
+        !hasValue?'unavailable':item.available===true?'ready':
+        aqi?(details.status==='invalid'?'invalid':'configuration_required'):'unavailable';
+      const invalid={en:'AQI value or scale cannot be evaluated',
+        de:'AQI-Wert oder Skala nicht auswertbar',el:'Δεν αξιολογείται η τιμή ή η κλίμακα AQI'};
+      const limit={en:'AQI comparison limit not configured',
+        de:'AQI-Vergleichsgrenze nicht eingerichtet',el:'Δεν έχει οριστεί το όριο σύγκρισης AQI'};
+      const reason=!hasValue?this._t('missing'):aqi&&status==='configuration_required'
+        ?details.reason==='custom_limit_required'?(limit[this._language()]||limit.en):this._l66('aqiSetup')
+        :aqi&&status!=='ready'
+          ?invalid[this._language()]||invalid.en:'';
+      const label=this._metricName(item.metric);
+      const id=typeof item.entity_id==='string' && /^sensor\.[a-z0-9_]+$/.test(item.entity_id)
+        ?item.entity_id:null;
+      const name=String(item.name||id||label);
+      const value=hasValue?this._format(item.value):'-';
+      const unit=hasValue&&typeof item.unit==='string'?item.unit:'';
+      const text=[value,unit].filter(Boolean).join(' ');
+      const title=[name,id&&id!==name?id:'',text,reason].filter(Boolean).join(' · ');
+      return {id,name,label,value,unit,text,title,reason,status,hasValue,
+        evaluated:hasValue&&item.available===true&&status==='ready'};
+    }
+
+    _outsideReadingInfoB7(reading) {
+      const tag=reading.id?'button':'div';
+      return '<'+tag+' class="hem-outside-info-row123"'+
+        (reading.id?' type="button" data-outside-source123="'+escape(reading.id)+'"':'')+
+        ' title="'+escape(reading.title)+'" aria-label="'+escape(reading.title)+'">'+
+        '<span><span class="hem-outside-info-name-b7">'+escape(reading.name)+'</span>'+
+        (reading.reason?'<small class="hem-outside-info-note-b7">'+escape(reading.reason)+'</small>':'')+
+        '</span> <strong class="hem-outside-info-value123">'+escape(reading.text)+'</strong></'+tag+'>';
+    }
+
+    _outsideAQIHelpB7() {
+      const help={en:'To compare a source, open Home settings, search AQI, then review its scale and any custom limit.',
+        de:'Zum Vergleichen einer Quelle in den Hauseinstellungen nach AQI suchen und ihre Skala sowie eine etwaige eigene Grenze prüfen.',
+        el:'Για σύγκριση μιας πηγής, άνοιξε τις ρυθμίσεις σπιτιού, αναζήτησε AQI και έλεγξε την κλίμακά της και τυχόν προσαρμοσμένο όριο.'};
+      return help[this._language()]||help.en;
+    }
+
     _outside(outdoor) {
       if (this._config.show_outside === false) return '';
       const status = ['safe','partial','unsafe','unknown'].includes(outdoor.status) ? outdoor.status : 'unknown';
-      const main = status === 'safe' ? this._t('goodOutside') : status === 'partial' ?
+      let main = status === 'safe' ? this._t('goodOutside') : status === 'partial' ?
         this._t('partialOutside') : status === 'unsafe' ?
         (outdoor.conditional_open ? this._t('attention')+' · '+this._t('outside') : this._t('badOutside')) : this._t('missingOutside');
       const wx = safeArray(outdoor.weather).find((item) => item.condition) || safeArray(outdoor.weather)[0];
@@ -2270,8 +2318,22 @@
         typeof wx?.wind_kmh === 'number' ? this._format(wx.wind_kmh) + ' km/h' : null
       ].filter(Boolean).join(' · ');
       const readings = safeArray(outdoor.readings);
+      const readingViews=readings.map(item=>this._outsideReadingB7(item));
       const blockers = safeArray(outdoor.blockers);
       const warnings = safeArray(outdoor.warnings).filter((item) => item.active === true);
+      const unverified=readingViews.filter((view,index)=>
+        readings[index].metric==='aqi'&&view.hasValue&&!view.evaluated);
+      const unverifiedIds=new Set(unverified.map(view=>view.id).filter(Boolean));
+      const missing=readingViews.some(view=>!view.hasValue)||
+        safeArray(outdoor.unavailable_sensors).some(id=>!unverifiedIds.has(id))||
+        blockers.some(item=>['no_outdoor_data','no_weather_data','unavailable_weather',
+          'unavailable_warning'].includes(item.code));
+      if(status==='partial'&&unverified.length&&!missing) {
+        const unchecked={en:'AQI cannot be evaluated',de:'AQI nicht auswertbar',el:'Δεν αξιολογείται ο AQI'};
+        main=unverified.every(view=>view.status==='configuration_required')&&
+          unverified.every(view=>view.reason===unverified[0].reason)
+          ?unverified[0].reason:unchecked[this._language()]||unchecked.en;
+      }
       return `<section class="outside outside-${status}" aria-label="${escape(this._t('outside'))}">
         <div class="outdoor-head"><div class="outdoor-icon" title="${escape(weatherSummary)}">${this._icon(icon)}</div>
           <div class="outdoor-text"><span class="eyebrow">${escape(this._t('outside'))}</span>
@@ -2284,10 +2346,12 @@
           <div class="outdoor-status">${this._icon(status === 'safe' ? 'mdi:check' : status === 'unsafe' ? 'mdi:alert' : 'mdi:information-outline')}</div>
         </div>
         ${readings.length ? `<div class="out-metrics" aria-label="${escape(this._t('outdoorSensors'))}">
-          ${readings.map((item) => `<span class="out-chip ${!item.available ? 'dim' : item.exceeded ? 'elevated' : ''} ${item.entity_id && /^sensor\.[a-z0-9_]+$/.test(item.entity_id) ? 'hem-source-click105' : ''}"
-              ${item.entity_id && /^sensor\.[a-z0-9_]+$/.test(item.entity_id) ? 'data-hem-source105="'+escape(item.entity_id)+'" role="button" tabindex="0"' : ''}>
-            <span class="hem-outside-metric-label123">${escape(this._metricName(item.metric))}</span> <b>${item.available ? escape(this._format(item.value)) : '-'}</b>
-            <small>${escape(item.unit)}</small></span>`).join('')}
+          ${readingViews.map((view,index) => `<span class="out-chip ${!view.evaluated ? 'dim' : readings[index].exceeded ? 'elevated' : ''} ${view.id ? 'hem-source-click105' : ''}"
+              data-outside-name-b7="${escape(view.name)}" data-outside-reason-b7="${escape(view.reason)}"
+              data-outside-evaluation-b7="${escape(view.status)}" title="${escape(view.title)}" aria-label="${escape(view.title)}"
+              ${view.id ? 'data-hem-source105="'+escape(view.id)+'" role="button" tabindex="0"' : ''}>
+            <span class="hem-outside-metric-label123">${escape(view.label)}</span> <b>${escape(view.value)}</b>
+            <small>${escape(view.unit)}</small></span>`).join('')}
         </div>` : `<div class="out-empty">${escape(this._t('noOutdoor'))}</div>`}
         ${blockers.length ? `<div class="outside-alerts">${blockers.map((item) => this._outsideBlocker(item)).join('')}</div>` : ''}
         ${warnings.length && !blockers.some((b) => b.code === 'active_warning' || b.code === 'unavailable_warning')
@@ -5343,7 +5407,7 @@
       }
       if(second.childElementCount)outside.appendChild(second);
       for(const reason of outside.querySelectorAll('.reason,.out-chip,.out-empty')) {
-        const full=reason.textContent?.trim();
+        const full=reason.getAttribute('title')||reason.textContent?.trim();
         if(full) {reason.setAttribute('title',full);reason.setAttribute('aria-label',full);}
       }
       const named=outside.querySelector('.outside-title');
@@ -5353,7 +5417,9 @@
       const warnings=[...second.querySelectorAll('.hem-wx-chip103')];
       outside.setAttribute('data-outside-count123',String(Math.min(3,
         Math.max(readings.length,blockers.length,warnings.length))));
-      if([readings,blockers,warnings].some(items=>items.length>1)){
+      const needsSourceInfo=readings.some(reading=>reading.getAttribute('data-outside-reason-b7'));
+      if(needsSourceInfo)outside.setAttribute('data-outside-info-required-b7','true');
+      if(needsSourceInfo||[readings,blockers,warnings].some(items=>items.length>1)){
         // A crowded compact row needs an explicit destination for its extra
         // readings, not a clipped number. Reuse the owned information portal;
         // distinct row/action classes keep hidden copies out of inline queries.
@@ -5366,12 +5432,13 @@
           const value=[reading.querySelector('b')?.textContent?.trim(),
             reading.querySelector('small')?.textContent?.trim()].filter(Boolean).join(' ');
           const id=reading.getAttribute('data-hem-source105');
-          const tag=id?'button':'div';
-          rows.push('<'+tag+' class="hem-outside-info-row123"'+
-            (id?' type="button" data-outside-source123="'+escape(id)+'"':'')+
-            '><span>'+escape(label)+'</span> <strong class="hem-outside-info-value123">'+
-            escape(value)+'</strong></'+tag+'>');
+          rows.push(this._outsideReadingInfoB7({id,
+            name:reading.getAttribute('data-outside-name-b7')||label,text:value,
+            reason:reading.getAttribute('data-outside-reason-b7')||'',
+            title:reading.getAttribute('title')||[label,value].filter(Boolean).join(' · ')}));
         }
+        if(readings.some(reading=>reading.getAttribute('data-outside-evaluation-b7')==='configuration_required'))
+          addText(this._outsideAQIHelpB7());
         for(const blocker of blockers){
           const value=blocker.querySelector('.hem-outside-blocker-value123')?.textContent?.trim();
           const label=blocker.querySelector('.hem-outside-blocker-label123')?.textContent?.trim();
@@ -8767,7 +8834,7 @@
       .hem-outside-details87 .out-metrics>.out-chip:nth-child(n+3),
       .hem-outside-details87 .outside-alerts>.reason~.reason~.reason,
       .hem-outside-details87 .outside-alerts>.hem-wx-chip103~.hem-wx-chip103~.hem-wx-chip103{display:none}
-      .outside[data-outside-count123="3"]{
+      .outside[data-outside-count123="3"],.outside[data-outside-info-required-b7="true"]{
         --hem-outside-more123:block;--hem-outside-status123:none}
       .outdoor-status:has(>.hem-outside-info123){flex:0 0 21px;min-width:21px}
       .outdoor-status>.hem-outside-info123{display:var(--hem-outside-more123,none);margin:0}
@@ -8785,6 +8852,9 @@
         background:transparent;color:inherit;font:inherit;text-align:start;
         white-space:normal;overflow-wrap:anywhere}
       .hem-outside-info-row123>span{min-width:0;flex:1 1 120px}
+      .hem-outside-info-name-b7{display:block;overflow-wrap:anywhere}
+      .hem-outside-info-note-b7{display:block;margin-top:2px;font-size:11px;
+        color:var(--aqa-muted);font-weight:400;white-space:normal;overflow-wrap:anywhere}
       .hem-outside-info-value123{flex:0 0 auto;max-width:100%;white-space:normal}
       button.hem-outside-info-row123{cursor:pointer;color:var(--aqa-blue)}
       button.hem-outside-info-row123:focus-visible{outline:2px solid var(--aqa-blue)}

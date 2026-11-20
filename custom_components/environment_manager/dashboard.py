@@ -22,11 +22,20 @@ def _reason(reason: Reason) -> dict[str, str]:
 
 
 def _reading(reading: Reading, threshold: float | None, *, indoor: bool) -> dict[str, Any]:
-    value = reading.value
+    from math import isfinite
+    value_available = (isinstance(reading.value, (int, float))
+                       and not isinstance(reading.value, bool)
+                       and isfinite(reading.value))
+    value = reading.value if value_available else None
     aqi = (reading.details or {}).get("aqi", {}) if reading.metric == "aqi" else {}
-    # An uncalibrated AQI index may have a numeric value but is not
-    # evaluated evidence. Show it as incomplete, never as safe/green.
+    # A fresh numeric index and a verified scale are different evidence.
+    # Retain the value for a neutral display while keeping existing evaluated
+    # availability false until that index can actually be interpreted.
     trusted_aqi = indoor or reading.metric != "aqi" or aqi.get("status") == "ready"
+    evaluation_status = ("unavailable" if not value_available else
+                         "ready" if trusted_aqi else
+                         "invalid" if aqi.get("status") in ("invalid", "unavailable")
+                         else "configuration_required")
     if aqi:
         threshold = aqi.get("custom_limit") if aqi.get("scale") == "custom" else (
             100 if aqi.get("scale") == "us_epa" else
@@ -41,7 +50,9 @@ def _reading(reading: Reading, threshold: float | None, *, indoor: bool) -> dict
                  else UNIT_LABEL.get(reading.metric, "")),
         "value": value,
         "threshold": threshold,
-        "available": value is not None and trusted_aqi,
+        "available": value_available and trusted_aqi,
+        "value_available": value_available,
+        "evaluation_status": evaluation_status,
         **({"details": reading.details} if reading.details else {}),
         "exceeded": (
             (bool(aqi.get("operational_unsafe")) if trusted_aqi else False)
@@ -211,6 +222,13 @@ def dashboard_snapshot(plan: Plan, limits: dict[str, float]) -> dict[str, Any]:
         "unknown" if not plan.outdoor_safe else
         "partial" if missing_conditions else "safe"
     )
+    outdoor_readings = [
+        _reading(item, limits.get(f"outdoor_{item.metric}"), indoor=False)
+        for item in plan.outdoor_readings
+    ]
+    unevaluated_aqi = [item["entity_id"] for item in outdoor_readings
+                      if item["metric"] == "aqi" and item["value_available"]
+                      and not item["available"]]
 
     return {
         "version": 1,
@@ -224,15 +242,17 @@ def dashboard_snapshot(plan: Plan, limits: dict[str, float]) -> dict[str, Any]:
             "pollen": plan.environment.get("__outside__", {}).get("pollen", {"status":"not_configured"}),
             "safe_to_ventilate": plan.outdoor_safe,
             "data_complete": not missing_conditions,
-            "readings": [
-                _reading(item, limits.get(f"outdoor_{item.metric}"), indoor=False)
-                for item in plan.outdoor_readings
-            ],
+            "readings": outdoor_readings,
             "weather": [_weather(item) for item in plan.weather],
             "warnings": [_warning(item) for item in plan.warnings if item.active is not None],
             "ignored_warning_entities": [item.entity_id for item in plan.warnings
                                          if item.active is None],
             "blockers": [_reason(reason) for reason in plan.outside_reasons],
-            "unavailable_sensors": list(plan.unavailable_outdoor),
+            # The plan retains every incomplete comparison for control/data
+            # health policy. The UI distinguishes missing observations from
+            # numeric AQI sources that need scale configuration or correction.
+            "unavailable_sensors": [entity for entity in plan.unavailable_outdoor
+                                    if entity not in unevaluated_aqi],
+            "unevaluated_aqi_sensors": unevaluated_aqi,
         },
     }

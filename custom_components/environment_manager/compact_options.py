@@ -547,7 +547,7 @@ class CompactOptionsMixin:
             fields[_field("outside_aqi_entity", chosen, required=True)] = _select([
                 {"value":e,"label":source_name(self.hass, e)} for e in aqis])
             fields[_field("outside_aqi_scale", scale_selection(current, chosen))] = _select([
-                "not_configured","us_epa","eea_category","custom"],
+                "auto","not_configured","us_epa","eea_category","custom"],
                 translation_key="outside_aqi_scale")
             fields[_field("outside_aqi_limit",details.get("custom_limit",100))] = _number(0,10000)
         else:
