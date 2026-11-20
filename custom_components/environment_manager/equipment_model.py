@@ -1373,6 +1373,35 @@ def pid_step(measured: float, target: float, now: float, *, increasing: bool,
     return PIDMemory(integral, measured, now, derivative, max(0., min(100., p+integral+d)))
 
 
+def pid_bumpless(memory: PIDMemory, target: float, *, increasing: bool,
+                 kp: float, ki: float, kd: float) -> PIDMemory | None:
+    """Rebias the stored integral contribution without changing current effort.
+
+    This is only mathematical state transfer; it never changes the physical
+    actuator, phase anchor, dwell or ownership. A transfer that cannot retain
+    output within the existing integral bounds is deferred. The independent
+    target cutoff still wins over any retained effort.
+    """
+    values = (memory.integral, memory.measured, memory.stamp,
+              memory.derivative, memory.demand, target, kp, ki, kd)
+    if (any(type(value) not in (int, float) or not math.isfinite(value)
+            for value in values) or type(increasing) is not bool
+            or min(kp, ki, kd) < 0 or not 0 <= memory.demand <= 100):
+        return None
+    direction = 1 if increasing else -1
+    error = direction * (target - memory.measured)
+    if error <= 0:
+        return PIDMemory(measured=memory.measured, stamp=memory.stamp)
+    proportional = kp * error
+    derivative = -direction * kd * memory.derivative
+    integral = max(-100., min(100., memory.demand - proportional - derivative))
+    output = max(0., min(100., proportional + integral + derivative))
+    if not math.isclose(output, memory.demand, rel_tol=0., abs_tol=1e-6):
+        return None
+    return PIDMemory(integral, memory.measured, memory.stamp,
+                     memory.derivative, memory.demand)
+
+
 def duty_on(demand: float, elapsed: float, cycle: float, min_on: float, min_off: float,
             *, starting: bool = False) -> bool:
     """Slow time-proportioning. Never fabricate a pulse shorter than a dwell.

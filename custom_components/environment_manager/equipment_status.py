@@ -50,7 +50,9 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
         from .pid_math import finite
-        from .pid_learning_status import context_mode, snapshot as learning_snapshot
+        from .pid_learning_status import (
+            adaptive_snapshot, context_mode, snapshot as learning_snapshot,
+        )
         from .pid_review import review_projection
         from .equipment_native_target import diagnostics as native_target_diagnostics
         runtime = self._manager.equipment
@@ -134,13 +136,23 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
         if (live_learning_context is None
                 or getattr(learning_tracker, "context", None) != live_learning_context):
             learning = None
+        adaptive_reader = getattr(runtime, "_pid_adaptive_status", None)
+        adaptive_payload = (adaptive_reader(self._spec, cfg=cfg, cap=native_cap, plan=plan)
+                            if callable(adaptive_reader) else None)
         review = record.get("pid_passive_review")
+        performance_review = (isinstance(review, dict)
+                              and review.get("algorithm") == "performance_v1")
+        review_context = (adaptive_payload.get("context")
+                          if performance_review and isinstance(adaptive_payload, dict)
+                          and adaptive_payload.get("context_verified") is True
+                          else None if performance_review else live_learning_context)
+        review_saved = record.get("pid_adaptive", {}) if performance_review else saved_learning
         review_mode = (review.get("operating_mode") or context_mode(review.get("context"))
                        if isinstance(review, dict) else None)
-        review = (review_projection(review, cfg, now, context=live_learning_context,
-                                    saved=saved_learning)
+        review = (review_projection(review, cfg, now, context=review_context,
+                                    saved=review_saved)
                   if review_mode == active_learning_mode else {"state": "none"})
-        if live_learning_context is None and review.get("state") == "pending":
+        if review_context is None and review.get("state") == "pending":
             # A missing sensor is not permanent proposal expiry. Keep the
             # stored review for recovery, but do not present unverified gains
             # as a proposal for the currently selected physical context.
@@ -156,6 +168,15 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
             live_context=live_learning_context,
             state_lookup=self._manager.hass.states.get,
         )
+        adaptive_status = None
+        if callable(adaptive_reader):
+            adaptive_status = adaptive_snapshot(
+                cfg=cfg, payload=adaptive_payload,
+            )
+            # The old ledger is retained as history. It cannot describe the
+            # active performance learner or impose its complete-cycle gates.
+            learning_status = adaptive_status
+            learning = None
         # Surface both pieces of an externally powered controller. The HA
         # native appliance may be unavailable precisely BECAUSE the supply
         # is OFF. Neither observation implies that the logical controller
@@ -306,15 +327,16 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
                                       in ("adaptive_suggest", "adaptive_auto")
                                       and cfg.get("control_mode") == "pid" else None),
             "pid_learning_status": learning_status,
+            "pid_adaptive_status": adaptive_status,
             "pid_calibration_method": cfg.get("pid_calibration_method", "manual"),
             "pid_last_calibration": cfg.get("pid_last_calibration"),
             # Compatibility field derived from the one selected method.
             "pid_adaptation_mode": cfg.get("pid_adaptation_mode", "disabled"),
             "pid_review": {
                 key: review.get(key)
-                for key in ("state","current","apply","recommended",
+                for key in ("state","algorithm","current","apply","recommended",
                             "confidence","valid_cycles","cycle_at","operating_mode",
-                            "created_at","expires_at","reason")
+                            "created_at","expires_at","reason","evidence_id","evidence_at")
             } if review
               else {"state":"none"},
             # Small read-only evidence summary. Raw measurements remain

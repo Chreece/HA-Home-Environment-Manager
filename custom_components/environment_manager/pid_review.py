@@ -63,6 +63,9 @@ def review_application_matches(review: Any, cfg: dict) -> bool:
     """Recognize the exact committed application after interrupted bookkeeping."""
     if not isinstance(review, dict):
         return False
+    if review.get("algorithm") == "performance_v1":
+        from .pid_adaptive_store import application_matches
+        return application_matches(review, cfg)
     last = cfg.get("pid_last_calibration")
     applied = review.get("apply")
     if not isinstance(last, dict) or not isinstance(applied, dict):
@@ -91,6 +94,9 @@ def review_projection(review: Any, cfg: dict, now: float, *,
     """
     if not isinstance(review, dict):
         return {"state": "none"}
+    if review.get("algorithm") == "performance_v1":
+        from .pid_adaptive_store import review_projection as performance_projection
+        return performance_projection(review, cfg, now, context=context, saved=saved)
     result = dict(review)
     if review_application_matches(review, cfg):
         result.update(state="applied", reason="applied")
@@ -273,6 +279,8 @@ def _review_locale(language: str) -> dict:
 
 
 def notification_text(spec: Any, review: dict, language: str = "en") -> str:
+    if review.get("algorithm") == "performance_v1":
+        return _performance_notification_text(spec, review, language)
     labels = _review_locale(language)
     def values(name: str) -> str:
         old = review["current"][name]
@@ -286,6 +294,52 @@ def notification_text(spec: Any, review: dict, language: str = "en") -> str:
         f"{labels['confidence']}: **{review['confidence']}**, "
         f"{review['valid_cycles']} {labels['cycles']}.\n\n"
         f"{labels['instructions']}\n\n{labels['safety']}"
+    )
+
+
+def _performance_notification_text(spec: Any, review: dict, language: str) -> str:
+    """Explain normal-operation evidence without importing legacy cycle gates."""
+    base = language.replace("_", "-").split("-", 1)[0].lower()
+    labels = _review_locale(language)
+    wording = {
+        "de": (
+            "Geprüfte Beobachtungsabschnitte",
+            "Diese kleine Anpassung wurde anhand der normalen Messungen und "
+            "der tatsächlichen PID- und Gerätegrenzen geprüft. Sie wird erst "
+            "bei bestätigtem Gerätezustand übernommen: bei schaltenden "
+            "Ausgängen sicher AUS, bei kontinuierlichen Ausgängen ohne "
+            "zusätzlichen Sollwertsprung. Danach wird die Wirkung beobachtet; "
+            "bei bestätigter Verschlechterung werden die vorherigen Werte "
+            "wiederhergestellt. Es wird kein Testzyklus erzwungen.",
+        ),
+        "el": (
+            "Επαληθευμένα διαστήματα παρατήρησης",
+            "Αυτή η μικρή προσαρμογή ελέγχθηκε με τις φυσιολογικές μετρήσεις "
+            "και τα πραγματικά όρια του PID και της συσκευής. Εφαρμόζεται "
+            "μόνο με επιβεβαιωμένη κατάσταση: ασφαλώς κλειστή έξοδος για "
+            "συσκευές on/off ή χωρίς πρόσθετο άλμα εντολής για συνεχή έξοδο. "
+            "Η απόδοση ελέγχεται μετά την εφαρμογή και οι προηγούμενες τιμές "
+            "επαναφέρονται αν επιβεβαιωθεί επιδείνωση. Δεν επιβάλλεται "
+            "δοκιμαστικός κύκλος.",
+        ),
+    }.get(base, (
+        "Validated observation windows",
+        "This small adjustment was checked against normal measurements and "
+        "the actual PID and actuator constraints. It is applied only with "
+        "confirmed device state: safely OFF for switching outputs, or with "
+        "a continuous output transfer that preserves the current demand. "
+        "Performance is checked afterwards and the previous gains are "
+        "restored if comparable observations confirm a regression. No test "
+        "cycle is forced.",
+    ))
+    changes = "\n\n".join(
+        f"**{key.upper()}**: {review['current'][key]:.5g} → {review['apply'][key]:.5g}"
+        for key in ("kp", "ki", "kd")
+    )
+    return (
+        f"{labels['device']} **{str(spec.name)[:96]}**.\n\n{changes}\n\n"
+        f"{wording[0]}: **{review.get('validated_windows', 0)}**.\n\n"
+        f"{labels['instructions']}\n\n{wording[1]}"
     )
 
 

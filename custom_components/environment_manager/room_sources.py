@@ -444,19 +444,52 @@ def numeric(hass: Any, entity: str, area: str, group: str, age: float) -> float 
 
 def aggregate(hass: Any, entities, area: str, group: str, age: float) -> tuple[float | None, str]:
     """Average valid normalized measurements only; never inject missing zeros."""
+    value, status, _ = aggregate_with_provenance(hass, entities, area, group, age)
+    return value, status
+
+
+def aggregate_with_provenance(
+    hass: Any, entities, area: str, group: str, age: float,
+) -> tuple[float | None, str, dict]:
+    """The same control mean plus the exact contributors and report times.
+
+    Provenance describes the accepted value; it never selects another input
+    for learning. An unchanged sensor value may be a new physical report,
+    while repeatedly reading one HA State never creates a new report time.
+    """
+    identities = tuple(dict.fromkeys(entities or ()))
+    evidence = {"source_ids": list(identities), "contributor_ids": [],
+                "aggregation": "mean" if len(identities) > 1 else "single",
+                "source_reported_at": {}, "reported_at": None}
     if not entities:
-        return None, "not_selected"
-    candidates = [numeric(hass, e, area, group, age) for e in dict.fromkeys(entities)]
-    values = [v for v in candidates
-              if isinstance(v, (int, float)) and not isinstance(v, bool)
-              and math.isfinite(v)]
+        return None, "not_selected", evidence
+    values = []
+    for entity in identities:
+        value = numeric(hass, entity, area, group, age)
+        if (not isinstance(value, (int, float)) or isinstance(value, bool)
+                or not math.isfinite(value)):
+            continue
+        values.append(value)
+        evidence["contributor_ids"].append(entity)
+        state = hass.states.get(entity)
+        stamp = getattr(state, "last_reported", None) or getattr(state, "last_updated", None)
+        try:
+            reported = stamp.timestamp() if stamp is not None and stamp.tzinfo is not None else None
+        except (AttributeError, TypeError, ValueError, OverflowError):
+            reported = None
+        if isinstance(reported, (int, float)) and math.isfinite(reported):
+            evidence["source_reported_at"][entity] = reported
+    times = evidence["source_reported_at"]
+    if times and len(times) == len(values):
+        evidence["reported_at"] = max(times.values())
     if not values:
-        return None, "selected_source_unavailable"
-    partial = len(values) != len(candidates)
+        return None, "selected_source_unavailable", evidence
+    partial = len(values) != len(identities)
+    evidence["partial"] = partial
     return sum(values) / len(values), (
         ("selected_partial_mean" if len(values) > 1 else "selected_partial_sensor")
         if partial else ("selected_mean" if len(values) > 1 else "selected_sensor")
-    )
+    ), evidence
 
 
 

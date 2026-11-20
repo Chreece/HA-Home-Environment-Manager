@@ -13360,7 +13360,7 @@
     const value=pidNumber074(left?.[key]);
     return value!==null&&value===pidNumber074(right?.[key]);
   });
-  function pidStatusModels074(fields,status,language,now=Date.now()/1000){
+  function pidLegacyStatusModels074(fields,status,language,now=Date.now()/1000){
     const words=pidWords074(language),groups=new Map();
     for(const field of fields){
       const a=field.state?.attributes||{};
@@ -13427,7 +13427,7 @@
       const rejection=progress?.last_rejection_reason!==reasonCode?
         pidReason074(language,progress?.last_rejection_reason):'';
       return {mode:group.mode||'device',title:words.modes[group.mode]||words.generic,
-        current:Boolean(actual),gains,method:words.methods[method]||words.unknown,
+        current:Boolean(actual),gains,method:words.methods[method]||words.unknown,methodCode:method,
         note:method==='adaptive_suggest'?words.suggest:method==='adaptive_auto'?words.automatic:'',
         state:words.states[state]?state:'unknown',stateLabel:words.states[state]||words.unavailable,
         reason,phase,rejection,cycles:adaptive&&matches&&contextVerified?pidNumber074(learning?.valid_cycles??progress?.valid_cycles):null,
@@ -13436,6 +13436,203 @@
         review,last,showHistory:matches&&Object.prototype.hasOwnProperty.call(status,'pid_last_calibration')&&
           (!status.pid_last_calibration||Boolean(last)),active:matches};
     }).sort((a,b)=>Number(b.active)-Number(a.active)||a.title.localeCompare(b.title,language));
+  }
+  const HEM_PID_PERFORMANCE_WORDS074B4={
+    en:{feedback:'Control measurement',sources:'Measurement sources',contributing:'used',excluded:'not used',
+      sourceCount:'{used} of {total} sources',mean:'Room average',single:'Selected sensor',
+      target:'Target',tolerance:'tolerance',observation:'Valid observations',readings:'readings',inBand:'Time within target',
+      error:'Average error',candidate:'Candidate · not applied',h:'h',min:'min',s:'s',
+      output:'Output evidence',outputKinds:{reported_state:'Reported device state',reported_position:'Reported output setting',
+        acknowledged_target:'Acknowledged setpoint',reported_activity:'Reported running activity',
+        acknowledged_native_command:'Confirmed native command; physical power is not measured'},
+      automatic:'Observes normal operation and adjusts only when supported by evidence. Each change is checked afterwards.',
+      suggest:'Observes normal operation. A proposed change needs your approval and is checked afterwards.',
+      unknownReason:'The current observation does not yet support an adjustment.',
+      states:{collecting:'Observing normal operation',retained:'Current gains retained',
+        limited:'Control is limited',candidate:'Checking a possible adjustment',verifying:'Evaluating the adjustment',
+        verified:'Adjustment verified',rollback:'Previous gains recommended',applied:'Adjustment applied',
+        evaluating:'Evaluating the adjustment',reverted:'Previous gains restored'}},
+    el:{feedback:'Μέτρηση ελέγχου',sources:'Πηγές μέτρησης',contributing:'χρησιμοποιείται',excluded:'δεν χρησιμοποιείται',
+      sourceCount:'{used} από {total} πηγές',mean:'Μέσος όρος χώρου',single:'Επιλεγμένος αισθητήρας',
+      target:'Στόχος',tolerance:'ανοχή',observation:'Έγκυρες παρατηρήσεις',readings:'μετρήσεις',inBand:'Χρόνος εντός στόχου',
+      error:'Μέση απόκλιση',candidate:'Υποψήφια αλλαγή · δεν εφαρμόστηκε',h:'ώρ.',min:'λεπ.',s:'δευτ.',
+      output:'Τεκμήριο εξόδου',outputKinds:{reported_state:'Αναφερόμενη κατάσταση συσκευής',reported_position:'Αναφερόμενη ρύθμιση εξόδου',
+        acknowledged_target:'Επιβεβαιωμένη τιμή στόχου',reported_activity:'Αναφερόμενη ενεργή λειτουργία',
+        acknowledged_native_command:'Επιβεβαιωμένη εντολή συσκευής· η φυσική ισχύς δεν μετριέται'},
+      automatic:'Παρακολουθεί την κανονική λειτουργία και προσαρμόζει τις τιμές μόνο όταν το τεκμηριώνουν οι μετρήσεις. Κάθε αλλαγή αξιολογείται μετά την εφαρμογή.',
+      suggest:'Παρακολουθεί την κανονική λειτουργία. Κάθε προτεινόμενη αλλαγή χρειάζεται την έγκρισή σου και αξιολογείται μετά την εφαρμογή.',
+      unknownReason:'Οι τρέχουσες παρατηρήσεις δεν επαρκούν ακόμη για προσαρμογή.',
+      states:{collecting:'Παρακολούθηση κανονικής λειτουργίας',retained:'Διατηρούνται οι τρέχουσες τιμές',
+        limited:'Ο έλεγχος υπόκειται σε περιορισμό',candidate:'Έλεγχος πιθανής προσαρμογής',verifying:'Αξιολόγηση της προσαρμογής',
+        verified:'Η προσαρμογή επαληθεύτηκε',rollback:'Προτείνεται επαναφορά των προηγούμενων τιμών',applied:'Η προσαρμογή εφαρμόστηκε',
+        evaluating:'Αξιολόγηση της προσαρμογής',reverted:'Οι προηγούμενες τιμές επανήλθαν'}},
+    de:{feedback:'Regelmesswert',sources:'Messwertquellen',contributing:'verwendet',excluded:'nicht verwendet',
+      sourceCount:'{used} von {total} Quellen',mean:'Raummittelwert',single:'Ausgewählter Sensor',
+      target:'Sollwert',tolerance:'Toleranz',observation:'Gültige Beobachtungen',readings:'Messungen',inBand:'Zeit im Zielbereich',
+      error:'Mittlere Abweichung',candidate:'Vorschlag · noch nicht angewendet',h:'Std.',min:'Min.',s:'Sek.',
+      output:'Ausgangsnachweis',outputKinds:{reported_state:'Gemeldeter Gerätezustand',reported_position:'Gemeldete Ausgangseinstellung',
+        acknowledged_target:'Bestätigter Sollwert',reported_activity:'Gemeldete Betriebsaktivität',
+        acknowledged_native_command:'Bestätigter Gerätebefehl; die physische Leistung wird nicht gemessen'},
+      automatic:'Beobachtet den normalen Betrieb und passt Werte nur bei ausreichenden Belegen an. Jede Änderung wird danach geprüft.',
+      suggest:'Beobachtet den normalen Betrieb. Ein Änderungsvorschlag benötigt deine Bestätigung und wird danach geprüft.',
+      unknownReason:'Die aktuellen Beobachtungen reichen noch nicht für eine Anpassung aus.',
+      states:{collecting:'Beobachtung des normalen Betriebs',retained:'Aktuelle Werte beibehalten',
+        limited:'Regelung ist begrenzt',candidate:'Mögliche Anpassung wird geprüft',verifying:'Anpassung wird bewertet',
+        verified:'Anpassung bestätigt',rollback:'Vorherige Werte empfohlen',applied:'Anpassung angewendet',
+        evaluating:'Anpassung wird bewertet',reverted:'Vorherige Werte wiederhergestellt'}}
+  };
+  const HEM_PID_PERFORMANCE_REASONS074B4={
+    awaiting_observation:['Waiting for the next valid control observation.','Αναμονή για την επόμενη έγκυρη παρατήρηση ελέγχου.','Warten auf die nächste gültige Regelungsbeobachtung.'],
+    context_changed:['Settings or measurement sources changed; fresh observations are needed.','Άλλαξαν οι ρυθμίσεις ή οι πηγές μέτρησης· χρειάζονται νέες παρατηρήσεις.','Einstellungen oder Messwertquellen haben sich geändert; neue Beobachtungen sind nötig.'],
+    tracking_well:['The target is being maintained; no gain change is needed.','Ο στόχος διατηρείται· δεν χρειάζεται αλλαγή συντελεστών.','Der Zielbereich wird eingehalten; eine Änderung ist nicht nötig.'],
+    insufficient_evidence:['More valid observations are needed to judge the response.','Χρειάζονται περισσότερες έγκυρες παρατηρήσεις για να αξιολογηθεί η απόκριση.','Weitere gültige Beobachtungen sind nötig, um die Reaktion zu beurteilen.'],
+    insufficient_excitation:['Output variation is too small to identify a reliable adjustment.','Η μεταβολή της εξόδου είναι πολύ μικρή για να τεκμηριωθεί αξιόπιστη προσαρμογή.','Die Ausgangsänderungen sind zu klein für eine verlässliche Anpassung.'],
+    output_unverified:['The applied output cannot be verified; gains are retained.','Δεν επιβεβαιώνεται η εφαρμοσμένη έξοδος· οι συντελεστές διατηρούνται.','Der tatsächlich angewendete Ausgang ist nicht bestätigt; die Werte bleiben erhalten.'],
+    capacity_limited:['The output is at its limit. Increasing gains cannot add capacity.','Η έξοδος βρίσκεται στο όριό της. Η αύξηση συντελεστών δεν αυξάνει τη διαθέσιμη ισχύ.','Der Ausgang ist am Limit. Höhere Reglerwerte schaffen keine zusätzliche Leistung.'],
+    actuator_limited:['An output restriction is active; these observations are not used for tuning.','Ισχύει περιορισμός εξόδου· αυτές οι παρατηρήσεις δεν χρησιμοποιούνται για προσαρμογή.','Eine Ausgangsbeschränkung ist aktiv; diese Beobachtungen werden nicht zur Anpassung verwendet.'],
+    measurement_noise:['Measurement noise is too high for a reliable gain change.','Ο θόρυβος των μετρήσεων είναι πολύ μεγάλος για αξιόπιστη αλλαγή συντελεστών.','Das Messrauschen ist zu hoch für eine verlässliche Anpassung.'],
+    measurement_unavailable:['The configured control measurement is missing or outdated.','Η ρυθμισμένη μέτρηση ελέγχου λείπει ή δεν είναι πρόσφατη.','Der konfigurierte Regelmesswert fehlt oder ist veraltet.'],
+    source_membership_changed:['The contributing sensors changed; a new observation segment has started.','Άλλαξαν οι αισθητήρες που συνεισφέρουν στη μέτρηση· ξεκίνησε νέο τμήμα παρατήρησης.','Die beitragenden Sensoren haben sich geändert; ein neuer Beobachtungsabschnitt beginnt.'],
+    model_not_validated:['The observed response does not yet support a reliable model.','Η παρατηρούμενη απόκριση δεν τεκμηριώνει ακόμη αξιόπιστο μοντέλο.','Die beobachtete Reaktion reicht noch nicht für ein verlässliches Modell.'],
+    no_supported_improvement:['No supported improvement was found; current gains are retained.','Δεν τεκμηριώθηκε βελτίωση· οι τρέχοντες συντελεστές διατηρούνται.','Keine ausreichend belegte Verbesserung gefunden; die aktuellen Werte bleiben erhalten.'],
+    performance_worsened:['Tracking worsened after the adjustment; the previous gains are recommended.','Η απόκριση επιδεινώθηκε μετά την προσαρμογή· προτείνεται επαναφορά των προηγούμενων τιμών.','Das Regelverhalten hat sich verschlechtert; die vorherigen Werte werden empfohlen.'],
+    restart_verification_required:['Fresh observations are needed after restart before evaluating another change.','Μετά την επανεκκίνηση χρειάζονται νέες παρατηρήσεις πριν αξιολογηθεί άλλη αλλαγή.','Nach dem Neustart sind neue Beobachtungen nötig, bevor eine weitere Änderung bewertet wird.'],
+    candidate_ready:['A bounded adjustment is being checked against current settings and operating limits.','Ελέγχεται μια περιορισμένη προσαρμογή με βάση τις τρέχουσες ρυθμίσεις και τα όρια λειτουργίας.','Eine begrenzte Anpassung wird anhand der aktuellen Einstellungen und Betriebsgrenzen geprüft.'],
+    verification_in_progress:['Comparing normal operation after the change with the previous observations.','Συγκρίνεται η κανονική λειτουργία μετά την αλλαγή με τις προηγούμενες παρατηρήσεις.','Der normale Betrieb nach der Änderung wird mit den bisherigen Beobachtungen verglichen.'],
+    performance_improved:['Comparable observations support retaining the adjustment.','Οι συγκρίσιμες παρατηρήσεις υποστηρίζουν τη διατήρηση της προσαρμογής.','Vergleichbare Beobachtungen sprechen dafür, die Anpassung beizubehalten.'],
+    gains_reverted:['The previous gains have been restored after performance deteriorated.','Οι προηγούμενες τιμές επανήλθαν μετά την επιδείνωση της απόκρισης.','Die vorherigen Werte wurden nach verschlechtertem Regelverhalten wiederhergestellt.'],
+    proposal_unavailable:['A current, verified proposal is not available for approval.','Δεν υπάρχει τρέχουσα, επαληθευμένη πρόταση για έγκριση.','Es liegt kein aktueller, geprüfter Vorschlag zur Bestätigung vor.']
+  };
+  Object.assign(HEM_PID_PERFORMANCE_REASONS074B4,{
+    fresh_observations_required:['Waiting for fresh observations from the configured control inputs.','Αναμονή νέων παρατηρήσεων από τις ρυθμισμένες εισόδους ελέγχου.','Warten auf neue Beobachtungen aus den konfigurierten Regeleingängen.'],
+    new_evidence_required:['More observations after the last evaluation are needed before considering another adjustment.','Χρειάζονται περισσότερες παρατηρήσεις μετά την τελευταία αξιολόγηση πριν εξεταστεί νέα προσαρμογή.','Vor einer weiteren Anpassung sind mehr Beobachtungen seit der letzten Bewertung nötig.'],
+    operating_limits:['Operating limits are active; current gains are retained.','Ισχύουν όρια λειτουργίας· οι τρέχοντες συντελεστές διατηρούνται.','Betriebsgrenzen sind aktiv; die aktuellen Werte bleiben erhalten.'],
+    other_controller_active:['Another controller affects this measurement; the response cannot be attributed to this device alone.','Άλλος ελεγκτής επηρεάζει αυτή τη μέτρηση· η απόκριση δεν μπορεί να αποδοθεί μόνο σε αυτή τη συσκευή.','Ein anderer Regler beeinflusst diesen Messwert; die Reaktion lässt sich diesem Gerät nicht allein zuordnen.'],
+    actuator_model_unverified:['Monitoring continues, but this output has no verified tuning model yet.','Η παρακολούθηση συνεχίζεται, αλλά δεν υπάρχει ακόμη επαληθευμένο μοντέλο προσαρμογής για αυτή την έξοδο.','Die Beobachtung läuft weiter; für diesen Ausgang liegt noch kein geprüftes Abstimmungsmodell vor.'],
+    insufficient_response_variation:['The measured response has not varied enough to assess another gain setting.','Η μετρημένη απόκριση δεν έχει μεταβληθεί αρκετά για να αξιολογηθεί άλλη ρύθμιση συντελεστών.','Der Messwert hat sich noch nicht genug verändert, um andere Reglerwerte zu beurteilen.'],
+    validated_improvement:['A bounded candidate passed model checks; it has not been applied yet.','Μια περιορισμένη υποψήφια αλλαγή πέρασε τους ελέγχους μοντέλου· δεν έχει εφαρμοστεί ακόμη.','Ein begrenzter Vorschlag hat die Modellprüfungen bestanden; er wurde noch nicht angewendet.'],
+    evaluating_adjustment:['Comparing observations after the change before deciding whether to retain it.','Συγκρίνονται οι παρατηρήσεις μετά την αλλαγή πριν αποφασιστεί αν θα διατηρηθεί.','Beobachtungen nach der Änderung werden verglichen, bevor sie dauerhaft beibehalten wird.'],
+    adjustment_verified:['Comparable observations support keeping the applied gains.','Οι συγκρίσιμες παρατηρήσεις υποστηρίζουν τη διατήρηση των εφαρμοσμένων συντελεστών.','Vergleichbare Beobachtungen sprechen dafür, die angewendeten Werte beizubehalten.'],
+    previous_gains_restored:['The previous gains have been restored; normal observation continues.','Οι προηγούμενοι συντελεστές επανήλθαν· η κανονική παρακολούθηση συνεχίζεται.','Die vorherigen Werte wurden wiederhergestellt; die normale Beobachtung läuft weiter.'],
+    verification_conditions_changed:['Operating conditions changed; more comparable observations are needed.','Άλλαξαν οι συνθήκες λειτουργίας· χρειάζονται περισσότερες συγκρίσιμες παρατηρήσεις.','Die Betriebsbedingungen haben sich geändert; weitere vergleichbare Beobachtungen sind nötig.'],
+    verification_model_unavailable:['The comparison model is unavailable; the adjustment has not been verified.','Το μοντέλο σύγκρισης δεν είναι διαθέσιμο· η προσαρμογή δεν έχει επαληθευτεί.','Das Vergleichsmodell ist nicht verfügbar; die Anpassung wurde noch nicht bestätigt.'],
+    verification_settings_changed:['The active gains changed; the previous evaluation no longer applies.','Άλλαξαν οι ενεργοί συντελεστές· η προηγούμενη αξιολόγηση δεν ισχύει πλέον.','Die aktiven Reglerwerte wurden geändert; die bisherige Bewertung gilt nicht mehr.'],
+    verification_context_changed:['The control context changed; the previous evaluation was ended.','Άλλαξαν οι συνθήκες ελέγχου· η προηγούμενη αξιολόγηση τερματίστηκε.','Der Regelungskontext hat sich geändert; die bisherige Bewertung wurde beendet.'],
+    verification_inconclusive:['The comparison ended without a reliable conclusion. Current gains are retained; new observations are needed before another adjustment.','Η σύγκριση ολοκληρώθηκε χωρίς αξιόπιστο συμπέρασμα. Οι τρέχοντες συντελεστές διατηρούνται· χρειάζονται νέες παρατηρήσεις πριν από άλλη προσαρμογή.','Der Vergleich endete ohne verlässliches Ergebnis. Die aktuellen Werte bleiben erhalten; vor einer weiteren Anpassung sind neue Beobachtungen nötig.'],
+    stable_after_adjustment:['The target is being maintained after the adjustment; current gains are retained.','Ο στόχος διατηρείται μετά την προσαρμογή· οι τρέχοντες συντελεστές διατηρούνται.','Der Zielbereich wird nach der Anpassung eingehalten; die aktuellen Werte bleiben erhalten.'],
+    calibration_algorithm_updated:['An older proposal was withdrawn because the learning method changed.','Μια παλαιότερη πρόταση αποσύρθηκε επειδή άλλαξε η μέθοδος εκμάθησης.','Ein älterer Vorschlag wurde zurückgezogen, weil sich das Lernverfahren geändert hat.'],
+    invalid_observation:['The control observation is incomplete or invalid; it was not used for learning.','Η παρατήρηση ελέγχου είναι ελλιπής ή μη έγκυρη· δεν χρησιμοποιήθηκε για εκμάθηση.','Die Regelungsbeobachtung ist unvollständig oder ungültig und wurde nicht zum Lernen verwendet.'],
+    measurement_outdated:['The configured measurement is outdated; waiting for a fresh report.','Η ρυθμισμένη μέτρηση δεν είναι πρόσφατη· αναμένεται νέα αναφορά.','Der konfigurierte Messwert ist veraltet; eine neue Meldung wird abgewartet.'],
+    measurement_gap:['A gap in the sensor reports ended this observation segment.','Κενό στις αναφορές του αισθητήρα τερμάτισε αυτό το τμήμα παρατήρησης.','Eine Lücke in den Sensormeldungen hat diesen Beobachtungsabschnitt beendet.'],
+    observation_interrupted:['The observation segment was interrupted; fresh data is needed to continue.','Το τμήμα παρατήρησης διακόπηκε· χρειάζονται νέα δεδομένα για τη συνέχεια.','Der Beobachtungsabschnitt wurde unterbrochen; zum Fortsetzen werden neue Daten benötigt.'],
+    observation_clock_or_gap:['A clock change or observation gap ended this segment.','Αλλαγή ώρας ή κενό παρατηρήσεων τερμάτισε αυτό το τμήμα.','Eine Zeitänderung oder Beobachtungslücke hat diesen Abschnitt beendet.'],
+    output_rate_limited:['The device limits how quickly its output can change.','Η συσκευή περιορίζει τον ρυθμό μεταβολής της εξόδου.','Das Gerät begrenzt, wie schnell sich sein Ausgang ändern darf.'],
+    below_minimum_output:['Requested output is below the device minimum; gains are retained.','Η ζητούμενη έξοδος είναι κάτω από το ελάχιστο της συσκευής· οι συντελεστές διατηρούνται.','Der angeforderte Ausgang liegt unter dem Geräteminimum; die Werte bleiben erhalten.'],
+    output_limit:['The configured output limit is active; gains are retained.','Το ρυθμισμένο όριο εξόδου είναι ενεργό· οι συντελεστές διατηρούνται.','Die konfigurierte Ausgangsgrenze ist aktiv; die Werte bleiben erhalten.'],
+    quiet_output_limit:['Quiet mode is limiting output; gains are retained.','Η αθόρυβη λειτουργία περιορίζει την έξοδο· οι συντελεστές διατηρούνται.','Der Ruhemodus begrenzt den Ausgang; die Werte bleiben erhalten.']
+  });
+  Object.assign(HEM_PID_PERFORMANCE_REASONS074B4,{
+    recommendation_expired:['The proposal expired; fresh observations are needed before another proposal.','Η πρόταση έληξε· χρειάζονται νέες παρατηρήσεις πριν από άλλη πρόταση.','Der Vorschlag ist abgelaufen; vor einem neuen Vorschlag sind neue Beobachtungen nötig.'],
+    recommendation_discarded:['The proposal was discarded; normal observation continues.','Η πρόταση απορρίφθηκε· η κανονική παρακολούθηση συνεχίζεται.','Der Vorschlag wurde verworfen; die normale Beobachtung läuft weiter.'],
+    recommendation_stale:['The proposal no longer matches the active settings or evidence.','Η πρόταση δεν αντιστοιχεί πλέον στις ενεργές ρυθμίσεις ή στα διαθέσιμα δεδομένα.','Der Vorschlag passt nicht mehr zu den aktiven Einstellungen oder Beobachtungen.'],
+    tuning_settings_changed:['Timing settings changed; the previous proposal was withdrawn.','Άλλαξαν οι ρυθμίσεις χρονισμού· η προηγούμενη πρόταση αποσύρθηκε.','Die Zeiteinstellungen wurden geändert; der bisherige Vorschlag wurde zurückgenommen.']
+  });
+  const pidPerformanceWords074B4=language=>HEM_PID_PERFORMANCE_WORDS074B4[language]||HEM_PID_PERFORMANCE_WORDS074B4.en;
+  const pidPerformanceSharedReasons074B4=new Set(['manual_calibration','pid_not_active','controller_inactive',
+    'unsupported_operating_mode','device_unavailable','upstream_device_unavailable','upstream_controller_paused',
+    'verified_activity_required','permissions_required','pending_command','controller_paused','recommendation_pending','applied']);
+  const pidPerformanceReason074B4=(language,reason)=>HEM_PID_PERFORMANCE_REASONS074B4[reason]?.[
+    language==='el'?1:language==='de'?2:0]||(pidPerformanceSharedReasons074B4.has(reason)?pidReason074(language,reason):'')||pidPerformanceWords074B4(language).unknownReason;
+  const pidPerformanceNumber074B4=(value,language)=>new Intl.NumberFormat(language,{maximumFractionDigits:2}).format(value);
+  const pidPerformanceDuration074B4=(seconds,language)=>{
+    const words=pidPerformanceWords074B4(language),value=Math.max(0,Math.floor(seconds));
+    if(value>=3600)return Math.floor(value/3600)+' '+words.h+' '+Math.floor(value%3600/60)+' '+words.min;
+    if(value>=60)return Math.floor(value/60)+' '+words.min+' '+value%60+' '+words.s;
+    return value+' '+words.s;
+  };
+  function pidStatusModels074(fields,status,language,now=Date.now()/1000){
+    const models=pidLegacyStatusModels074(fields,status,language,now),diagnostic=status.pid_adaptive_status;
+    if(!diagnostic||diagnostic.schema_version!==1)return models;
+    const words=pidPerformanceWords074B4(language),legacy=pidWords074(language);
+    return models.map(model=>{
+      if(!['adaptive_suggest','adaptive_auto'].includes(model.methodCode))return model;
+      const result={...model,note:model.methodCode==='adaptive_auto'?words.automatic:words.suggest,
+        cycles:null,required:null,phase:'',rejection:'',performance:null,candidate:null,feedback:null};
+      if(!model.active)return result;
+      const modeMatches=diagnostic.operating_mode===model.mode||model.mode==='device';
+      if(!modeMatches)return {...result,state:'waiting',stateLabel:legacy.states.waiting,
+        reason:pidPerformanceReason074B4(language,'context_changed'),review:null};
+      const verified=diagnostic.context_verified===true;
+      let state=diagnostic.status,reason=diagnostic.reason;
+      if(['verifying','evaluating'].includes(state)&&typeof diagnostic.verification?.reason==='string')
+        reason=diagnostic.verification.reason;
+      if(!verified&&['candidate','ready_for_review','verifying','verified','retained','rollback','evaluating'].includes(state)){
+        state='waiting';reason='context_changed';
+      }
+      const rawReview=status.pid_review;
+      let review=verified&&model.methodCode==='adaptive_suggest'&&rawReview?.algorithm==='performance_v1'&&
+        rawReview.state==='pending'&&rawReview.operating_mode===diagnostic.operating_mode&&
+        typeof rawReview.evidence_id==='string'&&rawReview.evidence_id===diagnostic.evidence_id?rawReview:null;
+      if(review){
+        const created=pidNumber074(review.created_at),expires=pidNumber074(review.expires_at);
+        if(created===null||expires===null||now<created||now>expires||!pidSameGains074(model.gains,review.current))review=null;
+      }
+      if(review){state='ready_for_review';reason='recommendation_pending';}
+      if(state==='ready_for_review'&&!review){state='waiting';reason='proposal_unavailable';}
+      // A saved proposal remains inspectable while current actuator evidence
+      // blocks applying it. The execution authorizer remains the final gate.
+      const constraints=Array.isArray(diagnostic.constraints)?diagnostic.constraints
+        .filter(item=>typeof item==='string'&&item):[];
+      if(constraints.length){
+        if(['candidate','ready_for_review'].includes(state))state='waiting';
+        reason=constraints[0];
+      }
+      const feedback=diagnostic.feedback&&typeof diagnostic.feedback==='object'?diagnostic.feedback:null;
+      const count=pidNumber074(diagnostic.samples),duration=pidNumber074(diagnostic.observed_seconds);
+      return {...result,state:words.states[state]||legacy.states[state]?state:'unknown',
+        stateLabel:words.states[state]||legacy.states[state]||legacy.unavailable,
+        reason:pidPerformanceReason074B4(language,reason),review,feedback,
+        outputKind:typeof diagnostic.output_kind==='string'?diagnostic.output_kind:null,
+        target:pidNumber074(diagnostic.target),band:pidNumber074(diagnostic.band),
+        targetSemantics:diagnostic.target_semantics,
+        observation:verified&&duration!==null&&duration>=0?pidPerformanceDuration074B4(duration,language)+
+          (count!==null&&count>=0?' · '+Math.floor(count)+' '+words.readings:''):null,
+        performance:verified&&diagnostic.performance&&typeof diagnostic.performance==='object'?diagnostic.performance:null,
+        candidate:verified&&state==='candidate'&&diagnostic.candidate&&typeof diagnostic.candidate==='object'?diagnostic.candidate:null};
+    });
+  }
+  function pidPerformanceHtml074B4(model,language,row){
+    if(!model.feedback&&!model.observation&&!model.performance&&!model.candidate&&!model.outputKind&&model.target==null)return '';
+    const words=pidPerformanceWords074B4(language),parts=[],feedback=model.feedback||{},unit=typeof feedback.unit==='string'?feedback.unit:'';
+    const format=value=>pidPerformanceNumber074B4(value,language)+(unit?' '+unit:'');
+    const sourceIds=Array.isArray(feedback.source_ids)?[...new Set(feedback.source_ids.filter(id=>typeof id==='string'))]:[];
+    const contributors=Array.isArray(feedback.contributor_ids)?new Set(feedback.contributor_ids.filter(id=>typeof id==='string')):null;
+    const measured=pidNumber074(feedback.value);
+    if(words.outputKinds[model.outputKind])parts.push(row(words.output,words.outputKinds[model.outputKind],'data-hem-pid-output074b4'));
+    if(measured!==null){
+      const description=sourceIds.length>1?words.mean:sourceIds.length===1?words.single:'';
+      parts.push(row(words.feedback,[format(measured),description].filter(Boolean).join(' · '),'data-hem-pid-measurement074b4'));
+    }
+    if(model.target!==null&&model.target!==undefined){
+      const sign=model.targetSemantics==='upper_threshold'?'≤ ':model.targetSemantics==='lower_threshold'?'≥ ':'';
+      const target=sign?sign+format(model.target)+(model.band!==null&&model.band>=0?' · '+words.tolerance+' '+format(model.band):''):
+        pidPerformanceNumber074B4(model.target,language)+
+        (model.band!==null&&model.band>=0?' ± '+pidPerformanceNumber074B4(model.band,language):'')+(unit?' '+unit:'');
+      parts.push(row(words.target,target,'data-hem-pid-target074b4'));
+    }
+    if(model.observation)parts.push(row(words.observation,model.observation,'data-hem-pid-observation074b4'));
+    const inside=pidNumber074(model.performance?.within_band_fraction),error=pidNumber074(model.performance?.mean_absolute_error);
+    if(inside!==null&&inside>=0&&inside<=1)parts.push(row(words.inBand,pidPerformanceNumber074B4(inside*100,language)+'%','data-hem-pid-in-band074b4'));
+    if(error!==null&&error>=0)parts.push(row(words.error,format(error),'data-hem-pid-error074b4'));
+    if(model.candidate&&['kp','ki','kd'].every(key=>pidNumber074(model.candidate[key])!==null))
+      parts.push(row(words.candidate,pidGains074(model.gains,language)+' → '+pidGains074(model.candidate,language),'data-hem-pid-candidate074b4'));
+    if(sourceIds.length){
+      const total=sourceIds.length,used=contributors===null?'—':sourceIds.filter(id=>contributors.has(id)).length;
+      parts.push('<details class="hem-pid-sources074b4" data-hem-pid-feedback074b4="'+escape(model.mode)+'"><summary>'+escape(words.sources+' · '+
+        words.sourceCount.replace('{used}',String(used)).replace('{total}',String(total)))+'</summary><ul>'+sourceIds.map(id=>
+          '<li>'+escape(id)+(contributors===null?'':' · '+escape(contributors.has(id)?words.contributing:words.excluded))+'</li>').join('')+'</ul></details>');
+    }
+    return parts.join('');
   }
   function pidStatusHtml074(models,language,timeZone){
     const words=pidWords074(language);
@@ -13448,6 +13645,8 @@
       if(model.review&&model.review.current&&model.review.apply)
         lines.push(row(words.pending,pidGains074(model.review.current,language)+' → '+pidGains074(model.review.apply,language),
           'data-hem-pid-proposal074'));
+      const performance=pidPerformanceHtml074B4(model,language,row);
+      if(performance)lines.push(performance);
       if(model.showHistory){
         let stamp='';const at=pidNumber074(model.last?.at);
         if(at!==null&&at>0){
@@ -13463,7 +13662,7 @@
       const detail=[model.reason,model.phase].filter(Boolean).join(' · ');
       return '<section class="hem-pid-mode-status074" data-hem-pid-mode074="'+escape(model.mode)+
         '" data-hem-pid-state074="'+escape(model.state)+'"><h4>'+escape(model.title)+' · PID</h4>'+
-        '<p class="hem-pid-state074">'+escape(model.stateLabel)+'</p>'+
+        '<p class="hem-pid-state074" role="status" aria-live="polite" aria-atomic="true">'+escape(model.stateLabel)+'</p>'+
         (detail?'<p>'+escape(detail)+'</p>':'')+lines.join('')+
         (model.rejection?'<p>'+escape(words.rejection+': '+model.rejection)+'</p>':'')+
         (model.note?'<p class="hem-pid-note074">'+escape(model.note)+'</p>':'')+'</section>';
@@ -13485,7 +13684,17 @@
     }
     panel.setAttribute('aria-label',pidWords074(this._language()).title);
     const html=pidStatusHtml074(models,this._language(),this._hass?.config?.time_zone);
-    if(panel.innerHTML!==html)panel.innerHTML=html;
+    if(panel.innerHTML!==html){
+      const opened=new Set([...panel.querySelectorAll('[data-hem-pid-feedback074b4][open]')]
+        .map(node=>node.getAttribute('data-hem-pid-feedback074b4')));
+      const focused=panel.querySelector('[data-hem-pid-feedback074b4] > summary:focus')?.parentElement
+        .getAttribute('data-hem-pid-feedback074b4');
+      panel.innerHTML=html;
+      for(const node of panel.querySelectorAll('[data-hem-pid-feedback074b4]')){
+        node.open=opened.has(node.getAttribute('data-hem-pid-feedback074b4'));
+        if(node.getAttribute('data-hem-pid-feedback074b4')===focused)node.querySelector('summary')?.focus({preventScroll:true});
+      }
+    }
   };
   const pidRenderBefore074=AirQualityAdvisorCard.prototype._hemFullRender127;
   AirQualityAdvisorCard.prototype._hemFullRender127=function(saved,scope){
@@ -13509,6 +13718,8 @@
       '.hem-pid-mode-status074 p{font-size:12px;line-height:1.5;margin:4px 0;overflow-wrap:break-word}',
       '.hem-pid-state074{font-weight:600}',
       '.hem-pid-note074{color:var(--aqa-muted)}',
+      '.hem-pid-sources074b4{font-size:12px;line-height:1.45;margin:7px 0;min-width:0;overflow-wrap:anywhere}',
+      '.hem-pid-sources074b4 summary{cursor:pointer;color:var(--aqa-muted)}.hem-pid-sources074b4 ul{padding-left:18px;margin:6px 0}',
       '.hem-pid-status-row074{display:flex;flex-wrap:wrap;gap:3px 9px;margin:5px 0;font-size:12px;line-height:1.45;min-width:0}',
       '.hem-pid-status-row074 b{flex:1 1 105px}.hem-pid-status-row074 span{flex:2 1 160px;min-width:0;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}',
       '@media(max-width:340px){.hem-controller-options126 [data-hem-full-category127="pid"]>.hem-full-rows127>.hem-full-row127[data-hem-pid-review-b18]{grid-column:1/-1}}',

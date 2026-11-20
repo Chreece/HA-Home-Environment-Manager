@@ -141,14 +141,14 @@ OPTION_TEXT = {
       "Berechnet Vorschläge aus einer gemessenen Reaktion nach Cohen–Coon; ohne ausdrückliche Anwendung ändert sich nichts."
     ],
     "adaptive_suggest": [
-      "Observe eligible normal operating cycles, then propose bounded tuning changes for you to approve or reject.",
-      "Παρακολουθεί κατάλληλους κύκλους κανονικής λειτουργίας και προτείνει περιορισμένες αλλαγές για έγκριση ή απόρριψη.",
-      "Beobachtet geeignete normale Betriebszyklen und schlägt begrenzte Änderungen zur Freigabe oder Ablehnung vor."
+      "Assess the same measurements used by PID during normal operation, including short cycles and continuous output. Keep gains when control is good; propose a small simulated improvement only when the observations justify it. You approve or discard the proposal.",
+      "Αξιολογεί τις ίδιες μετρήσεις που χρησιμοποιεί το PID στη φυσιολογική λειτουργία, σε σύντομους κύκλους ή συνεχή έξοδο. Διατηρεί τις τιμές όταν η ρύθμιση είναι καλή και προτείνει μικρή, ελεγμένη σε προσομοίωση βελτίωση μόνο με επαρκή στοιχεία. Εγκρίνεις ή απορρίπτεις την πρόταση.",
+      "Bewertet die normalen PID-Messungen auch bei kurzen Zyklen und kontinuierlicher Ausgabe. Gute Reglerwerte bleiben erhalten. Nur ausreichende Beobachtungen führen zu einem kleinen, simulierten Verbesserungsvorschlag, den Sie annehmen oder verwerfen."
     ],
     "adaptive_auto": [
-      "After enough high-quality cycles, allow bounded automatic PID tuning with the existing safety checks. This mode changes gains, so choose it deliberately.",
-      "Μετά από αρκετούς αξιόπιστους κύκλους, επιτρέπει περιορισμένη αυτόματη προσαρμογή PID με τους υπάρχοντες ελέγχους ασφαλείας. Αλλάζει συντελεστές, οπότε επίλεξέ το συνειδητά.",
-      "Erlaubt nach genügend hochwertigen Zyklen begrenzte automatische PID-Anpassung mit Schutzprüfungen. Dabei ändern sich Reglerwerte; bewusst wählen."
+      "Allow validated adjustments of at most 10% per gain change when normal observations show a useful improvement. Check the result before another adjustment and restore previous gains if comparable observations confirm worse control. No fixed daily wait or forced test cycle; existing device protections still apply.",
+      "Επιτρέπει ελεγμένες προσαρμογές έως 10% ανά συντελεστή όταν οι φυσιολογικές μετρήσεις τεκμηριώνουν χρήσιμη βελτίωση. Ελέγχει το αποτέλεσμα πριν από νέα αλλαγή και επαναφέρει τις προηγούμενες τιμές αν συγκρίσιμες μετρήσεις επιβεβαιώσουν χειρότερη ρύθμιση. Χωρίς σταθερή ημερήσια αναμονή ή επιβεβλημένο δοκιμαστικό κύκλο. Οι προστασίες της συσκευής ισχύουν.",
+      "Erlaubt geprüfte Änderungen von höchstens 10 % je Reglerwert, wenn normale Beobachtungen eine sinnvolle Verbesserung belegen. Vor der nächsten Änderung wird das Ergebnis geprüft; bestätigte Verschlechterung unter vergleichbaren Bedingungen führt zur Wiederherstellung. Keine feste Tageswartezeit und kein erzwungener Testzyklus; Geräteschutz bleibt aktiv."
     ]
   },
   "equipment_pid_fan_capacity_mode": {

@@ -60,6 +60,16 @@ NATIVE_RECONNECT_SETTLE_SECONDS = 30
 NATIVE_RECONNECT_EXTRA_ATTEMPTS = 2
 
 
+def _reported_timestamp(state: Any) -> float | None:
+    """A provider report timestamp, never the time an observer was polled."""
+    stamp = getattr(state, "last_reported", None) or getattr(state, "last_updated", None)
+    try:
+        value = stamp.timestamp() if stamp is not None and stamp.tzinfo is not None else None
+    except (AttributeError, TypeError, ValueError, OverflowError):
+        return None
+    return finite(value, 0, 1e13)
+
+
 def native_retry_decision(pending: dict, now: float, state=None) -> str:
     """Never mistake a service call for a physical acknowledgement."""
     attempts = pending.get("attempts")
@@ -222,6 +232,11 @@ class EquipmentRuntime:
         # into HA Recorder or its entity attributes. Only a handful of
         # completed, verified cycle statistics are saved on completion.
         self._pid_passive_observers: dict[str, PassiveObserver] = {}
+        # Generic performance adaptation consumes the very same control
+        # sample as pid_step. Raw response intervals remain session-only.
+        self._pid_adaptive_observers: dict[str, Any] = {}
+        self._pid_adaptive_samples: dict[str, dict] = {}
+        self._pid_adaptive_tasks: dict[str, asyncio.Task] = {}
         self._pid_learning_holds: dict[str, dict] = {}
         # Volatile continuity proof. Integer generations cannot collide when
         # several native events arrive within one wall-clock timestamp.
@@ -814,6 +829,14 @@ class EquipmentRuntime:
         if tasks:
             await asyncio.gather(*tasks, return_exceptions=True)
         self._pid_passive_tasks.clear()
+        adaptive_tasks = tuple(getattr(self, "_pid_adaptive_tasks", {}).values())
+        for task in adaptive_tasks:
+            task.cancel()
+        if adaptive_tasks:
+            await asyncio.gather(*adaptive_tasks, return_exceptions=True)
+        getattr(self, "_pid_adaptive_tasks", {}).clear()
+        getattr(self, "_pid_adaptive_observers", {}).clear()
+        getattr(self, "_pid_adaptive_samples", {}).clear()
         notices = tuple(getattr(self, "_pid_review_tasks", {}).values())
         for task in notices:
             task.cancel()
@@ -1307,6 +1330,722 @@ class EquipmentRuntime:
                     return "Existing power owner must reconcile this device OFF before transfer"
         return None
 
+    def _pid_adaptive_actuator(self, spec, cfg, cap, plan, state, mode, goal, demand):
+        """Describe the real adapter command scale, never watts or heat power."""
+        now = self.clock()
+        soft, power = model.permission(self.manager, spec, cap)
+        attrs = getattr(state, "attributes", {}) or {}
+        limits = model.device_limits(self.manager, spec, cap)
+        on_min, off_min, maximum = model.timing(self.manager, spec, cap)
+        record = self.records.get(spec.identifier, {})
+        constraints = []
+        output = constrained = None
+        output_state = state
+        kind = "binary"
+        output_kind, physical_activity, native_strategy = "reported_state", None, None
+        minimum, maximum_percent, step, stages = 0., 100., 1., []
+        max_change, step_origin, quantization = 100., 0., "nearest"
+        if cap.domain in ("number", "input_number"):
+            kind = "percentage"
+            output_kind = "reported_position"
+            max_change = 10.
+            if attrs.get("unit_of_measurement") == "%" and attrs.get("min") == 0 and attrs.get("max") == 100:
+                output = finite(state.state, 0, 100)
+            step = finite(attrs.get("step", 1), .01, 10) or 1.
+            if demand is not None and output is not None:
+                constrained = round(round(max(output - 10, min(output + 10, demand)), 1) / step) * step
+                constrained = max(0., min(100., constrained))
+                if abs(constrained - demand) > step + 1e-6:
+                    constraints.append("output_rate_limited")
+        elif cap.domain == "fan" or mode == "fan_only":
+            output_kind = "reported_position"
+            output_state = self.hass.states.get(cap.fan_entity or cap.primary)
+            fan_attrs = getattr(output_state, "attributes", {}) or {}
+            quiet = self._quiet_context(spec, cfg, plan)
+            if quiet is None:
+                constraints.append("quiet_context_unknown")
+            if cap.fan_percentage:
+                kind = "percentage"
+                minimum = limits["fan_min_percentage"]
+                maximum_percent = limits["fan_max_percentage"]
+                positions = sorted(float(v) for v in cap.fan_modes
+                                   if finite(v, minimum, maximum_percent) is not None)
+                stages = positions
+                step = min((b-a for a,b in zip(positions, positions[1:])), default=1.)
+                output = 0. if output_off(output_state) else finite(fan_attrs.get("percentage"), 0, 100)
+                if quiet is True:
+                    maximum_percent = max(minimum, min(maximum_percent, cfg["quiet_percentage"]))
+                    quantization = "floor"
+                if demand is not None and positions:
+                    if not percentage_output_requested(demand, min_percentage=minimum):
+                        constrained = 0.
+                        if demand > 0:
+                            constraints.append("below_minimum_output")
+                    else:
+                        raw = min(maximum_percent, max(minimum, demand))
+                        available = [v for v in positions if v <= maximum_percent]
+                        constrained = (max((v for v in available if v <= raw), default=min(positions))
+                                       if quiet is True else min(positions, key=lambda v: abs(v-raw)))
+                        if demand > maximum_percent:
+                            constraints.append("output_limit")
+            else:
+                names = ordered_fan_stages(cap.fan_modes)
+                if names:
+                    kind = "ordered_stage"
+                    stages = [100. * (i+1) / len(names) for i in range(len(names))]
+                    if quiet is True:
+                        ceiling = fan_speed_for_pid(100., modes=names, percentage=False,
+                                                   quiet=True, quiet_mode=cfg.get("quiet_fan_mode"))
+                        if ceiling in names:
+                            maximum_percent = stages[names.index(ceiling)]
+                    attribute = "fan_mode" if (cap.fan_entity or cap.primary).startswith("climate.") else "preset_mode"
+                    actual = fan_attrs.get(attribute)
+                    output = 0. if output_off(output_state) else (
+                        stages[names.index(actual)] if actual in names else None)
+                    if demand is not None:
+                        chosen = fan_speed_for_pid(demand, modes=names, percentage=False,
+                                                   quiet=quiet is True, quiet_mode=cfg.get("quiet_fan_mode"))
+                        constrained = 0. if demand <= 0 else stages[names.index(chosen)] if chosen in names else None
+                        normal = fan_speed_for_pid(demand, modes=names, percentage=False)
+                        if quiet is True and chosen != normal:
+                            constraints.append("quiet_output_limit")
+                else:
+                    output = 0. if output_off(output_state) else 100. if getattr(output_state, "state", None) == "on" else None
+                    constrained = demand
+        elif cap.domain == "climate" and not power:
+            kind = "setpoint_trim"
+            output_kind = "acknowledged_target"
+            max_change = .5 / 1.5 * 100
+            unit = attrs.get("temperature_unit")
+            actual = target_from_unit(attrs.get("temperature"), unit)
+            direction = 1 if mode == "heat" else -1
+            if actual is not None and goal is not None:
+                # A foreign/out-of-range target is not silently reclassified
+                # as zero or full HEM effort for response identification.
+                output = finite(direction * (actual - goal) / 1.5 * 100, 0, 100)
+                native_min = target_from_unit(attrs.get("min_temp"), unit)
+                native_max = target_from_unit(attrs.get("max_temp"), unit)
+                low = max(limits["temperature_min_limit"], native_min if native_min is not None else limits["temperature_min_limit"])
+                high = min(limits["temperature_max_limit"], native_max if native_max is not None else limits["temperature_max_limit"])
+                step_origin = direction * (low - goal) / 1.5 * 100
+                minimum = max(0., min(direction * (low-goal), direction * (high-goal)) / 1.5 * 100)
+                maximum_percent = min(100., max(direction * (low-goal), direction * (high-goal)) / 1.5 * 100)
+                quantization = "native_half_up" if direction > 0 else "native_half_down"
+                if demand is not None:
+                    requested_c = max(low, min(high, goal + direction * 1.5 * demand / 100))
+                    command_c = max(actual - .5, min(actual + .5, requested_c))
+                    rounded = quantize_target(target_to_unit(command_c, unit), attrs.get("target_temp_step", .5),
+                                              target_to_unit(low, unit), target_to_unit(high, unit))
+                    command_c = target_from_unit(rounded, unit) if rounded is not None else None
+                    constrained = finite(direction * (command_c-goal)/1.5*100, 0, 100) if command_c is not None else None
+                    if command_c is not None and abs(command_c-actual) > .500001:
+                        constrained = output
+                        constraints.append("output_rate_limited")
+                    if command_c is None or abs(command_c - requested_c) > cap.temp_step + 1e-6:
+                        constraints.append("output_rate_limited")
+            step = cap.temp_step / 1.5 * 100
+        else:
+            from .pid_diagnostics import observed_output
+            activity = observed_output(cap.domain, state, mode)
+            physical_activity = activity
+            output = 100. if activity == "on" else 0. if activity == "off" else None
+            if cap.domain == "climate":
+                output_kind = "reported_activity"
+                from .equipment_native_target import full_request
+                native_strategy = full_request(cap, attrs, mode) if cfg.get("native_full_output", True) is True else None
+                if native_strategy is not None:
+                    # Identify the end-to-end response to HEM's acknowledged
+                    # enable command. HVAC mode is never labelled measured
+                    # compressor power; reported activity remains separate.
+                    # This command scale is stable across OFF/ON even on
+                    # integrations which omit hvac_action while running.
+                    output_kind = "acknowledged_native_command"
+                    requested = native_strategy["data"]
+                    target_confirmed = all(
+                        finite(attrs.get(key), -30, 150) is not None
+                        and abs(float(attrs[key])-value) < .05
+                        for key, value in requested.items())
+                    pending = record.get("pending") or {}
+                    owned = (isinstance(record.get("power", {}).get(cap.primary), dict)
+                             or pending.get("entity") == cap.primary and pending.get("power") is True
+                             and pending.get("output_on") is True
+                             and isinstance(pending.get("expected"), dict)
+                             and matches(state, pending["expected"]))
+                    output = (0. if state.state == "off" else
+                              100. if state.state == mode and owned and target_confirmed else None)
+            constrained = demand
+        if (record.get("pending") or record.get("unconfirmed_native_target")
+                or (record.get("upstream") or {}).get("pending")):
+            constraints.append("pending_command")
+        if output is None:
+            constraints.append("output_unverified")
+        restored = (getattr(output_state, "attributes", {}) or {}).get("restored") is True
+        reported_at = _reported_timestamp(output_state)
+        verified = bool(output is not None and not restored and reported_at is not None
+                        and 0 <= now-reported_at <= max(1800., 3*cfg["sample_seconds"]))
+        if not verified and "output_unverified" not in constraints:
+            constraints.append("output_unverified")
+        return {
+            "actuator_kind": kind, "observed_output": output,
+            "output_kind": output_kind, "physical_activity": physical_activity,
+            "native_target_strategy": native_strategy,
+            "constrained_output": constrained, "output_verified": verified,
+            "output_at": reported_at, "constraints": constraints,
+            "output_changed_at": record.get("target_at") if kind == "setpoint_trim" else record.get("output_at"),
+            "min_on_seconds": on_min, "min_off_seconds": off_min,
+            "max_on_seconds": maximum, "min_percentage": minimum,
+            "max_percentage": maximum_percent, "percentage_step": step,
+            "max_output_change": max_change, "output_step_origin": step_origin,
+            "output_quantization": quantization,
+            "output_stages": stages,
+            "native_full_output": cfg.get("native_full_output", True),
+            "soft_permission": bool(soft), "power_permission": bool(power),
+        }
+
+    def _pid_adaptive_peer_active(self, spec, metric):
+        """Unmodeled simultaneous actuators can explain the same room response."""
+        for peer in model.specs(self.manager):
+            if (peer.identifier == spec.identifier or peer.area_id != spec.area_id
+                    or set(peer.source_entities).intersection(spec.source_entities)):
+                continue
+            cap = model.capabilities(self.manager, peer)
+            if cap is None:
+                continue
+            cfg = model.settings(self.manager, peer)
+            state = self.hass.states.get(cap.primary)
+            native_mode = cfg.get("requested_mode") or getattr(state, "state", None)
+            if metric == "temperature":
+                relevant = native_mode in ("heat", "cool", "heat_cool", "auto") and cap.temperature
+            elif metric == "humidity":
+                relevant = cap.domain == "humidifier" or native_mode in ("dry", "heat", "cool", "heat_cool", "auto")
+            else:
+                from .device_activation import effective_device
+                purpose = effective_device(self.manager, peer, cap.primary).get("fan_purpose")
+                relevant = (cap.domain == "fan" or native_mode == "fan_only") and (
+                    purpose == "extraction" if metric == "co2" else purpose in ("extraction", "filtration"))
+            if not relevant:
+                continue
+            peer_record = self.records.get(peer.identifier, {})
+            if peer_record.get("pending") or peer_record.get("unconfirmed_native_target"):
+                return True
+            if state is None or getattr(state, "state", None) in ("unknown", "unavailable"):
+                if peer_record.get("power"):
+                    return True
+                continue
+            if cap.domain == "climate":
+                action = state.attributes.get("hvac_action")
+                if state.state != "off" and action not in ("idle", "off"):
+                    return True
+            elif not output_off(state):
+                return True
+        return False
+
+    def _pid_adaptive_expected_pending(self, spec, *, entity=None, old=None, new=None):
+        """A short ordinary command/ACK is part of the controlled response.
+
+        This grants no actuator or tuning authority. Missing/late/retried ACKs,
+        restart journals and foreign edits still break observational continuity.
+        """
+        from .equipment_setpoint_sequence import retry_settings_match
+        record = self.records.get(spec.identifier, {})
+        pending = record.get("pending")
+        cfg = model.settings(self.manager, spec)
+        if (not isinstance(pending, dict) or cfg.get("control_mode") != "pid"
+                or cfg.get("pid_calibration_method") not in ("adaptive_auto", "adaptive_suggest")
+                or not self._current_spec(spec) or not self._identity_ok(spec)
+                or pending.get("phase") != "commanded" or pending.get("attempts") != 1
+                or pending.get("entity") not in spec.source_entities
+                or pending.get("stop_finish") or pending.get("off_state_recovery")
+                or any(record.get(key) for key in (
+                    "paused", "restart_power_verification", "automatic_continue_requested",
+                    "unconfirmed_native_target", "native_setpoint_stop", "queued_power_switch"))
+                or (record.get("upstream") or {}).get("paused")
+                or (record.get("upstream") or {}).get("pending")):
+            return False
+        when = finite(pending.get("when"), 0, self.clock())
+        context = pending.get("retry_context")
+        plan = model.plan_for(self.manager, spec)
+        if (when is None or self.clock()-when > ACK_SECONDS
+                or not isinstance(context, dict) or context.get("automatic") is not True
+                or context.get("policy_stop") is not None
+                or not retry_settings_match(context.get("settings"), cfg)
+                or context.get("profile") != model.profile_name(cfg, plan)):
+            return False
+        cap = model.capabilities(self.manager, spec)
+        if (cap is None or self._gate(spec, cap, cfg, plan, cfg.get("requested_mode"),
+                                     read_only=True) is not None):
+            # A previously valid command cannot bridge a new window, ownership,
+            # device-protection or other live policy hold in the response model.
+            return False
+        if new is None:
+            return True
+        if (entity != pending.get("entity") or not matches(new, pending.get("expected", {}))
+                or new.attributes.get("restored") is True):
+            return False
+        native_context = getattr(new, "context", None)
+        if (getattr(native_context, "user_id", None) and not getattr(native_context, "parent_id", None)
+                or str(new.attributes.get("change_origin") or new.attributes.get("operation_source") or "").lower()
+                in ("physical_button", "manual_button", "local_user")):
+            return False
+        if old is not None:
+            expected = pending.get("expected", {})
+            fields = expected.get("attributes") or {}
+            if (old.state != new.state and "state" not in expected
+                    or any(old.attributes.get(key) != new.attributes.get(key)
+                           for key in SETTABLE_OUTPUT_ATTRIBUTES | {"mode"} if key not in fields)):
+                return False
+        return True
+
+    def _pid_adaptive_ack_event(self, spec):
+        """Record an exact native output edge without inventing a PV report."""
+        observer = getattr(self, "_pid_adaptive_observers", {}).get(spec.identifier)
+        if observer is None:
+            return
+        sample = self._pid_adaptive_live_sample(spec)
+        if (sample is None or sample["context"] != observer.context
+                or not sample["output_verified"]):
+            observer.interrupt("output_unverified")
+            return
+        observer.observe_output(sample["output_at"], sample["observed_output"])
+
+    def _pid_adaptive_sample(self, spec, cfg, cap, plan, measured, state,
+                             mode, metric, goal, increasing, demand=None):
+        """Capture exactly the resolved input handed to the live PID."""
+        import json
+        bands = {"temperature": .3, "humidity": 2., "co2": 50., "pm25": 2.}
+        units = {"temperature": "°C", "humidity": "RH points", "co2": "ppm", "pm25": "µg/m³"}
+        if self.hass.states.get(cap.primary) is not state:
+            return None
+        if metric not in bands or finite(measured.get(metric), -1e6, 1e6) is None or finite(goal, -1e6, 1e6) is None:
+            return None
+        provenance = measured.get(metric + "_provenance")
+        if not isinstance(provenance, dict):
+            identities = measured.get(metric + "_selected_entities")
+            if identities is None:
+                entity = measured.get(metric + "_entity")
+                identities = [entity] if isinstance(entity, str) else []
+            times = {entity: at for entity in identities
+                     if (at := _reported_timestamp(self.hass.states.get(entity))) is not None}
+            provenance = {"source_ids": list(identities), "contributor_ids": list(identities),
+                          "aggregation": "mean" if len(identities) > 1 else "single",
+                          "source_reported_at": times,
+                          "reported_at": max(times.values()) if times and len(times) == len(identities) else None}
+        actuator = self._pid_adaptive_actuator(spec, cfg, cap, plan, state, mode, goal, demand)
+        if self._pid_adaptive_peer_active(spec, metric):
+            actuator["constraints"].append("other_controller_active")
+        semantics = "upper_threshold" if metric in ("co2", "pm25") else "band"
+        profile = model.profile_name(cfg, plan)
+        context_data = {
+            "version": 1, "controller": spec.identifier, "area": spec.area_id,
+            "source_device_id": spec.source_device_id, "physical_sources": list(spec.source_entities),
+            "primary": cap.primary, "operating_mode": cfg.get("operating_mode") or mode,
+            "mode": mode, "metric": metric, "unit": units[metric],
+            "target": float(goal), "increasing": bool(increasing),
+            "target_semantics": semantics, "profile": profile,
+            "source_ids": sorted(provenance.get("source_ids", [])),
+            "contributor_ids": sorted(provenance.get("contributor_ids", [])),
+            "aggregation": provenance.get("aggregation"),
+            "actuator_kind": actuator["actuator_kind"],
+            "output_kind": actuator["output_kind"],
+            "native_target_strategy": actuator["native_target_strategy"],
+            "adapter": {key: actuator.get(key) for key in (
+                "min_percentage", "max_percentage", "percentage_step", "output_step_origin",
+                "max_output_change", "output_stages", "output_quantization", "native_full_output",
+                "min_on_seconds", "min_off_seconds", "max_on_seconds")},
+            "fan_modes": list(cap.fan_modes), "fan_entity": cap.fan_entity,
+            "timing": {key: cfg.get(key) for key in (
+                "sample_seconds", "cycle_seconds", "min_on_seconds", "min_off_seconds", "max_on_seconds")},
+            "policy": {key: cfg.get(key) for key in (
+                "native_full_output", "power_switch_entity", "quiet_sleep", "quiet_occupied",
+                "quiet_percentage", "quiet_fan_mode", "fan_speed_limits", "pid_fan_capacity_mode",
+                "pid_fan_capacity_models", "fan_purpose", "fan_mode", "profile_fans")},
+        }
+        if actuator["actuator_kind"] == "binary" and cap.fan_entity and cap.fan_modes:
+            fan = self.hass.states.get(cap.fan_entity)
+            attribute = "percentage" if cap.fan_percentage else "fan_mode" if cap.fan_entity.startswith("climate.") else "preset_mode"
+            context_data["auxiliary_fan_setting"] = (getattr(fan, "attributes", {}) or {}).get(attribute)
+        context = json.dumps(context_data, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+        record = self.records.get(spec.identifier, {})
+        memory_state = getattr(self, "_memory", {}).get(spec.identifier)
+        memory = memory_state[1] if isinstance(memory_state, tuple) and len(memory_state) == 3 else None
+        anchor = memory_state[2] if memory is not None else self.clock()
+        if demand == 0 and (goal-measured[metric] if increasing else measured[metric]-goal) <= 0:
+            # The independent target cutoff returns before the ordinary
+            # numerical update; its effective request is the same zero state.
+            memory = model.pid_step(measured[metric], goal, self.clock(), increasing=increasing,
+                                    kp=cfg["kp"], ki=cfg["ki"], kd=cfg["kd"],
+                                    sample=cfg["sample_seconds"], memory=memory)
+        marker = record.get("pid_pwm_run") or {}
+        owned = record.get("power", {}).get(cap.primary) or {}
+        from .pid_review import calibration_hold
+        hold = calibration_hold(record, cfg, self.hass.states.get)
+        report = provenance.get("reported_at")
+        now = self.clock()
+        valid_input = finite(report, 0, now) is not None and now-report <= 600
+        return {
+            "context": context, "schema_version": 1, "operating_mode": context_data["operating_mode"],
+            "observed_at": now, "reported_at": report, "measured": measured[metric],
+            "target": goal, "metric": metric, "unit": units[metric], "increasing": bool(increasing),
+            "target_semantics": semantics, "band": bands[metric],
+            "gains": {key: cfg[key] for key in ("kp", "ki", "kd")},
+            "sample_seconds": cfg["sample_seconds"], "cycle_seconds": cfg["cycle_seconds"],
+            "requested_output": demand, **actuator,
+            "safe": bool(self._active and self._ready and valid_input and hold is None
+                         and cfg.get("control_mode") == "pid" and actuator["soft_permission"]),
+            "limited": bool(actuator["constraints"]),
+            "feedback": {"value": measured[metric], "metric": metric, "unit": units[metric], **provenance},
+            "source_ids": provenance.get("source_ids", []),
+            "contributor_ids": provenance.get("contributor_ids", []),
+            "generation": getattr(self, "_pid_learning_generation", {}).get(spec.identifier, 0),
+            "pid_memory": asdict(memory) if memory is not None else None,
+            "pwm_state": {"anchor": anchor, "served_at": marker.get("served_at"),
+                          "stopped_at": marker.get("stopped_at"), "on_since": owned.get("since"),
+                          "off_since": record.get("off_at", {}).get(cap.primary)},
+            "hold_reason": hold or (None if valid_input else "measurement_unavailable"),
+        }
+
+    def _pid_adaptive_live_sample(self, spec, cfg=None, cap=None, plan=None):
+        """Read-only revalidation through the same control input and targets."""
+        try:
+            cfg = model.settings(self.manager, spec) if cfg is None else cfg
+            cap = model.capabilities(self.manager, spec) if cap is None else cap
+            if cap is None or cfg.get("control_mode") != "pid":
+                return None
+            mode = cfg.get("requested_mode")
+            plan = model.plan_for(self.manager, spec) if plan is None else plan
+            state = self.hass.states.get(cap.primary)
+            if state is None or state.state in ("unknown", "unavailable"):
+                return None
+            measured = self.measurements(spec, cap)
+            targets = model.targets(self.manager, spec, cap, cfg, plan)
+            if cap.domain == "fan" or mode == "fan_only" or set(cap.modes) == {"off", "fan_only"}:
+                from .device_activation import effective_device
+                extraction = effective_device(self.manager, spec, cap.primary).get("fan_purpose") == "extraction"
+                metric, increasing = ("co2" if extraction else "pm25"), False
+                goal = plan.get("air_actions", {}).get("thresholds", {}).get(
+                    "co2_operational_ppm" if extraction else "pm25_short_term_action_ug_m3")
+            elif cap.domain == "humidifier" or mode == "dry":
+                metric, goal, increasing = "humidity", targets["humidity"], cap.humidifying
+            elif mode in ("heat", "cool"):
+                metric, goal, increasing = "temperature", targets[mode], mode == "heat"
+            else:
+                return None
+            memory = getattr(self, "_memory", {}).get(spec.identifier)
+            demand = memory[1].demand if isinstance(memory, tuple) and len(memory) == 3 else None
+            return self._pid_adaptive_sample(spec, cfg, cap, plan, measured, state,
+                                             mode, metric, goal, increasing, demand)
+        except (AttributeError, KeyError, ValueError, TypeError):
+            return None
+
+    def _pid_adaptive_context(self, spec, cfg=None, cap=None, plan=None):
+        sample = self._pid_adaptive_live_sample(spec, cfg=cfg, cap=cap, plan=plan)
+        return sample["context"] if sample is not None and sample["feedback"].get("reported_at") is not None else None
+
+    def _pid_adaptive_status(self, spec, cfg=None, cap=None, plan=None):
+        """Current feedback and assessment; restored ledgers never imply live proof."""
+        from .pid_adaptive_store import saved_snapshot
+        cfg = model.settings(self.manager, spec) if cfg is None else cfg
+        sample = self._pid_adaptive_live_sample(spec, cfg=cfg, cap=cap, plan=plan)
+        observer = getattr(self, "_pid_adaptive_observers", {}).get(spec.identifier)
+        record = self.records.get(spec.identifier, {})
+        assessment = observer.snapshot() if observer is not None else saved_snapshot(record.get("pid_adaptive"))
+        context = sample.get("context") if sample else None
+        verified = bool(sample and sample["safe"] and observer is not None
+                        and observer.context == context)
+        result = {**assessment, "schema_version": 1,
+                  "operating_mode": cfg.get("operating_mode") or cfg.get("requested_mode"),
+                  "context": context, "context_verified": verified,
+                  "feedback": sample["feedback"] if sample else {},
+                  "actuator_kind": sample["actuator_kind"] if sample else None,
+                  "output_kind": sample["output_kind"] if sample else None,
+                  "physical_activity": sample["physical_activity"] if sample else None,
+                  "constraints": sample["constraints"] if sample else []}
+        if not verified:
+            result.update(status="waiting", reason=(sample.get("hold_reason") if sample else None)
+                          or "fresh_observations_required", fresh_evidence=False, candidate=None)
+        if sample:
+            result.update(metric=sample["metric"], unit=sample["unit"], measured=sample["measured"],
+                          target=sample["target"], band=sample["band"], increasing=sample["increasing"],
+                          target_semantics=sample["target_semantics"])
+        return result
+
+    def _pid_adaptive_remember(self, record, context, ledger):
+        """Bound completed context ledgers; never persist live response buffers."""
+        import json
+        from .pid_adaptive_store import ALGORITHM
+        now = self.clock()
+        bank = record.get("pid_adaptive_contexts")
+        bank = bank if isinstance(bank, dict) else {}
+        clean = {}
+        for key, value in bank.items():
+            if (not isinstance(key, str) or len(key) > 16384
+                    or not isinstance(value, dict)
+                    or finite(value.get("last_saved_at"), max(0., now-7*86400), now) is None):
+                continue
+            item = value.get("ledger")
+            if (not isinstance(item, dict) or item.get("version") != 1
+                    or item.get("algorithm") != ALGORITHM or item.get("context") != key
+                    or item.get("raw_history_saved") is not False):
+                continue
+            try:
+                identity = json.loads(key)
+                if not isinstance(identity, dict) or identity.get("version") != 1 or len(json.dumps(item)) > 131072:
+                    continue
+            except (TypeError, ValueError):
+                continue
+            clean[key] = value
+        if (isinstance(context, str) and len(context) <= 16384
+                and isinstance(ledger, dict) and ledger.get("version") == 1
+                and ledger.get("algorithm") == ALGORITHM and ledger.get("context") == context
+                and ledger.get("raw_history_saved") is False):
+            try:
+                identity = json.loads(context)
+                valid = (isinstance(identity, dict) and identity.get("version") == 1
+                         and len(json.dumps(ledger, allow_nan=False)) <= 131072)
+            except (TypeError, ValueError):
+                valid = False
+            if valid:
+                value = {"version": 1, "algorithm": ALGORITHM, "context": context,
+                         "ledger": ledger, "last_saved_at": now}
+                clean[context] = value
+                record["pid_adaptive"] = value
+        ranked = sorted(clean, key=lambda key: clean[key]["last_saved_at"], reverse=True)
+        record["pid_adaptive_contexts"] = {key: clean[key] for key in ranked[:12]}
+
+    async def _pid_adaptive_observe_sample(self, spec, cfg, sample):
+        """Observe normal control and queue evidence-bound configuration work."""
+        from .pid_adaptive import AdaptiveObserver
+        from .pid_adaptive_store import ALGORITHM, make_proof, proposal_for
+        if cfg.get("pid_calibration_method") not in ("adaptive_auto", "adaptive_suggest"):
+            return False
+        if not isinstance(sample, dict):
+            return False
+        if (sample.get("generation") != getattr(self, "_pid_learning_generation", {}).get(spec.identifier, 0)
+                or model.settings(self.manager, spec).get("operating_mode") != cfg.get("operating_mode")):
+            return False
+        observers = getattr(self, "_pid_adaptive_observers", None)
+        if observers is None:
+            observers = self._pid_adaptive_observers = {}
+        samples = getattr(self, "_pid_adaptive_samples", None)
+        if samples is None:
+            samples = self._pid_adaptive_samples = {}
+        record = self._record(spec)
+        saved = record.get("pid_adaptive")
+        saved = saved if isinstance(saved, dict) else {}
+        observer = observers.get(spec.identifier)
+        if observer is not None and observer.context != sample["context"]:
+            self._pid_adaptive_remember(record, observer.context, observer.ledger())
+            observer = None
+        if observer is None:
+            if saved.get("context") != sample["context"]:
+                if saved.get("ledger"):
+                    self._pid_adaptive_remember(record, saved.get("context"), saved["ledger"])
+                saved = (record.get("pid_adaptive_contexts") or {}).get(sample["context"], {})
+            observer = observers[spec.identifier] = AdaptiveObserver(
+                saved=saved.get("ledger"), now=self.clock(), stepper=model.pid_step,
+                transfer=model.pid_bumpless)
+        previous = observer.snapshot()
+        samples[spec.identifier] = sample
+        self._pid_learning_observed(spec)
+        executor = getattr(self.hass, "async_add_executor_job", None)
+        if callable(executor):
+            # Fitting/replay can cost tens of milliseconds. Assess an isolated
+            # snapshot off the HA loop; event handlers keep owning the live
+            # observer and invalidate this result if anything changes meanwhile.
+            original = observer
+            candidate_observer = deepcopy(observer)
+            changed = await executor(candidate_observer.observe, deepcopy(sample))
+            current_cfg = model.settings(self.manager, spec)
+            current = self._pid_adaptive_live_sample(spec, cfg=current_cfg)
+            if (not self._active or not self._ready
+                    or observers.get(spec.identifier) is not original
+                    or sample["generation"] != getattr(self, "_pid_learning_generation", {}).get(spec.identifier, 0)
+                    or current is None or current["context"] != sample["context"]
+                    or current_cfg.get("operating_mode") != cfg.get("operating_mode")
+                    or any(current_cfg.get(key) != cfg.get(key) for key in ("kp", "ki", "kd"))):
+                return True  # Preserve the main-loop event handler's decision.
+            observer = observers[spec.identifier] = candidate_observer
+        else:
+            changed = observer.observe(sample)
+        status = observer.snapshot()
+        # Recover interrupted post-write bookkeeping from the receipt stored
+        # atomically with the exact active gains.
+        receipt = cfg.get("pid_last_calibration")
+        if (isinstance(receipt, dict) and receipt.get("algorithm") == ALGORITHM
+                and receipt.get("context") == sample["context"]
+                and receipt.get("applied_gains") == {key: cfg[key] for key in ("kp", "ki", "kd")}
+                and (observer.ledger().get("last_application") or {}).get("evidence_id") != receipt.get("evidence_id")):
+            if receipt.get("method") == "performance_rollback":
+                observer.mark_reverted(receipt)
+            else:
+                observer.mark_applied(receipt)
+            changed = True
+            status = observer.snapshot()
+        old_review = record.get("pid_passive_review")
+        dirty = False
+        if isinstance(old_review, dict) and old_review.get("state") == "pending" and old_review.get("algorithm") != ALGORITHM:
+            old_review.update(state="expired", reason="calibration_algorithm_updated")
+            old_review.pop("notification_cleared", None)
+            dirty = True
+        if cfg["pid_calibration_method"] == "adaptive_suggest":
+            candidate = proposal_for(cfg, status, sample["context"], self.clock())
+            if (candidate is not None and (not isinstance(old_review, dict)
+                    or old_review.get("evidence_id") != candidate.get("evidence_id"))):
+                record["pid_passive_review"] = candidate
+                dirty = True
+        ledger = observer.ledger()
+        saved_ledger = saved.get("ledger") or {}
+        # Progress counts are presentation data. Store bounded completed
+        # evidence and outcomes, without writing the Store for every report.
+        substantive = ledger != saved_ledger and (
+            any(ledger.get(key) != saved_ledger.get(key) for key in (
+                "context", "windows", "trial", "last_application", "last_result"))
+            or status.get("candidate") != (saved_ledger.get("assessment") or {}).get("candidate")
+            or self.clock() - saved.get("last_saved_at", 0) >= max(1800., 3*cfg["sample_seconds"]))
+        if substantive or dirty:
+            self._pid_adaptive_remember(record, sample["context"], ledger)
+            await self._save()
+        if changed or dirty or status != previous:
+            self._presentation_updates.request(spec.identifier)
+        if dirty:
+            self._schedule_pid_review_notice(spec)
+        rollback = (status.get("verification") or {}).get("state") == "rollback_recommended"
+        if cfg["pid_calibration_method"] == "adaptive_auto" or rollback:
+            proof = make_proof(cfg, status, sample["context"], self.clock(), rollback=rollback)
+            tasks = getattr(self, "_pid_adaptive_tasks", None)
+            if tasks is None:
+                tasks = self._pid_adaptive_tasks = {}
+            if proof is not None and spec.identifier not in tasks:
+                proof["generation"] = sample["generation"]
+                task = self.hass.async_create_task(self._pid_adaptive_apply(spec, proof, rollback=rollback))
+                tasks[spec.identifier] = task
+                def finished(done, identifier=spec.identifier):
+                    if tasks.get(identifier) is done:
+                        tasks.pop(identifier, None)
+                task.add_done_callback(finished)
+        return True
+
+    def _pid_adaptive_authorized(self, spec, changes, proof, *, read_only=False):
+        """Recheck evidence and the current adapter under the controller lock."""
+        from .pid_adaptive_store import ALGORITHM, calibration_receipt, validate_proof
+        from .pid_review import calibration_hold, review_projection
+        try:
+            if (not isinstance(proof, dict) or not self._active or not self._ready
+                    or not self._current_spec(spec)
+                    or proof.get("generation") != getattr(self, "_pid_learning_generation", {}).get(spec.identifier, 0)
+                    or self.clock()-self._started < STARTUP_SECONDS
+                    or set(changes) != {"kp", "ki", "kd", "pid_last_calibration"}):
+                return False
+            cfg = model.settings(self.manager, spec)
+            cap = model.capabilities(self.manager, spec)
+            if cap is None or cfg.get("control_mode") != "pid":
+                return False
+            record = self.records.get(spec.identifier, {})
+            if calibration_hold(record, cfg, self.hass.states.get) is not None:
+                return False
+            plan = model.plan_for(self.manager, spec)
+            sample = self._pid_adaptive_live_sample(spec, cfg=cfg, cap=cap, plan=plan)
+            observer = getattr(self, "_pid_adaptive_observers", {}).get(spec.identifier)
+            if (sample is None or not sample["safe"] or not sample["output_verified"]
+                    or sample["constraints"] or observer is None
+                    or observer.context != sample["context"]
+                    or not validate_proof(proof, cfg, observer.snapshot(), sample["context"], self.clock())):
+                return False
+            if self._gate(spec, cap, cfg, plan, cfg["requested_mode"], read_only=True) is not None:
+                return False
+            expected = proof["apply"]
+            if any(changes.get(key) != expected.get(key) for key in ("kp", "ki", "kd")):
+                return False
+            receipt = changes.get("pid_last_calibration")
+            if (not isinstance(receipt, dict) or finite(receipt.get("at"), 0, self.clock()) is None
+                    or receipt != calibration_receipt(proof, receipt["at"])):
+                return False
+            approved = proof.get("approved_id")
+            if approved is not None:
+                review = record.get("pid_passive_review")
+                if (not isinstance(review, dict) or review.get("algorithm") != ALGORITHM
+                        or review.get("id") != approved or review.get("state") != "pending"
+                        or review.get("evidence_id") != proof.get("evidence_id")
+                        or review.get("apply") != proof["apply"]
+                        or review_projection(review, cfg, self.clock(), context=sample["context"],
+                                             saved=record.get("pid_adaptive")).get("state") != "pending"):
+                    return False
+            native = self.hass.states.get(cap.primary)
+            if sample["actuator_kind"] == "binary":
+                if (not sample["power_permission"] or record.get("power")
+                        or any(not output_off(self.hass.states.get(entity)) for entity in spec.source_entities)
+                        or native.attributes.get("hvac_action") not in (None, "off", "idle")):
+                    return False
+            else:
+                # Continuous outputs may adapt while running, but a missing
+                # numerical state is not a license to create an output jump.
+                state = getattr(self, "_memory", {}).get(spec.identifier)
+                if (not isinstance(state, tuple) or len(state) != 3
+                        or finite(state[1].stamp, 0, self.clock()) is None
+                        or self.clock()-state[1].stamp > max(1800., 3*cfg["sample_seconds"])
+                        or model.pid_bumpless(state[1], sample["target"],
+                            increasing=sample["increasing"], **proof["apply"]) is None):
+                    return False
+                if sample["actuator_kind"] != "setpoint_trim" and not sample["power_permission"]:
+                    return False
+            return True
+        except (AttributeError, KeyError, ValueError, TypeError):
+            return False
+
+    def _pid_adaptive_review_authorized(self, spec, token):
+        """Read-only availability uses exactly the execution authorization."""
+        from .pid_adaptive_store import calibration_receipt, make_proof
+        cfg = model.settings(self.manager, spec)
+        observer = getattr(self, "_pid_adaptive_observers", {}).get(spec.identifier)
+        context = self._pid_adaptive_context(spec, cfg=cfg)
+        if observer is None or context is None or observer.context != context:
+            return False
+        proof = make_proof(cfg, observer.snapshot(), context, self.clock(), approved_id=token)
+        if proof is None:
+            return False
+        proof["generation"] = getattr(self, "_pid_learning_generation", {}).get(spec.identifier, 0)
+        changes = {**proof["apply"], "pid_last_calibration": calibration_receipt(proof, self.clock())}
+        return self._pid_adaptive_authorized(spec, changes, proof, read_only=True)
+
+    async def _pid_adaptive_apply(self, spec, proof, *, rollback=False):
+        """Commit an evidence-bound trial/restore, never dispatch hardware."""
+        from .pid_adaptive_store import ALGORITHM, calibration_receipt
+        if not isinstance(proof, dict) or proof.get("rollback") is not bool(rollback):
+            return False
+        receipt = calibration_receipt(proof, self.clock())
+        changes = {**proof["apply"], "pid_last_calibration": receipt}
+        try:
+            await self.async_update(spec, changes, adaptive_proof=proof,
+                                    operating_mode=proof["operating_mode"])
+            async with self._lock(spec.identifier):
+                cfg = model.settings(self.manager, spec)
+                if (cfg.get("pid_last_calibration") != receipt
+                        or any(cfg.get(key) != proof["apply"][key] for key in ("kp", "ki", "kd"))):
+                    return False
+                record = self._record(spec)
+                observer = getattr(self, "_pid_adaptive_observers", {}).get(spec.identifier)
+                if observer is not None:
+                    if rollback:
+                        observer.mark_reverted(receipt)
+                    else:
+                        observer.mark_applied(receipt)
+                    self._pid_adaptive_remember(record, proof["context"], observer.ledger())
+                review = record.get("pid_passive_review")
+                if (proof.get("approved_id") and isinstance(review, dict)
+                        and review.get("id") == proof["approved_id"]):
+                    review.update(state="applied", reason="applied")
+                    review.pop("notification_cleared", None)
+                await self._save()
+            self._presentation_updates.request(spec.identifier)
+            if proof.get("approved_id"):
+                self._schedule_pid_review_notice(spec)
+            return True
+        except asyncio.CancelledError:
+            raise
+        except (HomeAssistantError, ValueError, KeyError, TypeError):
+            _LOGGER.debug("Performance PID update retained pending current evidence for %s", spec.identifier)
+            return False
+
     def _pid_learning_context(self, spec: model.ManagedDevice, cfg=None, cap=None,
                               plan=None) -> str | None:
         """Resolve the current physical learning context without writes or IO."""
@@ -1363,10 +2102,21 @@ class EquipmentRuntime:
                     review_cfg = model.settings_for_mode(self.manager, spec, mode)
                 except (HomeAssistantError, ValueError, KeyError, TypeError):
                     pass
-            if context is None:
-                context = self._pid_learning_context(spec, cfg=cfg)
-            projected = review_projection(review, review_cfg, now, context=context,
-                                          saved=record.get("pid_passive", {}))
+            if review.get("algorithm") == "performance_v1":
+                context = self._pid_adaptive_context(spec, cfg=cfg) if context is None else context
+                projected = review_projection(review, review_cfg, now, context=context,
+                                              saved=record.get("pid_adaptive", {}))
+            elif (callable(getattr(self, "_pid_adaptive_context", None))
+                  and review.get("state") == "pending"):
+                # Upgrade withdraws old binary-step write authority before
+                # the first new observer tick, while preserving its history.
+                projected = {**review, "state": "expired", "reason": "calibration_algorithm_updated"}
+                projected.pop("notification_cleared", None)
+            else:
+                if context is None:
+                    context = self._pid_learning_context(spec, cfg=cfg)
+                projected = review_projection(review, review_cfg, now, context=context,
+                                              saved=record.get("pid_passive", {}))
             if projected != review:
                 record["pid_passive_review"] = projected
                 changed = True
@@ -1442,6 +2192,8 @@ class EquipmentRuntime:
         self, spec: model.ManagedDevice, changes: dict, proof: tuple,
     ) -> bool:
         """Fail closed under the per-controller update lock, with no IO."""
+        if callable(getattr(self, "_pid_adaptive_context", None)):
+            return False  # Retired step-fit evidence is history, not a second writer.
         try:
             from .pid_review import calibration_hold, tuning_signature
             context, cycle_at, previous, operating_mode, continuity = proof
@@ -1556,6 +2308,8 @@ class EquipmentRuntime:
         Called TWICE under async_update's per-controller lock, before and
         after storage yields. No physical service is issued by this path.
         """
+        if callable(getattr(self, "_pid_adaptive_context", None)):
+            return False  # Generic reviews use _pid_adaptive_review_authorized.
         from .equipment_power_switch import observed_output_off
         from .pid_review import is_pending, review_projection, calibration_hold
         try:
@@ -1686,6 +2440,19 @@ class EquipmentRuntime:
             self._presentation_updates.request(spec.identifier)
             return True
 
+        if review.get("algorithm") == "performance_v1":
+            from .pid_adaptive_store import make_proof
+            cfg = model.settings(self.manager, spec)
+            observer = getattr(self, "_pid_adaptive_observers", {}).get(spec.identifier)
+            context = self._pid_adaptive_context(spec, cfg=cfg)
+            if observer is None or context is None or observer.context != context:
+                return False
+            proof = make_proof(cfg, observer.snapshot(), context, self.clock(), approved_id=token)
+            if proof is None:
+                return False
+            proof["generation"] = getattr(self, "_pid_learning_generation", {}).get(spec.identifier, 0)
+            return await self._pid_adaptive_apply(spec, proof)
+
         changes = {
             **review["apply"],
             "pid_last_calibration": {
@@ -1728,6 +2495,7 @@ class EquipmentRuntime:
         self, spec: model.ManagedDevice, changes: dict, *,
         passive_auto: tuple | None = None,
         passive_review: str | None = None,
+        adaptive_proof: dict | None = None,
         operating_mode: str | None = None,
     ) -> None:
         """Validate edits to one operating profile or shared physical settings."""
@@ -1944,13 +2712,14 @@ class EquipmentRuntime:
                         rerun = self._setpoint_rerun = set()
                     rerun.add(spec.identifier)
             return
-        calibration_update = passive_auto is not None or passive_review is not None
+        calibration_update = passive_auto is not None or passive_review is not None or adaptive_proof is not None
         # Inactive-mode preference edits need not wait for an actuator command.
         # A learned-gain application, however, must share the controller lock
         # even when its settings are scoped to a mode.
         edit_lock = (asyncio.Lock() if operating_mode is not None and not calibration_update
                      else self._lock(spec.identifier))
         async with edit_lock:
+            adaptive_memory = None
             if not self._ready:
                 raise HomeAssistantError("Controller state storage is unavailable")
             if not self._current_spec(spec):
@@ -1963,6 +2732,11 @@ class EquipmentRuntime:
             if (passive_review is not None and
                     not self._pid_review_authorized(spec, changes, passive_review)):
                 raise HomeAssistantError("PID review has changed or hardware is not safely OFF")
+            if (adaptive_proof is not None and (
+                    passive_auto is not None or passive_review is not None
+                    or operating_mode != adaptive_proof.get("operating_mode")
+                    or not self._pid_adaptive_authorized(spec, changes, adaptive_proof))):
+                raise HomeAssistantError("PID performance evidence changed before applying gains")
             changes = deepcopy(changes)
             # A supply reassignment is configuration, never authority to
             # interrupt a running compressor or discard the previous supply's
@@ -2436,6 +3210,19 @@ class EquipmentRuntime:
                 if (passive_review is not None and
                         not self._pid_review_authorized(spec, changes, passive_review)):
                     raise HomeAssistantError("PID review changed before saving gains")
+                if adaptive_proof is not None:
+                    if not self._pid_adaptive_authorized(spec, changes, adaptive_proof):
+                        raise HomeAssistantError("PID performance context changed before saving gains")
+                    live = self._pid_adaptive_live_sample(spec)
+                    if live["actuator_kind"] != "binary":
+                        previous_signature, previous_memory, previous_anchor = self._memory[spec.identifier]
+                        transferred = model.pid_bumpless(previous_memory, live["target"],
+                            increasing=live["increasing"], **adaptive_proof["apply"])
+                        if transferred is None:
+                            raise HomeAssistantError("PID gain transfer cannot preserve current output")
+                        signature = list(previous_signature)
+                        signature[6:9] = [changes[key] for key in ("kp", "ki", "kd")]
+                        adaptive_memory = (tuple(signature), transferred, previous_anchor)
                 self.hass.config_entries.async_update_entry(self.manager.entry, options=options)
                 if calibration_update:
                     # A successful write must be the effective gains for the
@@ -2448,12 +3235,18 @@ class EquipmentRuntime:
             active_edit = not inactive_edit or self.active_control_mode(spec) == operating_mode
             if active_edit:
                 from .pid_restart import control_intent, reset_logical_cycle
-                if (control_intent(active_before) != control_intent(model.settings(self.manager, spec))
+                if adaptive_memory is not None:
+                    # An output-preserving gain transfer must not reset PWM
+                    # phase, physical dwell or the observer's verification.
+                    self._memory[spec.identifier] = adaptive_memory
+                    await self._checkpoint_pid(spec, record, model.settings(self.manager, spec),
+                                               *adaptive_memory)
+                elif (control_intent(active_before) != control_intent(model.settings(self.manager, spec))
                         and reset_logical_cycle(self, spec, "active_control_changed")):
                     # An actual active change starts new controller math. A
                     # repeated save of the same value keeps its logical phase.
                     await self._save()
-            if passive_auto is None and passive_review is None and any(
+            if passive_auto is None and passive_review is None and adaptive_proof is None and any(
                     k in changes and old.get(k) != new.get(k) for k in ("kp", "ki", "kd")):
                 # A deliberate gain edit supersedes that mode's old learning.
                 # Changing only Suggest/Auto or pausing control preserves the
@@ -2463,7 +3256,30 @@ class EquipmentRuntime:
                 edited_mode = operating_mode or old.get("operating_mode") or old.get("requested_mode")
                 if active_edit:
                     self._pid_passive_observers.pop(spec.identifier, None)
-                if invalidate(record, edited_mode):
+                    getattr(self, "_pid_adaptive_observers", {}).pop(spec.identifier, None)
+                    getattr(self, "_pid_adaptive_samples", {}).pop(spec.identifier, None)
+                import json
+                adaptive_invalidated = False
+                bank = record.get("pid_adaptive_contexts")
+                if isinstance(bank, dict):
+                    for context in list(bank):
+                        try:
+                            affected = json.loads(context).get("operating_mode") == edited_mode
+                        except (ValueError, TypeError, AttributeError):
+                            affected = True
+                        if affected:
+                            bank.pop(context, None)
+                            adaptive_invalidated = True
+                saved_adaptive = record.get("pid_adaptive")
+                if isinstance(saved_adaptive, dict):
+                    try:
+                        affected = json.loads(saved_adaptive.get("context", "")).get("operating_mode") == edited_mode
+                    except (ValueError, TypeError, AttributeError):
+                        affected = True
+                    if affected:
+                        record.pop("pid_adaptive", None)
+                        adaptive_invalidated = True
+                if invalidate(record, edited_mode) or adaptive_invalidated:
                     await self._save()
             maintain = getattr(self, "_pid_review_maintenance", None)
             if callable(maintain):
@@ -3748,7 +4564,7 @@ class EquipmentRuntime:
         values = {}
         for metric, key in (("temperature", "temperature_entity"), ("humidity", "humidity_entity"),
                             ("co2", "co2_entity"), ("pm25", "pm25_entity")):
-            from .room_sources import selected, aggregate
+            from .room_sources import selected, aggregate_with_provenance
             group = metric if metric in ("temperature", "humidity") else "air_quality"
             chosen = selected(self.manager.settings, spec.area_id, group)
             if chosen is not None:
@@ -3759,11 +4575,13 @@ class EquipmentRuntime:
                         if (state := self.hass.states.get(entity)) is not None
                         and supported_metric(self.hass, state, outdoor=False) == metric
                     )
-                value, _ = aggregate(self.hass, chosen, spec.area_id, group, 10)
+                value, _, provenance = aggregate_with_provenance(
+                    self.hass, chosen, spec.area_id, group, 10)
                 values[metric] = value
                 values[key] = None
                 values[metric + "_selected_entities"] = list(chosen)
                 values[metric + "_source"] = "room_selected_mean"
+                values[metric + "_provenance"] = provenance
                 continue
 
             # Legacy fallback only when this room has never been given an
@@ -3810,6 +4628,18 @@ class EquipmentRuntime:
                 "legacy_fallback" if source else
                 "legacy_room_mean" if legacy_mean is not None else "unavailable"
             )
+            identities = ([source] if isinstance(source, str) else
+                          values.get(metric + "_selected_entities", []))
+            contributors = identities if value is not None else []
+            timestamps = {entity: at for entity in contributors
+                          if (at := _reported_timestamp(self.hass.states.get(entity))) is not None}
+            values[metric + "_provenance"] = {
+                "source_ids": list(identities), "contributor_ids": list(contributors),
+                "aggregation": "mean" if len(identities) > 1 else "single",
+                "source_reported_at": timestamps,
+                "reported_at": max(timestamps.values()) if timestamps
+                               and len(timestamps) == len(contributors) else None,
+            }
         return values
 
     def _quiet_context(self, spec: model.ManagedDevice, cfg: dict, plan: dict) -> bool:
@@ -5970,7 +6800,7 @@ class EquipmentRuntime:
                      settings_saved=True)
         return True
 
-    def _interrupt_pid_learning(self, spec_or_identifier: Any, reason: str) -> None:
+    def _interrupt_pid_learning(self, spec_or_identifier: Any, reason: str, *, preserve_adaptive=False) -> None:
         """Discard unfinished samples and revoke queued automatic proof only.
 
         Accepted numerical cycles and reviews remain in the durable record.
@@ -5985,6 +6815,9 @@ class EquipmentRuntime:
         if generations is None:
             generations = self._pid_learning_generation = {}
         generations[identifier] = generations.get(identifier, 0) + 1
+        adaptive = getattr(self, "_pid_adaptive_observers", {}).get(identifier)
+        if adaptive is not None and not preserve_adaptive:
+            adaptive.interrupt(reason)
         observer = getattr(self, "_pid_passive_observers", {}).get(identifier)
         if observer is not None:
             unfinished = bool(observer.on or observer.off or observer.last_t is not None)
@@ -6032,7 +6865,7 @@ class EquipmentRuntime:
         interrupt_learning = getattr(self, "_interrupt_pid_learning", None)
         if (callable(interrupt_learning)
                 and entity_id.startswith(("climate.", "humidifier.", "switch.",
-                                          "input_boolean.", "fan."))):
+                                          "input_boolean.", "fan.", "number.", "input_number."))):
             old_live, new_live = live(old), live(new)
             normal_edge = bool(old_live and new_live
                                and output_off(old) != output_off(new))
@@ -6070,6 +6903,23 @@ class EquipmentRuntime:
                 elif (not output_off(old) and not output_off(new)
                       and old_attrs.get("hvac_action") != new_attrs.get("hvac_action")):
                     discontinuity = "native_activity_changed"
+            if old_live and new_live:
+                native_context = getattr(new, "context", None)
+                explicit_human = bool(
+                    (getattr(native_context, "user_id", None)
+                     and not getattr(native_context, "parent_id", None))
+                    or str(new.attributes.get("change_origin") or
+                           new.attributes.get("operation_source") or "").lower()
+                       in ("physical_button", "manual_button", "local_user")
+                )
+                if explicit_human and (
+                        old.state != new.state
+                        or any(old.attributes.get(key) != new.attributes.get(key)
+                               for key in SETTABLE_OUTPUT_ATTRIBUTES | {"mode"})):
+                    # Even an exact expected ON/OFF may have been performed by
+                    # the user. Revoke response evidence immediately, before
+                    # the next reconciliation can consume the matching state.
+                    discontinuity = "native_control_settings_changed"
             for spec in model.specs(self.manager):
                 if entity_id in spec.source_entities:
                     seen = getattr(self, "_pid_learning_observed_edges", {}).get(
@@ -6079,7 +6929,20 @@ class EquipmentRuntime:
                         "unobserved_native_output_edges"
                         if normal_edge and edges[entity_id] - seen > 1 else None
                     )
-                    if reason is not None:
+                    expected = getattr(self, "_pid_adaptive_expected_pending", None)
+                    ordinary_ack = bool(callable(expected) and old_live and new_live
+                                        and expected(spec, entity=entity_id, old=old, new=new))
+                    adaptive_observer = getattr(self, "_pid_adaptive_observers", {}).get(spec.identifier)
+                    command_activity = bool(reason == "native_activity_changed" and adaptive_observer is not None
+                        and (getattr(self, "_pid_adaptive_samples", {}).get(spec.identifier) or {}).get("output_kind")
+                            == "acknowledged_native_command")
+                    if ordinary_ack or command_activity:
+                        # Revoke queued gain writes, while preserving normal
+                        # closed-loop response across our own verified ACKs.
+                        interrupt_learning(spec, "native_command_acknowledged", preserve_adaptive=True)
+                        self._pid_adaptive_ack_event(spec)
+                        self._pid_learning_observed(spec)
+                    elif reason is not None:
                         interrupt_learning(spec, reason)
                 elif model.settings(self.manager, spec).get("power_switch_entity") == entity_id:
                     if not old_live or not new_live or old.state != new.state:
@@ -6418,6 +7281,7 @@ class EquipmentRuntime:
     async def tick(self, spec: model.ManagedDevice) -> None:
         interrupt_learning = getattr(self, "_interrupt_pid_learning", None)
         learning_observed = False
+        native_ack_wait = False
         interruption_reason = "controller_wait"
         try:
             if not self._active or not self._ready:
@@ -6599,6 +7463,7 @@ class EquipmentRuntime:
             if not await self._reconcile_native_after_supply_wake(spec, cap):
                 return
             if not await self._reconcile(spec):
+                native_ack_wait = True
                 return
             state = self.hass.states.get(cap.primary)
             if state is None or state.state in ("unknown", "unavailable"):
@@ -6708,18 +7573,26 @@ class EquipmentRuntime:
                 # Observe the actual native state BEFORE any OFF command; never
                 # fabricate OFF from zero demand or a successful service return.
                 # This path otherwise returns before the ordinary observer below.
+                adaptive = getattr(self, "_pid_adaptive_observe_sample", None)
                 passive = getattr(self, "_pid_passive_observe", None)
-                if passive is not None:
+                if callable(adaptive) or passive is not None:
                     learning_gate = self._gate(
                         spec, cap, cfg, plan, current_target["mode"], automatic=auto,
                     )
                     if learning_gate is None:
-                        await passive(
-                            spec, cfg, cap, plan, target, measured, record, state,
-                            current_target["mode"], current_target["metric"],
-                            current_target["target"], soft, power,
-                        )
-                        learning_observed = True
+                        if callable(adaptive):
+                            sample = self._pid_adaptive_sample(
+                                spec, cfg, cap, plan, measured, state,
+                                current_target["mode"], current_target["metric"],
+                                current_target["target"], current_target["increasing"], 0.)
+                            learning_observed = await adaptive(spec, cfg, sample)
+                        else:
+                            await passive(
+                                spec, cfg, cap, plan, target, measured, record, state,
+                                current_target["mode"], current_target["metric"],
+                                current_target["target"], soft, power,
+                            )
+                            learning_observed = True
                         diagnostic_sample = getattr(self, "_observe_pid_performance", None)
                         if callable(diagnostic_sample):
                             diagnostic_sample(
@@ -6883,8 +7756,9 @@ class EquipmentRuntime:
                     # compile only tick() without the new observer methods.
                     # The real runtime always has the passive observer; treating
                     # it as an optional diagnostic keeps the actuator path pure.
+                    adaptive = getattr(self, "_pid_adaptive_observe_sample", None)
                     passive = getattr(self, "_pid_passive_observe", None)
-                    if passive is not None:
+                    if not callable(adaptive) and passive is not None:
                         await passive(
                             spec, cfg, cap, plan, target, measured, record, state,
                             mode, metric, goal, soft, power,
@@ -7040,6 +7914,11 @@ class EquipmentRuntime:
                                 wanted = True
                             else:
                                 self._profile_wake.pop(spec.identifier, None)
+                    if callable(adaptive):
+                        sample = self._pid_adaptive_sample(
+                            spec, cfg, cap, plan, measured, state, mode, metric,
+                            goal, increasing, demand)
+                        learning_observed = await adaptive(spec, cfg, sample)
                 else:
                     # Hysteresis preserves current output until the opposite boundary.
                     band = .3 if metric == "temperature" else 2 if metric == "humidity" else 50 if metric == "co2" else 2
@@ -7199,4 +8078,15 @@ class EquipmentRuntime:
                     and (not learning_observed
                          or spec.identifier in self._invalidated
                          or self.records.get(spec.identifier, {}).get("paused"))):
-                interrupt_learning(spec, interruption_reason)
+                pending_check = getattr(self, "_pid_adaptive_expected_pending", None)
+                ordinary_wait = bool(
+                    native_ack_wait and interruption_reason != "evaluation_interrupted"
+                    and spec.identifier not in self._invalidated
+                    and not self.records.get(spec.identifier, {}).get("paused")
+                    and callable(pending_check) and pending_check(spec))
+                if ordinary_wait:
+                    # No PV interval is credited until the actual native ACK.
+                    # Its bounded delay does not erase earlier useful samples.
+                    interrupt_learning(spec, "pending_command", preserve_adaptive=True)
+                else:
+                    interrupt_learning(spec, interruption_reason)
