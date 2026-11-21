@@ -342,8 +342,14 @@ def browser_checks(data):
                 return Promise.resolve({[message.entity_ids[0]]:data.histories[message.entity_ids[0]]||[]});
               return Promise.resolve([]);
             }};
-          card._openAverage105('living','temperature');
         }""", data)
+        # The public hass setter schedules the first card render. Open through
+        # the rendered metric after that lifecycle completes, as a user does;
+        # a popup opened before the first render can be replaced by that render.
+        temperature = page.locator(
+            '[data-room-fold87="living"] [data-hem-average105="temperature"]').first
+        expect(temperature).to_be_visible()
+        temperature.click()
         popup = page.locator(".hem-avg-dialog105")
         expect(popup).to_be_visible()
         expect(popup.locator('[data-control-status075="loading"]')).to_be_visible()
