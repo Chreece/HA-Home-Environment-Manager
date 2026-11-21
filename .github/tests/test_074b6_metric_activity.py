@@ -580,7 +580,7 @@ def browser_checks(states):
           card._hass={...card._hass,language:'el',states};
           card._expanded.add('heat');card._roomsExpanded87.add('heat');card._renderContent(true);
         }""", states)
-        for metric, explanation in (("humidity", "Η σχετική υγρασία"), ("aqi", "Ο δείκτης AQI")):
+        for metric, explanation in (("humidity", "Η σχετική υγρασία"), ("aqi", "Ο δείκτης ποιότητας αέρα")):
             help_control = page.locator(
                 f'[data-room-fold87="heat"] [data-room-metric114="{metric}"] .metric-help > summary')
             help_control.click()
