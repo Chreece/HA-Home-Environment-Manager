@@ -3886,7 +3886,12 @@
         }
       },
       "global_setting_window_close_cooldown_minutes": {
-        "name": "通风 · 建议关窗前的等待时间（分钟）"
+        "name": "通风 · 建议关窗前的等待时间（分钟）",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "帮助"
+          }
+        }
       }
     },
     "switch": {

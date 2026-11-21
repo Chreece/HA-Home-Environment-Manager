@@ -3886,7 +3886,12 @@
         }
       },
       "global_setting_window_close_cooldown_minutes": {
-        "name": "환기 · 창문 닫기 권고 전 대기 시간(분)"
+        "name": "환기 · 창문 닫기 권고 전 대기 시간(분)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "도움말"
+          }
+        }
       }
     },
     "switch": {

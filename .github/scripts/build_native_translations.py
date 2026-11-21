@@ -65,7 +65,14 @@ def synchronize_setting_metadata(obj, locale, names, help_catalog):
         '_hem_native_translation_build.window_close_cooldown_text'
     ).WINDOW_CLOSE_COOLDOWN_TEXT[locale]
     key = 'window_close_cooldown_minutes'
-    obj['entity']['number'].setdefault('global_setting_' + key, {})
+    numbers = obj['entity']['number']
+    cooldown = numbers.setdefault('global_setting_' + key, {})
+    # The new number exposes the same help attribute as the opening timeout.
+    # Reuse its localized attribute label as well as the setting's own prose.
+    help_name = numbers['global_setting_window_open_timeout_minutes'][
+        'state_attributes']['configuration_help']['name']
+    cooldown.setdefault('state_attributes', {}).setdefault(
+        'configuration_help', {})['name'] = help_name
     for flow in ('config', 'options'):
         general = obj[flow]['step']['setup_general']
         general['data'][key] = close_text['label']

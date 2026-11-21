@@ -3886,7 +3886,12 @@
         }
       },
       "global_setting_window_close_cooldown_minutes": {
-        "name": "Провітрювання · Затримка перед порадою зачинити вікно (хв)"
+        "name": "Провітрювання · Затримка перед порадою зачинити вікно (хв)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Довідка"
+          }
+        }
       }
     },
     "switch": {

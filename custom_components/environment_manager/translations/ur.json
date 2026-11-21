@@ -3886,7 +3886,12 @@
         }
       },
       "global_setting_window_close_cooldown_minutes": {
-        "name": "ہوا کی آمدورفت · کھڑکی بند کرنے کا مشورہ دینے سے پہلے انتظار (منٹ)"
+        "name": "ہوا کی آمدورفت · کھڑکی بند کرنے کا مشورہ دینے سے پہلے انتظار (منٹ)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "مدد"
+          }
+        }
       }
     },
     "switch": {

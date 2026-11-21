@@ -3886,7 +3886,12 @@
         }
       },
       "global_setting_window_close_cooldown_minutes": {
-        "name": "Ventilație · Așteptare înainte de a sugera închiderea ferestrei (min)"
+        "name": "Ventilație · Așteptare înainte de a sugera închiderea ferestrei (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ajutor"
+          }
+        }
       }
     },
     "switch": {

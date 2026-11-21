@@ -3886,7 +3886,12 @@
         }
       },
       "global_setting_window_close_cooldown_minutes": {
-        "name": "تهویه · زمان انتظار پیش از پیشنهاد بستن پنجره (دقیقه)"
+        "name": "تهویه · زمان انتظار پیش از پیشنهاد بستن پنجره (دقیقه)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "راهنما"
+          }
+        }
       }
     },
     "switch": {

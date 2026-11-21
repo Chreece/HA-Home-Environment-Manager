@@ -3886,7 +3886,12 @@
         }
       },
       "global_setting_window_close_cooldown_minutes": {
-        "name": "Havalandırma · Pencereyi kapatmayı önermeden önce bekleme (dk)"
+        "name": "Havalandırma · Pencereyi kapatmayı önermeden önce bekleme (dk)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Yardım"
+          }
+        }
       }
     },
     "switch": {

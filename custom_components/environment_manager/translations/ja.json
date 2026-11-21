@@ -3886,7 +3886,12 @@
         }
       },
       "global_setting_window_close_cooldown_minutes": {
-        "name": "換気 · 窓を閉める提案までの待ち時間（分）"
+        "name": "換気 · 窓を閉める提案までの待ち時間（分）",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ヘルプ"
+          }
+        }
       }
     },
     "switch": {

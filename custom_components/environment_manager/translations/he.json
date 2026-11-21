@@ -3886,7 +3886,12 @@
         }
       },
       "global_setting_window_close_cooldown_minutes": {
-        "name": "אוורור · המתנה לפני הצעה לסגור חלון (דקות)"
+        "name": "אוורור · המתנה לפני הצעה לסגור חלון (דקות)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "עזרה"
+          }
+        }
       }
     },
     "switch": {

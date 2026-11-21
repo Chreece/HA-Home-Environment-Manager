@@ -3886,7 +3886,12 @@
         }
       },
       "global_setting_window_close_cooldown_minutes": {
-        "name": "Ventilação · Espera antes de sugerir fechar a janela (min)"
+        "name": "Ventilação · Espera antes de sugerir fechar a janela (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ajuda"
+          }
+        }
       }
     },
     "switch": {

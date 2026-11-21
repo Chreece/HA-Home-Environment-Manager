@@ -4692,13 +4692,18 @@
       const state=hass?.states?.[id], attrs=state?.attributes||{};
       if(typeof attrs.area_id==='string' && attrs.area_id!==a.area_id)continue;
       const domain=id.split('.')[0];
-      const role=id===primary && ['extraction','filtration'].includes(purpose)
-        ?purpose==='extraction'?'ventilation':'filtration':null;
       const rawAction=domain==='humidifier'?(attrs.action??attrs.hvac_action):attrs.hvac_action;
       const action=typeof rawAction==='string'?rawAction.trim().toLowerCase():null;
       const actionTone=Object.prototype.hasOwnProperty.call(tones,action)?tones[action]:null;
       const modes=[...safeArray(attrs.hvac_modes),state?.state,
         ...(id===primary?safeArray(a.supported_operating_modes):[])];
+      // A room's inferred fan purpose does not give a heater or humidifier
+      // air-treatment capability. Without a real fan channel, even an OFF
+      // or unavailable report must stay out of unrelated measurement help.
+      const fanChannel=domain==='fan' || domain==='climate' &&
+        (modes.includes('fan_only') || actionTone==='fan');
+      const role=id===primary && fanChannel && ['extraction','filtration'].includes(purpose)
+        ?purpose==='extraction'?'ventilation':'filtration':null;
       const possible=new Set();
       if(domain==='humidifier')possible.add('humidity');
       if(domain==='climate' || id===primary &&
@@ -7102,28 +7107,32 @@
     const rows=[...unique.values()].sort((a,b)=>a.t-b.t);
     if(rows.length<=1000)return rows;
     // Keep the complete requested period, including its real extremes and
-    // boundaries. Taking the last 1000 rows would silently discard days.
+    // availability boundaries. A missing transition cannot be replaced by a
+    // break on a later retained sample: that widens the actual source outage.
     const selected=new Set([0,rows.length-1]);
-    const stride=Math.ceil((rows.length-2)/498);
-    for(let begin=1;begin<rows.length-1;begin+=stride){
-      const stop=Math.min(rows.length-1,begin+stride);
-      let low=null,high=null;
-      for(let i=begin;i<stop;i++)if(rows[i].v!==null){
-        if(low===null||rows[i].v<rows[low].v)low=i;
-        if(high===null||rows[i].v>rows[high].v)high=i;
-      }
-      if(low===null)selected.add(begin);
-      else{selected.add(low);selected.add(high);}
+    for(let i=1;i<rows.length;i++){
+      if(rows[i].v===null&&rows[i-1].v!==null){
+        selected.add(i-1);selected.add(i);
+      }else if(rows[i].v!==null&&rows[i-1].v===null)selected.add(i);
     }
-    let previous=-1;
-    return [...selected].sort((a,b)=>a-b).map(index=>{
-      const row={...rows[index]};
-      // An omitted unavailable value must still break the rendered line.
-      if(row.v!==null&&rows.slice(previous+1,index).some(item=>item.v===null))
-        row.break_before=true;
-      previous=index;
-      return row;
-    });
+    // Preserve original transition readings even if they consume the normal
+    // 1000-point budget. The chart already supports at most 2600 points; fail
+    // explicitly rather than silently dropping boundaries beyond that cap.
+    if(selected.size>2600)throw new Error('Too many Recorder availability transitions');
+    const buckets=Math.floor(Math.max(0,1000-selected.size)/2);
+    if(buckets){
+      const stride=Math.ceil((rows.length-2)/buckets);
+      for(let begin=1;begin<rows.length-1;begin+=stride){
+        const stop=Math.min(rows.length-1,begin+stride);
+        let low=null,high=null;
+        for(let i=begin;i<stop;i++)if(rows[i].v!==null){
+          if(low===null||rows[i].v<rows[low].v)low=i;
+          if(high===null||rows[i].v>rows[high].v)high=i;
+        }
+        if(low!==null){selected.add(low);selected.add(high);}
+      }
+    }
+    return [...selected].sort((a,b)=>a-b).map(index=>({...rows[index]}));
   };
   trend114._entityTrendEvidence122=function(saved){
     const id=saved?.entity122;
@@ -7334,7 +7343,11 @@
       const tolerance=Math.max(0.001,1.5*secondsPerPixel);
       const nearest=model.visible.reduce((best,p)=>
         !best||Math.abs(p.t-time)<Math.abs(best.t-time)?p:best,null);
-      const snapped=nearest&&Math.abs(nearest.t-time)<=tolerance?nearest:null;
+      // A sub-pixel outage is still unavailable. Check the actual cursor
+      // before snapping so a nearby valid source event cannot erase it.
+      const inGap=model.gaps.some(([a,b])=>
+        (time>a||time===a&&model.missingStarts.includes(a))&&time<b);
+      const snapped=!inGap&&nearest&&Math.abs(nearest.t-time)<=tolerance?nearest:null;
       const inspectedAt=snapped?snapped.t:time;
       const latest=snapped||model.visible.filter(p=>p.t<=inspectedAt).at(-1);
       const unavailable=model.gaps.some(([a,b])=>

@@ -3886,7 +3886,12 @@
         }
       },
       "global_setting_window_close_cooldown_minutes": {
-        "name": "Szellőztetés · Várakozás az ablak bezárására vonatkozó javaslat előtt (perc)"
+        "name": "Szellőztetés · Várakozás az ablak bezárására vonatkozó javaslat előtt (perc)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Súgó"
+          }
+        }
       }
     },
     "switch": {

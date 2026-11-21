@@ -173,6 +173,78 @@ test('unresolved purpose and companion fan metadata cannot invent filtration',()
   assert.notEqual(old._controllerSignature(),signature,'Absent role and authoritative null have different rendering');
   assert.equal(tones(glance(old,'air'))[3],'neutral','Authoritative unresolved role overrides stale selector');
 });
+test('monitoring without applicable equipment omits device state from every measurement bubble',()=>{
+  for(const language of ['en','el','de']){
+    const c=make();c._hass.language=language;
+    for(const [id,state] of Object.entries(c._hass.states))
+      if(state.attributes?.area_id==='air')delete c._hass.states[id];
+    assert.equal(c._managedControllers('air').length,0);
+    for(const item of room(c,'air').readings){
+      const activity=c._metricActivityHelpB6(item,'air');
+      assert.equal(activity.text,'',language+' '+item.metric);
+      assert.equal(activity.help,c._metricHelp(item),language+' '+item.metric);
+      assert.equal(activity.tone,'neutral');
+      const html=tile(c,'air',item.metric);
+      assert.ok(html.includes(c._metricHelp(item)),'Measurement help disappeared');
+    }
+    const outside=c._hass.states['sensor.hem'].attributes.dashboard.outdoor.readings[0];
+    assert.equal(c._metricActivityHelpB6(outside,null).text,'');
+  }
+});
+test('inactive thermal and humidity devices cannot inherit air-treatment activity from room sensors',()=>{
+  for(const language of ['en','el','de'])for(const purpose of ['filtration','extraction']){
+    for(const [area,native,facade,ownMetric] of [
+      ['heat','climate.heater','climate.managed_heater','temperature'],
+      ['humidify','humidifier.moisture','climate.managed_moisture','humidity'],
+      ['dry','humidifier.dryer','climate.managed_dryer','humidity']]){
+      const c=make();c._hass.language=language;
+      change(c,facade,{attributes:{resolved_fan_purpose:purpose}});
+      const own=c._hass.states[native].attributes;
+      // Monitoring humidity or air pollutants on a thermal controller is
+      // not evidence that it can control those measurements.
+      own.current_humidity=54.2;own.pm2_5=7.2;
+      if(area==='heat')own.hvac_modes=['off','heat'];
+      for(const status of ['off','idle','unavailable']){
+        const action=status==='idle'?'idle':'off';
+        change(c,native,{state:status==='unavailable'?'unavailable':status==='off'?'off':'on',
+          attributes:{hvac_action:action,action}});
+        for(const metric of ['pm1','pm25','pm4','pm10','pollen','aqi','co2','voc','tvoc',
+          'voc_parts','voc_index','hcho','formaldehyde','radon','no2','o3','so2','co']){
+          const item=reading(c,'air',metric),activity=c._metricActivityHelpB6(item,area);
+          assert.equal(activity.text,'',language+' '+area+' '+purpose+' '+status+' '+metric);
+          assert.equal(activity.help,c._metricHelp(item));
+          assert.equal(activity.tone,'neutral');
+          for(const html of [c._metric(item,false,area),c._metricInfo122(item,area)]){
+            assert.ok(!html.includes('Ανενεργό'),'Unrelated Greek Off leaked into data help');
+            assert.ok(html.includes(c._metricHelp(item)),'Monitoring explanation disappeared');
+          }
+        }
+        // The actual equipment channel retains its real state and neutral icon.
+        const relevant=c._metricActivityHelpB6(reading(c,area,ownMetric),area);
+        assert.notEqual(relevant.text,'',language+' '+area+' '+status);
+        assert.equal(relevant.tone,'neutral');
+        if(area==='heat')assert.equal(c._metricActivityHelpB6(reading(c,area,'humidity'),area).text,'');
+        else assert.equal(c._metricActivityHelpB6(reading(c,area,'temperature'),area).text,'');
+      }
+    }
+  }
+});
+test('real fan-only and drying capabilities keep applicable inactive and unavailable explanations',()=>{
+  const c=make();
+  change(c,'climate.heater',{state:'off',attributes:{hvac_action:'off',hvac_modes:['off','heat','dry','fan_only']}});
+  change(c,'climate.managed_heater',{attributes:{resolved_fan_purpose:'extraction',
+    supported_operating_modes:['heat','dry','fan_only']}});
+  for(const metric of ['temperature','humidity','co2','aqi']){
+    const item=reading(c,metric==='aqi'?'air':'heat',metric);
+    assert.equal(c._metricActivityHelpB6(item,'heat').text,'Off',metric);
+  }
+  for(const [state,expected] of [['off','Off'],['unavailable','Device unavailable']]){
+    const fan=make();change(fan,'fan.purifier',{state});
+    assert.equal(fan._metricActivityHelpB6(reading(fan,'air','aqi'),'air').text,expected);
+    assert.equal(fan._metricActivityHelpB6(reading(fan,'air','co2'),'air').text,'');
+    assert.equal(fan._metricActivityHelpB6(reading(fan,'air','humidity'),'air').text,'');
+  }
+});
 test('missing action, idle and unavailable are distinct explanations with neutral icons',()=>{
   for(const [action,label] of [['idle','Idle'],[null,'Current activity is not reported']]){
     const c=make();
@@ -484,6 +556,36 @@ def browser_checks(states):
         assert any(t["metric"] == "pm10" for t in idle["tiles"]), idle
         assert all(t["icon"] != filtration for t in idle["tiles"])
         assert all(b["icon"] != filtration for b in idle["badges"])
+
+        # An inactive heater may carry a room-inferred fan purpose, but the
+        # actual Greek humidity/AQI information bubbles remain monitoring-only.
+        page.evaluate("""states=>{
+          const native=states['climate.heater'];
+          native.state='off';native.attributes.hvac_action='off';
+          native.attributes.hvac_modes=['off','heat'];native.attributes.current_humidity=54.2;
+          states['climate.managed_heater'].attributes.resolved_fan_purpose='filtration';
+          const rooms=states['sensor.hem'].attributes.dashboard.rooms;
+          const heat=rooms.find(room=>room.area_id==='heat');
+          const humidity=heat.readings.find(item=>item.metric==='humidity');
+          humidity.exceeded=true;humidity.threshold=50;
+          const aqi=structuredClone(rooms.find(room=>room.area_id==='air').readings.find(item=>item.metric==='aqi'));
+          aqi.entity_id='sensor.heat_aqi';states[aqi.entity_id]={state:String(aqi.value),attributes:{}};
+          heat.readings.push(aqi);
+          card._hass={...card._hass,language:'el',states};
+          card._expanded.add('heat');card._roomsExpanded87.add('heat');card._renderContent(true);
+        }""", states)
+        for metric, explanation in (("humidity", "Η σχετική υγρασία"), ("aqi", "Ο δείκτης AQI")):
+            help_control = page.locator(
+                f'[data-room-fold87="heat"] [data-room-metric114="{metric}"] .metric-help > summary')
+            help_control.click()
+            page.wait_for_function("!!card._floatingInfo87")
+            bubble_text = page.locator('.hem-floating-info87').inner_text()
+            assert explanation in bubble_text, (metric, bubble_text)
+            assert "Ανενεργό" not in bubble_text, (metric, bubble_text)
+            assert "Τρέχουσα δραστηριότητα συσκευών" not in bubble_text, (metric, bubble_text)
+            assert page.locator('[data-room-fold87="heat"]').get_attribute("open") is not None
+            page.keyboard.press("Escape")
+        assert page.evaluate("card._measurementActivityB6('temperature','heat').text") == "Ανενεργό"
         assert page.evaluate("calls") == []
         assert not errors, errors
         browser.close()

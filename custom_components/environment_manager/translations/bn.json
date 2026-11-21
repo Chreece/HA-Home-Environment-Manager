@@ -3886,7 +3886,12 @@
         }
       },
       "global_setting_window_close_cooldown_minutes": {
-        "name": "বায়ু চলাচল · জানালা বন্ধ করার পরামর্শের আগে অপেক্ষা (মিনিট)"
+        "name": "বায়ু চলাচল · জানালা বন্ধ করার পরামর্শের আগে অপেক্ষা (মিনিট)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "সাহায্য"
+          }
+        }
       }
     },
     "switch": {

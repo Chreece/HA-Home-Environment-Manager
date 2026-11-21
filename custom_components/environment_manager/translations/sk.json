@@ -3886,7 +3886,12 @@
         }
       },
       "global_setting_window_close_cooldown_minutes": {
-        "name": "Vetranie · Čakanie pred odporúčaním zatvoriť okno (min)"
+        "name": "Vetranie · Čakanie pred odporúčaním zatvoriť okno (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       }
     },
     "switch": {

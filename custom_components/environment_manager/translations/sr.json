@@ -3886,7 +3886,12 @@
         }
       },
       "global_setting_window_close_cooldown_minutes": {
-        "name": "Вентилација · Чекање пре предлога за затварање прозора (мин)"
+        "name": "Вентилација · Чекање пре предлога за затварање прозора (мин)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Помоћ"
+          }
+        }
       }
     },
     "switch": {

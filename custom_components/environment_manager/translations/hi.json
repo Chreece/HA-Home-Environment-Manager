@@ -3886,7 +3886,12 @@
         }
       },
       "global_setting_window_close_cooldown_minutes": {
-        "name": "वेंटिलेशन · खिड़की बंद करने का सुझाव देने से पहले प्रतीक्षा (मिनट)"
+        "name": "वेंटिलेशन · खिड़की बंद करने का सुझाव देने से पहले प्रतीक्षा (मिनट)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "सहायता"
+          }
+        }
       }
     },
     "switch": {
