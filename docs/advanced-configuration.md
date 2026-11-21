@@ -253,11 +253,13 @@ per room; floor-wide environmental overrides are not implied.
   value is unavailable; sources excluded from recording may have no history.
 - Matching controllers add their recorded targets to the trend. Stepped lines
   show when a target or profile changed, and each controller keeps its own
-  identity. The separate output view distinguishes HEM's requested demand from
-  the device's reported activity or output setting. Inspect the same time to
-  compare the measured value, target and available output evidence. A fan
-  percentage or valve position is a reported setting, not measured airflow or
-  power.
+  identity. Measurement, target, HEM's requested demand and the device's
+  reported activity or output setting share one graph and one time axis.
+  Measurements and targets use the left scale in the reading's unit; demand
+  and output use the right percentage or On/Off scale. The legend identifies
+  each controller and line, and one cursor inspects their values at the same
+  time. A fan percentage or valve position is a reported setting, not measured
+  airflow or power.
 - Targets use the exact feedback sources and quantity represented by the
   chart. For mold control, the mold chart shows the surface-humidity target;
   the corresponding room-humidity chart shows the effective room-air target.

@@ -1,4 +1,4 @@
-"""Historical targets and controller output share the measured trend timeline.
+"""Historical targets and controller output share one measured trend graph.
 
 Run production card code in Node; the default also exercises Chromium pointer,
 keyboard, retry and 320px geometry. All transport and HA states are fixtures.
@@ -122,7 +122,7 @@ const node=key=>{
     setAttribute(k,v){this.attributes[k]=v},removeAttribute(k){delete this.attributes[k]}});
   return nodes.get(key);
 };
-const chart=node('chart'),outputChart=node('outputChart'),cursor=node('cursor'),dot=node('dot');
+const chart=node('chart'),cursor=node('cursor'),dot=node('dot');
 cursor.querySelector=()=>dot;
 const handlers=new Map();
 const root={scrollTop:0,setAttribute(){},addEventListener(type,handler){
@@ -132,7 +132,7 @@ const root={scrollTop:0,setAttribute(){},addEventListener(type,handler){
   if(selector==='.hem-trend-cursor114')return cursor;
   if(selector==='[data-trend-chart114]')return chart;
   return node(selector);
-},querySelectorAll(selector){return selector==='[data-trend-chart114]'?[chart,outputChart]:[node('outputCursor')]}};
+},querySelectorAll(selector){return selector==='[data-trend-chart114]'?[chart]:[]}};
 const open=()=>{
   const saved=card._averageDialog105={area:'living',metric:'temperature',sources:'sensor.temp_a|sensor.temp_b',
     width114:480,view114:{range:0,end:null,cursor:null},node:root};
@@ -140,6 +140,17 @@ const open=()=>{
 };
 const evidence=()=>card._evidence105('living','temperature');
 const render=()=>card._averageBody105('living','temperature',evidence());
+const combinedGraph=html=>{
+  const graphs=html.match(/<svg\b[^>]*\bdata-trend-chart114\b[\s\S]*?<\/svg>/g)||[];
+  assert.equal(graphs.length,1,'Target and output must share one interactive SVG graph');
+  assert.ok(!html.includes('hem-control-output-chart075')&&!html.includes('data-output-chart075'),
+    'A separate controller output graph remains');
+  return graphs[0];
+};
+const vertices=path=>[...path.matchAll(/[ML]\s*(-?[\d.]+)\s+(-?[\d.]+)/g)]
+  .map(match=>({x:Number(match[1]),y:Number(match[2])}));
+const near=(actual,expected,message)=>assert.ok(Math.abs(actual-expected)<.011,
+  message+': '+actual+' vs '+expected);
 const original=JSON.stringify(data.response);
 (async()=>{
   const saved=open();
@@ -158,6 +169,18 @@ const original=JSON.stringify(data.response);
   assert.ok(html.includes('Radiator &lt;north&gt;')&&!html.includes('Radiator <north>'));
   assert.ok(html.includes('hem-control-target-key075')&&html.includes('hem-control-output-legend075'));
   assert.ok(!/NaN|Infinity|undefined/.test(html));
+  const graph=combinedGraph(html);
+  assert.equal(model.physicalValues075,true);
+  assert.ok(graph.includes('<text x="'+(model.left-8)+'"'),'Measured values lost their physical axis labels');
+  for(const series of ['hem-avg-line105','hem-control-target075','hem-control-demand075','hem-control-reported075'])
+    assert.ok(graph.includes(series),series+' is outside the combined plotting SVG');
+  assert.equal((graph.match(/class="hem-trend-cursor114"/g)||[]).length,1);
+  assert.ok(!graph.includes('hem-control-cursor075'),'Combined graph has duplicate time cursors');
+  assert.ok(graph.includes('hem-control-output-axis075')&&graph.includes('>100%</text>')&&graph.includes('>0%</text>'));
+  assert.ok(graph.includes('data-control-output-series075="0"')&&graph.includes('data-control-output-series075="1"'),
+    'A second controller lost its output series');
+  assert.notEqual(model.controls075[0].color,model.controls075[1].color);
+  assert.ok(model.right<model.width-14,'Output tick labels have no reserved space');
   const group=model.controls075[0];
   assert.equal(card._controlTrendPoint075(group,t+449),null,'Today target appeared before first observation');
   assert.equal(card._controlTrendPoint075(group,t+500).target,21);
@@ -166,6 +189,20 @@ const original=JSON.stringify(data.response);
   assert.equal(card._controlTrendPoint075(group,t+4201),null,'Target extended after last observed interval');
   const targetPath=card._controlTrendPath075(group,model,'target');
   assert.ok((targetPath.match(/M/g)||[]).length>=2,'Restart or off interval was connected');
+  const demandPath=card._controlTrendPath075(group,model,'demand_percent',true);
+  const reportedPath=card._controlTrendPath075(group,model,'output_percent',true);
+  const targetVertices=vertices(targetPath),demandVertices=vertices(demandPath),reportedVertices=vertices(reportedPath);
+  near(targetVertices[0].x,demandVertices[0].x,'Target and demand use different time axes');
+  near(targetVertices[0].x,reportedVertices[0].x,'Target and reported output use different time axes');
+  near(reportedVertices[0].y,model.top,'100% output is not at the combined plot top');
+  near(Math.max(...reportedVertices.map(p=>p.y)),model.bottom,'Reported OFF is not at the combined plot bottom');
+  near(demandVertices[0].y,model.bottom-(model.bottom-model.top)*.4,'40% demand uses a separate output lane');
+  near(demandVertices.at(-1).y,model.bottom-(model.bottom-model.top)*.8,'80% demand uses the wrong scale');
+  const gapX=model.left+(model.right-model.left)*2200/(model.end-model.start);
+  for(const segment of reportedPath.split('M').filter(Boolean)){
+    const xs=vertices('M'+segment).map(p=>p.x);
+    assert.ok(!(Math.min(...xs)<gapX&&Math.max(...xs)>gapX),'Output line bridges missing evidence');
+  }
   card._inspectTrend114(t+1050);
   assert.equal(card._trendSelection114(model).time,t+1050,'Mean snap moved controller cursor to another time');
   assert.equal(node('[data-control-target075="0"]').textContent,'22 °C');
@@ -175,7 +212,10 @@ const original=JSON.stringify(data.response);
     'Nearest measured sample lost its actual recorded time');
   assert.equal(node('[data-trend-value114]').attributes['data-sample-time114'],String(t+900));
   assert.equal(dot.style.display,'none','Nearest sample dot moved to unrecorded cursor time');
-  assert.equal(outputChart.attributes['aria-valuetext'],chart.attributes['aria-valuetext']);
+  for(const detail of ['22 °C','75%','On','Radiator <north>','Heat pump'])
+    assert.ok(chart.attributes['aria-valuetext'].includes(detail),'Combined graph accessibility omits '+detail);
+  near(Number(cursor.attributes.transform.match(/translate\(([-\d.]+)/)[1]),
+    model.left+(model.right-model.left)*1050/(model.end-model.start),'Cursor is on a different time axis');
   card._inspectTrend114(t+1800);
   assert.equal(node('[data-control-target075="0"]').textContent,'—');
   assert.equal(node('[data-control-demand075="0"]').textContent,'0%','Zero demand was mistaken for missing');
@@ -193,7 +233,8 @@ const original=JSON.stringify(data.response);
   // No measured history still displays bounded control evidence, with no PV.
   const mean=evidence().value,old=mean.trend;mean.trend=[];
   saved.view114={range:0,end:null,cursor:null};html=render();model=saved.model114;
-  assert.equal(model.points.length,0);assert.ok(html.includes('data-trend-chart114'));
+  assert.equal(model.points.length,0);
+  assert.ok(combinedGraph(html).includes('hem-control-reported075'));
   assert.equal(model.first,t+450);assert.equal(model.last,t+4200);
   card._inspectTrend114(t+900);
   assert.equal(node('[data-trend-value114]').textContent,'—');
@@ -206,6 +247,63 @@ const original=JSON.stringify(data.response);
   assert.equal(saved.view114.cursor,t+1800,'Keyboard got stuck at a target with no measured sample');
   key('ArrowRight');assert.equal(saved.view114.cursor,t+2100);
   key('End');assert.equal(saved.view114.cursor,t+4200);
+
+  // Output remains inspectable without any target or measured sample. The
+  // physical-value axis must not silently become a percentage scale.
+  const retainedControls=saved.controlData075;
+  saved.controlData075=structuredClone(retainedControls);
+  for(const controller of saved.controlData075.controllers)for(const series of controller.series)
+    for(const point of series.points)point.target=point.target_low=point.target_high=null;
+  saved.view114={range:0,end:null,cursor:t+900};html=render();model=saved.model114;
+  assert.equal(model.points.length,0);
+  assert.ok(combinedGraph(html).includes('hem-control-reported075'));
+  assert.ok(!html.includes('data-control-field075="target"')&&!html.includes('data-control-field075="target_low"'));
+  assert.ok(model.max<2,'Output-only history polluted the physical-value scale');
+  assert.equal(model.physicalValues075,false);
+  assert.ok(!combinedGraph(html).includes('<text x="'+(model.left-8)+'"')&&!html.includes('hem-control-unit075'),
+    'Output-only evidence displays an invented physical-value axis');
+  card._inspectTrend114(t+900);
+  assert.equal(node('[data-control-target075="0"]').textContent,'—');
+  assert.equal(node('[data-control-demand075="0"]').textContent,'75%');
+  assert.equal(node('[data-control-output075="0"]').textContent,'On');
+
+  const singleOutput=structuredClone(saved.controlData075);
+  singleOutput.controllers=singleOutput.controllers.slice(0,1);
+  const singleSeries=singleOutput.controllers[0].series[0];
+  singleSeries.points=[{...singleSeries.points[0],until:singleSeries.points[0].t,demand_percent:null}];
+  saved.controlData075=singleOutput;saved.view114={range:0,end:null,cursor:null};html=render();model=saved.model114;
+  assert.ok(combinedGraph(html).includes('hem-control-sample075'),'One output observation has no visible marker');
+  assert.equal(model.physicalValues075,false);
+  assert.ok(!combinedGraph(html).includes('<text x="'+(model.left-8)+'"')&&!html.includes('hem-control-unit075'),
+    'A single output observation displays an invented physical-value axis');
+  card._inspectTrend114();
+  assert.equal(card._trendSelection114(saved.model114).time,t+450,'Single output observation used padded time');
+  assert.equal(node('[data-control-output075="0"]').textContent,'On');
+
+  // With no requested percentage and only binary reports, the same right
+  // axis states On/Off instead of implying a measured power percentage.
+  saved.controlData075=structuredClone(retainedControls);
+  for(const controller of saved.controlData075.controllers)for(const series of controller.series)
+    for(const point of series.points){
+      point.demand_percent=null;
+      if(point.output_percent!==null){point.output_percent=point.output_percent>0?100:0;point.output_kind='binary';}
+    }
+  html=render();
+  assert.ok(combinedGraph(html).includes('>On</text>')&&html.includes('>Off</text>'));
+  assert.ok(!html.includes('>100%</text>')&&!html.includes('hem-control-demand075'));
+
+  // Target-only observations retain the original plot width; there is no
+  // empty output axis, output legend or second graph.
+  saved.controlData075=structuredClone(retainedControls);
+  for(const controller of saved.controlData075.controllers)for(const series of controller.series)
+    for(const point of series.points)point.demand_percent=point.output_percent=null;
+  html=render();model=saved.model114;
+  assert.ok(combinedGraph(html).includes('hem-control-target075'));
+  assert.equal(model.physicalValues075,true);
+  assert.ok(combinedGraph(html).includes('<text x="'+(model.left-8)+'"'),'Target-only history lost its physical axis labels');
+  assert.ok(!html.includes('hem-control-output-axis075')&&!html.includes('hem-control-reported075'));
+  assert.equal(model.right,model.width-14,'Absent output unnecessarily narrows the target graph');
+  saved.controlData075=retainedControls;
   mean.trend=old;
 
   // A native °F sensor gets converted C targets, never a C value relabelled F.
@@ -219,6 +317,58 @@ const original=JSON.stringify(data.response);
   assert.equal(native.model114.controls075[0].points[0].target,69.8);
   assert.ok(native.model114.max>75&&native.model114.max<85);
   assert.equal(native.model114.heldUntil,t+3600);
+
+  // A controller transition may be only seconds before a Recorder event.
+  // Inspect its exact time and held measurement; snapping to the next native
+  // event would skip that transition and trap ArrowLeft at the native event.
+  const nativeHandlers=new Map();
+  const nearNative=card._averageDialog105={...native,
+    controlData075:structuredClone(native.controlData075),
+    view114:{range:0,end:null,cursor:null},interactive114:false,
+    node:{...root,addEventListener(type,handler){
+      if(!nativeHandlers.has(type))nativeHandlers.set(type,[]);
+      nativeHandlers.get(type).push(handler);
+    }}};
+  const nativeController=nearNative.controlData075.controllers[0];
+  const nativeSeries=nativeController.series[0],nativePoint=nativeSeries.points[0];
+  nativeController.series=[{...nativeSeries,points:[
+    {...nativePoint,t:t+450,until:t+1195,target:21,output_percent:0},
+    {...nativePoint,t:t+1195,until:t+1800,target:22,output_percent:100},
+  ]}];
+  nearNative.controlData075.controllers=[nativeController];
+  const renderNearNative=()=>card._averageBody105('living','temperature',card._entityTrendEvidence122(nearNative));
+  renderNearNative();
+  card._inspectTrend114(t+1194);
+  assert.equal(card._trendSelection114(nearNative.model114).time,t+1194,'Pointer skipped to a future native sample');
+  assert.equal(node('[data-trend-value114]').textContent,'68');
+  assert.equal(node('[data-control-target075="0"]').textContent,'69.8 °F');
+  assert.equal(node('[data-control-output075="0"]').textContent,'Off');
+  card._inspectTrend114(t+1195);
+  assert.equal(card._trendSelection114(nearNative.model114).time,t+1195,'Controller transition snapped to a native sample');
+  assert.equal(node('[data-trend-value114]').textContent,'68','Future native reading replaced the held state');
+  assert.equal(node('[data-control-target075="0"]').textContent,'71.6 °F');
+  assert.equal(node('[data-control-output075="0"]').textContent,'On');
+  card._bindTrend114(nearNative,null);
+  const nativeKey=key=>nativeHandlers.get('keydown').forEach(handler=>handler({
+    key,target:{closest:()=>chart},preventDefault(){},
+  }));
+  card._inspectTrend114(t+1200);
+  nativeKey('ArrowLeft');
+  assert.equal(card._trendSelection114(nearNative.model114).time,t+1195,'ArrowLeft is stuck at the Recorder event');
+  assert.equal(node('[data-trend-value114]').textContent,'68');
+  assert.equal(node('[data-control-output075="0"]').textContent,'On');
+  nativeKey('ArrowLeft');
+  assert.equal(card._trendSelection114(nearNative.model114).time,t+450);
+  assert.equal(node('[data-control-output075="0"]').textContent,'Off');
+  nativeKey('ArrowRight');
+  assert.equal(card._trendSelection114(nearNative.model114).time,t+1195);
+  nativeKey('ArrowRight');
+  assert.equal(card._trendSelection114(nearNative.model114).time,t+1200);
+  assert.equal(node('[data-trend-value114]').textContent,'69');
+  nearNative.controlData075.controllers=[];nearNative.view114.cursor=t+1195;
+  renderNearNative();
+  assert.equal(card._trendSelection114(nearNative.model114).time,t+1200,'Native-only Recorder snapping changed');
+  card._averageDialog105=native;
   native.historyEnd122=t+3600;native.view114.cursor=t+4000;
   assert.equal(card._trendSelection114(native.model114).point,null,'Target timeline extended Recorder held state');
 
@@ -305,7 +455,7 @@ const original=JSON.stringify(data.response);
   card._refreshAverage105();assert.equal(pending.length,count+1);
   pending.at(-1).resolve(data.response);await new Promise(resolve=>setImmediate(resolve));
   assert.deepEqual(refresh.view114,pinned,'Control refresh moved pinned period or cursor');
-  console.log('PASS: recorded target steps/ranges, exact cursor, isolated output, sources, gaps, units, transport and locales');
+  console.log('PASS: one target/output graph, independent value axes, exact cursor, sources, gaps, units, transport and locales');
 })().catch(error=>{console.error(error);process.exitCode=1});
 """
 
@@ -355,10 +505,29 @@ def browser_checks(data):
         expect(popup.locator('[data-control-status075="loading"]')).to_be_visible()
         page.evaluate("controlRequests[0].resolve(data.response)")
         expect(popup.locator(".hem-control-target075")).to_have_count(2)
-        expect(popup.locator(".hem-control-output-chart075")).to_have_count(2)
+        expect(popup.locator("[data-trend-chart114]")).to_have_count(1)
+        expect(popup.locator(".hem-control-output-chart075,[data-output-chart075]")).to_have_count(0)
+        expect(popup.locator(".hem-control-output-series075")).to_have_count(2)
         assert popup.locator('[data-control-field075="target"]').count() == 1
         assert popup.locator('[data-control-field075="target_low"]').count() == 1
-        main = popup.locator("[data-trend-chart114]").first
+        main = popup.locator("[data-trend-chart114]")
+        assert main.evaluate("""svg=>[
+          '.hem-avg-line105','.hem-control-target075','.hem-control-demand075','.hem-control-reported075',
+          '.hem-control-output-axis075','.hem-trend-cursor114'
+        ].every(selector=>[...svg.querySelectorAll(selector)].length&&
+          [...svg.querySelectorAll(selector)].every(node=>node.ownerSVGElement===svg))"""), \
+            "Measurement, target and output must occupy the same SVG plotting area"
+        assert main.locator(".hem-trend-cursor114").count() == 1
+        target = main.locator('[data-control-field075="target"]')
+        demand = main.locator(".hem-control-demand075").first
+        output = main.locator(".hem-control-reported075").first
+        assert target.evaluate("e=>getComputedStyle(e).strokeDasharray") != demand.evaluate(
+            "e=>getComputedStyle(e).strokeDasharray"), "Target and requested output need distinct line styles"
+        assert output.evaluate("e=>getComputedStyle(e).strokeDasharray") == "none"
+        assert target.evaluate("e=>getComputedStyle(e).stroke") == output.evaluate(
+            "e=>getComputedStyle(e).stroke"), "Target and output lost their controller identity"
+        expect(main.locator(".hem-control-output-axis075")).to_contain_text("100%")
+        expect(main.locator(".hem-control-output-axis075")).to_contain_text("0%")
         main.focus()
         main.press("End")
         expect(popup.locator('[data-control-target075="0"]')).to_have_text("24 °C")
@@ -380,7 +549,8 @@ def browser_checks(data):
         assert abs(page.evaluate("card._averageDialog105.view114.cursor") - START - 1050) < 30
         assert popup.locator("[data-trend-value114]").get_attribute("data-sample-time114") == str(START + 900)
         assert popup.locator(".hem-trend-cursor114 circle").evaluate("e=>e.style.display") == "none"
-        assert main.get_attribute("aria-valuetext") == popup.locator(".hem-control-output-chart075").first.get_attribute("aria-valuetext")
+        for detail in ("22 °C", "75%", "On", "Radiator <north>", "Heat pump"):
+            assert detail in main.get_attribute("aria-valuetext"), detail
         for language in ("en", "el", "de"):
             page.evaluate("language=>{card._hass.language=language;card._refreshAverage105(true)}", language)
             assert "undefined" not in popup.inner_text()
@@ -390,6 +560,58 @@ def browser_checks(data):
                 assert popup.evaluate("e=>e.scrollWidth<=e.clientWidth+1"), (language, width)
                 bounds = popup.bounding_box()
                 assert bounds and bounds["x"] >= 0 and bounds["x"] + bounds["width"] <= width + 1
+                assert main.locator(".hem-control-output-series075").count() == 2
+                assert main.evaluate("""svg=>[...svg.querySelectorAll('.hem-control-output-axis075 text')]
+                  .every(label=>{const box=label.getBBox();
+                    return box.x>=0&&box.x+box.width<=svg.viewBox.baseVal.width+1})"""), (language, width)
+        page.evaluate("""()=>{
+          const saved=card._averageDialog105;
+          window.retainedControlData=saved.controlData075;
+          saved.controlData075=structuredClone(retainedControlData);
+          for(const controller of saved.controlData075.controllers)for(const series of controller.series)
+            for(const point of series.points){
+              point.demand_percent=null;
+              if(point.output_percent!==null){point.output_percent=point.output_percent>0?100:0;point.output_kind='binary';}
+            }
+          card._refreshAverage105(true);
+        }""")
+        expect(main.locator(".hem-control-output-axis075")).to_have_count(1)
+        for language in data["languages"]:
+            page.evaluate("language=>{card._hass.language=language;card._refreshAverage105(true)}", language)
+            assert main.evaluate("""svg=>{
+              const labels=[...svg.querySelectorAll('.hem-control-output-axis075 text')];
+              return labels.length>=2&&labels.every(label=>{const box=label.getBBox();
+                return box.x>=0&&box.x+box.width<=svg.viewBox.baseVal.width+1});
+            }"""), ("binary axis", language, 320)
+            assert popup.evaluate("e=>e.scrollWidth<=e.clientWidth+1"), ("binary axis", language, 320)
+        page.evaluate("""()=>{
+          const saved=card._averageDialog105;
+          card._hass.language='en';
+          saved.controlData075=structuredClone(retainedControlData);
+          for(const controller of saved.controlData075.controllers)for(const series of controller.series)
+            for(const point of series.points)point.target=point.target_low=point.target_high=null;
+          saved.history074=[];saved.status074='empty';
+          saved.view114={range:0,end:null,cursor:data.start+900};card._refreshAverage105(true);
+        }""")
+        expect(popup.locator("[data-trend-chart114]")).to_have_count(1)
+        expect(main.locator(".hem-control-reported075")).to_have_count(2)
+        expect(main.locator('[data-control-field075="target"],[data-control-field075="target_low"]')).to_have_count(0)
+        expect(popup.locator("[data-trend-value114]")).to_have_text("—")
+        expect(popup.locator('[data-control-target075="0"]')).to_have_text("—")
+        expect(popup.locator('[data-control-demand075="0"]')).to_have_text("75%")
+        expect(main.locator(".hem-control-unit075")).to_have_count(0)
+        assert main.evaluate("""svg=>![...svg.querySelectorAll('text')].some(label=>
+          Number(label.getAttribute('x'))===card._averageDialog105.model114.left-8)"""), \
+            "Output-only graph displays placeholder physical axis values"
+        main.focus()
+        main.press("ArrowRight")
+        assert page.evaluate("card._averageDialog105.view114.cursor") == START + 1800
+        expect(popup.locator('[data-control-output075="0"]')).to_have_text("Off")
+        page.evaluate("""()=>{
+          const saved=card._averageDialog105;
+          saved.controlData075=retainedControlData;saved.history074=data.samples;saved.status074='ready';
+          card._refreshAverage105(true);
+        }""")
         page.evaluate("""()=>{
           card._hass.language='en';card._loadControlTrend075(card._averageDialog105,true);
           controlRequests.at(-1).reject(Error('temporary'));
@@ -411,4 +633,4 @@ if __name__ == "__main__":
     subprocess.run(["node", "-e", NODE, str(CARD)], input=json.dumps(data), text=True, check=True)
     if "--logic-only" not in sys.argv:
         browser_checks(data)
-        print("PASS: target/output popup pointer, keyboard, retry, localization and narrow-screen geometry")
+        print("PASS: single target/output graph pointer, keyboard, retry, localization and narrow-screen geometry")

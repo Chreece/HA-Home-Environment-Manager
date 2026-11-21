@@ -470,7 +470,7 @@ jobs:
         run: python -I .github/tests/test_062b23_door_mold_card.py
       - name: Detailed average, mold and Recorder charts in Chromium
         run: python -I .github/tests/test_074_detailed_trends.py
-      - name: Historical targets, independent controller outputs and responsive trend inspection
+      - name: Historical targets and controller output on one responsive trend graph
         run: python -I .github/tests/test_075_trend_targets.py
       - name: Required room data, optional diagnostics and consistent responsive totals
         run: python -I .github/tests/test_075_room_data_card.py
