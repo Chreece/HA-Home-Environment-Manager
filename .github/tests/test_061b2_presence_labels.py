@@ -182,8 +182,11 @@ class PresenceChoiceTests(unittest.TestCase):
                         "whole-home Away", "minimum ON time", "command confirmation",
                         "Target demand, sleep and window"):
             self.assertIn(meaning, english)
-        source = json.loads((ROOT / "full_config_help_core.json").read_text())[
-            "device_settings.device_presence_requirement"]
+        english_source = json.loads((ROOT / "full_config_help_core.json").read_text())[
+            "device_settings.device_presence_requirement"]["en"]
+        # Native forms use the reviewed catalog; the legacy core retains older prose.
+        source = json.loads((ROOT / ".github/localization/native_residual_controllers_000.json")
+                            .read_text())[english_source]
         for locale in ("en", "el", "de"):
             data = json.loads((ROOT / "translations" / f"{locale}.json").read_text())
             for flow in ("config", "options"):
