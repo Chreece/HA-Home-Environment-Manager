@@ -155,7 +155,8 @@ for(const action of ['idle','off','unknown',null]) {
   const card=make(),native=structuredClone(card._hass.states['climate.heater']);
   if(action===null)delete native.attributes.hvac_action;else native.attributes.hvac_action=action;
   replace(card,'climate.heater',native);
-  expect(card,'heat',['neutral','neutral','neutral','neutral']);
+  expect(card,'heat',[action===null?'heatmode':'neutral','neutral','neutral','neutral']);
+  assert.ok(!glance(card,'heat').includes('mdi:fire'),'Mode-only hint invented active heating');
 }
 const sig=c._controllerSignature();
 const idle=structuredClone(c._hass.states['humidifier.moisture']);idle.attributes.action='idle';

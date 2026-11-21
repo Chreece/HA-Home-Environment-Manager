@@ -185,6 +185,7 @@ jobs:
           set -euo pipefail
           python -I .github/tests/test_074b6_activity_metadata.py
           python -I .github/tests/test_074b6_metric_activity.py --logic-only
+          python -I .github/tests/test_074_native_mode_feedback.py --logic-only
       - name: AQI source values, scale diagnostics and explicit outdoor selection
         run: |
           set -euo pipefail
@@ -471,6 +472,10 @@ jobs:
         env:
           HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
         run: python -I .github/tests/test_074b6_metric_activity.py
+      - name: Native mode feedback, verified activity and compact room indicators
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: python -I .github/tests/test_074_native_mode_feedback.py
       - name: Named AQI sources, scale explanations and responsive outdoor information
         env:
           HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui

@@ -245,14 +245,17 @@ test('real fan-only and drying capabilities keep applicable inactive and unavail
     assert.equal(fan._metricActivityHelpB6(reading(fan,'air','humidity'),'air').text,'');
   }
 });
-test('missing action, idle and unavailable are distinct explanations with neutral icons',()=>{
-  for(const [action,label] of [['idle','Idle'],[null,'Current activity is not reported']]){
+test('missing action has a mode hint while idle and unavailable remain neutral',()=>{
+  for(const [action,label,wanted] of [['idle','Idle','neutral'],
+      [null,'Enabled mode: Heating; current activity is not reported','heatmode']]){
     const c=make();
     if(action===null)delete c._hass.states['climate.heater'].attributes.hvac_action;
     else change(c,'climate.heater',{attributes:{hvac_action:action}});
-    assert.equal(tones(glance(c,'heat'))[0],'neutral');
+    assert.equal(tones(glance(c,'heat'))[0],wanted);
     assert.ok(title(glance(c,'heat')).includes(label));
-    tone(tile(c,'heat','temperature'),'neutral');
+    tone(tile(c,'heat','temperature'),wanted);
+    if(action===null)assert.ok(!glance(c,'heat').includes('mdi:fire'),
+      'Enabled mode was counted as a confirmed active heating device');
   }
   for(const state of ['unknown','unavailable']){
     const c=make();change(c,'climate.heater',{state});
@@ -285,7 +288,10 @@ test('confirmed supply Off blocks stale activity while preserving the conflict i
   assert.notEqual(c._controllerSignature(),signature,'Supply-only update did not invalidate');
   assert.equal(tones(glance(c,'heat'))[0],'heat');
   delete c._hass.states['climate.heater'].attributes.hvac_action;
-  assert.equal(tones(glance(c,'heat'))[0],'neutral','Supply ON was treated as heating evidence');
+  assert.equal(tones(glance(c,'heat'))[0],'heatmode','Native mode must stay distinct from running activity');
+  assert.ok(!glance(c,'heat').includes('mdi:fire'),'Supply ON was treated as active heating');
+  change(c,'climate.heater',{state:'off'});
+  assert.equal(tones(glance(c,'heat'))[0],'neutral','Supply ON alone invented a heating mode');
 });
 test('native Off with reported activity is an explicit conflict, not silent idle',()=>{
   const c=make();change(c,'climate.heater',{state:'off'});

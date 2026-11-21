@@ -185,11 +185,19 @@ def browser_checks(data):
           --secondary-background-color:#292929;--primary-color:#03a9f4;--divider-color:#444}</style>""")
         page.add_script_tag(path=str(CARD))
         page.evaluate("""data=>{
-          window.fixture=data;window.requests=[];window.deviceCalls=[];
+          window.fixture=data;window.requests=[];window.registryRequests=[];window.deviceCalls=[];
           window.card=document.createElement('home-environment-manager-card');document.body.append(card);
           card._config={entity:'sensor.hem'};
           card._hass={language:'el',states:data.states,connection:{},config:{time_zone:'Europe/Berlin'},
-            localize:()=>undefined,callWS:message=>new Promise((resolve,reject)=>requests.push({message,resolve,reject})),
+            localize:()=>undefined,callWS:message=>{
+              // Rendering also reads floor/area metadata. Those replies must
+              // not consume a deferred trend response or its queue index.
+              if(['config/floor_registry/list','config/area_registry/list'].includes(message.type)){
+                registryRequests.push(message);return Promise.resolve([]);
+              }
+              if(message.type!=='environment_manager/trend')throw Error('Unexpected WebSocket request: '+message.type);
+              return new Promise((resolve,reject)=>requests.push({message,resolve,reject}));
+            },
             callService:(...args)=>{deviceCalls.push(args);throw Error('No device writes')}};
           card._renderContent(true);
         }""", data)
@@ -199,6 +207,8 @@ def browser_checks(data):
         assert popup.locator('[data-trend-chart114]').count() == 0
         page.evaluate("requests[0].resolve(fixture.detailed.temperature)")
         page.wait_for_function("card._averageDialog105.status074==='ready'")
+        assert page.evaluate("registryRequests.map(r=>r.type)") == [
+            "config/floor_registry/list", "config/area_registry/list"]
         assert page.evaluate("card._averageDialog105.model114.visible.length") == 95
         assert popup.locator('.hem-trend-gap114').count() == 1
         assert page.locator('[data-room-fold87="living"]').get_attribute('open') is None
@@ -217,7 +227,10 @@ def browser_checks(data):
         page.wait_for_function("card._averageDialog105.status074==='ready'")
         assert page.evaluate("card._averageDialog105.model114.points.length") == 2016
         assert page.evaluate("card._averageDialog105.model114.first") == START
-        assert page.evaluate("requests.every(r=>r.message.type==='environment_manager/trend')")
+        assert page.evaluate("requests.map(r=>r.message)") == [
+            {"type": "environment_manager/trend", "entity_id": "sensor.hem",
+             "area_id": "living", "metric": metric}
+            for metric in ("temperature", "mold", "mold")]
         screenshot_dir = os.environ.get("HEM_TEST_SCREENSHOT_DIR")
         for width in (590, 390, 320):
             page.set_viewport_size({"width": width, "height": 900})
