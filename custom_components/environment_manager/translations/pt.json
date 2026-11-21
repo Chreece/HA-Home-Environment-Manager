@@ -230,7 +230,8 @@
           "general_home_policy": "Presença em casa",
           "general_wake_alarm_entity": "Sono · Próximo despertador",
           "general_wake_lead_minutes_entity": "Sono · Minutos antes do despertador",
-          "window_open_timeout_minutes": "Espera pela abertura da janela (min)"
+          "window_open_timeout_minutes": "Espera pela abertura da janela (min)",
+          "window_close_cooldown_minutes": "Espera antes de sugerir fechar a janela (min)"
         },
         "data_description": {
           "weather_entities": "Selecione: Tempo e avisos · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -283,7 +284,8 @@
           "general_home_policy": "Uma pessoa com presença confirmada em casa mantém sempre a habitação ocupada. A opção anterior «Todos em casa» é mantida nas configurações existentes e usa a mesma regra. O estado Ausente exige ausência verificada; um localizador selecionado com estado desconhecido não prova que todos saíram.",
           "general_wake_alarm_entity": "Selecione uma entidade de hora ou data e hora para o próximo despertador e uma entidade para os minutos de antecedência. O HEM termina o sono automático com essa antecedência e retoma os objetivos normais. Horas sem data usam o fuso do Home Assistant. Ausência, controlo manual e proteções mantêm a prioridade.",
           "general_wake_lead_minutes_entity": "Selecione uma entidade numérica com minutos não negativos, com unidade min ou sem unidade. Despertador às 07:00 e valor 30 terminam o sono automático às 06:30; 0 significa ao tocar. Para desativar, limpe as duas fontes.",
-          "window_open_timeout_minutes": "Espera após a aceitação de um pedido de arejamento antes de permitir novos arranques automáticos/PID se ainda forem necessários. 0–30 minutos, predefinição 5; 0 desativa a espera. As proteções de janela aberta e os tempos mínimos dos aparelhos mantêm-se."
+          "window_open_timeout_minutes": "Espera após a aceitação de um pedido de arejamento antes de permitir novos arranques automáticos/PID se ainda forem necessários. 0–30 minutos, predefinição 5; 0 desativa a espera. As proteções de janela aberta e os tempos mínimos dos aparelhos mantêm-se.",
+          "window_close_cooldown_minutes": "Quando uma janela é aberta após uma sugestão de arejamento do HEM, aguarda este número de minutos antes de sugerir que seja fechada, mesmo que as condições exteriores não sejam adequadas. A espera aplica-se de forma independente a cada divisão. 0–60 minutos, valor predefinido 5; 0 desativa a espera. As regras de pausa e proteção dos aparelhos mantêm-se ativas."
         }
       },
       "reconfigure": {
@@ -2248,7 +2250,8 @@
           "general_wake_lead_minutes_entity": "Sono · Minutos antes do despertador",
           "window_open_timeout_minutes": "Espera pela abertura da janela (min)",
           "general_source_freshness_mode": "Ocupação da casa · Política de validade",
-          "global_threshold_max_age_mode": "Ambiente · Política de validade"
+          "global_threshold_max_age_mode": "Ambiente · Política de validade",
+          "window_close_cooldown_minutes": "Espera antes de sugerir fechar a janela (min)"
         },
         "data_description": {
           "weather_entities": "Selecione: Tempo e avisos · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2303,7 +2306,8 @@
           "general_wake_lead_minutes_entity": "Selecione uma entidade numérica com minutos não negativos, com unidade min ou sem unidade. Despertador às 07:00 e valor 30 terminam o sono automático às 06:30; 0 significa ao tocar. Para desativar, limpe as duas fontes.",
           "window_open_timeout_minutes": "Espera após a aceitação de um pedido de arejamento antes de permitir novos arranques automáticos/PID se ainda forem necessários. 0–30 minutos, predefinição 5; 0 desativa a espera. As proteções de janela aberta e os tempos mínimos dos aparelhos mantêm-se.",
           "general_source_freshness_mode": "Automático: os contadores numéricos de pessoas e os relatórios de ausência dos localizadores da casa são aceites até 240 minutos; um estado Em casa válido e inalterado pode manter-se até mudar. Fontes desconhecidas, restauradas ou indisponíveis não provam ausência. Personalizado: usa o valor de minutos abaixo para os relatórios amostrados. As listas de divisões continuam a depender das mudanças de estado.",
-          "global_threshold_max_age_mode": "Automático: as entidades meteorológicas podem manter-se válidas durante 180 minutos e as outras medições ambientais numéricas durante 90 minutos; os contactos binários válidos acionados por mudanças de estado continuam utilizáveis sem expiração por inatividade. Personalizado: usa o valor de minutos abaixo. As verificações de disponibilidade e estado restaurado aplicam-se sempre. No Home Assistant, last_reported avança quando o estado é novamente escrito, mesmo com o mesmo valor, e não apenas pela passagem do tempo."
+          "global_threshold_max_age_mode": "Automático: as entidades meteorológicas podem manter-se válidas durante 180 minutos e as outras medições ambientais numéricas durante 90 minutos; os contactos binários válidos acionados por mudanças de estado continuam utilizáveis sem expiração por inatividade. Personalizado: usa o valor de minutos abaixo. As verificações de disponibilidade e estado restaurado aplicam-se sempre. No Home Assistant, last_reported avança quando o estado é novamente escrito, mesmo com o mesmo valor, e não apenas pela passagem do tempo.",
+          "window_close_cooldown_minutes": "Quando uma janela é aberta após uma sugestão de arejamento do HEM, aguarda este número de minutos antes de sugerir que seja fechada, mesmo que as condições exteriores não sejam adequadas. A espera aplica-se de forma independente a cada divisão. 0–60 minutos, valor predefinido 5; 0 desativa a espera. As regras de pausa e proteção dos aparelhos mantêm-se ativas."
         }
       },
       "room_occupancy": {
@@ -3875,6 +3879,14 @@
       },
       "equipment_power_switch_cooldown_seconds": {
         "name": "Alimentação · Espera antes de desligar a alimentação (segundos)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ajuda"
+          }
+        }
+      },
+      "global_setting_window_close_cooldown_minutes": {
+        "name": "Ventilação · Espera antes de sugerir fechar a janela (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ajuda"

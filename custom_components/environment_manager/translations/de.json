@@ -230,7 +230,8 @@
           "general_home_policy": "Anwesenheit zu Hause",
           "general_wake_alarm_entity": "Schlaf · Nächster Wecker",
           "general_wake_lead_minutes_entity": "Schlaf · Minuten vor dem Wecker",
-          "window_open_timeout_minutes": "Wartezeit zum Fensteröffnen (min)"
+          "window_open_timeout_minutes": "Wartezeit zum Fensteröffnen (min)",
+          "window_close_cooldown_minutes": "Wartezeit vor dem Hinweis zum Fensterschließen (min)"
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
@@ -283,7 +284,8 @@
           "general_home_policy": "Eine bestätigte Person zu Hause hält das Zuhause immer auf anwesend. Alle zu Hause bleibt für bestehende Konfigurationen erhalten und verwendet dieselbe Regel. Abwesenheit muss bestätigt sein; ein unbekannter Tracker beweist nicht, dass alle gegangen sind.",
           "general_wake_alarm_entity": "Home-Assistant-Quelle für den nächsten Weckalarm auswählen. HEM kann das automatische Schlafprofil nur vor dem Alarm verlassen, wenn auch eine Quelle für die Minuten davor konfiguriert ist. Beide Quellen zusammen auswählen oder beide frei lassen. Unbekannte Werte beweisen keine Weckzeit.",
           "general_wake_lead_minutes_entity": "Quelle mit der Anzahl Minuten vor dem nächsten Alarm wählen, zu denen HEM den automatischen Schlaf beenden soll. Erfordert die Weckalarmquelle oder beide bleiben leer. Ein unbekannter Wert löst kein Aufwachen aus.",
-          "window_open_timeout_minutes": "Wartezeit nach Annahme einer Lüftungsaufforderung, bevor neue Automatik-/PID-Starts bei weiterem Bedarf wieder erlaubt sind. 0–30 Minuten, Standard 5; 0 deaktiviert das Warten. Fensterschutz und Gerätemindestzeiten gelten weiterhin."
+          "window_open_timeout_minutes": "Wartezeit nach Annahme einer Lüftungsaufforderung, bevor neue Automatik-/PID-Starts bei weiterem Bedarf wieder erlaubt sind. 0–30 Minuten, Standard 5; 0 deaktiviert das Warten. Fensterschutz und Gerätemindestzeiten gelten weiterhin.",
+          "window_close_cooldown_minutes": "Wird ein Fenster nach einem Lüftungshinweis von HEM geöffnet, wartet HEM so viele Minuten, bevor es zum Schließen auffordert, auch bei ungeeigneten Außenbedingungen. Die Wartezeit gilt für jeden Raum unabhängig. 0–60 Minuten, Standard 5; 0 deaktiviert die Wartezeit. Die Regeln zum Pausieren und Schützen der Geräte bleiben aktiv."
         }
       },
       "reconfigure": {
@@ -2248,7 +2250,8 @@
           "general_wake_lead_minutes_entity": "Schlaf · Minuten vor dem Wecker",
           "window_open_timeout_minutes": "Wartezeit zum Fensteröffnen (min)",
           "general_source_freshness_mode": "Anwesenheit zu Hause · Gültigkeitsrichtlinie",
-          "global_threshold_max_age_mode": "Umgebung · Gültigkeitsrichtlinie"
+          "global_threshold_max_age_mode": "Umgebung · Gültigkeitsrichtlinie",
+          "window_close_cooldown_minutes": "Wartezeit vor dem Hinweis zum Fensterschließen (min)"
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
@@ -2303,7 +2306,8 @@
           "general_wake_lead_minutes_entity": "Quelle mit der Anzahl Minuten vor dem nächsten Alarm wählen, zu denen HEM den automatischen Schlaf beenden soll. Erfordert die Weckalarmquelle oder beide bleiben leer. Ein unbekannter Wert löst kein Aufwachen aus.",
           "window_open_timeout_minutes": "Wartezeit nach Annahme einer Lüftungsaufforderung, bevor neue Automatik-/PID-Starts bei weiterem Bedarf wieder erlaubt sind. 0–30 Minuten, Standard 5; 0 deaktiviert das Warten. Fensterschutz und Gerätemindestzeiten gelten weiterhin.",
           "general_source_freshness_mode": "Automatisch: Numerische Personenzähler und negative Anwesenheitsmeldungen gelten bis zu 240 Minuten; bestätigtes Zuhausebleiben bleibt auch ohne Änderung gültig. Unbekannte, wiederhergestellte und nicht verfügbare Werte beweisen keine Abwesenheit. Benutzerdefiniert: Minutengrenze für Meldungen. Raumlisten bleiben zustandsbasiert.",
-          "global_threshold_max_age_mode": "Automatisch: Wetterdaten höchstens 180 Minuten und numerische Umweltdaten 90 Minuten gültig; gültige zustandsgetriebene Binärkontakte verfallen nicht wegen Inaktivität. Benutzerdefiniert: Minutengrenze unten. Nicht verfügbare oder wiederhergestellte Werte bleiben ungültig. last_reported wird nur bei erneutem Zustandsbericht aktualisiert, auch bei gleichem Wert."
+          "global_threshold_max_age_mode": "Automatisch: Wetterdaten höchstens 180 Minuten und numerische Umweltdaten 90 Minuten gültig; gültige zustandsgetriebene Binärkontakte verfallen nicht wegen Inaktivität. Benutzerdefiniert: Minutengrenze unten. Nicht verfügbare oder wiederhergestellte Werte bleiben ungültig. last_reported wird nur bei erneutem Zustandsbericht aktualisiert, auch bei gleichem Wert.",
+          "window_close_cooldown_minutes": "Wird ein Fenster nach einem Lüftungshinweis von HEM geöffnet, wartet HEM so viele Minuten, bevor es zum Schließen auffordert, auch bei ungeeigneten Außenbedingungen. Die Wartezeit gilt für jeden Raum unabhängig. 0–60 Minuten, Standard 5; 0 deaktiviert die Wartezeit. Die Regeln zum Pausieren und Schützen der Geräte bleiben aktiv."
         }
       },
       "room_occupancy": {
@@ -3875,6 +3879,14 @@
       },
       "equipment_window_open_timeout_minutes": {
         "name": "Ansagen · {channel}Wartezeit zum Lüften (min)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
+      },
+      "global_setting_window_close_cooldown_minutes": {
+        "name": "Lüftung · Wartezeit vor dem Hinweis zum Fensterschließen (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"

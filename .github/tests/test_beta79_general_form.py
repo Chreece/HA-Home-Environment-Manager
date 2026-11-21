@@ -38,6 +38,8 @@ configkeys={
 'CONF_ENVIRONMENT_GLOBAL':'environment_global','CONF_THRESHOLDS':'thresholds',
 'CONF_WINDOW_OPEN_TIMEOUT_MINUTES':'window_open_timeout_minutes',
 'DEFAULT_WINDOW_OPEN_TIMEOUT_MINUTES':5,'MAX_WINDOW_OPEN_TIMEOUT_MINUTES':30,
+'CONF_WINDOW_CLOSE_COOLDOWN_MINUTES':'window_close_cooldown_minutes',
+'DEFAULT_WINDOW_CLOSE_COOLDOWN_MINUTES':5,'MAX_WINDOW_CLOSE_COOLDOWN_MINUTES':60,
 }
 limits={
 'outdoor_aqi':50.,'outdoor_co2':800.,'outdoor_pm25':15.,'outdoor_pm10':45.,

@@ -230,7 +230,8 @@
           "general_home_policy": "Présence à domicile",
           "general_wake_alarm_entity": "Sommeil · Prochain réveil",
           "general_wake_lead_minutes_entity": "Sommeil · Minutes avant le réveil",
-          "window_open_timeout_minutes": "Attente d’ouverture de fenêtre (min)"
+          "window_open_timeout_minutes": "Attente d’ouverture de fenêtre (min)",
+          "window_close_cooldown_minutes": "Délai avant de suggérer de fermer une fenêtre (min)"
         },
         "data_description": {
           "weather_entities": "Au moins une entité météo est nécessaire. Pluie, orages, vent fort et températures extrêmes empêchent d'ouvrir les fenêtres. L'indicateur de moisissure utilise l'attribut temperature (°C/°F) d'une entité météo sélectionnée comme température extérieure. Sélectionnez une source qui fournit une température.",
@@ -283,7 +284,8 @@
           "general_home_policy": "Une personne dont la présence au domicile est confirmée suffit toujours à maintenir le logement occupé. L’ancienne option « Tous à la maison » est conservée pour les configurations existantes et suit la même règle. L’absence exige une absence vérifiée ; un traceur sélectionné dont l’état est inconnu ne prouve pas que tout le monde est parti.",
           "general_wake_alarm_entity": "Sélectionnez une entité d’heure ou d’horodatage pour le prochain réveil, ainsi qu’une entité pour les minutes d’avance. HEM quitte le sommeil automatique avec cette avance et reprend les cibles normales. Une heure sans date utilise le fuseau de Home Assistant. L’absence, le contrôle manuel et les protections restent prioritaires.",
           "general_wake_lead_minutes_entity": "Sélectionnez une entité numérique indiquant un nombre de minutes positif ou nul, avec l’unité min ou sans unité. Un réveil à 07:00 avec 30 minutes termine le sommeil automatique à 06:30 ; 0 signifie à la sonnerie. Pour désactiver, effacez les deux sources.",
-          "window_open_timeout_minutes": "Attente après acceptation d’une demande d’aération avant d’autoriser de nouveaux démarrages automatiques/PID si nécessaire. 0–30 minutes, 5 par défaut ; 0 désactive l’attente. Les protections liées aux fenêtres ouvertes et les durées minimales des appareils restent actives."
+          "window_open_timeout_minutes": "Attente après acceptation d’une demande d’aération avant d’autoriser de nouveaux démarrages automatiques/PID si nécessaire. 0–30 minutes, 5 par défaut ; 0 désactive l’attente. Les protections liées aux fenêtres ouvertes et les durées minimales des appareils restent actives.",
+          "window_close_cooldown_minutes": "Lorsqu’une fenêtre est ouverte après un conseil d’aération de HEM, attendre ce nombre de minutes avant de suggérer de la fermer, même si les conditions extérieures sont défavorables. Le délai s’applique indépendamment à chaque pièce. 0–60 minutes, 5 par défaut ; 0 désactive le délai. Les règles de mise en pause et de protection des appareils restent actives."
         }
       },
       "reconfigure": {
@@ -2248,7 +2250,8 @@
           "general_wake_lead_minutes_entity": "Sommeil · Minutes avant le réveil",
           "window_open_timeout_minutes": "Attente d’ouverture de fenêtre (min)",
           "general_source_freshness_mode": "Occupation du logement · Règle de validité",
-          "global_threshold_max_age_mode": "Environnement · Règle de validité"
+          "global_threshold_max_age_mode": "Environnement · Règle de validité",
+          "window_close_cooldown_minutes": "Délai avant de suggérer de fermer une fenêtre (min)"
         },
         "data_description": {
           "weather_entities": "Au moins une entité météo est nécessaire. Pluie, orages, vent fort et températures extrêmes empêchent d'ouvrir les fenêtres. L'indicateur de moisissure utilise l'attribut temperature (°C/°F) d'une entité météo sélectionnée comme température extérieure. Sélectionnez une source qui fournit une température.",
@@ -2303,7 +2306,8 @@
           "general_wake_lead_minutes_entity": "Sélectionnez une entité numérique indiquant un nombre de minutes positif ou nul, avec l’unité min ou sans unité. Un réveil à 07:00 avec 30 minutes termine le sommeil automatique à 06:30 ; 0 signifie à la sonnerie. Pour désactiver, effacez les deux sources.",
           "window_open_timeout_minutes": "Attente après acceptation d’une demande d’aération avant d’autoriser de nouveaux démarrages automatiques/PID si nécessaire. 0–30 minutes, 5 par défaut ; 0 désactive l’attente. Les protections liées aux fenêtres ouvertes et les durées minimales des appareils restent actives.",
           "general_source_freshness_mode": "Automatique : les compteurs numériques de personnes et les signalements d’absence des traceurs du foyer sont acceptés pendant 240 minutes au maximum ; un état À la maison valide et inchangé peut rester valide jusqu’à sa modification. Les sources inconnues, restaurées ou indisponibles ne peuvent prouver l’absence. Personnalisé : la valeur en minutes ci-dessous s’applique aux rapports échantillonnés. Les listes de pièces restent pilotées par leurs changements d’état.",
-          "global_threshold_max_age_mode": "Automatique : les entités météo peuvent rester valides pendant 180 minutes et les autres mesures environnementales numériques pendant 90 minutes ; les contacts binaires valides pilotés par changement d’état restent utilisables sans délai d’expiration lié à l’inactivité. Personnalisé : utilise la valeur en minutes ci-dessous. Les vérifications de disponibilité et d’état restauré s’appliquent toujours. Dans Home Assistant, last_reported avance lors d’une nouvelle écriture, même de la même valeur, et non simplement parce que le temps passe."
+          "global_threshold_max_age_mode": "Automatique : les entités météo peuvent rester valides pendant 180 minutes et les autres mesures environnementales numériques pendant 90 minutes ; les contacts binaires valides pilotés par changement d’état restent utilisables sans délai d’expiration lié à l’inactivité. Personnalisé : utilise la valeur en minutes ci-dessous. Les vérifications de disponibilité et d’état restauré s’appliquent toujours. Dans Home Assistant, last_reported avance lors d’une nouvelle écriture, même de la même valeur, et non simplement parce que le temps passe.",
+          "window_close_cooldown_minutes": "Lorsqu’une fenêtre est ouverte après un conseil d’aération de HEM, attendre ce nombre de minutes avant de suggérer de la fermer, même si les conditions extérieures sont défavorables. Le délai s’applique indépendamment à chaque pièce. 0–60 minutes, 5 par défaut ; 0 désactive le délai. Les règles de mise en pause et de protection des appareils restent actives."
         }
       },
       "room_occupancy": {
@@ -3875,6 +3879,14 @@
       },
       "equipment_power_switch_cooldown_seconds": {
         "name": "Alimentation · Délai avant la coupure de l’alimentation (secondes)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aide"
+          }
+        }
+      },
+      "global_setting_window_close_cooldown_minutes": {
+        "name": "Aération · Délai avant de suggérer de fermer une fenêtre (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Aide"

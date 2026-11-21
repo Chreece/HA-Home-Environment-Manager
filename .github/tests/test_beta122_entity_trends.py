@@ -129,6 +129,52 @@ assert.equal(bounded.at(-1).t,t+604800);
 const actual=new Map(dense.filter(p=>Number.isFinite(Number(p.s))).map(p=>[p.lu,Number(p.s)]));
 for(const p of bounded.filter(p=>Number.isFinite(p.v)))assert.equal(p.v,actual.get(p.t));
 assert.ok(bounded.some(p=>p.v===null||p.break_before),'Sampling erased a source outage');
+// The downsampled week must preserve the actual one-minute outage, not the
+// much wider interval between its retained min/max samples. Inspecting that
+// sub-pixel gap must not snap onto a nearby available state.
+const denseSaved=card._averageDialog105={entity122:id,history122:bounded,
+  historyEnd122:t+604800,status122:'ready',unit122:'°F',
+  area:'living',metric:'temperature',width114:480,
+  view114:{range:0,end:null,cursor:t+3800*60}};
+card._averageBody105('living','temperature',card._entityTrendEvidence122(denseSaved));
+assert.deepEqual(denseSaved.model114.gaps,[[t+3800*60,t+3801*60]],
+  'Downsampling widened the actual Recorder outage');
+for(const stamp of [t+3800*60,t+3800*60+30]){
+  denseSaved.view114.cursor=stamp;
+  const selection=card._trendSelection114(denseSaved.model114);
+  assert.equal(selection.point,null,'A dense-history gap snapped to a valid source event');
+  assert.equal(selection.time,stamp);
+}
+for(const index of [3799,3801]){
+  denseSaved.view114.cursor=t+index*60;
+  assert.equal(card._trendSelection114(denseSaved.model114).point.v,actual.get(t+index*60));
+}
+assert.ok(!bounded.some(p=>p.break_before),'Exact null timestamps acquired an inflated synthetic break');
+const edgeRows=dense.map((row,index)=>index<20||index>=10061?{...row,s:'unavailable'}:row);
+const edges=card._entityHistoryPoints122({[id]:edgeRows},id,t,t+604800,'°F');
+denseSaved.history122=edges;denseSaved.view114.cursor=null;
+card._averageBody105('living','temperature',card._entityTrendEvidence122(denseSaved));
+assert.deepEqual(denseSaved.model114.gaps,
+  [[t,t+20*60],[t+3800*60,t+3801*60],[t+10061*60,t+604800]],
+  'Leading or trailing unavailable boundaries changed during downsampling');
+
+// Availability boundaries have priority over optional plot detail. More
+// than 1000 mandatory original readings fit the renderer's existing 2600
+// hard limit; histories exceeding that limit fail instead of losing gaps.
+const churn=Array.from({length:2001},(_,i)=>({s:i%5===2?'unavailable':String(60+i%17),
+  lu:t+i*60,a:{unit_of_measurement:'°F'}}));
+const transitions=card._entityHistoryPoints122({[id]:churn},id,t,t+2000*60,'°F');
+assert.ok(transitions.length>1000&&transitions.length<=2600);
+assert.equal(transitions[0].t,t);
+assert.equal(transitions.at(-1).t,t+2000*60);
+denseSaved.history122=transitions;denseSaved.historyEnd122=t+2000*60;
+card._averageBody105('living','temperature',card._entityTrendEvidence122(denseSaved));
+assert.deepEqual(denseSaved.model114.gaps,
+  Array.from({length:400},(_,i)=>[t+(i*5+2)*60,t+(i*5+3)*60]));
+const excessive=Array.from({length:5001},(_,i)=>({s:i%5===2?'unavailable':'60',
+  lu:t+i*60,a:{unit_of_measurement:'°F'}}));
+assert.throws(()=>card._entityHistoryPoints122({[id]:excessive},id,t,t+5000*60,'°F'),
+  /Too many Recorder availability transitions/);
 
 // A Recorder entity may keep the SAME value for days. This is not an outage.
 const sparse=[{t,v:70.123},{t:t+3*86400,v:71.125}];
@@ -413,6 +459,12 @@ def browser_checks(data):
               connection:{},localize:()=>undefined,
               callService:(...args)=>{serviceCalls.push(args);return Promise.resolve()},
               callWS:message=>{
+                if(message.type==='environment_manager/trend'){
+                  const room=card._hass.states['sensor.hem'].attributes.dashboard.rooms.find(r=>r.area_id===message.area_id);
+                  const value=room.environment.measurement_evidence[message.metric];
+                  return Promise.resolve({area_id:message.area_id,metric:message.metric,
+                    source_ids:value.source_ids,source_count:value.source_count,trend:structuredClone(value.trend||[])});
+                }
                 if(message.type!=='history/history_during_period')return Promise.resolve([]);
                 return new Promise((resolve,reject)=>historyRequests.push({message,resolve,reject}));
               }};

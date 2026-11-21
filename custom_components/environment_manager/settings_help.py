@@ -1291,9 +1291,14 @@ SETTING_HELP = {'area_area_environment_air_speed_m_s': {'de': 'Gemessene Luftges
  "arrival_preparation_timeout": {"en":"Maximum time to prepare home conditions for arrival. From the moment you press Prepare Home for Arrival, eligible automatically controlled devices use their Home targets for at most this many minutes. Preparation ends sooner on arrival or cancellation; device protections still apply.","el":"Μέγιστος χρόνος προετοιμασίας των συνθηκών του σπιτιού για την άφιξη. Από τη στιγμή που πατάς «Προετοιμασία σπιτιού για άφιξη», οι επιλέξιμες αυτόματα ελεγχόμενες συσκευές χρησιμοποιούν τους στόχους Home το πολύ για τόσα λεπτά. Η προετοιμασία λήγει νωρίτερα σε άφιξη ή ακύρωση· οι προστασίες παραμένουν ενεργές.","de":"Maximale Zeit, um die Wohnbedingungen für die Ankunft vorzubereiten. Ab dem Drücken von „Zuhause für die Ankunft vorbereiten“ verwenden geeignete automatisch geregelte Geräte höchstens so viele Minuten ihre Home-Sollwerte. Bei Ankunft oder Abbruch endet die Vorbereitung früher; die Geräteschutzregeln gelten weiter."}}
 
 from .window_open_text import WINDOW_OPEN_TEXT
+from .window_close_cooldown_text import WINDOW_CLOSE_COOLDOWN_TEXT
 
 SETTING_HELP["global_setting_window_open_timeout_minutes"] = {
     locale: text["help"] for locale, text in WINDOW_OPEN_TEXT.items()
+}
+
+SETTING_HELP["global_setting_window_close_cooldown_minutes"] = {
+    locale: text["help"] for locale, text in WINDOW_CLOSE_COOLDOWN_TEXT.items()
 }
 
 

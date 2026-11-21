@@ -160,7 +160,13 @@ def browser_checks(states):
           document.body.append(card);
           card.addEventListener('hass-more-info',e=>info.push(e.detail.entityId));
           card._config={entity:'sensor.hem'};
-          card._hass={language:'en',config:{time_zone:'Europe/Berlin'},states,callWS:async()=>({}),
+          card._hass={language:'en',config:{time_zone:'Europe/Berlin'},states,callWS:async message=>{
+        if(message.type!=='environment_manager/trend')return {};
+        const room=card._hass.states['sensor.hem'].attributes.dashboard.rooms.find(r=>r.area_id===message.area_id);
+        const value=message.metric==='mold'?room.environment.mold_trend:room.environment.measurement_evidence[message.metric];
+        return {area_id:message.area_id,metric:message.metric,source_ids:value.source_ids,
+          source_count:value.source_count,trend:structuredClone(value.trend||[])};
+      },
             localize:()=>undefined,callService:(...args)=>{calls.push(args);return Promise.resolve()}};
           card._renderContent(true);
         }""", states)
@@ -214,6 +220,7 @@ def browser_checks(states):
               const states=structuredClone(card._hass.states);
               const value=states['sensor.hem'].attributes.dashboard.rooms[0].environment.measurement_evidence.temperature;
               value.trend.push({t:value.trend.at(-1).t+3600,v:22.987});value.value=22.987;
+              card._averageDialog105.loadedAt074=0;
               card.hass={...card._hass,states};card._renderContent(true);
             }""")
 
@@ -312,19 +319,19 @@ def browser_checks(states):
             if screenshot_dir:
                 page.screenshot(path=str(Path(screenshot_dir) / f"beta114-trend-{width}-{theme}.png"))
         # One value and empty history keep sources usable without invented data.
-        page.evaluate("""()=>{
+        page.evaluate("""async()=>{
           const value=card._hass.states['sensor.hem'].attributes.dashboard.rooms[0].environment.measurement_evidence.temperature;
           value.trend=[{t:1793520000,v:0}];card._averageDialog105.view114={range:0,end:null,cursor:null};
-          card._refreshAverage105(true);
+          await card._loadAverageTrend074(card._averageDialog105,true);
         }""")
         assert popup.locator(".hem-trend-sample114").count() == 1
         assert popup.locator("[data-trend-value114]").inner_text() == "0"
-        page.evaluate("""()=>{
+        page.evaluate("""async()=>{
           card._hass.states['sensor.hem'].attributes.dashboard.rooms[0].environment.measurement_evidence.temperature.trend=[];
-          card._refreshAverage105(true);
+          await card._loadAverageTrend074(card._averageDialog105,true);
         }""")
         assert popup.locator("[data-trend-chart114]").count() == 0
-        assert popup.locator(".hem-avg-collect105").is_visible()
+        assert popup.locator('[data-entity-history-status122="empty"]').is_visible()
         assert popup.locator("[data-trend-value114]").inner_text() == "—"
         # Contributor identity changing must close the prior mean's history.
         page.evaluate("""()=>{

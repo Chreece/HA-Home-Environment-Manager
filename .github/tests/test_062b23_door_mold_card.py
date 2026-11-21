@@ -73,7 +73,13 @@ with sync_playwright() as pw:
           card._config={entity:'sensor.hem'};
           card._hass={language,states,connection:{},user:{is_admin:true},
             config:{time_zone:'Europe/Berlin'},localize:()=>undefined,
-            callWS:async()=>({}),
+            callWS:async message=>{
+        if(message.type!=='environment_manager/trend')return {};
+        const room=card._hass.states['sensor.hem'].attributes.dashboard.rooms.find(r=>r.area_id===message.area_id);
+        const value=message.metric==='mold'?room.environment.mold_trend:room.environment.measurement_evidence[message.metric];
+        return {area_id:message.area_id,metric:message.metric,source_ids:value.source_ids,
+          source_count:value.source_count,trend:structuredClone(value.trend||[])};
+      },
             callService:(...args)=>{calls.push(args);throw Error('No device writes in card audit')}};
           card._renderContent(true);
         }""",{"language":language,"states":states})

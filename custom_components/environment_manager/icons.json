@@ -19,6 +19,9 @@
     "number": {
       "equipment_window_open_timeout_minutes": {
         "default": "mdi:timer-outline"
+      },
+      "global_setting_window_close_cooldown_minutes": {
+        "default": "mdi:timer-sand"
       }
     }
   },

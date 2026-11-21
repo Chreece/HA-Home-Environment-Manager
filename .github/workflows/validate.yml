@@ -101,6 +101,13 @@ jobs:
         run: python -I .github/tests/test_publish_release.py
       - name: B23 recorded mold RH trends retain genuine gaps and bounds
         run: python -I .github/tests/test_062b23_mold_history.py
+      - name: Detailed trend retention, exact gaps and read-only authorization
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_074_trend_details.py
+          python -I .github/tests/test_074_detailed_trends.py --logic-only
+      - name: Permanent entry removal, isolated storage and pending-write cleanup
+        run: python -I .github/tests/test_074_entry_removal.py
       - name: HEM startup burst coalescing and shade-only fast tick safety
         run: python -I .github/tests/test_070_startup_load.py
       - name: Full startup, shutdown, bounded cleanup and optional notification lifecycle
@@ -163,6 +170,11 @@ jobs:
           python -I .github/tests/test_061b5_window_wait.py
           python -I .github/tests/test_061b5_window_delivery.py
           python -I .github/tests/test_061b5_window_text_settings.py
+      - name: Configurable post-opening advice cooldown and stale delivery guards
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_074b10_window_close_cooldown.py
+          python -I .github/tests/test_074b10_window_cooldown_settings.py
       - name: Device fan limits and advanced comfort controls
         run: |
           python -I .github/tests/test_beta112_device_fan_limits.py
@@ -173,6 +185,7 @@ jobs:
           set -euo pipefail
           python -I .github/tests/test_074b6_activity_metadata.py
           python -I .github/tests/test_074b6_metric_activity.py --logic-only
+          python -I .github/tests/test_074_native_mode_feedback.py --logic-only
       - name: AQI source values, scale diagnostics and explicit outdoor selection
         run: |
           set -euo pipefail
@@ -420,7 +433,10 @@ jobs:
       - name: B22 readable setting help and option details in the real card
         run: python -I .github/tests/test_062b22_setting_info_browser.py
       - name: Lifecycle through real Home Assistant startup and stop events
-        run: python -I .github/tests/test_074b5_ha_lifecycle.py --with-ha
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_074b5_ha_lifecycle.py --with-ha
+          python -I .github/tests/test_074_entry_removal.py --with-ha
       - name: B3 native HA door entities, metadata writes and responsive context popup
         run: |
           python -I .github/tests/test_062b3_door_entities.py --with-ha
@@ -438,6 +454,8 @@ jobs:
           python -I .github/tests/test_062b10_source_validation.py
       - name: B23 actual card door position and mold trend click
         run: python -I .github/tests/test_062b23_door_mold_card.py
+      - name: Detailed average, mold and Recorder charts in Chromium
+        run: python -I .github/tests/test_074_detailed_trends.py
       - name: v0.7.1 unified openings, missing data, door actions, science and covers
         run: python -I .github/tests/test_071_room_ui.py
       - name: v0.7.2 persistent Building physics and clear PM2.5 source verification
@@ -454,6 +472,10 @@ jobs:
         env:
           HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
         run: python -I .github/tests/test_074b6_metric_activity.py
+      - name: Native mode feedback, verified activity and compact room indicators
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: python -I .github/tests/test_074_native_mode_feedback.py
       - name: Named AQI sources, scale explanations and responsive outdoor information
         env:
           HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
@@ -510,6 +532,8 @@ jobs:
         run: python -I .github/tests/test_062b18_device_pid_actions.py
       - name: B9 quiet settings deduplication across supported device types
         run: python -I .github/tests/test_074b9_quiet_settings.py --with-browser
+      - name: B10 general window cooldown, localized mobile help and global saves
+        run: python -I .github/tests/test_074b10_window_cooldown_settings.py --with-browser
       - name: B19 per-device door preferences, exact area safety and native menu ownership
         run: |
           set -euo pipefail

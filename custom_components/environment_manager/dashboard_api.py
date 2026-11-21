@@ -6,6 +6,7 @@ without discarding any measurements, actions or per-device climate details.
 """
 from __future__ import annotations
 
+import time
 from typing import Any
 
 import probatio
@@ -18,23 +19,20 @@ from homeassistant.helpers import entity_registry as er
 from .const import DOMAIN
 from .dashboard import dashboard_snapshot
 from .controller_inventory import controller_inventory
+from .environment_history import AVG_ALLOWED, AVG_MAX_AGE, AVG_MIN_SAMPLE_SECONDS
 
 COMMAND = f"{DOMAIN}/dashboard"
+TREND_COMMAND = f"{DOMAIN}/trend"
 
 
-@websocket_api.websocket_command({
-    probatio.Required("type"): COMMAND,
-    probatio.Required("entity_id"): str,
-})
-@callback
-def websocket_dashboard(
+def _readable_manager(
     hass: HomeAssistant,
     connection: websocket_api.ActiveConnection,
     msg: dict[str, Any],
-) -> None:
-    """Fetch full state of precisely this accessible recommendation sensor."""
+) -> Any | None:
+    """Resolve exactly one readable HEM recommendation sensor's active owner."""
     entity_id = msg["entity_id"]
-    if not entity_id.startswith("sensor."):
+    if not isinstance(entity_id, str) or not entity_id.startswith("sensor."):
         connection.send_error(msg["id"], websocket_api.ERR_NOT_FOUND,
                               "Recommendation sensor not found")
         return
@@ -59,10 +57,29 @@ def websocket_dashboard(
         return
 
     manager = hass.data.get(DOMAIN, {}).get(entry_id)
-    if manager is None or manager.entry.entry_id != entry_id:
+    if (manager is None or manager.entry.entry_id != entry_id
+            or getattr(manager, "_stopping", False)):
         connection.send_error(msg["id"], websocket_api.ERR_NOT_FOUND,
                               "Home Environment Manager not loaded")
         return
+    return manager
+
+
+@websocket_api.websocket_command({
+    probatio.Required("type"): COMMAND,
+    probatio.Required("entity_id"): str,
+})
+@callback
+def websocket_dashboard(
+    hass: HomeAssistant,
+    connection: websocket_api.ActiveConnection,
+    msg: dict[str, Any],
+) -> None:
+    """Fetch full state of precisely this accessible recommendation sensor."""
+    manager = _readable_manager(hass, connection, msg)
+    if manager is None:
+        return
+    entry_id = manager.entry.entry_id
 
     # Pure transformation of the latest validated Plan; no I/O, no physical
     # control, no registry changes, and no Recorder/database writes.
@@ -80,7 +97,63 @@ def websocket_dashboard(
     connection.send_result(msg["id"], result)
 
 
+@websocket_api.websocket_command({
+    probatio.Required("type"): TREND_COMMAND,
+    probatio.Required("entity_id"): str,
+    probatio.Required("area_id"): str,
+    probatio.Required("metric"): probatio.In([*AVG_ALLOWED, "mold"]),
+})
+@callback
+def websocket_trend(
+    hass: HomeAssistant,
+    connection: websocket_api.ActiveConnection,
+    msg: dict[str, Any],
+) -> None:
+    """Read one chart's retained samples without decimating the whole week.
+
+    Authorization is identical to the overview; callers cannot choose another
+    entry, an unmonitored room or an arbitrary historical contributor set.
+    This only copies already-restored bounded data, without I/O or writes.
+    """
+    manager = _readable_manager(hass, connection, msg)
+    if manager is None:
+        return
+    area, metric = msg["area_id"], msg["metric"]
+    plan = manager.plan
+    if (not isinstance(area, str) or not area or len(area) > 128
+            or not isinstance(metric, str) or metric not in AVG_ALLOWED | {"mold"}
+            or not any(room.area_id == area for room in (*plan.rooms, *plan.climate_rooms))):
+        connection.send_error(msg["id"], websocket_api.ERR_NOT_FOUND, "Trend not found")
+        return
+    report = plan.environment.get(area, {})
+    evidence = (report.get("mold_trend") if metric == "mold"
+                else report.get("measurement_evidence", {}).get(metric))
+    sources = evidence.get("source_ids") if isinstance(evidence, dict) else None
+    count = evidence.get("source_count") if isinstance(evidence, dict) else None
+    valid_sources = (isinstance(sources, list) and type(count) is int and len(sources) == count
+                     and all(isinstance(source, str) and source.startswith("sensor.")
+                             and len(source) <= 255 for source in sources)
+                     and len(set(sources)) == len(sources))
+    if not valid_sources or not (count == 0 if metric == "mold" else 2 <= count <= 32):
+        connection.send_error(msg["id"], websocket_api.ERR_NOT_FOUND, "Trend not found")
+        return
+    # Historical samples remain readable during a missing current reading.
+    # No current value is appended, and a different/absent contributor set
+    # never grants access to an arbitrary old average series.
+    history = manager._environment_history
+    now = time.time()
+    points = (history.mold_points(area, now=now) if metric == "mold" else
+              history.average_points(area, metric, sources, now=now))
+    connection.send_result(msg["id"], {
+        "area_id": area, "metric": metric,
+        "source_ids": list(sources), "source_count": count,
+        "trend": points, "retention_seconds": AVG_MAX_AGE,
+        "sample_interval_seconds": 300 if metric == "mold" else AVG_MIN_SAMPLE_SECONDS,
+    })
+
+
 @callback
 def async_register_dashboard_api(hass: HomeAssistant) -> None:
     """Register once when the canonical integration is initialized."""
     websocket_api.async_register_command(hass, websocket_dashboard)
+    websocket_api.async_register_command(hass, websocket_trend)

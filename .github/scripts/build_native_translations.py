@@ -61,6 +61,22 @@ def runtime_catalogs():
 
 
 def synchronize_setting_metadata(obj, locale, names, help_catalog):
+    close_text = importlib.import_module(
+        '_hem_native_translation_build.window_close_cooldown_text'
+    ).WINDOW_CLOSE_COOLDOWN_TEXT[locale]
+    key = 'window_close_cooldown_minutes'
+    numbers = obj['entity']['number']
+    cooldown = numbers.setdefault('global_setting_' + key, {})
+    # The new number exposes the same help attribute as the opening timeout.
+    # Reuse its localized attribute label as well as the setting's own prose.
+    help_name = numbers['global_setting_window_open_timeout_minutes'][
+        'state_attributes']['configuration_help']['name']
+    cooldown.setdefault('state_attributes', {}).setdefault(
+        'configuration_help', {})['name'] = help_name
+    for flow in ('config', 'options'):
+        general = obj[flow]['step']['setup_general']
+        general['data'][key] = close_text['label']
+        general['data_description'][key] = close_text['help']
     for domain in ('number', 'select', 'switch', 'button', 'time'):
         for key, entry in obj['entity'][domain].items():
             if key.startswith('equipment_'):

@@ -230,7 +230,8 @@
           "general_home_policy": "在宅状況",
           "general_wake_alarm_entity": "睡眠 · 次のアラーム",
           "general_wake_lead_minutes_entity": "睡眠 · アラームの何分前に解除するか",
-          "window_open_timeout_minutes": "窓を開けるまでの待機時間（分）"
+          "window_open_timeout_minutes": "窓を開けるまでの待機時間（分）",
+          "window_close_cooldown_minutes": "窓を閉める提案までの待ち時間（分）"
         },
         "data_description": {
           "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -283,7 +284,8 @@
           "general_home_policy": "在宅が確認された人が一人でもいれば、家は常に在宅扱いになります。「全員在宅」は既存設定のために残されており、同じ規則を使用します。「外出」には不在の確認が必要です。選択したトラッカーの状態が不明でも、全員が外出した証拠にはなりません。",
           "general_wake_alarm_entity": "次のアラームの時刻または日時エンティティと、解除までの分数を持つエンティティを選択します。HEM は指定した分数だけ早く自動睡眠モードを終了し、通常の目標値に戻します。日付のない時刻には Home Assistant のタイムゾーンを使います。不在、手動制御、機器の保護機能は引き続き優先されます。",
           "general_wake_lead_minutes_entity": "0 以上の分数を持つ数値エンティティを選択します。単位は min または単位なしです。アラームが 07:00、値が 30 なら 06:30 に自動睡眠モードを終了します。0 はアラーム時刻を意味します。無効にするには両方の選択を解除します。",
-          "window_open_timeout_minutes": "換気の依頼が受け付けられた後、必要に応じて新たな自動/PID起動を許可するまでの待機時間です。0～30分、既定は5分。0で待機を無効にします。窓開放時の保護と機器の最小運転・停止時間は引き続き適用されます。"
+          "window_open_timeout_minutes": "換気の依頼が受け付けられた後、必要に応じて新たな自動/PID起動を許可するまでの待機時間です。0～30分、既定は5分。0で待機を無効にします。窓開放時の保護と機器の最小運転・停止時間は引き続き適用されます。",
+          "window_close_cooldown_minutes": "HEMの提案に従って窓が開けられた後、ここで設定した分数が経過してから窓を閉めるよう提案します。屋外の条件が適していない場合も同様です。待ち時間は部屋ごとに計測します。0–60分、初期値は5。0にすると待ち時間が無効になります。機器の一時停止と保護のルールは引き続き適用されます。"
         }
       },
       "reconfigure": {
@@ -2248,7 +2250,8 @@
           "general_wake_lead_minutes_entity": "睡眠 · アラームの何分前に解除するか",
           "window_open_timeout_minutes": "窓を開けるまでの待機時間（分）",
           "general_source_freshness_mode": "在宅状態 · 有効性ポリシー",
-          "global_threshold_max_age_mode": "環境 · 有効性ポリシー"
+          "global_threshold_max_age_mode": "環境 · 有効性ポリシー",
+          "window_close_cooldown_minutes": "窓を閉める提案までの待ち時間（分）"
         },
         "data_description": {
           "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2303,7 +2306,8 @@
           "general_wake_lead_minutes_entity": "0 以上の分数を持つ数値エンティティを選択します。単位は min または単位なしです。アラームが 07:00、値が 30 なら 06:30 に自動睡眠モードを終了します。0 はアラーム時刻を意味します。無効にするには両方の選択を解除します。",
           "window_open_timeout_minutes": "換気の依頼が受け付けられた後、必要に応じて新たな自動/PID起動を許可するまでの待機時間です。0～30分、既定は5分。0で待機を無効にします。窓開放時の保護と機器の最小運転・停止時間は引き続き適用されます。",
           "general_source_freshness_mode": "自動：数値の人数カウンターと在宅トラッカーの否定的な報告は最大 240 分間受け入れられます。有効で変化のない「在宅」状態は、変更されるまで「在宅」のまま維持できます。不明、復元済み、または利用不可の情報源は、不在の証拠にはなりません。カスタム：サンプリングされた報告には下の分数を使用します。部屋リストの情報源は引き続き変更に基づいて動作します。",
-          "global_threshold_max_age_mode": "自動：気象エンティティは 180 分間、その他の数値環境測定は 90 分間有効とできます。一方、有効な変更駆動のバイナリー接点は、変化がないことによるタイムアウトなしで使用できます。カスタム：下の分数を使用します。利用可否と復元状態の確認は常に適用されます。Home Assistant の last_reported は同じ値が再度書き込まれたときに更新され、単に時間が経過しただけでは更新されません。"
+          "global_threshold_max_age_mode": "自動：気象エンティティは 180 分間、その他の数値環境測定は 90 分間有効とできます。一方、有効な変更駆動のバイナリー接点は、変化がないことによるタイムアウトなしで使用できます。カスタム：下の分数を使用します。利用可否と復元状態の確認は常に適用されます。Home Assistant の last_reported は同じ値が再度書き込まれたときに更新され、単に時間が経過しただけでは更新されません。",
+          "window_close_cooldown_minutes": "HEMの提案に従って窓が開けられた後、ここで設定した分数が経過してから窓を閉めるよう提案します。屋外の条件が適していない場合も同様です。待ち時間は部屋ごとに計測します。0–60分、初期値は5。0にすると待ち時間が無効になります。機器の一時停止と保護のルールは引き続き適用されます。"
         }
       },
       "room_occupancy": {
@@ -3875,6 +3879,14 @@
       },
       "equipment_power_switch_cooldown_seconds": {
         "name": "電源 · 給電を切る前の待機時間（秒）",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "ヘルプ"
+          }
+        }
+      },
+      "global_setting_window_close_cooldown_minutes": {
+        "name": "換気 · 窓を閉める提案までの待ち時間（分）",
         "state_attributes": {
           "configuration_help": {
             "name": "ヘルプ"

@@ -230,7 +230,8 @@
           "general_home_policy": "Přítomnost doma",
           "general_wake_alarm_entity": "Spánek · Příští budík",
           "general_wake_lead_minutes_entity": "Spánek · Minuty před budíkem",
-          "window_open_timeout_minutes": "Čekání na otevření okna (min)"
+          "window_open_timeout_minutes": "Čekání na otevření okna (min)",
+          "window_close_cooldown_minutes": "Čekání před doporučením zavřít okno (min)"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasí a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -283,7 +284,8 @@
           "general_home_policy": "Ověřená přítomnost jediné osoby doma vždy zachová domácnost jako obsazenou. Starší volba „Všichni doma“ zůstává pro existující konfigurace a používá stejné pravidlo. Nepřítomnost vyžaduje ověření; vybraný sledovač s neznámým stavem nedokazuje, že všichni odešli.",
           "general_wake_alarm_entity": "Vyberte entitu času nebo časového razítka příštího budíku a také entitu s minutami předstihu. HEM ukončí automatický spánek s tímto předstihem a obnoví běžné cíle. Samotný čas používá časové pásmo Home Assistant. Nepřítomnost, ruční ovládání a ochrany zařízení mají nadále přednost.",
           "general_wake_lead_minutes_entity": "Vyberte číselnou entitu s nezáporným počtem minut, s jednotkou min nebo bez jednotky. Budík v 07:00 a hodnota 30 ukončí automatický spánek v 06:30; 0 znamená při zazvonění. Funkci vypnete vymazáním obou zdrojů.",
-          "window_open_timeout_minutes": "Čekání po přijetí žádosti o větrání, než budou při trvající potřebě povolena nová automatická/PID spuštění. 0–30 minut, výchozí 5; 0 čekání vypne. Ochrana při otevřeném okně a minimální provozní časy zařízení zůstávají v platnosti."
+          "window_open_timeout_minutes": "Čekání po přijetí žádosti o větrání, než budou při trvající potřebě povolena nová automatická/PID spuštění. 0–30 minut, výchozí 5; 0 čekání vypne. Ochrana při otevřeném okně a minimální provozní časy zařízení zůstávají v platnosti.",
+          "window_close_cooldown_minutes": "Po otevření okna na základě doporučení HEM vyčká tento počet minut, než doporučí jeho zavření, i když jsou venkovní podmínky nevhodné. Doba čekání se počítá pro každou místnost samostatně. 0–60 minut, výchozí hodnota 5; 0 čekání vypne. Pravidla pro pozastavení provozu a ochranu zařízení zůstávají aktivní."
         }
       },
       "reconfigure": {
@@ -2248,7 +2250,8 @@
           "general_wake_lead_minutes_entity": "Spánek · Minuty před budíkem",
           "window_open_timeout_minutes": "Čekání na otevření okna (min)",
           "general_source_freshness_mode": "Obsazenost domácnosti · Pravidla platnosti",
-          "global_threshold_max_age_mode": "Prostředí · Pravidla platnosti"
+          "global_threshold_max_age_mode": "Prostředí · Pravidla platnosti",
+          "window_close_cooldown_minutes": "Čekání před doporučením zavřít okno (min)"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasí a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2303,7 +2306,8 @@
           "general_wake_lead_minutes_entity": "Vyberte číselnou entitu s nezáporným počtem minut, s jednotkou min nebo bez jednotky. Budík v 07:00 a hodnota 30 ukončí automatický spánek v 06:30; 0 znamená při zazvonění. Funkci vypnete vymazáním obou zdrojů.",
           "window_open_timeout_minutes": "Čekání po přijetí žádosti o větrání, než budou při trvající potřebě povolena nová automatická/PID spuštění. 0–30 minut, výchozí 5; 0 čekání vypne. Ochrana při otevřeném okně a minimální provozní časy zařízení zůstávají v platnosti.",
           "general_source_freshness_mode": "Automaticky: číselné počty osob a hlášení nepřítomnosti domácích sledovačů jsou přijímány nejvýše 240 minut; platný nezměněný stav Doma může trvat až do změny. Neznámé, obnovené a nedostupné zdroje nemohou prokázat nepřítomnost. Vlastní: pro vzorkovaná hlášení použije počet minut níže. Seznamy místností se nadále řídí změnami stavu.",
-          "global_threshold_max_age_mode": "Automaticky: entity počasí mohou být platné 180 minut a ostatní číselná měření prostředí 90 minut; platné binární kontakty řízené změnami stavu zůstávají použitelné bez vypršení kvůli nečinnosti. Vlastní: použije počet minut níže. Kontroly dostupnosti a obnoveného stavu vždy platí. Home Assistant aktualizuje last_reported při opětovném zápisu stavu, i se stejnou hodnotou, nikoli jen plynutím času."
+          "global_threshold_max_age_mode": "Automaticky: entity počasí mohou být platné 180 minut a ostatní číselná měření prostředí 90 minut; platné binární kontakty řízené změnami stavu zůstávají použitelné bez vypršení kvůli nečinnosti. Vlastní: použije počet minut níže. Kontroly dostupnosti a obnoveného stavu vždy platí. Home Assistant aktualizuje last_reported při opětovném zápisu stavu, i se stejnou hodnotou, nikoli jen plynutím času.",
+          "window_close_cooldown_minutes": "Po otevření okna na základě doporučení HEM vyčká tento počet minut, než doporučí jeho zavření, i když jsou venkovní podmínky nevhodné. Doba čekání se počítá pro každou místnost samostatně. 0–60 minut, výchozí hodnota 5; 0 čekání vypne. Pravidla pro pozastavení provozu a ochranu zařízení zůstávají aktivní."
         }
       },
       "room_occupancy": {
@@ -3875,6 +3879,14 @@
       },
       "equipment_power_switch_cooldown_seconds": {
         "name": "Napájení · Čekání před vypnutím napájení (sekundy)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Nápověda"
+          }
+        }
+      },
+      "global_setting_window_close_cooldown_minutes": {
+        "name": "Větrání · Čekání před doporučením zavřít okno (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Nápověda"

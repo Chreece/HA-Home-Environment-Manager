@@ -230,7 +230,8 @@
           "general_home_policy": "Tilstedeværelse hjemme",
           "general_wake_alarm_entity": "Søvn · Neste alarm",
           "general_wake_lead_minutes_entity": "Søvn · Minutter før alarmen",
-          "window_open_timeout_minutes": "Ventetid for vindusåpning (min)"
+          "window_open_timeout_minutes": "Ventetid for vindusåpning (min)",
+          "window_close_cooldown_minutes": "Ventetid før lukking av vinduet foreslås (min)"
         },
         "data_description": {
           "weather_entities": "Velg: Vær og varsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -283,7 +284,8 @@
           "general_home_policy": "Én person med bekreftet tilstedeværelse hjemme holder alltid hjemmet registrert som bebodd. Det tidligere valget ‘Alle hjemme’ beholdes for eksisterende oppsett og bruker samme regel. Borte krever bekreftet fravær; en valgt sporer med ukjent tilstand beviser ikke at alle har gått.",
           "general_wake_alarm_entity": "Velg en tids- eller tidsstempelentitet for neste alarm og en entitet for minuttene. HEM avslutter automatisk søvn så mange minutter før alarmen og gjenopptar vanlige mål. Klokkeslett uten dato bruker Home Assistants tidssone. Fravær, manuell styring og enhetsbeskyttelse beholder prioritet.",
           "general_wake_lead_minutes_entity": "Velg en numerisk entitet med et ikke-negativt antall minutter, med enheten min eller uten enhet. Alarm kl. 07:00 og verdien 30 avslutter automatisk søvn kl. 06:30; 0 betyr når alarmen ringer. Tøm begge kildene for å deaktivere.",
-          "window_open_timeout_minutes": "Ventetid etter at en lufteforespørsel er godtatt, før nye automatiske/PID-starter tillates ved fortsatt behov. 0–30 minutter, standard 5; 0 slår av ventingen. Beskyttelse ved åpne vinduer og apparatenes minstetider gjelder fortsatt."
+          "window_open_timeout_minutes": "Ventetid etter at en lufteforespørsel er godtatt, før nye automatiske/PID-starter tillates ved fortsatt behov. 0–30 minutter, standard 5; 0 slår av ventingen. Beskyttelse ved åpne vinduer og apparatenes minstetider gjelder fortsatt.",
+          "window_close_cooldown_minutes": "Når et vindu åpnes etter et lufteforslag fra HEM, venter HEM så mange minutter før det foreslår å lukke vinduet, selv om forholdene ute er uegnede. Ventetiden beregnes separat for hvert rom. 0–60 minutter, standard 5; 0 slår av ventetiden. Reglene for å sette enheter på pause og beskytte dem gjelder fortsatt."
         }
       },
       "reconfigure": {
@@ -2248,7 +2250,8 @@
           "general_wake_lead_minutes_entity": "Søvn · Minutter før alarmen",
           "window_open_timeout_minutes": "Ventetid for vindusåpning (min)",
           "general_source_freshness_mode": "Boligens belegg · Gyldighetsregel",
-          "global_threshold_max_age_mode": "Miljø · Gyldighetsregel"
+          "global_threshold_max_age_mode": "Miljø · Gyldighetsregel",
+          "window_close_cooldown_minutes": "Ventetid før lukking av vinduet foreslås (min)"
         },
         "data_description": {
           "weather_entities": "Velg: Vær og varsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2303,7 +2306,8 @@
           "general_wake_lead_minutes_entity": "Velg en numerisk entitet med et ikke-negativt antall minutter, med enheten min eller uten enhet. Alarm kl. 07:00 og verdien 30 avslutter automatisk søvn kl. 06:30; 0 betyr når alarmen ringer. Tøm begge kildene for å deaktivere.",
           "window_open_timeout_minutes": "Ventetid etter at en lufteforespørsel er godtatt, før nye automatiske/PID-starter tillates ved fortsatt behov. 0–30 minutter, standard 5; 0 slår av ventingen. Beskyttelse ved åpne vinduer og apparatenes minstetider gjelder fortsatt.",
           "general_source_freshness_mode": "Automatisk: numeriske persontellere og fraværsmeldinger fra hjemmets sporere godtas i opptil 240 minutter; en gyldig uendret Hjemme-tilstand kan bestå til den endres. Ukjente, gjenopprettede og utilgjengelige kilder kan ikke bevise fravær. Egendefinert: bruk minuttverdien nedenfor for utvalgsbaserte meldinger. Romlister forblir endringsstyrte.",
-          "global_threshold_max_age_mode": "Automatisk: værentiteter kan være gyldige i 180 minutter og andre numeriske miljømålinger i 90 minutter; gyldige binære kontakter styrt av tilstandsendringer forblir brukbare uten utløp ved inaktivitet. Egendefinert: bruk minuttverdien nedenfor. Kontroll av tilgjengelighet og gjenopprettet tilstand gjelder alltid. Home Assistants last_reported oppdateres når tilstanden skrives på nytt, også med samme verdi, ikke bare fordi tiden går."
+          "global_threshold_max_age_mode": "Automatisk: værentiteter kan være gyldige i 180 minutter og andre numeriske miljømålinger i 90 minutter; gyldige binære kontakter styrt av tilstandsendringer forblir brukbare uten utløp ved inaktivitet. Egendefinert: bruk minuttverdien nedenfor. Kontroll av tilgjengelighet og gjenopprettet tilstand gjelder alltid. Home Assistants last_reported oppdateres når tilstanden skrives på nytt, også med samme verdi, ikke bare fordi tiden går.",
+          "window_close_cooldown_minutes": "Når et vindu åpnes etter et lufteforslag fra HEM, venter HEM så mange minutter før det foreslår å lukke vinduet, selv om forholdene ute er uegnede. Ventetiden beregnes separat for hvert rom. 0–60 minutter, standard 5; 0 slår av ventetiden. Reglene for å sette enheter på pause og beskytte dem gjelder fortsatt."
         }
       },
       "room_occupancy": {
@@ -3875,6 +3879,14 @@
       },
       "equipment_power_switch_cooldown_seconds": {
         "name": "Strøm · Ventetid før strømforsyningen slås av (sekunder)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjelp"
+          }
+        }
+      },
+      "global_setting_window_close_cooldown_minutes": {
+        "name": "Ventilasjon · Ventetid før lukking av vinduet foreslås (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjelp"

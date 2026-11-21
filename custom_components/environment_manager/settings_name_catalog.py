@@ -5573,12 +5573,20 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
              'arrival_preparation_timeout': '家中 - 準備 - 最長時間'}}
 
 from .window_open_text import WINDOW_OPEN_TEXT
+from .window_close_cooldown_text import WINDOW_CLOSE_COOLDOWN_TEXT
 from .backend_text import complete_catalog, translated_text, resolve_language
 
 _WINDOW_TIMEOUT_KEY = "global_setting_window_open_timeout_minutes"
 SETTING_GROUPS[_WINDOW_TIMEOUT_KEY] = "ventilation"
 for _locale, _text in WINDOW_OPEN_TEXT.items():
     SETTING_NAMES[_locale][_WINDOW_TIMEOUT_KEY] = (
+        f"{GROUP_LABELS[_locale]['ventilation']} · {_text['label']}"
+    )
+
+_WINDOW_CLOSE_COOLDOWN_KEY = "global_setting_window_close_cooldown_minutes"
+SETTING_GROUPS[_WINDOW_CLOSE_COOLDOWN_KEY] = "ventilation"
+for _locale, _text in WINDOW_CLOSE_COOLDOWN_TEXT.items():
+    SETTING_NAMES[_locale][_WINDOW_CLOSE_COOLDOWN_KEY] = (
         f"{GROUP_LABELS[_locale]['ventilation']} · {_text['label']}"
     )
 

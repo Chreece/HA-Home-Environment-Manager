@@ -230,7 +230,8 @@
           "general_home_policy": "Presencia en casa",
           "general_wake_alarm_entity": "Sueño · Próxima alarma",
           "general_wake_lead_minutes_entity": "Sueño · Minutos antes de la alarma",
-          "window_open_timeout_minutes": "Espera para abrir ventanas (min)"
+          "window_open_timeout_minutes": "Espera para abrir ventanas (min)",
+          "window_close_cooldown_minutes": "Espera antes de sugerir cerrar una ventana (min)"
         },
         "data_description": {
           "weather_entities": "Se requiere al menos una entidad meteorológica. La lluvia, las tormentas, el viento fuerte y las temperaturas extremas impiden abrir. El indicador de moho obtiene la temperatura exterior del atributo temperature (°C/°F) de una entidad meteorológica seleccionada. Elige una fuente que proporcione la temperatura.",
@@ -283,7 +284,8 @@
           "general_home_policy": "Una persona cuya presencia en casa esté verificada siempre mantiene la vivienda ocupada. La opción antigua «Todos en casa» se conserva para configuraciones existentes y aplica la misma regla. El estado Ausente requiere ausencia verificada; un rastreador seleccionado con estado desconocido no demuestra que todos se hayan marchado.",
           "general_wake_alarm_entity": "Selecciona una entidad de hora o fecha y hora para la próxima alarma, y otra para los minutos de antelación. HEM sale del sueño automático con esa antelación y recupera los objetivos normales. Las horas sin fecha usan la zona horaria de Home Assistant. Ausencia, control manual y protecciones mantienen su prioridad.",
           "general_wake_lead_minutes_entity": "Selecciona una entidad numérica con minutos no negativos, con unidad min o sin unidad. Una alarma a las 07:00 y un valor de 30 terminan el sueño automático a las 06:30; 0 significa al sonar. Para desactivar, borra ambas fuentes.",
-          "window_open_timeout_minutes": "Espera tras aceptar una solicitud de ventilación antes de permitir nuevos arranques automáticos/PID si aún son necesarios. 0–30 minutos, 5 por defecto; 0 desactiva la espera. Se mantienen las protecciones por ventanas abiertas y los tiempos mínimos de los equipos."
+          "window_open_timeout_minutes": "Espera tras aceptar una solicitud de ventilación antes de permitir nuevos arranques automáticos/PID si aún son necesarios. 0–30 minutos, 5 por defecto; 0 desactiva la espera. Se mantienen las protecciones por ventanas abiertas y los tiempos mínimos de los equipos.",
+          "window_close_cooldown_minutes": "Cuando se abre una ventana siguiendo una sugerencia de HEM, espera estos minutos antes de sugerir que se cierre, incluso si las condiciones exteriores no son adecuadas. La espera se aplica de forma independiente a cada habitación. 0–60 minutos, 5 por defecto; 0 desactiva la espera. Las reglas de pausa y protección de los equipos siguen activas."
         }
       },
       "reconfigure": {
@@ -2248,7 +2250,8 @@
           "general_wake_lead_minutes_entity": "Sueño · Minutos antes de la alarma",
           "window_open_timeout_minutes": "Espera para abrir ventanas (min)",
           "general_source_freshness_mode": "Ocupación del hogar · Política de validez",
-          "global_threshold_max_age_mode": "Entorno · Política de validez"
+          "global_threshold_max_age_mode": "Entorno · Política de validez",
+          "window_close_cooldown_minutes": "Espera antes de sugerir cerrar una ventana (min)"
         },
         "data_description": {
           "weather_entities": "Se requiere al menos una entidad meteorológica. La lluvia, las tormentas, el viento fuerte y las temperaturas extremas impiden abrir. El indicador de moho obtiene la temperatura exterior del atributo temperature (°C/°F) de una entidad meteorológica seleccionada. Elige una fuente que proporcione la temperatura.",
@@ -2303,7 +2306,8 @@
           "general_wake_lead_minutes_entity": "Selecciona una entidad numérica con minutos no negativos, con unidad min o sin unidad. Una alarma a las 07:00 y un valor de 30 terminan el sueño automático a las 06:30; 0 significa al sonar. Para desactivar, borra ambas fuentes.",
           "window_open_timeout_minutes": "Espera tras aceptar una solicitud de ventilación antes de permitir nuevos arranques automáticos/PID si aún son necesarios. 0–30 minutos, 5 por defecto; 0 desactiva la espera. Se mantienen las protecciones por ventanas abiertas y los tiempos mínimos de los equipos.",
           "general_source_freshness_mode": "Automático: los contadores numéricos de personas y los informes de ausencia de rastreadores de la vivienda se aceptan durante un máximo de 240 minutos; un estado En casa válido y sin cambios puede seguir vigente hasta que cambie. Las fuentes desconocidas, restauradas o no disponibles no pueden demostrar ausencia. Personalizado: utiliza los minutos indicados abajo para informes muestreados. Las listas de habitaciones siguen dependiendo de cambios de estado.",
-          "global_threshold_max_age_mode": "Automático: las entidades meteorológicas pueden ser válidas durante 180 minutos y las demás mediciones ambientales numéricas durante 90 minutos; los contactos binarios válidos que funcionan por cambios de estado siguen utilizándose sin caducar por inactividad. Personalizado: utiliza los minutos indicados abajo. Siempre se aplican las comprobaciones de disponibilidad y estado restaurado. En Home Assistant, last_reported avanza cuando se escribe de nuevo el estado, aunque el valor no cambie, y no solo por el paso del tiempo."
+          "global_threshold_max_age_mode": "Automático: las entidades meteorológicas pueden ser válidas durante 180 minutos y las demás mediciones ambientales numéricas durante 90 minutos; los contactos binarios válidos que funcionan por cambios de estado siguen utilizándose sin caducar por inactividad. Personalizado: utiliza los minutos indicados abajo. Siempre se aplican las comprobaciones de disponibilidad y estado restaurado. En Home Assistant, last_reported avanza cuando se escribe de nuevo el estado, aunque el valor no cambie, y no solo por el paso del tiempo.",
+          "window_close_cooldown_minutes": "Cuando se abre una ventana siguiendo una sugerencia de HEM, espera estos minutos antes de sugerir que se cierre, incluso si las condiciones exteriores no son adecuadas. La espera se aplica de forma independiente a cada habitación. 0–60 minutos, 5 por defecto; 0 desactiva la espera. Las reglas de pausa y protección de los equipos siguen activas."
         }
       },
       "room_occupancy": {
@@ -3875,6 +3879,14 @@
       },
       "equipment_power_switch_cooldown_seconds": {
         "name": "Alimentación · Espera antes de cortar la corriente (segundos)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ayuda"
+          }
+        }
+      },
+      "global_setting_window_close_cooldown_minutes": {
+        "name": "Ventilación · Espera antes de sugerir cerrar una ventana (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ayuda"

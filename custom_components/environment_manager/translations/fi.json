@@ -230,7 +230,8 @@
           "general_home_policy": "Kotonaolo",
           "general_wake_alarm_entity": "Uni · Seuraava herätys",
           "general_wake_lead_minutes_entity": "Uni · Minuutteja ennen herätystä",
-          "window_open_timeout_minutes": "Ikkunan avaamisen odotusaika (min)"
+          "window_open_timeout_minutes": "Ikkunan avaamisen odotusaika (min)",
+          "window_close_cooldown_minutes": "Odotusaika ennen ikkunan sulkemisehdotusta (min)"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -283,7 +284,8 @@
           "general_home_policy": "Yksi vahvistetusti kotona oleva henkilö pitää kodin aina asuttuna. Vanha ‘Kaikki kotona’ -vaihtoehto säilyy nykyisissä määrityksissä ja käyttää samaa sääntöä. Poissa-tila edellyttää vahvistettua poissaoloa; valittu seuranta, jonka tila on tuntematon, ei todista kaikkien lähteneen.",
           "general_wake_alarm_entity": "Valitse seuraavan herätyksen aika- tai aikaleimaentiteetti sekä minuuttien entiteetti. HEM lopettaa automaattisen unitilan näin monta minuuttia ennen herätystä ja palauttaa normaalit tavoitteet. Pelkkä kellonaika käyttää Home Assistantin aikavyöhykettä. Poissaolo, käsiohjaus ja laitesuojaukset ovat edelleen etusijalla.",
           "general_wake_lead_minutes_entity": "Valitse numeerinen entiteetti, jonka ei-negatiivinen arvo ilmaisee minuutit. Yksikkö on min tai puuttuu. Herätys 07:00 ja arvo 30 lopettavat automaattisen unitilan 06:30; 0 tarkoittaa herätyshetkeä. Poista molemmat lähteet käytöstä poistamista varten.",
-          "window_open_timeout_minutes": "Odotusaika tuuletuspyynnön hyväksymisen jälkeen ennen uusia automaattisia/PID-käynnistyksiä, jos niitä edelleen tarvitaan. 0–30 minuuttia, oletus 5; 0 poistaa odotuksen. Avoimen ikkunan suojaukset ja laitteiden vähimmäisajat säilyvät."
+          "window_open_timeout_minutes": "Odotusaika tuuletuspyynnön hyväksymisen jälkeen ennen uusia automaattisia/PID-käynnistyksiä, jos niitä edelleen tarvitaan. 0–30 minuuttia, oletus 5; 0 poistaa odotuksen. Avoimen ikkunan suojaukset ja laitteiden vähimmäisajat säilyvät.",
+          "window_close_cooldown_minutes": "Kun ikkuna avataan HEMin tuuletusehdotuksen jälkeen, HEM odottaa näin monta minuuttia ennen kuin ehdottaa sen sulkemista, vaikka ulko-olosuhteet olisivat epäsuotuisat. Odotusaika lasketaan erikseen kullekin huoneelle. 0–60 minuuttia, oletus 5; 0 poistaa odotusajan käytöstä. Laitteiden tauko- ja suojaussäännöt pysyvät voimassa."
         }
       },
       "reconfigure": {
@@ -2248,7 +2250,8 @@
           "general_wake_lead_minutes_entity": "Uni · Minuutteja ennen herätystä",
           "window_open_timeout_minutes": "Ikkunan avaamisen odotusaika (min)",
           "general_source_freshness_mode": "Kodin läsnäolo · Kelpoisuuskäytäntö",
-          "global_threshold_max_age_mode": "Ympäristö · Kelpoisuuskäytäntö"
+          "global_threshold_max_age_mode": "Ympäristö · Kelpoisuuskäytäntö",
+          "window_close_cooldown_minutes": "Odotusaika ennen ikkunan sulkemisehdotusta (min)"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2303,7 +2306,8 @@
           "general_wake_lead_minutes_entity": "Valitse numeerinen entiteetti, jonka ei-negatiivinen arvo ilmaisee minuutit. Yksikkö on min tai puuttuu. Herätys 07:00 ja arvo 30 lopettavat automaattisen unitilan 06:30; 0 tarkoittaa herätyshetkeä. Poista molemmat lähteet käytöstä poistamista varten.",
           "window_open_timeout_minutes": "Odotusaika tuuletuspyynnön hyväksymisen jälkeen ennen uusia automaattisia/PID-käynnistyksiä, jos niitä edelleen tarvitaan. 0–30 minuuttia, oletus 5; 0 poistaa odotuksen. Avoimen ikkunan suojaukset ja laitteiden vähimmäisajat säilyvät.",
           "general_source_freshness_mode": "Automaattinen: numeeriset henkilömäärät ja kodin seurantalähteiden poissaoloilmoitukset hyväksytään enintään 240 minuutin ajan; kelvollinen muuttumaton Kotona-tila voi säilyä, kunnes se muuttuu. Tuntemattomat, palautetut tai saavuttamattomat lähteet eivät todista poissaoloa. Mukautettu: käytä alla olevaa minuuttimäärää näytteistettyihin raportteihin. Huonelistat pysyvät muutosohjattuina.",
-          "global_threshold_max_age_mode": "Automaattinen: sääentiteetit voivat olla kelvollisia 180 minuuttia ja muut numeeriset ympäristömittaukset 90 minuuttia; kelvolliset tilamuutoksiin perustuvat binäärikontaktit pysyvät käytettävinä ilman toimettomuuteen perustuvaa vanhenemista. Mukautettu: käytä alla olevaa minuuttimäärää. Saatavuuden ja palautetun tilan tarkistukset pätevät aina. Home Assistantin last_reported päivittyy tilan uudelleenkirjoituksessa myös samalla arvolla, ei pelkästään ajan kulumisen vuoksi."
+          "global_threshold_max_age_mode": "Automaattinen: sääentiteetit voivat olla kelvollisia 180 minuuttia ja muut numeeriset ympäristömittaukset 90 minuuttia; kelvolliset tilamuutoksiin perustuvat binäärikontaktit pysyvät käytettävinä ilman toimettomuuteen perustuvaa vanhenemista. Mukautettu: käytä alla olevaa minuuttimäärää. Saatavuuden ja palautetun tilan tarkistukset pätevät aina. Home Assistantin last_reported päivittyy tilan uudelleenkirjoituksessa myös samalla arvolla, ei pelkästään ajan kulumisen vuoksi.",
+          "window_close_cooldown_minutes": "Kun ikkuna avataan HEMin tuuletusehdotuksen jälkeen, HEM odottaa näin monta minuuttia ennen kuin ehdottaa sen sulkemista, vaikka ulko-olosuhteet olisivat epäsuotuisat. Odotusaika lasketaan erikseen kullekin huoneelle. 0–60 minuuttia, oletus 5; 0 poistaa odotusajan käytöstä. Laitteiden tauko- ja suojaussäännöt pysyvät voimassa."
         }
       },
       "room_occupancy": {
@@ -3875,6 +3879,14 @@
       },
       "equipment_power_switch_cooldown_seconds": {
         "name": "Virta · Odotusaika ennen virransyötön katkaisua (sekuntia)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
+      },
+      "global_setting_window_close_cooldown_minutes": {
+        "name": "Ilmanvaihto · Odotusaika ennen ikkunan sulkemisehdotusta (min)",
         "state_attributes": {
           "configuration_help": {
             "name": "Ohje"
