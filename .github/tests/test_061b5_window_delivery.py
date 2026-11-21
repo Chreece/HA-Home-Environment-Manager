@@ -172,6 +172,9 @@ class ManagerSchedulerTests(unittest.TestCase):
         manager.plan = logic.Plan("idle",True,(),(),())
         manager.window_open_wait = N(prepare=lambda plan:plan)
         manager._capture = lambda:self.plan
+        # This fixture isolates announcement scheduling. The optional history
+        # observer has its own production collector/storage regression suite.
+        manager._capture_control_trends = lambda: None
         for name in ("pid","native_climate","direct_climate","native_humidity",
                      "humidity_power","secondary_climate","running_fans","fan_power",
                      "native_air_mode","equipment","shading"):
