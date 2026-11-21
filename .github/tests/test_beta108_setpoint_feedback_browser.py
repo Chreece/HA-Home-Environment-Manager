@@ -170,16 +170,22 @@ def normalize(text):
 def assert_native_tiles(device, language, *, target_present):
     temperature, target, physical, heat, _ = LABELS[language]
     cells = device.locator('.hem-device-data > div').evaluate_all("""nodes =>
-      nodes.map(node=>[node.querySelector('span').textContent,node.querySelector('b').textContent])""")
-    values = {normalize(label): normalize(value) for label, value in cells}
+      nodes.map(node=>[node.querySelector('span').textContent,
+                      node.querySelector('b').textContent,node.getAttribute('title')])""")
+    values = {normalize(label): normalize(value) for label, value, _ in cells}
     measured = "18.6 °C" if language == "en" else "18,6 °C"
     assert values[temperature] == measured, (language, values)
     assert values[physical] == heat, (language, values)
-    target_label = target + " · " + temperature
+    # Native target tiles identify their physical source; their tooltip keeps
+    # the measured quantity explicit, separately from HEM's logical target.
+    target_label = target + " · " + physical
+    native_targets = [(normalize(value), normalize(title or ""))
+                      for label, value, title in cells if normalize(label) == target_label]
     if target_present:
-        assert values[target_label] == "5 °C", (language, values)
+        expected_title = physical + " · " + target + " · " + temperature + ": 5 °C"
+        assert native_targets == [("5 °C", expected_title)], (language, native_targets, values)
     else:
-        assert target_label not in values, ("missing target fabricated", language, values)
+        assert not native_targets, ("missing target fabricated", language, native_targets, values)
     # Neither the logical room goal nor the pending setpoint is physical
     # feedback. The three native values must not be replaced with 21 or 30.
     assert not any(re.search(r"\b(?:21|30)(?:[.,]0)?\s*°C", value) for value in values.values()), values
