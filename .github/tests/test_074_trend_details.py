@@ -288,7 +288,8 @@ class TrendWebSocketTests(unittest.TestCase):
     def test_dashboard_setup_registers_the_read_only_detail_command(self):
         registered.clear()
         api.async_register_dashboard_api(self.hass)
-        self.assertEqual(registered, [api.websocket_dashboard, api.websocket_trend])
+        self.assertEqual(registered, [api.websocket_dashboard, api.websocket_trend,
+                                      api.websocket_control_trend])
 
 
 if __name__ == "__main__":

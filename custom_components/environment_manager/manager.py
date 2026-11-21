@@ -114,6 +114,8 @@ class AirQualityManager:
         self._environment_history = EnvironmentHistory()
         self._environment_store: Any | None = None
         self._environment_restored = False
+        self._environment_save_scheduled = False
+        self._control_trend_specs: dict[str, Any] = {}
         self.away_windows = AwayWindowAlert(self)
         self.presence_continuity = PresenceContinuity(self.hass, self.entry.entry_id)
         self.arrival_preparation = ArrivalPreparation(self)
@@ -683,10 +685,8 @@ class AirQualityManager:
                     and (watch_household or entity_area(self.hass, state.entity_id) in monitored_areas)
                     and native_room_source(self.hass, state.entity_id)):
                 self._tracked.add(state.entity_id)
-        if changed and self._environment_store is not None:
-            self._environment_store.async_delay_save(
-                self._environment_history.snapshot, 300,
-            )
+        if changed:
+            self._schedule_environment_save()
         # Solar shading diagnostics share the full read-only dashboard; they
         # never enter Recorder as an unbounded recommendation attribute.
         from .room_sources import selected as selected_room_source
@@ -905,6 +905,35 @@ class AirQualityManager:
             _LOGGER.debug("Home Assistant storage not available in test runtime")
         except Exception:
             _LOGGER.exception("Environment history could not be restored; starting empty")
+
+    def _environment_snapshot(self) -> dict:
+        """One coalesced save deadline; frequent trend events cannot defer it."""
+        self._environment_save_scheduled = False
+        return self._environment_history.snapshot()
+
+    def _schedule_environment_save(self) -> None:
+        if (self._environment_store is None or not self._environment_restored
+                or getattr(self, "_environment_save_scheduled", False)
+                or self._stopping or is_stopping(self.hass)):
+            return
+        self._environment_save_scheduled = True
+        self._environment_store.async_delay_save(self._environment_snapshot, 300)
+
+    def _capture_control_trends(self, *, spec: Any = None, **evidence: Any) -> None:
+        """Optional presentation evidence must never interrupt physical control."""
+        if (not self._active or not self._environment_restored
+                or self._stopping or is_stopping(self.hass)):
+            return
+        try:
+            from .control_trend import capture
+            if capture(self, spec=spec, **evidence):
+                self._schedule_environment_save()
+        except Exception:
+            # Keep actuator decisions independent of a presentation journal.
+            # Avoid repeating a potentially noisy error on every native event.
+            if not getattr(self, "_control_trend_error_logged", False):
+                self._control_trend_error_logged = True
+                _LOGGER.exception("Controller trend observation could not be recorded")
 
     async def async_start(self) -> None:
         """Restore independent stores with bounded parallelism before control."""
@@ -1421,6 +1450,7 @@ class AirQualityManager:
             != self._plan_without_poll_clock(previous_plan)
         )
         self.plan = new_plan
+        self._capture_control_trends()
         if visible_changed:
             async_dispatcher_send(self.hass, f"{SIGNAL_UPDATED}_{self.entry.entry_id}")
 

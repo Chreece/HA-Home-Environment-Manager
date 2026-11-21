@@ -251,6 +251,19 @@ per room; floor-wide environmental overrides are not implied.
   using their recorded Home Assistant history. **Open entity** opens that
   sensor's native Home Assistant details. History remains useful when a current
   value is unavailable; sources excluded from recording may have no history.
+- Matching controllers add their recorded targets to the trend. Stepped lines
+  show when a target or profile changed, and each controller keeps its own
+  identity. The separate output view distinguishes HEM's requested demand from
+  the device's reported activity or output setting. Inspect the same time to
+  compare the measured value, target and available output evidence. A fan
+  percentage or valve position is a reported setting, not measured airflow or
+  power.
+- Targets use the exact feedback sources and quantity represented by the
+  chart. For mold control, the mold chart shows the surface-humidity target;
+  the corresponding room-humidity chart shows the effective room-air target.
+  Temperature targets follow the chart's temperature unit. Off, missing target
+  evidence and Manual without an explicit HEM target leave the target line
+  empty.
 - Average history keeps separate records for each exact group of contributing
   sensors. Temporary startup outages do not replace the original group's
   samples. A returning group resumes its history with a visible gap.
@@ -872,6 +885,16 @@ The detailed charts read the stored observations, not the sparse overview
 preview. They cannot recover periods that were never recorded, have expired,
 or were already discarded. Mold history is the estimate computed at the time;
 it is not recalculated retrospectively using a new calibration factor.
+
+Controller target and output history starts with v0.7.5b2. It shares the local
+environment-history journal and retains up to seven days within fixed point
+and controller limits; frequent changes or many controllers can shorten that
+window. Target, profile and output changes are recorded from observed control
+decisions and device reports. It does not reconstruct earlier settings or use
+the current target to fill older history. Restart, source and availability
+boundaries stay visible, and values are never extended beyond their observed
+interval merely because a chart was opened. Loading control history does not
+change the device, its targets or its PID settings.
 
 To remove a configured HEM integration, use **Settings → Devices & services →
 Home Environment Manager → Delete**. Permanent removal stops its writers and

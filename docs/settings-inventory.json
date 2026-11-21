@@ -2640,6 +2640,7 @@
       "catalog_path": "strings.json/config/step/weather/data/weather_entities",
       "literal_references": [
         "custom_components/environment_manager/const.py:17",
+        "custom_components/environment_manager/control_trend.py:263",
         "custom_components/environment_manager/mold_control_demand.py:112",
         "custom_components/environment_manager/sensor.py:135",
         "custom_components/environment_manager/shade_weather.py:23"
@@ -2842,7 +2843,7 @@
         "custom_components/environment_manager/const.py:64",
         "custom_components/environment_manager/environment.py:161",
         "custom_components/environment_manager/environment.py:320",
-        "custom_components/environment_manager/environment_history.py:19"
+        "custom_components/environment_manager/environment_history.py:20"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -2857,7 +2858,7 @@
       "literal_references": [
         "custom_components/environment_manager/const.py:65",
         "custom_components/environment_manager/environment.py:162",
-        "custom_components/environment_manager/environment_history.py:19"
+        "custom_components/environment_manager/environment_history.py:20"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -3264,7 +3265,7 @@
         "custom_components/environment_manager/device_controls.py:353",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1272",
+        "custom_components/environment_manager/manager.py:1301",
         "custom_components/environment_manager/manager.py:694"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -3279,6 +3280,7 @@
       "catalog_path": "strings.json/config/step/setup_general/data/weather_entities",
       "literal_references": [
         "custom_components/environment_manager/const.py:17",
+        "custom_components/environment_manager/control_trend.py:263",
         "custom_components/environment_manager/mold_control_demand.py:112",
         "custom_components/environment_manager/sensor.py:135",
         "custom_components/environment_manager/shade_weather.py:23"
@@ -7326,7 +7328,7 @@
         "custom_components/environment_manager/device_controls.py:353",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1272",
+        "custom_components/environment_manager/manager.py:1301",
         "custom_components/environment_manager/manager.py:694"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -7465,7 +7467,7 @@
         "custom_components/environment_manager/device_controls.py:353",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1272",
+        "custom_components/environment_manager/manager.py:1301",
         "custom_components/environment_manager/manager.py:694"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -7500,7 +7502,7 @@
         "custom_components/environment_manager/door_settings.py:21",
         "custom_components/environment_manager/equipment_door_policy.py:70",
         "custom_components/environment_manager/equipment_model.py:1089",
-        "custom_components/environment_manager/manager.py:385",
+        "custom_components/environment_manager/manager.py:387",
         "custom_components/environment_manager/manager.py:708",
         "custom_components/environment_manager/number.py:332"
       ],
@@ -7654,6 +7656,7 @@
       "catalog_path": "strings.json/options/step/weather/data/weather_entities",
       "literal_references": [
         "custom_components/environment_manager/const.py:17",
+        "custom_components/environment_manager/control_trend.py:263",
         "custom_components/environment_manager/mold_control_demand.py:112",
         "custom_components/environment_manager/sensor.py:135",
         "custom_components/environment_manager/shade_weather.py:23"
@@ -7856,7 +7859,7 @@
         "custom_components/environment_manager/const.py:64",
         "custom_components/environment_manager/environment.py:161",
         "custom_components/environment_manager/environment.py:320",
-        "custom_components/environment_manager/environment_history.py:19"
+        "custom_components/environment_manager/environment_history.py:20"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7871,7 +7874,7 @@
       "literal_references": [
         "custom_components/environment_manager/const.py:65",
         "custom_components/environment_manager/environment.py:162",
-        "custom_components/environment_manager/environment_history.py:19"
+        "custom_components/environment_manager/environment_history.py:20"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -11435,7 +11438,7 @@
         "custom_components/environment_manager/device_controls.py:353",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1272",
+        "custom_components/environment_manager/manager.py:1301",
         "custom_components/environment_manager/manager.py:694"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -11450,6 +11453,7 @@
       "catalog_path": "strings.json/options/step/setup_general/data/weather_entities",
       "literal_references": [
         "custom_components/environment_manager/const.py:17",
+        "custom_components/environment_manager/control_trend.py:263",
         "custom_components/environment_manager/mold_control_demand.py:112",
         "custom_components/environment_manager/sensor.py:135",
         "custom_components/environment_manager/shade_weather.py:23"
@@ -12342,7 +12346,7 @@
         "custom_components/environment_manager/device_controls.py:353",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1272",
+        "custom_components/environment_manager/manager.py:1301",
         "custom_components/environment_manager/manager.py:694"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -12481,7 +12485,7 @@
         "custom_components/environment_manager/device_controls.py:353",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1272",
+        "custom_components/environment_manager/manager.py:1301",
         "custom_components/environment_manager/manager.py:694"
       ],
       "consumer_status": "card_adapts_options_form"
@@ -12516,7 +12520,7 @@
         "custom_components/environment_manager/door_settings.py:21",
         "custom_components/environment_manager/equipment_door_policy.py:70",
         "custom_components/environment_manager/equipment_model.py:1089",
-        "custom_components/environment_manager/manager.py:385",
+        "custom_components/environment_manager/manager.py:387",
         "custom_components/environment_manager/manager.py:708",
         "custom_components/environment_manager/number.py:332"
       ],

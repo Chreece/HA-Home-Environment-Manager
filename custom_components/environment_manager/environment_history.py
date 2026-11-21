@@ -10,6 +10,7 @@ import time
 from typing import Any
 
 from .building_physics import WEEK_S, DAY_S
+from .control_history import ControlHistory
 
 
 FIELDS = frozenset((
@@ -99,10 +100,12 @@ def _bounded_average(series: dict, now: float) -> dict | None:
 class EnvironmentHistory:
     def __init__(self, areas: dict[str, list[dict]] | None = None,
                  daily: dict[str, list[dict]] | None = None,
-                 averages: dict[str, dict[str, dict]] | None = None):
+                 averages: dict[str, dict[str, dict]] | None = None,
+                 control: ControlHistory | None = None):
         self.areas: dict[str, list[dict]] = areas if areas is not None else {}
         self.daily: dict[str, list[dict]] = daily if daily is not None else {}
         self.averages: dict[str, dict[str, dict]] = averages if averages is not None else {}
+        self.control = control if control is not None else ControlHistory()
         # A restored value is historical evidence, not evidence of continuity
         # while HEM was stopped. Mark the first new observation separately.
         self._restarted_areas: set[str] = set()
@@ -184,13 +187,14 @@ class EnvironmentHistory:
                             valid_metrics[metric] = bounded
                 if valid_metrics:
                     averages[area] = valid_metrics
-        history = cls(areas, daily, averages)
+        history = cls(areas, daily, averages,
+                      ControlHistory.restore(data.get("controllers"), now=current))
         history._restarted_areas = set(areas)
         return history
 
     def snapshot(self) -> dict:
         return {"version": 1, "areas": self.areas, "daily": self.daily,
-                "averages": self.averages}
+                "averages": self.averages, "controllers": self.control.snapshot()}
 
     def add_average(self, area: str, metric: str, sources: list[str],
                     value: float, *, now: float) -> bool:

@@ -313,11 +313,15 @@ class EquipmentRuntime:
                                    else "suspected_output_after_off")
         from .equipment_pid_safety import status_details
         value.update(status_details(self.records.get(key, {})))
+        trend_evidence = {}
         if not isinstance(spec, str) and hasattr(model, "humidity_demand"):
             cfg = model.settings(self.manager, spec)
             cap = model.mode_capabilities(self.manager, spec)
             if cap is not None:
-                demand = model.humidity_demand(self.manager, spec, cap, cfg, model.plan_for(self.manager, spec))
+                plan = model.plan_for(self.manager, spec)
+                demand = model.humidity_demand(self.manager, spec, cap, cfg, plan)
+                trend_evidence = {"configuration": cfg, "cap": cap, "plan": plan,
+                                  "humidity": demand}
                 value["humidity_demand"] = demand
                 surface_target = demand.get("target_basis") == "mold_surface_rh"
                 if demand.get("mold_protection_required") is True:
@@ -339,6 +343,9 @@ class EquipmentRuntime:
             return
         self.statuses[key] = value
         if self._active:
+            capture_trend = getattr(self.manager, "_capture_control_trends", None)
+            if callable(capture_trend) and not isinstance(spec, str):
+                capture_trend(spec=spec, status=value, now=self.clock(), **trend_evidence)
             # A status change belongs to this controller, not every room and
             # configuration entity in the installation. Keep runtime evidence
             # immediate; batch only its outward presentation until next turn.
@@ -7908,6 +7915,23 @@ class EquipmentRuntime:
                         sample=cfg["sample_seconds"], memory=memory,
                     )
                     self._memory[spec.identifier] = (signature, memory, anchor)
+                    capture_trend = getattr(self.manager, "_capture_control_trends", None)
+                    if callable(capture_trend):
+                        provenance = measured.get(metric + "_provenance", {})
+                        contributors = (provenance.get("contributor_ids", provenance.get("source_ids"))
+                                        if isinstance(provenance, dict) else None)
+                        if contributors is None:
+                            contributors = measured.get(metric + "_selected_entities")
+                        if contributors is None:
+                            contributors = [measured.get(metric + "_entity")]
+                        capture_trend(
+                            spec=spec, configuration=cfg, cap=cap, plan=plan,
+                            measurements=measured, now=self.clock(),
+                            evaluation={"metric": metric, "target": goal,
+                                        "mode": mode, "profile": profile,
+                                        "source_ids": contributors,
+                                        "demand_percent": memory.demand},
+                        )
                     persist = getattr(self, "_checkpoint_pid", None)
                     if callable(persist):
                         await persist(spec, record, cfg, signature, memory, anchor)
