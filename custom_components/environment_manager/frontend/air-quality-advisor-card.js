@@ -3172,15 +3172,13 @@
               <span>${escape(labels.title)}</span></div>
             ${this._editButton(room.area_id)}
           </div>
+          ${this._roomMissingInfo071(room)}
           ${this._climatePanel(room,overview122)}
           ${this._shadePanel(room)}
           ${this._windowsDoors071(room)}
         </article>`;
       }
-      const availability071=this._roomInputs071(room);
-      const status=room.status==='attention'?'attention':
-        !availability071.temperature&&!availability071.humidity?'unknown':
-        room.status==='safe'?'safe':'partial';
+      const status=this._roomStatus075(room);
       const readings = safeArray(room.readings);
       const details122 = this._roomDetailReadings122(room,overview122);
       const windows = safeArray(room.windows);
@@ -3238,11 +3236,13 @@
       ).length;
       const roomStatusLabel=this._t(status);
       const subheading = room.high_count > 0 ? this._t('indoorHigh')
+        : status === 'unknown' && this._roomControlMissing075(room).length
+          ? hemTextB8('Required control measurement is unavailable or outdated',this._language())
         : status === 'unknown' && room.status_detail === 'mold_not_calibrated'
           ? this._t('moldNotCalibrated')
         : status === 'unknown' && room.status_detail === 'mold_inputs_unavailable'
           ? this._t('moldInputsUnavailable')
-        : status === 'partial'
+        : room.data_availability?.status === 'partial'
           ? this._t('partial')
         : status === 'unknown' ? this._t('missingIndoor')
           : this._t('allOkay');
@@ -3352,7 +3352,7 @@
           ${this._arrivalError124()}
           ${this._outside(data.outdoor || {})}
           ${this._pollenIndicator(data.outdoor || {})}
-          ${this._summary(data.summary || {})}
+          ${this._summary(data.summary || {},rooms)}
           <div class="rooms-list">${rooms.length || this._floorRegistry140?.floors?.length ? this._floorRooms140(rooms)
             : `<div class="empty-rooms">${this._icon('mdi:home-outline')}${escape(this._t('noRooms'))}</div>`}</div>
           <footer>${this._icon('mdi:shield-check-outline')} ${escape(this._t('sourceData'))}</footer>
@@ -5045,7 +5045,13 @@
       (calibration?'<div class="metric-limit">'+escape(calibration)+'</div>':'')+'</div>';
   };
   /* HEM_ROOM_DETAILS122_END */
-  proto87._summary = function(summary) {
+  proto87._summary = function(summary,rooms) {
+    // Count the same classification and room set that the rows/floors render.
+    // This also reconciles an older inline snapshot during a backend upgrade.
+    if(Array.isArray(rooms)){
+      summary={safe:0,attention:0,unknown:0};
+      for(const room of rooms)summary[this._roomStatus075(room)]++;
+    }
     const counts=['safe','attention','unknown'].map(k=>
       Math.max(0,Math.trunc(Number(summary?.[k])||0)));
     const labels=_roomLabels87(this._language());
@@ -5109,10 +5115,7 @@
     const active=devices.map(entry=>({entry,state:_deviceState87(entry,this._hass)}))
       .filter(item=>item.state.active);
     const temp=overview122.temperature,humidity=overview122.humidity;
-    const availability071=this._roomInputs071(room);
-    const roomStatus=room.status==='attention'?'attention':
-      !availability071.temperature&&!availability071.humidity?'unknown':
-      room.status==='safe'?'safe':'partial';
+    const roomStatus=this._roomStatus075(room);
     const alerts=[];
     // Display-only: room ventilation opportunity uses NO virtual CO2/AQI
     // readings. Native window-temperature guidance uses measured °C and
@@ -5162,12 +5165,14 @@
       '<span>'+ventNotes95.map(value=>escape(value)).join(' · ')+'</span></div>':'';
     if(roomStatus==='attention') alerts.push(this._roomAlert114(room,'attention',
       'mdi:alert-circle-outline',labels.attention,'warn'));
-    // Keep the existing missing-sensor diagnostic shortcut even when basic
-    // temperature or humidity evidence makes the room status partial/ready.
-    // Optional sensor outages must not relabel a room as "No data".
+    // Required control inputs and optional diagnostics have distinct icons.
+    // Neither an optional sensor nor an unconfigured window means No data.
     const hasMissingSensor=safeArray(room.readings).some(item=>item?.available!==true);
-    if(roomStatus==='unknown'||hasMissingSensor) alerts.push(this._roomAlert114(room,'missing',
-      'mdi:help-circle-outline',hasMissingSensor?this._hemText071('missing'):labels.unavailable,'muted'));
+    const missingRequired=room.data_availability?.status==='missing'||roomStatus==='unknown';
+    const missingBasic=this._roomBasicMissing075(room);
+    if(missingRequired||hasMissingSensor||missingBasic.length) alerts.push(this._roomAlert114(room,'missing',
+      missingRequired?'mdi:help-circle-outline':'mdi:information-outline',
+      missingRequired?this._t('unknown'):this._hemText071('missing'),'muted'));
     if(safeArray(room.windows).some(win=>win.opened===true))
       alerts.push(this._roomAlert114(room,'windows','mdi:window-open-variant',
         this._t('windowOpen'),'warn'));
@@ -6170,7 +6175,7 @@
   proto101._weatherChip101=function(warning){
     const data=this._weatherContent101(warning);
     const text=wxLabel101(this,'subject')+' · '+data.brief;
-    if(!data.source)return '<span class="reason">'+this._icon('mdi:weather-alert')+
+    if(!data.source)return '<span class="reason">'+this._icon('mdi:weather-cloudy-alert')+
       escape(text)+'</span>';
     const {id,state}=data.source,attrs=state.attributes||{};
     const cells=Object.entries(attrs).map(([key,v])=>{
@@ -6191,7 +6196,7 @@
       this._icon('mdi:open-in-new')+escape(wxLabel101(this,'open'))+'</button>';
     return '<details class="hem-context76 hem-warning101" data-detail-id="wx:'+escape(id)+'">'+
       '<summary class="reason hem-wx-summary101" title="'+escape(text)+'" '+
-      'aria-label="'+escape(text)+'">'+this._icon('mdi:weather-alert')+
+      'aria-label="'+escape(text)+'">'+this._icon('mdi:weather-cloudy-alert')+
       '<span class="hem-wx-text101">'+escape(text)+'</span>'+
       this._icon('mdi:information-outline')+'</summary>'+
       '<div class="hem-context-body76">'+detail+'</div></details>';
@@ -6314,10 +6319,10 @@
     const full=subject+(body?' · '+body:'');
     const title=escape(full);
     if(!info.source)return '<span class="reason hem-wx-static103" title="'+title+'">'+
-      this._icon('mdi:weather-alert')+escape(subject)+'</span>';
+      this._icon('mdi:weather-cloudy-alert')+escape(subject)+'</span>';
     return '<button type="button" class="hem-wx-chip103" '+
       'data-wx-open103="'+escape(info.source.id)+'" title="'+title+
-      '" aria-label="'+title+'">'+this._icon('mdi:weather-alert')+
+      '" aria-label="'+title+'">'+this._icon('mdi:weather-cloudy-alert')+
       '<span class="hem-wx-chip-text103">'+escape(subject)+'</span>'+
       this._icon('mdi:information-outline')+'</button>';
   };
@@ -6404,7 +6409,7 @@
     pop.setAttribute('tabindex','-1');
     pop.setAttribute('aria-label',wxWord103(this,'details'));
     pop.innerHTML='<div class="hem-wx-head103"><strong>'+
-      this._icon('mdi:weather-alert')+escape(wxWord103(this,'details'))+
+      this._icon('mdi:weather-cloudy-alert')+escape(wxWord103(this,'details'))+
       '</strong><button type="button" data-wx-close103 aria-label="'+
       escape(wxWord103(this,'close'))+'">'+this._icon('mdi:close')+
       '</button></div><div class="hem-wx-content103"></div>';
@@ -6545,12 +6550,12 @@
     const tooltip=escape(full+(description?' · '+description:''));
     if(!info.source)
       return '<span class="reason hem-wx-static103" title="'+tooltip+'">'+
-        this._icon('mdi:weather-alert')+
+        this._icon('mdi:weather-cloudy-alert')+
         '<span class="hem-wx-chip-text103">'+escape(visible)+'</span></span>';
     return '<button type="button" class="hem-wx-chip103" '+
       'data-wx-open103="'+escape(info.source.id)+'" '+
       'title="'+tooltip+'" aria-label="'+tooltip+'">'+
-      this._icon('mdi:weather-alert')+
+      this._icon('mdi:weather-cloudy-alert')+
       '<span class="hem-wx-chip-text103">'+escape(visible)+'</span>'+
       this._icon('mdi:information-outline')+'</button>';
   };
@@ -8059,6 +8064,11 @@
     };
     if(kind==='occupancy')add(this._roomPresence114(room).label);
     else if(kind==='missing'){
+      for(const controller of this._roomControlMissing075(room))
+        add(controller.name+' · '+controller.metrics.map(metric=>this._metricName(metric)||metric).join(', ')+
+          ' · '+hemTextB8('Required control measurement is unavailable or outdated',this._language()));
+      for(const metric of this._roomBasicMissing075(room))
+        add((this._metricName(metric)||metric)+' · '+this._t('missing'));
       if(room.climate_only===true)add(words.climateOnly);
       else {
         for(const item of safeArray(room.readings).filter(r=>r.available!==true)){
@@ -8067,10 +8077,6 @@
               ?this._t('moldNotCalibrated'):this._t('missing')),item.entity_id);
         }
         for(const warning of safeArray(room.mold_warnings))add(this._moldInputWarning(warning));
-        if(!safeArray(room.readings).some(r=>r.available===true))add(words.noSensors);
-        if(!safeArray(room.windows).length)add(words.noWindows);
-        else for(const win of room.windows.filter(w=>typeof w.opened!=='boolean'))
-          add((win.name||this._t('windows'))+' · '+words.missingWindows,win.entity_id);
       }
     } else if(kind==='attention'){
       for(const item of safeArray(room.readings).filter(r=>r.exceeded===true))
@@ -8810,10 +8816,12 @@
       }
       group.querySelector('[data-room-options-empty114]').hidden=visible>0;
     });
+    this._settingsBeginOpen075(saved,"room");
     this.shadowRoot.appendChild(node);
     try{node.showModal();}catch{node.setAttribute('open','');}
     node.querySelector('[data-room-options-x114]').focus({preventScroll:true});
     this._roomSettingsBusy114(saved,true);
+    const registryReady=this._hemFullLoad127(saved,"room");
     // These optional translations improve native ha-form labels without
     // making access depend on a translation download or a lazy UI import.
     for(const category of ['options','selector']){
@@ -8834,12 +8842,16 @@
         throw new Error('The exact room is not in the current options menu');
       const form=await saved.api('POST',_roomOptionsEndpoint114(saved),{next_step_id:next});
       if(!_roomOptionsActive114(this,saved)){_roomOptionsDiscard114(this,saved);return false;}
+      await registryReady;
+      if(!this._settingsOpenActive075(saved,"room")){_roomOptionsDiscard114(this,saved);return false;}
       this._renderRoomSettingsForm114(saved,form);
+      this._settingsFinishOpen075(saved,"room");
       return true;
     }catch{
       if(_roomOptionsActive114(this,saved))
         this._failRoomSettings114(saved,_roomOptionsWord114(this,'loadError'));
       else _roomOptionsDiscard114(this,saved);
+      this._settingsFinishOpen075(saved,"room");
       return false;
     }
   };
@@ -10367,34 +10379,86 @@
       group.remove();
     }
   };
+  // Options schemas and the complete entity registry are separate requests.
+  // Keep their provisional rows, duplicate aliases and counts out of the
+  // first visible frame; reveal one fully grouped and filtered settings view.
+  hemFull127._settingsBeginOpen075=function(saved,scope){
+    saved.initialOpening075=true;
+    saved.node.classList.add("hem-settings-stable075");
+    saved.node.setAttribute("data-settings-opening075","");
+    saved.node.setAttribute("aria-busy","true");
+    const loading=document.createElement("p");
+    loading.setAttribute("data-settings-loading075","");
+    loading.setAttribute("role","status");loading.setAttribute("aria-live","polite");
+    loading.textContent=scope==="home"?homeWord128(this,"loading"):
+      _roomOptionsWord114(this,"loading");
+    saved.node.querySelector(".hem-room-options-body114").prepend(loading);
+  };
+  hemFull127._settingsOpenActive075=function(saved,scope){
+    if(!saved||saved.disposed||saved.settingsClosed||!saved.node?.isConnected||
+       saved.connection!==this._hass?.connection)return false;
+    if(scope==="room")return _roomOptionsActive114(this,saved)&&
+      _roomOptionsContext114(this,saved.area,saved.entryId,saved.owner)?.device===saved.device;
+    return scope==="home"&&homeActive128(this,saved);
+  };
+  hemFull127._settingsFinishOpen075=function(saved,scope){
+    if(!this._settingsOpenActive075(saved,scope)||!saved.initialOpening075)return;
+    saved.initialOpening075=false;
+    try{
+      if(!saved.failed){
+        this._hemFullRender127(saved,scope);
+        this._settingsAttachSourcesB10(saved,scope);
+      }
+    }finally{
+      saved.node.removeAttribute("data-settings-opening075");
+      saved.node.querySelector("[data-settings-loading075]")?.remove();
+      saved.node.setAttribute("aria-busy",String(Boolean(saved.busy)));
+    }
+  };
   hemFull127._hemFullLoad127=function(saved,scope){
-    if(typeof this._hass?.callWS!=="function")return;
-    saved.fullLoading127=true;this._hemFullRender127(saved,scope);
-    const connection=this._hass.connection,owner=saved.owner;
-    Promise.resolve().then(()=>this._hass.callWS({type:"config/entity_registry/list"}))
-      .then(records=>{
-        if(!this._hemFullContext127(saved,scope)||this._hass.connection!==connection||
-           saved.owner!==owner)return;
-        if(!Array.isArray(records))throw Error("Invalid entity registry");
-        saved.fullRegistry127=records;saved.fullLoading127=false;saved.fullError127=false;
-        this._hemFullRender127(saved,scope);
-      }).catch(()=>{
-        if(!this._hemFullContext127(saved,scope)||this._hass.connection!==connection)return;
-        saved.fullLoading127=false;saved.fullError127=true;
-        this._hemFullRender127(saved,scope);
-      });
+    if(saved.fullLoading127&&saved.fullLoadPromise127)return saved.fullLoadPromise127;
+    const hass=this._hass;
+    if(typeof hass?.callWS!=="function")return Promise.resolve();
+    const callWS=hass.callWS.bind(hass);
+    saved.fullLoading127=true;
+    if(!saved.initialOpening075)this._hemFullRender127(saved,scope);
+    const connection=hass.connection,owner=saved.owner;
+    const active=()=>this._hass?.connection===connection&&saved.owner===owner&&
+      (scope==="device"?this._hemFullContext127(saved,scope):
+        this._settingsOpenActive075(saved,scope));
+    // An unavailable registry must not trap a valid Options form behind the
+    // loading view. On failure use the existing cache and show its error notice.
+    // Settling this promise also ignores a response that arrives after timeout.
+    let timer;
+    const response=new Promise((resolve,reject)=>{
+      timer=setTimeout(()=>reject(Error("Settings registry load timed out")),10000);
+      Promise.resolve().then(()=>callWS({type:"config/entity_registry/list"}))
+        .then(resolve,reject);
+    });
+    saved.fullLoadPromise127=response.then(records=>{
+      if(!active())return;
+      if(!Array.isArray(records))throw Error("Invalid entity registry");
+      saved.fullRegistry127=records;saved.fullLoading127=false;saved.fullError127=false;
+    }).catch(()=>{
+      if(!active())return;
+      saved.fullLoading127=false;saved.fullError127=true;
+    }).finally(()=>{
+      clearTimeout(timer);
+      if(active()&&!saved.initialOpening075&&!saved.failed)this._hemFullRender127(saved,scope);
+    });
+    return saved.fullLoadPromise127;
   };
   const priorOpenRoom127=hemFull127._openRoomSettings114;
   hemFull127._openRoomSettings114=async function(area){
-    const result=await priorOpenRoom127.call(this,area),saved=this._roomSettingsDialog114;
-    if(!result||!saved||saved.area!==area)return result;
+    const opening=priorOpenRoom127.call(this,area),saved=this._roomSettingsDialog114;
+    const result=await opening;
+    if(!result||!saved||this._roomSettingsDialog114!==saved||saved.area!==area)return result;
     saved.node.addEventListener("click",event=>{
       const button=event.target?.closest?.('[data-hem-full-apply127][data-hem-full-target127="room"]');
       if(!button)return;
       event.preventDefault();event.stopPropagation();
       this._hemFullApply127(saved,"room",button);
     });
-    this._hemFullLoad127(saved,"room");
     return result;
   };
   const priorOpenDevice127=hemFull127._openHemControllerSettings126;
@@ -10859,10 +10923,11 @@
       const input=event.target?.closest?.("[data-hem-home-input128]");
       if(input)this._homeValueChanged128(saved,input);
     });
+    this._settingsBeginOpen075(saved,"home");
     this.shadowRoot.appendChild(node);
     try{node.showModal();}catch{node.setAttribute("open","");}
     node.querySelector("[data-hem-home-close128]").focus({preventScroll:true});
-    this._hemFullLoad127(saved,"home");
+    const registryReady=this._hemFullLoad127(saved,"home");
     try{
       for(const category of ["options","selector"]){
         try{Promise.resolve(this._hass.loadBackendTranslation?.(
@@ -10872,7 +10937,7 @@
         handler:saved.entryId});
       if(typeof menu?.flow_id==="string"&&/^[A-Za-z0-9_-]{1,128}$/.test(menu.flow_id))
         saved.flowId=menu.flow_id;
-      if(!homeActive128(this,saved))return false;
+      if(!homeActive128(this,saved)){_roomOptionsCleanup114(saved);return false;}
       const options=Array.isArray(menu?.menu_options)?menu.menu_options:
         Object.keys(menu?.menu_options||{});
       if(menu?.type!=="menu"||!saved.flowId||!options.includes("general_settings")||
@@ -10880,14 +10945,18 @@
         throw Error("Home option step is unavailable");
       const form=await saved.api("POST",_roomOptionsEndpoint114(saved),{
         next_step_id:"general_settings"});
-      if(!homeActive128(this,saved))return false;
+      if(!homeActive128(this,saved)){_roomOptionsCleanup114(saved);return false;}
+      await registryReady;
+      if(!this._settingsOpenActive075(saved,"home")){_roomOptionsCleanup114(saved);return false;}
       this._renderHomeGeneral128(saved,form);
+      this._settingsFinishOpen075(saved,"home");
       return true;
     }catch{
       if(homeActive128(this,saved)){
         saved.failed=true;this._homeStatus128(saved,homeWord128(this,"error"),true);
         this._homeBusy128(saved,false);
-      }
+      }else _roomOptionsCleanup114(saved);
+      this._settingsFinishOpen075(saved,"home");
       return false;
     }
   };
@@ -10984,8 +11053,8 @@
     const collapsed=this._floorCollapsed140||new Set();
     const render=(floor,assigned,unowned=false)=>{
       const id=floor.floor_id,open=!collapsed.has(id),n=assigned.length;
-      const attention=assigned.filter(room=>room.status==="attention").length;
-      const unknown=assigned.filter(room=>room.status==="unknown").length;
+      const attention=assigned.filter(room=>this._roomStatus075(room)==="attention").length;
+      const unknown=assigned.filter(room=>this._roomStatus075(room)==="unknown").length;
       const count=String(n)+" "+words.rooms;
       const details=[count];
       if(attention)details.push(String(attention)+" "+words.attention);
@@ -11586,6 +11655,7 @@
   hemUnified141._hemFullRender127=function(saved,scope){
     if(scope==="device")return hemOriginalFullRender141.call(this,saved,scope);
     if(scope!=="room"&&scope!=="home")return;
+    if(saved?.initialOpening075||(saved?.failed&&!saved.fields))return;
     if(!this._hemFullContext127(saved,scope))return;
     const root=saved.node.querySelector(scope==="home"?
       "[data-hem-home-form-groups128]":"[data-room-options-groups114]");
@@ -11951,19 +12021,53 @@
     return {temperature:Number.isFinite(summary?.temperature),
             humidity:Number.isFinite(summary?.humidity)};
   };
-  hem071._roomMissingInfo071=function(room){
-    if(!room||room.climate_only===true)return '';
+  hem071._roomStatus075=function(room){
+    const data=room?.data_availability;
+    if(data&&['ready','partial','missing'].includes(data.status)&&
+        ['safe','attention','unknown'].includes(room.status))return room.status;
+    // Legacy snapshots used unknown for missing optional/window information.
+    // Keep genuine attention, then apply the monitoring-only fallback.
+    if(room?.status==='attention')return 'attention';
     const inputs=this._roomInputs071(room);
-    const required=[];
-    if(!inputs.temperature)required.push(this._hemText071('temp'));
-    if(!inputs.humidity)required.push(this._hemText071('rh'));
+    return inputs.temperature||inputs.humidity?'safe':'unknown';
+  };
+  hem071._roomBasicMissing075=function(room){
+    if(Array.isArray(room?.data_availability?.missing_basic_metrics))
+      return room.data_availability.missing_basic_metrics.filter(
+        metric=>['temperature','humidity'].includes(metric));
+    const inputs=this._roomInputs071(room);
+    return ['temperature','humidity'].filter(metric=>!inputs[metric]);
+  };
+  hem071._roomControlMissing075=function(room){
+    return safeArray(room?.data_availability?.controllers)
+      .filter(controller=>safeArray(controller?.missing_metrics).length)
+      .map(controller=>({name:String(controller.name||controller.controller_id||''),
+        metrics:[...new Set(safeArray(controller.missing_metrics)
+          .filter(metric=>typeof metric==='string'))]}));
+  };
+  hem071._roomMissingInfo071=function(room){
+    if(!room)return '';
+    const controlled=safeArray(room.data_availability?.controllers).length>0;
+    const controlMissing=this._roomControlMissing075(room);
+    const requiredMetrics=controlled
+      ?safeArray(room.data_availability?.missing_required_metrics)
+      :this._roomBasicMissing075(room);
+    const metricLabel=metric=>this._metricName(metric)||metric;
+    const required=[...new Set(requiredMetrics.map(metricLabel))];
     const optional=[...new Set(safeArray(room.readings)
-      .filter(v=>v&&v.available!==true&&!['temperature','humidity'].includes(v.metric))
+      .filter(v=>v&&v.available!==true&&!requiredMetrics.includes(v.metric))
       .map(v=>String(v.name||this._metricName(v.metric)||v.metric)).filter(Boolean))].slice(0,20);
+    if(controlled)for(const metric of this._roomBasicMissing075(room)){
+      if(!requiredMetrics.includes(metric)&&!optional.includes(metricLabel(metric)))
+        optional.push(metricLabel(metric));
+    }
     if(!required.length&&!optional.length)return '';
     const title=this._hemText071('missing');
     const visible=required.length?required.join(', '):this._hemText071('optional');
-    const explanation='<p>'+escape(this._hemText071('required'))+'</p>'+
+    const explanation=(controlled
+      ?(controlMissing.length?'<p>'+escape(hemTextB8('Required control measurement is unavailable or outdated',this._language()))+'</p>'+
+        '<ul>'+controlMissing.map(item=>'<li>'+escape(item.name+' · '+item.metrics.map(metricLabel).join(', '))+'</li>').join('')+'</ul>':'')
+      :'<p>'+escape(this._hemText071('required'))+'</p>')+
       (required.length?'<p>'+escape(title+': '+required.join(', '))+'</p>':'')+
       (optional.length?'<p>'+escape(this._hemText071('optional')+': '+optional.join(' · '))+'</p>':'')+
       '<p>'+escape(this._hemText071('partial'))+'</p>';
@@ -12907,11 +13011,16 @@
   };
   const auditRenderBefore=auditProto._hemFullRender127;
   auditProto._hemFullRender127=function(saved,scope){
+    if(saved?.initialOpening075||(saved?.failed&&!saved.fields&&scope!=="device"))return;
     const result=auditRenderBefore.call(this,saved,scope);
     this._settingsAuditApplyB8(saved,scope);return result;
   };
   const auditStylesBefore=auditProto._styles;
   auditProto._styles=function(){return auditStylesBefore.call(this)+'<style>'+
+    '.hem-room-options114.hem-settings-stable075{height:min(700px,calc(100dvh - 24px))}'+
+    '.hem-settings-stable075>.hem-room-options-body114{flex:1 1 auto}'+
+    '.hem-settings-stable075[data-settings-opening075]>.hem-room-options-body114>:not([data-settings-loading075]){display:none!important}'+
+    '[data-settings-loading075]{display:grid;place-items:center;min-height:100%;margin:0;font-size:13px;color:var(--secondary-text-color,#aebbc8)}'+
     '[data-settings-tier-b8][hidden],[data-hem-unified141][hidden],[data-room-options-group114][hidden],[data-settings-empty-b8][hidden],[data-settings-hidden-matches-b8][hidden]{display:none!important}'+
     '.hem-settings-tools-b8{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:10px 14px;border-bottom:1px solid var(--aqa-edge);min-width:0}'+
     '.hem-settings-tools-b8 input[type=search]{flex:1 1 180px;min-width:0;max-width:100%;box-sizing:border-box;padding:8px;border:1px solid var(--aqa-edge);border-radius:8px;background:var(--secondary-background-color,#292929);color:inherit}'+
@@ -13144,7 +13253,7 @@
     return result;
   };
   b10._settingsAttachSourcesB10=function(saved,scope){
-    if(!saved?.node||saved.settingsSourcesBoundB10)return;
+    if(!saved?.node||saved.initialOpening075||saved.settingsSourcesBoundB10)return;
     const node=saved.node;
     const header=node.querySelector(scope==='home'?'.hem-home-options-head128':'.hem-room-options-head114')||node.querySelector('header');
     if(!header)return;

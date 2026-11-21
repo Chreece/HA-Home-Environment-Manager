@@ -31,9 +31,11 @@ card._language=()=>card._hass.language;
 card._room=r=>'<article data-test-area="'+r.area_id+'">'+r.name+'</article>';
 card._icon=i=>'<ha-icon icon="'+i+'"></ha-icon>';
 const rooms=[
- {area_id:'living',name:'Living room',status:'safe'},
- {area_id:'kitchen',name:'Kitchen',status:'attention'},
- {area_id:'loft',name:'Loft',status:'unknown'}
+ // These isolated grouping fixtures carry the backend classification;
+ // the room renderer is stubbed and has no measurement/card context.
+ {area_id:'living',name:'Living room',status:'safe',data_availability:{status:'ready'}},
+ {area_id:'kitchen',name:'Kitchen',status:'attention',data_availability:{status:'ready'}},
+ {area_id:'loft',name:'Loft',status:'unknown',data_availability:{status:'missing'}}
 ];
 const flat=rooms.map(r=>card._room(r)).join('');
 assert.equal(card._floorRooms140(rooms),flat,'missing HA metadata must not add floor UI');

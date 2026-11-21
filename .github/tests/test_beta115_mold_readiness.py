@@ -189,7 +189,10 @@ class MoldMeasurementReadiness(unittest.TestCase):
         plan = logic.evaluate((), (), (), (room,), constants.DEFAULT_THRESHOLDS)
         payload = dash.dashboard_snapshot(plan, constants.DEFAULT_THRESHOLDS)["rooms"][0]
         reported = next(item for item in payload["readings"] if item["metric"] == "mold")
-        self.assertEqual(payload["status_detail"], "mold_not_calibrated")
+        self.assertEqual(payload["status"], "safe")
+        self.assertEqual(payload["data_availability"]["status"], "partial")
+        self.assertEqual(payload["status_detail"], "partial_indoor_data")
+        self.assertIn("calibration", payload["mold_warnings"])
         self.assertEqual(reported["details"]["calibration_readiness"], "difference_suitable")
         self.assertFalse(reported["available"])
         self.assertIsNone(reported["value"])

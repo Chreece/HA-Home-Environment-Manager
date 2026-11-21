@@ -108,6 +108,14 @@ jobs:
           python -I .github/tests/test_074_detailed_trends.py --logic-only
       - name: Permanent entry removal, isolated storage and pending-write cleanup
         run: python -I .github/tests/test_074_entry_removal.py
+      - name: Required room feedback, consistent availability and valid weather warning icons
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_075_room_data.py
+          python -I .github/tests/test_075_room_data_card.py --logic-only
+          python -I .github/tests/test_weather_warning_icon.py --logic-only
+      - name: Settings opening request ordering, failure and stale-response isolation
+        run: python -I .github/tests/test_075_settings_dialog_opening.py --node-only
       - name: HEM startup burst coalescing and shade-only fast tick safety
         run: python -I .github/tests/test_070_startup_load.py
       - name: Full startup, shutdown, bounded cleanup and optional notification lifecycle
@@ -456,6 +464,12 @@ jobs:
         run: python -I .github/tests/test_062b23_door_mold_card.py
       - name: Detailed average, mold and Recorder charts in Chromium
         run: python -I .github/tests/test_074_detailed_trends.py
+      - name: Required room data, optional diagnostics and consistent responsive totals
+        run: python -I .github/tests/test_075_room_data_card.py
+      - name: Visible weather warning glyph, responsive layout and keyboard details
+        run: python -I .github/tests/test_weather_warning_icon.py
+      - name: Stable room and home settings from loading to the first complete frame
+        run: python -I .github/tests/test_075_settings_dialog_opening.py
       - name: v0.7.1 unified openings, missing data, door actions, science and covers
         run: python -I .github/tests/test_071_room_ui.py
       - name: v0.7.2 persistent Building physics and clear PM2.5 source verification

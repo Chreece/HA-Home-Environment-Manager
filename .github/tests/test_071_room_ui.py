@@ -76,7 +76,7 @@ with sync_playwright() as pw:
         }""", {"language":language,"states":deepcopy(states)})
         row=page.locator('[data-room-fold87="living"]')
         assert row.count()==1
-        assert "hem-room-partial" in row.get_attribute("class")
+        assert "hem-room-safe" in row.get_attribute("class")
         row.locator('.hem-room-name87').click()
         expect(row.locator('.hem-room-missing071')).to_be_visible()
         assert page.evaluate("card._roomInputs071(card._dashboard105().rooms[0])")=={

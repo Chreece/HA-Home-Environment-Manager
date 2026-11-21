@@ -34,7 +34,7 @@ REQUIRED = (
     "advanced_comfort.py", "shade_cooling.py", "switch.py", "button.py", "climate.py",
     "equipment_name_catalog.py", "equipment_labels.json", "equipment_window.py",
     "climate_arbitration.py", "pid_phase.py", "pid_restart.py", "equipment_status.py",
-    "equipment_battery.py", "room_ventilation.py", "messages.py", "select.py",
+    "equipment_battery.py", "room_ventilation.py", "room_data.py", "messages.py", "select.py",
     "number.py", "device_controls.py", "arrival_preparation.py", "translations/el.json",
     "languages.py", "tts_languages.py", "announcement_text.py",
     "recommendation_text.py", "window_open_wait.py", "window_open_text.py", "window_option_catalog.py",
