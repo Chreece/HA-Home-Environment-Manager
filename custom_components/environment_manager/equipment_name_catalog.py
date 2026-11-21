@@ -2053,6 +2053,16 @@ def _pid_parameter_label(key: str) -> str | None:
     return None
 
 
+# These native controls have mode-scoped entities rather than legacy entries
+# in strings.json. Reuse the reviewed command-feedback labels so their HA
+# names and the card's per-language setting metadata share one source.
+_NATIVE_CONTROL_LABELS = {
+    "fan_mode": "Fan mode",
+    "swing_mode": "Swing mode",
+    "swing_horizontal_mode": "Horizontal swing mode",
+}
+
+
 def localized_equipment_name(key: str, language: str, channel: str = "") -> str:
     """Translate full grouped name in HA's server language (not the user UI).
 
@@ -2062,6 +2072,9 @@ def localized_equipment_name(key: str, language: str, channel: str = "") -> str:
     This lookup is in-memory only; it never performs blocking I/O at setup.
     """
     canonical = resolve_language(language)
+    if key in _NATIVE_CONTROL_LABELS:
+        label = translated_text(_NATIVE_CONTROL_LABELS[key], canonical)
+        return f"{channel or ''}{label}".strip()
     template = EQUIPMENT_TRANSLATED_NAMES[canonical].get(key)
     if template is None:
         template = EQUIPMENT_TRANSLATED_NAMES["en"].get(key, key.replace("_", " ").title())
