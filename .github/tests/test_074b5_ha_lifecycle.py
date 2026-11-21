@@ -300,7 +300,9 @@ install_module(PACKAGE + ".room_sources", native=lambda *args: True)
 install_module(PACKAGE + ".advanced_comfort", async_migrate_advanced_comfort=lambda *args: None)
 install_module(PACKAGE + ".room_hubs", async_sync_room_hubs=lambda *args: {},
     async_watch_room_hubs=lambda *args: lambda: None, home_subentry_id=lambda *args: None)
-install_module(PACKAGE + ".device_hierarchy", async_register_hierarchy=lambda *args: None)
+configured_area_ids = importlib.import_module(PACKAGE + ".device_hierarchy").configured_area_ids
+install_module(PACKAGE + ".device_hierarchy", async_register_hierarchy=lambda *args: None,
+    configured_area_ids=configured_area_ids)
 install_module(PACKAGE + ".pid_review", decode_mobile_action=lambda *args: None,
     is_pending=lambda *args: False)
 install_module(PACKAGE + ".equipment_model", specs=lambda *args: ())
@@ -335,7 +337,7 @@ def production_namespace(path, wanted_class=None, wanted_functions=()):
     }
     namespace.update({key: value for key, value in vars(const).items() if key.isupper()})
     for name in ("AwayWindowAlert", "PresenceContinuity", "ArrivalPreparation",
-                 "RoomVentilationMonitor", "WindowOpeningWait", "EquipmentRuntime",
+                 "RoomVentilationMonitor", "WindowOpeningWait", "WindowCloseCooldown", "EquipmentRuntime",
                  "ClimatePidCoordinator", "NativeClimateControl", "DirectClimateControl",
                  "HumiditySetpointControl", "HumidityPowerControl", "SecondaryClimateSetpoint",
                  "RunningFanSpeedControl", "FanPowerControl", "NativeAirModeControl"):
@@ -717,6 +719,8 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
                         await asyncio.wait_for(ENTRY_NS["async_setup_entry"](self.hass, self.entry), .5)
             self.assertTrue(cancelled.is_set())
             self.assertTrue(self.manager._stop_pending)
+            cleanup_state = self.hass.data[f"{const.DOMAIN}_entry_cleanup"][self.entry.entry_id]
+            self.assertFalse(cleanup_state.stopped)
             with self.assertRaisesRegex(ConfigEntryNotReady, "Previous HEM cleanup did not finish"):
                 await asyncio.wait_for(ENTRY_NS["async_setup_entry"](self.hass, self.entry), .5)
             self.assertEqual(len(created), 1)
@@ -737,6 +741,9 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
             await ENTRY_NS["async_setup_entry"](self.hass, self.entry)
         previous = self.manager
         self.assertTrue(await previous.async_stop())
+        cleanup_state = self.hass.data[f"{const.DOMAIN}_entry_cleanup"][self.entry.entry_id]
+        self.assertTrue(cleanup_state.stopped)
+        self.assertIs(cleanup_state.stores[previous._environment_store.key], previous._environment_store)
         self.manager = Manager(self.hass, self.entry)
         self.manager._capture = lambda: logic.Plan("blocked", False, (), (), ())
         await self.setup_entry()

@@ -39,9 +39,11 @@ async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
     )
     # Bundled asset and HACS release version share ONE authoritative source.
     # Rebranding must not change the original integration domain/path.
-    add_extra_js_url(
-        hass, f"/{DOMAIN}/air-quality-advisor-card.js?v={manifest['version']}"
-    )
+    url = f"/{DOMAIN}/air-quality-advisor-card.js?v={manifest['version']}"
+    add_extra_js_url(hass, url)
+    from .entry_cleanup import remember_frontend_resource
+
+    remember_frontend_resource(hass, url)
     # A full multi-room dashboard cannot safely fit in Recorder attributes.
     # Its authenticated WebSocket API is read-only and registered just once
     # per canonical integration setup, not once per config entry.
@@ -114,6 +116,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             "Previous HEM cleanup did not finish; restart Home Assistant "
             "before setting up HEM again"
         )
+    from .entry_cleanup import prepare_entry_setup
+
+    prepare_entry_setup(hass, entry)
     from .advanced_comfort import async_migrate_advanced_comfort
     async_migrate_advanced_comfort(hass, entry)
     from .room_hubs import async_sync_room_hubs, async_watch_room_hubs, home_subentry_id
@@ -134,7 +139,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         if manager._stopping or is_stopping(hass):
             raise asyncio.CancelledError("Home Assistant stopped during HEM setup")
     except BaseException:
-        await manager.async_stop(shutdown=is_stopping(hass))
+        from .entry_cleanup import capture_entry_runtime
+
+        cleanup = capture_entry_runtime(hass, entry)
+        cleanup.stopped = await manager.async_stop(shutdown=is_stopping(hass))
         raise
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = manager
     entry.async_on_unload(async_watch_room_hubs(hass, entry))
@@ -301,10 +309,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    from .entry_cleanup import capture_entry_runtime
+
+    cleanup = capture_entry_runtime(hass, entry)
     if not await entry.runtime_data.async_stop():
         return False
     if not await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         return False
+    cleanup.stopped = True
     hass.data.get(DOMAIN, {}).pop(entry.entry_id, None)
     if not hass.data.get(DOMAIN):
         if hass.services.has_service(DOMAIN, "announce"):
@@ -316,3 +328,10 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         if hass.services.has_service(DOMAIN, "climate_diagnostics"):
             hass.services.async_remove(DOMAIN, "climate_diagnostics")
     return True
+
+
+async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Permanently remove this entry's own files after normal unload."""
+    from .entry_cleanup import async_remove_owned_data
+
+    await async_remove_owned_data(hass, entry)

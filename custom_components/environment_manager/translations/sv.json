@@ -230,7 +230,8 @@
           "general_home_policy": "Närvaro hemma",
           "general_wake_alarm_entity": "Sömn · Nästa alarm",
           "general_wake_lead_minutes_entity": "Sömn · Minuter före alarmet",
-          "window_open_timeout_minutes": "Väntetid för fönsteröppning (min)"
+          "window_open_timeout_minutes": "Väntetid för fönsteröppning (min)",
+          "window_close_cooldown_minutes": "Väntetid innan fönsterstängning föreslås (min)"
         },
         "data_description": {
           "weather_entities": "Välj: Väder och varningar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -283,7 +284,8 @@
           "general_home_policy": "En person med bekräftad närvaro hemma gör alltid att hemmet räknas som bebott. Det tidigare alternativet ‘Alla hemma’ behålls för befintliga konfigurationer och använder samma regel. Borta kräver verifierad frånvaro; en vald spårare med okänt tillstånd bevisar inte att alla har gått.",
           "general_wake_alarm_entity": "Välj en tids- eller tidsstämpelentitet för nästa alarm och en entitet för minuterna. HEM avslutar automatisk sömn så många minuter före alarmet och återgår till normala mål. Klockslag utan datum använder Home Assistants tidszon. Frånvaro, manuell styrning och enhetsskydd har fortsatt företräde.",
           "general_wake_lead_minutes_entity": "Välj en numerisk entitet med ett icke-negativt antal minuter, med enheten min eller utan enhet. Alarm 07:00 och värdet 30 avslutar automatisk sömn 06:30; 0 betyder när alarmet ringer. Rensa båda källorna för att inaktivera.",
-          "window_open_timeout_minutes": "Väntan efter att en vädringsbegäran har accepterats innan nya automatiska/PID-starter tillåts vid kvarstående behov. 0–30 minuter, standard 5; 0 stänger av väntan. Skydd för öppna fönster och apparaternas minimitider gäller fortfarande."
+          "window_open_timeout_minutes": "Väntan efter att en vädringsbegäran har accepterats innan nya automatiska/PID-starter tillåts vid kvarstående behov. 0–30 minuter, standard 5; 0 stänger av väntan. Skydd för öppna fönster och apparaternas minimitider gäller fortfarande.",
+          "window_close_cooldown_minutes": "När ett fönster öppnas efter ett vädringsförslag från HEM väntar HEM så här många minuter innan det föreslår att fönstret stängs, även om förhållandena utomhus är olämpliga. Väntetiden räknas separat för varje rum. 0–60 minuter, standard 5; 0 stänger av väntetiden. Reglerna för att pausa och skydda enheter gäller fortfarande."
         }
       },
       "reconfigure": {
@@ -2248,7 +2250,8 @@
           "general_wake_lead_minutes_entity": "Sömn · Minuter före alarmet",
           "window_open_timeout_minutes": "Väntetid för fönsteröppning (min)",
           "general_source_freshness_mode": "Hemmets beläggning · Giltighetsregel",
-          "global_threshold_max_age_mode": "Miljö · Giltighetsregel"
+          "global_threshold_max_age_mode": "Miljö · Giltighetsregel",
+          "window_close_cooldown_minutes": "Väntetid innan fönsterstängning föreslås (min)"
         },
         "data_description": {
           "weather_entities": "Välj: Väder och varningar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2303,7 +2306,8 @@
           "general_wake_lead_minutes_entity": "Välj en numerisk entitet med ett icke-negativt antal minuter, med enheten min eller utan enhet. Alarm 07:00 och värdet 30 avslutar automatisk sömn 06:30; 0 betyder när alarmet ringer. Rensa båda källorna för att inaktivera.",
           "window_open_timeout_minutes": "Väntan efter att en vädringsbegäran har accepterats innan nya automatiska/PID-starter tillåts vid kvarstående behov. 0–30 minuter, standard 5; 0 stänger av väntan. Skydd för öppna fönster och apparaternas minimitider gäller fortfarande.",
           "general_source_freshness_mode": "Automatiskt: numeriska personräknare och frånvarorapporter från hemmets spårare accepteras i upp till 240 minuter; ett giltigt oförändrat Hemma-tillstånd kan bestå tills det ändras. Okända, återställda eller otillgängliga källor kan inte bevisa frånvaro. Anpassat: använd minutvärdet nedan för samplade rapporter. Rumslistor förblir ändringsstyrda.",
-          "global_threshold_max_age_mode": "Automatiskt: väderentiteter kan vara giltiga i 180 minuter och andra numeriska miljömätningar i 90 minuter; giltiga binära kontakter som styrs av tillståndsändringar förblir användbara utan att löpa ut på grund av inaktivitet. Anpassat: använd minutvärdet nedan. Kontroller av tillgänglighet och återställt tillstånd gäller alltid. Home Assistants last_reported uppdateras vid en ny skrivning av tillståndet, även med samma värde, inte bara för att tiden går."
+          "global_threshold_max_age_mode": "Automatiskt: väderentiteter kan vara giltiga i 180 minuter och andra numeriska miljömätningar i 90 minuter; giltiga binära kontakter som styrs av tillståndsändringar förblir användbara utan att löpa ut på grund av inaktivitet. Anpassat: använd minutvärdet nedan. Kontroller av tillgänglighet och återställt tillstånd gäller alltid. Home Assistants last_reported uppdateras vid en ny skrivning av tillståndet, även med samma värde, inte bara för att tiden går.",
+          "window_close_cooldown_minutes": "När ett fönster öppnas efter ett vädringsförslag från HEM väntar HEM så här många minuter innan det föreslår att fönstret stängs, även om förhållandena utomhus är olämpliga. Väntetiden räknas separat för varje rum. 0–60 minuter, standard 5; 0 stänger av väntetiden. Reglerna för att pausa och skydda enheter gäller fortfarande."
         }
       },
       "room_occupancy": {
@@ -3880,6 +3884,9 @@
             "name": "Hjälp"
           }
         }
+      },
+      "global_setting_window_close_cooldown_minutes": {
+        "name": "Ventilation · Väntetid innan fönsterstängning föreslås (min)"
       }
     },
     "switch": {

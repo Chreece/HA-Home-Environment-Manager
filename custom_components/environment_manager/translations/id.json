@@ -230,7 +230,8 @@
           "general_home_policy": "Kehadiran di rumah",
           "general_wake_alarm_entity": "Tidur · Alarm berikutnya",
           "general_wake_lead_minutes_entity": "Tidur · Menit sebelum alarm",
-          "window_open_timeout_minutes": "Waktu tunggu membuka jendela (menit)"
+          "window_open_timeout_minutes": "Waktu tunggu membuka jendela (menit)",
+          "window_close_cooldown_minutes": "Jeda sebelum menyarankan penutupan jendela (menit)"
         },
         "data_description": {
           "weather_entities": "Pilih: Cuaca dan peringatan · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -283,7 +284,8 @@
           "general_home_policy": "Seseorang yang terverifikasi berada di rumah selalu membuat rumah dianggap berpenghuni. Opsi „Semua di rumah” dipertahankan untuk konfigurasi yang ada dan menggunakan aturan yang sama. Status „Pergi” memerlukan ketidakhadiran terverifikasi; status pelacak terpilih yang tidak diketahui tidak dapat membuktikan bahwa semua orang telah pergi.",
           "general_wake_alarm_entity": "Pilih entitas waktu atau tanggal dan waktu alarm berikutnya, serta entitas menit sebelumnya. HEM keluar dari tidur otomatis beberapa menit lebih awal untuk melanjutkan target normal. Waktu tanpa tanggal memakai zona waktu Home Assistant. Ketidakhadiran, kendali manual, dan perlindungan perangkat tetap diprioritaskan.",
           "general_wake_lead_minutes_entity": "Pilih entitas numerik dengan nilai menit nonnegatif, bersatuan min atau tanpa satuan. Alarm 07:00 dan nilai 30 mengakhiri tidur otomatis pukul 06:30; 0 berarti saat alarm berbunyi. Kosongkan kedua sumber untuk menonaktifkan.",
-          "window_open_timeout_minutes": "Waktu tunggu setelah permintaan membuka jendela diterima sebelum penyalaan otomatis/PID baru diizinkan jika masih diperlukan. 0–30 menit, bawaan 5; 0 menonaktifkan penantian. Perlindungan jendela terbuka dan waktu minimum perangkat tetap berlaku."
+          "window_open_timeout_minutes": "Waktu tunggu setelah permintaan membuka jendela diterima sebelum penyalaan otomatis/PID baru diizinkan jika masih diperlukan. 0–30 menit, bawaan 5; 0 menonaktifkan penantian. Perlindungan jendela terbuka dan waktu minimum perangkat tetap berlaku.",
+          "window_close_cooldown_minutes": "Setelah jendela dibuka mengikuti saran HEM, tunggu selama jumlah menit ini sebelum menyarankan agar jendela ditutup, meskipun kondisi di luar tidak sesuai. Jeda dihitung secara terpisah untuk setiap ruangan. 0–60 menit, bawaan 5; 0 menonaktifkan jeda. Aturan jeda operasi dan perlindungan perangkat tetap aktif."
         }
       },
       "reconfigure": {
@@ -2248,7 +2250,8 @@
           "general_wake_lead_minutes_entity": "Tidur · Menit sebelum alarm",
           "window_open_timeout_minutes": "Waktu tunggu membuka jendela (menit)",
           "general_source_freshness_mode": "Hunian rumah · Kebijakan validitas",
-          "global_threshold_max_age_mode": "Lingkungan · Kebijakan validitas"
+          "global_threshold_max_age_mode": "Lingkungan · Kebijakan validitas",
+          "window_close_cooldown_minutes": "Jeda sebelum menyarankan penutupan jendela (menit)"
         },
         "data_description": {
           "weather_entities": "Pilih: Cuaca dan peringatan · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2303,7 +2306,8 @@
           "general_wake_lead_minutes_entity": "Pilih entitas numerik dengan nilai menit nonnegatif, bersatuan min atau tanpa satuan. Alarm 07:00 dan nilai 30 mengakhiri tidur otomatis pukul 06:30; 0 berarti saat alarm berbunyi. Kosongkan kedua sumber untuk menonaktifkan.",
           "window_open_timeout_minutes": "Waktu tunggu setelah permintaan membuka jendela diterima sebelum penyalaan otomatis/PID baru diizinkan jika masih diperlukan. 0–30 menit, bawaan 5; 0 menonaktifkan penantian. Perlindungan jendela terbuka dan waktu minimum perangkat tetap berlaku.",
           "general_source_freshness_mode": "Otomatis: penghitung jumlah orang numerik dan laporan negatif pelacak rumah diterima hingga 240 menit; status „Di rumah” yang valid dan tidak berubah dapat tetap „Di rumah” sampai berubah. Sumber yang tidak diketahui, dipulihkan, dan tidak tersedia tidak dapat membuktikan ketidakhadiran. Kustom: gunakan nilai menit di bawah untuk laporan yang diambil sebagai sampel. Sumber daftar ruangan tetap berbasis perubahan.",
-          "global_threshold_max_age_mode": "Otomatis: entitas cuaca dapat tetap valid selama 180 menit, pengukuran lingkungan numerik lainnya selama 90 menit, sedangkan kontak biner valid yang berbasis perubahan tetap dapat digunakan tanpa batas waktu tidak aktif. Kustom: gunakan nilai menit di bawah. Pemeriksaan ketersediaan dan status yang dipulihkan selalu berlaku. Di Home Assistant, last_reported maju saat nilai yang sama ditulis ulang, bukan hanya karena waktu berlalu."
+          "global_threshold_max_age_mode": "Otomatis: entitas cuaca dapat tetap valid selama 180 menit, pengukuran lingkungan numerik lainnya selama 90 menit, sedangkan kontak biner valid yang berbasis perubahan tetap dapat digunakan tanpa batas waktu tidak aktif. Kustom: gunakan nilai menit di bawah. Pemeriksaan ketersediaan dan status yang dipulihkan selalu berlaku. Di Home Assistant, last_reported maju saat nilai yang sama ditulis ulang, bukan hanya karena waktu berlalu.",
+          "window_close_cooldown_minutes": "Setelah jendela dibuka mengikuti saran HEM, tunggu selama jumlah menit ini sebelum menyarankan agar jendela ditutup, meskipun kondisi di luar tidak sesuai. Jeda dihitung secara terpisah untuk setiap ruangan. 0–60 menit, bawaan 5; 0 menonaktifkan jeda. Aturan jeda operasi dan perlindungan perangkat tetap aktif."
         }
       },
       "room_occupancy": {
@@ -3880,6 +3884,9 @@
             "name": "Bantuan"
           }
         }
+      },
+      "global_setting_window_close_cooldown_minutes": {
+        "name": "Ventilasi · Jeda sebelum menyarankan penutupan jendela (menit)"
       }
     },
     "switch": {

@@ -230,7 +230,8 @@
           "general_home_policy": "Aanwezigheid thuis",
           "general_wake_alarm_entity": "Slaap · Volgende wekker",
           "general_wake_lead_minutes_entity": "Slaap · Minuten vóór de wekker",
-          "window_open_timeout_minutes": "Wachttijd voor raam openen (min)"
+          "window_open_timeout_minutes": "Wachttijd voor raam openen (min)",
+          "window_close_cooldown_minutes": "Wachttijd voordat sluiten van het raam wordt voorgesteld (min)"
         },
         "data_description": {
           "weather_entities": "Kies: Weer en waarschuwingen · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -283,7 +284,8 @@
           "general_home_policy": "Eén persoon die aantoonbaar thuis is, houdt de woning altijd als bezet aangemerkt. De oude optie ‘Iedereen thuis’ blijft voor bestaande configuraties behouden en gebruikt dezelfde regel. Afwezig vereist bevestigde afwezigheid; een geselecteerde tracker met onbekende status bewijst niet dat iedereen weg is.",
           "general_wake_alarm_entity": "Kies een tijd- of tijdstempelentiteit voor de volgende wekker en een entiteit voor de minuten. HEM beëindigt automatische slaap zoveel minuten eerder en hervat de normale doelen. Tijden zonder datum gebruiken de Home Assistant-tijdzone. Afwezigheid, handmatige bediening en beveiligingen houden voorrang.",
           "general_wake_lead_minutes_entity": "Kies een numerieke entiteit met een niet-negatief aantal minuten, met eenheid min of zonder eenheid. Een wekker om 07:00 met waarde 30 beëindigt automatische slaap om 06:30; 0 betekent bij het afgaan. Wis beide bronnen om uit te schakelen.",
-          "window_open_timeout_minutes": "Wachttijd nadat een verzoek tot luchten is geaccepteerd, voordat nieuwe automatische/PID-starts zo nodig weer mogen. 0–30 minuten, standaard 5; 0 schakelt het wachten uit. Beveiligingen voor open ramen en minimale bedrijfstijden blijven gelden."
+          "window_open_timeout_minutes": "Wachttijd nadat een verzoek tot luchten is geaccepteerd, voordat nieuwe automatische/PID-starts zo nodig weer mogen. 0–30 minuten, standaard 5; 0 schakelt het wachten uit. Beveiligingen voor open ramen en minimale bedrijfstijden blijven gelden.",
+          "window_close_cooldown_minutes": "Wanneer een raam wordt geopend na een ventilatieadvies van HEM, wacht HEM dit aantal minuten voordat het voorstelt het raam te sluiten, ook als de buitenomstandigheden ongeschikt zijn. De wachttijd geldt afzonderlijk voor elke kamer. 0–60 minuten, standaard 5; 0 schakelt de wachttijd uit. De regels voor het pauzeren en beschermen van apparaten blijven actief."
         }
       },
       "reconfigure": {
@@ -2248,7 +2250,8 @@
           "general_wake_lead_minutes_entity": "Slaap · Minuten vóór de wekker",
           "window_open_timeout_minutes": "Wachttijd voor raam openen (min)",
           "general_source_freshness_mode": "Woningbezetting · Geldigheidsbeleid",
-          "global_threshold_max_age_mode": "Omgeving · Geldigheidsbeleid"
+          "global_threshold_max_age_mode": "Omgeving · Geldigheidsbeleid",
+          "window_close_cooldown_minutes": "Wachttijd voordat sluiten van het raam wordt voorgesteld (min)"
         },
         "data_description": {
           "weather_entities": "Kies: Weer en waarschuwingen · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2303,7 +2306,8 @@
           "general_wake_lead_minutes_entity": "Kies een numerieke entiteit met een niet-negatief aantal minuten, met eenheid min of zonder eenheid. Een wekker om 07:00 met waarde 30 beëindigt automatische slaap om 06:30; 0 betekent bij het afgaan. Wis beide bronnen om uit te schakelen.",
           "window_open_timeout_minutes": "Wachttijd nadat een verzoek tot luchten is geaccepteerd, voordat nieuwe automatische/PID-starts zo nodig weer mogen. 0–30 minuten, standaard 5; 0 schakelt het wachten uit. Beveiligingen voor open ramen en minimale bedrijfstijden blijven gelden.",
           "general_source_freshness_mode": "Automatisch: numerieke personentellers en afwezigheidsmeldingen van woningtrackers worden maximaal 240 minuten geaccepteerd; een geldige ongewijzigde status Thuis kan geldig blijven tot die verandert. Onbekende, uit opslag herstelde en niet-beschikbare bronnen bewijzen geen afwezigheid. Aangepast: gebruik de minutenwaarde hieronder voor bemonsterde meldingen. Kamerlijsten blijven afhankelijk van statusveranderingen.",
-          "global_threshold_max_age_mode": "Automatisch: weerentiteiten kunnen 180 minuten geldig blijven en andere numerieke omgevingsmetingen 90 minuten; geldige binaire contacten die door statusveranderingen worden gestuurd blijven bruikbaar zonder inactiviteitsverval. Aangepast: gebruik de minutenwaarde hieronder. Beschikbaarheidscontroles en controles op herstelde status blijven altijd gelden. In Home Assistant verandert last_reported bij opnieuw schrijven van de status, ook met dezelfde waarde, en niet alleen door het verstrijken van tijd."
+          "global_threshold_max_age_mode": "Automatisch: weerentiteiten kunnen 180 minuten geldig blijven en andere numerieke omgevingsmetingen 90 minuten; geldige binaire contacten die door statusveranderingen worden gestuurd blijven bruikbaar zonder inactiviteitsverval. Aangepast: gebruik de minutenwaarde hieronder. Beschikbaarheidscontroles en controles op herstelde status blijven altijd gelden. In Home Assistant verandert last_reported bij opnieuw schrijven van de status, ook met dezelfde waarde, en niet alleen door het verstrijken van tijd.",
+          "window_close_cooldown_minutes": "Wanneer een raam wordt geopend na een ventilatieadvies van HEM, wacht HEM dit aantal minuten voordat het voorstelt het raam te sluiten, ook als de buitenomstandigheden ongeschikt zijn. De wachttijd geldt afzonderlijk voor elke kamer. 0–60 minuten, standaard 5; 0 schakelt de wachttijd uit. De regels voor het pauzeren en beschermen van apparaten blijven actief."
         }
       },
       "room_occupancy": {
@@ -3880,6 +3884,9 @@
             "name": "Hulp"
           }
         }
+      },
+      "global_setting_window_close_cooldown_minutes": {
+        "name": "Ventilatie · Wachttijd voordat sluiten van het raam wordt voorgesteld (min)"
       }
     },
     "switch": {

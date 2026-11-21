@@ -230,7 +230,8 @@
           "general_home_policy": "Có mặt ở nhà",
           "general_wake_alarm_entity": "Ngủ · Báo thức tiếp theo",
           "general_wake_lead_minutes_entity": "Ngủ · Số phút trước báo thức",
-          "window_open_timeout_minutes": "Thời gian chờ mở cửa sổ (phút)"
+          "window_open_timeout_minutes": "Thời gian chờ mở cửa sổ (phút)",
+          "window_close_cooldown_minutes": "Thời gian chờ trước khi đề nghị đóng cửa sổ (phút)"
         },
         "data_description": {
           "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -283,7 +284,8 @@
           "general_home_policy": "Một người được xác minh là đang ở nhà luôn khiến nhà được coi là có người. Tùy chọn „Tất cả ở nhà” được giữ cho cấu hình hiện có và dùng cùng quy tắc. Trạng thái „Vắng nhà” cần sự vắng mặt đã được xác minh; trạng thái không xác định của một thiết bị theo dõi đã chọn không thể chứng minh rằng mọi người đều đã rời đi.",
           "general_wake_alarm_entity": "Chọn thực thể giờ hoặc ngày giờ của báo thức tiếp theo và thực thể số phút sớm hơn. HEM kết thúc chế độ ngủ tự động sớm hơn số phút đó để tiếp tục các mục tiêu thông thường. Giờ không có ngày dùng múi giờ Home Assistant. Vắng nhà, điều khiển thủ công và bảo vệ thiết bị vẫn được ưu tiên.",
           "general_wake_lead_minutes_entity": "Chọn thực thể số có giá trị phút không âm, đơn vị min hoặc không có đơn vị. Báo thức 07:00 và giá trị 30 kết thúc ngủ tự động lúc 06:30; 0 nghĩa là khi báo thức reo. Để tắt tính năng, xóa cả hai nguồn.",
-          "window_open_timeout_minutes": "Chờ sau khi yêu cầu thông gió được chấp nhận trước khi cho phép khởi động tự động/PID mới nếu vẫn cần. 0–30 phút, mặc định 5; 0 tắt thời gian chờ. Bảo vệ khi cửa sổ mở và thời gian tối thiểu của thiết bị vẫn áp dụng."
+          "window_open_timeout_minutes": "Chờ sau khi yêu cầu thông gió được chấp nhận trước khi cho phép khởi động tự động/PID mới nếu vẫn cần. 0–30 phút, mặc định 5; 0 tắt thời gian chờ. Bảo vệ khi cửa sổ mở và thời gian tối thiểu của thiết bị vẫn áp dụng.",
+          "window_close_cooldown_minutes": "Sau khi cửa sổ được mở theo đề nghị của HEM, chờ số phút này trước khi đề nghị đóng lại, ngay cả khi điều kiện bên ngoài không phù hợp. Thời gian chờ được tính riêng cho từng phòng. 0–60 phút, mặc định 5; 0 tắt thời gian chờ. Các quy tắc tạm dừng và bảo vệ thiết bị vẫn có hiệu lực."
         }
       },
       "reconfigure": {
@@ -2248,7 +2250,8 @@
           "general_wake_lead_minutes_entity": "Ngủ · Số phút trước báo thức",
           "window_open_timeout_minutes": "Thời gian chờ mở cửa sổ (phút)",
           "general_source_freshness_mode": "Hiện diện tại nhà · Chính sách hiệu lực",
-          "global_threshold_max_age_mode": "Môi trường · Chính sách hiệu lực"
+          "global_threshold_max_age_mode": "Môi trường · Chính sách hiệu lực",
+          "window_close_cooldown_minutes": "Thời gian chờ trước khi đề nghị đóng cửa sổ (phút)"
         },
         "data_description": {
           "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2303,7 +2306,8 @@
           "general_wake_lead_minutes_entity": "Chọn thực thể số có giá trị phút không âm, đơn vị min hoặc không có đơn vị. Báo thức 07:00 và giá trị 30 kết thúc ngủ tự động lúc 06:30; 0 nghĩa là khi báo thức reo. Để tắt tính năng, xóa cả hai nguồn.",
           "window_open_timeout_minutes": "Chờ sau khi yêu cầu thông gió được chấp nhận trước khi cho phép khởi động tự động/PID mới nếu vẫn cần. 0–30 phút, mặc định 5; 0 tắt thời gian chờ. Bảo vệ khi cửa sổ mở và thời gian tối thiểu của thiết bị vẫn áp dụng.",
           "general_source_freshness_mode": "Tự động: bộ đếm số người dạng số và báo cáo phủ định của thiết bị theo dõi ở nhà được chấp nhận trong tối đa 240 phút; trạng thái „Ở nhà” hợp lệ, không đổi có thể tiếp tục là „Ở nhà” cho đến khi thay đổi. Nguồn không xác định, đã khôi phục hoặc không khả dụng không thể chứng minh sự vắng mặt. Tùy chỉnh: dùng số phút bên dưới cho báo cáo được lấy mẫu. Nguồn danh sách phòng vẫn hoạt động theo thay đổi.",
-          "global_threshold_max_age_mode": "Tự động: thực thể thời tiết có thể còn hợp lệ trong 180 phút, các phép đo môi trường dạng số khác trong 90 phút, còn tiếp điểm nhị phân hợp lệ hoạt động theo thay đổi vẫn dùng được mà không hết hạn do không hoạt động. Tùy chỉnh: dùng số phút bên dưới. Các kiểm tra tính khả dụng và trạng thái đã khôi phục luôn áp dụng. Trong Home Assistant, last_reported chỉ tiến lên khi ghi lại cùng một giá trị, không phải chỉ vì thời gian đã trôi qua."
+          "global_threshold_max_age_mode": "Tự động: thực thể thời tiết có thể còn hợp lệ trong 180 phút, các phép đo môi trường dạng số khác trong 90 phút, còn tiếp điểm nhị phân hợp lệ hoạt động theo thay đổi vẫn dùng được mà không hết hạn do không hoạt động. Tùy chỉnh: dùng số phút bên dưới. Các kiểm tra tính khả dụng và trạng thái đã khôi phục luôn áp dụng. Trong Home Assistant, last_reported chỉ tiến lên khi ghi lại cùng một giá trị, không phải chỉ vì thời gian đã trôi qua.",
+          "window_close_cooldown_minutes": "Sau khi cửa sổ được mở theo đề nghị của HEM, chờ số phút này trước khi đề nghị đóng lại, ngay cả khi điều kiện bên ngoài không phù hợp. Thời gian chờ được tính riêng cho từng phòng. 0–60 phút, mặc định 5; 0 tắt thời gian chờ. Các quy tắc tạm dừng và bảo vệ thiết bị vẫn có hiệu lực."
         }
       },
       "room_occupancy": {
@@ -3880,6 +3884,9 @@
             "name": "Trợ giúp"
           }
         }
+      },
+      "global_setting_window_close_cooldown_minutes": {
+        "name": "Thông gió · Thời gian chờ trước khi đề nghị đóng cửa sổ (phút)"
       }
     },
     "switch": {

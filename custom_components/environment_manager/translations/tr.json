@@ -230,7 +230,8 @@
           "general_home_policy": "Evde bulunma",
           "general_wake_alarm_entity": "Uyku · Sonraki alarm",
           "general_wake_lead_minutes_entity": "Uyku · Alarmdan kaç dakika önce",
-          "window_open_timeout_minutes": "Pencere açma bekleme süresi (dk)"
+          "window_open_timeout_minutes": "Pencere açma bekleme süresi (dk)",
+          "window_close_cooldown_minutes": "Pencereyi kapatmayı önermeden önce bekleme (dk)"
         },
         "data_description": {
           "weather_entities": "Seçin: Hava durumu ve uyarılar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -283,7 +284,8 @@
           "general_home_policy": "Evde olduğu doğrulanmış bir kişi, evin her zaman dolu sayılmasını sağlar. Mevcut yapılandırmalar için „Herkes evde” korunur ve aynı kuralı kullanır. „Evde yok” durumu doğrulanmış yokluk gerektirir; seçilen bir takipçinin bilinmeyen durumu herkesin ayrıldığını kanıtlayamaz.",
           "general_wake_alarm_entity": "Sonraki alarm için saat veya tarih ve saat varlığını ve öndeki dakika varlığını seçin. HEM otomatik uykuyu bu kadar dakika önce bitirerek normal hedeflere döner. Tarihsiz saatler Home Assistant saat dilimini kullanır. Evde olmama, elle kontrol ve cihaz korumaları önceliğini korur.",
           "general_wake_lead_minutes_entity": "Negatif olmayan dakika değeri içeren sayısal bir varlık seçin; birim min olmalı veya boş bırakılmalıdır. 07:00 alarmı ve 30 değeri otomatik uykuyu 06:30’da bitirir; 0 alarmın çaldığı an demektir. Kapatmak için iki kaynağı da temizleyin.",
-          "window_open_timeout_minutes": "Havalandırma isteği kabul edildikten sonra, hâlâ gerekliyse yeni otomatik/PID başlatmalarına izin verilmeden önce beklenen süre. 0–30 dakika, varsayılan 5; 0 beklemeyi kapatır. Açık pencere korumaları ve cihazların asgari çalışma süreleri geçerliliğini korur."
+          "window_open_timeout_minutes": "Havalandırma isteği kabul edildikten sonra, hâlâ gerekliyse yeni otomatik/PID başlatmalarına izin verilmeden önce beklenen süre. 0–30 dakika, varsayılan 5; 0 beklemeyi kapatır. Açık pencere korumaları ve cihazların asgari çalışma süreleri geçerliliğini korur.",
+          "window_close_cooldown_minutes": "HEM’in havalandırma önerisinin ardından bir pencere açıldığında, dış koşullar uygun olmasa bile kapatılmasını önermeden önce bu kadar dakika bekler. Bekleme süresi her oda için ayrı hesaplanır. 0–60 dakika, varsayılan 5; 0 beklemeyi devre dışı bırakır. Cihazları duraklatma ve koruma kuralları etkin kalır."
         }
       },
       "reconfigure": {
@@ -2248,7 +2250,8 @@
           "general_wake_lead_minutes_entity": "Uyku · Alarmdan kaç dakika önce",
           "window_open_timeout_minutes": "Pencere açma bekleme süresi (dk)",
           "general_source_freshness_mode": "Evde bulunma · Geçerlilik ilkesi",
-          "global_threshold_max_age_mode": "Çevre · Geçerlilik ilkesi"
+          "global_threshold_max_age_mode": "Çevre · Geçerlilik ilkesi",
+          "window_close_cooldown_minutes": "Pencereyi kapatmayı önermeden önce bekleme (dk)"
         },
         "data_description": {
           "weather_entities": "Seçin: Hava durumu ve uyarılar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2303,7 +2306,8 @@
           "general_wake_lead_minutes_entity": "Negatif olmayan dakika değeri içeren sayısal bir varlık seçin; birim min olmalı veya boş bırakılmalıdır. 07:00 alarmı ve 30 değeri otomatik uykuyu 06:30’da bitirir; 0 alarmın çaldığı an demektir. Kapatmak için iki kaynağı da temizleyin.",
           "window_open_timeout_minutes": "Havalandırma isteği kabul edildikten sonra, hâlâ gerekliyse yeni otomatik/PID başlatmalarına izin verilmeden önce beklenen süre. 0–30 dakika, varsayılan 5; 0 beklemeyi kapatır. Açık pencere korumaları ve cihazların asgari çalışma süreleri geçerliliğini korur.",
           "general_source_freshness_mode": "Otomatik: sayısal kişi sayaçları ve ev takipçilerinin olumsuz bildirimleri en fazla 240 dakika kabul edilir; geçerli ve değişmemiş bir „Evde” durumu değişene kadar „Evde” kalabilir. Bilinmeyen, geri yüklenmiş ve kullanılamayan kaynaklar yokluğu kanıtlayamaz. Özel: örneklenen bildirimler için aşağıdaki dakika değerini kullanır. Oda listesi kaynakları değişiklik temelli kalır.",
-          "global_threshold_max_age_mode": "Otomatik: hava durumu varlıkları 180 dakika, diğer sayısal çevre ölçümleri 90 dakika geçerli kalabilir; değişiklik temelli geçerli ikili kontaklar ise hareketsizlik zaman aşımı olmadan kullanılabilir. Özel: aşağıdaki dakika değerini kullanır. Kullanılabilirlik ve geri yüklenen durum denetimleri her zaman uygulanır. Home Assistant last_reported, yalnızca zaman geçtiği için değil, aynı değer tekrar yazıldığında ilerler."
+          "global_threshold_max_age_mode": "Otomatik: hava durumu varlıkları 180 dakika, diğer sayısal çevre ölçümleri 90 dakika geçerli kalabilir; değişiklik temelli geçerli ikili kontaklar ise hareketsizlik zaman aşımı olmadan kullanılabilir. Özel: aşağıdaki dakika değerini kullanır. Kullanılabilirlik ve geri yüklenen durum denetimleri her zaman uygulanır. Home Assistant last_reported, yalnızca zaman geçtiği için değil, aynı değer tekrar yazıldığında ilerler.",
+          "window_close_cooldown_minutes": "HEM’in havalandırma önerisinin ardından bir pencere açıldığında, dış koşullar uygun olmasa bile kapatılmasını önermeden önce bu kadar dakika bekler. Bekleme süresi her oda için ayrı hesaplanır. 0–60 dakika, varsayılan 5; 0 beklemeyi devre dışı bırakır. Cihazları duraklatma ve koruma kuralları etkin kalır."
         }
       },
       "room_occupancy": {
@@ -3880,6 +3884,9 @@
             "name": "Yardım"
           }
         }
+      },
+      "global_setting_window_close_cooldown_minutes": {
+        "name": "Havalandırma · Pencereyi kapatmayı önermeden önce bekleme (dk)"
       }
     },
     "switch": {

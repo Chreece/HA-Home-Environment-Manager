@@ -230,7 +230,8 @@
           "general_home_policy": "Prisutnost kod kuće",
           "general_wake_alarm_entity": "Spavanje · Sljedeći alarm",
           "general_wake_lead_minutes_entity": "Spavanje · Minute prije alarma",
-          "window_open_timeout_minutes": "Čekanje na otvaranje prozora (min)"
+          "window_open_timeout_minutes": "Čekanje na otvaranje prozora (min)",
+          "window_close_cooldown_minutes": "Čekanje prije prijedloga za zatvaranje prozora (min)"
         },
         "data_description": {
           "weather_entities": "Odaberite: Vrijeme i upozorenja · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -283,7 +284,8 @@
           "general_home_policy": "Potvrđena prisutnost osobe kod kuće uvijek znači da je dom zauzet. Opcija „Svi kod kuće” zadržana je za postojeće konfiguracije i koristi isto pravilo. Stanje „Odsutnost” zahtijeva potvrđenu odsutnost; nepoznato stanje odabranog uređaja za praćenje ne dokazuje da su svi otišli.",
           "general_wake_alarm_entity": "Odaberite entitet vremena ili datuma i vremena sljedećeg alarma te entitet za minute. HEM završava automatsko spavanje toliko minuta ranije i vraća uobičajene ciljeve. Vrijeme bez datuma koristi vremensku zonu Home Assistanta. Odsutnost, ručno upravljanje i zaštite zadržavaju prednost.",
           "general_wake_lead_minutes_entity": "Odaberite brojčani entitet s nenegativnim brojem minuta, s jedinicom min ili bez jedinice. Alarm u 07:00 i vrijednost 30 završavaju automatsko spavanje u 06:30; 0 znači pri zvonjavi. Za isključivanje uklonite oba izvora.",
-          "window_open_timeout_minutes": "Čekanje nakon prihvaćanja zahtjeva za prozračivanje prije dopuštanja novih automatskih/PID pokretanja ako su potrebna. 0–30 minuta, zadano 5; 0 isključuje čekanje. Zaštite pri otvorenom prozoru i minimalna vremena rada uređaja i dalje vrijede."
+          "window_open_timeout_minutes": "Čekanje nakon prihvaćanja zahtjeva za prozračivanje prije dopuštanja novih automatskih/PID pokretanja ako su potrebna. 0–30 minuta, zadano 5; 0 isključuje čekanje. Zaštite pri otvorenom prozoru i minimalna vremena rada uređaja i dalje vrijede.",
+          "window_close_cooldown_minutes": "Nakon što se prozor otvori na preporuku HEM-a, čeka ovoliko minuta prije nego što predloži zatvaranje, čak i ako vanjski uvjeti nisu prikladni. Vrijeme čekanja računa se zasebno za svaku prostoriju. 0–60 minuta, zadano 5; 0 isključuje čekanje. Pravila pauziranja rada i zaštite uređaja ostaju aktivna."
         }
       },
       "reconfigure": {
@@ -2248,7 +2250,8 @@
           "general_wake_lead_minutes_entity": "Spavanje · Minute prije alarma",
           "window_open_timeout_minutes": "Čekanje na otvaranje prozora (min)",
           "general_source_freshness_mode": "Prisutnost u domu · Pravilo valjanosti",
-          "global_threshold_max_age_mode": "Okoliš · Pravilo valjanosti"
+          "global_threshold_max_age_mode": "Okoliš · Pravilo valjanosti",
+          "window_close_cooldown_minutes": "Čekanje prije prijedloga za zatvaranje prozora (min)"
         },
         "data_description": {
           "weather_entities": "Odaberite: Vrijeme i upozorenja · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2303,7 +2306,8 @@
           "general_wake_lead_minutes_entity": "Odaberite brojčani entitet s nenegativnim brojem minuta, s jedinicom min ili bez jedinice. Alarm u 07:00 i vrijednost 30 završavaju automatsko spavanje u 06:30; 0 znači pri zvonjavi. Za isključivanje uklonite oba izvora.",
           "window_open_timeout_minutes": "Čekanje nakon prihvaćanja zahtjeva za prozračivanje prije dopuštanja novih automatskih/PID pokretanja ako su potrebna. 0–30 minuta, zadano 5; 0 isključuje čekanje. Zaštite pri otvorenom prozoru i minimalna vremena rada uređaja i dalje vrijede.",
           "general_source_freshness_mode": "Automatski: brojčani brojači osoba i negativna izvješća kućnih uređaja za praćenje prihvaćaju se do 240 minuta; valjano nepromijenjeno stanje „Kod kuće” može ostati takvo dok se ne promijeni. Nepoznati, obnovljeni i nedostupni izvori ne mogu dokazati odsutnost. Prilagođeno: za uzorkovana izvješća koristite broj minuta u nastavku. Izvori popisa prostorija i dalje se temelje na promjenama.",
-          "global_threshold_max_age_mode": "Automatski: vremenski entiteti mogu ostati valjani 180 minuta, ostala brojčana mjerenja okoliša 90 minuta, dok valjani binarni kontakti koji se temelje na promjenama ostaju upotrebljivi bez vremenskog ograničenja neaktivnosti. Prilagođeno: koristite broj minuta u nastavku. Provjere dostupnosti i obnovljenog stanja uvijek vrijede. U Home Assistantu last_reported se ažurira ponovnim zapisom iste vrijednosti, a ne samo zbog proteka vremena."
+          "global_threshold_max_age_mode": "Automatski: vremenski entiteti mogu ostati valjani 180 minuta, ostala brojčana mjerenja okoliša 90 minuta, dok valjani binarni kontakti koji se temelje na promjenama ostaju upotrebljivi bez vremenskog ograničenja neaktivnosti. Prilagođeno: koristite broj minuta u nastavku. Provjere dostupnosti i obnovljenog stanja uvijek vrijede. U Home Assistantu last_reported se ažurira ponovnim zapisom iste vrijednosti, a ne samo zbog proteka vremena.",
+          "window_close_cooldown_minutes": "Nakon što se prozor otvori na preporuku HEM-a, čeka ovoliko minuta prije nego što predloži zatvaranje, čak i ako vanjski uvjeti nisu prikladni. Vrijeme čekanja računa se zasebno za svaku prostoriju. 0–60 minuta, zadano 5; 0 isključuje čekanje. Pravila pauziranja rada i zaštite uređaja ostaju aktivna."
         }
       },
       "room_occupancy": {
@@ -3880,6 +3884,9 @@
             "name": "Pomoć"
           }
         }
+      },
+      "global_setting_window_close_cooldown_minutes": {
+        "name": "Ventilacija · Čekanje prije prijedloga za zatvaranje prozora (min)"
       }
     },
     "switch": {

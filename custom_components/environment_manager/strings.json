@@ -230,7 +230,8 @@
           "general_home_policy": "Home Occupancy",
           "general_wake_alarm_entity": "Sleep · Next alarm",
           "general_wake_lead_minutes_entity": "Sleep · Minutes before alarm",
-          "window_open_timeout_minutes": "Wait for window opening (min)"
+          "window_open_timeout_minutes": "Wait for window opening (min)",
+          "window_close_cooldown_minutes": "Wait before suggesting window closure (min)"
         },
         "data_description": {
           "weather_entities": "At least one weather provider. Rain, storms and extreme wind/temperature block opening. Mold indication uses the current temperature attribute (°C/°F) of a selected weather entity for outdoor temperature. Choose a source that reports temperature.",
@@ -283,7 +284,8 @@
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Select the Home Assistant source reporting the next wake alarm. HEM can end an automatically selected sleep profile before the alarm only when a corresponding minutes-before-alarm source is also configured. Both sources must be selected together; an unavailable source never proves that a wake time was reached.",
           "general_wake_lead_minutes_entity": "Select the source reporting how many minutes before the next wake alarm HEM should end automatic sleep. This must be paired with the next-alarm source, or both left unselected. An invalid/unknown value does not force a wake transition.",
-          "window_open_timeout_minutes": "Wait after an opening request is accepted before new automatic/PID starts resume if still needed. 0–30 minutes, default 5; 0 disables waiting. Existing open-window and device timing protections still apply."
+          "window_open_timeout_minutes": "Wait after an opening request is accepted before new automatic/PID starts resume if still needed. 0–30 minutes, default 5; 0 disables waiting. Existing open-window and device timing protections still apply.",
+          "window_close_cooldown_minutes": "After a window opens following HEM opening advice, wait this many minutes before suggesting that it be closed, even when outside conditions are unsuitable. Applies independently to each room. 0–60 minutes, default 5; 0 disables the delay. Device pause and protection rules remain active."
         }
       },
       "reconfigure": {
@@ -2248,7 +2250,8 @@
           "general_wake_lead_minutes_entity": "Sleep · Minutes before alarm",
           "window_open_timeout_minutes": "Wait for window opening (min)",
           "general_source_freshness_mode": "Home occupancy · Validity policy",
-          "global_threshold_max_age_mode": "Environment · Validity policy"
+          "global_threshold_max_age_mode": "Environment · Validity policy",
+          "window_close_cooldown_minutes": "Wait before suggesting window closure (min)"
         },
         "data_description": {
           "weather_entities": "At least one weather provider. Rain, storms and extreme wind/temperature block opening. Mold indication uses the current temperature attribute (°C/°F) of a selected weather entity for outdoor temperature. Choose a source that reports temperature.",
@@ -2303,7 +2306,8 @@
           "general_wake_lead_minutes_entity": "Select the source reporting how many minutes before the next wake alarm HEM should end automatic sleep. This must be paired with the next-alarm source, or both left unselected. An invalid/unknown value does not force a wake transition.",
           "window_open_timeout_minutes": "Wait after an opening request is accepted before new automatic/PID starts resume if still needed. 0–30 minutes, default 5; 0 disables waiting. Existing open-window and device timing protections still apply.",
           "general_source_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven.",
-          "global_threshold_max_age_mode": "Automatic: weather entities can remain valid for 180 minutes, other numeric environmental measurements for 90 minutes, while valid change-driven binary contacts remain usable without an inactivity timeout. Custom: use the minute value below. Availability and restored-state checks always apply. Home Assistant last_reported advances on a repeated same-value write, not merely because time has passed."
+          "global_threshold_max_age_mode": "Automatic: weather entities can remain valid for 180 minutes, other numeric environmental measurements for 90 minutes, while valid change-driven binary contacts remain usable without an inactivity timeout. Custom: use the minute value below. Availability and restored-state checks always apply. Home Assistant last_reported advances on a repeated same-value write, not merely because time has passed.",
+          "window_close_cooldown_minutes": "After a window opens following HEM opening advice, wait this many minutes before suggesting that it be closed, even when outside conditions are unsuitable. Applies independently to each room. 0–60 minutes, default 5; 0 disables the delay. Device pause and protection rules remain active."
         }
       },
       "room_occupancy": {
@@ -3880,6 +3884,9 @@
             "name": "Help"
           }
         }
+      },
+      "global_setting_window_close_cooldown_minutes": {
+        "name": "Ventilation · Wait before suggesting window closure (min)"
       }
     },
     "switch": {

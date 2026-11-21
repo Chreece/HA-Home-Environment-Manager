@@ -19,6 +19,8 @@ from .const import (
     CONF_AWAY_WINDOWS_ALERT, CONF_AWAY_WINDOWS_PERSONS, CONF_AWAY_WINDOWS_DELIVERY,
     CONF_THRESHOLDS, DEFAULT_THRESHOLDS,
     CONF_WINDOW_OPEN_TIMEOUT_MINUTES, DEFAULT_WINDOW_OPEN_TIMEOUT_MINUTES,
+    CONF_WINDOW_CLOSE_COOLDOWN_MINUTES, DEFAULT_WINDOW_CLOSE_COOLDOWN_MINUTES,
+    MAX_WINDOW_CLOSE_COOLDOWN_MINUTES,
     MAX_WINDOW_OPEN_TIMEOUT_MINUTES,
 )
 from . import room_sources as sources
@@ -486,6 +488,8 @@ class RoomSetupMixin:
                 self._values.get(CONF_LANGUAGE, "auto")) or "auto").lower(),
             CONF_WINDOW_OPEN_TIMEOUT_MINUTES: self._values.get(
                 CONF_WINDOW_OPEN_TIMEOUT_MINUTES, DEFAULT_WINDOW_OPEN_TIMEOUT_MINUTES),
+            CONF_WINDOW_CLOSE_COOLDOWN_MINUTES: self._values.get(
+                CONF_WINDOW_CLOSE_COOLDOWN_MINUTES, DEFAULT_WINDOW_CLOSE_COOLDOWN_MINUTES),
             CONF_USE_MOLD: self._values.get(CONF_USE_MOLD, False),
             CONF_AWAY_WINDOWS_ALERT: self._values.get(CONF_AWAY_WINDOWS_ALERT, False),
             CONF_AWAY_WINDOWS_PERSONS: self._values.get(CONF_AWAY_WINDOWS_PERSONS, []),
@@ -561,6 +565,15 @@ class RoomSetupMixin:
                     or not window_timeout.is_integer()
                     or not 0 <= window_timeout <= MAX_WINDOW_OPEN_TIMEOUT_MINUTES):
                 errors[CONF_WINDOW_OPEN_TIMEOUT_MINUTES] = "invalid_room_source"
+            raw_close_cooldown = value[CONF_WINDOW_CLOSE_COOLDOWN_MINUTES]
+            try:
+                close_cooldown = float(raw_close_cooldown)
+            except (TypeError, ValueError, OverflowError):
+                close_cooldown = float("nan")
+            if (isinstance(raw_close_cooldown, bool) or not math.isfinite(close_cooldown)
+                    or not close_cooldown.is_integer()
+                    or not 0 <= close_cooldown <= MAX_WINDOW_CLOSE_COOLDOWN_MINUTES):
+                errors[CONF_WINDOW_CLOSE_COOLDOWN_MINUTES] = "invalid_room_source"
             if ((value["general_wake_alarm_entity"] == "none") !=
                     (value["general_wake_lead_minutes_entity"] == "none")):
                 errors["general_wake_lead_minutes_entity"] = "wake_sources_pair"
@@ -680,6 +693,7 @@ class RoomSetupMixin:
                     else language
                 )
                 self._values[CONF_WINDOW_OPEN_TIMEOUT_MINUTES] = int(window_timeout)
+                self._values[CONF_WINDOW_CLOSE_COOLDOWN_MINUTES] = int(close_cooldown)
                 self._values[CONF_USE_MOLD] = value[CONF_USE_MOLD]
                 self._values[CONF_AWAY_WINDOWS_ALERT] = value[CONF_AWAY_WINDOWS_ALERT]
                 from .hub_delivery import hub_installed
@@ -790,6 +804,10 @@ class RoomSetupMixin:
         fields[field(CONF_WINDOW_OPEN_TIMEOUT_MINUTES, value[CONF_WINDOW_OPEN_TIMEOUT_MINUTES])] = (
             selector.NumberSelector(selector.NumberSelectorConfig(
                 min=0, max=MAX_WINDOW_OPEN_TIMEOUT_MINUTES, step=1,
+                unit_of_measurement="min", mode=selector.NumberSelectorMode.BOX)))
+        fields[field(CONF_WINDOW_CLOSE_COOLDOWN_MINUTES, value[CONF_WINDOW_CLOSE_COOLDOWN_MINUTES])] = (
+            selector.NumberSelector(selector.NumberSelectorConfig(
+                min=0, max=MAX_WINDOW_CLOSE_COOLDOWN_MINUTES, step=1,
                 unit_of_measurement="min", mode=selector.NumberSelectorMode.BOX)))
         fields[field(CONF_LANGUAGE, value[CONF_LANGUAGE])] = select(
             language_choices, translation_key="output_language")

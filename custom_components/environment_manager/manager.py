@@ -66,6 +66,7 @@ from .presence_continuity import PresenceContinuity
 from .arrival_preparation import ArrivalPreparation, room_eligible
 from .room_ventilation import RoomVentilationMonitor, has_indoor_air_sensor, thermal_targets
 from .window_open_wait import WindowOpeningWait, pending_demands
+from .window_close_cooldown import WindowCloseCooldown
 from .lifecycle import is_running, is_stopping, create_background_task
 from .notification_delivery import delivery_allowed, async_call_notification
 
@@ -118,6 +119,7 @@ class AirQualityManager:
         self.arrival_preparation = ArrivalPreparation(self)
         self.ventilation = RoomVentilationMonitor()
         self.window_open_wait = WindowOpeningWait(self)
+        self.window_close_cooldown = WindowCloseCooldown(self)
         self.equipment = EquipmentRuntime(self)
         from .device_faults import NativeDeviceFaultMonitor
         self.faults = NativeDeviceFaultMonitor(self)
@@ -1337,6 +1339,9 @@ class AirQualityManager:
         if not native_room_source(self.hass, entity_id):
             return  # Never use our own climate/overview as measurement input.
         old, new = event.data.get("old_state"), event.data.get("new_state")
+        close_cooldown = getattr(self, "window_close_cooldown", None)
+        if close_cooldown is not None:
+            close_cooldown.state_changed(entity_id, old, new)
         door_monitor = getattr(self, "door_context", None)
         if door_monitor is not None:
             door_monitor.state_changed(entity_id, old, new, time())
@@ -1405,6 +1410,9 @@ class AirQualityManager:
         if not self._active or getattr(self, "_stopping", False) or is_stopping(self.hass):
             return
         new_plan = self.window_open_wait.prepare(self._capture())
+        close_cooldown = getattr(self, "window_close_cooldown", None)
+        if close_cooldown is not None:
+            new_plan = close_cooldown.prepare(new_plan)
         previous_plan = self.plan
         # Always keep the newest evidence and schedule the physical drivers;
         # only publish state when sensor observations or decisions changed.
@@ -1687,6 +1695,8 @@ class AirQualityManager:
             ("shading",self.shading),
             ("presence_continuity",self.presence_continuity),
             ("arrival_preparation",self.arrival_preparation),
+            *((("window_close_cooldown", self.window_close_cooldown),)
+              if getattr(self, "window_close_cooldown", None) is not None else ()),
             ("pid",self.pid),("native_climate",self.native_climate),
             ("direct_climate",self.direct_climate),
             ("native_humidity",self.native_humidity),
@@ -1845,6 +1855,7 @@ class AirQualityManager:
         sent = 0
         errors: list[str] = []
         waiter = getattr(self,"window_open_wait",None)
+        close_cooldown = getattr(self, "window_close_cooldown", None)
         for rec in all_notices:
             if getattr(self, "_stopping", False) or not delivery_allowed(self.hass):
                 break
@@ -1860,6 +1871,21 @@ class AirQualityManager:
             if current is None:
                 continue
             rec = current
+
+            def close_is_current():
+                # A user may open a window while an older CLOSE is waiting
+                # for AI or another output. Recheck at each transport boundary.
+                if rec.action != "close":
+                    return True
+                if close_cooldown is not None and close_cooldown.blocks(rec.area_id):
+                    return False
+                return any(item.action_signature == rec.action_signature
+                           and item.reason_signature == rec.reason_signature
+                           for item in (*self.plan.recommendations,
+                                        *self.plan.climate_recommendations))
+
+            if not close_is_current():
+                continue
             should_announce = getattr(waiter, "should_announce", None)
             if channels == "auto" and callable(should_announce) and not should_announce(rec):
                 continue
@@ -1932,6 +1958,11 @@ class AirQualityManager:
                     self.hass, delivery_rec, message, localized, agent,
                 )
 
+            if not close_is_current():
+                if waiter is not None:
+                    waiter.submission_failed(rec)
+                continue
+
             dispatched = False
             if can_notify:
                 try:
@@ -1945,7 +1976,7 @@ class AirQualityManager:
                     _LOGGER.warning("Direct notification failed: %s", ex)
                     errors.append(str(ex))
 
-            if can_speak:
+            if can_speak and close_is_current():
                 try:
                     data: dict[str, Any] = {
                         "media_player_entity_id": tts_players, "message": message,
@@ -1964,13 +1995,17 @@ class AirQualityManager:
                     _LOGGER.warning("Direct TTS failed: %s", ex)
                     errors.append(str(ex))
 
-            if not dispatched and (prefer_hub or visual):
+            if not dispatched and (prefer_hub or visual) and close_is_current():
                 # Update one notification per room rather than stacking alerts.
                 if await async_system_notification(
                     self.hass, title, message, rec.area_id
                 ):
                     sent += 1
                     dispatched = True
+            if not dispatched and not close_is_current():
+                if waiter is not None:
+                    waiter.submission_failed(rec)
+                continue
             if not dispatched:
                 if waiter is not None:
                     waiter.submission_failed(rec)

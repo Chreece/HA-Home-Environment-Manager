@@ -230,7 +230,8 @@
           "general_home_policy": "在家狀態",
           "general_wake_alarm_entity": "睡眠 · 下次鬧鐘",
           "general_wake_lead_minutes_entity": "睡眠 · 鬧鐘響鈴前的分鐘數",
-          "window_open_timeout_minutes": "等候開窗時間（分鐘）"
+          "window_open_timeout_minutes": "等候開窗時間（分鐘）",
+          "window_close_cooldown_minutes": "建議關窗前的等待時間（分鐘）"
         },
         "data_description": {
           "weather_entities": "請選擇: 天氣與警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -283,7 +284,8 @@
           "general_home_policy": "只要確認有人在家，就始終認為家中有人。為相容既有設定而保留的「所有人在家」也使用同一規則。「離家」必須有經過確認的無人證據；所選追蹤器狀態未知不能證明所有人都已離開。",
           "general_wake_alarm_entity": "選擇下次鬧鐘的時間或日期時間實體，以及提前分鐘數實體。HEM 會提前這些分鐘結束自動睡眠模式，恢復一般目標值。只有時間的值使用 Home Assistant 的時區。離家、手動控制和裝置保護仍保持優先順序。",
           "general_wake_lead_minutes_entity": "選擇值不小於 0 的數字實體，單位為 min 或無單位。鬧鐘為 07:00、數值為 30 時，自動睡眠於 06:30 結束；0 表示響鈴時。清除兩個來源即可停用。",
-          "window_open_timeout_minutes": "開窗請求被接受後，等候一段時間，再依需要允許新的自動/PID啟動。範圍0–30分鐘，預設5；0表示不等候。開窗保護和裝置最短運作／停機時間仍然有效。"
+          "window_open_timeout_minutes": "開窗請求被接受後，等候一段時間，再依需要允許新的自動/PID啟動。範圍0–30分鐘，預設5；0表示不等候。開窗保護和裝置最短運作／停機時間仍然有效。",
+          "window_close_cooldown_minutes": "依照 HEM 的開窗建議打開窗戶後，等待設定的分鐘數，再建議關窗，即使室外條件不適宜也會等待。各房間的等待時間獨立計算。範圍 0–60 分鐘，預設 5；設為 0 可關閉等待。裝置暫停和保護規則仍然有效。"
         }
       },
       "reconfigure": {
@@ -2248,7 +2250,8 @@
           "general_wake_lead_minutes_entity": "睡眠 · 鬧鐘響鈴前的分鐘數",
           "window_open_timeout_minutes": "等候開窗時間（分鐘）",
           "general_source_freshness_mode": "家中人員狀態 · 有效性策略",
-          "global_threshold_max_age_mode": "環境 · 有效性策略"
+          "global_threshold_max_age_mode": "環境 · 有效性策略",
+          "window_close_cooldown_minutes": "建議關窗前的等待時間（分鐘）"
         },
         "data_description": {
           "weather_entities": "請選擇: 天氣與警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2303,7 +2306,8 @@
           "general_wake_lead_minutes_entity": "選擇值不小於 0 的數字實體，單位為 min 或無單位。鬧鐘為 07:00、數值為 30 時，自動睡眠於 06:30 結束；0 表示響鈴時。清除兩個來源即可停用。",
           "window_open_timeout_minutes": "開窗請求被接受後，等候一段時間，再依需要允許新的自動/PID啟動。範圍0–30分鐘，預設5；0表示不等候。開窗保護和裝置最短運作／停機時間仍然有效。",
           "general_source_freshness_mode": "自動：數字人數計數器和家庭追蹤器的否定回報最多接受 240 分鐘；有效且未變化的「在家」狀態可以保持到它發生變化。未知、還原或無法使用的來源不能證明無人。自訂：對取樣回報使用下方的分鐘值。房間清單來源仍依變化更新。",
-          "global_threshold_max_age_mode": "自動：天氣實體可保持有效 180 分鐘，其他數字環境量測可保持有效 90 分鐘，而依變化更新的有效二元接點不會因長時間無變化而逾時。自訂：使用下方的分鐘值。始終檢查可用性與還原狀態。Home Assistant 的 last_reported 在重複寫入相同值時更新，不會僅因時間流逝而更新。"
+          "global_threshold_max_age_mode": "自動：天氣實體可保持有效 180 分鐘，其他數字環境量測可保持有效 90 分鐘，而依變化更新的有效二元接點不會因長時間無變化而逾時。自訂：使用下方的分鐘值。始終檢查可用性與還原狀態。Home Assistant 的 last_reported 在重複寫入相同值時更新，不會僅因時間流逝而更新。",
+          "window_close_cooldown_minutes": "依照 HEM 的開窗建議打開窗戶後，等待設定的分鐘數，再建議關窗，即使室外條件不適宜也會等待。各房間的等待時間獨立計算。範圍 0–60 分鐘，預設 5；設為 0 可關閉等待。裝置暫停和保護規則仍然有效。"
         }
       },
       "room_occupancy": {
@@ -3880,6 +3884,9 @@
             "name": "說明"
           }
         }
+      },
+      "global_setting_window_close_cooldown_minutes": {
+        "name": "通風 · 建議關窗前的等待時間（分鐘）"
       }
     },
     "switch": {

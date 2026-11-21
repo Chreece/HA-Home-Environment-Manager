@@ -17,7 +17,7 @@ FIELDS = frozenset((
     "outdoor_temperature_c", "window_open", "occupied",
     "radon", "noise_dba", "hcho", "lux", "melanopic_edi",
     "outdoor_pm25", "outdoor_pm10",
-    "radon_source",
+    "radon_source", "surface_rh_break_before",
 ))
 MAX_AGE = 8 * DAY_S
 MAX_POINTS_PER_AREA = 2600
@@ -103,6 +103,9 @@ class EnvironmentHistory:
         self.areas: dict[str, list[dict]] = areas if areas is not None else {}
         self.daily: dict[str, list[dict]] = daily if daily is not None else {}
         self.averages: dict[str, dict[str, dict]] = averages if averages is not None else {}
+        # A restored value is historical evidence, not evidence of continuity
+        # while HEM was stopped. Mark the first new observation separately.
+        self._restarted_areas: set[str] = set()
 
     @classmethod
     def restore(cls, data: Any, *, now: float | None = None) -> "EnvironmentHistory":
@@ -132,7 +135,7 @@ class EnvironmentHistory:
                     if key == "radon_source":
                         if isinstance(val, str) and val.startswith("sensor.") and len(val) <= 255:
                             clean[key] = val
-                    elif key in ("occupied", "window_open"):
+                    elif key in ("occupied", "window_open", "surface_rh_break_before"):
                         if type(val) is bool:
                             clean[key] = val
                     elif isinstance(val, (int, float)) and math.isfinite(val):
@@ -181,7 +184,9 @@ class EnvironmentHistory:
                             valid_metrics[metric] = bounded
                 if valid_metrics:
                     averages[area] = valid_metrics
-        return cls(areas, daily, averages)
+        history = cls(areas, daily, averages)
+        history._restarted_areas = set(areas)
+        return history
 
     def snapshot(self) -> dict:
         return {"version": 1, "areas": self.areas, "daily": self.daily,
@@ -296,35 +301,107 @@ class EnvironmentHistory:
             previous = index
         return view
 
+    def average_points(self, area: str, metric: str, sources: list[str],
+                       *, now: float) -> list[dict]:
+        """Full bounded history for an opened chart, without preview decimation.
+
+        The compact dashboard preview cannot describe a shorter time window:
+        decimating a week to 72 points first leaves only about ten per day and
+        moves a short real interruption onto a much wider displayed interval.
+        Return only the exact requested contributor set's stored observations.
+        """
+        if (metric not in AVG_ALLOWED or not isinstance(sources, list)
+                or not 2 <= len(sources) <= 32
+                or any(not isinstance(source, str) for source in sources)
+                or len(set(sources)) != len(sources)
+                or type(now) not in (int, float) or not math.isfinite(now)):
+            return []
+        series = self.averages.get(area, {}).get(metric)
+        if not isinstance(series, dict):
+            return []
+        series = next((row for row in [series, *series.get("previous", [])]
+                       if row["sources"] == sorted(sources)), {})
+        result = []
+        for stored in series.get("points", [])[-AVG_MAX_POINTS:]:
+            if not now - AVG_MAX_AGE <= stored["t"] <= now + 60:
+                continue
+            point = {"t": stored["t"], "v": stored["v"]}
+            if (stored.get("break_before") is True or result
+                    and point["t"] - result[-1]["t"] > AVG_MIN_SAMPLE_SECONDS * 2.5):
+                point["break_before"] = True
+            result.append(point)
+        return result
+
     def add(self, area: str, observation: dict[str, Any], *, now: float | None = None) -> bool:
         current = time.time() if now is None else now
-        if not isinstance(area, str) or not area or not math.isfinite(current):
+        if (not isinstance(area, str) or not area
+                or type(current) not in (int, float) or not math.isfinite(current)):
             return False
+        # Persist and compare the same precision. Unrounded values can be a
+        # fraction below a rounded five-minute boundary and skip that sample.
+        current = round(float(current), 3)
         points = self.areas.setdefault(area, [])
         min_stamp = current - MAX_AGE
         if points and points[-1]["t"] > current:
             return False
-        data = {"t": round(current, 3)}
+        data = {"t": current}
         for key in FIELDS:
             val = observation.get(key)
             if key == "radon_source":
                 if isinstance(val, str) and val.startswith("sensor.") and len(val) <= 255:
                     data[key] = val
-            elif key in ("occupied", "window_open"):
+            elif key in ("occupied", "window_open", "surface_rh_break_before"):
                 if type(val) is bool:
                     data[key] = val
             elif isinstance(val, (int, float)) and math.isfinite(val):
                 data[key] = float(val)
-        if points and current - points[-1]["t"] < 300:
+        restarted = area in self._restarted_areas
+        if points and current - points[-1]["t"] < 300 and not restarted:
             # Record window/occupancy transitions immediately to segment ACH.
-            if all(points[-1].get(key) == data.get(key) for key in ("occupied", "window_open")):
+            # A short missing surface-RH observation must also survive the
+            # normal sampling throttle; otherwise the chart invents continuity.
+            previous_rh, current_rh = points[-1].get("surface_rh"), data.get("surface_rh")
+            previous_valid = type(previous_rh) in (int, float) and 0 <= previous_rh <= 100
+            current_valid = type(current_rh) in (int, float) and 0 <= current_rh <= 100
+            if (previous_valid == current_valid and all(
+                    points[-1].get(key) == data.get(key) for key in ("occupied", "window_open"))):
                 return False
+        if restarted:
+            data["surface_rh_break_before"] = True
+            self._restarted_areas.discard(area)
         points.append(data)
         points[:] = [s for s in points if s["t"] >= min_stamp][-MAX_POINTS_PER_AREA:]
         return True
 
     def samples(self, area: str) -> list[dict]:
         return self.areas.get(area, [])
+
+    def mold_points(self, area: str, *, now: float) -> list[dict]:
+        """Exact bounded surface-RH snapshots, including real missing values.
+
+        This read-only detail is requested for one open chart; it never grows
+        Recorder attributes or the all-room dashboard. Historical estimates
+        retain the calibration and input conditions that produced each value.
+        """
+        if (not isinstance(area, str) or type(now) not in (int, float)
+                or not math.isfinite(now)):
+            return []
+        result = []
+        for stored in self.samples(area)[-MAX_POINTS_PER_AREA:]:
+            stamp = stored.get("t")
+            if (type(stamp) not in (int, float) or not math.isfinite(stamp)
+                    or not now - 7 * DAY_S <= stamp <= now + 60):
+                continue
+            value = stored.get("surface_rh")
+            valid = (type(value) in (int, float) and math.isfinite(value)
+                     and 0 <= value <= 100)
+            point = {"t": round(float(stamp), 3),
+                     "v": round(float(value), 3) if valid else None}
+            if (stored.get("surface_rh_break_before") is True or result
+                    and point["t"] - result[-1]["t"] > 900):
+                point["break_before"] = True
+            result.append(point)
+        return result
 
     def mold_trend(self, area: str, *, now: float, limit: int = 96) -> list[dict]:
         """Recorded calculated surface-RH values, never a synthetic sensor.
@@ -351,6 +428,7 @@ class EnvironmentHistory:
         ]
         if not valid:
             return []
+        valid_indices = set(valid)
         # Preserve first and last real sample, and a bounded set of others.
         # A skipped unavailable sample must still split the next segment.
         maximum = min(144, limit)
@@ -366,7 +444,9 @@ class EnvironmentHistory:
             point = {"t": round(float(sample["t"]), 3),
                      "v": round(float(sample["surface_rh"]), 3)}
             if previous is not None and (
-                any("surface_rh" not in rows[j] for j in range(previous + 1, index))
+                any(j not in valid_indices for j in range(previous + 1, index))
+                or any(rows[j].get("surface_rh_break_before") is True
+                       for j in range(previous + 1, index + 1))
                 or any(rows[j]["t"] - rows[j - 1]["t"] > 900
                        for j in range(previous + 1, index + 1))
             ):

@@ -28,7 +28,7 @@ SOURCE = "custom_components/environment_manager/"
 PREFIX = ""  # Marketplace ZIP is extracted directly into the integration folder.
 VERSION = re.compile(r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:b(0|[1-9]\d*))?")
 REQUIRED = (
-    "__init__.py", "device_faults.py", "equipment_resume.py", "pid_review.py",
+    "__init__.py", "entry_cleanup.py", "device_faults.py", "equipment_resume.py", "pid_review.py",
     "equipment_power_switch.py", "pid_passive.py", "pid_calibration.py",
     "equipment_runtime.py", "equipment_setpoint_sequence.py", "equipment_native_target.py", "equipment_pid_safety.py",
     "advanced_comfort.py", "shade_cooling.py", "switch.py", "button.py", "climate.py",
@@ -38,6 +38,7 @@ REQUIRED = (
     "number.py", "device_controls.py", "arrival_preparation.py", "translations/el.json",
     "languages.py", "tts_languages.py", "announcement_text.py",
     "recommendation_text.py", "window_open_wait.py", "window_open_text.py", "window_option_catalog.py",
+    "window_close_cooldown.py", "window_close_cooldown_text.py",
     "device_command_text.py",
     "equipment_mode_settings.py", "equipment_mode_entities.py", "operating_mode_catalog.py",
     "mold_control_demand.py",

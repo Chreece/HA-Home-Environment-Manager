@@ -161,7 +161,13 @@ with sync_playwright() as playwright:
       window.card=document.createElement('home-environment-manager-card');
       document.getElementById('card-frame').append(card);
       card.addEventListener('hass-more-info',event=>info.push(event.detail.entityId));
-      card._hass={language:'de',states,localize:()=>undefined,callWS:async()=>({}),
+      card._hass={language:'de',states,localize:()=>undefined,callWS:async message=>{
+        if(message.type!=='environment_manager/trend')return {};
+        const room=card._hass.states['sensor.hem'].attributes.dashboard.rooms.find(r=>r.area_id===message.area_id);
+        const value=message.metric==='mold'?room.environment.mold_trend:room.environment.measurement_evidence[message.metric];
+        return {area_id:message.area_id,metric:message.metric,source_ids:value.source_ids,
+          source_count:value.source_count,trend:structuredClone(value.trend||[])};
+      },
         callService:(...args)=>{calls.push(args);return Promise.resolve()}};
       card._config={entity:'sensor.hem'};card._renderContent(true);
     }""", {"states": states})

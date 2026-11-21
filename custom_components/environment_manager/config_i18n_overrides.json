@@ -5,7 +5,8 @@
     "menu": "Choose one section. All other settings stay unchanged.",
     "help": {
       "language": "Use the Home Assistant language by default, or choose any announcement language supported by HEM.",
-      "window_open_timeout_minutes": "Wait after an opening request is accepted before new automatic/PID starts resume if still needed. 0–30 minutes, default 5; 0 disables waiting. Existing open-window and device timing protections still apply."
+      "window_open_timeout_minutes": "Wait after an opening request is accepted before new automatic/PID starts resume if still needed. 0–30 minutes, default 5; 0 disables waiting. Existing open-window and device timing protections still apply.",
+      "window_close_cooldown_minutes": "After a window opens following HEM opening advice, wait this many minutes before suggesting that it be closed, even when outside conditions are unsuitable. Applies independently to each room. 0–60 minutes, default 5; 0 disables the delay. Device pause and protection rules remain active."
     },
     "thresholds": {},
     "errors": {},
@@ -26,7 +27,8 @@
       "notify_entities": "Άμεσες οντότητες ειδοποιήσεων όταν δεν χρησιμοποιείται το Announcement Hub.",
       "tts_engine": "Μηχανή σύνθεσης ομιλίας για απευθείας ανακοινώσεις εκτός Announcement Hub.",
       "media_players": "Συσκευές αναπαραγωγής άμεσων ανακοινώσεων. Η αντιστοίχιση χώρου καθορίζει τους παραλήπτες.",
-      "window_open_timeout_minutes": "Χρόνος αναμονής μετά την αποδοχή του αιτήματος αερισμού, πριν επιτραπούν νέες αυτόματες/PID εκκινήσεις εφόσον χρειάζονται. 0–30 λεπτά, προεπιλογή 5· το 0 απενεργοποιεί την αναμονή. Οι προστασίες ανοιχτού παραθύρου και οι χρόνοι λειτουργίας συσκευών εξακολουθούν να ισχύουν."
+      "window_open_timeout_minutes": "Χρόνος αναμονής μετά την αποδοχή του αιτήματος αερισμού, πριν επιτραπούν νέες αυτόματες/PID εκκινήσεις εφόσον χρειάζονται. 0–30 λεπτά, προεπιλογή 5· το 0 απενεργοποιεί την αναμονή. Οι προστασίες ανοιχτού παραθύρου και οι χρόνοι λειτουργίας συσκευών εξακολουθούν να ισχύουν.",
+      "window_close_cooldown_minutes": "Όταν ανοίγει παράθυρο μετά από πρόταση αερισμού του HEM, περιμένει τόσα λεπτά πριν προτείνει να κλείσει, ακόμη κι αν οι εξωτερικές συνθήκες δεν είναι κατάλληλες. Η αναμονή ισχύει ανεξάρτητα για κάθε χώρο. 0–60 λεπτά, προεπιλογή 5· το 0 απενεργοποιεί την αναμονή. Οι κανόνες παύσης και προστασίας των συσκευών παραμένουν ενεργοί."
     },
     "thresholds": {
       "outdoor_aqi": "Μέγιστος εξωτερικός AQI",
@@ -66,7 +68,8 @@
       "notify_entities": "Direkte Benachrichtigungsziele, wenn Announcement Hub nicht verwendet wird.",
       "tts_engine": "Sprachausgabe für direkte Ansagen ohne Announcement Hub.",
       "media_players": "Mediaplayer für direkte Sprachausgabe. Die Raumzuordnung bestimmt die Ziele.",
-      "window_open_timeout_minutes": "Wartezeit nach Annahme einer Lüftungsaufforderung, bevor neue Automatik-/PID-Starts bei weiterem Bedarf wieder erlaubt sind. 0–30 Minuten, Standard 5; 0 deaktiviert das Warten. Fensterschutz und Gerätemindestzeiten gelten weiterhin."
+      "window_open_timeout_minutes": "Wartezeit nach Annahme einer Lüftungsaufforderung, bevor neue Automatik-/PID-Starts bei weiterem Bedarf wieder erlaubt sind. 0–30 Minuten, Standard 5; 0 deaktiviert das Warten. Fensterschutz und Gerätemindestzeiten gelten weiterhin.",
+      "window_close_cooldown_minutes": "Wird ein Fenster nach einem Lüftungshinweis von HEM geöffnet, wartet HEM so viele Minuten, bevor es zum Schließen auffordert, auch bei ungeeigneten Außenbedingungen. Die Wartezeit gilt für jeden Raum unabhängig. 0–60 Minuten, Standard 5; 0 deaktiviert die Wartezeit. Die Regeln zum Pausieren und Schützen der Geräte bleiben aktiv."
     },
     "thresholds": {
       "outdoor_aqi": "Maximaler Außen-AQI",
@@ -106,7 +109,8 @@
       "notify_entities": "Destinations de notification directe lorsqu'Announcement Hub n'est pas utilisé.",
       "tts_engine": "Moteur de synthèse vocale pour les annonces directes sans Announcement Hub.",
       "media_players": "Lecteurs pour les annonces vocales directes. L'affectation aux pièces détermine les destinataires.",
-      "window_open_timeout_minutes": "Attente après acceptation d’une demande d’aération avant d’autoriser de nouveaux démarrages automatiques/PID si nécessaire. 0–30 minutes, 5 par défaut ; 0 désactive l’attente. Les protections liées aux fenêtres ouvertes et les durées minimales des appareils restent actives."
+      "window_open_timeout_minutes": "Attente après acceptation d’une demande d’aération avant d’autoriser de nouveaux démarrages automatiques/PID si nécessaire. 0–30 minutes, 5 par défaut ; 0 désactive l’attente. Les protections liées aux fenêtres ouvertes et les durées minimales des appareils restent actives.",
+      "window_close_cooldown_minutes": "Lorsqu’une fenêtre est ouverte après un conseil d’aération de HEM, attendre ce nombre de minutes avant de suggérer de la fermer, même si les conditions extérieures sont défavorables. Le délai s’applique indépendamment à chaque pièce. 0–60 minutes, 5 par défaut ; 0 désactive le délai. Les règles de mise en pause et de protection des appareils restent actives."
     },
     "thresholds": {
       "outdoor_aqi": "AQI extérieur maximal",
@@ -146,7 +150,8 @@
       "notify_entities": "Destinos de notificación directa cuando no se utiliza Announcement Hub.",
       "tts_engine": "Motor de voz para anuncios directos sin Announcement Hub.",
       "media_players": "Reproductores para los anuncios de voz directos. La asignación de habitación determina los destinos.",
-      "window_open_timeout_minutes": "Espera tras aceptar una solicitud de ventilación antes de permitir nuevos arranques automáticos/PID si aún son necesarios. 0–30 minutos, 5 por defecto; 0 desactiva la espera. Se mantienen las protecciones por ventanas abiertas y los tiempos mínimos de los equipos."
+      "window_open_timeout_minutes": "Espera tras aceptar una solicitud de ventilación antes de permitir nuevos arranques automáticos/PID si aún son necesarios. 0–30 minutos, 5 por defecto; 0 desactiva la espera. Se mantienen las protecciones por ventanas abiertas y los tiempos mínimos de los equipos.",
+      "window_close_cooldown_minutes": "Cuando se abre una ventana siguiendo una sugerencia de HEM, espera estos minutos antes de sugerir que se cierre, incluso si las condiciones exteriores no son adecuadas. La espera se aplica de forma independiente a cada habitación. 0–60 minutos, 5 por defecto; 0 desactiva la espera. Las reglas de pausa y protección de los equipos siguen activas."
     },
     "thresholds": {
       "outdoor_aqi": "AQI exterior máximo",
@@ -193,7 +198,8 @@
       "media_players": "Seleziona: media_player.* · Annunci vocali automatici.",
       "ai_rewrite_announcements": "AI · Annunci (facoltativi) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Seleziona: conversation.* (Home Assistant · Predefinito).",
-      "window_open_timeout_minutes": "Attesa dopo l’accettazione di una richiesta di aerazione prima di consentire nuovi avvii automatici/PID se ancora necessari. 0–30 minuti, predefinito 5; 0 disattiva l’attesa. Restano attive le protezioni per finestre aperte e i tempi minimi dei dispositivi."
+      "window_open_timeout_minutes": "Attesa dopo l’accettazione di una richiesta di aerazione prima di consentire nuovi avvii automatici/PID se ancora necessari. 0–30 minuti, predefinito 5; 0 disattiva l’attesa. Restano attive le protezioni per finestre aperte e i tempi minimi dei dispositivi.",
+      "window_close_cooldown_minutes": "Quando una finestra viene aperta dopo un suggerimento di aerazione di HEM, attende questo numero di minuti prima di suggerire di chiuderla, anche se le condizioni esterne non sono adatte. L’attesa si applica indipendentemente a ogni stanza. 0–60 minuti, valore predefinito 5; 0 disattiva l’attesa. Le regole di pausa e protezione dei dispositivi restano attive."
     },
     "thresholds": {},
     "errors": {
@@ -239,7 +245,8 @@
       "media_players": "Kies: media_player.* · Automatisch gesproken meldingen.",
       "ai_rewrite_announcements": "AI · Meldingen (optioneel) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Kies: conversation.* (Home Assistant · Standaard).",
-      "window_open_timeout_minutes": "Wachttijd nadat een verzoek tot luchten is geaccepteerd, voordat nieuwe automatische/PID-starts zo nodig weer mogen. 0–30 minuten, standaard 5; 0 schakelt het wachten uit. Beveiligingen voor open ramen en minimale bedrijfstijden blijven gelden."
+      "window_open_timeout_minutes": "Wachttijd nadat een verzoek tot luchten is geaccepteerd, voordat nieuwe automatische/PID-starts zo nodig weer mogen. 0–30 minuten, standaard 5; 0 schakelt het wachten uit. Beveiligingen voor open ramen en minimale bedrijfstijden blijven gelden.",
+      "window_close_cooldown_minutes": "Wanneer een raam wordt geopend na een ventilatieadvies van HEM, wacht HEM dit aantal minuten voordat het voorstelt het raam te sluiten, ook als de buitenomstandigheden ongeschikt zijn. De wachttijd geldt afzonderlijk voor elke kamer. 0–60 minuten, standaard 5; 0 schakelt de wachttijd uit. De regels voor het pauzeren en beschermen van apparaten blijven actief."
     },
     "thresholds": {},
     "errors": {
@@ -285,7 +292,8 @@
       "media_players": "Selecione: media_player.* · Avisos de voz automáticos.",
       "ai_rewrite_announcements": "AI · Anúncios (opcional) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Selecione: conversation.* (Home Assistant · Predefinido).",
-      "window_open_timeout_minutes": "Espera após a aceitação de um pedido de arejamento antes de permitir novos arranques automáticos/PID se ainda forem necessários. 0–30 minutos, predefinição 5; 0 desativa a espera. As proteções de janela aberta e os tempos mínimos dos aparelhos mantêm-se."
+      "window_open_timeout_minutes": "Espera após a aceitação de um pedido de arejamento antes de permitir novos arranques automáticos/PID se ainda forem necessários. 0–30 minutos, predefinição 5; 0 desativa a espera. As proteções de janela aberta e os tempos mínimos dos aparelhos mantêm-se.",
+      "window_close_cooldown_minutes": "Quando uma janela é aberta após uma sugestão de arejamento do HEM, aguarda este número de minutos antes de sugerir que seja fechada, mesmo que as condições exteriores não sejam adequadas. A espera aplica-se de forma independente a cada divisão. 0–60 minutos, valor predefinido 5; 0 desativa a espera. As regras de pausa e proteção dos aparelhos mantêm-se ativas."
     },
     "thresholds": {},
     "errors": {
@@ -331,7 +339,8 @@
       "media_players": "Selecione: media_player.* · Avisos de voz automáticos.",
       "ai_rewrite_announcements": "AI · Avisos (opcional) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Selecione: conversation.* (Home Assistant · Padrão).",
-      "window_open_timeout_minutes": "Espera após a aceitação de um pedido de ventilação antes de permitir novas partidas automáticas/PID se ainda forem necessárias. 0–30 minutos, padrão 5; 0 desativa a espera. As proteções de janela aberta e os tempos mínimos dos aparelhos continuam valendo."
+      "window_open_timeout_minutes": "Espera após a aceitação de um pedido de ventilação antes de permitir novas partidas automáticas/PID se ainda forem necessárias. 0–30 minutos, padrão 5; 0 desativa a espera. As proteções de janela aberta e os tempos mínimos dos aparelhos continuam valendo.",
+      "window_close_cooldown_minutes": "Quando uma janela é aberta após uma sugestão de ventilação do HEM, aguarda este número de minutos antes de sugerir que ela seja fechada, mesmo que as condições externas não sejam adequadas. A espera se aplica de forma independente a cada cômodo. 0–60 minutos, padrão 5; 0 desativa a espera. As regras de pausa e proteção dos aparelhos continuam ativas."
     },
     "thresholds": {},
     "errors": {
@@ -377,7 +386,8 @@
       "media_players": "Wybierz: media_player.* · Automatyczne komunikaty głosowe.",
       "ai_rewrite_announcements": "AI · Komunikaty (opcjonalnie) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Wybierz: conversation.* (Home Assistant · Domyślne).",
-      "window_open_timeout_minutes": "Czas oczekiwania po przyjęciu prośby o wietrzenie przed ponownym zezwoleniem na automatyczne uruchomienia/PID, jeśli są potrzebne. 0–30 minut, domyślnie 5; 0 wyłącza oczekiwanie. Ochrona przy otwartym oknie i minimalne czasy pracy urządzeń nadal obowiązują."
+      "window_open_timeout_minutes": "Czas oczekiwania po przyjęciu prośby o wietrzenie przed ponownym zezwoleniem na automatyczne uruchomienia/PID, jeśli są potrzebne. 0–30 minut, domyślnie 5; 0 wyłącza oczekiwanie. Ochrona przy otwartym oknie i minimalne czasy pracy urządzeń nadal obowiązują.",
+      "window_close_cooldown_minutes": "Po otwarciu okna zgodnie z sugestią HEM odczekuje tyle minut, zanim zasugeruje jego zamknięcie, nawet jeśli warunki na zewnątrz są nieodpowiednie. Czas oczekiwania jest liczony niezależnie dla każdego pomieszczenia. 0–60 minut, domyślnie 5; 0 wyłącza opóźnienie. Zasady wstrzymywania pracy i ochrony urządzeń pozostają aktywne."
     },
     "thresholds": {},
     "errors": {
@@ -423,7 +433,8 @@
       "media_players": "Выберите: media_player.* · Автоматические голосовые оповещения.",
       "ai_rewrite_announcements": "AI · Оповещения (необязательно) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Выберите: conversation.* (Home Assistant · По умолчанию).",
-      "window_open_timeout_minutes": "Ожидание после принятия запроса на проветривание перед новыми автоматическими/PID-запусками при сохраняющейся необходимости. 0–30 минут, по умолчанию 5; 0 отключает ожидание. Защита при открытом окне и минимальные интервалы работы устройств сохраняются."
+      "window_open_timeout_minutes": "Ожидание после принятия запроса на проветривание перед новыми автоматическими/PID-запусками при сохраняющейся необходимости. 0–30 минут, по умолчанию 5; 0 отключает ожидание. Защита при открытом окне и минимальные интервалы работы устройств сохраняются.",
+      "window_close_cooldown_minutes": "После открытия окна по совету HEM выжидает указанное число минут, прежде чем предложить закрыть его, даже если условия снаружи неподходящие. Задержка отсчитывается независимо для каждой комнаты. 0–60 минут, по умолчанию 5; 0 отключает задержку. Правила приостановки работы и защиты устройств остаются активными."
     },
     "thresholds": {},
     "errors": {
@@ -469,7 +480,8 @@
       "media_players": "Оберіть: media_player.* · Автоматичні голосові оголошення.",
       "ai_rewrite_announcements": "AI · Оголошення (необов’язково) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Оберіть: conversation.* (Home Assistant · Типово).",
-      "window_open_timeout_minutes": "Очікування після прийняття запиту на провітрювання перед новими автоматичними/PID-запусками, якщо вони ще потрібні. 0–30 хвилин, типово 5; 0 вимикає очікування. Захист при відчиненому вікні та мінімальні інтервали роботи пристроїв зберігаються."
+      "window_open_timeout_minutes": "Очікування після прийняття запиту на провітрювання перед новими автоматичними/PID-запусками, якщо вони ще потрібні. 0–30 хвилин, типово 5; 0 вимикає очікування. Захист при відчиненому вікні та мінімальні інтервали роботи пристроїв зберігаються.",
+      "window_close_cooldown_minutes": "Після відчинення вікна за порадою HEM очікує вказану кількість хвилин, перш ніж запропонувати зачинити його, навіть якщо умови надворі несприятливі. Затримка відлічується незалежно для кожної кімнати. 0–60 хвилин, типово 5; 0 вимикає затримку. Правила призупинення роботи та захисту пристроїв залишаються активними."
     },
     "thresholds": {},
     "errors": {
@@ -515,7 +527,8 @@
       "media_players": "Seçin: media_player.* · Otomatik sesli duyurular.",
       "ai_rewrite_announcements": "AI · Duyurular (isteğe bağlı) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Seçin: conversation.* (Home Assistant · Varsayılan).",
-      "window_open_timeout_minutes": "Havalandırma isteği kabul edildikten sonra, hâlâ gerekliyse yeni otomatik/PID başlatmalarına izin verilmeden önce beklenen süre. 0–30 dakika, varsayılan 5; 0 beklemeyi kapatır. Açık pencere korumaları ve cihazların asgari çalışma süreleri geçerliliğini korur."
+      "window_open_timeout_minutes": "Havalandırma isteği kabul edildikten sonra, hâlâ gerekliyse yeni otomatik/PID başlatmalarına izin verilmeden önce beklenen süre. 0–30 dakika, varsayılan 5; 0 beklemeyi kapatır. Açık pencere korumaları ve cihazların asgari çalışma süreleri geçerliliğini korur.",
+      "window_close_cooldown_minutes": "HEM’in havalandırma önerisinin ardından bir pencere açıldığında, dış koşullar uygun olmasa bile kapatılmasını önermeden önce bu kadar dakika bekler. Bekleme süresi her oda için ayrı hesaplanır. 0–60 dakika, varsayılan 5; 0 beklemeyi devre dışı bırakır. Cihazları duraklatma ve koruma kuralları etkin kalır."
     },
     "thresholds": {},
     "errors": {
@@ -561,7 +574,8 @@
       "media_players": "Vyberte: media_player.* · Automatická hlasová oznámení.",
       "ai_rewrite_announcements": "AI · Oznámení (volitelně) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Vyberte: conversation.* (Home Assistant · Výchozí).",
-      "window_open_timeout_minutes": "Čekání po přijetí žádosti o větrání, než budou při trvající potřebě povolena nová automatická/PID spuštění. 0–30 minut, výchozí 5; 0 čekání vypne. Ochrana při otevřeném okně a minimální provozní časy zařízení zůstávají v platnosti."
+      "window_open_timeout_minutes": "Čekání po přijetí žádosti o větrání, než budou při trvající potřebě povolena nová automatická/PID spuštění. 0–30 minut, výchozí 5; 0 čekání vypne. Ochrana při otevřeném okně a minimální provozní časy zařízení zůstávají v platnosti.",
+      "window_close_cooldown_minutes": "Po otevření okna na základě doporučení HEM vyčká tento počet minut, než doporučí jeho zavření, i když jsou venkovní podmínky nevhodné. Doba čekání se počítá pro každou místnost samostatně. 0–60 minut, výchozí hodnota 5; 0 čekání vypne. Pravidla pro pozastavení provozu a ochranu zařízení zůstávají aktivní."
     },
     "thresholds": {},
     "errors": {
@@ -607,7 +621,8 @@
       "media_players": "Vyberte: media_player.* · Automatické hlasové oznámenia.",
       "ai_rewrite_announcements": "AI · Oznámenia (voliteľné) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Vyberte: conversation.* (Home Assistant · Predvolené).",
-      "window_open_timeout_minutes": "Čakanie po prijatí žiadosti o vetranie pred povolením nových automatických/PID spustení, ak sú stále potrebné. 0–30 minút, predvolene 5; 0 čakanie vypne. Ochrana pri otvorenom okne a minimálne prevádzkové časy zariadení zostávajú v platnosti."
+      "window_open_timeout_minutes": "Čakanie po prijatí žiadosti o vetranie pred povolením nových automatických/PID spustení, ak sú stále potrebné. 0–30 minút, predvolene 5; 0 čakanie vypne. Ochrana pri otvorenom okne a minimálne prevádzkové časy zariadení zostávajú v platnosti.",
+      "window_close_cooldown_minutes": "Po otvorení okna na základe odporúčania HEM počká tento počet minút, kým odporučí jeho zatvorenie, aj keď sú vonkajšie podmienky nevhodné. Čas čakania sa počíta pre každú miestnosť samostatne. 0–60 minút, predvolená hodnota 5; 0 čakanie vypne. Pravidlá pozastavenia prevádzky a ochrany zariadení zostávajú aktívne."
     },
     "thresholds": {},
     "errors": {
@@ -653,7 +668,8 @@
       "media_players": "Válassz: media_player.* · Automatikus hangos értesítések.",
       "ai_rewrite_announcements": "AI · Értesítések (opcionális) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Válassz: conversation.* (Home Assistant · Alapértelmezett).",
-      "window_open_timeout_minutes": "Várakozás a szellőztetési kérés elfogadása után, mielőtt szükség esetén új automatikus/PID-indítások engedélyezhetők. 0–30 perc, alapérték 5; 0 kikapcsolja a várakozást. A nyitott ablak és a minimális működési idők védelmei továbbra is érvényesek."
+      "window_open_timeout_minutes": "Várakozás a szellőztetési kérés elfogadása után, mielőtt szükség esetén új automatikus/PID-indítások engedélyezhetők. 0–30 perc, alapérték 5; 0 kikapcsolja a várakozást. A nyitott ablak és a minimális működési idők védelmei továbbra is érvényesek.",
+      "window_close_cooldown_minutes": "Ha a HEM szellőztetési javaslata után kinyitnak egy ablakot, ennyi percet vár, mielőtt annak bezárását javasolná, akkor is, ha a kinti körülmények nem megfelelőek. A várakozási időt helyiségenként külön számítja. 0–60 perc, alapérték 5; a 0 kikapcsolja a várakozást. Az eszközök szüneteltetési és védelmi szabályai továbbra is érvényesek."
     },
     "thresholds": {},
     "errors": {
@@ -699,7 +715,8 @@
       "media_players": "Alegeți: media_player.* · Anunțuri vocale automate.",
       "ai_rewrite_announcements": "AI · Anunțuri (opțional) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Alegeți: conversation.* (Home Assistant · Implicit).",
-      "window_open_timeout_minutes": "Așteptare după acceptarea unei cereri de aerisire înainte de a permite noi porniri automate/PID, dacă mai sunt necesare. 0–30 de minute, implicit 5; 0 dezactivează așteptarea. Protecțiile pentru ferestre deschise și timpii minimi ai dispozitivelor rămân active."
+      "window_open_timeout_minutes": "Așteptare după acceptarea unei cereri de aerisire înainte de a permite noi porniri automate/PID, dacă mai sunt necesare. 0–30 de minute, implicit 5; 0 dezactivează așteptarea. Protecțiile pentru ferestre deschise și timpii minimi ai dispozitivelor rămân active.",
+      "window_close_cooldown_minutes": "După deschiderea unei ferestre în urma unei sugestii HEM, așteaptă acest număr de minute înainte de a sugera închiderea ei, chiar dacă condițiile de afară sunt nepotrivite. Timpul de așteptare se aplică independent fiecărei camere. 0–60 de minute, implicit 5; 0 dezactivează așteptarea. Regulile de pauză și protecție ale dispozitivelor rămân active."
     },
     "thresholds": {},
     "errors": {
@@ -745,7 +762,8 @@
       "media_players": "Изберете: media_player.* · Автоматични гласови съобщения.",
       "ai_rewrite_announcements": "AI · Съобщения (по избор) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Изберете: conversation.* (Home Assistant · По подразбиране).",
-      "window_open_timeout_minutes": "Изчакване след приемане на заявка за проветряване, преди да се разрешат нови автоматични/PID стартирания при нужда. 0–30 минути, по подразбиране 5; 0 изключва изчакването. Защитите при отворен прозорец и минималните времена на уредите остават активни."
+      "window_open_timeout_minutes": "Изчакване след приемане на заявка за проветряване, преди да се разрешат нови автоматични/PID стартирания при нужда. 0–30 минути, по подразбиране 5; 0 изключва изчакването. Защитите при отворен прозорец и минималните времена на уредите остават активни.",
+      "window_close_cooldown_minutes": "Когато прозорец бъде отворен след съвет от HEM за проветряване, изчаква толкова минути, преди да предложи затварянето му, дори ако външните условия са неподходящи. Времето за изчакване се отчита независимо за всяка стая. 0–60 минути, по подразбиране 5; 0 изключва изчакването. Правилата за пауза и защита на устройствата остават активни."
     },
     "thresholds": {},
     "errors": {
@@ -791,7 +809,8 @@
       "media_players": "Odaberite: media_player.* · Automatske glasovne obavijesti.",
       "ai_rewrite_announcements": "AI · Obavijesti (neobavezno) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Odaberite: conversation.* (Home Assistant · Zadano).",
-      "window_open_timeout_minutes": "Čekanje nakon prihvaćanja zahtjeva za prozračivanje prije dopuštanja novih automatskih/PID pokretanja ako su potrebna. 0–30 minuta, zadano 5; 0 isključuje čekanje. Zaštite pri otvorenom prozoru i minimalna vremena rada uređaja i dalje vrijede."
+      "window_open_timeout_minutes": "Čekanje nakon prihvaćanja zahtjeva za prozračivanje prije dopuštanja novih automatskih/PID pokretanja ako su potrebna. 0–30 minuta, zadano 5; 0 isključuje čekanje. Zaštite pri otvorenom prozoru i minimalna vremena rada uređaja i dalje vrijede.",
+      "window_close_cooldown_minutes": "Nakon što se prozor otvori na preporuku HEM-a, čeka ovoliko minuta prije nego što predloži zatvaranje, čak i ako vanjski uvjeti nisu prikladni. Vrijeme čekanja računa se zasebno za svaku prostoriju. 0–60 minuta, zadano 5; 0 isključuje čekanje. Pravila pauziranja rada i zaštite uređaja ostaju aktivna."
     },
     "thresholds": {},
     "errors": {
@@ -837,7 +856,8 @@
       "media_players": "Изаберите: media_player.* · Аутоматска говорна обавештења.",
       "ai_rewrite_announcements": "AI · Обавештења (опционо) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Изаберите: conversation.* (Home Assistant · Подразумевано).",
-      "window_open_timeout_minutes": "Чекање после прихватања захтева за проветравање пре дозвољавања нових аутоматских/PID покретања ако су потребна. 0–30 минута, подразумевано 5; 0 искључује чекање. Заштите при отвореном прозору и минимална времена рада уређаја и даље важе."
+      "window_open_timeout_minutes": "Чекање после прихватања захтева за проветравање пре дозвољавања нових аутоматских/PID покретања ако су потребна. 0–30 минута, подразумевано 5; 0 искључује чекање. Заштите при отвореном прозору и минимална времена рада уређаја и даље важе.",
+      "window_close_cooldown_minutes": "Када се прозор отвори по препоруци HEM-а, чека оволико минута пре него што предложи затварање, чак и ако спољни услови нису одговарајући. Време чекања рачуна се засебно за сваку просторију. 0–60 минута, подразумевано 5; 0 искључује чекање. Правила паузирања рада и заштите уређаја остају активна."
     },
     "thresholds": {},
     "errors": {
@@ -883,7 +903,8 @@
       "media_players": "Välj: media_player.* · Automatiska röstmeddelanden.",
       "ai_rewrite_announcements": "AI · Meddelanden (valfritt) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Välj: conversation.* (Home Assistant · Standard).",
-      "window_open_timeout_minutes": "Väntan efter att en vädringsbegäran har accepterats innan nya automatiska/PID-starter tillåts vid kvarstående behov. 0–30 minuter, standard 5; 0 stänger av väntan. Skydd för öppna fönster och apparaternas minimitider gäller fortfarande."
+      "window_open_timeout_minutes": "Väntan efter att en vädringsbegäran har accepterats innan nya automatiska/PID-starter tillåts vid kvarstående behov. 0–30 minuter, standard 5; 0 stänger av väntan. Skydd för öppna fönster och apparaternas minimitider gäller fortfarande.",
+      "window_close_cooldown_minutes": "När ett fönster öppnas efter ett vädringsförslag från HEM väntar HEM så här många minuter innan det föreslår att fönstret stängs, även om förhållandena utomhus är olämpliga. Väntetiden räknas separat för varje rum. 0–60 minuter, standard 5; 0 stänger av väntetiden. Reglerna för att pausa och skydda enheter gäller fortfarande."
     },
     "thresholds": {},
     "errors": {
@@ -929,7 +950,8 @@
       "media_players": "Velg: media_player.* · Automatiske talemeldinger.",
       "ai_rewrite_announcements": "AI · Kunngjøringer (valgfritt) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Velg: conversation.* (Home Assistant · Standard).",
-      "window_open_timeout_minutes": "Ventetid etter at en lufteforespørsel er godtatt, før nye automatiske/PID-starter tillates ved fortsatt behov. 0–30 minutter, standard 5; 0 slår av ventingen. Beskyttelse ved åpne vinduer og apparatenes minstetider gjelder fortsatt."
+      "window_open_timeout_minutes": "Ventetid etter at en lufteforespørsel er godtatt, før nye automatiske/PID-starter tillates ved fortsatt behov. 0–30 minutter, standard 5; 0 slår av ventingen. Beskyttelse ved åpne vinduer og apparatenes minstetider gjelder fortsatt.",
+      "window_close_cooldown_minutes": "Når et vindu åpnes etter et lufteforslag fra HEM, venter HEM så mange minutter før det foreslår å lukke vinduet, selv om forholdene ute er uegnede. Ventetiden beregnes separat for hvert rom. 0–60 minutter, standard 5; 0 slår av ventetiden. Reglene for å sette enheter på pause og beskytte dem gjelder fortsatt."
     },
     "thresholds": {},
     "errors": {
@@ -975,7 +997,8 @@
       "media_players": "Vælg: media_player.* · Automatiske talemeddelelser.",
       "ai_rewrite_announcements": "AI · Meddelelser (valgfrit) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Vælg: conversation.* (Home Assistant · Standard).",
-      "window_open_timeout_minutes": "Ventetid efter accept af en udluftningsanmodning, før nye automatiske/PID-starter tillades ved fortsat behov. 0–30 minutter, standard 5; 0 slår ventetiden fra. Beskyttelse ved åbne vinduer og apparaternes minimumstider gælder stadig."
+      "window_open_timeout_minutes": "Ventetid efter accept af en udluftningsanmodning, før nye automatiske/PID-starter tillades ved fortsat behov. 0–30 minutter, standard 5; 0 slår ventetiden fra. Beskyttelse ved åbne vinduer og apparaternes minimumstider gælder stadig.",
+      "window_close_cooldown_minutes": "Når et vindue åbnes efter et udluftningsforslag fra HEM, venter HEM så mange minutter, før det foreslår at lukke vinduet, selv hvis forholdene udenfor er uegnede. Ventetiden beregnes separat for hvert rum. 0–60 minutter, standard 5; 0 slår ventetiden fra. Reglerne for at sætte enheder på pause og beskytte dem gælder fortsat."
     },
     "thresholds": {},
     "errors": {
@@ -1021,7 +1044,8 @@
       "media_players": "Valitse: media_player.* · Automaattiset puheilmoitukset.",
       "ai_rewrite_announcements": "AI · Ilmoitukset (valinnainen) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Valitse: conversation.* (Home Assistant · Oletus).",
-      "window_open_timeout_minutes": "Odotusaika tuuletuspyynnön hyväksymisen jälkeen ennen uusia automaattisia/PID-käynnistyksiä, jos niitä edelleen tarvitaan. 0–30 minuuttia, oletus 5; 0 poistaa odotuksen. Avoimen ikkunan suojaukset ja laitteiden vähimmäisajat säilyvät."
+      "window_open_timeout_minutes": "Odotusaika tuuletuspyynnön hyväksymisen jälkeen ennen uusia automaattisia/PID-käynnistyksiä, jos niitä edelleen tarvitaan. 0–30 minuuttia, oletus 5; 0 poistaa odotuksen. Avoimen ikkunan suojaukset ja laitteiden vähimmäisajat säilyvät.",
+      "window_close_cooldown_minutes": "Kun ikkuna avataan HEMin tuuletusehdotuksen jälkeen, HEM odottaa näin monta minuuttia ennen kuin ehdottaa sen sulkemista, vaikka ulko-olosuhteet olisivat epäsuotuisat. Odotusaika lasketaan erikseen kullekin huoneelle. 0–60 minuuttia, oletus 5; 0 poistaa odotusajan käytöstä. Laitteiden tauko- ja suojaussäännöt pysyvät voimassa."
     },
     "thresholds": {},
     "errors": {
@@ -1067,7 +1091,8 @@
       "media_players": "Pilih: media_player.* · Pengumuman suara otomatis.",
       "ai_rewrite_announcements": "AI · Pengumuman (opsional) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Pilih: conversation.* (Home Assistant · Bawaan).",
-      "window_open_timeout_minutes": "Waktu tunggu setelah permintaan membuka jendela diterima sebelum penyalaan otomatis/PID baru diizinkan jika masih diperlukan. 0–30 menit, bawaan 5; 0 menonaktifkan penantian. Perlindungan jendela terbuka dan waktu minimum perangkat tetap berlaku."
+      "window_open_timeout_minutes": "Waktu tunggu setelah permintaan membuka jendela diterima sebelum penyalaan otomatis/PID baru diizinkan jika masih diperlukan. 0–30 menit, bawaan 5; 0 menonaktifkan penantian. Perlindungan jendela terbuka dan waktu minimum perangkat tetap berlaku.",
+      "window_close_cooldown_minutes": "Setelah jendela dibuka mengikuti saran HEM, tunggu selama jumlah menit ini sebelum menyarankan agar jendela ditutup, meskipun kondisi di luar tidak sesuai. Jeda dihitung secara terpisah untuk setiap ruangan. 0–60 menit, bawaan 5; 0 menonaktifkan jeda. Aturan jeda operasi dan perlindungan perangkat tetap aktif."
     },
     "thresholds": {},
     "errors": {
@@ -1113,7 +1138,8 @@
       "media_players": "Chọn: media_player.* · Thông báo giọng nói tự động.",
       "ai_rewrite_announcements": "AI · Thông báo (tùy chọn) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "Chọn: conversation.* (Home Assistant · Mặc định).",
-      "window_open_timeout_minutes": "Chờ sau khi yêu cầu thông gió được chấp nhận trước khi cho phép khởi động tự động/PID mới nếu vẫn cần. 0–30 phút, mặc định 5; 0 tắt thời gian chờ. Bảo vệ khi cửa sổ mở và thời gian tối thiểu của thiết bị vẫn áp dụng."
+      "window_open_timeout_minutes": "Chờ sau khi yêu cầu thông gió được chấp nhận trước khi cho phép khởi động tự động/PID mới nếu vẫn cần. 0–30 phút, mặc định 5; 0 tắt thời gian chờ. Bảo vệ khi cửa sổ mở và thời gian tối thiểu của thiết bị vẫn áp dụng.",
+      "window_close_cooldown_minutes": "Sau khi cửa sổ được mở theo đề nghị của HEM, chờ số phút này trước khi đề nghị đóng lại, ngay cả khi điều kiện bên ngoài không phù hợp. Thời gian chờ được tính riêng cho từng phòng. 0–60 phút, mặc định 5; 0 tắt thời gian chờ. Các quy tắc tạm dừng và bảo vệ thiết bị vẫn có hiệu lực."
     },
     "thresholds": {},
     "errors": {
@@ -1159,7 +1185,8 @@
       "media_players": "เลือก: media_player.* · ประกาศเสียงอัตโนมัติ.",
       "ai_rewrite_announcements": "AI · การประกาศ (ไม่บังคับ) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "เลือก: conversation.* (Home Assistant · ค่าเริ่มต้น).",
-      "window_open_timeout_minutes": "เวลารอหลังจากรับคำขอระบายอากาศ ก่อนอนุญาตให้เริ่มทำงานอัตโนมัติ/PID ครั้งใหม่หากยังจำเป็น 0–30 นาที ค่าเริ่มต้น 5; 0 ปิดการรอ การป้องกันเมื่อหน้าต่างเปิดและเวลาขั้นต่ำของอุปกรณ์ยังคงมีผล"
+      "window_open_timeout_minutes": "เวลารอหลังจากรับคำขอระบายอากาศ ก่อนอนุญาตให้เริ่มทำงานอัตโนมัติ/PID ครั้งใหม่หากยังจำเป็น 0–30 นาที ค่าเริ่มต้น 5; 0 ปิดการรอ การป้องกันเมื่อหน้าต่างเปิดและเวลาขั้นต่ำของอุปกรณ์ยังคงมีผล",
+      "window_close_cooldown_minutes": "เมื่อเปิดหน้าต่างตามคำแนะนำของ HEM ให้รอตามจำนวนนาทีนี้ก่อนแนะนำให้ปิด แม้ว่าสภาพภายนอกจะไม่เหมาะสมก็ตาม ระยะเวลารอจะนับแยกกันสำหรับแต่ละห้อง ตั้งได้ 0–60 นาที ค่าเริ่มต้น 5; ค่า 0 ปิดการรอ กฎการพักการทำงานและการป้องกันอุปกรณ์ยังคงมีผลอยู่"
     },
     "thresholds": {},
     "errors": {
@@ -1205,7 +1232,8 @@
       "media_players": "चुनें: media_player.* · स्वचालित ध्वनि घोषणाएँ.",
       "ai_rewrite_announcements": "AI · घोषणाएँ (वैकल्पिक) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "चुनें: conversation.* (Home Assistant · डिफ़ॉल्ट).",
-      "window_open_timeout_minutes": "हवा आने देने का अनुरोध स्वीकार होने के बाद, आवश्यकता होने पर नए स्वचालित/PID आरंभ की अनुमति देने से पहले प्रतीक्षा। 0–30 मिनट, डिफ़ॉल्ट 5; 0 प्रतीक्षा बंद करता है। खुली खिड़की की सुरक्षा और उपकरण के न्यूनतम समय लागू रहते हैं।"
+      "window_open_timeout_minutes": "हवा आने देने का अनुरोध स्वीकार होने के बाद, आवश्यकता होने पर नए स्वचालित/PID आरंभ की अनुमति देने से पहले प्रतीक्षा। 0–30 मिनट, डिफ़ॉल्ट 5; 0 प्रतीक्षा बंद करता है। खुली खिड़की की सुरक्षा और उपकरण के न्यूनतम समय लागू रहते हैं।",
+      "window_close_cooldown_minutes": "HEM के सुझाव पर खिड़की खोलने के बाद, उसे बंद करने का सुझाव देने से पहले इतने मिनट प्रतीक्षा करें, भले ही बाहर की स्थितियाँ उपयुक्त न हों। प्रतीक्षा समय हर कमरे के लिए अलग गिना जाता है। 0–60 मिनट, डिफ़ॉल्ट 5; 0 प्रतीक्षा बंद करता है। उपकरणों को रोकने और उनकी सुरक्षा के नियम सक्रिय रहते हैं।"
     },
     "thresholds": {},
     "errors": {
@@ -1251,7 +1279,8 @@
       "media_players": "请选择: media_player.* · 自动语音播报.",
       "ai_rewrite_announcements": "AI · 播报（可选） → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "请选择: conversation.* (Home Assistant · 默认).",
-      "window_open_timeout_minutes": "开窗请求被接受后，等待一段时间，再根据需要允许新的自动/PID启动。范围0–30分钟，默认5；0表示不等待。开窗保护和设备最短运行/停机时间仍然有效。"
+      "window_open_timeout_minutes": "开窗请求被接受后，等待一段时间，再根据需要允许新的自动/PID启动。范围0–30分钟，默认5；0表示不等待。开窗保护和设备最短运行/停机时间仍然有效。",
+      "window_close_cooldown_minutes": "按照 HEM 的开窗建议打开窗户后，等待设定的分钟数，再建议关窗，即使室外条件不适宜也会等待。各房间的等待时间独立计算。范围 0–60 分钟，默认 5；设为 0 可关闭等待。设备暂停和保护规则仍然有效。"
     },
     "thresholds": {},
     "errors": {
@@ -1297,7 +1326,8 @@
       "media_players": "請選擇: media_player.* · 自動語音播報.",
       "ai_rewrite_announcements": "AI · 播報（選用） → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "請選擇: conversation.* (Home Assistant · 預設).",
-      "window_open_timeout_minutes": "開窗請求被接受後，等候一段時間，再依需要允許新的自動/PID啟動。範圍0–30分鐘，預設5；0表示不等候。開窗保護和裝置最短運作／停機時間仍然有效。"
+      "window_open_timeout_minutes": "開窗請求被接受後，等候一段時間，再依需要允許新的自動/PID啟動。範圍0–30分鐘，預設5；0表示不等候。開窗保護和裝置最短運作／停機時間仍然有效。",
+      "window_close_cooldown_minutes": "依照 HEM 的開窗建議打開窗戶後，等待設定的分鐘數，再建議關窗，即使室外條件不適宜也會等待。各房間的等待時間獨立計算。範圍 0–60 分鐘，預設 5；設為 0 可關閉等待。裝置暫停和保護規則仍然有效。"
     },
     "thresholds": {},
     "errors": {
@@ -1343,7 +1373,8 @@
       "media_players": "選択してください: media_player.* · 自動音声通知.",
       "ai_rewrite_announcements": "AI · 通知（任意） → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "選択してください: conversation.* (Home Assistant · 既定).",
-      "window_open_timeout_minutes": "換気の依頼が受け付けられた後、必要に応じて新たな自動/PID起動を許可するまでの待機時間です。0～30分、既定は5分。0で待機を無効にします。窓開放時の保護と機器の最小運転・停止時間は引き続き適用されます。"
+      "window_open_timeout_minutes": "換気の依頼が受け付けられた後、必要に応じて新たな自動/PID起動を許可するまでの待機時間です。0～30分、既定は5分。0で待機を無効にします。窓開放時の保護と機器の最小運転・停止時間は引き続き適用されます。",
+      "window_close_cooldown_minutes": "HEMの提案に従って窓が開けられた後、ここで設定した分数が経過してから窓を閉めるよう提案します。屋外の条件が適していない場合も同様です。待ち時間は部屋ごとに計測します。0–60分、初期値は5。0にすると待ち時間が無効になります。機器の一時停止と保護のルールは引き続き適用されます。"
     },
     "thresholds": {},
     "errors": {
@@ -1389,7 +1420,8 @@
       "media_players": "선택하세요: media_player.* · 자동 음성 안내.",
       "ai_rewrite_announcements": "AI · 알림(선택 사항) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "선택하세요: conversation.* (Home Assistant · 기본값).",
-      "window_open_timeout_minutes": "환기 요청이 수락된 후, 필요한 경우 새로운 자동/PID 시작을 허용하기 전까지 기다리는 시간입니다. 0~30분, 기본값 5; 0은 대기를 끕니다. 창문 열림 보호와 기기의 최소 작동·정지 시간은 계속 적용됩니다."
+      "window_open_timeout_minutes": "환기 요청이 수락된 후, 필요한 경우 새로운 자동/PID 시작을 허용하기 전까지 기다리는 시간입니다. 0~30분, 기본값 5; 0은 대기를 끕니다. 창문 열림 보호와 기기의 최소 작동·정지 시간은 계속 적용됩니다.",
+      "window_close_cooldown_minutes": "HEM의 창문 열기 권고에 따라 창문이 열리면, 설정한 시간만큼 기다린 후 닫기를 권고합니다. 실외 조건이 적합하지 않아도 대기하며, 대기 시간은 방마다 따로 계산합니다. 0–60분, 기본값 5; 0으로 설정하면 대기하지 않습니다. 기기 일시 중지 및 보호 규칙은 계속 적용됩니다."
     },
     "thresholds": {},
     "errors": {
@@ -1435,7 +1467,8 @@
       "media_players": "اختر: media_player.* · إعلانات صوتية تلقائية.",
       "ai_rewrite_announcements": "AI · الإعلانات (اختياري) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "اختر: conversation.* (Home Assistant · افتراضي).",
-      "window_open_timeout_minutes": "انتظار بعد قبول طلب التهوية قبل السماح بعمليات تشغيل تلقائي/PID جديدة إذا ظلت مطلوبة. من 0 إلى 30 دقيقة، والافتراضي 5؛ القيمة 0 تلغي الانتظار. تظل حماية النافذة المفتوحة والحدود الزمنية الدنيا للأجهزة سارية."
+      "window_open_timeout_minutes": "انتظار بعد قبول طلب التهوية قبل السماح بعمليات تشغيل تلقائي/PID جديدة إذا ظلت مطلوبة. من 0 إلى 30 دقيقة، والافتراضي 5؛ القيمة 0 تلغي الانتظار. تظل حماية النافذة المفتوحة والحدود الزمنية الدنيا للأجهزة سارية.",
+      "window_close_cooldown_minutes": "بعد فتح نافذة استجابةً لاقتراح HEM بالتهوية، ينتظر هذا العدد من الدقائق قبل اقتراح إغلاقها، حتى لو كانت الظروف الخارجية غير مناسبة. تُحسب مدة الانتظار لكل غرفة على حدة. من 0–60 دقيقة، والقيمة الافتراضية 5؛ تعطل القيمة 0 الانتظار. تظل قواعد الإيقاف المؤقت وحماية الأجهزة سارية."
     },
     "thresholds": {},
     "errors": {
@@ -1481,7 +1514,8 @@
       "media_players": "בחרו: media_player.* · הודעות קוליות אוטומטיות.",
       "ai_rewrite_announcements": "AI · הודעות (אופציונלי) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "בחרו: conversation.* (Home Assistant · ברירת מחדל).",
-      "window_open_timeout_minutes": "המתנה לאחר קבלת בקשת אוורור, לפני מתן אפשרות להפעלות אוטומטיות/PID חדשות אם הן עדיין נחוצות. 0–30 דקות, ברירת מחדל 5; 0 מבטל את ההמתנה. הגנות חלון פתוח וזמני המינימום של המכשירים ממשיכים לחול."
+      "window_open_timeout_minutes": "המתנה לאחר קבלת בקשת אוורור, לפני מתן אפשרות להפעלות אוטומטיות/PID חדשות אם הן עדיין נחוצות. 0–30 דקות, ברירת מחדל 5; 0 מבטל את ההמתנה. הגנות חלון פתוח וזמני המינימום של המכשירים ממשיכים לחול.",
+      "window_close_cooldown_minutes": "לאחר פתיחת חלון בעקבות המלצת HEM לאוורור, יש להמתין מספר דקות זה לפני הצעה לסגור אותו, גם כשהתנאים בחוץ אינם מתאימים. זמן ההמתנה מחושב בנפרד לכל חדר. 0–60 דקות, ברירת המחדל 5; הערך 0 מבטל את ההמתנה. כללי ההשהיה וההגנה של המכשירים נשארים בתוקף."
     },
     "thresholds": {},
     "errors": {
@@ -1527,7 +1561,8 @@
       "media_players": "انتخاب کنید: media_player.* · اعلان‌های صوتی خودکار.",
       "ai_rewrite_announcements": "AI · اعلان‌ها (اختیاری) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "انتخاب کنید: conversation.* (Home Assistant · پیش‌فرض).",
-      "window_open_timeout_minutes": "زمان انتظار پس از پذیرفته شدن درخواست تهویه، پیش از مجاز شدن شروع‌های خودکار/PID جدید در صورت نیاز. ۰ تا ۳۰ دقیقه، پیش‌فرض ۵؛ ۰ انتظار را غیرفعال می‌کند. حفاظت پنجرهٔ باز و حداقل زمان‌های دستگاه‌ها همچنان اعمال می‌شوند."
+      "window_open_timeout_minutes": "زمان انتظار پس از پذیرفته شدن درخواست تهویه، پیش از مجاز شدن شروع‌های خودکار/PID جدید در صورت نیاز. ۰ تا ۳۰ دقیقه، پیش‌فرض ۵؛ ۰ انتظار را غیرفعال می‌کند. حفاظت پنجرهٔ باز و حداقل زمان‌های دستگاه‌ها همچنان اعمال می‌شوند.",
+      "window_close_cooldown_minutes": "پس از باز شدن پنجره طبق پیشنهاد تهویهٔ HEM، این تعداد دقیقه صبر می‌کند و سپس بستن پنجره را پیشنهاد می‌دهد، حتی اگر شرایط بیرون مناسب نباشد. زمان انتظار برای هر اتاق جداگانه محاسبه می‌شود. 0–60 دقیقه، پیش‌فرض 5؛ مقدار 0 انتظار را غیرفعال می‌کند. قواعد توقف موقت و حفاظت از دستگاه‌ها همچنان فعال می‌مانند."
     },
     "thresholds": {},
     "errors": {
@@ -1573,7 +1608,8 @@
       "media_players": "নির্বাচন করুন: media_player.* · স্বয়ংক্রিয় ভয়েস ঘোষণা.",
       "ai_rewrite_announcements": "AI · ঘোষণা (ঐচ্ছিক) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "নির্বাচন করুন: conversation.* (Home Assistant · ডিফল্ট).",
-      "window_open_timeout_minutes": "বাতাস চলাচলের অনুরোধ গৃহীত হওয়ার পর, প্রয়োজন থাকলে নতুন স্বয়ংক্রিয়/PID চালুর অনুমতির আগে অপেক্ষা। ০–৩০ মিনিট, ডিফল্ট ৫; ০ অপেক্ষা বন্ধ করে। খোলা জানালার সুরক্ষা ও যন্ত্রের ন্যূনতম সময় কার্যকর থাকে।"
+      "window_open_timeout_minutes": "বাতাস চলাচলের অনুরোধ গৃহীত হওয়ার পর, প্রয়োজন থাকলে নতুন স্বয়ংক্রিয়/PID চালুর অনুমতির আগে অপেক্ষা। ০–৩০ মিনিট, ডিফল্ট ৫; ০ অপেক্ষা বন্ধ করে। খোলা জানালার সুরক্ষা ও যন্ত্রের ন্যূনতম সময় কার্যকর থাকে।",
+      "window_close_cooldown_minutes": "HEM-এর পরামর্শে জানালা খোলার পর, সেটি বন্ধ করার পরামর্শ দেওয়ার আগে এই সংখ্যক মিনিট অপেক্ষা করে, বাইরের পরিবেশ অনুকূল না হলেও। প্রতিটি ঘরের জন্য অপেক্ষার সময় আলাদাভাবে গণনা করা হয়। 0–60 মিনিট, ডিফল্ট 5; 0 দিলে অপেক্ষা বন্ধ হয়। যন্ত্রের কাজ সাময়িক বন্ধ রাখা ও সুরক্ষার নিয়ম চালু থাকে।"
     },
     "thresholds": {},
     "errors": {
@@ -1619,7 +1655,8 @@
       "media_players": "منتخب کریں: media_player.* · خودکار صوتی اعلانات.",
       "ai_rewrite_announcements": "AI · اعلانات (اختیاری) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "منتخب کریں: conversation.* (Home Assistant · پہلے سے طے شدہ).",
-      "window_open_timeout_minutes": "ہوا آنے دینے کی درخواست قبول ہونے کے بعد، ضرورت برقرار ہو تو نئے خودکار/PID آغاز کی اجازت سے پہلے انتظار۔ 0–30 منٹ، طے شدہ 5؛ 0 انتظار بند کرتا ہے۔ کھلی کھڑکی کی حفاظت اور آلات کے کم از کم اوقات برقرار رہتے ہیں۔"
+      "window_open_timeout_minutes": "ہوا آنے دینے کی درخواست قبول ہونے کے بعد، ضرورت برقرار ہو تو نئے خودکار/PID آغاز کی اجازت سے پہلے انتظار۔ 0–30 منٹ، طے شدہ 5؛ 0 انتظار بند کرتا ہے۔ کھلی کھڑکی کی حفاظت اور آلات کے کم از کم اوقات برقرار رہتے ہیں۔",
+      "window_close_cooldown_minutes": "HEM کے ہوا کی آمدورفت کے مشورے پر کھڑکی کھلنے کے بعد، اسے بند کرنے کا مشورہ دینے سے پہلے اتنے منٹ انتظار کرتا ہے، چاہے باہر کے حالات موزوں نہ ہوں۔ ہر کمرے کا انتظار الگ شمار کیا جاتا ہے۔ 0–60 منٹ، طے شدہ قدر 5؛ قدر 0 انتظار بند کرتی ہے۔ آلات کو عارضی طور پر روکنے اور ان کی حفاظت کے قواعد فعال رہتے ہیں۔"
     },
     "thresholds": {},
     "errors": {
@@ -1665,7 +1702,8 @@
       "media_players": "தேர்ந்தெடுக்கவும்: media_player.* · தானியங்கி குரல் அறிவிப்புகள்.",
       "ai_rewrite_announcements": "AI · அறிவிப்புகள் (விருப்பம்) → Announcement Hub (use_ai) / Home Assistant.",
       "ai_conversation_agent": "தேர்ந்தெடுக்கவும்: conversation.* (Home Assistant · இயல்புநிலை).",
-      "window_open_timeout_minutes": "காற்றோட்டக் கோரிக்கை ஏற்கப்பட்ட பின், இன்னும் தேவை இருந்தால் புதிய தானியங்கி/PID தொடக்கங்களை அனுமதிக்கும் முன் காத்திருக்கும் நேரம். 0–30 நிமிடங்கள், இயல்புநிலை 5; 0 காத்திருப்பை முடக்கும். திறந்த சாளரப் பாதுகாப்புகளும் சாதனங்களின் குறைந்தபட்ச நேரங்களும் தொடர்ந்து பொருந்தும்."
+      "window_open_timeout_minutes": "காற்றோட்டக் கோரிக்கை ஏற்கப்பட்ட பின், இன்னும் தேவை இருந்தால் புதிய தானியங்கி/PID தொடக்கங்களை அனுமதிக்கும் முன் காத்திருக்கும் நேரம். 0–30 நிமிடங்கள், இயல்புநிலை 5; 0 காத்திருப்பை முடக்கும். திறந்த சாளரப் பாதுகாப்புகளும் சாதனங்களின் குறைந்தபட்ச நேரங்களும் தொடர்ந்து பொருந்தும்.",
+      "window_close_cooldown_minutes": "HEM பரிந்துரையின்படி சாளரம் திறக்கப்பட்ட பிறகு, அதை மூடப் பரிந்துரைக்கும் முன் இத்தனை நிமிடங்கள் காத்திருக்கும்; வெளிப்புறச் சூழல் ஏற்றதாக இல்லாவிட்டாலும் காத்திருக்கும். ஒவ்வொரு அறைக்கும் காத்திருப்பு நேரம் தனித்தனியாகக் கணக்கிடப்படும். 0–60 நிமிடங்கள், இயல்புநிலை 5; 0 என அமைத்தால் காத்திருப்பு முடக்கப்படும். சாதனங்களை இடைநிறுத்தும் மற்றும் பாதுகாக்கும் விதிகள் தொடர்ந்து செயல்படும்."
     },
     "thresholds": {},
     "errors": {

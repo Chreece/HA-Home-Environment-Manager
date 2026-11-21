@@ -212,7 +212,8 @@
     "shade_lux_enabled": "advanced",
     "shade_lux_entity": "advanced",
     "shade_min_lux": "advanced",
-    "shade_window_entity": "basic"
+    "shade_window_entity": "basic",
+    "global_setting_window_close_cooldown_minutes": "basic"
   },
   "home_option_levels": {
     "ai_conversation_agent": "advanced",
@@ -267,7 +268,8 @@
     "use_mold_indicator": "basic",
     "weather_entities": "basic",
     "weather_warnings": "basic",
-    "window_open_timeout_minutes": "basic"
+    "window_open_timeout_minutes": "basic",
+    "window_close_cooldown_minutes": "basic"
   },
   "room_option_levels": {
     "windows": "basic",
@@ -285,7 +287,8 @@
     "home_global_policy_home_policy": "general_home_policy",
     "home_global_policy_source_freshness_mode": "general_source_freshness_mode",
     "home_global_threshold_mode_max_age_mode": "global_threshold_max_age_mode",
-    "global_threshold_max_age_minutes": "global_threshold_max_age_minutes"
+    "global_threshold_max_age_minutes": "global_threshold_max_age_minutes",
+    "global_setting_window_close_cooldown_minutes": "window_close_cooldown_minutes"
   },
   "always_basic": {
     "native": [
@@ -351,6 +354,7 @@
       "equipment_target_sleep_heat",
       "equipment_target_sleep_humidity",
       "global_occupancy_source_stale_minutes",
+      "global_setting_window_close_cooldown_minutes",
       "global_threshold_max_age_minutes",
       "global_threshold_max_outdoor_humidity",
       "global_threshold_max_outdoor_temp",
@@ -395,6 +399,7 @@
       "use_mold_indicator",
       "weather_entities",
       "weather_warnings",
+      "window_close_cooldown_minutes",
       "window_open_timeout_minutes"
     ],
     "room_options": [

@@ -254,6 +254,11 @@ per room; floor-wide environmental overrides are not implied.
 - Average history keeps separate records for each exact group of contributing
   sensors. Temporary startup outages do not replace the original group's
   samples. A returning group resumes its history with a visible gap.
+- The room-average and mold popups fetch detailed retained observations only
+  when opened. The small preview in the normal dashboard is not used as the
+  complete history of a 6-hour or 24-hour chart. Unavailable intervals and
+  restart boundaries remain visible; HEM does not fill them with invented
+  measurements.
 - The icon before a physical entity's name opens its device page; the icon
   before a HEM controller's name opens its HEM device page. Clicking either
   name opens the corresponding entity. Announcement controls show the bell
@@ -837,6 +842,54 @@ Use `tts` or `notification` to limit the channel. Optional `areas` contains Home
 Assistant area IDs. This action announces current recommendations; it does not
 send arbitrary text, and there may be nothing to announce when no action is
 recommended.
+
+## History storage and removing HEM
+
+Individual sensor charts read Home Assistant's recorded history. Their coverage
+depends on Recorder exclusions and retention. Room averages and derived mold
+charts use HEM's own bounded local history, saved through Home Assistant's
+storage helper and restored after restart. Average history retains up to seven
+days and 672 observations per room/metric, shared across its exact contributor
+groups. Environmental snapshots retain up to eight days and 2,600 observations
+per room; mold charts show the latest seven days. The normal sampling intervals
+are 15 minutes for averages and five minutes for environmental snapshots,
+with relevant transitions recorded separately. **All** means all retained
+observations, not an unlimited archive.
+
+The detailed charts read the stored observations, not the sparse overview
+preview. They cannot recover periods that were never recorded, have expired,
+or were already discarded. Mold history is the estimate computed at the time;
+it is not recalculated retrospectively using a new calibration factor.
+
+To remove a configured HEM integration, use **Settings → Devices & services →
+Home Environment Manager → Delete**. Permanent removal stops its writers and
+deletes the entry's 16 owned storage journals, including history, calibration
+and controller recovery state. It also dismisses identifiable owned persistent
+notifications. Home Assistant removes that entry's entities, devices and
+associated configuration. A reload, restart or disable keeps its saved data.
+With multiple HEM entries, removal is scoped to the selected entry.
+
+After the last entry is removed, HEM unregisters its added frontend script for
+new page loads. An already open dashboard can retain loaded JavaScript until
+refreshed. Per-browser display preferences can remain in browser storage;
+server-side removal cannot clear offline browsers. Manually added dashboard
+cards, automations and scripts are user
+configuration and remain for you to remove or reuse. HEM does not uninstall
+its own code: remove the installed package separately through HACS after
+deleting the configured integration. Removing the package first prevents its
+cleanup hook from running. Old backups and journal files from integrations
+deleted before this cleanup was available are not scanned or erased.
+
+Source sensors, physical device integrations and Recorder data are preserved.
+Recorder follows its own retention policy; permanent HEM removal does not
+purge its database or clear long-term statistics. If you separately intend to
+delete recorded entity history, Home Assistant provides explicit Recorder
+purge actions. Avoid broad domain or wildcard purges when you only intend to
+remove particular entities.
+
+References: [Home Assistant config-entry removal](https://contributors.home-assistant.io/core/integrations/config-entries/#remove-a-config-entry),
+[Recorder configuration](https://www.home-assistant.io/integrations/recorder/)
+and [entity-specific Recorder purging](https://www.home-assistant.io/actions/recorder.purge_entities/).
 
 ## Troubleshooting
 

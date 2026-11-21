@@ -413,6 +413,12 @@ def browser_checks(data):
               connection:{},localize:()=>undefined,
               callService:(...args)=>{serviceCalls.push(args);return Promise.resolve()},
               callWS:message=>{
+                if(message.type==='environment_manager/trend'){
+                  const room=card._hass.states['sensor.hem'].attributes.dashboard.rooms.find(r=>r.area_id===message.area_id);
+                  const value=room.environment.measurement_evidence[message.metric];
+                  return Promise.resolve({area_id:message.area_id,metric:message.metric,
+                    source_ids:value.source_ids,source_count:value.source_count,trend:structuredClone(value.trend||[])});
+                }
                 if(message.type!=='history/history_during_period')return Promise.resolve([]);
                 return new Promise((resolve,reject)=>historyRequests.push({message,resolve,reject}));
               }};

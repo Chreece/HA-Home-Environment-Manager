@@ -230,7 +230,8 @@
           "general_home_policy": "Prezență acasă",
           "general_wake_alarm_entity": "Somn · Următoarea alarmă",
           "general_wake_lead_minutes_entity": "Somn · Minute înainte de alarmă",
-          "window_open_timeout_minutes": "Așteptare pentru deschiderea ferestrei (min)"
+          "window_open_timeout_minutes": "Așteptare pentru deschiderea ferestrei (min)",
+          "window_close_cooldown_minutes": "Așteptare înainte de a sugera închiderea ferestrei (min)"
         },
         "data_description": {
           "weather_entities": "Alegeți: Vreme și avertizări · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -283,7 +284,8 @@
           "general_home_policy": "O persoană confirmată acasă menține întotdeauna locuința ocupată. Opțiunea „Toți acasă” este păstrată pentru configurațiile existente și aplică aceeași regulă. Starea „Plecat” necesită absență confirmată; starea necunoscută a unui dispozitiv de urmărire selectat nu dovedește că au plecat toți.",
           "general_wake_alarm_entity": "Selectați o entitate cu ora sau data și ora următoarei alarme și o entitate pentru minutele de avans. HEM încheie somnul automat cu acest avans și reia țintele normale. Orele fără dată folosesc fusul Home Assistant. Absența, controlul manual și protecțiile rămân prioritare.",
           "general_wake_lead_minutes_entity": "Selectați o entitate numerică cu minute nenegative, cu unitatea min sau fără unitate. O alarmă la 07:00 și valoarea 30 încheie somnul automat la 06:30; 0 înseamnă la sonerie. Pentru dezactivare, ștergeți ambele surse.",
-          "window_open_timeout_minutes": "Așteptare după acceptarea unei cereri de aerisire înainte de a permite noi porniri automate/PID, dacă mai sunt necesare. 0–30 de minute, implicit 5; 0 dezactivează așteptarea. Protecțiile pentru ferestre deschise și timpii minimi ai dispozitivelor rămân active."
+          "window_open_timeout_minutes": "Așteptare după acceptarea unei cereri de aerisire înainte de a permite noi porniri automate/PID, dacă mai sunt necesare. 0–30 de minute, implicit 5; 0 dezactivează așteptarea. Protecțiile pentru ferestre deschise și timpii minimi ai dispozitivelor rămân active.",
+          "window_close_cooldown_minutes": "După deschiderea unei ferestre în urma unei sugestii HEM, așteaptă acest număr de minute înainte de a sugera închiderea ei, chiar dacă condițiile de afară sunt nepotrivite. Timpul de așteptare se aplică independent fiecărei camere. 0–60 de minute, implicit 5; 0 dezactivează așteptarea. Regulile de pauză și protecție ale dispozitivelor rămân active."
         }
       },
       "reconfigure": {
@@ -2248,7 +2250,8 @@
           "general_wake_lead_minutes_entity": "Somn · Minute înainte de alarmă",
           "window_open_timeout_minutes": "Așteptare pentru deschiderea ferestrei (min)",
           "general_source_freshness_mode": "Ocuparea locuinței · Regula de valabilitate",
-          "global_threshold_max_age_mode": "Mediu · Regula de valabilitate"
+          "global_threshold_max_age_mode": "Mediu · Regula de valabilitate",
+          "window_close_cooldown_minutes": "Așteptare înainte de a sugera închiderea ferestrei (min)"
         },
         "data_description": {
           "weather_entities": "Alegeți: Vreme și avertizări · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2303,7 +2306,8 @@
           "general_wake_lead_minutes_entity": "Selectați o entitate numerică cu minute nenegative, cu unitatea min sau fără unitate. O alarmă la 07:00 și valoarea 30 încheie somnul automat la 06:30; 0 înseamnă la sonerie. Pentru dezactivare, ștergeți ambele surse.",
           "window_open_timeout_minutes": "Așteptare după acceptarea unei cereri de aerisire înainte de a permite noi porniri automate/PID, dacă mai sunt necesare. 0–30 de minute, implicit 5; 0 dezactivează așteptarea. Protecțiile pentru ferestre deschise și timpii minimi ai dispozitivelor rămân active.",
           "general_source_freshness_mode": "Automat: contoarele numerice de persoane și rapoartele negative ale dispozitivelor de urmărire de acasă sunt acceptate până la 240 de minute; o stare „Acasă” validă și neschimbată poate rămâne „Acasă” până când se modifică. Sursele necunoscute, restaurate și indisponibile nu pot dovedi absența. Personalizat: folosiți numărul de minute de mai jos pentru rapoartele eșantionate. Sursele listelor de camere rămân bazate pe schimbări.",
-          "global_threshold_max_age_mode": "Automat: entitățile meteo pot rămâne valide 180 de minute, alte măsurători numerice de mediu 90 de minute, iar contactele binare valide bazate pe schimbări rămân utilizabile fără un termen de inactivitate. Personalizat: folosiți numărul de minute de mai jos. Verificările de disponibilitate și de stare restaurată se aplică întotdeauna. În Home Assistant, last_reported avansează la o scriere repetată a aceleiași valori, nu doar pentru că a trecut timpul."
+          "global_threshold_max_age_mode": "Automat: entitățile meteo pot rămâne valide 180 de minute, alte măsurători numerice de mediu 90 de minute, iar contactele binare valide bazate pe schimbări rămân utilizabile fără un termen de inactivitate. Personalizat: folosiți numărul de minute de mai jos. Verificările de disponibilitate și de stare restaurată se aplică întotdeauna. În Home Assistant, last_reported avansează la o scriere repetată a aceleiași valori, nu doar pentru că a trecut timpul.",
+          "window_close_cooldown_minutes": "După deschiderea unei ferestre în urma unei sugestii HEM, așteaptă acest număr de minute înainte de a sugera închiderea ei, chiar dacă condițiile de afară sunt nepotrivite. Timpul de așteptare se aplică independent fiecărei camere. 0–60 de minute, implicit 5; 0 dezactivează așteptarea. Regulile de pauză și protecție ale dispozitivelor rămân active."
         }
       },
       "room_occupancy": {
@@ -3880,6 +3884,9 @@
             "name": "Ajutor"
           }
         }
+      },
+      "global_setting_window_close_cooldown_minutes": {
+        "name": "Ventilație · Așteptare înainte de a sugera închiderea ferestrei (min)"
       }
     },
     "switch": {

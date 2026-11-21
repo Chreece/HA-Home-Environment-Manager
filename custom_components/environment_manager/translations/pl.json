@@ -230,7 +230,8 @@
           "general_home_policy": "Obecność w domu",
           "general_wake_alarm_entity": "Sen · Następny budzik",
           "general_wake_lead_minutes_entity": "Sen · Minuty przed budzikiem",
-          "window_open_timeout_minutes": "Oczekiwanie na otwarcie okna (min)"
+          "window_open_timeout_minutes": "Oczekiwanie na otwarcie okna (min)",
+          "window_close_cooldown_minutes": "Czas oczekiwania przed sugestią zamknięcia okna (min)"
         },
         "data_description": {
           "weather_entities": "Wybierz: Pogoda i ostrzeżenia · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -283,7 +284,8 @@
           "general_home_policy": "Potwierdzona obecność osoby w domu zawsze oznacza, że dom jest zajęty. Opcja „Wszyscy w domu” zostaje zachowana dla istniejących konfiguracji i stosuje tę samą regułę. Stan „Poza domem” wymaga potwierdzonej nieobecności; nieznany stan wybranego lokalizatora nie dowodzi, że wszyscy wyszli.",
           "general_wake_alarm_entity": "Wybierz encję godziny lub daty i godziny następnego budzika oraz encję minut wyprzedzenia. HEM kończy automatyczny sen o tyle minut wcześniej i przywraca zwykłe cele. Godziny bez daty używają strefy Home Assistant. Nieobecność, sterowanie ręczne i zabezpieczenia zachowują pierwszeństwo.",
           "general_wake_lead_minutes_entity": "Wybierz encję liczbową z nieujemną liczbą minut, z jednostką min lub bez jednostki. Budzik o 07:00 i wartość 30 kończą automatyczny sen o 06:30; 0 oznacza moment dzwonienia. Aby wyłączyć, usuń oba źródła.",
-          "window_open_timeout_minutes": "Czas oczekiwania po przyjęciu prośby o wietrzenie przed ponownym zezwoleniem na automatyczne uruchomienia/PID, jeśli są potrzebne. 0–30 minut, domyślnie 5; 0 wyłącza oczekiwanie. Ochrona przy otwartym oknie i minimalne czasy pracy urządzeń nadal obowiązują."
+          "window_open_timeout_minutes": "Czas oczekiwania po przyjęciu prośby o wietrzenie przed ponownym zezwoleniem na automatyczne uruchomienia/PID, jeśli są potrzebne. 0–30 minut, domyślnie 5; 0 wyłącza oczekiwanie. Ochrona przy otwartym oknie i minimalne czasy pracy urządzeń nadal obowiązują.",
+          "window_close_cooldown_minutes": "Po otwarciu okna zgodnie z sugestią HEM odczekuje tyle minut, zanim zasugeruje jego zamknięcie, nawet jeśli warunki na zewnątrz są nieodpowiednie. Czas oczekiwania jest liczony niezależnie dla każdego pomieszczenia. 0–60 minut, domyślnie 5; 0 wyłącza opóźnienie. Zasady wstrzymywania pracy i ochrony urządzeń pozostają aktywne."
         }
       },
       "reconfigure": {
@@ -2248,7 +2250,8 @@
           "general_wake_lead_minutes_entity": "Sen · Minuty przed budzikiem",
           "window_open_timeout_minutes": "Oczekiwanie na otwarcie okna (min)",
           "general_source_freshness_mode": "Obecność w domu · Zasady ważności",
-          "global_threshold_max_age_mode": "Środowisko · Zasady ważności"
+          "global_threshold_max_age_mode": "Środowisko · Zasady ważności",
+          "window_close_cooldown_minutes": "Czas oczekiwania przed sugestią zamknięcia okna (min)"
         },
         "data_description": {
           "weather_entities": "Wybierz: Pogoda i ostrzeżenia · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2303,7 +2306,8 @@
           "general_wake_lead_minutes_entity": "Wybierz encję liczbową z nieujemną liczbą minut, z jednostką min lub bez jednostki. Budzik o 07:00 i wartość 30 kończą automatyczny sen o 06:30; 0 oznacza moment dzwonienia. Aby wyłączyć, usuń oba źródła.",
           "window_open_timeout_minutes": "Czas oczekiwania po przyjęciu prośby o wietrzenie przed ponownym zezwoleniem na automatyczne uruchomienia/PID, jeśli są potrzebne. 0–30 minut, domyślnie 5; 0 wyłącza oczekiwanie. Ochrona przy otwartym oknie i minimalne czasy pracy urządzeń nadal obowiązują.",
           "general_source_freshness_mode": "Automatycznie: liczniki osób i negatywne zgłoszenia lokalizatorów domowych są akceptowane przez maksymalnie 240 minut; prawidłowy niezmieniony stan „W domu” może pozostać takim stanem, dopóki się nie zmieni. Źródła nieznane, przywrócone i niedostępne nie mogą potwierdzić nieobecności. Własne: użyj poniższej liczby minut dla raportów próbkowanych. Źródła list pomieszczeń nadal działają na podstawie zmian.",
-          "global_threshold_max_age_mode": "Automatycznie: encje pogodowe mogą pozostać aktualne przez 180 minut, inne liczbowe pomiary środowiskowe przez 90 minut, a prawidłowe styki binarne sterowane zmianami pozostają użyteczne bez limitu bezczynności. Własne: użyj poniższej liczby minut. Kontrole dostępności i przywróconego stanu obowiązują zawsze. W Home Assistant last_reported aktualizuje się po ponownym zapisie tej samej wartości, a nie wskutek samego upływu czasu."
+          "global_threshold_max_age_mode": "Automatycznie: encje pogodowe mogą pozostać aktualne przez 180 minut, inne liczbowe pomiary środowiskowe przez 90 minut, a prawidłowe styki binarne sterowane zmianami pozostają użyteczne bez limitu bezczynności. Własne: użyj poniższej liczby minut. Kontrole dostępności i przywróconego stanu obowiązują zawsze. W Home Assistant last_reported aktualizuje się po ponownym zapisie tej samej wartości, a nie wskutek samego upływu czasu.",
+          "window_close_cooldown_minutes": "Po otwarciu okna zgodnie z sugestią HEM odczekuje tyle minut, zanim zasugeruje jego zamknięcie, nawet jeśli warunki na zewnątrz są nieodpowiednie. Czas oczekiwania jest liczony niezależnie dla każdego pomieszczenia. 0–60 minut, domyślnie 5; 0 wyłącza opóźnienie. Zasady wstrzymywania pracy i ochrony urządzeń pozostają aktywne."
         }
       },
       "room_occupancy": {
@@ -3880,6 +3884,9 @@
             "name": "Pomoc"
           }
         }
+      },
+      "global_setting_window_close_cooldown_minutes": {
+        "name": "Wentylacja · Czas oczekiwania przed sugestią zamknięcia okna (min)"
       }
     },
     "switch": {
