@@ -163,9 +163,13 @@ def _configured_metric(manager: Any, spec: Any, cap: Any, cfg: dict,
                 profile = equipment.settings_for_mode(manager, spec, mode)
                 method = profile.get("control_mode")
                 if isinstance(method, str) and method in _AUTOMATIC:
-                    metrics.add(_metric_for_controller(manager, spec, cap, profile))
+                    metric = _metric_for_controller(manager, spec, cap, profile)
+                    if metric is not None:
+                        metrics.add(metric)
             # Different eligible directions need different evidence. Until a
             # direction exists, only a common input is an unambiguous need.
+            # A profile without a resolved feedback metric must not erase
+            # the known requirement of another eligible direction.
             return next(iter(metrics)) if len(metrics) == 1 else None
     method = cfg.get("control_mode")
     return (_metric_for_controller(manager, spec, cap, cfg)

@@ -387,6 +387,38 @@ class RoomDataTests(unittest.TestCase):
         cfg["requested_mode"] = "dry"
         self.assertEqual(self.room()["data_availability"]["missing_required_metrics"], ["humidity"])
 
+    def test_unresolved_fan_purpose_cannot_hide_scoped_heating_feedback(self):
+        spec = self.controller(mode=None, modes=("off", "heat", "fan_only"))
+        cfg = self.manager.settings["equipment_controllers"][spec.identifier]
+        cfg.clear()
+        cfg.update(requested_mode=None, mode_settings_version=1, mode_settings={
+            "heat": {"control_mode": "automatic"},
+            "fan_only": {"control_mode": "automatic"}})
+        self.sensor("humidity", 50.)
+        self.sensor("temperature", "unavailable")
+        self.selection(temperature=("sensor.temperature",), humidity=("sensor.humidity",))
+        self.manager.plan = self.plan(temperature=None, humidity=50.)
+        before = deepcopy((self.manager.settings, self.runtime.records))
+        self.assertIsNone(self.runtime.active_control_mode(spec))
+        result = self.snapshot()
+        self.assertEqual(result["rooms"][0]["data_availability"]["required_metrics"], ["temperature"])
+        self.assertEqual(result["rooms"][0]["data_availability"]["missing_required_metrics"], ["temperature"])
+        self.assertEqual(result["rooms"][0]["status"], "unknown")
+        self.assertEqual(result["summary"]["unknown"], 1)
+        self.assertEqual(areas.AreaOverview(self.manager, "entry", "room").native_value, "unknown")
+        self.sensor("temperature", 21.)
+        self.assertEqual(self.room()["data_availability"]["missing_required_metrics"], [])
+        self.assertEqual(self.room()["status"], "safe")
+        self.assertEqual((self.manager.settings, self.runtime.records), before)
+        # With no eligible known metric, keep ordinary monitoring readiness;
+        # an unresolved fan purpose must not invent a pollutant requirement.
+        cfg["mode_settings"]["heat"]["control_mode"] = "manual"
+        self.states["sensor.temperature"].state = "unavailable"
+        result = self.room()
+        self.assertEqual(result["data_availability"]["required_metrics"], [])
+        self.assertEqual(result["data_availability"]["controllers"], [])
+        self.assertEqual(result["status"], "safe")
+
     def test_two_controllers_report_independent_required_metrics(self):
         self.controller()
         self.controller("humidifier.dry", mode="dry", method="pid")
