@@ -107,8 +107,8 @@ with sync_playwright() as playwright:
         assert native.locator('[data-hem-option-help127]').count() == 0
         assert 'native fan mode' in native.locator('.hem-full-help-body127').inner_text()
         assert page.evaluate('calls.length') == 0
-        # Even malicious-looking option explanations are escaped as literal
-        # text and cannot create a DOM element or issue HA calls.
+        # A known English source uses its reviewed bundled translation even
+        # when incoming localized metadata has been replaced.
         page.evaluate(r"""() => {
           doorField.state.attributes.option_help_locales.el.conflicts=
             '<img src=x onerror=alert(1)> A setting example';
@@ -118,8 +118,21 @@ with sync_playwright() as playwright:
         }""")
         panel = page.locator('[data-hem-full-row127="select.test_door_coordination"]')
         panel.locator('summary').click()
+        assert option_help('equipment_door_start_coordination')['el']['conflicts'] in panel.inner_text()
+        assert '<img src=x onerror=alert(1)>' not in panel.inner_text()
+        assert panel.locator('script,img,iframe').count() == 0
+        assert page.evaluate('calls.length') == 0
+        # An unknown vendor source takes the localized metadata fallback.
+        # Its malicious-looking explanation must remain literal text.
+        page.evaluate(r"""() => {
+          doorField.state.attributes.option_help_locales.en.conflicts=
+            'Vendor-specific explanation for the escaping regression fixture.';
+          const node=card.shadowRoot.querySelector('[data-hem-full-row127="select.test_door_coordination"]');
+          node.outerHTML=card._hemFullRow127(doorField,'device');
+        }""")
+        panel.locator('summary').click()
         assert '<img src=x onerror=alert(1)>' in panel.inner_text()
-        assert panel.locator('script,img').count() == 0
+        assert panel.locator('script,img,iframe').count() == 0
         assert page.evaluate('calls.length') == 0
         assert not errors, errors
         page.close()
