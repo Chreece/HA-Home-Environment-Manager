@@ -12,6 +12,7 @@ from .operating_mode_catalog import (
     operating_mode_ui_labels,
 )
 from .settings_name_catalog import localized_setting_name
+from .backend_text import presentation_languages, translated_text
 
 TARGET_PROFILES = ("manual", "home", "comfort", "away", "sleep", "eco")
 
@@ -100,19 +101,24 @@ def scoped_help(key: str, language: str, ordinary: str) -> str:
         }
     else:
         return ordinary
-    return prefix.get(language, prefix["en"]) + ("\n" + ordinary if ordinary else "")
+    return prefix.get(language, translated_text(prefix["en"], language)) + ("\n" + ordinary if ordinary else "")
 
 
 def scoped_metadata(manager, spec, mode: str, key: str, language: str) -> dict:
     descriptor = model.mode_descriptor(manager, spec, mode) or {}
+    locales = presentation_languages(language)
     return {
         "settings_scope": "operating_mode",
         "setting_key": key,
         "operating_mode": mode,
         "operating_mode_label": operating_mode_label(mode, language),
+        "operating_mode_label_locales": {locale: operating_mode_label(mode, locale) for locale in locales},
         "operating_mode_ui_labels": operating_mode_ui_labels(language),
+        "operating_mode_ui_labels_locales": {locale: operating_mode_ui_labels(locale) for locale in locales},
         "setting_label": setting_label(key, language),
+        "setting_label_locales": {locale: setting_label(key, locale) for locale in locales},
         "option_labels": mode_option_labels(key, language),
+        "option_labels_locales": {locale: mode_option_labels(key, locale) for locale in locales},
         "native_operating_mode": descriptor.get("native_mode"),
         "pid_supported": descriptor.get("pid_supported", False),
         "target_metric": descriptor.get("metric"),

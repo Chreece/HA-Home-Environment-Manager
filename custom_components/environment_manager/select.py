@@ -450,7 +450,8 @@ class EquipmentSelect(EquipmentEntity, SelectEntity):
     def extra_state_attributes(self):
         attributes = super().extra_state_attributes
         from .setting_option_explanations import option_help_locales
-        explanations = option_help_locales("equipment_" + self._key)
+        locale = getattr(getattr(self._manager.hass, "config", None), "language", "en")
+        explanations = option_help_locales("equipment_" + self._key, locale)
         if explanations:
             attributes = {**attributes, "option_help_locales": explanations}
         if self._key in ("pid_fan_capacity_mode", "pid_fan_capacity_for_mode"):
@@ -621,11 +622,10 @@ class ShadeIlluminanceSelect(SettingsMetadata, SelectEntity):
         self._attr_device_info = controller_device_info(manager, area, cover)
         if self._attr_device_info is None:
             raise ValueError("No registered child device for this window shade")
-        locale = str(getattr(getattr(manager.hass, "config", None), "language", "en")).split("-")[0]
-        self._none_label = {"el":"Χωρίς αισθητήρα", "de":"Kein Sensor", "en":"No sensor"}.get(locale, "No sensor")
-        self._mean_label = {"el":"Μέσος όρος επιλεγμένων lux δωματίου",
-                            "de":"Mittelwert der ausgewählten Raum-Lux-Sensoren",
-                            "en":"Selected room lux sensor mean"}.get(locale,"Selected room lux sensor mean")
+        from .backend_text import translated_text, resolve_language
+        locale = resolve_language(getattr(getattr(manager.hass, "config", None), "language", "en"))
+        self._none_label = translated_text("No sensor", locale)
+        self._mean_label = translated_text("Selected room lux sensor mean", locale)
         # Inventory scan once per room and initial registration, never once
         # per controller state update or each additional cover in this room.
         inventory = getattr(manager, "_shade_lux_inventory_cache", None)

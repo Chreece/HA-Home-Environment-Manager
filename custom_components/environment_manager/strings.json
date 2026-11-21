@@ -279,7 +279,7 @@
           "pollen_high_from": "Pollen reading at or above which the selected provider counts as high. Use the provider's own scale, from 0 up to the configured maximum; e.g. 3 with a maximum of 5. With Avoid ventilation enabled, valid high readings caution against automatic outdoor-air intake.",
           "pollen_max_scale": "Positive maximum of the selected provider's pollen index (1–100), not the current reading. For a 0–5 scale enter 5. All selected pollen sources must use compatible index scales; HEM does not convert between providers. A zero or invalid scale cannot classify pollen.",
           "pollen_avoid_ventilation": "Include verified high pollen among outdoor cautions and keep automatic outside-air use blocked while it persists. Useful manual airing may still be suggested conditionally with the pollen warning. The selected source, high threshold and provider maximum define high pollen; enable when pollen avoidance matters to occupants.",
-          "general_source_stale_minutes": "Maximum age of reports from direct home trackers and sampled numeric occupancy counts. The default is 240 minutes. Stable occupied/sleep-room lists and binary room-presence states remain valid until they change; unavailable, restored or invalid selected sources remain unknown. This is not a sleep duration.",
+          "general_source_stale_minutes": "Maximum report age for confirming Away from person/device trackers and for sampled numeric counts (default 240 minutes). An unchanged positive Home state on a person/device tracker or an ON whole-home binary sensor remains valid overnight. Room-presence and sleep lists also remain valid while unchanged. Missing, unknown, unavailable and restored sources cannot establish Away.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Select the Home Assistant source reporting the next wake alarm. HEM can end an automatically selected sleep profile before the alarm only when a corresponding minutes-before-alarm source is also configured. Both sources must be selected together; an unavailable source never proves that a wake time was reached.",
           "general_wake_lead_minutes_entity": "Select the source reporting how many minutes before the next wake alarm HEM should end automatic sleep. This must be paired with the next-alarm source, or both left unselected. An invalid/unknown value does not force a wake transition.",
@@ -536,7 +536,7 @@
       },
       "environment_room_air": {
         "title": "Room: {area_name} - ventilation and moisture",
-        "description": "Specify room air volume and sensors. Manufacturer particle CADR is now a per-air-purifier device setting, never a general room setting.",
+        "description": "Room air volume and sensors. Rated particle CADR belongs to each purifier device.",
         "data": {
           "temperature_entity": "Room air temperature sensor (optional override)",
           "room_volume_m3": "Measured room air volume (m³)",
@@ -588,7 +588,7 @@
       },
       "environment_room_comfort": {
         "title": "Room: {area_name} - full thermal comfort (advanced)",
-        "description": "Optional advanced ISO 7730 only; simple automatic comfort works with real room temperature and humidity, without manual estimates of air speed or clothing.",
+        "description": "Optional advanced ISO 7730. Simple automatic comfort requires no clothing, activity, radiant or air-speed inputs.",
         "data": {
           "enable_pmv": "Calculate full ISO 7730 PMV/PPD (opt in)",
           "radiant_temperature_entity": "Mean radiant temperature sensor (°C)",
@@ -669,7 +669,7 @@
           "climate_area": "Room to configure"
         },
         "data_description": {
-          "climate_area": "This setting governs Room to configure. Physical commands require a separate device opt-in and appropriate protections."
+          "climate_area": "Choose which room's climate settings to edit. Device commands require separate permission for each device and appropriate protections."
         }
       },
       "climate_room": {
@@ -729,7 +729,7 @@
           "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification. The configured wake alarm and lead time can end automatic Sleep before this source ends, so normal control resumes within its existing permissions.",
           "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00. The configured wake alarm and lead time can end automatic Sleep before this source ends, so normal control resumes within its existing permissions.",
           "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source. The configured wake alarm and lead time can end automatic Sleep before this source ends, so normal control resumes within its existing permissions.",
-          "climate_target_source": "Fixed temperatures, bounded automatic comfort from measured room humidity without clothes/wind assumptions, or advanced ISO 7730 with actual required inputs.",
+          "climate_target_source": "Fixed setpoints, small measured-humidity adjustment without guessed clothes/air speed, or advanced ISO 7730 with all verified inputs.",
           "climate_comfort_adjustment_max_c": "Maximum absolute °C offset from the chosen temperature target when the qualified PMV/PPD comfort estimate is available. Avoids uncontrolled target shifts.",
           "climate_occupancy_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven."
         }
@@ -946,7 +946,7 @@
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "Select an entity listing sleeping rooms by Home Assistant area ID or name, in its state or a chosen attribute. A listed room counts as asleep only while it is also occupied. The list remains valid while unchanged; a missing or invalid source is unknown. Manual Sleeping now and an enabled room schedule are separate sleep inputs. A configured wake alarm can end automatic Sleep before ringing.",
           "general_sleep_rooms_attribute": "Choose the State field or a verified room-list attribute from the selected sleep entity. A missing or unrecognized list makes sleep state unknown.",
-          "general_source_stale_minutes": "Maximum age of reports from direct home trackers and sampled numeric occupancy counts. The default is 240 minutes. Stable occupied/sleep-room lists and binary room-presence states remain valid until they change; unavailable, restored or invalid selected sources remain unknown. This is not a sleep duration.",
+          "general_source_stale_minutes": "Maximum report age for confirming Away from person/device trackers and for sampled numeric counts (default 240 minutes). An unchanged positive Home state on a person/device tracker or an ON whole-home binary sensor remains valid overnight. Room-presence and sleep lists also remain valid while unchanged. Missing, unknown, unavailable and restored sources cannot establish Away.",
           "general_wake_alarm_entity": "Select the Home Assistant source reporting the next wake alarm. HEM can end an automatically selected sleep profile before the alarm only when a corresponding minutes-before-alarm source is also configured. Both sources must be selected together; an unavailable source never proves that a wake time was reached.",
           "general_wake_lead_minutes_entity": "Select the source reporting how many minutes before the next wake alarm HEM should end automatic sleep. This must be paired with the next-alarm source, or both left unselected. An invalid/unknown value does not force a wake transition."
         }
@@ -1147,16 +1147,18 @@
           "humidity": "Humidity",
           "climate_devices": "Devices",
           "shades": "Window blinds, shades and shutters",
-          "occupancy_sensors": "Occupancy/presence sensors in this room"
+          "occupancy_sensors": "Occupancy/presence sensors in this room",
+          "door_sensors": "Interior door contacts"
         },
         "data_description": {
-          "windows": "Select this room's real window and door-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window.",
+          "windows": "Select this room's real window-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window.",
           "air_quality": "Select this room's air-quality sensors and optional light sensors (lux). Lux records light history. For solar shading, enable lux on the individual cover controller and choose a same-room sensor or the selected room mean: new automatic closing then requires the configured minimum brightness. Selecting sensors here does not enable movement.",
           "temperature": "Select the room's actual indoor temperature sensors. When several valid sensors are selected, the manager combines them; unavailable readings are ignored.",
           "humidity": "Select indoor relative-humidity sensors. Valid readings inform comfort, drying and mold-risk advice; missing readings are not treated as zero.",
           "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
           "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available.",
-          "occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight."
+          "occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight.",
+          "door_sensors": "Select real binary_sensor door contacts assigned to this exact Home Assistant room (effective Area). A closed door is not proof of an airtight room. The optional Eco policy is disabled by default and requires stable closure, verified vacancy, known safe indoor temperature/humidity, and all device protections. Door contacts never count as windows or occupancy."
         }
       }
     },
@@ -1183,8 +1185,8 @@
       "missing_mold_outdoor_temperature": "No selected weather entity supplies a valid recent outdoor temperature. Configure weather first or wait for a valid measurement.",
       "invalid_mold_surface_temperature": "Enter a finite measured surface temperature in °C.",
       "invalid_mold_calibration": "Calibration needs room, outdoor and cold-surface temperatures measured together, with at least 3°C difference between room and outside. Check the three readings.",
-      "invalid_setup_rooms": "Invalid: Rooms to monitor",
-      "invalid_room_source": "Invalid: Room · source",
+      "invalid_setup_rooms": "Select at least one available room to monitor.",
+      "invalid_room_source": "This value is not valid. Choose an available option or enter a value within the allowed range.",
       "invalid_away_windows_recipients": "Select at least one person and one delivery channel for the open-window departure alert.",
       "invalid_environment_scale": "Select a supported AQI/pollen scale and a valid threshold; no scale is guessed automatically.",
       "invalid_environment_measurement": "Check this room's numeric values and allowed units/ranges.",
@@ -1205,30 +1207,38 @@
       "climate_target_required": "Select a supported climate entity assigned to this room.",
       "climate_direct_actuator_not_ready": "Relay/PWM/proportional drivers are still under safety testing; they cannot be enabled.",
       "climate_controller_invalid": "Choose a supported control method.",
-      "climate_mode_invalid": "Choose auto, heat, cool or off.",
-      "climate_occupancy_invalid": "An occupancy sensor does not belong to this room.",
+      "climate_mode_invalid": "Check the climate mode, operating profile, unknown-occupancy choice and humidity limits. Use only offered choices and allowed ranges.",
+      "climate_occupancy_invalid": "Check occupancy sensors and presence settings. Select sensors assigned to this room and use only the available policy, profile and target options.",
       "climate_away_invalid": "Select a valid people/tracker entity.",
       "climate_deadband_invalid": "Cooling target must be at least 1°C above heating target in every profile.",
       "climate_attestation_required": "Confirm explicitly that selected outputs are independently protected, non-compressor thermal actuators before allowing switching.",
       "climate_direct_targets_invalid": "Select one or two real, unique and room-assigned actuator entities of the required device type.",
       "climate_direct_timing_invalid": "Check sample period, PWM cycle, minimum on/off durations and maximum continuous runtime.",
-      "general_invalid_presence": "Invalid · Occupancy · settings",
-      "general_invalid_trackers": "Invalid · Home · settings",
-      "general_invalid_rooms_entity": "Invalid · Room · settings",
-      "general_invalid_attribute": "Invalid · source · settings",
-      "general_invalid_source_age": "Invalid · source · settings",
-      "invalid_selected_devices": "Invalid · Devices · settings",
-      "device_policy_invalid": "Invalid · Occupancy · settings",
-      "device_method_invalid": "Invalid · control · settings",
-      "device_hardware_required": "Invalid · Required · settings",
-      "device_power_required_for_off": "Invalid · Power · settings",
-      "device_temperature_required": "Invalid · Temperature · settings",
-      "device_humidity_required": "Invalid · Humidity · settings",
-      "device_air_sensor_required": "Invalid · sensor · settings",
-      "device_temperature_band_invalid": "Invalid · Temperature · settings",
-      "device_humidity_invalid": "Invalid · Humidity · settings",
-      "device_runtime_invalid": "Invalid · Power · settings",
-      "wake_sources_pair": "Select both the next-alarm entity and the minutes-before-alarm entity, or clear both."
+      "general_invalid_presence": "Choose occupancy or presence sensors from the available list.",
+      "general_invalid_trackers": "Choose people, device trackers or home-presence sensors from the available list.",
+      "general_invalid_rooms_entity": "Choose an available source for the list of occupied rooms or rooms where people are sleeping.",
+      "general_invalid_attribute": "Choose the source’s state or one of its available room-list attributes.",
+      "general_invalid_source_age": "Enter a source validity time from 10 to 1,440 minutes.",
+      "invalid_selected_devices": "Check the device selection and source-configuration option. Only devices offered for this room are allowed.",
+      "device_policy_invalid": "Check the presence, absence and sleep settings. Switching off on absence requires a presence rule. Other devices in this room must not use conflicting methods or the same fan role.",
+      "device_method_invalid": "Choose a control method supported by this device’s actual features. Native mode control also requires support for switching off.",
+      "device_hardware_required": "Verify this device’s type and confirm that it supports the requested on/off or mode control before granting hardware permission.",
+      "device_power_required_for_off": "To switch this device off when nobody is present, select on/off control and confirm the hardware permission.",
+      "device_temperature_required": "Select a valid temperature sensor assigned to this room and not excluded from control.",
+      "device_humidity_required": "Select a valid humidity sensor assigned to this room and not excluded from control.",
+      "device_air_sensor_required": "Choose air extraction with a verified CO₂ sensor, or particle filtration with a verified PM2.5 sensor, assigned to this room.",
+      "device_temperature_band_invalid": "Set heating targets to 5–35 °C and cooling targets to 6–40 °C, with cooling at least 1 °C above heating in every profile.",
+      "device_humidity_invalid": "Set both the normal and sleep humidity targets between 20% and 80%.",
+      "device_runtime_invalid": "Enter permitted minimum on/off times and a maximum run time greater than the minimum on time.",
+      "wake_sources_pair": "Select both the next-alarm entity and the minutes-before-alarm entity, or clear both.",
+      "device_conflicting_control": "Another automatic fan or humidity controller in this room uses a conflicting method. Disable that controller before enabling this one.",
+      "device_dry_advisory_only": "This device only supports DRY. Select humidity-based control and a humidity sensor from this room.",
+      "climate_pid_separate_configuration": "Configure and enable the room PID controller in the dedicated PID settings; this form cannot authorize it.",
+      "climate_invalid_sleep_schedule": "Enter different sleep start and end times in 24-hour HH:MM format.",
+      "climate_invalid_occupancy_timing": "Set the vacancy delay to 0–240 minutes and the occupancy-data freshness limit to 10–1440 minutes.",
+      "climate_invalid_comfort_adjustment": "Set the maximum comfort target adjustment between 0 and 2.5°C.",
+      "climate_proportional_requires_percent": "Proportional control requires a number entity with unit %, minimum 0, maximum 100 and a numeric step.",
+      "invalid_freshness_mode": "Choose Automatic or Custom for the sensor freshness limit."
     },
     "abort": {
       "already_configured": "Home Environment Manager is already configured.",
@@ -1615,7 +1625,7 @@
       },
       "environment_room_air": {
         "title": "Room: {area_name} - ventilation and moisture",
-        "description": "Specify room air volume and sensors. Manufacturer particle CADR is now a per-air-purifier device setting, never a general room setting.",
+        "description": "Room air volume and sensors. Rated particle CADR belongs to each purifier device.",
         "data": {
           "temperature_entity": "Room air temperature sensor (optional override)",
           "room_volume_m3": "Measured room air volume (m³)",
@@ -1667,7 +1677,7 @@
       },
       "environment_room_comfort": {
         "title": "Room: {area_name} - full thermal comfort (advanced)",
-        "description": "Optional advanced ISO 7730 only; simple automatic comfort works with real room temperature and humidity, without manual estimates of air speed or clothing.",
+        "description": "Optional advanced ISO 7730. Simple automatic comfort requires no clothing, activity, radiant or air-speed inputs.",
         "data": {
           "enable_pmv": "Calculate full ISO 7730 PMV/PPD (opt in)",
           "radiant_temperature_entity": "Mean radiant temperature sensor (°C)",
@@ -1748,7 +1758,7 @@
           "climate_area": "Room to configure"
         },
         "data_description": {
-          "climate_area": "This setting governs Room to configure. Physical commands require a separate device opt-in and appropriate protections."
+          "climate_area": "Choose which room's climate settings to edit. Device commands require separate permission for each device and appropriate protections."
         }
       },
       "climate_room": {
@@ -1807,7 +1817,7 @@
           "climate_sleep_schedule_enabled": "Uses the room sleep start/end times in the Home Assistant local time zone as sleeping-now evidence. The default interval is 22:00–07:00. Manual sleep and the selected sleeping-room source also contribute; enabling a schedule does not change the static noise-room classification. The configured wake alarm and lead time can end automatic Sleep before this source ends, so normal control resumes within its existing permissions.",
           "climate_sleep_start": "Local start time of this room’s sleep interval. It contributes to sleeping-now evidence only when Use schedule is enabled. An interval may cross midnight, such as 22:00–07:00. The configured wake alarm and lead time can end automatic Sleep before this source ends, so normal control resumes within its existing permissions.",
           "climate_sleep_end": "Local end time of this room’s sleep interval. It contributes only when Use schedule is enabled. Reaching the end does not cancel sleep indicated by the manual switch or another selected sleep source. The configured wake alarm and lead time can end automatic Sleep before this source ends, so normal control resumes within its existing permissions.",
-          "climate_target_source": "Fixed temperatures, bounded automatic comfort from measured room humidity without clothes/wind assumptions, or advanced ISO 7730 with actual required inputs.",
+          "climate_target_source": "Fixed setpoints, small measured-humidity adjustment without guessed clothes/air speed, or advanced ISO 7730 with all verified inputs.",
           "climate_comfort_adjustment_max_c": "Maximum absolute °C offset from the chosen temperature target when the qualified PMV/PPD comfort estimate is available. Avoids uncontrolled target shifts."
         }
       },
@@ -2023,7 +2033,7 @@
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_sleep_rooms_entity": "Select an entity listing sleeping rooms by Home Assistant area ID or name, in its state or a chosen attribute. A listed room counts as asleep only while it is also occupied. The list remains valid while unchanged; a missing or invalid source is unknown. Manual Sleeping now and an enabled room schedule are separate sleep inputs. A configured wake alarm can end automatic Sleep before ringing.",
           "general_sleep_rooms_attribute": "Choose the State field or a verified room-list attribute from the selected sleep entity. A missing or unrecognized list makes sleep state unknown.",
-          "general_source_stale_minutes": "Maximum age of reports from direct home trackers and sampled numeric occupancy counts. The default is 240 minutes. Stable occupied/sleep-room lists and binary room-presence states remain valid until they change; unavailable, restored or invalid selected sources remain unknown. This is not a sleep duration.",
+          "general_source_stale_minutes": "Maximum report age for confirming Away from person/device trackers and for sampled numeric counts (default 240 minutes). An unchanged positive Home state on a person/device tracker or an ON whole-home binary sensor remains valid overnight. Room-presence and sleep lists also remain valid while unchanged. Missing, unknown, unavailable and restored sources cannot establish Away.",
           "general_wake_alarm_entity": "Select the Home Assistant source reporting the next wake alarm. HEM can end an automatically selected sleep profile before the alarm only when a corresponding minutes-before-alarm source is also configured. Both sources must be selected together; an unavailable source never proves that a wake time was reached.",
           "general_wake_lead_minutes_entity": "Select the source reporting how many minutes before the next wake alarm HEM should end automatic sleep. This must be paired with the next-alarm source, or both left unselected. An invalid/unknown value does not force a wake transition."
         }
@@ -2287,7 +2297,7 @@
           "pollen_high_from": "Pollen reading at or above which the selected provider counts as high. Use the provider's own scale, from 0 up to the configured maximum; e.g. 3 with a maximum of 5. With Avoid ventilation enabled, valid high readings caution against automatic outdoor-air intake.",
           "pollen_max_scale": "Positive maximum of the selected provider's pollen index (1–100), not the current reading. For a 0–5 scale enter 5. All selected pollen sources must use compatible index scales; HEM does not convert between providers. A zero or invalid scale cannot classify pollen.",
           "pollen_avoid_ventilation": "Include verified high pollen among outdoor cautions and keep automatic outside-air use blocked while it persists. Useful manual airing may still be suggested conditionally with the pollen warning. The selected source, high threshold and provider maximum define high pollen; enable when pollen avoidance matters to occupants.",
-          "general_source_stale_minutes": "Maximum age of reports from direct home trackers and sampled numeric occupancy counts. The default is 240 minutes. Stable occupied/sleep-room lists and binary room-presence states remain valid until they change; unavailable, restored or invalid selected sources remain unknown. This is not a sleep duration.",
+          "general_source_stale_minutes": "Maximum report age for confirming Away from person/device trackers and for sampled numeric counts (default 240 minutes). An unchanged positive Home state on a person/device tracker or an ON whole-home binary sensor remains valid overnight. Room-presence and sleep lists also remain valid while unchanged. Missing, unknown, unavailable and restored sources cannot establish Away.",
           "general_home_policy": "A verified person at home always keeps the home occupied. All home is retained for existing configurations and uses this same rule. Away requires verified absence; an unknown selected tracker cannot prove everyone has left.",
           "general_wake_alarm_entity": "Select the Home Assistant source reporting the next wake alarm. HEM can end an automatically selected sleep profile before the alarm only when a corresponding minutes-before-alarm source is also configured. Both sources must be selected together; an unavailable source never proves that a wake time was reached.",
           "general_wake_lead_minutes_entity": "Select the source reporting how many minutes before the next wake alarm HEM should end automatic sleep. This must be paired with the next-alarm source, or both left unselected. An invalid/unknown value does not force a wake transition.",
@@ -2368,16 +2378,18 @@
           "humidity": "Humidity",
           "climate_devices": "Devices",
           "shades": "Window blinds, shades and shutters",
-          "occupancy_sensors": "Occupancy/presence sensors in this room"
+          "occupancy_sensors": "Occupancy/presence sensors in this room",
+          "door_sensors": "Interior door contacts"
         },
         "data_description": {
-          "windows": "Select this room's real window and door-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window.",
+          "windows": "Select this room's real window-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window.",
           "air_quality": "Select this room's air-quality sensors and optional light sensors (lux). Lux records light history. For solar shading, enable lux on the individual cover controller and choose a same-room sensor or the selected room mean: new automatic closing then requires the configured minimum brightness. Selecting sensors here does not enable movement.",
           "temperature": "Select the room's actual indoor temperature sensors. When several valid sensors are selected, the manager combines them; unavailable readings are ignored.",
           "humidity": "Select indoor relative-humidity sensors. Valid readings inform comfort, drying and mold-risk advice; missing readings are not treated as zero.",
           "climate_devices": "Devices. Select only physical climate.*, humidifier.* and fan.* entities assigned to this room. Their native capabilities determine which heating, cooling, drying, humidity, fan-speed or setpoint controls the Manager can offer. Automatic control and power changes remain off until expressly enabled on each managed device; selecting it here does not operate hardware. Switches and proportional actuators are configured separately.",
           "shades": "Window blinds, shades and shutters. Select native cover.* window blinds, shutters, shades or curtains in this room. Generic covers without device_class are also supported when their native CLOSE feature is advertised; check that they really are window shades. Garages, gates, doors, actual windows, dampers and awnings are excluded. Selection never moves a cover: its own room child device requires a linked window contact, an automatic-control switch, optional advance announcement and a temperature threshold. Unknown/unavailable covers can be selected but never moved until verified available.",
-          "occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight."
+          "occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight.",
+          "door_sensors": "Select real binary_sensor door contacts assigned to this exact Home Assistant room (effective Area). A closed door is not proof of an airtight room. The optional Eco policy is disabled by default and requires stable closure, verified vacancy, known safe indoor temperature/humidity, and all device protections. Door contacts never count as windows or occupancy."
         }
       }
     },
@@ -2423,33 +2435,41 @@
       "climate_target_required": "Select a supported climate entity assigned to this room.",
       "climate_direct_actuator_not_ready": "Relay/PWM/proportional drivers are still under safety testing; they cannot be enabled.",
       "climate_controller_invalid": "Choose a supported control method.",
-      "climate_mode_invalid": "Choose auto, heat, cool or off.",
-      "climate_occupancy_invalid": "An occupancy sensor does not belong to this room.",
+      "climate_mode_invalid": "Check the climate mode, operating profile, unknown-occupancy choice and humidity limits. Use only offered choices and allowed ranges.",
+      "climate_occupancy_invalid": "Check occupancy sensors and presence settings. Select sensors assigned to this room and use only the available policy, profile and target options.",
       "climate_away_invalid": "Select a valid people/tracker entity.",
       "climate_deadband_invalid": "Cooling target must be at least 1°C above heating target in every profile.",
       "climate_attestation_required": "Confirm explicitly that selected outputs are independently protected, non-compressor thermal actuators before allowing switching.",
       "climate_direct_targets_invalid": "Select one or two real, unique and room-assigned actuator entities of the required device type.",
       "climate_direct_timing_invalid": "Check sample period, PWM cycle, minimum on/off durations and maximum continuous runtime.",
-      "general_invalid_presence": "Invalid · Occupancy · settings",
-      "general_invalid_trackers": "Invalid · Home · settings",
-      "general_invalid_rooms_entity": "Invalid · Room · settings",
-      "general_invalid_attribute": "Invalid · source · settings",
-      "general_invalid_source_age": "Invalid · source · settings",
-      "invalid_selected_devices": "Invalid · Devices · settings",
-      "device_policy_invalid": "Invalid · Occupancy · settings",
-      "device_method_invalid": "Invalid · control · settings",
-      "device_hardware_required": "Invalid · Required · settings",
-      "device_power_required_for_off": "Invalid · Power · settings",
-      "device_temperature_required": "Invalid · Temperature · settings",
-      "device_humidity_required": "Invalid · Humidity · settings",
-      "device_air_sensor_required": "Invalid · sensor · settings",
-      "device_temperature_band_invalid": "Invalid · Temperature · settings",
-      "device_humidity_invalid": "Invalid · Humidity · settings",
-      "device_runtime_invalid": "Invalid · Power · settings",
-      "invalid_setup_rooms": "Invalid: Rooms to monitor",
-      "invalid_room_source": "Invalid: Room · source",
+      "general_invalid_presence": "Choose occupancy or presence sensors from the available list.",
+      "general_invalid_trackers": "Choose people, device trackers or home-presence sensors from the available list.",
+      "general_invalid_rooms_entity": "Choose an available source for the list of occupied rooms or rooms where people are sleeping.",
+      "general_invalid_attribute": "Choose the source’s state or one of its available room-list attributes.",
+      "general_invalid_source_age": "Enter a source validity time from 10 to 1,440 minutes.",
+      "invalid_selected_devices": "Check the device selection and source-configuration option. Only devices offered for this room are allowed.",
+      "device_policy_invalid": "Check the presence, absence and sleep settings. Switching off on absence requires a presence rule. Other devices in this room must not use conflicting methods or the same fan role.",
+      "device_method_invalid": "Choose a control method supported by this device’s actual features. Native mode control also requires support for switching off.",
+      "device_hardware_required": "Verify this device’s type and confirm that it supports the requested on/off or mode control before granting hardware permission.",
+      "device_power_required_for_off": "To switch this device off when nobody is present, select on/off control and confirm the hardware permission.",
+      "device_temperature_required": "Select a valid temperature sensor assigned to this room and not excluded from control.",
+      "device_humidity_required": "Select a valid humidity sensor assigned to this room and not excluded from control.",
+      "device_air_sensor_required": "Choose air extraction with a verified CO₂ sensor, or particle filtration with a verified PM2.5 sensor, assigned to this room.",
+      "device_temperature_band_invalid": "Set heating targets to 5–35 °C and cooling targets to 6–40 °C, with cooling at least 1 °C above heating in every profile.",
+      "device_humidity_invalid": "Set both the normal and sleep humidity targets between 20% and 80%.",
+      "device_runtime_invalid": "Enter permitted minimum on/off times and a maximum run time greater than the minimum on time.",
+      "invalid_setup_rooms": "Select at least one available room to monitor.",
+      "invalid_room_source": "This value is not valid. Choose an available option or enter a value within the allowed range.",
       "invalid_away_windows_recipients": "Select at least one person and one delivery channel for the open-window departure alert.",
-      "wake_sources_pair": "Select both the next-alarm entity and the minutes-before-alarm entity, or clear both."
+      "wake_sources_pair": "Select both the next-alarm entity and the minutes-before-alarm entity, or clear both.",
+      "device_conflicting_control": "Another automatic fan or humidity controller in this room uses a conflicting method. Disable that controller before enabling this one.",
+      "device_dry_advisory_only": "This device only supports DRY. Select humidity-based control and a humidity sensor from this room.",
+      "climate_pid_separate_configuration": "Configure and enable the room PID controller in the dedicated PID settings; this form cannot authorize it.",
+      "climate_invalid_sleep_schedule": "Enter different sleep start and end times in 24-hour HH:MM format.",
+      "climate_invalid_occupancy_timing": "Set the vacancy delay to 0–240 minutes and the occupancy-data freshness limit to 10–1440 minutes.",
+      "climate_invalid_comfort_adjustment": "Set the maximum comfort target adjustment between 0 and 2.5°C.",
+      "climate_proportional_requires_percent": "Proportional control requires a number entity with unit %, minimum 0, maximum 100 and a numeric step.",
+      "invalid_freshness_mode": "Choose Automatic or Custom for the sensor freshness limit."
     },
     "abort": {
       "setup_area_removed": "Invalid: Rooms to monitor",
@@ -2799,7 +2819,7 @@
           "temperature_source_missing_or_wrong_area": "Temperature source missing or wrong area",
           "temperature_stale_or_wrong_room": "Temperature stale or wrong room",
           "temperature_unavailable_or_stale": "Temperature measurement is missing or too old",
-          "suspected_heating_after_off": "Possible heating after reported OFF",
+          "suspected_heating_after_off": "Possible heating despite reported OFF",
           "suspected_output_after_off": "Possible continued output despite reported OFF",
           "thermal_priority_defer_dry": "Heating or cooling has priority over drying",
           "thermal_temperature_control_has_priority": "Thermal temperature control has priority",
@@ -2895,6 +2915,16 @@
           "window_state_unknown": "Waiting for window status",
           "window_open_wait": "Waiting for you to open the window",
           "window_request_pending": "Sending a request to open the window"
+        }
+      },
+      "room_door_context": {
+        "name": "Door context",
+        "state": {
+          "open": "Open",
+          "closed": "Closed",
+          "settling": "Confirming closure",
+          "unknown": "Unknown",
+          "not_configured": "No contacts selected"
         }
       }
     },
@@ -3763,8 +3793,16 @@
           }
         }
       },
+      "equipment_power_switch_cooldown_seconds": {
+        "name": "Power · Idle cooldown before supply OFF (seconds)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
       "equipment_particle_cadr_m3h": {
-        "name": "Rated air purifier particle CADR (m³/h)",
+        "name": "Rated particle CADR of this air purifier (m³/h)",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"
@@ -4022,7 +4060,7 @@
         }
       },
       "equipment_announce_before_start": {
-        "name": "Announcement · {channel}Ask to open windows",
+        "name": "Suggest opening windows to avoid using this device",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"
@@ -4050,9 +4088,9 @@
       "area_manual_profile": {
         "name": "Profile · Override (automatic recommended)",
         "state": {
+          "comfort": "Comfort",
           "home": "Home",
           "away": "Away",
-          "comfort": "Comfort",
           "sleep": "Sleep",
           "eco": "Eco",
           "auto": "Automatic"
@@ -4115,8 +4153,8 @@
         "name": "Advanced comfort · Temperature target method",
         "state": {
           "temperature": "Fixed temperature targets",
-          "auto_comfort": "Automatic comfort (temperature and humidity)",
-          "pmv": "Advanced ISO 7730 (measured inputs required)"
+          "auto_comfort": "Automatic comfort (measured temperature/RH)",
+          "pmv": "Advanced ISO 7730 (measurements required)"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4220,7 +4258,7 @@
         "state": {
           "normal": "Automatic",
           "pause": "Hold",
-          "sleep_targets": "Sleep · target"
+          "sleep_targets": "Sleep targets"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4231,8 +4269,8 @@
       "equipment_fan_purpose": {
         "name": "Fan · {channel}Purpose",
         "state": {
-          "extraction": "Outside · control",
-          "filtration": "PM2.5 · control",
+          "extraction": "Air extraction",
+          "filtration": "Particle filtration",
           "auto": "Automatic"
         },
         "state_attributes": {
@@ -4534,8 +4572,8 @@
     },
     "device_method": {
       "options": {
-        "setpoint": "target · control",
-        "native": "Devices · control",
+        "setpoint": "Target adjustment only",
+        "native": "Device on/off and mode control",
         "power": "Power",
         "speed": "Speed"
       }
@@ -4557,13 +4595,13 @@
       "options": {
         "normal": "Automatic",
         "pause": "Hold",
-        "sleep_targets": "Sleep · target"
+        "sleep_targets": "Sleep targets"
       }
     },
     "device_fan_purpose": {
       "options": {
-        "extraction": "Outside · control",
-        "filtration": "PM2.5 · control"
+        "extraction": "Air extraction",
+        "filtration": "Particle filtration"
       }
     },
     "outside_aqi_scale": {

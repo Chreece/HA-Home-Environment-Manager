@@ -4,6 +4,16 @@ These are the translated area PID and direct-tuning settings whose displayed
 name must start with PID rather than the Home Assistant room/device name.
 """
 
+if __package__:
+    from .backend_text import translated_text, resolve_language
+else:
+    from pathlib import Path
+    from runpy import run_path
+    _text_helpers = run_path(str(Path(__file__).with_name("backend_text.py")))
+    translated_text = _text_helpers["translated_text"]
+    resolve_language = _text_helpers["resolve_language"]
+
+
 ROOM_PID_NAMES = {
     "en": {
         "area_direct_tuning_kd": "PID · derivative gain (percentage points·minute/°C)",
@@ -747,6 +757,13 @@ _ROOM_PID_PARAMETERS = {
 }
 
 
+# These legacy values contained raw identifiers or untranslated prose.
+for _locale, _names in ROOM_PID_NAMES.items():
+    for _key in ("area_pid_gain_source", "area_pid_max_setpoint_c",
+                 "area_pid_min_setpoint_c", "area_pid_offset_c"):
+        _names[_key] = translated_text(ROOM_PID_NAMES["en"][_key], _locale)
+
+
 def _room_pid_parameter(key: str) -> str | None:
     for prefix in ("area_direct_tuning_", "area_pid_"):
         if key.startswith(prefix):
@@ -756,17 +773,13 @@ def _room_pid_parameter(key: str) -> str | None:
 
 def localized_room_pid_name(key: str, language: str) -> str:
     """Resolve the complete, already PID-prefixed name from in-memory strings."""
-    locale = str(language or "en").replace("_", "-")
-    match = next((name for name in ROOM_PID_NAMES
-                  if name.casefold() == locale.casefold()), None)
-    if match is None:
-        base = locale.partition("-")[0].casefold()
-        match = next((name for name in ROOM_PID_NAMES
-                      if name.casefold() == base), "en")
+    match = resolve_language(language)
     translated = ROOM_PID_NAMES[match].get(
         key, ROOM_PID_NAMES["en"].get(key, "PID · "+key.replace("_", " "))
     )
-    parameter = _room_pid_parameter(key)
+    # Kp/Ki/Kd are engineering symbols. Ordinary words such as "Target" and
+    # "Gains" must not be prepended in English to an already translated name.
+    parameter = _room_pid_parameter(key) if key.endswith(("_kp", "_ki", "_kd")) else None
     if parameter and translated.startswith("PID · "):
         rest = translated[len("PID · "):]
         if not rest.startswith(parameter + " · "):

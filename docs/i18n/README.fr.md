@@ -71,7 +71,8 @@ HEM sépare les règles communes des décisions propres à chaque pièce et à c
 | **Pièce** | Capteurs de température et d'humidité, seuils de qualité de l'air, contacts de fenêtre et de porte, règles de présence et de sommeil, consignes de confort, aération et protections solaires. |
 | **Appareil** | Modes réellement disponibles, méthode Automatic/Manual/PID, consignes selon le profil, capteurs, réglages silencieux, durées minimales de fonctionnement, protections électriques, comportement en cas de fenêtre ouverte et alertes de défaut. |
 
-Ces trois niveaux sont accessibles depuis des paramètres regroupés et recherchables dans la carte. Les options avancées restent disponibles sans encombrer les réglages quotidiens. Vous pouvez actualiser les sources proposées après une modification de votre installation Home Assistant.
+Les réglages du logement, des pièces et des appareils sont regroupés et accessibles par recherche dans la carte. Choisissez **Base**, **Avancé** ou **Expert** pour déterminer les réglages affichés. Base comprend les commandes courantes et la configuration indispensable. Avancé ajoute le réglage manuel des coefficients PID et les ajustements détaillés. Expert ajoute les modèles spécialisés et le réglage de la capacité des appareils. Chaque niveau inclut les précédents. Vous pouvez actualiser les sources disponibles lorsque votre installation Home Assistant évolue. <!-- HEM-I18N:levels -->
+
 
 <a id="climate-control-and-pid-device-by-device"></a>
 ### Régulation du climat et PID, appareil par appareil
@@ -120,7 +121,9 @@ Cette préparation ne met pas tous les équipements en marche. Il faut toujours 
 HEM confronte **les besoins de chaque pièce** à **l'intérêt d'utiliser l'air extérieur**.
 
 - Il conseille d'ouvrir ou de fermer les fenêtres selon les mesures intérieures, l'humidité et la pollution extérieures, la température, le vent, les alertes météo et, si disponibles, les données sur les pollens.
+- L’indice AQI est facultatif. Si l’échelle du fournisseur n’est pas configurée, HEM signale des données incomplètes ; cela ne suffit pas à bloquer l’aération ou à demander la fermeture d’une fenêtre. Les mesures valides de polluants et les valeurs AQI réellement dangereuses, interprétées avec la bonne échelle, restent prises en compte. <!-- HEM-I18N:aqi -->
 - Il utilise les contacts de porte et de fenêtre choisis pour interpréter les conditions des pièces, sans considérer qu'un contact à l'état inconnu est fermé.
+- Vous pouvez inclure les portes de balcon ou de terrasse de classe de capteur binaire Home Assistant `door` ou `opening` comme **contacts de fenêtre**. Elles apparaissent dans le sélecteur de fenêtres de la pièce, mais ne sont **jamais présélectionnées**. La surveillance habituelle des portes reste indépendante. <!-- HEM-I18N:balcony -->
 - Sur demande, il peut proposer d'essayer d'ouvrir une fenêtre avant de démarrer un appareil automatique compatible, puis reprendre la régulation normale après le délai d'attente configuré si nécessaire.
 - Les informations sur les portes servent à mieux connaître les limites entre pièces, à préciser les conseils d'aération et à appliquer des règles Eco facultatives et prudentes.
 - Les volets, stores et protections solaires autorisés peuvent être pilotés selon les fenêtres, la température, la météo, la hauteur du soleil et éventuellement la luminosité.

@@ -28,6 +28,7 @@ from . import equipment_model as model
 from .languages import announcement_language, resolve_language
 from .tts_languages import tts_language
 from .announcement_text import FAULT_LABELS
+from .backend_text import translated_text
 from .notification_delivery import (
     NotificationDeliveryUnavailable, async_call_notification, delivery_allowed,
 )
@@ -559,7 +560,7 @@ class NativeDeviceFaultMonitor:
             language = announcement_language(
                 self.hass, self.manager.settings.get("language", "auto")
             )
-            labels = {
+            label_variants = {
                 "en": ("Device unavailable", "The physical device {name} in {room} "
                        "has remained unavailable for at least 3 minutes. "
                        "Check its batteries if battery-powered, Zigbee connectivity "
@@ -575,12 +576,16 @@ class NativeDeviceFaultMonitor:
                        "Ελέγξτε τις μπαταρίες, εφόσον χρησιμοποιεί, τη σύνδεση Zigbee "
                        "και την αρχική ενσωμάτωση του Home Assistant. "
                        "Δεν αποστέλλονται εντολές στην αποσυνδεδεμένη συσκευή."),
-            }.get(resolve_language(language), ("Device unavailable",
-                "The device {name} in {room} has been unavailable for at least 3 minutes."))
-            name = _text(spec.name, 96) or "Device"
+            }
+            labels = label_variants.get(resolve_language(language))
+            if labels is None:
+                labels = tuple(translated_text(text, language) for text in label_variants["en"])
+            name = _text(spec.name, 96) or translated_text("Device", language)
             title = f"HEM · {labels[0]} · {name}"
             sources = ", ".join(missing[:8])
-            message = labels[1].format(name=name, room=room) + (f"\nSources: {sources}" if sources else "")
+            message = labels[1].format(name=name, room=room)
+            if sources:
+                message += f"\n{translated_text('Sources', language)}: {sources}"
             # Deduplicate the episode before the async transport call.
             # A Hub rejection must not cause local duplicate fallback/retries.
             self._offline_notified.add(device_key)

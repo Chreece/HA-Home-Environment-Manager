@@ -66,7 +66,7 @@ HEM keeps shared policies separate from local decisions.
 | **Room** | Indoor temperature and humidity sources, air-quality thresholds, window and door contacts, sleep and occupancy behavior, room-specific comfort targets, ventilation and shading choices. |
 | **Individual device** | Its available control modes, Automatic/Manual/PID method, per-profile targets, sensors, quiet fan settings, minimum operating times, power protections, window behavior and device-error notifications. |
 
-All three scopes are accessible through grouped, searchable settings in the card. Choose **Basic**, **Advanced** or **Expert** to control how many settings are shown. Basic includes everyday controls and required setup; Advanced adds manual PID gains and detailed adjustments; Expert adds specialist models and capacity tuning. Each level includes the previous levels. You can refresh source choices as your Home Assistant setup changes.
+All three scopes are accessible through grouped, searchable settings in the card. Choose **Basic**, **Advanced** or **Expert** to control how many settings are shown. Basic includes everyday controls and required setup; Advanced adds manual PID gains and detailed adjustments; Expert adds specialist models and capacity tuning. Each level includes the previous levels. You can refresh source choices as your Home Assistant setup changes. <!-- HEM-I18N:levels -->
 
 ### Climate control and PID, device by device
 
@@ -111,9 +111,9 @@ Preparation is not a command to turn everything on. Devices still need genuine d
 HEM compares **what a room needs** with **whether outdoor air can help**.
 
 - Recommend opening or closing windows using current indoor measurements, outdoor humidity, pollution, temperature, wind, weather alerts and optional pollen context.
-- Treat an AQI index as optional: an unconfigured provider scale is reported as incomplete data, not a reason to block ventilation or close a window. Valid measured pollutants and genuinely unsafe, correctly scaled AQI readings still apply.
+- Treat an AQI index as optional: an unconfigured provider scale is reported as incomplete data, not a reason to block ventilation or close a window. Valid measured pollutants and genuinely unsafe, correctly scaled AQI readings still apply. <!-- HEM-I18N:aqi -->
 - Use selected window and door contacts to explain room conditions and avoid treating an unknown contact as closed.
-- Optionally include balcony or patio doors with Home Assistant binary-sensor class `door` or `opening` as **window inputs**. They appear in the room's window selector but are **never preselected**; regular door monitoring remains independent.
+- Optionally include balcony or patio doors with Home Assistant binary-sensor class `door` or `opening` as **window inputs**. They appear in the room's window selector but are **never preselected**; regular door monitoring remains independent. <!-- HEM-I18N:balcony -->
 - Optionally ask you to try opening a window before starting a supported automatic appliance, then continue normal control after the configured response wait if needed.
 - Use door information for room boundary awareness, ventilation cautions and optional guarded Eco behavior.
 - Manage opted-in shutters, blinds and shades using suitable window, temperature, weather, sun-elevation and optional illuminance evidence.

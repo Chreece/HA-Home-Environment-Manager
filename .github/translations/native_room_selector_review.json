@@ -1,0 +1,154 @@
+{
+  "source": "Choose which room's climate settings to edit. Device commands require separate permission for each device and appropriate protections.",
+  "decision": "The room selector opens the selected room’s climate settings. The explanation now states that purpose directly in every locale and retains the separate per-device permission and protection requirements. The generic label-template exception is removed.",
+  "locales": {
+    "ar": {
+      "label": "الغرفة المراد إعدادها",
+      "approved_text": "اختر الغرفة التي تريد تعديل إعدادات مناخها. يتطلب إرسال الأوامر إلى الأجهزة إذنًا منفصلًا لكل جهاز ووسائل الحماية المناسبة."
+    },
+    "bg": {
+      "label": "Стая за настройване",
+      "approved_text": "Изберете стаята, чиито климатични настройки искате да промените. Командите към устройствата изискват отделно разрешение за всяко устройство и подходящи защити."
+    },
+    "bn": {
+      "label": "যে কক্ষটি কনফিগার করবেন",
+      "approved_text": "যে কক্ষের জলবায়ু নিয়ন্ত্রণের সেটিংস বদলাতে চান, সেটি বেছে নিন। যন্ত্রে নির্দেশ পাঠাতে প্রতিটি যন্ত্রের জন্য আলাদা অনুমতি ও উপযুক্ত সুরক্ষা প্রয়োজন।"
+    },
+    "cs": {
+      "label": "Místnost k nastavení",
+      "approved_text": "Vyberte místnost, jejíž nastavení klimatu chcete upravit. Příkazy zařízením vyžadují samostatné povolení pro každé zařízení a odpovídající ochrany."
+    },
+    "da": {
+      "label": "Rum, der skal konfigureres",
+      "approved_text": "Vælg det rum, hvis klimaindstillinger du vil ændre. Kommandoer til enheder kræver særskilt tilladelse for hver enhed og passende beskyttelsesforanstaltninger."
+    },
+    "de": {
+      "label": "Zu konfigurierender Raum",
+      "approved_text": "Wähle den Raum aus, dessen Klimaeinstellungen du bearbeiten möchtest. Gerätebefehle erfordern eine separate Freigabe für jedes Gerät und geeignete Schutzmaßnahmen."
+    },
+    "el": {
+      "label": "Χώρος προς ρύθμιση",
+      "approved_text": "Επίλεξε τον χώρο του οποίου θέλεις να αλλάξεις τις ρυθμίσεις κλιματισμού. Οι εντολές προς συσκευές απαιτούν ξεχωριστή άδεια για κάθε συσκευή και κατάλληλα μέτρα προστασίας."
+    },
+    "es": {
+      "label": "Habitación que configurar",
+      "approved_text": "Elige la habitación cuya configuración de climatización quieras editar. Las órdenes a los dispositivos requieren un permiso independiente para cada dispositivo y las protecciones adecuadas."
+    },
+    "fa": {
+      "label": "اتاق مورد تنظیم",
+      "approved_text": "اتاقی را انتخاب کنید که می‌خواهید تنظیمات اقلیمی آن را ویرایش کنید. ارسال فرمان به دستگاه‌ها به مجوز جداگانه برای هر دستگاه و حفاظت‌های مناسب نیاز دارد."
+    },
+    "fi": {
+      "label": "Määritettävä huone",
+      "approved_text": "Valitse huone, jonka ilmastoasetuksia haluat muokata. Laitteille annettavat komennot edellyttävät erillistä lupaa kullekin laitteelle ja asianmukaisia suojauksia."
+    },
+    "fr": {
+      "label": "Pièce à configurer",
+      "approved_text": "Choisissez la pièce dont vous souhaitez modifier les réglages climatiques. Les commandes aux appareils nécessitent une autorisation distincte pour chaque appareil et des protections adaptées."
+    },
+    "he": {
+      "label": "החדר להגדרה",
+      "approved_text": "בחרו את החדר שאת הגדרות האקלים שלו ברצונכם לערוך. פקודות למכשירים דורשות הרשאה נפרדת לכל מכשיר ואמצעי הגנה מתאימים."
+    },
+    "hi": {
+      "label": "कॉन्फ़िगर किया जाने वाला कमरा",
+      "approved_text": "वह कमरा चुनें जिसकी तापमान और आर्द्रता नियंत्रण संबंधी सेटिंग बदलनी है। उपकरणों को आदेश भेजने के लिए हर उपकरण की अलग अनुमति और उपयुक्त सुरक्षा उपाय आवश्यक हैं।"
+    },
+    "hr": {
+      "label": "Prostorija za podešavanje",
+      "approved_text": "Odaberite prostoriju čije klimatske postavke želite urediti. Naredbe uređajima zahtijevaju zasebno dopuštenje za svaki uređaj i odgovarajuće zaštitne mjere."
+    },
+    "hu": {
+      "label": "Beállítandó szoba",
+      "approved_text": "Válassza ki azt a szobát, amelynek klímabeállításait módosítani szeretné. Az eszközöknek küldött parancsokhoz eszközönként külön engedély és megfelelő védelem szükséges."
+    },
+    "id": {
+      "label": "Ruangan yang akan dikonfigurasi",
+      "approved_text": "Pilih ruangan yang pengaturan iklimnya ingin Anda ubah. Perintah ke perangkat memerlukan izin terpisah untuk setiap perangkat dan perlindungan yang sesuai."
+    },
+    "it": {
+      "label": "Stanza da configurare",
+      "approved_text": "Scegli la stanza di cui vuoi modificare le impostazioni climatiche. I comandi ai dispositivi richiedono un’autorizzazione separata per ciascun dispositivo e protezioni adeguate."
+    },
+    "ja": {
+      "label": "設定する部屋",
+      "approved_text": "空調設定を変更する部屋を選択してください。機器への指示には、機器ごとの個別の許可と適切な保護が必要です。"
+    },
+    "ko": {
+      "label": "설정할 방",
+      "approved_text": "실내 환경 설정을 수정할 방을 선택하세요. 기기에 명령을 보내려면 각 기기에 대한 별도 허용과 적절한 보호 조치가 필요합니다."
+    },
+    "nb": {
+      "label": "Rom som skal konfigureres",
+      "approved_text": "Velg rommet du vil endre klimainnstillingene for. Kommandoer til enheter krever særskilt tillatelse for hver enhet og egnede beskyttelsestiltak."
+    },
+    "nl": {
+      "label": "Te configureren kamer",
+      "approved_text": "Kies de ruimte waarvan je de klimaatinstellingen wilt bewerken. Opdrachten aan apparaten vereisen afzonderlijke toestemming voor elk apparaat en passende beveiligingen."
+    },
+    "pl": {
+      "label": "Pomieszczenie do skonfigurowania",
+      "approved_text": "Wybierz pomieszczenie, którego ustawienia klimatu chcesz edytować. Polecenia wysyłane do urządzeń wymagają osobnego zezwolenia dla każdego urządzenia i odpowiednich zabezpieczeń."
+    },
+    "pt": {
+      "label": "Divisão a configurar",
+      "approved_text": "Escolha a divisão cujas definições de climatização pretende editar. Os comandos aos dispositivos exigem uma autorização separada para cada dispositivo e proteções adequadas."
+    },
+    "pt-BR": {
+      "label": "Cômodo a configurar",
+      "approved_text": "Escolha o cômodo cujas configurações de climatização deseja editar. Os comandos aos dispositivos exigem uma autorização separada para cada dispositivo e proteções adequadas."
+    },
+    "ro": {
+      "label": "Camera de configurat",
+      "approved_text": "Alegeți camera ale cărei setări de climatizare doriți să le modificați. Comenzile către dispozitive necesită permisiune separată pentru fiecare dispozitiv și protecții adecvate."
+    },
+    "ru": {
+      "label": "Комната для настройки",
+      "approved_text": "Выберите комнату, настройки климата которой хотите изменить. Команды устройствам требуют отдельного разрешения для каждого устройства и соответствующих мер защиты."
+    },
+    "sk": {
+      "label": "Miestnosť na nastavenie",
+      "approved_text": "Vyberte miestnosť, ktorej nastavenia klímy chcete upraviť. Príkazy zariadeniam vyžadujú samostatné povolenie pre každé zariadenie a primerané ochrany."
+    },
+    "sr": {
+      "label": "Просторија за подешавање",
+      "approved_text": "Изаберите просторију чија климатска подешавања желите да измените. Команде уређајима захтевају засебну дозволу за сваки уређај и одговарајуће мере заштите."
+    },
+    "sv": {
+      "label": "Rum att konfigurera",
+      "approved_text": "Välj det rum vars klimatinställningar du vill ändra. Kommandon till enheter kräver separat tillstånd för varje enhet och lämpliga skyddsåtgärder."
+    },
+    "ta": {
+      "label": "அமைக்க வேண்டிய அறை",
+      "approved_text": "காலநிலைக் கட்டுப்பாட்டு அமைப்புகளை மாற்ற விரும்பும் அறையைத் தேர்ந்தெடுக்கவும். சாதனங்களுக்குக் கட்டளைகளை அனுப்ப ஒவ்வொரு சாதனத்திற்கும் தனி அனுமதியும் பொருத்தமான பாதுகாப்பு ஏற்பாடுகளும் தேவை."
+    },
+    "th": {
+      "label": "ห้องที่จะกำหนดค่า",
+      "approved_text": "เลือกห้องที่ต้องการแก้ไขการตั้งค่าสภาพอากาศภายใน การส่งคำสั่งไปยังอุปกรณ์ต้องได้รับอนุญาตแยกสำหรับแต่ละอุปกรณ์และมีมาตรการป้องกันที่เหมาะสม"
+    },
+    "tr": {
+      "label": "Yapılandırılacak oda",
+      "approved_text": "İklimlendirme ayarlarını düzenlemek istediğiniz odayı seçin. Cihaz komutları, her cihaz için ayrı izin ve uygun koruma önlemleri gerektirir."
+    },
+    "uk": {
+      "label": "Кімната для налаштування",
+      "approved_text": "Виберіть кімнату, налаштування клімату якої хочете змінити. Команди пристроям потребують окремого дозволу для кожного пристрою та відповідних заходів захисту."
+    },
+    "ur": {
+      "label": "ترتیب دینے کے لیے کمرہ",
+      "approved_text": "وہ کمرہ منتخب کریں جس کی ماحول کنٹرول کرنے کی ترتیبات بدلنی ہیں۔ آلات کو حکم بھیجنے کے لیے ہر آلے کی الگ اجازت اور مناسب حفاظتی انتظامات ضروری ہیں۔"
+    },
+    "vi": {
+      "label": "Phòng cần cấu hình",
+      "approved_text": "Chọn phòng có cài đặt điều hòa môi trường mà bạn muốn chỉnh sửa. Lệnh gửi đến thiết bị cần có quyền riêng cho từng thiết bị và các biện pháp bảo vệ phù hợp."
+    },
+    "zh-Hans": {
+      "label": "要配置的房间",
+      "approved_text": "选择要编辑温湿度控制设置的房间。向设备发送指令需要逐台授权，并采取适当的保护措施。"
+    },
+    "zh-Hant": {
+      "label": "要設定的房間",
+      "approved_text": "選擇要編輯溫濕度控制設定的房間。向裝置傳送指令需要逐台授權，並採取適當的保護措施。"
+    }
+  }
+}

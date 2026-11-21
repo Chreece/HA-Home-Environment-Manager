@@ -18,7 +18,7 @@
 # HEM - Home Environment Manager
 
 <!-- HEM-TRANSLATION-UNREVIEWED-START -->
-> ⚠️ **Unreviewed machine translation.** This page has not been checked for linguistic or technical accuracy, and some descriptions may be wrong. For installation, device control and safety instructions, refer to the <a href="../../README.md">English README</a>.
+> ⚠️ **Ellenőrizetlen gépi fordítás.** Az oldal nyelvi és műszaki pontosságát nem ellenőrizték, ezért egyes leírások hibásak lehetnek. A telepítési, eszközvezérlési és biztonsági útmutatásokért olvassa el az <a href="../../README.md">angol README-t</a>.
 <!-- HEM-TRANSLATION-UNREVIEWED-END -->
 
 <p align="center">
@@ -75,7 +75,8 @@ HEM a közös politikákat a helyi döntésektől elkülönítve tartja.
 | **Szobában.** | A belső hőmérséklet és nedvesség forrásai, a levegőminőség küszöbértékek, az ablak- és ajtókontaktumok, az alvás és a lakóhely viselkedése, a szobás kényelmes célpontok, a szellőztetés és az árnyékolás lehetőségei. |
 | **Egyéni berendezés** | A rendelkezésre álló vezérelési módok: Automatikus/Manuális/PID módszer, profilonkénti célpontok, érzékelők, csendes ventilátor beállítása, minimális működési idő, áramvédelem, ablak viselkedés és készülék hibás értesítése. |
 
-Mindhárom szintet csoportosított, kereshető beállításokon keresztül lehet elérni a kártyában. Home Assistant A beállítási változások.
+Az otthon, a helyiségek és az eszközök beállításai csoportosítva jelennek meg a kártyán, és kereshetők. Az **Alap**, **Haladó** vagy **Szakértő** szint kiválasztásával szabályozhatja a megjelenő beállítások körét. Az Alap a mindennapi vezérlőket és a szükséges beállításokat tartalmazza. A Haladó kézi PID-együtthatókkal és részletes finomhangolással egészíti ki ezeket. A Szakértő speciális modelleket és kapacitásbeállításokat ad hozzá. Minden szint tartalmazza a korábbi szinteket. A Home Assistant konfigurációjának változásakor frissítheti az elérhető forrásokat. <!-- HEM-I18N:levels -->
+
 
 <a id="climate-control-and-pid-device-by-device"></a>
 ### Az éghajlat-ellenőrzés PID, készülékről készülékre
@@ -124,7 +125,9 @@ A készülékeknek még mindig valódi igényre, érvényes érzékelőkre és e
 HEM összehasonlít **A szobának mit kell?** az **A külső levegő segíthet-e**.
 
 - Az ablakok megnyitását vagy bezárását a jelenlegi belső mérések, a külső páratartalom, a szennyezés, a hőmérséklet, a szél, az időjárási figyelmeztetések és az önkéntes pollénkontextus alkalmazásával ajánlják.
+- Az AQI-index használata nem kötelező. Ha a szolgáltató skálája nincs beállítva, a HEM hiányos adatokat jelez; ez önmagában nem tiltja a szellőztetést, és nem indokolja az ablak bezárását. Az érvényes szennyezőanyag-mérések és a helyes skálával értékelt, valóban veszélyes AQI-adatok továbbra is számítanak. <!-- HEM-I18N:aqi -->
 - Használja a kiválasztott ablak- és ajtókontaktusokat, hogy megmagyarázza a szobás körülményeket, és ne kezelje a ismeretlen kontaktust zárva.
+- A Home Assistant `door` vagy `opening` bináris érzékelőosztályába tartozó erkély- és teraszajtók igény szerint **ablakbemenetként** is hozzáadhatók. Megjelennek a helyiség ablakválasztójában, de **soha nincsenek előre kijelölve**. A szokásos ajtófigyelés ettől független marad. <!-- HEM-I18N:balcony -->
 - Választhatóan kérjük, hogy próbáljon kinyitni egy ablakot, mielőtt elindítaná a támogatott automatikus készüléket, majd folytatja a normál vezérléset, miután a konfigurált válasz vár, ha szükséges.
 - Használja az ajtók adatait a szoba határérzékeléséhez, a szellőztetési figyelmeztetésekhez és az önkéntes védett környezetvédelmi viselkedéshez.
 - A beállított zárokat, függönyöket és árnyékokat megfelelő ablak, hőmérséklet, időjárás, napfelkeltés és a választható világítási bizonyítékok segítségével kezeljük.

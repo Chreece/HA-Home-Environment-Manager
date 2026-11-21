@@ -1,0 +1,186 @@
+[
+  {
+    "id": 88,
+    "en": "Select exactly one primary climate.* device assigned to this HA room. It supplies native capabilities; manual OFF or unsupported modes cannot be auto-restarted.",
+    "paths": [
+      "config.step.climate_room.data_description.climate_entity",
+      "options.step.climate_room.data_description.climate_entity"
+    ]
+  },
+  {
+    "id": 89,
+    "en": "Independent fresh temperature sensor (°C or °F) in the same room; stale readings stop target changes. Avoid using an unrelated outdoor or thermostat estimate.",
+    "paths": [
+      "config.step.climate_room.data_description.climate_temperature_entity",
+      "options.step.climate_room.data_description.climate_temperature_entity"
+    ]
+  },
+  {
+    "id": 90,
+    "en": "People or device trackers for home/away status. Absence is considered only with explicit, fresh evidence; unknown trackers are treated conservatively.",
+    "paths": [
+      "config.step.climate_presence.data_description.climate_away_entities",
+      "options.step.climate_presence.data_description.climate_away_entities"
+    ]
+  },
+  {
+    "id": 91,
+    "en": "Optional same-room heat-only radiator or heating-zone climate.* entity. It must actually support HEAT; it never receives cooling commands.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_heat_climate_entity",
+      "options.step.climate_equipment.data_description.climate_heat_climate_entity"
+    ]
+  },
+  {
+    "id": 92,
+    "en": "Optional same-room air conditioner or cooling heat-pump climate.* entity. It must support COOL; manual OFF is respected.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_cool_climate_entity",
+      "options.step.climate_equipment.data_description.climate_cool_climate_entity"
+    ]
+  },
+  {
+    "id": 93,
+    "en": "Optional climate.* device with real native DRY. DRY-only devices provide humidity advice without fabricated temperature setpoints; automatic mode control is separately commissioned.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_dry_climate_entity",
+      "options.step.climate_equipment.data_description.climate_dry_climate_entity"
+    ]
+  },
+  {
+    "id": 94,
+    "en": "Optional climate.* device exposing FAN_ONLY. Do not assume an arbitrary air conditioner can safely switch to fan mode.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_fan_climate_entity",
+      "options.step.climate_equipment.data_description.climate_fan_climate_entity"
+    ]
+  },
+  {
+    "id": 95,
+    "en": "Optional HA humidifier.* adding moisture. Select only a matching same-room device; automatic setpoint/power changes need separate authorization.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_humidifier_entity",
+      "options.step.climate_equipment.data_description.climate_humidifier_entity"
+    ]
+  },
+  {
+    "id": 96,
+    "en": "Optional HA dehumidifier.* removing moisture. Compressor-equipped units need independent frost, tank and cycle protections.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_dehumidifier_entity",
+      "options.step.climate_equipment.data_description.climate_dehumidifier_entity"
+    ]
+  },
+  {
+    "id": 97,
+    "en": "Optional same-room fan.* extracting air, driven by verified CO₂/ventilation demand. Merely selecting the entity does not power it on.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_extraction_fan_entity",
+      "options.step.climate_equipment.data_description.climate_extraction_fan_entity"
+    ]
+  },
+  {
+    "id": 98,
+    "en": "Optional same-room fan.* used as air purifier for measured PM2.5. Filtration capability must be real; plain ventilation is not HEPA purification.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_purifier_fan_entity",
+      "options.step.climate_equipment.data_description.climate_purifier_fan_entity"
+    ]
+  },
+  {
+    "id": 99,
+    "en": "Select one fresh independent same-room RH sensor (%). Humidity controls hold rather than guess when this measurement is missing.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_humidity_entity",
+      "options.step.climate_equipment.data_description.climate_humidity_entity"
+    ]
+  },
+  {
+    "id": 100,
+    "en": "True same-room CO₂ sensor in ppm, preferably verified NDIR, used for demand-based extraction. eCO₂ from VOC is not equivalent.",
+    "paths": [
+      "config.step.climate_air_strategy.data_description.climate_co2_entity",
+      "options.step.climate_air_strategy.data_description.climate_co2_entity"
+    ]
+  },
+  {
+    "id": 101,
+    "en": "Same-room PM2.5 µg/m³ sensor used for filtration control. Missing or unsupported data cannot start a purifier.",
+    "paths": [
+      "config.step.climate_air_strategy.data_description.climate_pm25_entity",
+      "options.step.climate_air_strategy.data_description.climate_pm25_entity"
+    ]
+  },
+  {
+    "id": 102,
+    "en": "Select actual person/device tracker entities for home/away evidence. Unknown trackers do not prove everyone has left.",
+    "paths": [
+      "config.step.general_settings.data_description.general_home_trackers",
+      "options.step.general_settings.data_description.general_home_trackers"
+    ]
+  },
+  {
+    "id": 103,
+    "en": "Select a numerical pollen-index sensor provided by Home Assistant. Country- and provider-specific indices are not automatically comparable.",
+    "paths": [
+      "config.step.pollen.data_description.pollen_entity",
+      "options.step.pollen.data_description.pollen_entity"
+    ]
+  },
+  {
+    "id": 104,
+    "en": "Select one real outdoor AQI sensor to assign its provider's published scale; ordinary pollutant concentration sensors use their own units instead.",
+    "paths": [
+      "config.step.outside_aqi.data_description.outside_aqi_entity",
+      "options.step.outside_aqi.data_description.outside_aqi_entity"
+    ]
+  },
+  {
+    "id": 105,
+    "en": "Choose the Home Assistant area whose devices you want to review. Device discovery is for inventory and does not enable any automation.",
+    "paths": [
+      "config.step.area_devices.data_description.area_devices_area",
+      "options.step.area_devices.data_description.area_devices_area"
+    ]
+  },
+  {
+    "id": 106,
+    "en": "Choose exactly one monitored device to adjust its capabilities, consent, occupancy and setpoint rules. Other room devices remain unchanged.",
+    "paths": [
+      "config.step.device_choice.data_description.device_choice",
+      "options.step.device_choice.data_description.device_choice"
+    ]
+  },
+  {
+    "id": 107,
+    "en": "Select a real fresh independent temperature sensor in the same area. Missing data holds thermostat setpoint changes.",
+    "paths": [
+      "config.step.device_settings.data_description.device_temperature_entity",
+      "options.step.device_settings.data_description.device_temperature_entity"
+    ]
+  },
+  {
+    "id": 108,
+    "en": "Select a real relative-humidity sensor (%) in the same area to inform humidification/dehumidification. Stale data cannot drive a power change.",
+    "paths": [
+      "config.step.device_settings.data_description.device_humidity_entity",
+      "options.step.device_settings.data_description.device_humidity_entity"
+    ]
+  },
+  {
+    "id": 109,
+    "en": "Choose an actual CO₂ ppm source for extraction decisions, ideally verified NDIR. TVOC-derived eCO₂ is not equivalent to measured CO₂.",
+    "paths": [
+      "config.step.device_settings.data_description.device_co2_entity",
+      "options.step.device_settings.data_description.device_co2_entity"
+    ]
+  },
+  {
+    "id": 110,
+    "en": "Choose a real PM2.5 µg/m³ sensor in this room for purifier decisions. Unsupported indices or estimated particle levels are not accepted.",
+    "paths": [
+      "config.step.device_settings.data_description.device_pm25_entity",
+      "options.step.device_settings.data_description.device_pm25_entity"
+    ]
+  }
+]

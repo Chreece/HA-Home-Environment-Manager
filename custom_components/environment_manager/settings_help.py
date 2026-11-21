@@ -1,7 +1,7 @@
 """Setting-specific purpose text for HEM configuration entities.
 
-All static settings have native English, Greek and German explanations. Other
-UI locales use deterministic English help while keeping localized entity names.
+All static settings have explanations in each of the 38 supported UI languages.
+Their exact English source keys are shared with the card's bundled catalog.
 No file access, services, settings writes or registry edits occur at runtime.
 """
 from __future__ import annotations
@@ -10,6 +10,7 @@ from .settings_name_catalog import (
     localized_setting_name, localized_setting_group, setting_locale,
 )
 from .setting_option_explanations import option_help_locales
+from .backend_text import translated_variants, presentation_languages
 
 SETTING_HELP = {'area_area_environment_air_speed_m_s': {'de': 'Gemessene Luftgeschwindigkeit im Raum in m/s für PMV/PPD, '
                                                'wenn keine Live-Quelle gewählt ist. Eine repräsentative '
@@ -1327,6 +1328,9 @@ SETTING_HELP['global_threshold_mode_max_age_mode'] = {'en': 'Automatic: weather 
 SETTING_HELP['home_global_policy_source_freshness_mode'] = {'en': 'Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven.', 'el': 'Αυτόματα: αριθμητικοί μετρητές ατόμων και αρνητικές αναφορές παρουσίας ισχύουν για 240 λεπτά. Μία έγκυρη αμετάβλητη κατάσταση «σπίτι» μπορεί να παραμείνει ενεργή. Άγνωστες, επαναφερμένες και μη διαθέσιμες πηγές δεν αποδεικνύουν απουσία. Προσαρμοσμένα: όριο λεπτών για αριθμητικές αναφορές. Οι λίστες δωματίων παραμένουν οδηγούμενες από αλλαγές.', 'de': 'Automatisch: Numerische Personenzähler und negative Anwesenheitsmeldungen gelten bis zu 240 Minuten; bestätigtes Zuhausebleiben bleibt auch ohne Änderung gültig. Unbekannte, wiederhergestellte und nicht verfügbare Werte beweisen keine Abwesenheit. Benutzerdefiniert: Minutengrenze für Meldungen. Raumlisten bleiben zustandsbasiert.'}
 SETTING_HELP['area_climate_policy_occupancy_freshness_mode'] = {'en': 'Automatic: numeric room people counts must have been reported within 240 minutes; binary room presence and occupancy contacts remain valid until the next change, provided they are available and not restored. Custom: use the minute value below for numeric counts. Unknown sources never prove a room vacant.', 'el': 'Αυτόματα: οι αριθμητικοί μετρητές ατόμων στον χώρο απαιτούν αναφορά μέσα σε 240 λεπτά. Δυαδικοί αισθητήρες παρουσίας παραμένουν έγκυροι έως την επόμενη αλλαγή, εφόσον είναι διαθέσιμοι και δεν είναι επαναφερμένοι. Προσαρμοσμένα: χρησιμοποίησε το όριο λεπτών παρακάτω για αριθμητικούς μετρητές. Άγνωστη πηγή δεν τεκμηριώνει κενό χώρο.', 'de': 'Automatisch: Numerische Raum-Personenzähler erfordern eine Meldung innerhalb von 240 Minuten; verfügbare, nicht wiederhergestellte Binärkontakte bleiben bis zur nächsten Änderung gültig. Benutzerdefiniert: Zeitlimit für Zählwerte. Unbekannte Werte beweisen keinen leeren Raum.'}
 
+SETTING_HELP = {key: translated_variants(value) for key, value in SETTING_HELP.items()}
+
+
 def configuration_help(key: str, locale: str = "en") -> str | None:
     """One current setting explanation; never the complete help catalog."""
     translations = SETTING_HELP.get(key)
@@ -1379,15 +1383,15 @@ class SettingsMetadata:
             attributes.update({"setting_display_name": name,
                                "setting_key": key,
                                "setting_group": localized_setting_group(key, locale)})
-        details = option_help_locales(key) if key else {}
+        details = option_help_locales(key, locale) if key else {}
         if details:
             attributes["option_help_locales"] = details
         if text:
             attributes["configuration_help"] = text
-            # The card may use a different locale than HA Core. Transfer only
-            # this entity's three supported explanations, not the full catalog.
+            # The card bundles the same message catalog for an independent
+            # UI language. Keep per-entity recorder/websocket data bounded.
             attributes["configuration_help_locales"] = {
                 language: configuration_help(key, language)
-                for language in ("en", "el", "de")
+                for language in presentation_languages(locale)
             }
         return attributes

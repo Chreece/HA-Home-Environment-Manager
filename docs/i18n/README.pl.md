@@ -18,7 +18,7 @@
 # HEM - Home Environment Manager
 
 <!-- HEM-TRANSLATION-UNREVIEWED-START -->
-> ⚠️ **Unreviewed machine translation.** This page has not been checked for linguistic or technical accuracy, and some descriptions may be wrong. For installation, device control and safety instructions, refer to the <a href="../../README.md">English README</a>.
+> ⚠️ **Niezweryfikowane tłumaczenie maszynowe.** Poprawność językowa i techniczna tej strony nie została sprawdzona, a niektóre opisy mogą być błędne. Instrukcje instalacji, sterowania urządzeniami i bezpieczeństwa znajdują się w <a href="../../README.md">angielskim pliku README</a>.
 <!-- HEM-TRANSLATION-UNREVIEWED-END -->
 
 <p align="center">
@@ -75,7 +75,8 @@ HEM utrzymuje wspólne polityki oddzielne od lokalnych decyzji.
 | **Pokój** | Źródła temperatury i wilgotności w pomieszczeniu, progi jakości powietrza, kontakty okna i drzwi, zachowanie w zakresie snu i zajęć, konkretne cele komfortu pomieszczenia, wybory wentylacji i zasłonięcia. |
 | **Indywidualne urządzenie** | Dostępne tryby sterowania, automatyczne/w ręku/PID metodę, cele na profil, czujniki, ustawienia cicha wentylatora, minimalne czasy pracy, zabezpieczenia zasilania, zachowanie okna i powiadomienia o błędzie urządzenia. |
 
-Wszystkie trzy poziomy są dostępne za pośrednictwem zgrupowanych, wyszukiwanych ustawień w karcie. Home Assistant zmiany w ustawie.
+Ustawienia domu, pomieszczeń i urządzeń są pogrupowane na karcie i można je wyszukiwać. Wybierz poziom **Podstawowy**, **Zaawansowany** lub **Ekspercki**, aby określić zakres widocznych ustawień. Podstawowy obejmuje codzienną obsługę i niezbędną konfigurację. Zaawansowany dodaje ręczne ustawianie współczynników PID i szczegółowe regulacje. Ekspercki udostępnia specjalistyczne modele i dostrajanie wydajności. Każdy poziom obejmuje poprzednie. Po zmianach w instalacji Home Assistant możesz odświeżyć dostępne źródła. <!-- HEM-I18N:levels -->
+
 
 <a id="climate-control-and-pid-device-by-device"></a>
 ### Kontrola klimatu i PID, urządzenie po urządzeniu
@@ -124,7 +125,9 @@ Przygotowanie nie jest polecenie do włączenia wszystkiego. Urządzenia nadal p
 HEM porównania **czego potrzebuje pokój** z **czy powietrze na zewnątrz może pomóc**.
 
 - Zaleca się otwieranie lub zamykanie okien przy użyciu bieżących pomiarów pomiarów w pomieszczeniach, wilgotności na zewnątrz, zanieczyszczenia, temperatury, wiatru, ostrzeżeń pogodowych i opcjonalnego kontekstu pyłu.
+- Indeks AQI jest opcjonalny. Brak skonfigurowanej skali dostawcy jest zgłaszany jako niepełne dane; sam w sobie nie blokuje wietrzenia ani nie stanowi powodu do zamknięcia okna. Nadal uwzględniane są prawidłowe pomiary zanieczyszczeń oraz rzeczywiście niebezpieczne wartości AQI interpretowane we właściwej skali. <!-- HEM-I18N:aqi -->
 - Wykorzystaj wybrane kontakty okna i drzwi, aby wyjaśnić warunki w pomieszczeniu i uniknąć traktowania nieznanego kontaktu jako zamkniętego.
+- Drzwi balkonowe lub tarasowe z klasą czujnika binarnego Home Assistant `door` albo `opening` można opcjonalnie dodać jako **wejścia okienne**. Pojawiają się w wyborze okien pomieszczenia, ale **nigdy nie są zaznaczone domyślnie**. Zwykłe monitorowanie drzwi pozostaje niezależne. <!-- HEM-I18N:balcony -->
 - Zaleca się, abyś spróbował otworzyć okno przed uruchomieniem obsługiwanego urządzenia automatycznego, a następnie kontynuować normalną kontrolę po skonfigurowanej reakcji czekając, jeśli jest to konieczne.
 - Wykorzystaj informacje o drzwiach w celu uświadomienia sobie granic pomieszczeń, ostrzeżeń o wentylacji i opcjonalnego zachowania ochrony ekologicznej.
 - Zarządzanie opcjonalnymi oknami, zasłonami i odcieniami przy użyciu odpowiednich okien, temperatury, pogody, wysokości słońca i opcjonalnych dowodów oświetlenia.

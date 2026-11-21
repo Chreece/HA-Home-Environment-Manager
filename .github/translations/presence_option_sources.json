@@ -1,0 +1,410 @@
+[
+  {
+    "en": "If any selected person/tracker is verified at home, the household is Home. Away needs verified absence from all relevant sources.",
+    "sources": [
+      {
+        "catalog": "setting_option_explanations.OPTION_TEXT",
+        "key": "home_global_policy_home_policy.any_home"
+      }
+    ],
+    "existing": {
+      "de": "Ist mindestens eine ausgewählte Person oder ein Tracker nachweislich zu Hause, gilt Home. Away erfordert bestätigte Abwesenheit aller maßgeblichen Quellen.",
+      "el": "Αν έστω ένα επιλεγμένο άτομο ή tracker επιβεβαιώνεται στο σπίτι, το σπίτι θεωρείται Home. Για Away πρέπει να έχει επιβεβαιωθεί η απουσία από όλες τις σχετικές πηγές."
+    },
+    "id": "backend-146",
+    "missing_locales": [
+      "fr",
+      "es",
+      "it",
+      "nl",
+      "pt",
+      "pt-BR",
+      "pl",
+      "ru",
+      "uk",
+      "tr",
+      "cs",
+      "sk",
+      "hu",
+      "ro",
+      "bg",
+      "hr",
+      "sr",
+      "sv",
+      "nb",
+      "da",
+      "fi",
+      "id",
+      "vi",
+      "th",
+      "hi",
+      "zh-Hans",
+      "zh-Hant",
+      "ja",
+      "ko",
+      "ar",
+      "he",
+      "fa",
+      "bn",
+      "ur",
+      "ta"
+    ]
+  },
+  {
+    "en": "Legacy compatibility choice. It currently follows the same conservative Home/Away rule as «Any home»; it does not require everybody to be home.",
+    "sources": [
+      {
+        "catalog": "setting_option_explanations.OPTION_TEXT",
+        "key": "home_global_policy_home_policy.all_home"
+      }
+    ],
+    "existing": {
+      "de": "Kompatibilitätsoption für ältere Einstellungen. Derzeit gilt dieselbe vorsichtige Home/Away-Regel wie bei »Mindestens eine Person da«; es müssen NICHT alle zu Hause sein.",
+      "el": "Επιλογή συμβατότητας παλαιών ρυθμίσεων. Σήμερα ακολουθεί τον ίδιο ασφαλή κανόνα Home/Away με το «Έστω ένας στο σπίτι»· ΔΕΝ απαιτεί να είναι όλοι μέσα."
+    },
+    "id": "backend-151",
+    "missing_locales": [
+      "fr",
+      "es",
+      "it",
+      "nl",
+      "pt",
+      "pt-BR",
+      "pl",
+      "ru",
+      "uk",
+      "tr",
+      "cs",
+      "sk",
+      "hu",
+      "ro",
+      "bg",
+      "hr",
+      "sr",
+      "sv",
+      "nb",
+      "da",
+      "fi",
+      "id",
+      "vi",
+      "th",
+      "hi",
+      "zh-Hans",
+      "zh-Hant",
+      "ja",
+      "ko",
+      "ar",
+      "he",
+      "fa",
+      "bn",
+      "ur",
+      "ta"
+    ]
+  },
+  {
+    "en": "Legacy fallback: when local occupancy is unknown, suspend that old room-profile decision instead of assuming someone is inside.",
+    "sources": [
+      {
+        "catalog": "setting_option_explanations.OPTION_TEXT",
+        "key": "area_climate_policy_unknown_occupancy.hold"
+      }
+    ],
+    "existing": {
+      "de": "Älterer Ersatzmodus: Bei unbekannter Raumbelegung wird die frühere Raumprofilentscheidung ausgesetzt, statt Anwesenheit anzunehmen.",
+      "el": "Παλιά εφεδρική συμπεριφορά: με άγνωστη παρουσία, αναστέλλει την παλιά απόφαση προφίλ χώρου αντί να υποθέτει ότι υπάρχει άτομο."
+    },
+    "id": "backend-152",
+    "missing_locales": [
+      "fr",
+      "es",
+      "it",
+      "nl",
+      "pt",
+      "pt-BR",
+      "pl",
+      "ru",
+      "uk",
+      "tr",
+      "cs",
+      "sk",
+      "hu",
+      "ro",
+      "bg",
+      "hr",
+      "sr",
+      "sv",
+      "nb",
+      "da",
+      "fi",
+      "id",
+      "vi",
+      "th",
+      "hi",
+      "zh-Hans",
+      "zh-Hant",
+      "ja",
+      "ko",
+      "ar",
+      "he",
+      "fa",
+      "bn",
+      "ur",
+      "ta"
+    ]
+  },
+  {
+    "en": "Legacy fallback: when local room occupancy is unknown, treat the room conservatively as occupied for the old room-level profile policy. This does not prove anyone is present.",
+    "sources": [
+      {
+        "catalog": "setting_option_explanations.OPTION_TEXT",
+        "key": "area_climate_policy_unknown_occupancy.occupied"
+      }
+    ],
+    "existing": {
+      "de": "Älterer Ersatzmodus: Bei unbekannter Raumbelegung behandelt die frühere Raumprofilregel den Raum vorsichtshalber als belegt. Dies beweist keine Anwesenheit.",
+      "el": "Παλιά εφεδρική συμπεριφορά: όταν η παρουσία χώρου είναι άγνωστη, ο παλιός κανόνας προφίλ τον αντιμετωπίζει συντηρητικά ως κατειλημμένο. Δεν αποδεικνύει ότι βρίσκεται κάποιος εκεί."
+    },
+    "id": "backend-153",
+    "missing_locales": [
+      "fr",
+      "es",
+      "it",
+      "nl",
+      "pt",
+      "pt-BR",
+      "pl",
+      "ru",
+      "uk",
+      "tr",
+      "cs",
+      "sk",
+      "hu",
+      "ro",
+      "bg",
+      "hr",
+      "sr",
+      "sv",
+      "nb",
+      "da",
+      "fi",
+      "id",
+      "vi",
+      "th",
+      "hi",
+      "zh-Hans",
+      "zh-Hant",
+      "ja",
+      "ko",
+      "ar",
+      "he",
+      "fa",
+      "bn",
+      "ur",
+      "ta"
+    ]
+  },
+  {
+    "en": "Use automatic freshness limits for numeric room occupancy counts. Valid binary room-presence states remain change-driven.",
+    "sources": [
+      {
+        "catalog": "setting_option_explanations.OPTION_TEXT",
+        "key": "area_climate_policy_occupancy_freshness_mode.auto"
+      }
+    ],
+    "existing": {
+      "de": "Verwendet automatische Grenzen für numerische Raumbelegungszähler. Gültige binäre Raumpräsenzzustände bleiben ereignisgesteuert.",
+      "el": "Χρησιμοποιεί αυτόματα όρια παλαιότητας για αριθμητικούς μετρητές παρουσίας. Οι έγκυρες δυαδικές καταστάσεις παρουσίας βασίζονται στις αλλαγές τους."
+    },
+    "id": "backend-169",
+    "missing_locales": [
+      "fr",
+      "es",
+      "it",
+      "nl",
+      "pt",
+      "pt-BR",
+      "pl",
+      "ru",
+      "uk",
+      "tr",
+      "cs",
+      "sk",
+      "hu",
+      "ro",
+      "bg",
+      "hr",
+      "sr",
+      "sv",
+      "nb",
+      "da",
+      "fi",
+      "id",
+      "vi",
+      "th",
+      "hi",
+      "zh-Hans",
+      "zh-Hant",
+      "ja",
+      "ko",
+      "ar",
+      "he",
+      "fa",
+      "bn",
+      "ur",
+      "ta"
+    ]
+  },
+  {
+    "en": "Use the configured maximum age for sampled home-presence reports, never treating missing or stale reports as proof that everyone left.",
+    "sources": [
+      {
+        "catalog": "setting_option_explanations.OPTION_TEXT",
+        "key": "home_global_policy_source_freshness_mode.custom"
+      }
+    ],
+    "existing": {
+      "de": "Verwendet die eingestellte Gültigkeitsdauer für gemeldete Anwesenheitswerte; fehlende oder alte Meldungen beweisen niemals, dass alle abwesend sind.",
+      "el": "Χρησιμοποιεί το δικό σου χρονικό όριο στις δειγματοληπτικές αναφορές παρουσίας· άγνωστες ή παλιές αναφορές δεν αποδεικνύουν ότι έφυγαν όλοι."
+    },
+    "id": "backend-173",
+    "missing_locales": [
+      "fr",
+      "es",
+      "it",
+      "nl",
+      "pt",
+      "pt-BR",
+      "pl",
+      "ru",
+      "uk",
+      "tr",
+      "cs",
+      "sk",
+      "hu",
+      "ro",
+      "bg",
+      "hr",
+      "sr",
+      "sv",
+      "nb",
+      "da",
+      "fi",
+      "id",
+      "vi",
+      "th",
+      "hi",
+      "zh-Hans",
+      "zh-Hant",
+      "ja",
+      "ko",
+      "ar",
+      "he",
+      "fa",
+      "bn",
+      "ur",
+      "ta"
+    ]
+  },
+  {
+    "en": "Use the conservative automatic age policy for sampled home-presence counters and tracker reports. Valid unchanged Home evidence is handled separately.",
+    "sources": [
+      {
+        "catalog": "setting_option_explanations.OPTION_TEXT",
+        "key": "home_global_policy_source_freshness_mode.auto"
+      }
+    ],
+    "existing": {
+      "de": "Verwendet die vorsichtigen automatischen Aktualitätsgrenzen für Anwesenheitszähler und Tracker-Meldungen. Gültige unveränderte Home-Nachweise werden getrennt behandelt.",
+      "el": "Χρησιμοποιεί τα συντηρητικά αυτόματα όρια παλαιότητας για μετρητές ατόμων και αναφορές παρουσίας. Η έγκυρη αμετάβλητη κατάσταση Home αντιμετωπίζεται ξεχωριστά."
+    },
+    "id": "backend-174",
+    "missing_locales": [
+      "fr",
+      "es",
+      "it",
+      "nl",
+      "pt",
+      "pt-BR",
+      "pl",
+      "ru",
+      "uk",
+      "tr",
+      "cs",
+      "sk",
+      "hu",
+      "ro",
+      "bg",
+      "hr",
+      "sr",
+      "sv",
+      "nb",
+      "da",
+      "fi",
+      "id",
+      "vi",
+      "th",
+      "hi",
+      "zh-Hans",
+      "zh-Hant",
+      "ja",
+      "ko",
+      "ar",
+      "he",
+      "fa",
+      "bn",
+      "ur",
+      "ta"
+    ]
+  },
+  {
+    "en": "Use your configured maximum reading age for numeric room occupancy counts. Unknown values cannot prove the room is empty.",
+    "sources": [
+      {
+        "catalog": "setting_option_explanations.OPTION_TEXT",
+        "key": "area_climate_policy_occupancy_freshness_mode.custom"
+      }
+    ],
+    "existing": {
+      "de": "Verwendet das eingestellte Höchstalter für numerische Raumbelegungszähler. Unbekannte Werte beweisen nicht, dass der Raum leer ist.",
+      "el": "Χρησιμοποιεί το χρονικό όριο που όρισες για αριθμητικούς μετρητές παρουσίας. Οι άγνωστες ενδείξεις δεν αποδεικνύουν ότι ο χώρος είναι άδειος."
+    },
+    "id": "backend-186",
+    "missing_locales": [
+      "fr",
+      "es",
+      "it",
+      "nl",
+      "pt",
+      "pt-BR",
+      "pl",
+      "ru",
+      "uk",
+      "tr",
+      "cs",
+      "sk",
+      "hu",
+      "ro",
+      "bg",
+      "hr",
+      "sr",
+      "sv",
+      "nb",
+      "da",
+      "fi",
+      "id",
+      "vi",
+      "th",
+      "hi",
+      "zh-Hans",
+      "zh-Hant",
+      "ja",
+      "ko",
+      "ar",
+      "he",
+      "fa",
+      "bn",
+      "ur",
+      "ta"
+    ]
+  }
+]

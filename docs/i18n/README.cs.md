@@ -18,7 +18,7 @@
 # HEM - Home Environment Manager
 
 <!-- HEM-TRANSLATION-UNREVIEWED-START -->
-> ⚠️ **Unreviewed machine translation.** This page has not been checked for linguistic or technical accuracy, and some descriptions may be wrong. For installation, device control and safety instructions, refer to the <a href="../../README.md">English README</a>.
+> ⚠️ **Nerevidovaný strojový překlad.** Jazyková ani technická správnost této stránky nebyla ověřena a některé popisy mohou být chybné. Pokyny k instalaci, ovládání zařízení a bezpečnosti najdete v <a href="../../README.md">anglickém souboru README</a>.
 <!-- HEM-TRANSLATION-UNREVIEWED-END -->
 
 <p align="center">
@@ -75,7 +75,8 @@ HEM udržuje sdílené politiky oddělené od místních rozhodnutí.
 | **Pokoj** | Zdroje vnitřní teploty a vlhkosti, prahové hodnoty kvality ovzduší, kontakty oken a dveří, chování spánku a obsazení, komfortní cíle pro místnost, možnosti větrání a stínování. |
 | **Jednotlivé zařízení** | Jeho dostupné režimy ovládání, automatické/manuální/PID metoda, cíle pro profil, senzory, nastavení tichého ventilátoru, minimální provozní doby, ochranná energie, chování oken a upozornění na chybu zařízení. |
 
-Všechny tři úrovně jsou přístupné prostřednictvím skupinových, vyhledatelných nastavení v kartou. Home Assistant změny nastavení.
+Nastavení domácnosti, místností a zařízení jsou na kartě seskupena a lze v nich vyhledávat. Zvolte **Základní**, **Pokročilé** nebo **Expertní** podle požadovaného rozsahu zobrazených nastavení. Základní obsahuje běžné ovládání a nezbytnou konfiguraci. Pokročilé přidává ruční nastavení koeficientů PID a podrobné úpravy. Expertní přidává specializované modely a ladění výkonu. Každá úroveň zahrnuje předchozí úrovně. Při změně instalace Home Assistant můžete obnovit dostupné zdroje. <!-- HEM-I18N:levels -->
+
 
 <a id="climate-control-and-pid-device-by-device"></a>
 ### Kontrola klimatu a PID, zařízení za zařízení
@@ -124,7 +125,9 @@ Příprava není příkaz k tomu, abyste všechno zapnul. Přístroje stále pot
 HEM srovnává **co pokoj potřebuje** s **jestli může pomoci vzduch venku**.
 
 - Doporučujeme otevřít nebo zavřít okna pomocí aktuálních měření vnitřních prostor, vlhkosti venku, znečištění, teploty, větru, varování počasí a volitelného kontextu pylu.
+- Index AQI je volitelný. Není-li nastavena stupnice poskytovatele, HEM hlásí neúplná data; to samo o sobě nebrání větrání ani není důvodem k zavření okna. Platná měření znečišťujících látek a skutečně nebezpečné hodnoty AQI vyhodnocené podle správné stupnice se nadále zohledňují. <!-- HEM-I18N:aqi -->
 - Použijte vybrané kontaktní okna a dveře k vysvětlení podmínek v místnosti a vyhněte se tomu, aby neznámý kontakt byl považován za uzavřený.
+- Balkonové nebo terasové dveře s třídou binárního senzoru Home Assistant `door` nebo `opening` můžete volitelně zahrnout jako **okenní vstupy**. Zobrazí se ve výběru oken místnosti, ale **nikdy nejsou předem vybrány**. Běžné sledování dveří zůstává nezávislé. <!-- HEM-I18N:balcony -->
 - Pokud je to nutné, požádejte vás, abyste se pokusili otevřít okno před spuštěním podporovaného automatického zařízení, a pak pokračujte v běžném ovládání po skonfiguraci odpovědi.
 - Použijte informace o dveřích pro poznání hranic místnosti, varování proti větrání a volitelné ochranné ekologické chování.
 - Správte opcionální závěsy, závěsy a odstíny pomocí vhodných oken, teploty, počasí, slunečního vzestupu a volitelného světelného důkazu.

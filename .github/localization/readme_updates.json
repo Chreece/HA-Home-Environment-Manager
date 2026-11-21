@@ -1,0 +1,419 @@
+{
+  "version": 1,
+  "translations": {
+    "en": {
+      "levels": "All three scopes are accessible through grouped, searchable settings in the card. Choose **Basic**, **Advanced** or **Expert** to control how many settings are shown. Basic includes everyday controls and required setup; Advanced adds manual PID gains and detailed adjustments; Expert adds specialist models and capacity tuning. Each level includes the previous levels. You can refresh source choices as your Home Assistant setup changes.",
+      "aqi": "Treat an AQI index as optional: an unconfigured provider scale is reported as incomplete data, not a reason to block ventilation or close a window. Valid measured pollutants and genuinely unsafe, correctly scaled AQI readings still apply.",
+      "balcony": "Optionally include balcony or patio doors with Home Assistant binary-sensor class `door` or `opening` as **window inputs**. They appear in the room's window selector but are **never preselected**; regular door monitoring remains independent.",
+      "warning": "**Unreviewed machine translation.** This page has not been checked for linguistic or technical accuracy, and some descriptions may be wrong. For installation, device control and safety instructions, refer to the <a href=\"../../README.md\">English README</a>.",
+      "level_labels": [
+        "Basic",
+        "Advanced",
+        "Expert"
+      ]
+    },
+    "el": {
+      "levels": "Οι ρυθμίσεις σπιτιού, δωματίου και συσκευής είναι οργανωμένες σε ομάδες με δυνατότητα αναζήτησης στην κάρτα. Επιλέξτε **Βασικές**, **Προηγμένες** ή **Εξειδικευμένες** για να ορίσετε ποιες ρυθμίσεις εμφανίζονται. Οι Βασικές περιλαμβάνουν τις καθημερινές επιλογές και την απαραίτητη αρχική διαμόρφωση. Οι Προηγμένες προσθέτουν χειροκίνητη ρύθμιση των συντελεστών PID και λεπτομερείς προσαρμογές. Οι Εξειδικευμένες προσθέτουν ειδικά μοντέλα και ρυθμίσεις δυναμικότητας. Κάθε επίπεδο περιλαμβάνει και τα προηγούμενα. Όποτε αλλάζει η εγκατάσταση του Home Assistant, μπορείτε να ανανεώνετε τις διαθέσιμες πηγές.",
+      "aqi": "Ο δείκτης AQI είναι προαιρετικός. Αν δεν έχει οριστεί η κλίμακα του παρόχου, εμφανίζεται ένδειξη ελλιπών δεδομένων· αυτό από μόνο του δεν εμποδίζει τον αερισμό ούτε αποτελεί λόγο να κλείσει ένα παράθυρο. Οι έγκυρες μετρήσεις ρύπων και οι πραγματικά επικίνδυνες τιμές AQI με σωστά ορισμένη κλίμακα εξακολουθούν να λαμβάνονται υπόψη.",
+      "balcony": "Μπορείτε προαιρετικά να προσθέσετε μπαλκονόπορτες ή πόρτες βεράντας με κλάση δυαδικού αισθητήρα `door` ή `opening` στο Home Assistant ως **εισόδους παραθύρων**. Εμφανίζονται στον επιλογέα παραθύρων του δωματίου, αλλά **δεν επιλέγονται ποτέ αυτόματα**. Η κανονική παρακολούθηση θυρών παραμένει ανεξάρτητη.",
+      "level_labels": [
+        "Βασικές",
+        "Προηγμένες",
+        "Εξειδικευμένες"
+      ]
+    },
+    "de": {
+      "levels": "Die Einstellungen für Zuhause, Räume und Geräte sind in der Karte übersichtlich gruppiert und durchsuchbar. Wählen Sie **Basis**, **Erweitert** oder **Experten**, um den Umfang der angezeigten Einstellungen festzulegen. Basis enthält die alltäglichen Bedienelemente und die erforderliche Einrichtung. Erweitert ergänzt manuelle PID-Koeffizienten und detaillierte Anpassungen. Experten fügt spezielle Modelle und die Abstimmung der Geräteleistung hinzu. Jede Stufe umfasst auch die vorherigen Stufen. Wenn sich Ihre Home-Assistant-Installation ändert, können Sie die verfügbaren Quellen neu einlesen.",
+      "aqi": "Der AQI-Index ist optional. Eine nicht konfigurierte Anbieterskala wird als unvollständige Datengrundlage angezeigt; sie allein verhindert weder das Lüften noch begründet sie eine Aufforderung zum Fensterschließen. Gültige Schadstoffmessungen und tatsächlich bedenkliche AQI-Werte mit korrekt zugeordneter Skala werden weiterhin berücksichtigt.",
+      "balcony": "Balkon- oder Terrassentüren mit der Home-Assistant-Binärsensorklasse `door` oder `opening` können Sie optional als **Fensterkontakte** einbeziehen. Sie erscheinen in der Fensterauswahl des Raums, werden aber **nie automatisch vorausgewählt**. Die normale Türüberwachung bleibt davon unabhängig.",
+      "level_labels": [
+        "Basis",
+        "Erweitert",
+        "Experten"
+      ]
+    },
+    "fr": {
+      "levels": "Les réglages du logement, des pièces et des appareils sont regroupés et accessibles par recherche dans la carte. Choisissez **Base**, **Avancé** ou **Expert** pour déterminer les réglages affichés. Base comprend les commandes courantes et la configuration indispensable. Avancé ajoute le réglage manuel des coefficients PID et les ajustements détaillés. Expert ajoute les modèles spécialisés et le réglage de la capacité des appareils. Chaque niveau inclut les précédents. Vous pouvez actualiser les sources disponibles lorsque votre installation Home Assistant évolue.",
+      "aqi": "L’indice AQI est facultatif. Si l’échelle du fournisseur n’est pas configurée, HEM signale des données incomplètes ; cela ne suffit pas à bloquer l’aération ou à demander la fermeture d’une fenêtre. Les mesures valides de polluants et les valeurs AQI réellement dangereuses, interprétées avec la bonne échelle, restent prises en compte.",
+      "balcony": "Vous pouvez inclure les portes de balcon ou de terrasse de classe de capteur binaire Home Assistant `door` ou `opening` comme **contacts de fenêtre**. Elles apparaissent dans le sélecteur de fenêtres de la pièce, mais ne sont **jamais présélectionnées**. La surveillance habituelle des portes reste indépendante.",
+      "level_labels": [
+        "Base",
+        "Avancé",
+        "Expert"
+      ]
+    },
+    "es": {
+      "levels": "Los ajustes de la vivienda, las habitaciones y los dispositivos están agrupados y se pueden buscar en la tarjeta. Elige **Básico**, **Avanzado** o **Experto** para decidir qué ajustes se muestran. Básico incluye los controles habituales y la configuración necesaria. Avanzado añade los coeficientes PID manuales y ajustes detallados. Experto añade modelos especializados y ajustes de capacidad. Cada nivel incluye los anteriores. Puedes actualizar las fuentes disponibles cuando cambie tu instalación de Home Assistant.",
+      "aqi": "El índice AQI es opcional. Si no se ha configurado la escala del proveedor, HEM indica que faltan datos; esto por sí solo no impide ventilar ni justifica cerrar una ventana. Se siguen teniendo en cuenta las mediciones válidas de contaminantes y los valores AQI realmente peligrosos interpretados con la escala correcta.",
+      "balcony": "Puedes incluir puertas de balcón o terraza con la clase de sensor binario de Home Assistant `door` u `opening` como **entradas de ventana**. Aparecen en el selector de ventanas de la habitación, pero **nunca se seleccionan de antemano**. La supervisión habitual de puertas sigue siendo independiente.",
+      "level_labels": [
+        "Básico",
+        "Avanzado",
+        "Experto"
+      ]
+    },
+    "it": {
+      "levels": "Le impostazioni di casa, stanze e dispositivi sono raggruppate nella scheda e possono essere cercate. Scegli **Base**, **Avanzato** o **Esperto** per decidere quali impostazioni visualizzare. Base comprende i comandi quotidiani e la configurazione necessaria. Avanzato aggiunge la regolazione manuale dei coefficienti PID e le impostazioni dettagliate. Esperto aggiunge modelli specialistici e regolazioni della capacità. Ogni livello include quelli precedenti. Puoi aggiornare le fonti disponibili quando cambia la configurazione di Home Assistant.",
+      "aqi": "L’indice AQI è facoltativo. Se la scala del fornitore non è configurata, HEM segnala dati incompleti: questo, da solo, non impedisce di arieggiare e non è un motivo per chiudere una finestra. Restano valide le misurazioni degli inquinanti e le letture AQI realmente pericolose interpretate con la scala corretta.",
+      "balcony": "Puoi includere le porte di balconi o terrazze con classe di sensore binario Home Assistant `door` o `opening` come **ingressi finestra**. Compaiono nel selettore delle finestre della stanza, ma **non vengono mai preselezionate**. Il normale monitoraggio delle porte rimane indipendente.",
+      "warning": "**Traduzione automatica non revisionata.** L’accuratezza linguistica e tecnica di questa pagina non è stata verificata e alcune descrizioni potrebbero essere errate. Per l’installazione, il controllo dei dispositivi e le istruzioni di sicurezza, consulta il <a href=\"../../README.md\">README in inglese</a>.",
+      "level_labels": [
+        "Base",
+        "Avanzato",
+        "Esperto"
+      ]
+    },
+    "nl": {
+      "levels": "De instellingen voor de woning, kamers en apparaten staan gegroepeerd in de kaart en zijn doorzoekbaar. Kies **Basis**, **Geavanceerd** of **Expert** om te bepalen welke instellingen zichtbaar zijn. Basis bevat dagelijkse bediening en noodzakelijke configuratie. Geavanceerd voegt handmatige PID-coëfficiënten en gedetailleerde aanpassingen toe. Expert voegt specialistische modellen en capaciteitsafstemming toe. Elk niveau omvat de voorgaande niveaus. U kunt de beschikbare bronnen vernieuwen wanneer uw Home Assistant-installatie verandert.",
+      "aqi": "De AQI-index is optioneel. Als de schaal van de aanbieder niet is ingesteld, meldt HEM onvolledige gegevens; dat alleen blokkeert ventilatie niet en is geen reden om een raam te sluiten. Geldige metingen van verontreinigende stoffen en werkelijk onveilige AQI-waarden met de juiste schaal blijven meetellen.",
+      "balcony": "U kunt balkon- of terrasdeuren met de Home Assistant-klasse voor binaire sensoren `door` of `opening` optioneel als **raamcontacten** opnemen. Ze verschijnen in de raamkeuze van de kamer, maar zijn **nooit vooraf geselecteerd**. De gewone deurbewaking blijft onafhankelijk.",
+      "warning": "**Niet nagekeken machinevertaling.** De taalkundige en technische juistheid van deze pagina is niet gecontroleerd; sommige beschrijvingen kunnen onjuist zijn. Raadpleeg voor installatie, apparaatbesturing en veiligheidsinstructies de <a href=\"../../README.md\">Engelse README</a>.",
+      "level_labels": [
+        "Basis",
+        "Geavanceerd",
+        "Expert"
+      ]
+    },
+    "pt": {
+      "levels": "As definições da casa, das divisões e dos dispositivos estão agrupadas no cartão e podem ser pesquisadas. Escolha **Básico**, **Avançado** ou **Especialista** para definir quais são apresentadas. Básico inclui os controlos quotidianos e a configuração necessária. Avançado acrescenta os ganhos PID manuais e os ajustes detalhados. Especialista acrescenta modelos especializados e ajustes de capacidade. Cada nível inclui os anteriores. Pode atualizar as fontes disponíveis quando a sua instalação do Home Assistant mudar.",
+      "aqi": "O índice AQI é opcional. Uma escala do fornecedor não configurada é assinalada como dados incompletos; isso, por si só, não impede a ventilação nem justifica fechar uma janela. Continuam a ser consideradas as medições válidas de poluentes e as leituras AQI realmente perigosas interpretadas com a escala correta.",
+      "balcony": "Pode incluir portas de varanda ou de terraço com a classe de sensor binário do Home Assistant `door` ou `opening` como **entradas de janela**. Surgem no seletor de janelas da divisão, mas **nunca são pré-selecionadas**. A monitorização normal das portas permanece independente.",
+      "warning": "**Tradução automática não revista.** A exatidão linguística e técnica desta página não foi verificada e algumas descrições podem estar erradas. Para instruções de instalação, controlo de dispositivos e segurança, consulte o <a href=\"../../README.md\">README em inglês</a>.",
+      "level_labels": [
+        "Básico",
+        "Avançado",
+        "Especialista"
+      ]
+    },
+    "pt-BR": {
+      "levels": "As configurações da casa, dos cômodos e dos dispositivos ficam agrupadas no cartão e podem ser pesquisadas. Escolha **Básico**, **Avançado** ou **Especialista** para definir quais serão exibidas. Básico inclui os controles do dia a dia e a configuração necessária. Avançado acrescenta os ganhos PID manuais e os ajustes detalhados. Especialista acrescenta modelos especializados e ajustes de capacidade. Cada nível inclui os anteriores. Você pode atualizar as fontes disponíveis quando sua instalação do Home Assistant mudar.",
+      "aqi": "O índice AQI é opcional. Se a escala do provedor não estiver configurada, o HEM indica dados incompletos; isso, por si só, não impede a ventilação nem justifica fechar uma janela. As medições válidas de poluentes e as leituras AQI realmente perigosas interpretadas com a escala correta continuam sendo consideradas.",
+      "balcony": "Você pode incluir portas de sacada ou de varanda com a classe de sensor binário do Home Assistant `door` ou `opening` como **entradas de janela**. Elas aparecem no seletor de janelas do cômodo, mas **nunca vêm pré-selecionadas**. O monitoramento normal das portas permanece independente.",
+      "warning": "**Tradução automática não revisada.** A precisão linguística e técnica desta página não foi verificada e algumas descrições podem estar erradas. Para instruções de instalação, controle de dispositivos e segurança, consulte o <a href=\"../../README.md\">README em inglês</a>.",
+      "level_labels": [
+        "Básico",
+        "Avançado",
+        "Especialista"
+      ]
+    },
+    "da": {
+      "levels": "Indstillinger for hjem, rum og enheder er grupperet i kortet og kan søges frem. Vælg **Grundlæggende**, **Avanceret** eller **Ekspert** for at bestemme, hvilke indstillinger der vises. Grundlæggende omfatter daglig betjening og nødvendig opsætning. Avanceret tilføjer manuelle PID-koefficienter og detaljerede justeringer. Ekspert tilføjer specialiserede modeller og kapacitetsjustering. Hvert niveau omfatter de foregående niveauer. Du kan opdatere de tilgængelige kilder, når din Home Assistant-installation ændrer sig.",
+      "aqi": "AQI-indekset er valgfrit. Hvis udbyderens skala ikke er konfigureret, vises dataene som ufuldstændige; dette alene blokerer ikke udluftning og er ikke en grund til at lukke et vindue. Gyldige målinger af luftforurening og reelt farlige AQI-værdier, fortolket med den korrekte skala, indgår fortsat.",
+      "balcony": "Altan- eller terrassedøre med Home Assistants binærsensorklasse `door` eller `opening` kan valgfrit medtages som **vindueskontakter**. De vises i rummets vinduesvælger, men er **aldrig valgt på forhånd**. Den almindelige dørovervågning er fortsat uafhængig.",
+      "warning": "**Maskinoversættelse, der ikke er gennemgået.** Denne sides sproglige og tekniske nøjagtighed er ikke kontrolleret, og nogle beskrivelser kan være forkerte. Se den <a href=\"../../README.md\">engelske README</a> for installation, enhedsstyring og sikkerhedsanvisninger.",
+      "level_labels": [
+        "Grundlæggende",
+        "Avanceret",
+        "Ekspert"
+      ]
+    },
+    "sv": {
+      "levels": "Inställningarna för hem, rum och enheter är grupperade i kortet och går att söka bland. Välj **Grundläggande**, **Avancerad** eller **Expert** för att bestämma vilka inställningar som visas. Grundläggande omfattar dagliga reglage och nödvändig konfiguration. Avancerad lägger till manuella PID-koefficienter och detaljerade justeringar. Expert lägger till specialiserade modeller och kapacitetsanpassning. Varje nivå omfattar de föregående nivåerna. Du kan uppdatera tillgängliga källor när din Home Assistant-installation ändras.",
+      "aqi": "AQI-indexet är valfritt. Om leverantörens skala inte har konfigurerats visas uppgifterna som ofullständiga; enbart detta hindrar inte vädring och är inget skäl att stänga ett fönster. Giltiga mätningar av luftföroreningar och faktiskt farliga AQI-värden som tolkas med rätt skala gäller fortfarande.",
+      "balcony": "Du kan välja att lägga till balkong- eller altandörrar med Home Assistants binära sensorklass `door` eller `opening` som **fönsterkontakter**. De visas i rummets fönsterväljare men är **aldrig förvalda**. Den vanliga dörrövervakningen är fortsatt oberoende.",
+      "warning": "**Maskinöversättning som inte har granskats.** Sidans språkliga och tekniska korrekthet har inte kontrollerats och vissa beskrivningar kan vara felaktiga. Läs den <a href=\"../../README.md\">engelska README-filen</a> för installation, enhetsstyrning och säkerhetsanvisningar.",
+      "level_labels": [
+        "Grundläggande",
+        "Avancerad",
+        "Expert"
+      ]
+    },
+    "nb": {
+      "levels": "Innstillingene for hjem, rom og enheter er gruppert i kortet og kan søkes opp. Velg **Grunnleggende**, **Avansert** eller **Ekspert** for å bestemme hvilke innstillinger som vises. Grunnleggende omfatter daglig betjening og nødvendig oppsett. Avansert legger til manuelle PID-koeffisienter og detaljerte justeringer. Ekspert legger til spesialiserte modeller og kapasitetsjustering. Hvert nivå inkluderer de foregående nivåene. Du kan oppdatere tilgjengelige kilder når Home Assistant-oppsettet endres.",
+      "aqi": "AQI-indeksen er valgfri. Hvis leverandørens skala ikke er konfigurert, vises dataene som ufullstendige; dette alene hindrer ikke lufting og er ingen grunn til å lukke et vindu. Gyldige målinger av luftforurensning og faktisk farlige AQI-verdier tolket med riktig skala gjelder fortsatt.",
+      "balcony": "Du kan velge å ta med balkong- eller terrassedører med Home Assistants binærsensorklasse `door` eller `opening` som **vinduskontakter**. De vises i rommets vindusvelger, men er **aldri forhåndsvalgt**. Vanlig dørovervåking er fortsatt uavhengig.",
+      "warning": "**Maskinoversettelse som ikke er gjennomgått.** Språklig og teknisk nøyaktighet på denne siden er ikke kontrollert, og enkelte beskrivelser kan være feil. Se den <a href=\"../../README.md\">engelske README-filen</a> for installasjon, enhetsstyring og sikkerhetsinstruksjoner.",
+      "level_labels": [
+        "Grunnleggende",
+        "Avansert",
+        "Ekspert"
+      ]
+    },
+    "fi": {
+      "levels": "Kodin, huoneiden ja laitteiden asetukset on ryhmitelty korttiin, ja niistä voi hakea. Valitse **Perus**, **Laajennettu** tai **Asiantuntija** määrittääksesi, mitkä asetukset näkyvät. Perus sisältää päivittäiset ohjaimet ja välttämättömät määritykset. Laajennettu lisää PID-kertoimien käsisäädön ja yksityiskohtaiset asetukset. Asiantuntija lisää erikoismallit ja kapasiteetin säädön. Kukin taso sisältää edeltävät tasot. Voit päivittää käytettävissä olevat lähteet, kun Home Assistant -kokoonpano muuttuu.",
+      "aqi": "AQI-indeksi on valinnainen. Jos palveluntarjoajan asteikkoa ei ole määritetty, tiedot merkitään puutteellisiksi; pelkästään tämä ei estä tuuletusta eikä ole syy sulkea ikkunaa. Kelvolliset epäpuhtausmittaukset ja oikealla asteikolla tulkitut, aidosti vaaralliset AQI-arvot otetaan edelleen huomioon.",
+      "balcony": "Voit halutessasi lisätä parvekkeen tai terassin ovet, joiden Home Assistant -binäärianturiluokka on `door` tai `opening`, **ikkunatuloiksi**. Ne näkyvät huoneen ikkunavalitsimessa, mutta niitä **ei koskaan esivalita**. Tavallinen ovien valvonta toimii edelleen erillään.",
+      "warning": "**Tarkistamaton konekäännös.** Tämän sivun kielellistä tai teknistä oikeellisuutta ei ole tarkistettu, ja osa kuvauksista voi olla virheellisiä. Katso asennus-, laiteohjaus- ja turvallisuusohjeet <a href=\"../../README.md\">englanninkielisestä README-tiedostosta</a>.",
+      "level_labels": [
+        "Perus",
+        "Laajennettu",
+        "Asiantuntija"
+      ]
+    },
+    "pl": {
+      "levels": "Ustawienia domu, pomieszczeń i urządzeń są pogrupowane na karcie i można je wyszukiwać. Wybierz poziom **Podstawowy**, **Zaawansowany** lub **Ekspercki**, aby określić zakres widocznych ustawień. Podstawowy obejmuje codzienną obsługę i niezbędną konfigurację. Zaawansowany dodaje ręczne ustawianie współczynników PID i szczegółowe regulacje. Ekspercki udostępnia specjalistyczne modele i dostrajanie wydajności. Każdy poziom obejmuje poprzednie. Po zmianach w instalacji Home Assistant możesz odświeżyć dostępne źródła.",
+      "aqi": "Indeks AQI jest opcjonalny. Brak skonfigurowanej skali dostawcy jest zgłaszany jako niepełne dane; sam w sobie nie blokuje wietrzenia ani nie stanowi powodu do zamknięcia okna. Nadal uwzględniane są prawidłowe pomiary zanieczyszczeń oraz rzeczywiście niebezpieczne wartości AQI interpretowane we właściwej skali.",
+      "balcony": "Drzwi balkonowe lub tarasowe z klasą czujnika binarnego Home Assistant `door` albo `opening` można opcjonalnie dodać jako **wejścia okienne**. Pojawiają się w wyborze okien pomieszczenia, ale **nigdy nie są zaznaczone domyślnie**. Zwykłe monitorowanie drzwi pozostaje niezależne.",
+      "warning": "**Niezweryfikowane tłumaczenie maszynowe.** Poprawność językowa i techniczna tej strony nie została sprawdzona, a niektóre opisy mogą być błędne. Instrukcje instalacji, sterowania urządzeniami i bezpieczeństwa znajdują się w <a href=\"../../README.md\">angielskim pliku README</a>.",
+      "level_labels": [
+        "Podstawowy",
+        "Zaawansowany",
+        "Ekspercki"
+      ]
+    },
+    "cs": {
+      "levels": "Nastavení domácnosti, místností a zařízení jsou na kartě seskupena a lze v nich vyhledávat. Zvolte **Základní**, **Pokročilé** nebo **Expertní** podle požadovaného rozsahu zobrazených nastavení. Základní obsahuje běžné ovládání a nezbytnou konfiguraci. Pokročilé přidává ruční nastavení koeficientů PID a podrobné úpravy. Expertní přidává specializované modely a ladění výkonu. Každá úroveň zahrnuje předchozí úrovně. Při změně instalace Home Assistant můžete obnovit dostupné zdroje.",
+      "aqi": "Index AQI je volitelný. Není-li nastavena stupnice poskytovatele, HEM hlásí neúplná data; to samo o sobě nebrání větrání ani není důvodem k zavření okna. Platná měření znečišťujících látek a skutečně nebezpečné hodnoty AQI vyhodnocené podle správné stupnice se nadále zohledňují.",
+      "balcony": "Balkonové nebo terasové dveře s třídou binárního senzoru Home Assistant `door` nebo `opening` můžete volitelně zahrnout jako **okenní vstupy**. Zobrazí se ve výběru oken místnosti, ale **nikdy nejsou předem vybrány**. Běžné sledování dveří zůstává nezávislé.",
+      "warning": "**Nerevidovaný strojový překlad.** Jazyková ani technická správnost této stránky nebyla ověřena a některé popisy mohou být chybné. Pokyny k instalaci, ovládání zařízení a bezpečnosti najdete v <a href=\"../../README.md\">anglickém souboru README</a>.",
+      "level_labels": [
+        "Základní",
+        "Pokročilé",
+        "Expertní"
+      ]
+    },
+    "sk": {
+      "levels": "Nastavenia domácnosti, miestností a zariadení sú na karte zoskupené a možno v nich vyhľadávať. Vyberte **Základné**, **Pokročilé** alebo **Expertné** podľa požadovaného rozsahu zobrazených nastavení. Základné obsahujú bežné ovládanie a nevyhnutnú konfiguráciu. Pokročilé pridávajú ručné nastavenie koeficientov PID a podrobné úpravy. Expertné pridávajú špecializované modely a ladenie výkonu. Každá úroveň zahŕňa predchádzajúce úrovne. Pri zmene inštalácie Home Assistant môžete obnoviť dostupné zdroje.",
+      "aqi": "Index AQI je voliteľný. Ak nie je nastavená stupnica poskytovateľa, HEM hlási neúplné údaje; to samo osebe nebráni vetraniu ani nie je dôvodom na zatvorenie okna. Platné merania znečisťujúcich látok a skutočne nebezpečné hodnoty AQI vyhodnotené podľa správnej stupnice sa naďalej zohľadňujú.",
+      "balcony": "Balkónové alebo terasové dvere s triedou binárneho snímača Home Assistant `door` alebo `opening` môžete voliteľne zahrnúť ako **okenné vstupy**. Zobrazia sa vo výbere okien miestnosti, ale **nikdy nie sú vopred vybrané**. Bežné sledovanie dverí zostáva nezávislé.",
+      "warning": "**Nerevidovaný strojový preklad.** Jazyková ani technická správnosť tejto stránky nebola overená a niektoré opisy môžu byť chybné. Pokyny na inštaláciu, ovládanie zariadení a bezpečnosť nájdete v <a href=\"../../README.md\">anglickom súbore README</a>.",
+      "level_labels": [
+        "Základné",
+        "Pokročilé",
+        "Expertné"
+      ]
+    },
+    "ru": {
+      "levels": "Настройки дома, комнат и устройств сгруппированы в карточке и доступны через поиск. Выберите уровень **Базовый**, **Расширенный** или **Экспертный**, чтобы определить набор отображаемых настроек. Базовый включает повседневные элементы управления и обязательную настройку. Расширенный добавляет ручное задание коэффициентов PID и подробные регулировки. Экспертный добавляет специализированные модели и настройку производительности. Каждый уровень включает предыдущие. При изменении конфигурации Home Assistant можно обновить список доступных источников.",
+      "aqi": "Индекс AQI необязателен. Если шкала поставщика не настроена, HEM сообщает о неполных данных; само по себе это не блокирует проветривание и не служит причиной закрывать окно. Достоверные измерения загрязняющих веществ и действительно опасные значения AQI с правильно указанной шкалой по-прежнему учитываются.",
+      "balcony": "Балконные или террасные двери с классом бинарного датчика Home Assistant `door` или `opening` можно по желанию добавить как **оконные входы**. Они отображаются в списке окон комнаты, но **никогда не выбираются заранее**. Обычный контроль дверей остаётся независимым.",
+      "warning": "**Непроверенный машинный перевод.** Языковая и техническая точность этой страницы не проверялась; некоторые описания могут быть ошибочными. Инструкции по установке, управлению устройствами и безопасности см. в <a href=\"../../README.md\">английском README</a>.",
+      "level_labels": [
+        "Базовый",
+        "Расширенный",
+        "Экспертный"
+      ]
+    },
+    "uk": {
+      "levels": "Налаштування оселі, кімнат і пристроїв згруповано в картці, де доступний пошук. Виберіть рівень **Базовий**, **Розширений** або **Експертний**, щоб визначити перелік видимих налаштувань. Базовий містить повсякденні засоби керування й обов’язкове налаштування. Розширений додає ручне встановлення коефіцієнтів PID і докладні регулювання. Експертний додає спеціалізовані моделі та налаштування продуктивності. Кожен рівень містить попередні. Коли конфігурація Home Assistant змінюється, можна оновити доступні джерела.",
+      "aqi": "Індекс AQI необов’язковий. Якщо шкалу постачальника не налаштовано, HEM повідомляє про неповні дані; саме по собі це не блокує провітрювання й не є причиною закривати вікно. Достовірні вимірювання забруднювачів і справді небезпечні значення AQI, витлумачені за правильною шкалою, і далі враховуються.",
+      "balcony": "Балконні або терасні двері з класом бінарного датчика Home Assistant `door` чи `opening` можна за бажанням додати як **віконні входи**. Вони з’являються у виборі вікон кімнати, але **ніколи не вибираються заздалегідь**. Звичайний контроль дверей залишається незалежним.",
+      "warning": "**Неперевірений машинний переклад.** Мовну й технічну точність цієї сторінки не перевірено; деякі описи можуть бути помилковими. Вказівки щодо встановлення, керування пристроями та безпеки дивіться в <a href=\"../../README.md\">англійському README</a>.",
+      "level_labels": [
+        "Базовий",
+        "Розширений",
+        "Експертний"
+      ]
+    },
+    "bg": {
+      "levels": "Настройките за дома, стаите и устройствата са групирани в картата и могат да се търсят. Изберете **Основно**, **Разширено** или **Експертно**, за да определите кои настройки се показват. Основното ниво включва ежедневното управление и необходимата конфигурация. Разширеното добавя ръчни PID коефициенти и подробни настройки. Експертното добавя специализирани модели и настройване на капацитета. Всяко ниво включва предходните. Можете да обновите наличните източници при промяна на инсталацията на Home Assistant.",
+      "aqi": "Индексът AQI е незадължителен. Ако скалата на доставчика не е настроена, HEM съобщава за непълни данни; само това не блокира проветряването и не е причина за затваряне на прозорец. Валидните измервания на замърсители и действително опасните стойности на AQI, оценени по правилната скала, продължават да се вземат предвид.",
+      "balcony": "По желание можете да включите балконски или терасни врати с клас на двоичен сензор в Home Assistant `door` или `opening` като **входове за прозорци**. Те се показват в избора на прозорци за стаята, но **никога не са предварително избрани**. Обичайното наблюдение на вратите остава независимо.",
+      "warning": "**Непроверен машинен превод.** Езиковата и техническата точност на тази страница не е проверена и някои описания може да са грешни. За инструкции за инсталиране, управление на устройства и безопасност вижте <a href=\"../../README.md\">README на английски</a>.",
+      "level_labels": [
+        "Основно",
+        "Разширено",
+        "Експертно"
+      ]
+    },
+    "hr": {
+      "levels": "Postavke doma, prostorija i uređaja grupirane su na kartici i mogu se pretraživati. Odaberite **Osnovno**, **Napredno** ili **Stručno** kako biste odredili koje se postavke prikazuju. Osnovno uključuje svakodnevne kontrole i nužno postavljanje. Napredno dodaje ručno podešavanje PID koeficijenata i detaljne prilagodbe. Stručno dodaje specijalizirane modele i podešavanje kapaciteta. Svaka razina uključuje prethodne. Dostupne izvore možete osvježiti kada se promijeni vaša instalacija sustava Home Assistant.",
+      "aqi": "Indeks AQI nije obvezan. Ako ljestvica davatelja nije postavljena, HEM prijavljuje nepotpune podatke; to samo po sebi ne sprječava prozračivanje niti je razlog za zatvaranje prozora. Valjana mjerenja onečišćujućih tvari i doista opasne vrijednosti AQI-ja, protumačene prema ispravnoj ljestvici, i dalje se uzimaju u obzir.",
+      "balcony": "Balkonska ili terasna vrata s klasom binarnog senzora Home Assistant `door` ili `opening` možete po želji uključiti kao **ulaze za prozore**. Pojavljuju se u odabiru prozora prostorije, ali **nikad nisu unaprijed odabrana**. Uobičajeni nadzor vrata ostaje neovisan.",
+      "warning": "**Nepregledan strojni prijevod.** Jezična i tehnička točnost ove stranice nije provjerena i neki opisi mogu biti pogrešni. Upute za instalaciju, upravljanje uređajima i sigurnost potražite u <a href=\"../../README.md\">README datoteci na engleskom</a>.",
+      "level_labels": [
+        "Osnovno",
+        "Napredno",
+        "Stručno"
+      ]
+    },
+    "sr": {
+      "levels": "Подешавања дома, просторија и уређаја груписана су на картици и могу се претраживати. Изаберите **Основно**, **Напредно** или **Стручно** да одредите која се подешавања приказују. Основно обухвата свакодневне контроле и неопходно подешавање. Напредно додаје ручно подешавање PID коефицијената и детаљне измене. Стручно додаје специјализоване моделе и подешавање капацитета. Сваки ниво обухвата претходне. Доступне изворе можете освежити када се промени ваша Home Assistant инсталација.",
+      "aqi": "Индекс AQI није обавезан. Ако скала добављача није подешена, HEM пријављује непотпуне податке; то само по себи не спречава проветравање и није разлог за затварање прозора. Ваљана мерења загађујућих материја и заиста опасне вредности AQI-ја, протумачене према исправној скали, и даље се узимају у обзир.",
+      "balcony": "Балконска или терасна врата са класом бинарног сензора Home Assistant `door` или `opening` можете по жељи укључити као **улазе за прозоре**. Појављују се у избору прозора просторије, али **никада нису унапред изабрана**. Уобичајени надзор врата остаје независан.",
+      "warning": "**Непроверен машински превод.** Језичка и техничка тачност ове странице није проверена и неки описи могу бити погрешни. Упутства за инсталацију, управљање уређајима и безбедност погледајте у <a href=\"../../README.md\">README датотеци на енглеском</a>.",
+      "level_labels": [
+        "Основно",
+        "Напредно",
+        "Стручно"
+      ]
+    },
+    "ro": {
+      "levels": "Setările locuinței, camerelor și dispozitivelor sunt grupate în card și pot fi căutate. Alegeți **De bază**, **Avansat** sau **Expert** pentru a stabili ce setări sunt afișate. Nivelul de bază include comenzile zilnice și configurarea necesară. Avansat adaugă coeficienții PID manuali și ajustările detaliate. Expert adaugă modele specializate și reglaje de capacitate. Fiecare nivel le include pe cele anterioare. Puteți actualiza sursele disponibile când configurația Home Assistant se schimbă.",
+      "aqi": "Indicele AQI este opțional. Dacă scara furnizorului nu este configurată, HEM semnalează date incomplete; acest lucru singur nu blochează aerisirea și nu justifică închiderea unei ferestre. Măsurătorile valide ale poluanților și valorile AQI cu adevărat periculoase, interpretate folosind scara corectă, rămân luate în considerare.",
+      "balcony": "Puteți include opțional uși de balcon sau de terasă cu clasa de senzor binar Home Assistant `door` sau `opening` ca **intrări pentru ferestre**. Ele apar în selectorul ferestrelor camerei, dar **nu sunt niciodată preselectate**. Monitorizarea obișnuită a ușilor rămâne independentă.",
+      "warning": "**Traducere automată nerevizuită.** Corectitudinea lingvistică și tehnică a acestei pagini nu a fost verificată, iar unele descrieri pot fi greșite. Pentru instrucțiuni de instalare, control al dispozitivelor și siguranță, consultați <a href=\"../../README.md\">README în engleză</a>.",
+      "level_labels": [
+        "De bază",
+        "Avansat",
+        "Expert"
+      ]
+    },
+    "hu": {
+      "levels": "Az otthon, a helyiségek és az eszközök beállításai csoportosítva jelennek meg a kártyán, és kereshetők. Az **Alap**, **Haladó** vagy **Szakértő** szint kiválasztásával szabályozhatja a megjelenő beállítások körét. Az Alap a mindennapi vezérlőket és a szükséges beállításokat tartalmazza. A Haladó kézi PID-együtthatókkal és részletes finomhangolással egészíti ki ezeket. A Szakértő speciális modelleket és kapacitásbeállításokat ad hozzá. Minden szint tartalmazza a korábbi szinteket. A Home Assistant konfigurációjának változásakor frissítheti az elérhető forrásokat.",
+      "aqi": "Az AQI-index használata nem kötelező. Ha a szolgáltató skálája nincs beállítva, a HEM hiányos adatokat jelez; ez önmagában nem tiltja a szellőztetést, és nem indokolja az ablak bezárását. Az érvényes szennyezőanyag-mérések és a helyes skálával értékelt, valóban veszélyes AQI-adatok továbbra is számítanak.",
+      "balcony": "A Home Assistant `door` vagy `opening` bináris érzékelőosztályába tartozó erkély- és teraszajtók igény szerint **ablakbemenetként** is hozzáadhatók. Megjelennek a helyiség ablakválasztójában, de **soha nincsenek előre kijelölve**. A szokásos ajtófigyelés ettől független marad.",
+      "warning": "**Ellenőrizetlen gépi fordítás.** Az oldal nyelvi és műszaki pontosságát nem ellenőrizték, ezért egyes leírások hibásak lehetnek. A telepítési, eszközvezérlési és biztonsági útmutatásokért olvassa el az <a href=\"../../README.md\">angol README-t</a>.",
+      "level_labels": [
+        "Alap",
+        "Haladó",
+        "Szakértő"
+      ]
+    },
+    "ar": {
+      "levels": "تُعرض إعدادات المنزل والغرف والأجهزة في مجموعات داخل البطاقة، ويمكن البحث فيها. اختر **أساسي** أو **متقدم** أو **خبير** لتحديد الإعدادات الظاهرة. يشمل المستوى الأساسي عناصر التحكم اليومية والإعداد الضروري. ويضيف المستوى المتقدم الضبط اليدوي لمعاملات PID والتعديلات التفصيلية. أما مستوى الخبير فيضيف النماذج المتخصصة وضبط السعة. يتضمن كل مستوى المستويات السابقة له. يمكنك تحديث المصادر المتاحة عند تغيير إعداد Home Assistant.",
+      "aqi": "مؤشر AQI اختياري. إذا لم يُضبط مقياس مزود البيانات، يعرض HEM تنبيهًا بأن البيانات غير مكتملة؛ وهذا وحده لا يمنع التهوية ولا يبرر إغلاق نافذة. تظل قياسات الملوثات الصالحة وقراءات AQI الخطرة فعلًا، بعد تفسيرها بالمقياس الصحيح، مؤثرة في القرار.",
+      "balcony": "يمكنك اختياريًا إضافة أبواب الشرفات أو الأفنية ذات فئة المستشعر الثنائي `door` أو `opening` في Home Assistant بوصفها **مدخلات نوافذ**. تظهر في محدد نوافذ الغرفة، لكنها **لا تُحدد مسبقًا أبدًا**. وتبقى مراقبة الأبواب المعتادة مستقلة.",
+      "warning": "**ترجمة آلية لم تُراجع.** لم تُتحقق الدقة اللغوية أو التقنية لهذه الصفحة، وقد تكون بعض الأوصاف خاطئة. لإرشادات التثبيت والتحكم في الأجهزة والسلامة، راجع <a href=\"../../README.md\">ملف README بالإنجليزية</a>.",
+      "level_labels": [
+        "أساسي",
+        "متقدم",
+        "خبير"
+      ]
+    },
+    "he": {
+      "levels": "ההגדרות לבית, לחדרים ולמכשירים מקובצות בכרטיס וניתן לחפש בהן. בחרו **בסיסי**, **מתקדם** או **מומחה** כדי לקבוע אילו הגדרות יוצגו. הרמה הבסיסית כוללת פקדים יומיומיים ואת ההגדרה הראשונית הנדרשת. הרמה המתקדמת מוסיפה כוונון ידני של מקדמי PID והתאמות מפורטות. רמת המומחה מוסיפה מודלים ייעודיים וכוונון קיבולת. כל רמה כוללת את הרמות הקודמות. ניתן לרענן את המקורות הזמינים כאשר תצורת Home Assistant משתנה.",
+      "aqi": "מדד AQI הוא אופציונלי. אם סולם הספק לא הוגדר, HEM מציג שהנתונים חלקיים; מצב זה לבדו אינו מונע אוורור ואינו סיבה לסגירת חלון. מדידות תקינות של מזהמים וערכי AQI מסוכנים באמת, המפורשים לפי הסולם הנכון, עדיין נלקחים בחשבון.",
+      "balcony": "ניתן לכלול דלתות מרפסת או פטיו בעלות מחלקת חיישן בינארי של Home Assistant מסוג `door` או `opening` בתור **קלטי חלונות**. הן מופיעות בבורר החלונות של החדר, אך **לעולם אינן נבחרות מראש**. ניטור הדלתות הרגיל נותר עצמאי.",
+      "warning": "**תרגום מכונה שלא נבדק.** הדיוק הלשוני והטכני של דף זה לא אומת, וייתכן שחלק מהתיאורים שגויים. להוראות התקנה, שליטה במכשירים ובטיחות, עיינו ב<a href=\"../../README.md\">קובץ README באנגלית</a>.",
+      "level_labels": [
+        "בסיסי",
+        "מתקדם",
+        "מומחה"
+      ]
+    },
+    "fa": {
+      "levels": "تنظیمات خانه، اتاق‌ها و دستگاه‌ها در کارت گروه‌بندی شده‌اند و می‌توان در آن‌ها جست‌وجو کرد. برای تعیین تنظیمات قابل نمایش، **پایه**، **پیشرفته** یا **تخصصی** را انتخاب کنید. سطح پایه شامل کنترل‌های روزمره و پیکربندی ضروری است. سطح پیشرفته تنظیم دستی ضرایب PID و تنظیمات جزئی‌تر را اضافه می‌کند. سطح تخصصی مدل‌های ویژه و تنظیم ظرفیت را می‌افزاید. هر سطح، سطح‌های پیشین را نیز در بر می‌گیرد. با تغییر پیکربندی Home Assistant می‌توانید منابع موجود را تازه‌سازی کنید.",
+      "aqi": "شاخص AQI اختیاری است. اگر مقیاس ارائه‌دهنده تنظیم نشده باشد، HEM داده‌ها را ناقص اعلام می‌کند؛ این وضعیت به‌تنهایی مانع تهویه یا دلیلی برای بستن پنجره نیست. اندازه‌گیری‌های معتبر آلاینده‌ها و مقادیر واقعاً خطرناک AQI که با مقیاس درست تفسیر شده‌اند همچنان لحاظ می‌شوند.",
+      "balcony": "می‌توانید درهای بالکن یا تراس با ردهٔ حسگر دودویی `door` یا `opening` در Home Assistant را به‌صورت اختیاری به‌عنوان **ورودی پنجره** اضافه کنید. این درها در انتخابگر پنجره‌های اتاق دیده می‌شوند، اما **هرگز از پیش انتخاب نمی‌شوند**. پایش معمول درها مستقل باقی می‌ماند.",
+      "warning": "**ترجمهٔ ماشینی بازبینی‌نشده.** درستی زبانی و فنی این صفحه بررسی نشده است و برخی توضیحات ممکن است نادرست باشند. برای دستورالعمل‌های نصب، کنترل دستگاه‌ها و ایمنی، به <a href=\"../../README.md\">README انگلیسی</a> مراجعه کنید.",
+      "level_labels": [
+        "پایه",
+        "پیشرفته",
+        "تخصصی"
+      ]
+    },
+    "tr": {
+      "levels": "Ev, oda ve cihaz ayarları kartta gruplandırılır ve aranabilir. Hangi ayarların gösterileceğini belirlemek için **Temel**, **Gelişmiş** veya **Uzman** düzeyini seçin. Temel düzey günlük kontrolleri ve gerekli kurulumu içerir. Gelişmiş düzey elle ayarlanan PID katsayılarını ve ayrıntılı ayarları ekler. Uzman düzeyi özel modelleri ve kapasite ayarlarını ekler. Her düzey önceki düzeyleri de kapsar. Home Assistant kurulumunuz değiştiğinde kullanılabilir kaynakları yenileyebilirsiniz.",
+      "aqi": "AQI endeksi isteğe bağlıdır. Sağlayıcının ölçeği yapılandırılmamışsa HEM eksik veri bildirir; bu durum tek başına havalandırmayı engellemez veya pencereyi kapatma nedeni oluşturmaz. Geçerli kirletici ölçümleri ve doğru ölçekle yorumlanan, gerçekten tehlikeli AQI değerleri dikkate alınmaya devam eder.",
+      "balcony": "Home Assistant ikili sensör sınıfı `door` veya `opening` olan balkon ya da teras kapılarını isteğe bağlı olarak **pencere girişlerine** ekleyebilirsiniz. Odanın pencere seçicisinde görünürler ancak **asla önceden seçili gelmezler**. Normal kapı izleme işlevi bağımsız kalır.",
+      "warning": "**İncelenmemiş makine çevirisi.** Bu sayfanın dilsel ve teknik doğruluğu kontrol edilmemiştir; bazı açıklamalar yanlış olabilir. Kurulum, cihaz kontrolü ve güvenlik talimatları için <a href=\"../../README.md\">İngilizce README dosyasına</a> bakın.",
+      "level_labels": [
+        "Temel",
+        "Gelişmiş",
+        "Uzman"
+      ]
+    },
+    "id": {
+      "levels": "Pengaturan rumah, ruangan, dan perangkat dikelompokkan di kartu dan dapat dicari. Pilih **Dasar**, **Lanjutan**, atau **Ahli** untuk menentukan pengaturan yang ditampilkan. Dasar mencakup kontrol sehari-hari dan konfigurasi yang diperlukan. Lanjutan menambahkan pengaturan koefisien PID secara manual dan penyesuaian terperinci. Ahli menambahkan model khusus dan penyetelan kapasitas. Setiap tingkat mencakup tingkat sebelumnya. Anda dapat menyegarkan pilihan sumber saat konfigurasi Home Assistant berubah.",
+      "aqi": "Indeks AQI bersifat opsional. Jika skala penyedia belum dikonfigurasi, HEM melaporkan data yang tidak lengkap; hal itu saja tidak menghalangi ventilasi atau menjadi alasan menutup jendela. Pengukuran polutan yang valid dan nilai AQI yang benar-benar berbahaya dengan skala yang tepat tetap diperhitungkan.",
+      "balcony": "Anda dapat menambahkan pintu balkon atau teras dengan kelas sensor biner Home Assistant `door` atau `opening` sebagai **masukan jendela**. Pintu tersebut muncul di pemilih jendela ruangan, tetapi **tidak pernah dipilih secara bawaan**. Pemantauan pintu biasa tetap terpisah.",
+      "warning": "**Terjemahan mesin yang belum ditinjau.** Ketepatan bahasa dan teknis halaman ini belum diperiksa, sehingga beberapa deskripsi mungkin salah. Untuk petunjuk pemasangan, kontrol perangkat, dan keselamatan, lihat <a href=\"../../README.md\">README berbahasa Inggris</a>.",
+      "level_labels": [
+        "Dasar",
+        "Lanjutan",
+        "Ahli"
+      ]
+    },
+    "vi": {
+      "levels": "Các cài đặt cho nhà, phòng và thiết bị được nhóm trong thẻ và có thể tìm kiếm. Chọn **Cơ bản**, **Nâng cao** hoặc **Chuyên gia** để quyết định những cài đặt được hiển thị. Cơ bản gồm các điều khiển hằng ngày và cấu hình cần thiết. Nâng cao bổ sung việc chỉnh thủ công các hệ số PID và các điều chỉnh chi tiết. Chuyên gia bổ sung mô hình chuyên biệt và hiệu chỉnh công suất. Mỗi cấp bao gồm các cấp trước đó. Bạn có thể làm mới các nguồn khả dụng khi cấu hình Home Assistant thay đổi.",
+      "aqi": "Chỉ số AQI là tùy chọn. Nếu chưa cấu hình thang đo của nhà cung cấp, HEM báo dữ liệu chưa đầy đủ; chỉ riêng điều này không ngăn thông gió hoặc là lý do đóng cửa sổ. Các phép đo chất ô nhiễm hợp lệ và giá trị AQI thực sự nguy hiểm được diễn giải theo đúng thang đo vẫn được xét đến.",
+      "balcony": "Bạn có thể thêm cửa ra ban công hoặc sân hiên có lớp cảm biến nhị phân Home Assistant `door` hoặc `opening` làm **đầu vào cửa sổ**. Chúng xuất hiện trong bộ chọn cửa sổ của phòng nhưng **không bao giờ được chọn sẵn**. Việc theo dõi cửa thông thường vẫn độc lập.",
+      "warning": "**Bản dịch máy chưa được rà soát.** Độ chính xác về ngôn ngữ và kỹ thuật của trang này chưa được kiểm tra; một số mô tả có thể sai. Để xem hướng dẫn cài đặt, điều khiển thiết bị và an toàn, hãy tham khảo <a href=\"../../README.md\">README tiếng Anh</a>.",
+      "level_labels": [
+        "Cơ bản",
+        "Nâng cao",
+        "Chuyên gia"
+      ]
+    },
+    "zh-Hans": {
+      "levels": "住宅、房间和设备的设置在卡片中分组显示，并支持搜索。选择**基础**、**高级**或**专家**，即可决定显示哪些设置。基础级包含日常控制和必要的初始配置；高级增加 PID 系数的手动设置及详细调整；专家级增加专用模型和容量调校。每个级别都包含此前级别的设置。Home Assistant 配置发生变化后，可以刷新可用的数据源。",
+      "aqi": "AQI 指数是可选的。如果未配置数据提供方所用的指数标度，HEM 会提示数据不完整，但不会仅因此阻止通风或建议关窗。有效的污染物实测值，以及按正确标度判断为确实危险的 AQI 数值，仍会纳入判断。",
+      "balcony": "可将 Home Assistant 二进制传感器类别为 `door` 或 `opening` 的阳台门、露台门选作**窗户输入**。它们会出现在房间的窗户选择列表中，但**绝不会默认选中**；常规门状态监控仍然独立。",
+      "warning": "**未经审核的机器翻译。** 本页尚未经过语言和技术准确性检查，部分描述可能有误。有关安装、设备控制和安全的说明，请参阅<a href=\"../../README.md\">英文 README</a>。",
+      "level_labels": [
+        "基础",
+        "高级",
+        "专家"
+      ]
+    },
+    "zh-Hant": {
+      "levels": "住宅、房間和裝置的設定在卡片中分組顯示，並支援搜尋。選擇**基本**、**進階**或**專家**，即可決定顯示哪些設定。基本層級包含日常控制和必要的初始設定；進階增加 PID 係數的手動設定及詳細調整；專家層級增加專用模型和容量調校。每個層級都包含先前層級的設定。Home Assistant 設定變更後，可以重新整理可用的資料來源。",
+      "aqi": "AQI 指數是選用項目。如果尚未設定資料提供者使用的指數尺度，HEM 會提示資料不完整，但不會僅因此阻止通風或建議關窗。有效的污染物實測值，以及按正確尺度判斷為確實危險的 AQI 數值，仍會納入判斷。",
+      "balcony": "可將 Home Assistant 二進位感測器類別為 `door` 或 `opening` 的陽台門、露台門選作**窗戶輸入**。它們會出現在房間的窗戶選擇清單中，但**絕不會預先選取**；一般門狀態監控仍然獨立。",
+      "warning": "**尚未審核的機器翻譯。** 本頁尚未經過語言與技術準確性檢查，部分描述可能有誤。有關安裝、裝置控制與安全的說明，請參閱<a href=\"../../README.md\">英文 README</a>。",
+      "level_labels": [
+        "基本",
+        "進階",
+        "專家"
+      ]
+    },
+    "ja": {
+      "levels": "住宅、部屋、機器の設定はカード内で分類され、検索できます。**基本**、**詳細**、**エキスパート**を選ぶと、表示する設定の範囲が変わります。基本には日常の操作と必須の初期設定、詳細には PID 係数の手動設定や細かな調整、エキスパートには専門的なモデルや能力の調整が含まれます。各レベルは、それより前のレベルの設定も含みます。Home Assistant の構成を変更したときは、利用可能なデータソースを更新できます。",
+      "aqi": "AQI 指数は任意です。提供元の尺度が設定されていない場合、HEM はデータが不完全であると表示しますが、それだけで換気を禁止したり、窓を閉めるよう勧めたりはしません。有効な汚染物質の実測値や、正しい尺度で評価した結果、本当に危険と判断される AQI 値は引き続き考慮されます。",
+      "balcony": "Home Assistant のバイナリセンサークラスが `door` または `opening` のバルコニーやテラスのドアを、必要に応じて**窓の入力**として追加できます。部屋の窓の選択肢に表示されますが、**初期状態で選択されることはありません**。通常のドア監視は独立したままです。",
+      "warning": "**未レビューの機械翻訳です。** このページは言語面・技術面の正確性が確認されておらず、説明に誤りがある可能性があります。インストール、機器の制御、安全に関する手順は<a href=\"../../README.md\">英語版 README</a>を参照してください。",
+      "level_labels": [
+        "基本",
+        "詳細",
+        "エキスパート"
+      ]
+    },
+    "ko": {
+      "levels": "집, 방, 기기의 설정은 카드에서 그룹으로 정리되며 검색할 수 있습니다. **기본**, **고급**, **전문가**를 선택하여 표시할 설정의 범위를 정하세요. 기본에는 일상적인 제어와 필수 초기 설정이 포함됩니다. 고급에는 PID 계수의 수동 설정과 세부 조정이 추가됩니다. 전문가에는 전문 모델과 용량 조정이 추가됩니다. 각 단계에는 이전 단계의 설정도 포함됩니다. Home Assistant 구성이 바뀌면 사용 가능한 데이터 소스를 새로고침할 수 있습니다.",
+      "aqi": "AQI 지수는 선택 사항입니다. 제공업체의 척도가 설정되지 않으면 HEM은 데이터가 불완전하다고 표시하지만, 그것만으로 환기를 막거나 창문을 닫도록 권하지는 않습니다. 유효한 오염물질 측정값과 올바른 척도로 해석했을 때 실제로 위험한 AQI 값은 계속 고려됩니다.",
+      "balcony": "Home Assistant 이진 센서 클래스가 `door` 또는 `opening`인 발코니나 테라스 문을 필요에 따라 **창문 입력**으로 추가할 수 있습니다. 방의 창문 선택 목록에 표시되지만 **기본으로 선택되지는 않습니다**. 일반적인 문 상태 모니터링은 독립적으로 유지됩니다.",
+      "warning": "**검토되지 않은 기계 번역입니다.** 이 페이지의 언어적·기술적 정확성은 확인되지 않았으며 일부 설명은 틀릴 수 있습니다. 설치, 기기 제어 및 안전 지침은 <a href=\"../../README.md\">영문 README</a>를 참고하세요.",
+      "level_labels": [
+        "기본",
+        "고급",
+        "전문가"
+      ]
+    },
+    "th": {
+      "levels": "การตั้งค่าสำหรับบ้าน ห้อง และอุปกรณ์ถูกจัดเป็นกลุ่มในบัตรและค้นหาได้ เลือก **พื้นฐาน**, **ขั้นสูง** หรือ **ผู้เชี่ยวชาญ** เพื่อกำหนดว่าจะแสดงการตั้งค่าใด ระดับพื้นฐานมีตัวควบคุมที่ใช้ประจำและการตั้งค่าที่จำเป็น ระดับขั้นสูงเพิ่มการกำหนดค่าสัมประสิทธิ์ PID ด้วยตนเองและการปรับแต่งโดยละเอียด ส่วนระดับผู้เชี่ยวชาญเพิ่มแบบจำลองเฉพาะทางและการปรับความสามารถของอุปกรณ์ แต่ละระดับรวมการตั้งค่าของระดับก่อนหน้าด้วย คุณสามารถรีเฟรชแหล่งข้อมูลที่ใช้ได้เมื่อการตั้งค่า Home Assistant เปลี่ยนไป",
+      "aqi": "ดัชนี AQI เป็นข้อมูลเสริม หากยังไม่ได้กำหนดมาตราส่วนของผู้ให้บริการ HEM จะแสดงว่าข้อมูลไม่ครบถ้วน แต่เหตุนี้เพียงอย่างเดียวจะไม่ขัดขวางการระบายอากาศหรือเป็นเหตุให้ปิดหน้าต่าง ค่ามลพิษที่วัดได้อย่างถูกต้องและค่า AQI ที่อันตรายจริงเมื่อแปลผลด้วยมาตราส่วนที่ถูกต้องยังคงถูกนำมาพิจารณา",
+      "balcony": "คุณสามารถเลือกเพิ่มประตูระเบียงหรือประตูลานที่มีคลาสเซ็นเซอร์ไบนารีของ Home Assistant เป็น `door` หรือ `opening` ให้เป็น **ข้อมูลเข้าของหน้าต่าง** ได้ ประตูเหล่านี้จะแสดงในตัวเลือกหน้าต่างของห้อง แต่ **จะไม่ถูกเลือกล่วงหน้าเด็ดขาด** การตรวจสอบประตูตามปกติยังคงแยกเป็นอิสระ",
+      "warning": "**คำแปลด้วยเครื่องที่ยังไม่ได้ตรวจทาน** ยังไม่ได้ตรวจสอบความถูกต้องทางภาษาและเทคนิคของหน้านี้ และคำอธิบายบางส่วนอาจผิด โปรดดู <a href=\"../../README.md\">README ภาษาอังกฤษ</a> สำหรับการติดตั้ง การควบคุมอุปกรณ์ และคำแนะนำด้านความปลอดภัย",
+      "level_labels": [
+        "พื้นฐาน",
+        "ขั้นสูง",
+        "ผู้เชี่ยวชาญ"
+      ]
+    },
+    "hi": {
+      "levels": "घर, कमरे और उपकरण की सेटिंग कार्ड में समूहों में दी गई हैं और उनमें खोज की जा सकती है। कौन-सी सेटिंग दिखेंगी, यह चुनने के लिए **बुनियादी**, **उन्नत** या **विशेषज्ञ** स्तर चुनें। बुनियादी स्तर में रोज़मर्रा के नियंत्रण और आवश्यक प्रारंभिक सेटअप हैं। उन्नत स्तर में PID गुणांकों का मैन्युअल समायोजन और विस्तृत सेटिंग जुड़ती हैं। विशेषज्ञ स्तर में विशेष मॉडल और क्षमता का समायोजन जुड़ता है। हर स्तर में पिछले स्तर भी शामिल हैं। Home Assistant का सेटअप बदलने पर उपलब्ध स्रोतों की सूची रीफ़्रेश की जा सकती है।",
+      "aqi": "AQI सूचकांक वैकल्पिक है। यदि प्रदाता का पैमाना कॉन्फ़िगर नहीं है, तो HEM डेटा अधूरा होने की सूचना देता है; केवल इसी कारण वेंटिलेशन नहीं रुकता और न ही खिड़की बंद करने की सलाह दी जाती है। प्रदूषकों के वैध माप और सही पैमाने से समझे गए वास्तव में खतरनाक AQI मानों को अब भी ध्यान में रखा जाता है।",
+      "balcony": "Home Assistant की बाइनरी सेंसर क्लास `door` या `opening` वाले बालकनी या आँगन के दरवाज़ों को चाहें तो **खिड़की इनपुट** के रूप में जोड़ सकते हैं। वे कमरे के खिड़की चयन में दिखाई देते हैं, लेकिन **कभी पहले से चयनित नहीं होते**। दरवाज़ों की सामान्य निगरानी स्वतंत्र रहती है।",
+      "warning": "**बिना समीक्षा का मशीन अनुवाद।** इस पृष्ठ की भाषाई और तकनीकी सटीकता जाँची नहीं गई है और कुछ विवरण गलत हो सकते हैं। स्थापना, उपकरण नियंत्रण और सुरक्षा निर्देशों के लिए <a href=\"../../README.md\">अंग्रेज़ी README</a> देखें।",
+      "level_labels": [
+        "बुनियादी",
+        "उन्नत",
+        "विशेषज्ञ"
+      ]
+    },
+    "bn": {
+      "levels": "বাড়ি, ঘর ও ডিভাইসের সেটিংগুলো কার্ডে গোষ্ঠীবদ্ধ থাকে এবং খোঁজা যায়। কোন সেটিং দেখা যাবে, তা নির্ধারণ করতে **মৌলিক**, **উন্নত** বা **বিশেষজ্ঞ** স্তর বেছে নিন। মৌলিক স্তরে দৈনন্দিন নিয়ন্ত্রণ ও প্রয়োজনীয় প্রাথমিক সেটআপ থাকে। উন্নত স্তরে PID সহগ হাতে নির্ধারণ এবং বিস্তারিত সমন্বয় যোগ হয়। বিশেষজ্ঞ স্তরে বিশেষায়িত মডেল ও সক্ষমতার সমন্বয় যোগ হয়। প্রতিটি স্তরে আগের স্তরগুলোও অন্তর্ভুক্ত থাকে। Home Assistant-এর বিন্যাস বদলালে উপলব্ধ উৎসগুলো রিফ্রেশ করতে পারেন।",
+      "aqi": "AQI সূচক ঐচ্ছিক। প্রদানকারীর স্কেল কনফিগার করা না থাকলে HEM তথ্য অসম্পূর্ণ বলে জানায়; শুধু এ কারণে বায়ু চলাচল বন্ধ হয় না বা জানালা বন্ধ করার পরামর্শ দেওয়া হয় না। দূষকের বৈধ পরিমাপ এবং সঠিক স্কেলে ব্যাখ্যা করা সত্যিই বিপজ্জনক AQI মানগুলো তখনও বিবেচনা করা হয়।",
+      "balcony": "Home Assistant-এর বাইনারি সেন্সর ক্লাস `door` বা `opening`-এর বারান্দা বা উঠানের দরজা চাইলে **জানালার ইনপুট** হিসেবে যুক্ত করতে পারেন। সেগুলো ঘরের জানালা নির্বাচকে দেখা যায়, কিন্তু **কখনো আগে থেকে নির্বাচিত থাকে না**। দরজার স্বাভাবিক পর্যবেক্ষণ আলাদা থাকে।",
+      "warning": "**পর্যালোচনা না করা যান্ত্রিক অনুবাদ।** এই পাতার ভাষাগত ও কারিগরি নির্ভুলতা যাচাই করা হয়নি এবং কিছু বর্ণনা ভুল হতে পারে। ইনস্টলেশন, ডিভাইস নিয়ন্ত্রণ ও নিরাপত্তার নির্দেশনার জন্য <a href=\"../../README.md\">ইংরেজি README</a> দেখুন।",
+      "level_labels": [
+        "মৌলিক",
+        "উন্নত",
+        "বিশেষজ্ঞ"
+      ]
+    },
+    "ur": {
+      "levels": "گھر، کمروں اور آلات کی ترتیبات کارڈ میں گروپوں میں موجود ہیں اور ان میں تلاش کی جا سکتی ہے۔ دکھائی جانے والی ترتیبات منتخب کرنے کے لیے **بنیادی**، **اعلیٰ** یا **ماہرانہ** سطح منتخب کریں۔ بنیادی سطح میں روزمرہ کے کنٹرول اور ضروری ابتدائی ترتیب شامل ہے۔ اعلیٰ سطح میں PID کے ضرائب کی دستی ترتیب اور تفصیلی تبدیلیاں شامل ہوتی ہیں۔ ماہرانہ سطح میں خصوصی ماڈل اور گنجائش کی ترتیب شامل ہوتی ہے۔ ہر سطح میں پچھلی سطحیں بھی شامل ہیں۔ Home Assistant کی ترتیب بدلنے پر دستیاب ذرائع کی فہرست تازہ کی جا سکتی ہے۔",
+      "aqi": "AQI اشاریہ اختیاری ہے۔ اگر فراہم کنندہ کا پیمانہ مقرر نہیں تو HEM نامکمل ڈیٹا کی نشاندہی کرتا ہے؛ صرف یہ بات ہوا کی آمدورفت روکنے یا کھڑکی بند کرنے کی وجہ نہیں بنتی۔ آلودہ مادوں کی درست پیمائشیں اور صحیح پیمانے کے مطابق واقعی خطرناک AQI قدریں اب بھی مدنظر رکھی جاتی ہیں۔",
+      "balcony": "Home Assistant میں بائنری سینسر کی کلاس `door` یا `opening` رکھنے والے بالکونی یا صحن کے دروازوں کو اختیاری طور پر **کھڑکی کے ان پٹ** میں شامل کیا جا سکتا ہے۔ وہ کمرے کی کھڑکیوں کے انتخاب میں دکھائی دیتے ہیں، مگر **کبھی پہلے سے منتخب نہیں ہوتے**۔ دروازوں کی معمول کی نگرانی الگ رہتی ہے۔",
+      "warning": "**غیر نظرثانی شدہ مشینی ترجمہ۔** اس صفحے کی لسانی اور تکنیکی درستگی نہیں جانچی گئی، اور بعض وضاحتیں غلط ہو سکتی ہیں۔ تنصیب، آلات کے کنٹرول اور حفاظت کی ہدایات کے لیے <a href=\"../../README.md\">انگریزی README</a> دیکھیں۔",
+      "level_labels": [
+        "بنیادی",
+        "اعلیٰ",
+        "ماہرانہ"
+      ]
+    },
+    "ta": {
+      "levels": "வீடு, அறைகள் மற்றும் சாதனங்களுக்கான அமைப்புகள் அட்டையில் குழுக்களாக உள்ளன; அவற்றைத் தேடவும் முடியும். எந்த அமைப்புகள் காட்டப்பட வேண்டும் என்பதைத் தீர்மானிக்க **அடிப்படை**, **மேம்பட்ட** அல்லது **நிபுணர்** நிலையைத் தேர்ந்தெடுக்கவும். அடிப்படை நிலையில் அன்றாடக் கட்டுப்பாடுகளும் தேவையான தொடக்க அமைப்புகளும் உள்ளன. மேம்பட்ட நிலையில் PID குணகங்களைக் கைமுறையாக அமைப்பதும் விரிவான சரிசெய்தல்களும் சேர்கின்றன. நிபுணர் நிலையில் சிறப்பு மாதிரிகளும் திறன் சரிசெய்தலும் சேர்கின்றன. ஒவ்வொரு நிலையிலும் முந்தைய நிலைகளின் அமைப்புகளும் அடங்கும். Home Assistant அமைப்பு மாறும்போது கிடைக்கும் தரவு மூலங்களைப் புதுப்பிக்கலாம்.",
+      "aqi": "AQI குறியீடு விருப்பத் தேர்வாகும். வழங்குநரின் அளவுகோல் அமைக்கப்படவில்லை என்றால், தரவு முழுமையில்லை என HEM தெரிவிக்கும்; இது மட்டும் காற்றோட்டத்தைத் தடுக்கவோ சன்னலை மூடச் சொல்லவோ காரணமாகாது. செல்லுபடியாகும் மாசுப் பொருள் அளவீடுகளும் சரியான அளவுகோலின்படி உண்மையில் ஆபத்தான AQI மதிப்புகளும் தொடர்ந்து கருத்தில் கொள்ளப்படும்.",
+      "balcony": "Home Assistant இன் இருநிலை உணரி வகை `door` அல்லது `opening` ஆக உள்ள பால்கனி அல்லது முற்றக் கதவுகளை விருப்பப்படி **சன்னல் உள்ளீடுகளாக** சேர்க்கலாம். அவை அறையின் சன்னல் தேர்வுப் பட்டியலில் தோன்றும்; ஆனால் **ஒருபோதும் முன்கூட்டியே தேர்ந்தெடுக்கப்படாது**. வழக்கமான கதவுக் கண்காணிப்பு தனியாகவே இருக்கும்.",
+      "warning": "**மதிப்பாய்வு செய்யப்படாத இயந்திர மொழிபெயர்ப்பு.** இந்தப் பக்கத்தின் மொழி மற்றும் தொழில்நுட்பத் துல்லியம் சரிபார்க்கப்படவில்லை; சில விளக்கங்கள் தவறாக இருக்கலாம். நிறுவல், சாதனக் கட்டுப்பாடு மற்றும் பாதுகாப்பு வழிமுறைகளுக்கு <a href=\"../../README.md\">ஆங்கில README</a> ஐப் பார்க்கவும்.",
+      "level_labels": [
+        "அடிப்படை",
+        "மேம்பட்ட",
+        "நிபுணர்"
+      ]
+    }
+  }
+}

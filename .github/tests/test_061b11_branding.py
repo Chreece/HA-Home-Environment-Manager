@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import re
 import struct
+import subprocess
 import xml.etree.ElementTree as ET
 import zlib
 
@@ -31,8 +32,26 @@ assert 'help.purpose' in source
 assert 'HEM_CARD_SETTINGS126_START' in source
 assert 'mdi:information-outline' in source
 assert '_arrivalAction124(button)' in source
-help_map=json.loads(source.split('const ARRIVAL_HELP125=',1)[1].split(';',1)[0])
 locales={p.stem for p in (INTEGRATION/'translations').glob('*.json')}
+# Exercise the public card helper rather than treating a JavaScript initializer
+# as JSON. Catalog normalization may wrap or compose the original literal.
+probe=r'''
+const fs=require('node:fs'),vm=require('node:vm');
+const registry=new Map();
+const context={HTMLElement:class{},window:{},console,Intl,
+  customElements:{get:name=>registry.get(name),define:(name,card)=>registry.set(name,card)}};
+vm.createContext(context);
+vm.runInContext(fs.readFileSync(process.argv[1],'utf8'),context);
+const prototype=registry.get('home-environment-manager-card').prototype;
+const help=Object.fromEntries(JSON.parse(process.argv[2]).map(language=>{
+  const card=Object.create(prototype);
+  card._hass={language};
+  return [language,card._arrivalHelp125().purpose];
+}));
+process.stdout.write(JSON.stringify(help));
+'''
+help_map=json.loads(subprocess.check_output(
+    ['node','-e',probe,str(CARD),json.dumps(sorted(locales))],text=True))
 assert locales == set(help_map),(locales-set(help_map),set(help_map)-locales)
 assert all(isinstance(v,str) and len(v.strip())>=4 for v in help_map.values())
 # Brand assets are version independent: accept canonical stable SemVer and

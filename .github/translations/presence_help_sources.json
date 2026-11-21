@@ -1,0 +1,414 @@
+[
+  {
+    "en": "Announces when verified home-presence evidence says everyone is away while selected room windows remain open. Unknown presence does not prove absence. This alert does not close windows.",
+    "sources": [
+      {
+        "catalog": "settings_help.SETTING_HELP",
+        "key": "home_away_open_window_alert"
+      }
+    ],
+    "existing": {
+      "de": "Meldet offene ausgewählte Raumfenster, wenn bestätigte Anwesenheitsdaten zeigen, dass niemand zu Hause ist. Unbekannte Anwesenheit beweist keine Abwesenheit. Die Meldung schließt keine Fenster.",
+      "el": "Ανακοινώνει ότι παραμένουν ανοιχτά επιλεγμένα παράθυρα όταν επιβεβαιωμένα στοιχεία παρουσίας δείχνουν ότι όλοι απουσιάζουν. Άγνωστη παρουσία δεν αποδεικνύει απουσία. Η ειδοποίηση δεν κλείνει παράθυρα."
+    },
+    "id": "backend-193",
+    "missing_locales": [
+      "fr",
+      "es",
+      "it",
+      "nl",
+      "pt",
+      "pt-BR",
+      "pl",
+      "ru",
+      "uk",
+      "tr",
+      "cs",
+      "sk",
+      "hu",
+      "ro",
+      "bg",
+      "hr",
+      "sr",
+      "sv",
+      "nb",
+      "da",
+      "fi",
+      "id",
+      "vi",
+      "th",
+      "hi",
+      "zh-Hans",
+      "zh-Hant",
+      "ja",
+      "ko",
+      "ar",
+      "he",
+      "fa",
+      "bn",
+      "ur",
+      "ta"
+    ]
+  },
+  {
+    "en": "Automatic: numeric room people counts must have been reported within 240 minutes; binary room presence and occupancy contacts remain valid until the next change, provided they are available and not restored. Custom: use the minute value below for numeric counts. Unknown sources never prove a room vacant.",
+    "sources": [
+      {
+        "catalog": "settings_help.SETTING_HELP",
+        "key": "area_climate_policy_occupancy_freshness_mode"
+      }
+    ],
+    "existing": {
+      "de": "Automatisch: Numerische Raum-Personenzähler erfordern eine Meldung innerhalb von 240 Minuten; verfügbare, nicht wiederhergestellte Binärkontakte bleiben bis zur nächsten Änderung gültig. Benutzerdefiniert: Zeitlimit für Zählwerte. Unbekannte Werte beweisen keinen leeren Raum.",
+      "el": "Αυτόματα: οι αριθμητικοί μετρητές ατόμων στον χώρο απαιτούν αναφορά μέσα σε 240 λεπτά. Δυαδικοί αισθητήρες παρουσίας παραμένουν έγκυροι έως την επόμενη αλλαγή, εφόσον είναι διαθέσιμοι και δεν είναι επαναφερμένοι. Προσαρμοσμένα: χρησιμοποίησε το όριο λεπτών παρακάτω για αριθμητικούς μετρητές. Άγνωστη πηγή δεν τεκμηριώνει κενό χώρο."
+    },
+    "id": "backend-195",
+    "missing_locales": [
+      "fr",
+      "es",
+      "it",
+      "nl",
+      "pt",
+      "pt-BR",
+      "pl",
+      "ru",
+      "uk",
+      "tr",
+      "cs",
+      "sk",
+      "hu",
+      "ro",
+      "bg",
+      "hr",
+      "sr",
+      "sv",
+      "nb",
+      "da",
+      "fi",
+      "id",
+      "vi",
+      "th",
+      "hi",
+      "zh-Hans",
+      "zh-Hant",
+      "ja",
+      "ko",
+      "ar",
+      "he",
+      "fa",
+      "bn",
+      "ur",
+      "ta"
+    ]
+  },
+  {
+    "en": "Delay in minutes before room-derived evidence confirms the home is empty, used only when no direct home trackers are configured. Direct verified trackers reporting everyone away take effect immediately. A verified person at home always takes precedence.",
+    "sources": [
+      {
+        "catalog": "settings_help.SETTING_HELP",
+        "key": "home_global_occupancy_away_cooldown_minutes"
+      },
+      {
+        "catalog": "settings_help.SETTING_HELP",
+        "key": "global_occupancy_away_cooldown_minutes"
+      }
+    ],
+    "existing": {
+      "de": "Verzögerung in Minuten, bevor aus Raumdaten auf ein leeres Zuhause geschlossen wird; gilt nur ohne direkte Zuhause-Tracker. Bestätigte Abwesenheit aller direkten Tracker gilt sofort. Eine bestätigte Person zu Hause hat immer Vorrang.",
+      "el": "Καθυστέρηση σε λεπτά πριν τα στοιχεία χώρων επιβεβαιώσουν άδειο σπίτι, μόνο χωρίς άμεσους ανιχνευτές παρουσίας σπιτιού. Η επιβεβαιωμένη απουσία όλων από άμεσους ανιχνευτές ισχύει αμέσως. Επιβεβαιωμένο άτομο στο σπίτι πάντα υπερισχύει."
+    },
+    "id": "backend-203",
+    "missing_locales": [
+      "fr",
+      "es",
+      "it",
+      "nl",
+      "pt",
+      "pt-BR",
+      "pl",
+      "ru",
+      "uk",
+      "tr",
+      "cs",
+      "sk",
+      "hu",
+      "ro",
+      "bg",
+      "hr",
+      "sr",
+      "sv",
+      "nb",
+      "da",
+      "fi",
+      "id",
+      "vi",
+      "th",
+      "hi",
+      "zh-Hans",
+      "zh-Hant",
+      "ja",
+      "ko",
+      "ar",
+      "he",
+      "fa",
+      "bn",
+      "ur",
+      "ta"
+    ]
+  },
+  {
+    "en": "End this home’s temporary arrival preparation now and recalculate from actual presence and current settings. If everyone is still away, automatic profile selection returns to Away. The device’s minimum ON/OFF times and other protections still govern physical transitions; cancel does not force all appliances off.",
+    "sources": [
+      {
+        "catalog": "settings_help.SETTING_HELP",
+        "key": "cancel_arrival_preparation"
+      }
+    ],
+    "existing": {
+      "de": "Die vorübergehende Ankunftsvorbereitung dieses Zuhauses jetzt beenden und anhand der tatsächlichen Anwesenheit und aktuellen Einstellungen neu berechnen. Sind weiterhin alle abwesend, kehrt die automatische Profilwahl zu Abwesend zurück. Mindestlauf-/Mindeststillstandszeiten und andere Schutzregeln gelten weiter; Abbrechen erzwingt nicht das sofortige Ausschalten aller Geräte.",
+      "el": "Τερματίζει τώρα την προσωρινή προετοιμασία άφιξης αυτού του σπιτιού και επανυπολογίζει βάσει πραγματικής παρουσίας και τρεχουσών ρυθμίσεων. Αν όλοι λείπουν ακόμη, η αυτόματη επιλογή επιστρέφει στην Απουσία. Οι ελάχιστοι χρόνοι ON/OFF και οι άλλες προστασίες συνεχίζουν να καθορίζουν τις μεταβάσεις· δεν απενεργοποιούνται αναγκαστικά όλες οι συσκευές."
+    },
+    "id": "backend-207",
+    "missing_locales": [
+      "fr",
+      "es",
+      "it",
+      "nl",
+      "pt",
+      "pt-BR",
+      "pl",
+      "ru",
+      "uk",
+      "tr",
+      "cs",
+      "sk",
+      "hu",
+      "ro",
+      "bg",
+      "hr",
+      "sr",
+      "sv",
+      "nb",
+      "da",
+      "fi",
+      "id",
+      "vi",
+      "th",
+      "hi",
+      "zh-Hans",
+      "zh-Hant",
+      "ja",
+      "ko",
+      "ar",
+      "he",
+      "fa",
+      "bn",
+      "ur",
+      "ta"
+    ]
+  },
+  {
+    "en": "Maximum age of reports from direct home trackers and sampled numeric occupancy counts. The default is 240 minutes. Stable occupied/sleep-room lists and binary room-presence states remain valid until they change; unavailable, restored or invalid selected sources remain unknown. This is not a sleep duration.",
+    "sources": [
+      {
+        "catalog": "settings_help.SETTING_HELP",
+        "key": "global_occupancy_source_stale_minutes"
+      }
+    ],
+    "existing": {
+      "de": "Höchstalter der Meldungen direkter Anwesenheits-Tracker und numerischer Personenzählungen. Standard: 240 Minuten. Unveränderte Belegungs-/Schlaflisten und binäre Raumanwesenheitszustände bleiben gültig. Nicht verfügbare, wiederhergestellte oder ungültige ausgewählte Quellen bleiben unbekannt. Dies ist keine Schlafdauer.",
+      "el": "Μέγιστη ηλικία αναφορών από άμεσες πηγές παρουσίας στο σπίτι και αριθμητικές μετρήσεις πλήθους ατόμων. Προεπιλογή: 240 λεπτά. Οι λίστες παρουσίας/ύπνου και οι δυαδικές καταστάσεις παρουσίας χώρου παραμένουν έγκυρες όσο δεν αλλάζουν. Μη διαθέσιμες, επαναφερμένες ή άκυρες επιλεγμένες πηγές παραμένουν άγνωστες. Δεν είναι διάρκεια ύπνου."
+    },
+    "id": "backend-245",
+    "missing_locales": [
+      "fr",
+      "es",
+      "it",
+      "nl",
+      "pt",
+      "pt-BR",
+      "pl",
+      "ru",
+      "uk",
+      "tr",
+      "cs",
+      "sk",
+      "hu",
+      "ro",
+      "bg",
+      "hr",
+      "sr",
+      "sv",
+      "nb",
+      "da",
+      "fi",
+      "id",
+      "vi",
+      "th",
+      "hi",
+      "zh-Hans",
+      "zh-Hant",
+      "ja",
+      "ko",
+      "ar",
+      "he",
+      "fa",
+      "bn",
+      "ur",
+      "ta"
+    ]
+  },
+  {
+    "en": "Maximum time to prepare home conditions for arrival. From the moment you press Prepare Home for Arrival, eligible automatically controlled devices use their Home targets for at most this many minutes. Preparation ends sooner on arrival or cancellation; device protections still apply.",
+    "sources": [
+      {
+        "catalog": "settings_help.SETTING_HELP",
+        "key": "arrival_preparation_timeout"
+      }
+    ],
+    "existing": {
+      "de": "Maximale Zeit, um die Wohnbedingungen für die Ankunft vorzubereiten. Ab dem Drücken von „Zuhause für die Ankunft vorbereiten“ verwenden geeignete automatisch geregelte Geräte höchstens so viele Minuten ihre Home-Sollwerte. Bei Ankunft oder Abbruch endet die Vorbereitung früher; die Geräteschutzregeln gelten weiter.",
+      "el": "Μέγιστος χρόνος προετοιμασίας των συνθηκών του σπιτιού για την άφιξη. Από τη στιγμή που πατάς «Προετοιμασία σπιτιού για άφιξη», οι επιλέξιμες αυτόματα ελεγχόμενες συσκευές χρησιμοποιούν τους στόχους Home το πολύ για τόσα λεπτά. Η προετοιμασία λήγει νωρίτερα σε άφιξη ή ακύρωση· οι προστασίες παραμένουν ενεργές."
+    },
+    "id": "backend-248",
+    "missing_locales": [
+      "fr",
+      "es",
+      "it",
+      "nl",
+      "pt",
+      "pt-BR",
+      "pl",
+      "ru",
+      "uk",
+      "tr",
+      "cs",
+      "sk",
+      "hu",
+      "ro",
+      "bg",
+      "hr",
+      "sr",
+      "sv",
+      "nb",
+      "da",
+      "fi",
+      "id",
+      "vi",
+      "th",
+      "hi",
+      "zh-Hans",
+      "zh-Hant",
+      "ja",
+      "ko",
+      "ar",
+      "he",
+      "fa",
+      "bn",
+      "ur",
+      "ta"
+    ]
+  },
+  {
+    "en": "Optional: use the room's existing Eco targets only when every selected same-room DOOR contact has been closed for at least two minutes and vacancy is verified. A door does not prove airtight isolation. Unknown/unavailable sensors, occupancy, sleeping, arrival preparation, open windows, excessive humidity or insufficiently warm room readings prevent Eco. Existing manual overrides, anti-mold measures and native device safety always remain effective.",
+    "sources": [
+      {
+        "catalog": "settings_help.SETTING_HELP",
+        "key": "area_climate_operating_closed_door_eco"
+      }
+    ],
+    "existing": {
+      "de": "Optional: Die bestehenden Eco-Sollwerte des Raums gelten nur, wenn alle ausgewählten Türkontakte seit mindestens zwei Minuten geschlossen sind und der Raum nachweislich leer ist. Geschlossene Türen beweisen keine luftdichte Trennung. Unbekannte Sensoren, Anwesenheit, Schlaf, Ankunftsvorbereitung, offene Fenster, zu hohe Feuchte oder zu niedrige Raumtemperatur verhindern Eco. Manuelle Vorgaben und Geräteschutzfunktionen bleiben maßgeblich.",
+      "el": "Προαιρετικά επιλέγει τους υπάρχοντες στόχους Eco μόνο όταν όλες οι επιλεγμένες πόρτες του χώρου είναι κλειστές τουλάχιστον δύο λεπτά και έχει επιβεβαιωθεί ότι ο χώρος είναι άδειος. Η κλειστή πόρτα δεν αποδεικνύει αεροστεγή απομόνωση. Άγνωστοι αισθητήρες, παρουσία, ύπνος, προετοιμασία άφιξης, ανοιχτά παράθυρα, υψηλή υγρασία ή ανεπαρκής θερμοκρασία εμποδίζουν το Eco. Οι χειροκίνητες επιλογές και οι προστασίες της συσκευής παραμένουν ενεργές."
+    },
+    "id": "backend-256",
+    "missing_locales": [
+      "fr",
+      "es",
+      "it",
+      "nl",
+      "pt",
+      "pt-BR",
+      "pl",
+      "ru",
+      "uk",
+      "tr",
+      "cs",
+      "sk",
+      "hu",
+      "ro",
+      "bg",
+      "hr",
+      "sr",
+      "sv",
+      "nb",
+      "da",
+      "fi",
+      "id",
+      "vi",
+      "th",
+      "hi",
+      "zh-Hans",
+      "zh-Hant",
+      "ja",
+      "ko",
+      "ar",
+      "he",
+      "fa",
+      "bn",
+      "ur",
+      "ta"
+    ]
+  },
+  {
+    "en": "While the home is confirmed Away, temporarily use Home targets for Automatic/PID with automatic profile selection. Controllers already authorized for native ON/OFF can also prepare occupied-only rooms. Default 60 minutes; press again to renew. Arrival ends preparation; unknown presence suspends its effect. Manual choices, explicit presets, windows and minimum ON/OFF times still apply. Legacy and setpoint-only controls keep their original presence gates.",
+    "sources": [
+      {
+        "catalog": "settings_help.SETTING_HELP",
+        "key": "prepare_for_arrival"
+      }
+    ],
+    "existing": {
+      "de": "Bei bestätigter Abwesenheit vorübergehend Zuhause-Ziele für Automatik/PID mit automatischer Profilwahl verwenden. Bereits zur Ein-/Ausschaltsteuerung berechtigte Regler dürfen auch Räume mit Anwesenheitspflicht vorbereiten. Standard 60 Minuten; erneutes Drücken erneuert die Dauer. Heimkehr beendet die Vorbereitung; unbekannte Anwesenheit setzt sie aus. Manuelle Einstellungen, feste Profile, Fenster und Mindestlauf-/Mindeststillstandszeiten gelten weiter. Ältere Regler und reine Sollwertregler behalten ihre Anwesenheitsregeln.",
+      "el": "Με επιβεβαιωμένη απουσία, χρησιμοποιεί προσωρινά στόχους Σπιτιού για Αυτόματο/PID με αυτόματη επιλογή προφίλ. Ελεγκτές με υπάρχουσα άδεια ενεργοποίησης/απενεργοποίησης μπορούν να προετοιμάζουν και δωμάτια με απαίτηση παρουσίας. Προεπιλογή 60 λεπτά· νέο πάτημα ανανεώνει τη διάρκεια. Η άφιξη ολοκληρώνει την προετοιμασία· άγνωστη παρουσία την αναστέλλει. Ισχύουν χειροκίνητες επιλογές, ρητά προφίλ, παράθυρα και ελάχιστοι χρόνοι ON/OFF. Παλαιοί ελεγκτές και ελεγκτές μόνο στόχου διατηρούν τους αρχικούς περιορισμούς παρουσίας."
+    },
+    "id": "backend-305",
+    "missing_locales": [
+      "fr",
+      "es",
+      "it",
+      "nl",
+      "pt",
+      "pt-BR",
+      "pl",
+      "ru",
+      "uk",
+      "tr",
+      "cs",
+      "sk",
+      "hu",
+      "ro",
+      "bg",
+      "hr",
+      "sr",
+      "sv",
+      "nb",
+      "da",
+      "fi",
+      "id",
+      "vi",
+      "th",
+      "hi",
+      "zh-Hans",
+      "zh-Hant",
+      "ja",
+      "ko",
+      "ar",
+      "he",
+      "fa",
+      "bn",
+      "ur",
+      "ta"
+    ]
+  }
+]

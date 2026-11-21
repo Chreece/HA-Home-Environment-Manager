@@ -18,7 +18,7 @@
 # HEM - Home Environment Manager
 
 <!-- HEM-TRANSLATION-UNREVIEWED-START -->
-> ⚠️ **Unreviewed machine translation.** This page has not been checked for linguistic or technical accuracy, and some descriptions may be wrong. For installation, device control and safety instructions, refer to the <a href="../../README.md">English README</a>.
+> ⚠️ **Tradução automática não revista.** A exatidão linguística e técnica desta página não foi verificada e algumas descrições podem estar erradas. Para instruções de instalação, controlo de dispositivos e segurança, consulte o <a href="../../README.md">README em inglês</a>.
 <!-- HEM-TRANSLATION-UNREVIEWED-END -->
 
 <p align="center">
@@ -75,7 +75,8 @@ HEM mantém as políticas compartilhadas separadas das decisões locais.
 | **Quarto** | Fontes de temperatura e umidade de interior, limiares de qualidade do ar, contactos de janelas e portas, comportamento de sono e ocupação, objetivos de conforto específicos para o quarto, opções de ventilação e sombreamento. |
 | **Dispositivo individual** | Os modos de controlo disponíveis, Automático/Manual/PID Método, alvos por perfil, sensores, configurações de ventilador silencioso, tempos mínimos de operação, proteções de energia, comportamento das janelas e notificações de erro no dispositivo. |
 
-Os três níveis são acessíveis através de configurações agrupadas e pesquisáveis no cartão. Home Assistant alterações de configuração.
+As definições da casa, das divisões e dos dispositivos estão agrupadas no cartão e podem ser pesquisadas. Escolha **Básico**, **Avançado** ou **Especialista** para definir quais são apresentadas. Básico inclui os controlos quotidianos e a configuração necessária. Avançado acrescenta os ganhos PID manuais e os ajustes detalhados. Especialista acrescenta modelos especializados e ajustes de capacidade. Cada nível inclui os anteriores. Pode atualizar as fontes disponíveis quando a sua instalação do Home Assistant mudar. <!-- HEM-I18N:levels -->
+
 
 <a id="climate-control-and-pid-device-by-device"></a>
 ### Controle do clima e PID, dispositivo por dispositivo
@@ -124,7 +125,9 @@ A preparação não é um comando para ativar tudo. Os dispositivos ainda precis
 HEM comparações **O que uma sala precisa** com **Se o ar exterior pode ajudar**.
 
 - Recomenda-se a abertura ou fechamento de janelas utilizando as medições actuais de interiores, a umidade exterior, a poluição, a temperatura, o vento, os alertas meteorológicos e o contexto opcional do pólen.
+- O índice AQI é opcional. Uma escala do fornecedor não configurada é assinalada como dados incompletos; isso, por si só, não impede a ventilação nem justifica fechar uma janela. Continuam a ser consideradas as medições válidas de poluentes e as leituras AQI realmente perigosas interpretadas com a escala correta. <!-- HEM-I18N:aqi -->
 - Use os contactos de janelas e portas selecionados para explicar as condições do quarto e evite tratar um contato desconhecido como fechado.
+- Pode incluir portas de varanda ou de terraço com a classe de sensor binário do Home Assistant `door` ou `opening` como **entradas de janela**. Surgem no seletor de janelas da divisão, mas **nunca são pré-selecionadas**. A monitorização normal das portas permanece independente. <!-- HEM-I18N:balcony -->
 - Opcionalmente, solicite-lhe que tente abrir uma janela antes de iniciar um aparelho automático com suporte, e, em seguida, continue com o controle normal após a resposta configurada esperar, se necessário.
 - Usar informações de portas para conscientização dos limites da sala, precauções de ventilação e comportamento ecológico protegido opcional.
 - Gerenciar obturadores, persianas e sombras optados usando a prova adequada de janela, temperatura, tempo, elevação solar e iluminação opcional.

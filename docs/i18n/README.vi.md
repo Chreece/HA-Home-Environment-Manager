@@ -18,7 +18,7 @@
 # HEM - Home Environment Manager
 
 <!-- HEM-TRANSLATION-UNREVIEWED-START -->
-> ⚠️ **Unreviewed machine translation.** This page has not been checked for linguistic or technical accuracy, and some descriptions may be wrong. For installation, device control and safety instructions, refer to the <a href="../../README.md">English README</a>.
+> ⚠️ **Bản dịch máy chưa được rà soát.** Độ chính xác về ngôn ngữ và kỹ thuật của trang này chưa được kiểm tra; một số mô tả có thể sai. Để xem hướng dẫn cài đặt, điều khiển thiết bị và an toàn, hãy tham khảo <a href="../../README.md">README tiếng Anh</a>.
 <!-- HEM-TRANSLATION-UNREVIEWED-END -->
 
 <p align="center">
@@ -75,7 +75,8 @@ HEM giữ các chính sách chia sẻ tách biệt với các quyết định đ
 | **Phòng** | Nguồn nhiệt độ và độ ẩm trong nhà, ngưỡng chất lượng không khí, liên lạc cửa sổ và cửa, hành vi ngủ và chiếm đóng, mục tiêu thoải mái cụ thể cho phòng, thông gió và lựa chọn bóng tối. |
 | **Thiết bị cá nhân** | Các chế độ điều khiển có sẵn, tự động/Hướng dẫn/PID Phương pháp, mục tiêu cho mỗi hồ sơ, cảm biến, cài đặt fan tĩnh, thời gian hoạt động tối thiểu, bảo vệ điện, hành vi cửa sổ và thông báo lỗi thiết bị. |
 
-Tất cả ba cấp độ đều có thể truy cập thông qua các thiết lập được nhóm, có thể tìm kiếm trong thẻ. Home Assistant thay đổi thiết lập.
+Các cài đặt cho nhà, phòng và thiết bị được nhóm trong thẻ và có thể tìm kiếm. Chọn **Cơ bản**, **Nâng cao** hoặc **Chuyên gia** để quyết định những cài đặt được hiển thị. Cơ bản gồm các điều khiển hằng ngày và cấu hình cần thiết. Nâng cao bổ sung việc chỉnh thủ công các hệ số PID và các điều chỉnh chi tiết. Chuyên gia bổ sung mô hình chuyên biệt và hiệu chỉnh công suất. Mỗi cấp bao gồm các cấp trước đó. Bạn có thể làm mới các nguồn khả dụng khi cấu hình Home Assistant thay đổi. <!-- HEM-I18N:levels -->
+
 
 <a id="climate-control-and-pid-device-by-device"></a>
 ### Kiểm soát khí hậu và PID, thiết bị theo thiết bị
@@ -124,7 +125,9 @@ Việc chuẩn bị không phải là lệnh để bật mọi thứ. Các thi�
 HEM so sánh **một phòng cần gì** với **không khí ngoài trời có thể giúp**.
 
 - khuyến cáo mở hoặc đóng cửa sổ bằng cách sử dụng các phép đo nội thất hiện tại, độ ẩm ngoài trời, ô nhiễm, nhiệt độ, gió, cảnh báo thời tiết và bối cảnh bột hoa tùy chọn.
+- Chỉ số AQI là tùy chọn. Nếu chưa cấu hình thang đo của nhà cung cấp, HEM báo dữ liệu chưa đầy đủ; chỉ riêng điều này không ngăn thông gió hoặc là lý do đóng cửa sổ. Các phép đo chất ô nhiễm hợp lệ và giá trị AQI thực sự nguy hiểm được diễn giải theo đúng thang đo vẫn được xét đến. <!-- HEM-I18N:aqi -->
 - Sử dụng các liên hệ cửa sổ và cửa được chọn để giải thích điều kiện trong phòng và tránh coi một liên hệ không rõ ràng là đóng cửa.
+- Bạn có thể thêm cửa ra ban công hoặc sân hiên có lớp cảm biến nhị phân Home Assistant `door` hoặc `opening` làm **đầu vào cửa sổ**. Chúng xuất hiện trong bộ chọn cửa sổ của phòng nhưng **không bao giờ được chọn sẵn**. Việc theo dõi cửa thông thường vẫn độc lập. <!-- HEM-I18N:balcony -->
 - Tùy chọn yêu cầu bạn thử mở cửa sổ trước khi khởi động thiết bị tự động được hỗ trợ, sau đó tiếp tục điều khiển bình thường sau khi phản ứng được cấu hình chờ nếu cần thiết.
 - Sử dụng thông tin cửa để nhận thức ranh giới phòng, cảnh báo thông gió và hành vi Eco bảo vệ tùy chọn.
 - Quản lý màn trập, màn trần và màu sắc được chọn bằng cách sử dụng cửa sổ thích hợp, nhiệt độ, thời tiết, độ nắng và bằng chứng chiếu sáng tùy chọn.

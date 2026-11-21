@@ -1,0 +1,122 @@
+{
+  "Room cooling temperature target (°C) while the Away profile is active. This saved target is applied within the room/device limits by permitted controllers; editing it does not grant control permission.": {
+    "profile": "away",
+    "kind": "cool",
+    "existing": {
+      "de": "Raumsollwert für Kühltemperatur (°C) bei aktivem Profil Abwesend. Freigegebene Regler wenden ihn innerhalb der Raum-/Gerätegrenzen an; Bearbeiten erteilt keine Steuerfreigabe.",
+      "el": "Στόχος χώρου για θερμοκρασία ψύξης (°C) όταν είναι ενεργό το προφίλ Απουσία. Εφαρμόζεται εντός ορίων χώρου/συσκευής από ήδη εξουσιοδοτημένους ελεγκτές· η αλλαγή δεν χορηγεί άδεια ελέγχου."
+    }
+  },
+  "Room cooling temperature target (°C) while the Comfort (room occupied) profile is active. This saved target is applied within the room/device limits by permitted controllers; editing it does not grant control permission.": {
+    "profile": "comfort",
+    "kind": "cool",
+    "existing": {
+      "de": "Raumsollwert für Kühltemperatur (°C) bei aktivem Profil Komfort (Raum belegt). Freigegebene Regler wenden ihn innerhalb der Raum-/Gerätegrenzen an; Bearbeiten erteilt keine Steuerfreigabe.",
+      "el": "Στόχος χώρου για θερμοκρασία ψύξης (°C) όταν είναι ενεργό το προφίλ Άνεση (κατειλημμένος χώρος). Εφαρμόζεται εντός ορίων χώρου/συσκευής από ήδη εξουσιοδοτημένους ελεγκτές· η αλλαγή δεν χορηγεί άδεια ελέγχου."
+    }
+  },
+  "Room cooling temperature target (°C) while the Eco profile is active. This saved target is applied within the room/device limits by permitted controllers; editing it does not grant control permission.": {
+    "profile": "eco",
+    "kind": "cool",
+    "existing": {
+      "de": "Raumsollwert für Kühltemperatur (°C) bei aktivem Profil Eco. Freigegebene Regler wenden ihn innerhalb der Raum-/Gerätegrenzen an; Bearbeiten erteilt keine Steuerfreigabe.",
+      "el": "Στόχος χώρου για θερμοκρασία ψύξης (°C) όταν είναι ενεργό το προφίλ Eco. Εφαρμόζεται εντός ορίων χώρου/συσκευής από ήδη εξουσιοδοτημένους ελεγκτές· η αλλαγή δεν χορηγεί άδεια ελέγχου."
+    }
+  },
+  "Room cooling temperature target (°C) while the Home profile is active. This saved target is applied within the room/device limits by permitted controllers; editing it does not grant control permission.": {
+    "profile": "home",
+    "kind": "cool",
+    "existing": {
+      "de": "Raumsollwert für Kühltemperatur (°C) bei aktivem Profil Zu Hause. Freigegebene Regler wenden ihn innerhalb der Raum-/Gerätegrenzen an; Bearbeiten erteilt keine Steuerfreigabe.",
+      "el": "Στόχος χώρου για θερμοκρασία ψύξης (°C) όταν είναι ενεργό το προφίλ Σπίτι. Εφαρμόζεται εντός ορίων χώρου/συσκευής από ήδη εξουσιοδοτημένους ελεγκτές· η αλλαγή δεν χορηγεί άδεια ελέγχου."
+    }
+  },
+  "Room cooling temperature target (°C) while the Sleep profile is active. This saved target is applied within the room/device limits by permitted controllers; editing it does not grant control permission.": {
+    "profile": "sleep",
+    "kind": "cool",
+    "existing": {
+      "de": "Raumsollwert für Kühltemperatur (°C) bei aktivem Profil Schlaf. Freigegebene Regler wenden ihn innerhalb der Raum-/Gerätegrenzen an; Bearbeiten erteilt keine Steuerfreigabe.",
+      "el": "Στόχος χώρου για θερμοκρασία ψύξης (°C) όταν είναι ενεργό το προφίλ Ύπνος. Εφαρμόζεται εντός ορίων χώρου/συσκευής από ήδη εξουσιοδοτημένους ελεγκτές· η αλλαγή δεν χορηγεί άδεια ελέγχου."
+    }
+  },
+  "Room heating temperature target (°C) while the Away profile is active. This saved target is applied within the room/device limits by permitted controllers; editing it does not grant control permission.": {
+    "profile": "away",
+    "kind": "heat",
+    "existing": {
+      "de": "Raumsollwert für Heiztemperatur (°C) bei aktivem Profil Abwesend. Freigegebene Regler wenden ihn innerhalb der Raum-/Gerätegrenzen an; Bearbeiten erteilt keine Steuerfreigabe.",
+      "el": "Στόχος χώρου για θερμοκρασία θέρμανσης (°C) όταν είναι ενεργό το προφίλ Απουσία. Εφαρμόζεται εντός ορίων χώρου/συσκευής από ήδη εξουσιοδοτημένους ελεγκτές· η αλλαγή δεν χορηγεί άδεια ελέγχου."
+    }
+  },
+  "Room heating temperature target (°C) while the Comfort (room occupied) profile is active. This saved target is applied within the room/device limits by permitted controllers; editing it does not grant control permission.": {
+    "profile": "comfort",
+    "kind": "heat",
+    "existing": {
+      "de": "Raumsollwert für Heiztemperatur (°C) bei aktivem Profil Komfort (Raum belegt). Freigegebene Regler wenden ihn innerhalb der Raum-/Gerätegrenzen an; Bearbeiten erteilt keine Steuerfreigabe.",
+      "el": "Στόχος χώρου για θερμοκρασία θέρμανσης (°C) όταν είναι ενεργό το προφίλ Άνεση (κατειλημμένος χώρος). Εφαρμόζεται εντός ορίων χώρου/συσκευής από ήδη εξουσιοδοτημένους ελεγκτές· η αλλαγή δεν χορηγεί άδεια ελέγχου."
+    }
+  },
+  "Room heating temperature target (°C) while the Eco profile is active. This saved target is applied within the room/device limits by permitted controllers; editing it does not grant control permission.": {
+    "profile": "eco",
+    "kind": "heat",
+    "existing": {
+      "de": "Raumsollwert für Heiztemperatur (°C) bei aktivem Profil Eco. Freigegebene Regler wenden ihn innerhalb der Raum-/Gerätegrenzen an; Bearbeiten erteilt keine Steuerfreigabe.",
+      "el": "Στόχος χώρου για θερμοκρασία θέρμανσης (°C) όταν είναι ενεργό το προφίλ Eco. Εφαρμόζεται εντός ορίων χώρου/συσκευής από ήδη εξουσιοδοτημένους ελεγκτές· η αλλαγή δεν χορηγεί άδεια ελέγχου."
+    }
+  },
+  "Room heating temperature target (°C) while the Home profile is active. This saved target is applied within the room/device limits by permitted controllers; editing it does not grant control permission.": {
+    "profile": "home",
+    "kind": "heat",
+    "existing": {
+      "de": "Raumsollwert für Heiztemperatur (°C) bei aktivem Profil Zu Hause. Freigegebene Regler wenden ihn innerhalb der Raum-/Gerätegrenzen an; Bearbeiten erteilt keine Steuerfreigabe.",
+      "el": "Στόχος χώρου για θερμοκρασία θέρμανσης (°C) όταν είναι ενεργό το προφίλ Σπίτι. Εφαρμόζεται εντός ορίων χώρου/συσκευής από ήδη εξουσιοδοτημένους ελεγκτές· η αλλαγή δεν χορηγεί άδεια ελέγχου."
+    }
+  },
+  "Room heating temperature target (°C) while the Sleep profile is active. This saved target is applied within the room/device limits by permitted controllers; editing it does not grant control permission.": {
+    "profile": "sleep",
+    "kind": "heat",
+    "existing": {
+      "de": "Raumsollwert für Heiztemperatur (°C) bei aktivem Profil Schlaf. Freigegebene Regler wenden ihn innerhalb der Raum-/Gerätegrenzen an; Bearbeiten erteilt keine Steuerfreigabe.",
+      "el": "Στόχος χώρου για θερμοκρασία θέρμανσης (°C) όταν είναι ενεργό το προφίλ Ύπνος. Εφαρμόζεται εντός ορίων χώρου/συσκευής από ήδη εξουσιοδοτημένους ελεγκτές· η αλλαγή δεν χορηγεί άδεια ελέγχου."
+    }
+  },
+  "Room relative humidity target (%) while the Away profile is active. This saved target is applied within the room/device limits by permitted controllers; editing it does not grant control permission.": {
+    "profile": "away",
+    "kind": "humidity",
+    "existing": {
+      "de": "Raumsollwert für relative Luftfeuchte (%) bei aktivem Profil Abwesend. Freigegebene Regler wenden ihn innerhalb der Raum-/Gerätegrenzen an; Bearbeiten erteilt keine Steuerfreigabe.",
+      "el": "Στόχος χώρου για σχετική υγρασία (%) όταν είναι ενεργό το προφίλ Απουσία. Εφαρμόζεται εντός ορίων χώρου/συσκευής από ήδη εξουσιοδοτημένους ελεγκτές· η αλλαγή δεν χορηγεί άδεια ελέγχου."
+    }
+  },
+  "Room relative humidity target (%) while the Comfort (room occupied) profile is active. This saved target is applied within the room/device limits by permitted controllers; editing it does not grant control permission.": {
+    "profile": "comfort",
+    "kind": "humidity",
+    "existing": {
+      "de": "Raumsollwert für relative Luftfeuchte (%) bei aktivem Profil Komfort (Raum belegt). Freigegebene Regler wenden ihn innerhalb der Raum-/Gerätegrenzen an; Bearbeiten erteilt keine Steuerfreigabe.",
+      "el": "Στόχος χώρου για σχετική υγρασία (%) όταν είναι ενεργό το προφίλ Άνεση (κατειλημμένος χώρος). Εφαρμόζεται εντός ορίων χώρου/συσκευής από ήδη εξουσιοδοτημένους ελεγκτές· η αλλαγή δεν χορηγεί άδεια ελέγχου."
+    }
+  },
+  "Room relative humidity target (%) while the Eco profile is active. This saved target is applied within the room/device limits by permitted controllers; editing it does not grant control permission.": {
+    "profile": "eco",
+    "kind": "humidity",
+    "existing": {
+      "de": "Raumsollwert für relative Luftfeuchte (%) bei aktivem Profil Eco. Freigegebene Regler wenden ihn innerhalb der Raum-/Gerätegrenzen an; Bearbeiten erteilt keine Steuerfreigabe.",
+      "el": "Στόχος χώρου για σχετική υγρασία (%) όταν είναι ενεργό το προφίλ Eco. Εφαρμόζεται εντός ορίων χώρου/συσκευής από ήδη εξουσιοδοτημένους ελεγκτές· η αλλαγή δεν χορηγεί άδεια ελέγχου."
+    }
+  },
+  "Room relative humidity target (%) while the Home profile is active. This saved target is applied within the room/device limits by permitted controllers; editing it does not grant control permission.": {
+    "profile": "home",
+    "kind": "humidity",
+    "existing": {
+      "de": "Raumsollwert für relative Luftfeuchte (%) bei aktivem Profil Zu Hause. Freigegebene Regler wenden ihn innerhalb der Raum-/Gerätegrenzen an; Bearbeiten erteilt keine Steuerfreigabe.",
+      "el": "Στόχος χώρου για σχετική υγρασία (%) όταν είναι ενεργό το προφίλ Σπίτι. Εφαρμόζεται εντός ορίων χώρου/συσκευής από ήδη εξουσιοδοτημένους ελεγκτές· η αλλαγή δεν χορηγεί άδεια ελέγχου."
+    }
+  },
+  "Room relative humidity target (%) while the Sleep profile is active. This saved target is applied within the room/device limits by permitted controllers; editing it does not grant control permission.": {
+    "profile": "sleep",
+    "kind": "humidity",
+    "existing": {
+      "de": "Raumsollwert für relative Luftfeuchte (%) bei aktivem Profil Schlaf. Freigegebene Regler wenden ihn innerhalb der Raum-/Gerätegrenzen an; Bearbeiten erteilt keine Steuerfreigabe.",
+      "el": "Στόχος χώρου για σχετική υγρασία (%) όταν είναι ενεργό το προφίλ Ύπνος. Εφαρμόζεται εντός ορίων χώρου/συσκευής από ήδη εξουσιοδοτημένους ελεγκτές· η αλλαγή δεν χορηγεί άδεια ελέγχου."
+    }
+  }
+}

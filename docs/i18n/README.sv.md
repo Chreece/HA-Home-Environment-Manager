@@ -18,7 +18,7 @@
 # HEM - Home Environment Manager
 
 <!-- HEM-TRANSLATION-UNREVIEWED-START -->
-> ⚠️ **Unreviewed machine translation.** This page has not been checked for linguistic or technical accuracy, and some descriptions may be wrong. For installation, device control and safety instructions, refer to the <a href="../../README.md">English README</a>.
+> ⚠️ **Maskinöversättning som inte har granskats.** Sidans språkliga och tekniska korrekthet har inte kontrollerats och vissa beskrivningar kan vara felaktiga. Läs den <a href="../../README.md">engelska README-filen</a> för installation, enhetsstyrning och säkerhetsanvisningar.
 <!-- HEM-TRANSLATION-UNREVIEWED-END -->
 
 <p align="center">
@@ -75,7 +75,8 @@ HEM Den gemensamma politiken ska hållas oberoende av lokala beslut.
 | **Rummet** | Inomhustemperatur- och luftfuktighetskällor, luftkvalitetströskelvärden, fönster- och dörrkontakter, sömn- och upptagningsbeteende, rumsspecifika komfortmål, ventilation och skuggning. |
 | **En enskild enhet** | Dess tillgängliga styrläge, automatiska/manuella/PID Metod, mål per profil, sensorer, lugna ventilatörsinställningar, minsta driftstider, strömskydd, fönsterbeteende och meddelanden om fel på enheten. |
 
-Alla tre nivåer är tillgängliga genom grupperade, sökbara inställningar i kortet. Home Assistant Anpassningar i inställningen.
+Inställningarna för hem, rum och enheter är grupperade i kortet och går att söka bland. Välj **Grundläggande**, **Avancerad** eller **Expert** för att bestämma vilka inställningar som visas. Grundläggande omfattar dagliga reglage och nödvändig konfiguration. Avancerad lägger till manuella PID-koefficienter och detaljerade justeringar. Expert lägger till specialiserade modeller och kapacitetsanpassning. Varje nivå omfattar de föregående nivåerna. Du kan uppdatera tillgängliga källor när din Home Assistant-installation ändras. <!-- HEM-I18N:levels -->
+
 
 <a id="climate-control-and-pid-device-by-device"></a>
 ### Klimatkontroll och PID, enhet för enhet
@@ -124,7 +125,9 @@ Förberedelse är inte ett kommando för att slå på allt. Enheter behöver for
 HEM jämförelser **vad ett rum behöver** med **om utomhusluft kan hjälpa**.
 
 - Rekommenderas att öppna eller stänga fönster med hjälp av aktuella inomhusmätningar, utomhusfuktighet, föroreningar, temperatur, vind, vädervarningar och valfri pollenkontext.
+- AQI-indexet är valfritt. Om leverantörens skala inte har konfigurerats visas uppgifterna som ofullständiga; enbart detta hindrar inte vädring och är inget skäl att stänga ett fönster. Giltiga mätningar av luftföroreningar och faktiskt farliga AQI-värden som tolkas med rätt skala gäller fortfarande. <!-- HEM-I18N:aqi -->
 - Använd utvalda fönster- och dörrkontakter för att förklara rumförhållandena och undvik att behandla en okänd kontakt som stängd.
+- Du kan välja att lägga till balkong- eller altandörrar med Home Assistants binära sensorklass `door` eller `opening` som **fönsterkontakter**. De visas i rummets fönsterväljare men är **aldrig förvalda**. Den vanliga dörrövervakningen är fortsatt oberoende. <!-- HEM-I18N:balcony -->
 - Alternativt kan du be om att försöka öppna ett fönster innan du startar en automatisk apparat som stöds, och sedan fortsätta normal kontroll efter att det konfigurerade svaret har väntat om det behövs.
 - Använd dörrinformation för att vara medveten om rumgränserna, ventilationsförsiktighet och valfritt skyddat miljöbeteende.
 - Hantera valda luktar, blindar och skuggor med lämpliga fönster, temperatur, väder, soluppgång och valbara belysningsbevis.

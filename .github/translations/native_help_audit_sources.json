@@ -1,0 +1,1860 @@
+[
+  {
+    "id": 0,
+    "en": "Choose the ambient room temperature sensor (°C/°F). Only supported temperature sensors assigned to this room are offered. The reading is captured together with the outdoor weather temperature when you save a new calibration.",
+    "paths": [
+      "config.step.indoor_sensors.data_description.mold_indoor_temperature",
+      "options.step.indoor_sensors.data_description.mold_indoor_temperature"
+    ]
+  },
+  {
+    "id": 1,
+    "en": "Choose State when the entity state itself is a valid room list, or select an actual attribute that contains that list. Choices refresh when changing entity.",
+    "paths": [
+      "config.step.general_settings.data_description.general_occupied_rooms_attribute",
+      "config.step.setup_general.data_description.general_occupied_rooms_attribute",
+      "options.step.general_settings.data_description.general_occupied_rooms_attribute",
+      "options.step.setup_general.data_description.general_occupied_rooms_attribute"
+    ]
+  },
+  {
+    "id": 2,
+    "en": "Choose the State field or a verified room-list attribute from the selected sleep entity. A missing or unrecognized list makes sleep state unknown.",
+    "paths": [
+      "config.step.general_settings.data_description.general_sleep_rooms_attribute",
+      "config.step.setup_general.data_description.general_sleep_rooms_attribute",
+      "options.step.general_settings.data_description.general_sleep_rooms_attribute",
+      "options.step.setup_general.data_description.general_sleep_rooms_attribute"
+    ]
+  },
+  {
+    "id": 3,
+    "en": "Pollen reading at or above which the selected provider counts as high. Use the provider's own scale, from 0 up to the configured maximum; e.g. 3 with a maximum of 5. With Avoid ventilation enabled, valid high readings caution against automatic outdoor-air intake.",
+    "paths": [
+      "config.step.environment.data_description.pollen_high_from",
+      "config.step.pollen.data_description.pollen_high_from",
+      "config.step.setup_general.data_description.pollen_high_from",
+      "options.step.environment.data_description.pollen_high_from",
+      "options.step.pollen.data_description.pollen_high_from",
+      "options.step.setup_general.data_description.pollen_high_from"
+    ]
+  },
+  {
+    "id": 4,
+    "en": "Positive maximum of the selected provider's pollen index (1–100), not the current reading. For a 0–5 scale enter 5. All selected pollen sources must use compatible index scales; HEM does not convert between providers. A zero or invalid scale cannot classify pollen.",
+    "paths": [
+      "config.step.environment.data_description.pollen_max_scale",
+      "config.step.pollen.data_description.pollen_max_scale",
+      "config.step.setup_general.data_description.pollen_max_scale",
+      "options.step.environment.data_description.pollen_max_scale",
+      "options.step.pollen.data_description.pollen_max_scale",
+      "options.step.setup_general.data_description.pollen_max_scale"
+    ]
+  },
+  {
+    "id": 5,
+    "en": "Include verified high pollen among outdoor cautions and keep automatic outside-air use blocked while it persists. Useful manual airing may still be suggested conditionally with the pollen warning. The selected source, high threshold and provider maximum define high pollen; enable when pollen avoidance matters to occupants.",
+    "paths": [
+      "config.step.pollen.data_description.pollen_avoid_ventilation",
+      "config.step.setup_general.data_description.pollen_avoid_ventilation",
+      "options.step.pollen.data_description.pollen_avoid_ventilation",
+      "options.step.setup_general.data_description.pollen_avoid_ventilation"
+    ]
+  },
+  {
+    "id": 6,
+    "en": "Optional. Declare each AQI provider's scale explicitly: EPA 0-500, European six-category index, or your provider's custom limit. An unknown AQI scale is NEVER treated as the US scale. A pollen forecast can come from any Home Assistant integration and is advisory unless you deliberately enable blocking.",
+    "paths": [
+      "config.step.environment.description",
+      "options.step.environment.description"
+    ]
+  },
+  {
+    "id": 7,
+    "en": "If enabled, a high trusted pollen reading becomes an outside blocker. Leave off unless this is appropriate for your household.",
+    "paths": [
+      "config.step.environment.data_description.pollen_avoid_ventilation",
+      "options.step.environment.data_description.pollen_avoid_ventilation"
+    ]
+  },
+  {
+    "id": 8,
+    "en": "Choose only the scale documented by the sensor's data provider; source entity IDs are shown above.",
+    "paths": [
+      "config.step.environment.data_description.aqi_scale_0",
+      "config.step.environment.data_description.aqi_scale_1",
+      "config.step.environment.data_description.aqi_scale_10",
+      "config.step.environment.data_description.aqi_scale_11",
+      "config.step.environment.data_description.aqi_scale_12",
+      "config.step.environment.data_description.aqi_scale_13",
+      "config.step.environment.data_description.aqi_scale_14",
+      "config.step.environment.data_description.aqi_scale_15",
+      "config.step.environment.data_description.aqi_scale_16",
+      "config.step.environment.data_description.aqi_scale_17",
+      "config.step.environment.data_description.aqi_scale_18",
+      "config.step.environment.data_description.aqi_scale_19",
+      "config.step.environment.data_description.aqi_scale_2",
+      "config.step.environment.data_description.aqi_scale_20",
+      "config.step.environment.data_description.aqi_scale_21",
+      "config.step.environment.data_description.aqi_scale_22",
+      "config.step.environment.data_description.aqi_scale_23",
+      "config.step.environment.data_description.aqi_scale_24",
+      "config.step.environment.data_description.aqi_scale_25",
+      "config.step.environment.data_description.aqi_scale_26",
+      "config.step.environment.data_description.aqi_scale_27",
+      "config.step.environment.data_description.aqi_scale_28",
+      "config.step.environment.data_description.aqi_scale_29",
+      "config.step.environment.data_description.aqi_scale_3",
+      "config.step.environment.data_description.aqi_scale_30",
+      "config.step.environment.data_description.aqi_scale_31",
+      "config.step.environment.data_description.aqi_scale_4",
+      "config.step.environment.data_description.aqi_scale_5",
+      "config.step.environment.data_description.aqi_scale_6",
+      "config.step.environment.data_description.aqi_scale_7",
+      "config.step.environment.data_description.aqi_scale_8",
+      "config.step.environment.data_description.aqi_scale_9",
+      "options.step.environment.data_description.aqi_scale_0",
+      "options.step.environment.data_description.aqi_scale_1",
+      "options.step.environment.data_description.aqi_scale_10",
+      "options.step.environment.data_description.aqi_scale_11",
+      "options.step.environment.data_description.aqi_scale_12",
+      "options.step.environment.data_description.aqi_scale_13",
+      "options.step.environment.data_description.aqi_scale_14",
+      "options.step.environment.data_description.aqi_scale_15",
+      "options.step.environment.data_description.aqi_scale_16",
+      "options.step.environment.data_description.aqi_scale_17",
+      "options.step.environment.data_description.aqi_scale_18",
+      "options.step.environment.data_description.aqi_scale_19",
+      "options.step.environment.data_description.aqi_scale_2",
+      "options.step.environment.data_description.aqi_scale_20",
+      "options.step.environment.data_description.aqi_scale_21",
+      "options.step.environment.data_description.aqi_scale_22",
+      "options.step.environment.data_description.aqi_scale_23",
+      "options.step.environment.data_description.aqi_scale_24",
+      "options.step.environment.data_description.aqi_scale_25",
+      "options.step.environment.data_description.aqi_scale_26",
+      "options.step.environment.data_description.aqi_scale_27",
+      "options.step.environment.data_description.aqi_scale_28",
+      "options.step.environment.data_description.aqi_scale_29",
+      "options.step.environment.data_description.aqi_scale_3",
+      "options.step.environment.data_description.aqi_scale_30",
+      "options.step.environment.data_description.aqi_scale_31",
+      "options.step.environment.data_description.aqi_scale_4",
+      "options.step.environment.data_description.aqi_scale_5",
+      "options.step.environment.data_description.aqi_scale_6",
+      "options.step.environment.data_description.aqi_scale_7",
+      "options.step.environment.data_description.aqi_scale_8",
+      "options.step.environment.data_description.aqi_scale_9"
+    ]
+  },
+  {
+    "id": 9,
+    "en": "Configure extra sensors and assumptions for one selected room. All are optional. The basic Home Environment Manager features work without any of them.",
+    "paths": [
+      "config.step.environment_room.description",
+      "options.step.environment_room.description"
+    ]
+  },
+  {
+    "id": 10,
+    "en": "Only the selected room is edited. Return here to configure another room.",
+    "paths": [
+      "config.step.environment_room.data_description.environment_area",
+      "options.step.environment_room.data_description.environment_area"
+    ]
+  },
+  {
+    "id": 11,
+    "en": "Room air volume and sensors. Rated particle CADR belongs to each purifier device.",
+    "paths": [
+      "config.step.environment_room_air.description",
+      "options.step.environment_room_air.description"
+    ]
+  },
+  {
+    "id": 12,
+    "en": "Optional. Select only sensors actually measuring the requested pollutant and units. Confirm independent hardware/calibration; synthetic HCHO, eCO₂ and generic sound-level signals are not acceptable substitutes for validated observations. Radon guidelines need nearly a full year of history.",
+    "paths": [
+      "config.step.environment_room_exposure.description",
+      "options.step.environment_room_exposure.description"
+    ]
+  },
+  {
+    "id": 13,
+    "en": "Annual radon screening reference appropriate to local rules. WHO recommends 100 Bq/m³ where feasible (national references differ, not above 300); compare annual averages only.",
+    "paths": [
+      "config.step.environment_room_exposure.data_description.radon_reference_bq_m3",
+      "options.step.environment_room_exposure.data_description.radon_reference_bq_m3"
+    ]
+  },
+  {
+    "id": 14,
+    "en": "Optional advanced ISO 7730. Simple automatic comfort requires no clothing, activity, radiant or air-speed inputs.",
+    "paths": [
+      "config.step.environment_room_comfort.description",
+      "options.step.environment_room_comfort.description"
+    ]
+  },
+  {
+    "id": 15,
+    "en": "Opt in to ISO 7730 Predicted Mean Vote/Predicted Percentage Dissatisfied analysis. Needs real radiant temperature, air speed, clothing and activity assumptions; off by default.",
+    "paths": [
+      "config.step.environment_room_comfort.data_description.enable_pmv",
+      "options.step.environment_room_comfort.data_description.enable_pmv"
+    ]
+  },
+  {
+    "id": 16,
+    "en": "Optional and disabled by default. Choose exactly one monitored room. A room's PID never controls climate devices in a different assigned Home Assistant area.",
+    "paths": [
+      "config.step.pid.description",
+      "options.step.pid.description"
+    ]
+  },
+  {
+    "id": 17,
+    "en": "Enable PID only after selecting real room temperature measurements and the climate devices you authorize. The existing thermostat must already be in heat or cool mode. Windows with open or unknown contacts stop PID commands. No HVAC mode or compressor switching is performed.",
+    "paths": [
+      "config.step.pid_room.description",
+      "options.step.pid_room.description"
+    ]
+  },
+  {
+    "id": 18,
+    "en": "Kp in %/°C, Ki in %/(°C·minute), Kd in %·minute/°C. The output only trims the existing thermostat setpoint within a bounded range, at limited intervals. Start with defaults; tune gradually after reviewing room trends. Manual setpoint changes pause PID until you explicitly resume it.",
+    "paths": [
+      "config.step.pid_tuning.description",
+      "options.step.pid_tuning.description"
+    ]
+  },
+  {
+    "id": 19,
+    "en": "Configure each selected room independently. A fresh room temperature sensor and exact room-assigned actuators are required. Direct relay/PWM is permitted only for independently protected non-compressor loads, with confirmed on/off limits and explicit actuation opt-in. Occupied, unoccupied, away and sleep heating/cooling targets are independent.",
+    "paths": [
+      "config.step.climate.description",
+      "config.step.climate_actuators.description",
+      "config.step.climate_presence.description",
+      "config.step.climate_profiles.description",
+      "config.step.climate_room.description",
+      "options.step.climate.description",
+      "options.step.climate_actuators.description",
+      "options.step.climate_presence.description",
+      "options.step.climate_profiles.description",
+      "options.step.climate_room.description"
+    ]
+  },
+  {
+    "id": 20,
+    "en": "Exact same-room switch or number output for independently protected heating. Never use the direct driver for an AC compressor or unknown load.",
+    "paths": [
+      "config.step.climate_actuators.data_description.heat_actuator",
+      "options.step.climate_actuators.data_description.heat_actuator"
+    ]
+  },
+  {
+    "id": 21,
+    "en": "Exact same-room switch or number output for independently protected non-compressor cooling load. Verify interlocks and electrical ratings.",
+    "paths": [
+      "config.step.climate_actuators.data_description.cool_actuator",
+      "options.step.climate_actuators.data_description.cool_actuator"
+    ]
+  },
+  {
+    "id": 22,
+    "en": "Proportional PID coefficient controlling how strongly current temperature error changes direct thermal demand. Too large may oscillate.",
+    "paths": [
+      "config.step.climate_actuators.data_description.kp",
+      "options.step.climate_actuators.data_description.kp"
+    ]
+  },
+  {
+    "id": 23,
+    "en": "Integral PID coefficient accumulating persistent thermal error. Anti-windup and saturation limits apply; too high causes overshoot.",
+    "paths": [
+      "config.step.climate_actuators.data_description.ki",
+      "options.step.climate_actuators.data_description.ki"
+    ]
+  },
+  {
+    "id": 24,
+    "en": "Derivative PID coefficient responding to the rate of measured temperature change. Noisy sensors can make large derivative gains unstable.",
+    "paths": [
+      "config.step.climate_actuators.data_description.kd",
+      "options.step.climate_actuators.data_description.kd"
+    ]
+  },
+  {
+    "id": 25,
+    "en": "Maximum change of requested proportional output percentage points each cycle. Prevents sudden steps and oversized corrections.",
+    "paths": [
+      "config.step.climate_actuators.data_description.max_demand_change",
+      "options.step.climate_actuators.data_description.max_demand_change"
+    ]
+  },
+  {
+    "id": 26,
+    "en": "Minimum output change (percentage points) considered meaningful enough to send to a proportional actuator. Avoids tiny repeated updates.",
+    "paths": [
+      "config.step.climate_actuators.data_description.min_demand_change",
+      "options.step.climate_actuators.data_description.min_demand_change"
+    ]
+  },
+  {
+    "id": 27,
+    "en": "Choose US EPA (0-500), EEA categories or custom only if this exactly matches the selected AQI provider. Unknown scales cannot certify safe outside air.",
+    "paths": [
+      "config.step.outside_aqi.data_description.outside_aqi_scale",
+      "options.step.outside_aqi.data_description.outside_aqi_scale"
+    ]
+  },
+  {
+    "id": 28,
+    "en": "No configured supported outdoor AQI source is available. First choose a real AQI entity under Outside data → Outdoor air quality.",
+    "paths": [
+      "config.step.outside_aqi.data_description.outside_aqi_no_sources",
+      "options.step.outside_aqi.data_description.outside_aqi_no_sources"
+    ]
+  },
+  {
+    "id": 29,
+    "en": "For Existing room controller: No room-presence restriction allows demand-based control in either room state. Only while room is occupied requires presence in this room. Only while someone is home requires whole-home presence. Unknown required presence pauses new commands; the separate absence action applies after confirmed absence. Automatic and PID use the presence choice on the individual device controller.",
+    "paths": [
+      "config.step.device_settings.data_description.device_presence_requirement",
+      "options.step.device_settings.data_description.device_presence_requirement"
+    ]
+  },
+  {
+    "id": 30,
+    "en": "When a selected room is sleeping, choose normal operation, pause device control or sleep targets. Unknown sleep evidence does not trigger shutdown.",
+    "paths": [
+      "config.step.device_settings.data_description.device_sleep_behavior",
+      "options.step.device_settings.data_description.device_sleep_behavior"
+    ]
+  },
+  {
+    "id": 31,
+    "en": "Choose extraction (ventilating CO₂) or filtration (reducing PM2.5). The role determines which sensor and safety rules apply.",
+    "paths": [
+      "config.step.device_settings.data_description.device_fan_purpose",
+      "options.step.device_settings.data_description.device_fan_purpose"
+    ]
+  },
+  {
+    "id": 32,
+    "en": "Choose the monitored Home Assistant room whose settings you want to edit. Selecting a room does not move any sensor or device, and does not change its saved settings.",
+    "paths": [
+      "config.step.select_room.data_description.edit_room_area",
+      "options.step.select_room.data_description.edit_room_area"
+    ]
+  },
+  {
+    "id": 33,
+    "en": "Check only after measuring the coldest surface again now. Otherwise changing sensor exclusions must not silently overwrite the original calibration.",
+    "paths": [
+      "config.step.indoor_sensors.data_description.mold_recalibrate",
+      "options.step.indoor_sensors.data_description.mold_recalibrate"
+    ]
+  },
+  {
+    "id": 34,
+    "en": "Measured indoor air volume in m³ (usable floor area multiplied by ceiling height). Required to estimate nominal clean-air changes from purifier CADR.",
+    "paths": [
+      "config.step.environment_room_air.data_description.room_volume_m3",
+      "options.step.environment_room_air.data_description.room_volume_m3"
+    ]
+  },
+  {
+    "id": 35,
+    "en": "Manufacturer-rated particle clean-air delivery rate in m³/h at the selected fan speed, not simple fan airflow. Filter performance for gases is not inferred.",
+    "paths": [
+      "config.step.environment_room_air.data_description.particle_cadr_m3h",
+      "options.step.environment_room_air.data_description.particle_cadr_m3h"
+    ]
+  },
+  {
+    "id": 36,
+    "en": "Enable only after independently verifying that the selected CO₂ source is true NDIR or equivalent measured hardware, not estimated eCO₂ derived from VOC.",
+    "paths": [
+      "config.step.environment_room_air.data_description.co2_ndir_verified",
+      "options.step.environment_room_air.data_description.co2_ndir_verified"
+    ]
+  },
+  {
+    "id": 37,
+    "en": "Confirm the device really measures radon with dedicated calibrated hardware. Ordinary VOC-based sensors are unsuitable; annual risk estimates need enough history.",
+    "paths": [
+      "config.step.environment_room_exposure.data_description.radon_sensor_verified",
+      "options.step.environment_room_exposure.data_description.radon_sensor_verified"
+    ]
+  },
+  {
+    "id": 38,
+    "en": "Confirm this is a genuine HCHO measurement before using its 30-minute average. WHO short-term guidance is 100 µg/m³ (30 min), not a universal single-reading threshold.",
+    "paths": [
+      "config.step.environment_room_exposure.data_description.formaldehyde_sensor_verified",
+      "options.step.environment_room_exposure.data_description.formaldehyde_sensor_verified"
+    ]
+  },
+  {
+    "id": 39,
+    "en": "Enable only if the selected source produces calibrated equivalent levels over known intervals. Peak-only or guessed readings cannot form valid LAeq estimates.",
+    "paths": [
+      "config.step.environment_room_exposure.data_description.noise_sensor_calibrated",
+      "options.step.environment_room_exposure.data_description.noise_sensor_calibrated"
+    ]
+  },
+  {
+    "id": 40,
+    "en": "Confirm independent actual spectral evidence for the melanopic EDI source. The system will not infer it from color temperature or ordinary lux.",
+    "paths": [
+      "config.step.environment_room_exposure.data_description.melanopic_spectral_verified",
+      "options.step.environment_room_exposure.data_description.melanopic_spectral_verified"
+    ]
+  },
+  {
+    "id": 41,
+    "en": "Explicit assumed air speed in m/s only when no real sensor is available. Enter a defensible estimate; results remain labelled as estimated.",
+    "paths": [
+      "config.step.environment_room_comfort.data_description.air_speed_m_s",
+      "options.step.environment_room_comfort.data_description.air_speed_m_s"
+    ]
+  },
+  {
+    "id": 42,
+    "en": "Human metabolic activity in met units. Roughly 1.0 for sitting quietly, 1.2 for light desk work; set actual occupant activity, not equipment output.",
+    "paths": [
+      "config.step.environment_room_comfort.data_description.met",
+      "options.step.environment_room_comfort.data_description.met"
+    ]
+  },
+  {
+    "id": 43,
+    "en": "Clothing insulation in clo; roughly 0.5 for light summer clothing, 1.0 for common winter clothing. Impacts comfort estimates, not a sensor reading.",
+    "paths": [
+      "config.step.environment_room_comfort.data_description.clo",
+      "options.step.environment_room_comfort.data_description.clo"
+    ]
+  },
+  {
+    "id": 44,
+    "en": "Installer attests independent compressor minimum-OFF, defrost, electrical and manufacturer protections on this exact AC. A checkbox alone cannot verify hardware.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_dry_fan_hardware_confirmed",
+      "options.step.climate_equipment.data_description.climate_dry_fan_hardware_confirmed"
+    ]
+  },
+  {
+    "id": 45,
+    "en": "Extra explicit consent when native DRY/FAN_ONLY switching must work without a verified room window contact. Does not bypass other safety interlocks.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_dry_fan_windowless_confirmed",
+      "options.step.climate_equipment.data_description.climate_dry_fan_windowless_confirmed"
+    ]
+  },
+  {
+    "id": 46,
+    "en": "Attest independent overflow, frost, overtemperature, electrical and any compressor-cycle protections appropriate to this exact humidity device.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_humidity_power_hardware_confirmed",
+      "options.step.climate_equipment.data_description.climate_humidity_power_hardware_confirmed"
+    ]
+  },
+  {
+    "id": 47,
+    "en": "Extra consent to run dedicated moisture equipment in this room without a known window contact. Does not waive source freshness or safety bounds.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_humidity_power_windowless_confirmed",
+      "options.step.climate_equipment.data_description.climate_humidity_power_windowless_confirmed"
+    ]
+  },
+  {
+    "id": 48,
+    "en": "Attest the selected extractor/purifier has independent electrical, fire, backdraft and ventilation pressure protection suitable for automatic switching.",
+    "paths": [
+      "config.step.climate_air_strategy.data_description.climate_fan_power_hardware_confirmed",
+      "options.step.climate_air_strategy.data_description.climate_fan_power_hardware_confirmed"
+    ]
+  },
+  {
+    "id": 49,
+    "en": "Confirm that the selected sensor directly measures PM2.5 mass concentration (µg/m³), not an uncalibrated proxy or arbitrary AQI.",
+    "paths": [
+      "config.step.climate_air_strategy.data_description.climate_pm25_sensor_verified",
+      "options.step.climate_air_strategy.data_description.climate_pm25_sensor_verified"
+    ]
+  },
+  {
+    "id": 50,
+    "en": "Confirm these are independently protected, slow, non-compressor heating/cooling loads. This check must never be used to authorize a generic AC compressor relay.",
+    "paths": [
+      "config.step.climate_actuators.data_description.direct_hardware_confirmed",
+      "options.step.climate_actuators.data_description.direct_hardware_confirmed"
+    ]
+  },
+  {
+    "id": 51,
+    "en": "Confirm you have independently checked protection of this exact device. The checkbox is an assertion by the installer, not a software hardware-certification test.",
+    "paths": [
+      "config.step.device_settings.data_description.device_hardware_confirmed",
+      "options.step.device_settings.data_description.device_hardware_confirmed"
+    ]
+  },
+  {
+    "id": 52,
+    "en": "This confirms the PM2.5 sensor used for this purifier's automatic particle filtration. ON: enable only after checking that the selected same-room sensor measures real PM2.5 concentration in µg/m³, not AQI, eCO₂ or VOC estimates. OFF: automatic filtration needs separate confirmation of the room's PM2.5 source or stays blocked. It does not select a sensor, start the purifier or bypass device safety checks.",
+    "paths": [
+      "config.step.device_settings.data_description.device_sensor_verified",
+      "options.step.device_settings.data_description.device_sensor_verified"
+    ]
+  },
+  {
+    "id": 53,
+    "en": "Disabled by default. No repeated alerts on every sensor reading.",
+    "paths": [
+      "config.step.delivery.data_description.automatic_notifications",
+      "options.step.delivery.data_description.automatic_notifications"
+    ]
+  },
+  {
+    "id": 54,
+    "en": "Only that room's explicitly selected climate entities may be controlled.",
+    "paths": [
+      "config.step.pid.data_description.pid_area",
+      "options.step.pid.data_description.pid_area"
+    ]
+  },
+  {
+    "id": 55,
+    "en": "Opt in to supervisory PID that adjusts setpoints only on chosen, already operating thermostats. It does not power HVAC on or defeat native compressor controls.",
+    "paths": [
+      "config.step.pid_room.data_description.pid_enabled",
+      "options.step.pid_room.data_description.pid_enabled"
+    ]
+  },
+  {
+    "id": 56,
+    "en": "Choose HEAT or COOL only to match the actual already active thermostat mode. Supervisory PID never switches mode or powers on a compressor.",
+    "paths": [
+      "config.step.pid_room.data_description.pid_mode",
+      "options.step.pid_room.data_description.pid_mode"
+    ]
+  },
+  {
+    "id": 57,
+    "en": "Stop new thermostat setpoint changes when a selected room window is open or sensor state unknown. Prevents unwanted heating/cooling while airing.",
+    "paths": [
+      "config.step.pid_room.data_description.pid_pause_on_window_open",
+      "options.step.pid_room.data_description.pid_pause_on_window_open"
+    ]
+  },
+  {
+    "id": 58,
+    "en": "Proportional PID gain (% per °C): immediate response to room-temperature error. Default 22; too high can cause oscillation and frequent target changes.",
+    "paths": [
+      "config.step.pid_tuning.data_description.pid_kp",
+      "options.step.pid_tuning.data_description.pid_kp"
+    ]
+  },
+  {
+    "id": 59,
+    "en": "Integral PID gain (% per °C·minute): compensates persistent temperature error. Default 0.25; anti-windup applies, but very high values can overshoot.",
+    "paths": [
+      "config.step.pid_tuning.data_description.pid_ki",
+      "options.step.pid_tuning.data_description.pid_ki"
+    ]
+  },
+  {
+    "id": 60,
+    "en": "Derivative PID gain (%·minute/°C): responds to filtered temperature change rate. Default 0; high values amplify sensor noise.",
+    "paths": [
+      "config.step.pid_tuning.data_description.pid_kd",
+      "options.step.pid_tuning.data_description.pid_kd"
+    ]
+  },
+  {
+    "id": 61,
+    "en": "Enables per-room climate planning and status. It does not authorize actuator commands; Allow actuation and each device's separate opt-in are required.",
+    "paths": [
+      "config.step.climate_room.data_description.climate_enabled",
+      "options.step.climate_room.data_description.climate_enabled"
+    ]
+  },
+  {
+    "id": 62,
+    "en": "Separate consent to switch between supported heating and cooling modes, subject to dwell and device interlocks. Does not bypass equipment compressor protection.",
+    "paths": [
+      "config.step.climate_room.data_description.climate_auto_switch_hvac",
+      "options.step.climate_room.data_description.climate_auto_switch_hvac"
+    ]
+  },
+  {
+    "id": 63,
+    "en": "When a thermostat genuinely supports native HEAT_COOL with two target temperatures, prefer its built-in control over simulated mode switching.",
+    "paths": [
+      "config.step.climate_room.data_description.climate_prefer_native_auto",
+      "options.step.climate_room.data_description.climate_prefer_native_auto"
+    ]
+  },
+  {
+    "id": 64,
+    "en": "Choose the control strategy supported by installed equipment: native thermostat, or independently protected slow direct actuator. Do not use relays for compressors.",
+    "paths": [
+      "config.step.climate_room.data_description.climate_controller",
+      "options.step.climate_room.data_description.climate_controller"
+    ]
+  },
+  {
+    "id": 65,
+    "en": "Separate permission to adjust humidity targets of an already-running native humidifier. Does not power on equipment or overrule manual settings.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_humidity_setpoint_auto",
+      "options.step.climate_equipment.data_description.climate_humidity_setpoint_auto"
+    ]
+  },
+  {
+    "id": 66,
+    "en": "Suggest opening a closed window when measured outdoor-air benefit can help current heating, cooling or drying demand, including before a device starts. Detected outside concerns are included as cautions. Windows are opened by the user; running devices are not stopped for the request. The configured window-opening timeout may defer new qualifying automatic starts.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_window_efficiency_notify",
+      "options.step.climate_equipment.data_description.climate_window_efficiency_notify"
+    ]
+  },
+  {
+    "id": 67,
+    "en": "Experimental opt-in for supported native DRY/FAN_ONLY transitions. Requires exact-device commissioning, mode dwell and independent compressor protections.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_dry_fan_mode_auto",
+      "options.step.climate_equipment.data_description.climate_dry_fan_mode_auto"
+    ]
+  },
+  {
+    "id": 68,
+    "en": "Separate experimental permission to turn verified dedicated humidifier/dehumidifier power on/off. Requires hardware protection, measured RH and strict runtime bounds.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_humidity_power_auto",
+      "options.step.climate_equipment.data_description.climate_humidity_power_auto"
+    ]
+  },
+  {
+    "id": 69,
+    "en": "Separate opt-in to adjust the temperature setpoint of an already-running secondary heat/cool climate device. Never powers it on or changes unsupported modes.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_secondary_climate_setpoint_auto",
+      "options.step.climate_equipment.data_description.climate_secondary_climate_setpoint_auto"
+    ]
+  },
+  {
+    "id": 70,
+    "en": "Separate permission to increase percentage only on an already-running extraction or purifier fan with verified air measurements. Never changes fan power.",
+    "paths": [
+      "config.step.climate_air_strategy.data_description.climate_fan_speed_auto",
+      "options.step.climate_air_strategy.data_description.climate_fan_speed_auto"
+    ]
+  },
+  {
+    "id": 71,
+    "en": "Experimental opt-in for bounded ON/OFF of the exact room fan.* device, using verified demand and hardware safety. Cannot share ownership with fan-speed automation.",
+    "paths": [
+      "config.step.climate_air_strategy.data_description.climate_fan_power_auto",
+      "options.step.climate_air_strategy.data_description.climate_fan_power_auto"
+    ]
+  },
+  {
+    "id": 72,
+    "en": "Master opt-in for this exact device. OFF means monitoring/advice only. When enabled, all other device-specific capability and safety gates still apply.",
+    "paths": [
+      "config.step.device_settings.data_description.device_auto_control",
+      "options.step.device_settings.data_description.device_auto_control"
+    ]
+  },
+  {
+    "id": 73,
+    "en": "Select a control supported by this device: thermostat setpoints, verified native modes, humidity setpoint, fan speed or separately protected power. Unsupported modes are blocked.",
+    "paths": [
+      "config.step.device_settings.data_description.device_method",
+      "options.step.device_settings.data_description.device_method"
+    ]
+  },
+  {
+    "id": 74,
+    "en": "Select HOLD or OFF when occupancy requirement is not met. OFF is allowed only for explicitly commissioned supported equipment after safety dwell; no automatic restart.",
+    "paths": [
+      "config.step.device_settings.data_description.device_absence_action",
+      "options.step.device_settings.data_description.device_absence_action"
+    ]
+  },
+  {
+    "id": 75,
+    "en": "Direct outputs when Announcement Hub is not used.",
+    "paths": [
+      "config.step.delivery.data_description.notify_entities",
+      "config.step.setup_general.data_description.notify_entities",
+      "options.step.delivery.data_description.notify_entities",
+      "options.step.setup_general.data_description.notify_entities"
+    ]
+  },
+  {
+    "id": 76,
+    "en": "Select a current numeric pollen-index entity produced by any local HA integration; nothing is fetched from a fixed national service.",
+    "paths": [
+      "config.step.environment.data_description.pollen_entity",
+      "options.step.environment.data_description.pollen_entity"
+    ]
+  },
+  {
+    "id": 77,
+    "en": "Choose the measured ambient air temperature of this room, not an external sensor. Used for room science and moisture calculations when multiple sources exist.",
+    "paths": [
+      "config.step.environment_room_air.data_description.temperature_entity",
+      "options.step.environment_room_air.data_description.temperature_entity"
+    ]
+  },
+  {
+    "id": 78,
+    "en": "Choose the purifier's real power/fan state. The environmental analysis can describe nominal filtration while the device is running; merely selecting it does not switch it on.",
+    "paths": [
+      "config.step.environment_room_air.data_description.purifier_entity",
+      "options.step.environment_room_air.data_description.purifier_entity"
+    ]
+  },
+  {
+    "id": 79,
+    "en": "Select the existing mechanical extraction fan/switch for contextual humidity-event advice. A humidity rise alone does not prove a shower or cooking event.",
+    "paths": [
+      "config.step.environment_room_air.data_description.extractor_entity",
+      "options.step.environment_room_air.data_description.extractor_entity"
+    ]
+  },
+  {
+    "id": 80,
+    "en": "Select a dedicated radon monitor with Bq/m³ or pCi/L output. Use long observation periods to assess exposure; radon is associated with lung cancer risk.",
+    "paths": [
+      "config.step.environment_room_exposure.data_description.radon_entity",
+      "options.step.environment_room_exposure.data_description.radon_entity"
+    ]
+  },
+  {
+    "id": 81,
+    "en": "Select a real HCHO sensor measuring formaldehyde (µg/m³ or mg/m³), not a generic VOC-estimated value. Only verified concentration can inform exposure analysis.",
+    "paths": [
+      "config.step.environment_room_exposure.data_description.formaldehyde_entity",
+      "options.step.environment_room_exposure.data_description.formaldehyde_entity"
+    ]
+  },
+  {
+    "id": 82,
+    "en": "Choose calibrated A-weighted equivalent sound level in dB(A). The integration uses logarithmic sound-energy averaging; uncalibrated phone peaks are not suitable.",
+    "paths": [
+      "config.step.environment_room_exposure.data_description.noise_entity",
+      "options.step.environment_room_exposure.data_description.noise_entity"
+    ]
+  },
+  {
+    "id": 83,
+    "en": "Select a real spectral sensor providing melanopic equivalent daylight illuminance in lux. Never derive it from ordinary photopic lux with an arbitrary multiplier.",
+    "paths": [
+      "config.step.environment_room_exposure.data_description.melanopic_edi_entity",
+      "options.step.environment_room_exposure.data_description.melanopic_edi_entity"
+    ]
+  },
+  {
+    "id": 84,
+    "en": "Measured mean radiant temperature (°C), not ordinary room air temperature. Required for credible PMV/PPD thermal comfort calculations.",
+    "paths": [
+      "config.step.environment_room_comfort.data_description.radiant_temperature_entity",
+      "options.step.environment_room_comfort.data_description.radiant_temperature_entity"
+    ]
+  },
+  {
+    "id": 85,
+    "en": "True local air-speed sensor in m/s; if provided, it overrides the static estimated airflow value used in PMV/PPD.",
+    "paths": [
+      "config.step.environment_room_comfort.data_description.air_speed_entity",
+      "options.step.environment_room_comfort.data_description.air_speed_entity"
+    ]
+  },
+  {
+    "id": 86,
+    "en": "Exact climate.* devices this room's PID is authorized to adjust. No area-wide broadcast or automatic assignment; manually switched-off devices remain off.",
+    "paths": [
+      "config.step.pid_room.data_description.pid_climate_entities",
+      "options.step.pid_room.data_description.pid_climate_entities"
+    ]
+  },
+  {
+    "id": 87,
+    "en": "Independent room temperature source (°C/°F) refreshed in the last 10 minutes. Stale or unavailable values suspend setpoint commands.",
+    "paths": [
+      "config.step.pid_room.data_description.pid_temperature_entity",
+      "options.step.pid_room.data_description.pid_temperature_entity"
+    ]
+  },
+  {
+    "id": 88,
+    "en": "Select exactly one primary climate.* device assigned to this HA room. It supplies native capabilities; manual OFF or unsupported modes cannot be auto-restarted.",
+    "paths": [
+      "config.step.climate_room.data_description.climate_entity",
+      "options.step.climate_room.data_description.climate_entity"
+    ]
+  },
+  {
+    "id": 89,
+    "en": "Independent fresh temperature sensor (°C or °F) in the same room; stale readings stop target changes. Avoid using an unrelated outdoor or thermostat estimate.",
+    "paths": [
+      "config.step.climate_room.data_description.climate_temperature_entity",
+      "options.step.climate_room.data_description.climate_temperature_entity"
+    ]
+  },
+  {
+    "id": 90,
+    "en": "People or device trackers for home/away status. Absence is considered only with explicit, fresh evidence; unknown trackers are treated conservatively.",
+    "paths": [
+      "config.step.climate_presence.data_description.climate_away_entities",
+      "options.step.climate_presence.data_description.climate_away_entities"
+    ]
+  },
+  {
+    "id": 91,
+    "en": "Optional same-room heat-only radiator or heating-zone climate.* entity. It must actually support HEAT; it never receives cooling commands.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_heat_climate_entity",
+      "options.step.climate_equipment.data_description.climate_heat_climate_entity"
+    ]
+  },
+  {
+    "id": 92,
+    "en": "Optional same-room air conditioner or cooling heat-pump climate.* entity. It must support COOL; manual OFF is respected.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_cool_climate_entity",
+      "options.step.climate_equipment.data_description.climate_cool_climate_entity"
+    ]
+  },
+  {
+    "id": 93,
+    "en": "Optional climate.* device with real native DRY. DRY-only devices provide humidity advice without fabricated temperature setpoints; automatic mode control is separately commissioned.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_dry_climate_entity",
+      "options.step.climate_equipment.data_description.climate_dry_climate_entity"
+    ]
+  },
+  {
+    "id": 94,
+    "en": "Optional climate.* device exposing FAN_ONLY. Do not assume an arbitrary air conditioner can safely switch to fan mode.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_fan_climate_entity",
+      "options.step.climate_equipment.data_description.climate_fan_climate_entity"
+    ]
+  },
+  {
+    "id": 95,
+    "en": "Optional HA humidifier.* adding moisture. Select only a matching same-room device; automatic setpoint/power changes need separate authorization.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_humidifier_entity",
+      "options.step.climate_equipment.data_description.climate_humidifier_entity"
+    ]
+  },
+  {
+    "id": 96,
+    "en": "Optional HA dehumidifier.* removing moisture. Compressor-equipped units need independent frost, tank and cycle protections.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_dehumidifier_entity",
+      "options.step.climate_equipment.data_description.climate_dehumidifier_entity"
+    ]
+  },
+  {
+    "id": 97,
+    "en": "Optional same-room fan.* extracting air, driven by verified CO₂/ventilation demand. Merely selecting the entity does not power it on.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_extraction_fan_entity",
+      "options.step.climate_equipment.data_description.climate_extraction_fan_entity"
+    ]
+  },
+  {
+    "id": 98,
+    "en": "Optional same-room fan.* used as air purifier for measured PM2.5. Filtration capability must be real; plain ventilation is not HEPA purification.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_purifier_fan_entity",
+      "options.step.climate_equipment.data_description.climate_purifier_fan_entity"
+    ]
+  },
+  {
+    "id": 99,
+    "en": "Select one fresh independent same-room RH sensor (%). Humidity controls hold rather than guess when this measurement is missing.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_humidity_entity",
+      "options.step.climate_equipment.data_description.climate_humidity_entity"
+    ]
+  },
+  {
+    "id": 100,
+    "en": "True same-room CO₂ sensor in ppm, preferably verified NDIR, used for demand-based extraction. eCO₂ from VOC is not equivalent.",
+    "paths": [
+      "config.step.climate_air_strategy.data_description.climate_co2_entity",
+      "options.step.climate_air_strategy.data_description.climate_co2_entity"
+    ]
+  },
+  {
+    "id": 101,
+    "en": "Same-room PM2.5 µg/m³ sensor used for filtration control. Missing or unsupported data cannot start a purifier.",
+    "paths": [
+      "config.step.climate_air_strategy.data_description.climate_pm25_entity",
+      "options.step.climate_air_strategy.data_description.climate_pm25_entity"
+    ]
+  },
+  {
+    "id": 102,
+    "en": "Select actual person/device tracker entities for home/away evidence. Unknown trackers do not prove everyone has left.",
+    "paths": [
+      "config.step.general_settings.data_description.general_home_trackers",
+      "options.step.general_settings.data_description.general_home_trackers"
+    ]
+  },
+  {
+    "id": 103,
+    "en": "Select a numerical pollen-index sensor provided by Home Assistant. Country- and provider-specific indices are not automatically comparable.",
+    "paths": [
+      "config.step.pollen.data_description.pollen_entity",
+      "options.step.pollen.data_description.pollen_entity"
+    ]
+  },
+  {
+    "id": 104,
+    "en": "Select one real outdoor AQI sensor to assign its provider's published scale; ordinary pollutant concentration sensors use their own units instead.",
+    "paths": [
+      "config.step.outside_aqi.data_description.outside_aqi_entity",
+      "options.step.outside_aqi.data_description.outside_aqi_entity"
+    ]
+  },
+  {
+    "id": 105,
+    "en": "Choose the Home Assistant area whose devices you want to review. Device discovery is for inventory and does not enable any automation.",
+    "paths": [
+      "config.step.area_devices.data_description.area_devices_area",
+      "options.step.area_devices.data_description.area_devices_area"
+    ]
+  },
+  {
+    "id": 106,
+    "en": "Choose exactly one monitored device to adjust its capabilities, consent, occupancy and setpoint rules. Other room devices remain unchanged.",
+    "paths": [
+      "config.step.device_choice.data_description.device_choice",
+      "options.step.device_choice.data_description.device_choice"
+    ]
+  },
+  {
+    "id": 107,
+    "en": "Select a real fresh independent temperature sensor in the same area. Missing data holds thermostat setpoint changes.",
+    "paths": [
+      "config.step.device_settings.data_description.device_temperature_entity",
+      "options.step.device_settings.data_description.device_temperature_entity"
+    ]
+  },
+  {
+    "id": 108,
+    "en": "Select a real relative-humidity sensor (%) in the same area to inform humidification/dehumidification. Stale data cannot drive a power change.",
+    "paths": [
+      "config.step.device_settings.data_description.device_humidity_entity",
+      "options.step.device_settings.data_description.device_humidity_entity"
+    ]
+  },
+  {
+    "id": 109,
+    "en": "Choose an actual CO₂ ppm source for extraction decisions, ideally verified NDIR. TVOC-derived eCO₂ is not equivalent to measured CO₂.",
+    "paths": [
+      "config.step.device_settings.data_description.device_co2_entity",
+      "options.step.device_settings.data_description.device_co2_entity"
+    ]
+  },
+  {
+    "id": 110,
+    "en": "Choose a real PM2.5 µg/m³ sensor in this room for purifier decisions. Unsupported indices or estimated particle levels are not accepted.",
+    "paths": [
+      "config.step.device_settings.data_description.device_pm25_entity",
+      "options.step.device_settings.data_description.device_pm25_entity"
+    ]
+  },
+  {
+    "id": 111,
+    "en": "Outdoor AQI ceiling used for ventilation. Confirm the provider scale with the AQI selector; per-source custom limits override this general ceiling. Exceeding the applicable limit is an outdoor caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with the air-quality caution included. The default assumes US AQI.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_outdoor_aqi",
+      "config.step.thresholds.data_description.outdoor_aqi",
+      "options.step.setup_general.data_description.global_threshold_outdoor_aqi",
+      "options.step.thresholds.data_description.outdoor_aqi"
+    ]
+  },
+  {
+    "id": 112,
+    "en": "Outdoor CO₂ (ppm) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_outdoor_co2",
+      "config.step.thresholds.data_description.outdoor_co2",
+      "options.step.setup_general.data_description.global_threshold_outdoor_co2",
+      "options.step.thresholds.data_description.outdoor_co2"
+    ]
+  },
+  {
+    "id": 113,
+    "en": "Outdoor PM2.5 (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard. Instantaneous readings are not a WHO 24-hour mean.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_outdoor_pm25",
+      "config.step.thresholds.data_description.outdoor_pm25",
+      "options.step.setup_general.data_description.global_threshold_outdoor_pm25",
+      "options.step.thresholds.data_description.outdoor_pm25"
+    ]
+  },
+  {
+    "id": 114,
+    "en": "Outdoor PM10 (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard. This does not replace time-averaged exposure assessment.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_outdoor_pm10",
+      "config.step.thresholds.data_description.outdoor_pm10",
+      "options.step.setup_general.data_description.global_threshold_outdoor_pm10",
+      "options.step.thresholds.data_description.outdoor_pm10"
+    ]
+  },
+  {
+    "id": 115,
+    "en": "Outdoor VOC (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard. VOC mixtures and sensor calibration vary.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_outdoor_voc",
+      "config.step.thresholds.data_description.outdoor_voc",
+      "options.step.setup_general.data_description.global_threshold_outdoor_voc",
+      "options.step.thresholds.data_description.outdoor_voc"
+    ]
+  },
+  {
+    "id": 116,
+    "en": "Outdoor VOC (ppb) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard. Conversion between ppb and µg/m³ depends on gas identity.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_outdoor_voc_parts",
+      "config.step.thresholds.data_description.outdoor_voc_parts",
+      "options.step.setup_general.data_description.global_threshold_outdoor_voc_parts",
+      "options.step.thresholds.data_description.outdoor_voc_parts"
+    ]
+  },
+  {
+    "id": 117,
+    "en": "Outdoor NO₂ (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_outdoor_no2",
+      "config.step.thresholds.data_description.outdoor_no2",
+      "options.step.setup_general.data_description.global_threshold_outdoor_no2",
+      "options.step.thresholds.data_description.outdoor_no2"
+    ]
+  },
+  {
+    "id": 118,
+    "en": "Outdoor O₃ (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_outdoor_o3",
+      "config.step.thresholds.data_description.outdoor_o3",
+      "options.step.setup_general.data_description.global_threshold_outdoor_o3",
+      "options.step.thresholds.data_description.outdoor_o3"
+    ]
+  },
+  {
+    "id": 119,
+    "en": "Outdoor SO₂ (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_outdoor_so2",
+      "config.step.thresholds.data_description.outdoor_so2",
+      "options.step.setup_general.data_description.global_threshold_outdoor_so2",
+      "options.step.thresholds.data_description.outdoor_so2"
+    ]
+  },
+  {
+    "id": 120,
+    "en": "Above this indoor AQI threshold, HEM checks whether airing could help. Any useful manual opening suggestion includes detected outside-air and weather cautions; automatic outside-air protections remain active. Match the sensor’s AQI scale.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_indoor_aqi",
+      "config.step.thresholds.data_description.indoor_aqi",
+      "options.step.setup_general.data_description.global_threshold_indoor_aqi",
+      "options.step.thresholds.data_description.indoor_aqi"
+    ]
+  },
+  {
+    "id": 121,
+    "en": "Indoor CO₂ in ppm used to recommend increased fresh-air ventilation. Elevated CO₂ can indicate insufficient ventilation, but low CO₂ does not guarantee healthy air.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_indoor_co2",
+      "config.step.thresholds.data_description.indoor_co2",
+      "options.step.setup_general.data_description.global_threshold_indoor_co2",
+      "options.step.thresholds.data_description.indoor_co2"
+    ]
+  },
+  {
+    "id": 122,
+    "en": "Indoor PM2.5 in µg/m³ used to identify particle exposure and consider ventilation when outdoor particles are lower. This instant screen is not the WHO 24-hour mean.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_indoor_pm25",
+      "config.step.thresholds.data_description.indoor_pm25",
+      "options.step.setup_general.data_description.global_threshold_indoor_pm25",
+      "options.step.thresholds.data_description.indoor_pm25"
+    ]
+  },
+  {
+    "id": 123,
+    "en": "Indoor PM10 in µg/m³ used for air-quality attention and safe ventilation comparison. Higher levels can irritate the respiratory system; avoid outside air if worse.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_indoor_pm10",
+      "config.step.thresholds.data_description.indoor_pm10",
+      "options.step.setup_general.data_description.global_threshold_indoor_pm10",
+      "options.step.thresholds.data_description.indoor_pm10"
+    ]
+  },
+  {
+    "id": 124,
+    "en": "Indoor VOC in µg/m³ used to flag possible sources such as cleaners or furnishings. HEM checks whether manual airing could help and includes detected outdoor cautions in any useful opening suggestion. Automatic outside-air guards remain active; individual VOC sensors are not universal health monitors.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_indoor_voc",
+      "config.step.thresholds.data_description.indoor_voc",
+      "options.step.setup_general.data_description.global_threshold_indoor_voc",
+      "options.step.thresholds.data_description.indoor_voc"
+    ]
+  },
+  {
+    "id": 125,
+    "en": "Indoor VOC measurement in ppb. Above the configured value, HEM checks whether manual airing could help and includes detected outdoor cautions in any useful opening suggestion. Automatic outside-air guards remain active. ppb cannot generally be converted to µg/m³ without a reference gas.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_indoor_voc_parts",
+      "config.step.thresholds.data_description.indoor_voc_parts",
+      "options.step.setup_general.data_description.global_threshold_indoor_voc_parts",
+      "options.step.thresholds.data_description.indoor_voc_parts"
+    ]
+  },
+  {
+    "id": 126,
+    "en": "Upper indoor relative humidity (%) for ventilation recommendations. Sustained high humidity may promote condensation and mold; a single reading is not a mold diagnosis.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_indoor_humidity",
+      "config.step.thresholds.data_description.indoor_humidity",
+      "options.step.setup_general.data_description.global_threshold_indoor_humidity",
+      "options.step.thresholds.data_description.indoor_humidity"
+    ]
+  },
+  {
+    "id": 127,
+    "en": "Below this outdoor temperature (°C), report cold-air discomfort and heating-loss cautions and keep automatic outside-air use blocked. Useful brief manual airing may still be suggested conditionally with those cautions. This is a ventilation threshold, not a heating setpoint.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_min_outdoor_temp",
+      "config.step.thresholds.data_description.min_outdoor_temp",
+      "options.step.setup_general.data_description.global_threshold_min_outdoor_temp",
+      "options.step.thresholds.data_description.min_outdoor_temp"
+    ]
+  },
+  {
+    "id": 128,
+    "en": "Above this outdoor temperature (°C), report a heat caution and keep automatic outside-air use blocked. Useful manual airing for another verified need may still be suggested conditionally, with the hot outside air disclosed. This does not set the air-conditioner target.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_max_outdoor_temp",
+      "config.step.thresholds.data_description.max_outdoor_temp",
+      "options.step.setup_general.data_description.global_threshold_max_outdoor_temp",
+      "options.step.thresholds.data_description.max_outdoor_temp"
+    ]
+  },
+  {
+    "id": 129,
+    "en": "Outdoor relative-humidity ceiling (%) for ventilation checks. Higher values become an outdoor caution and keep automatic outside-air use blocked. Useful manual airing may still be suggested conditionally. Drying benefit compares indoor and outdoor water-vapour content because relative humidity depends on temperature.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_max_outdoor_humidity",
+      "config.step.thresholds.data_description.max_outdoor_humidity",
+      "options.step.setup_general.data_description.global_threshold_max_outdoor_humidity",
+      "options.step.thresholds.data_description.max_outdoor_humidity"
+    ]
+  },
+  {
+    "id": 130,
+    "en": "Estimated critical-surface relative humidity (%) that triggers moisture/mold-risk ventilation advice. This is a physics-based indication, not detection of mold spores.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_indoor_mold",
+      "config.step.thresholds.data_description.indoor_mold",
+      "options.step.setup_general.data_description.global_threshold_indoor_mold",
+      "options.step.thresholds.data_description.indoor_mold"
+    ]
+  },
+  {
+    "id": 131,
+    "en": "Window-opening advice is blocked when measured wind speed exceeds this km/h value. It prevents suggesting ventilation during potentially unsafe wind.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_max_wind_kmh",
+      "options.step.setup_general.data_description.global_threshold_max_wind_kmh"
+    ]
+  },
+  {
+    "id": 132,
+    "en": "Maximum permitted age of an outdoor sensor report in minutes. Older data are marked stale and are not treated as proof that outdoor air is safe or unsafe.",
+    "paths": [
+      "config.step.setup_general.data_description.global_threshold_max_age_minutes",
+      "options.step.setup_general.data_description.global_threshold_max_age_minutes"
+    ]
+  },
+  {
+    "id": 133,
+    "en": "Used only when the custom provider scale is selected. This is an operational policy, not a health threshold.",
+    "paths": [
+      "config.step.environment.data_description.aqi_custom_limit_0",
+      "config.step.environment.data_description.aqi_custom_limit_1",
+      "config.step.environment.data_description.aqi_custom_limit_10",
+      "config.step.environment.data_description.aqi_custom_limit_11",
+      "config.step.environment.data_description.aqi_custom_limit_12",
+      "config.step.environment.data_description.aqi_custom_limit_13",
+      "config.step.environment.data_description.aqi_custom_limit_14",
+      "config.step.environment.data_description.aqi_custom_limit_15",
+      "config.step.environment.data_description.aqi_custom_limit_16",
+      "config.step.environment.data_description.aqi_custom_limit_17",
+      "config.step.environment.data_description.aqi_custom_limit_18",
+      "config.step.environment.data_description.aqi_custom_limit_19",
+      "config.step.environment.data_description.aqi_custom_limit_2",
+      "config.step.environment.data_description.aqi_custom_limit_20",
+      "config.step.environment.data_description.aqi_custom_limit_21",
+      "config.step.environment.data_description.aqi_custom_limit_22",
+      "config.step.environment.data_description.aqi_custom_limit_23",
+      "config.step.environment.data_description.aqi_custom_limit_24",
+      "config.step.environment.data_description.aqi_custom_limit_25",
+      "config.step.environment.data_description.aqi_custom_limit_26",
+      "config.step.environment.data_description.aqi_custom_limit_27",
+      "config.step.environment.data_description.aqi_custom_limit_28",
+      "config.step.environment.data_description.aqi_custom_limit_29",
+      "config.step.environment.data_description.aqi_custom_limit_3",
+      "config.step.environment.data_description.aqi_custom_limit_30",
+      "config.step.environment.data_description.aqi_custom_limit_31",
+      "config.step.environment.data_description.aqi_custom_limit_4",
+      "config.step.environment.data_description.aqi_custom_limit_5",
+      "config.step.environment.data_description.aqi_custom_limit_6",
+      "config.step.environment.data_description.aqi_custom_limit_7",
+      "config.step.environment.data_description.aqi_custom_limit_8",
+      "config.step.environment.data_description.aqi_custom_limit_9",
+      "options.step.environment.data_description.aqi_custom_limit_0",
+      "options.step.environment.data_description.aqi_custom_limit_1",
+      "options.step.environment.data_description.aqi_custom_limit_10",
+      "options.step.environment.data_description.aqi_custom_limit_11",
+      "options.step.environment.data_description.aqi_custom_limit_12",
+      "options.step.environment.data_description.aqi_custom_limit_13",
+      "options.step.environment.data_description.aqi_custom_limit_14",
+      "options.step.environment.data_description.aqi_custom_limit_15",
+      "options.step.environment.data_description.aqi_custom_limit_16",
+      "options.step.environment.data_description.aqi_custom_limit_17",
+      "options.step.environment.data_description.aqi_custom_limit_18",
+      "options.step.environment.data_description.aqi_custom_limit_19",
+      "options.step.environment.data_description.aqi_custom_limit_2",
+      "options.step.environment.data_description.aqi_custom_limit_20",
+      "options.step.environment.data_description.aqi_custom_limit_21",
+      "options.step.environment.data_description.aqi_custom_limit_22",
+      "options.step.environment.data_description.aqi_custom_limit_23",
+      "options.step.environment.data_description.aqi_custom_limit_24",
+      "options.step.environment.data_description.aqi_custom_limit_25",
+      "options.step.environment.data_description.aqi_custom_limit_26",
+      "options.step.environment.data_description.aqi_custom_limit_27",
+      "options.step.environment.data_description.aqi_custom_limit_28",
+      "options.step.environment.data_description.aqi_custom_limit_29",
+      "options.step.environment.data_description.aqi_custom_limit_3",
+      "options.step.environment.data_description.aqi_custom_limit_30",
+      "options.step.environment.data_description.aqi_custom_limit_31",
+      "options.step.environment.data_description.aqi_custom_limit_4",
+      "options.step.environment.data_description.aqi_custom_limit_5",
+      "options.step.environment.data_description.aqi_custom_limit_6",
+      "options.step.environment.data_description.aqi_custom_limit_7",
+      "options.step.environment.data_description.aqi_custom_limit_8",
+      "options.step.environment.data_description.aqi_custom_limit_9"
+    ]
+  },
+  {
+    "id": 134,
+    "en": "Requested room temperature (°C) used as PID reference. The controller adjusts thermostat setpoints within safety bounds; this does not guarantee comfort.",
+    "paths": [
+      "config.step.pid_room.data_description.pid_target_c",
+      "options.step.pid_room.data_description.pid_target_c"
+    ]
+  },
+  {
+    "id": 135,
+    "en": "Maximum adjustment of the actual thermostat setpoint above heating or below cooling demand (°C). This limits PID authority without changing HVAC mode.",
+    "paths": [
+      "config.step.pid_tuning.data_description.pid_offset_c",
+      "options.step.pid_tuning.data_description.pid_offset_c"
+    ]
+  },
+  {
+    "id": 136,
+    "en": "Hard minimum thermostat setpoint in °C. Device's native minimum and other manufacturer protections still apply.",
+    "paths": [
+      "config.step.pid_tuning.data_description.pid_min_setpoint_c",
+      "options.step.pid_tuning.data_description.pid_min_setpoint_c"
+    ]
+  },
+  {
+    "id": 137,
+    "en": "Hard maximum thermostat setpoint in °C. Device's native maximum and independent thermal limits still apply.",
+    "paths": [
+      "config.step.pid_tuning.data_description.pid_max_setpoint_c",
+      "options.step.pid_tuning.data_description.pid_max_setpoint_c"
+    ]
+  },
+  {
+    "id": 138,
+    "en": "Maximum thermostat setpoint step per control cycle (°C), default 0.5. Even a large temperature error cannot bypass this rate limit.",
+    "paths": [
+      "config.step.pid_tuning.data_description.pid_max_change_c",
+      "options.step.pid_tuning.data_description.pid_max_change_c"
+    ]
+  },
+  {
+    "id": 139,
+    "en": "Smallest meaningful setpoint difference (°C) before issuing a command. Avoids needless small repeated adjustments and device quantization noise.",
+    "paths": [
+      "config.step.pid_tuning.data_description.pid_min_change_c",
+      "options.step.pid_tuning.data_description.pid_min_change_c"
+    ]
+  },
+  {
+    "id": 140,
+    "en": "Temperature separation in °C before changing heating/cooling direction. Prevents rapid oscillation; native mode dwell protections also apply.",
+    "paths": [
+      "config.step.climate_room.data_description.climate_hysteresis_c",
+      "options.step.climate_room.data_description.climate_hysteresis_c"
+    ]
+  },
+  {
+    "id": 141,
+    "en": "Fixed setpoints, small measured-humidity adjustment without guessed clothes/air speed, or advanced ISO 7730 with all verified inputs.",
+    "paths": [
+      "config.step.climate_presence.data_description.climate_target_source",
+      "options.step.climate_presence.data_description.climate_target_source"
+    ]
+  },
+  {
+    "id": 142,
+    "en": "Maximum absolute °C offset from the chosen temperature target when the qualified PMV/PPD comfort estimate is available. Avoids uncontrolled target shifts.",
+    "paths": [
+      "config.step.climate_presence.data_description.climate_comfort_adjustment_max_c",
+      "options.step.climate_presence.data_description.climate_comfort_adjustment_max_c"
+    ]
+  },
+  {
+    "id": 143,
+    "en": "Lower desired relative humidity (%) for humidifier advice. Sustained values below it may cause discomfort; prevents over-drying.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_humidity_low_rh",
+      "options.step.climate_equipment.data_description.climate_humidity_low_rh"
+    ]
+  },
+  {
+    "id": 144,
+    "en": "Upper desired relative humidity (%) for dehumidification advice. Persistent high RH can promote condensation and mold on cold surfaces.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_humidity_high_rh",
+      "options.step.climate_equipment.data_description.climate_humidity_high_rh"
+    ]
+  },
+  {
+    "id": 145,
+    "en": "RH percentage-point margin before changing humidify/dry decisions. Prevents repeated switching around a target.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_humidity_hysteresis_rh",
+      "options.step.climate_equipment.data_description.climate_humidity_hysteresis_rh"
+    ]
+  },
+  {
+    "id": 146,
+    "en": "Operational instantaneous PM2.5 threshold (µg/m³) for purifier-fan demand. Not a WHO daily exposure limit; a short spike is interpreted conservatively.",
+    "paths": [
+      "config.step.climate_air_strategy.data_description.climate_pm25_action_ug_m3",
+      "options.step.climate_air_strategy.data_description.climate_pm25_action_ug_m3"
+    ]
+  },
+  {
+    "id": 147,
+    "en": "Maximum extraction-fan speed (%) when verified CO₂ demand requires more airflow. Applies only to a supported fan already ON.",
+    "paths": [
+      "config.step.climate_air_strategy.data_description.climate_extraction_speed_percent",
+      "options.step.climate_air_strategy.data_description.climate_extraction_speed_percent"
+    ]
+  },
+  {
+    "id": 148,
+    "en": "Maximum purifier-fan speed (%) when PM2.5 demand exists. Changing percentage does not switch power or confirm filter efficiency.",
+    "paths": [
+      "config.step.climate_air_strategy.data_description.climate_purifier_speed_percent",
+      "options.step.climate_air_strategy.data_description.climate_purifier_speed_percent"
+    ]
+  },
+  {
+    "id": 149,
+    "en": "Operational unsafe AQI threshold only for a custom-scale provider. Do not use a US AQI value for a European category scale.",
+    "paths": [
+      "config.step.outside_aqi.data_description.outside_aqi_limit",
+      "options.step.outside_aqi.data_description.outside_aqi_limit"
+    ]
+  },
+  {
+    "id": 150,
+    "en": "Maximum selected percentage for an already-running supported fan when demand exists. It does not authorize turning the fan on.",
+    "paths": [
+      "config.step.device_settings.data_description.device_fan_speed_percent",
+      "options.step.device_settings.data_description.device_fan_speed_percent"
+    ]
+  },
+  {
+    "id": 151,
+    "en": "Desired RH (%) while the room follows the normal humidifier profile, bounded by device capability. Avoid overly humid conditions that promote condensation.",
+    "paths": [
+      "config.step.device_settings.data_description.device_humidity_target",
+      "options.step.device_settings.data_description.device_humidity_target"
+    ]
+  },
+  {
+    "id": 152,
+    "en": "Select one or more Home Assistant areas. Adding a room only adds it to monitoring; it does not start heating, cooling or other equipment. Removing a room safely disables its previous automatic controls.",
+    "paths": [
+      "config.step.choose_rooms.data_description.areas",
+      "config.step.setup_rooms.data_description.areas",
+      "options.step.choose_rooms.data_description.areas",
+      "options.step.setup_rooms.data_description.areas"
+    ]
+  },
+  {
+    "id": 153,
+    "en": "Windows. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+    "paths": [
+      "config.step.setup_room_sources.data_description.windows",
+      "options.step.setup_room_sources.data_description.windows"
+    ]
+  },
+  {
+    "id": 154,
+    "en": "Temperature. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+    "paths": [
+      "config.step.setup_room_sources.data_description.temperature",
+      "options.step.setup_room_sources.data_description.temperature"
+    ]
+  },
+  {
+    "id": 155,
+    "en": "Humidity. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control.",
+    "paths": [
+      "config.step.setup_room_sources.data_description.humidity",
+      "options.step.setup_room_sources.data_description.humidity"
+    ]
+  },
+  {
+    "id": 156,
+    "en": "Select this room's real window and door-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window.",
+    "paths": [
+      "config.step.room_settings.data_description.windows",
+      "options.step.room_settings.data_description.windows"
+    ]
+  },
+  {
+    "id": 157,
+    "en": "Select the room's actual indoor temperature sensors. When several valid sensors are selected, the manager combines them; unavailable readings are ignored.",
+    "paths": [
+      "config.step.edit_room.data_description.temperature",
+      "config.step.room_settings.data_description.temperature",
+      "options.step.edit_room.data_description.temperature",
+      "options.step.room_settings.data_description.temperature"
+    ]
+  },
+  {
+    "id": 158,
+    "en": "Select indoor relative-humidity sensors. Valid readings inform comfort, drying and mold-risk advice; missing readings are not treated as zero.",
+    "paths": [
+      "config.step.edit_room.data_description.humidity",
+      "config.step.room_settings.data_description.humidity",
+      "options.step.edit_room.data_description.humidity",
+      "options.step.room_settings.data_description.humidity"
+    ]
+  },
+  {
+    "id": 159,
+    "en": "Select this room's real window-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window.",
+    "paths": [
+      "config.step.edit_room.data_description.windows",
+      "options.step.edit_room.data_description.windows"
+    ]
+  },
+  {
+    "id": 160,
+    "en": "Interval between PID decisions, in seconds. Default 300 seconds and at least 120; it avoids writing on every sensor update.",
+    "paths": [
+      "config.step.pid_tuning.data_description.pid_sample_seconds",
+      "options.step.pid_tuning.data_description.pid_sample_seconds"
+    ]
+  },
+  {
+    "id": 161,
+    "en": "Minimum seconds between automatic DRY/FAN_ONLY mode changes; at least 1800 seconds. Avoids aggressive switching but cannot replace physical compressor protection.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_dry_fan_mode_dwell_s",
+      "options.step.climate_equipment.data_description.climate_dry_fan_mode_dwell_s"
+    ]
+  },
+  {
+    "id": 162,
+    "en": "Minimum number of seconds dedicated humidity equipment must run before a supervised OFF is attempted, unless independent physical protection intervenes.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_humidity_power_min_on_s",
+      "options.step.climate_equipment.data_description.climate_humidity_power_min_on_s"
+    ]
+  },
+  {
+    "id": 163,
+    "en": "Minimum verified OFF duration before another managed humidity-device start. Avoid rapid compressor cycling; never bypass manufacturer limits.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_humidity_power_min_off_s",
+      "options.step.climate_equipment.data_description.climate_humidity_power_min_off_s"
+    ]
+  },
+  {
+    "id": 164,
+    "en": "Maximum continuous controller-owned run time in seconds for a humidifier or dehumidifier. Triggers bounded OFF/reconciliation.",
+    "paths": [
+      "config.step.climate_equipment.data_description.climate_humidity_power_max_on_s",
+      "options.step.climate_equipment.data_description.climate_humidity_power_max_on_s"
+    ]
+  },
+  {
+    "id": 165,
+    "en": "Minimum fan ON seconds after an authorized activation, before an automated OFF. Avoid rapid toggling but do not bypass required emergency cutouts.",
+    "paths": [
+      "config.step.climate_air_strategy.data_description.climate_fan_power_min_on_s",
+      "options.step.climate_air_strategy.data_description.climate_fan_power_min_on_s"
+    ]
+  },
+  {
+    "id": 166,
+    "en": "Minimum observed fan OFF seconds before another permitted start. Hardware protection still applies independently.",
+    "paths": [
+      "config.step.climate_air_strategy.data_description.climate_fan_power_min_off_s",
+      "options.step.climate_air_strategy.data_description.climate_fan_power_min_off_s"
+    ]
+  },
+  {
+    "id": 167,
+    "en": "Maximum duration in seconds that this controller can own an active fan. Exceeding it requests safe shutdown or manual reconciliation.",
+    "paths": [
+      "config.step.climate_air_strategy.data_description.climate_fan_power_max_on_s",
+      "options.step.climate_air_strategy.data_description.climate_fan_power_max_on_s"
+    ]
+  },
+  {
+    "id": 168,
+    "en": "Minimum energized seconds before switching a thermal actuator off. Slow heating equipment needs safe dwell; emergency protection remains independent.",
+    "paths": [
+      "config.step.climate_actuators.data_description.min_on_s",
+      "options.step.climate_actuators.data_description.min_on_s"
+    ]
+  },
+  {
+    "id": 169,
+    "en": "Minimum de-energized seconds before starting a thermal output again; reduces rapid cycling.",
+    "paths": [
+      "config.step.climate_actuators.data_description.min_off_s",
+      "options.step.climate_actuators.data_description.min_off_s"
+    ]
+  },
+  {
+    "id": 170,
+    "en": "Maximum uninterrupted energized seconds for an output owned by the controller. Reaching it requests a bounded safe shutdown.",
+    "paths": [
+      "config.step.climate_actuators.data_description.max_on_s",
+      "options.step.climate_actuators.data_description.max_on_s"
+    ]
+  },
+  {
+    "id": 171,
+    "en": "Minimum seconds between changing heating and cooling direction. Prevents contradictory simultaneous outputs.",
+    "paths": [
+      "config.step.climate_actuators.data_description.mode_dwell_s",
+      "options.step.climate_actuators.data_description.mode_dwell_s"
+    ]
+  },
+  {
+    "id": 172,
+    "en": "Time between direct thermal controller samples in seconds. Short cycles can cause excessive writes and heating oscillation.",
+    "paths": [
+      "config.step.climate_actuators.data_description.sample_seconds",
+      "options.step.climate_actuators.data_description.sample_seconds"
+    ]
+  },
+  {
+    "id": 173,
+    "en": "PWM period in seconds for slow thermal loads. Sets modulation window, not high-frequency electrical PWM; generic compressors are excluded.",
+    "paths": [
+      "config.step.climate_actuators.data_description.pwm_period_s",
+      "options.step.climate_actuators.data_description.pwm_period_s"
+    ]
+  },
+  {
+    "id": 174,
+    "en": "Minimum run time after an authorized power ON before a supervised OFF is considered. Protects equipment from rapid cycles but is not a safety certification.",
+    "paths": [
+      "config.step.device_settings.data_description.device_min_on_s",
+      "options.step.device_settings.data_description.device_min_on_s"
+    ]
+  },
+  {
+    "id": 175,
+    "en": "Minimum observed OFF interval before the device can start again. Critical for equipment that requires rest; independent hardware protection is still needed.",
+    "paths": [
+      "config.step.device_settings.data_description.device_min_off_s",
+      "options.step.device_settings.data_description.device_min_off_s"
+    ]
+  },
+  {
+    "id": 176,
+    "en": "Maximum continuous runtime the controller may own before requesting safe shutdown. Should be based on the equipment's actual protection limits.",
+    "paths": [
+      "config.step.device_settings.data_description.device_max_on_s",
+      "options.step.device_settings.data_description.device_max_on_s"
+    ]
+  },
+  {
+    "id": 177,
+    "en": "Choose which room's climate settings to edit. Device commands require separate permission for each device and appropriate protections.",
+    "paths": [
+      "config.step.climate.data_description.climate_area",
+      "options.step.climate.data_description.climate_area"
+    ]
+  },
+  {
+    "id": 178,
+    "en": "Allows commands only through the separately enabled, capability-checked room controllers. Leave off for monitoring/advice only.",
+    "paths": [
+      "config.step.climate_room.data_description.climate_allow_actuation",
+      "options.step.climate_room.data_description.climate_allow_actuation"
+    ]
+  },
+  {
+    "id": 179,
+    "en": "Heating, cooling, or automatic decision only when those modes truly exist on the device. An unsupported mode remains advisory and does not send commands.",
+    "paths": [
+      "config.step.climate_room.data_description.climate_mode",
+      "options.step.climate_room.data_description.climate_mode"
+    ]
+  },
+  {
+    "id": 180,
+    "en": "Explicitly override the automatically selected home/unoccupied/away/sleep profile for this room. Use for diagnostics or deliberate preferences; it still obeys safety gates.",
+    "paths": [
+      "config.step.climate_presence.data_description.climate_manual_profile",
+      "options.step.climate_presence.data_description.climate_manual_profile"
+    ]
+  },
+  {
+    "id": 181,
+    "en": "Select optional extra HVAC, humidifiers, dehumidifiers, extraction and purification fans in this room. The planner checks actual modes and assigns exclusive roles. Secondary devices are advisory only until their safe drivers are verified.",
+    "paths": [
+      "config.step.climate_equipment.description",
+      "options.step.climate_equipment.description"
+    ]
+  },
+  {
+    "id": 182,
+    "en": "Select an actual same-room CO2/PM2.5 sensor, confirm NDIR/PM sensor quality, and optionally permit bounded speed increases only for already-on fans. No on/off, preset, AC mode or compressor commands are permitted.",
+    "paths": [
+      "config.step.climate_air_strategy.description",
+      "options.step.climate_air_strategy.description"
+    ]
+  },
+  {
+    "id": 183,
+    "en": "Room heating target (°C) when the home profile is active. It applies only to equipment with that native capability, within independent device limits.",
+    "paths": [
+      "config.step.climate_profiles.data_description.home_heat",
+      "options.step.climate_profiles.data_description.home_heat"
+    ]
+  },
+  {
+    "id": 184,
+    "en": "Room cooling target (°C) when the home profile is active. It applies only to equipment with that native capability, within independent device limits.",
+    "paths": [
+      "config.step.climate_profiles.data_description.home_cool",
+      "options.step.climate_profiles.data_description.home_cool"
+    ]
+  },
+  {
+    "id": 185,
+    "en": "Room heating target (°C) after confirmed stable room vacancy. It applies only to equipment with that native capability, within independent device limits.",
+    "paths": [
+      "config.step.climate_profiles.data_description.unoccupied_heat",
+      "options.step.climate_profiles.data_description.unoccupied_heat"
+    ]
+  },
+  {
+    "id": 186,
+    "en": "Room cooling target (°C) after confirmed stable room vacancy. It applies only to equipment with that native capability, within independent device limits.",
+    "paths": [
+      "config.step.climate_profiles.data_description.unoccupied_cool",
+      "options.step.climate_profiles.data_description.unoccupied_cool"
+    ]
+  },
+  {
+    "id": 187,
+    "en": "Room heating target (°C) when household away status is verified. It applies only to equipment with that native capability, within independent device limits.",
+    "paths": [
+      "config.step.climate_profiles.data_description.away_heat",
+      "options.step.climate_profiles.data_description.away_heat"
+    ]
+  },
+  {
+    "id": 188,
+    "en": "Room cooling target (°C) when household away status is verified. It applies only to equipment with that native capability, within independent device limits.",
+    "paths": [
+      "config.step.climate_profiles.data_description.away_cool",
+      "options.step.climate_profiles.data_description.away_cool"
+    ]
+  },
+  {
+    "id": 189,
+    "en": "Room heating target (°C) when this room uses its sleep profile. It applies only to equipment with that native capability, within independent device limits.",
+    "paths": [
+      "config.step.climate_profiles.data_description.sleep_heat",
+      "options.step.climate_profiles.data_description.sleep_heat"
+    ]
+  },
+  {
+    "id": 190,
+    "en": "Room cooling target (°C) when this room uses its sleep profile. It applies only to equipment with that native capability, within independent device limits.",
+    "paths": [
+      "config.step.climate_profiles.data_description.sleep_cool",
+      "options.step.climate_profiles.data_description.sleep_cool"
+    ]
+  },
+  {
+    "id": 191,
+    "en": "Desired RH (%) when the selected room is confirmed sleeping. No sleep evidence means no unverified switch to sleep targets.",
+    "paths": [
+      "config.step.device_settings.data_description.device_sleep_humidity_target",
+      "options.step.device_settings.data_description.device_sleep_humidity_target"
+    ]
+  },
+  {
+    "id": 192,
+    "en": "Desired heating target in °C when the home profile is active. It is applied only if equipment supports HEAT; safety bounds and presence evidence remain mandatory.",
+    "paths": [
+      "config.step.device_settings.data_description.device_home_heat_c",
+      "options.step.device_settings.data_description.device_home_heat_c"
+    ]
+  },
+  {
+    "id": 193,
+    "en": "Desired cooling target in °C when the home profile is active. It is applied only if equipment supports COOL; safety bounds and presence evidence remain mandatory.",
+    "paths": [
+      "config.step.device_settings.data_description.device_home_cool_c",
+      "options.step.device_settings.data_description.device_home_cool_c"
+    ]
+  },
+  {
+    "id": 194,
+    "en": "Desired heating target in °C when the room is confirmed unoccupied. It is applied only if equipment supports HEAT; safety bounds and presence evidence remain mandatory.",
+    "paths": [
+      "config.step.device_settings.data_description.device_unoccupied_heat_c",
+      "options.step.device_settings.data_description.device_unoccupied_heat_c"
+    ]
+  },
+  {
+    "id": 195,
+    "en": "Desired cooling target in °C when the room is confirmed unoccupied. It is applied only if equipment supports COOL; safety bounds and presence evidence remain mandatory.",
+    "paths": [
+      "config.step.device_settings.data_description.device_unoccupied_cool_c",
+      "options.step.device_settings.data_description.device_unoccupied_cool_c"
+    ]
+  },
+  {
+    "id": 196,
+    "en": "Desired heating target in °C when the household is confirmed away. It is applied only if equipment supports HEAT; safety bounds and presence evidence remain mandatory.",
+    "paths": [
+      "config.step.device_settings.data_description.device_away_heat_c",
+      "options.step.device_settings.data_description.device_away_heat_c"
+    ]
+  },
+  {
+    "id": 197,
+    "en": "Desired cooling target in °C when the household is confirmed away. It is applied only if equipment supports COOL; safety bounds and presence evidence remain mandatory.",
+    "paths": [
+      "config.step.device_settings.data_description.device_away_cool_c",
+      "options.step.device_settings.data_description.device_away_cool_c"
+    ]
+  },
+  {
+    "id": 198,
+    "en": "Desired heating target in °C when the room is confirmed sleeping. It is applied only if equipment supports HEAT; safety bounds and presence evidence remain mandatory.",
+    "paths": [
+      "config.step.device_settings.data_description.device_sleep_heat_c",
+      "options.step.device_settings.data_description.device_sleep_heat_c"
+    ]
+  },
+  {
+    "id": 199,
+    "en": "Desired cooling target in °C when the room is confirmed sleeping. It is applied only if equipment supports COOL; safety bounds and presence evidence remain mandatory.",
+    "paths": [
+      "config.step.device_settings.data_description.device_sleep_cool_c",
+      "options.step.device_settings.data_description.device_sleep_cool_c"
+    ]
+  },
+  {
+    "id": 200,
+    "en": "Choose the Home Assistant room whose occupancy sources you want to configure. This choice changes only which room you are editing; it does not itself report occupancy.",
+    "paths": [
+      "config.step.room_occupancy.data_description.room_occupancy_area",
+      "options.step.room_occupancy.data_description.room_occupancy_area"
+    ]
+  },
+  {
+    "id": 201,
+    "en": "When enabled, humidity recommendations use the estimated relative humidity at each room's coldest surface instead of raw RH. Calibrate each room under the Room settings menu; an uncalibrated room remains unknown rather than safe.",
+    "paths": [
+      "config.step.areas.data_description.use_mold_indicator",
+      "config.step.setup_general.data_description.use_mold_indicator",
+      "options.step.areas.data_description.use_mold_indicator",
+      "options.step.setup_general.data_description.use_mold_indicator"
+    ]
+  },
+  {
+    "id": 202,
+    "en": "Optional Home Assistant warning entities. An explicitly active warning adds an outdoor-air caution and blocks automatic window-opening advice. Unavailable or unknown warnings are reported as missing evidence, not treated as active warnings; separate weather, pollution and equipment safety checks still apply. Select verified warning entities rather than ordinary weather conditions.",
+    "paths": [
+      "config.step.setup_general.data_description.weather_warnings",
+      "config.step.weather.data_description.weather_warnings",
+      "options.step.setup_general.data_description.weather_warnings",
+      "options.step.weather.data_description.weather_warnings"
+    ]
+  },
+  {
+    "id": 203,
+    "en": "Direct speech provider when Announcement Hub is not used.",
+    "paths": [
+      "config.step.delivery.data_description.tts_engine",
+      "config.step.setup_general.data_description.tts_engine",
+      "options.step.delivery.data_description.tts_engine",
+      "options.step.setup_general.data_description.tts_engine"
+    ]
+  },
+  {
+    "id": 204,
+    "en": "Direct audio destinations; room assignment controls targeting.",
+    "paths": [
+      "config.step.delivery.data_description.media_players",
+      "config.step.setup_general.data_description.media_players",
+      "options.step.delivery.data_description.media_players",
+      "options.step.setup_general.data_description.media_players"
+    ]
+  },
+  {
+    "id": 205,
+    "en": "Disabled by default. New open recommendations need 90 seconds of stable conditions.",
+    "paths": [
+      "config.step.delivery.data_description.automatic_tts",
+      "options.step.delivery.data_description.automatic_tts"
+    ]
+  },
+  {
+    "id": 206,
+    "en": "These limits apply to instantaneous sensor values and are configurable guidance, not health or exposure standards. AQI assumes the US 0-500 scale by default; change the limits for any differently scaled provider.",
+    "paths": [
+      "config.step.thresholds.description",
+      "options.step.thresholds.description"
+    ]
+  }
+]

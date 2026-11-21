@@ -27,6 +27,7 @@ const = importlib.import_module(PKG + ".const")
 metadata = importlib.import_module(PKG + ".settings_help")
 names = importlib.import_module(PKG + ".settings_name_catalog")
 equipment_help = importlib.import_module(PKG + ".equipment_help")
+languages = importlib.import_module(PKG + ".languages")
 
 
 def production_nodes(filename, selected, namespace):
@@ -224,8 +225,15 @@ class MetadataTests(unittest.TestCase):
             self.assertIn(key, metadata.SETTING_HELP)
         self.assertEqual(set(metadata.SETTING_HELP), set(names.SETTING_GROUPS))
         for key, entry in metadata.SETTING_HELP.items():
-            self.assertTrue({"en", "el", "de"} <= set(entry) <= set(names.SETTING_NAMES), key)
-            self.assertTrue(all(len(text) > 60 for text in entry.values()), key)
+            self.assertEqual(set(entry), set(languages.SUPPORTED_LANGUAGE_TAGS), key)
+            # Keep the original three-language length gate. A Chinese or
+            # Japanese explanation need not use as many characters as English.
+            for locale, text in entry.items():
+                self.assertTrue(text.strip(), (key, locale))
+                if locale in {"en", "el", "de"}:
+                    self.assertGreater(len(text), 60, (key, locale))
+                if locale != "en":
+                    self.assertNotEqual(text, entry["en"], (key, locale))
             self.assertEqual(metadata.configuration_help(key, "unsupported"), entry["en"])
 
     def test_all_catalog_names_states_and_attribute_labels_are_synchronized(self):

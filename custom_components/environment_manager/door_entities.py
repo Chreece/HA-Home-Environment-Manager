@@ -12,6 +12,7 @@ from homeassistant.helpers.entity import EntityCategory
 from .const import DOMAIN, SIGNAL_UPDATED
 from .door_settings import async_update, editable_contact, inventory, target_areas
 from .room_doors import contact_options
+from .backend_text import complete_catalog, resolve_language, presentation_languages
 
 WORDS = {
     "en": {"target_area": "Connects to room", "kind": "Door purpose",
@@ -56,9 +57,12 @@ WORDS["de"].update(
     energy_help="Nativen kumulativen Energiezähler dieses Bereichs wählen (Wh/kWh/MWh). Gemessener Verbrauch und erfasste Zeit werden nach Türzustand verglichen, nicht als Einsparung bewertet. Lücken, beobachtete Zählerrücksetzungen, Einheitenwechsel und Türwechsel werden ausgeschlossen. Nur aktuelle Sitzung; Vergleiche mehrerer Kontakte mit demselben Zähler nicht addieren.")
 
 
+WORDS = complete_catalog(WORDS)
+
+
 def words(manager):
-    locale = str(getattr(getattr(manager.hass, "config", None), "language", "en")).split("-")[0]
-    return WORDS.get(locale, WORDS["en"])
+    locale = resolve_language(getattr(getattr(manager.hass, "config", None), "language", "en"))
+    return WORDS[locale]
 
 
 class DoorEntity:
@@ -92,9 +96,16 @@ class DoorEntity:
         help_key = {"target_area": "target_help", "kind": "kind_help",
                     "coordination": "coordination_help",
                     "energy_meter": "energy_help"}[self._key]
+        locale = getattr(getattr(self._manager.hass, "config", None), "language", "en")
         return {"setting_display_name": self.name, "setting_key": "door_" + self._key,
                 "door_source_entity": self._contact, "door_setting_key": self._key,
-                "configuration_help": words(self._manager)[help_key]}
+                "configuration_help": words(self._manager)[help_key],
+                "configuration_help_locales": {
+                    language: WORDS[language][help_key] for language in presentation_languages(locale)
+                },
+                "setting_label_locales": {
+                    language: WORDS[language][self._key] for language in presentation_languages(locale)
+                }}
 
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
@@ -112,7 +123,8 @@ class DoorSelect(DoorEntity, SelectEntity):
         attributes = super().extra_state_attributes
         if self._key in ("kind", "coordination"):
             from .setting_option_explanations import option_help_locales
-            descriptions = option_help_locales("door_" + self._key)
+            locale = getattr(getattr(self._manager.hass, "config", None), "language", "en")
+            descriptions = option_help_locales("door_" + self._key, locale)
             labels = words(self._manager)
             # The native Select stores localized HA option text, not raw IDs.
             # Bind explanations to the exact published labels, while the
@@ -125,6 +137,14 @@ class DoorSelect(DoorEntity, SelectEntity):
             }
             if mapped:
                 attributes["option_help_locales"] = mapped
+            # Values remain the exact server-language Select options. The card
+            # can translate their labels without changing the submitted value.
+            raw_options = ("interior", "fire", "exterior") if self._key == "kind" else (
+                "observe", "conflicts", "shared")
+            attributes["option_labels_locales"] = {
+                language: {labels[raw]: WORDS[language][raw] for raw in raw_options}
+                for language in presentation_languages(locale)
+            }
         return attributes
 
     def _choices(self):

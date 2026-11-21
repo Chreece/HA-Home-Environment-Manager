@@ -8,6 +8,16 @@ interior connection, never to closed doors or a peer's actuator.
 """
 from __future__ import annotations
 
+if __package__:
+    from .backend_text import complete_catalog, resolve_language
+else:
+    from pathlib import Path
+    from runpy import run_path
+    _text_helpers = run_path(str(Path(__file__).with_name("backend_text.py")))
+    complete_catalog = _text_helpers["complete_catalog"]
+    resolve_language = _text_helpers["resolve_language"]
+
+
 from collections.abc import Mapping
 
 COORDINATION_OPTIONS = ("inherit", "observe", "conflicts", "shared")
@@ -47,9 +57,11 @@ WORDS = {
 }
 
 
+WORDS = complete_catalog(WORDS)
+
+
 def words(language):
-    locale = str(language or "en").split("-")[0].split("_")[0].lower()
-    return WORDS.get(locale, WORDS["en"])
+    return WORDS[resolve_language(language)]
 
 
 def selected_room_contacts(settings, area):

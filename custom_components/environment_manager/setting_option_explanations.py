@@ -2,9 +2,21 @@
 
 Only existing, code-verified select option IDs appear here. No I/O, active
 device reads, control changes or translated option-name guessing at runtime.
-The current HEM card language selects EN, EL or DE; all other languages use EN.
+Static catalogs cover all supported languages. Entity metadata keeps English
+and the configured presentation languages for the card's local translation lookup.
 """
 from __future__ import annotations
+
+if __package__:
+    from .backend_text import translated_text, presentation_languages, SUPPORTED_LANGUAGE_TAGS
+else:
+    from pathlib import Path
+    from runpy import run_path
+    _text_helpers = run_path(str(Path(__file__).with_name("backend_text.py")))
+    translated_text = _text_helpers["translated_text"]
+    presentation_languages = _text_helpers["presentation_languages"]
+    SUPPORTED_LANGUAGE_TAGS = _text_helpers["SUPPORTED_LANGUAGE_TAGS"]
+
 
 OPTION_TEXT = {
   "equipment_door_start_coordination": {
@@ -366,13 +378,20 @@ OPTION_TEXT["door_coordination"] = {
     for option in ("observe", "conflicts", "shared")
 }
 
-def option_help_locales(key: str) -> dict[str, dict[str, str]]:
+def option_help_locales(key: str, language: str | None = None) -> dict[str, dict[str, str]]:
     """Return safe, static explanations keyed by native select option values."""
     options = OPTION_TEXT.get(OPTION_ALIASES.get(key, key), {})
-    return {
-        locale: {option: text[index] for option, text in options.items()}
-        for index, locale in enumerate(("en", "el", "de"))
-    } if options else {}
+    if not options:
+        return {}
+    locales = presentation_languages(language) if language is not None else SUPPORTED_LANGUAGE_TAGS
+    result = {}
+    for locale in locales:
+        index = {"en": 0, "el": 1, "de": 2}.get(locale)
+        result[locale] = {
+            option: values[index] if index is not None else translated_text(values[0], locale)
+            for option, values in options.items()
+        }
+    return result
 
 OPTION_ALIASES = {
     "area_climate_policy_away_policy": "home_global_policy_home_policy",

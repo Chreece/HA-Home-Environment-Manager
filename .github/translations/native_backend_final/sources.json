@@ -1,0 +1,58 @@
+[
+  {
+    "id": 201,
+    "en": "When enabled, humidity recommendations use the estimated relative humidity at each room's coldest surface instead of raw RH. Calibrate each room under the Room settings menu; an uncalibrated room remains unknown rather than safe.",
+    "paths": [
+      "config.step.areas.data_description.use_mold_indicator",
+      "config.step.setup_general.data_description.use_mold_indicator",
+      "options.step.areas.data_description.use_mold_indicator",
+      "options.step.setup_general.data_description.use_mold_indicator"
+    ]
+  },
+  {
+    "id": 202,
+    "en": "Optional Home Assistant warning entities. An explicitly active warning adds an outdoor-air caution and blocks automatic window-opening advice. Unavailable or unknown warnings are reported as missing evidence, not treated as active warnings; separate weather, pollution and equipment safety checks still apply. Select verified warning entities rather than ordinary weather conditions.",
+    "paths": [
+      "config.step.setup_general.data_description.weather_warnings",
+      "config.step.weather.data_description.weather_warnings",
+      "options.step.setup_general.data_description.weather_warnings",
+      "options.step.weather.data_description.weather_warnings"
+    ]
+  },
+  {
+    "id": 203,
+    "en": "Direct speech provider when Announcement Hub is not used.",
+    "paths": [
+      "config.step.delivery.data_description.tts_engine",
+      "config.step.setup_general.data_description.tts_engine",
+      "options.step.delivery.data_description.tts_engine",
+      "options.step.setup_general.data_description.tts_engine"
+    ]
+  },
+  {
+    "id": 204,
+    "en": "Direct audio destinations; room assignment controls targeting.",
+    "paths": [
+      "config.step.delivery.data_description.media_players",
+      "config.step.setup_general.data_description.media_players",
+      "options.step.delivery.data_description.media_players",
+      "options.step.setup_general.data_description.media_players"
+    ]
+  },
+  {
+    "id": 205,
+    "en": "Disabled by default. New open recommendations need 90 seconds of stable conditions.",
+    "paths": [
+      "config.step.delivery.data_description.automatic_tts",
+      "options.step.delivery.data_description.automatic_tts"
+    ]
+  },
+  {
+    "id": 206,
+    "en": "These limits apply to instantaneous sensor values and are configurable guidance, not health or exposure standards. AQI assumes the US 0-500 scale by default; change the limits for any differently scaled provider.",
+    "paths": [
+      "config.step.thresholds.description",
+      "options.step.thresholds.description"
+    ]
+  }
+]

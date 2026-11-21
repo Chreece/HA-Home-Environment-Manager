@@ -5,6 +5,16 @@ A room trend is circumstantial evidence, never a physical actuator ACK.
 """
 from __future__ import annotations
 
+if __package__:
+    from .backend_text import complete_catalog, resolve_language
+else:
+    from pathlib import Path
+    from runpy import run_path
+    _text_helpers = run_path(str(Path(__file__).with_name("backend_text.py")))
+    complete_catalog = _text_helpers["complete_catalog"]
+    resolve_language = _text_helpers["resolve_language"]
+
+
 from dataclasses import dataclass
 from math import exp, isfinite
 
@@ -169,12 +179,15 @@ TEXT = {
 }
 
 
+TEXT = complete_catalog(TEXT)
+
+
 def notice(effect: str, language: str, kind: str, *,
            name: str, room: str, first: float, current: float,
            target: float, attempts: int = 0) -> tuple[str, str]:
     """Localized advisory; never claim that physical output was confirmed."""
     profile = EFFECTS[effect]
-    words = TEXT.get(language, TEXT["en"])
+    words = TEXT[resolve_language(language)]
     common = dict(
         effect=words["effects"][effect], name=name, room=room,
         first=first, current=current, target=target,

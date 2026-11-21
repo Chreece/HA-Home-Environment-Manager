@@ -17,6 +17,15 @@ import json
 import math
 from typing import Any
 
+if __package__:
+    from .backend_text import translated_text, resolve_language
+else:
+    from pathlib import Path
+    from runpy import run_path
+    _text_helpers = run_path(str(Path(__file__).with_name("backend_text.py")))
+    translated_text = _text_helpers["translated_text"]
+    resolve_language = _text_helpers["resolve_language"]
+
 COMMAND_SETTLE_SECONDS = 120.0
 TWO_CHECK_SECONDS = 60.0
 _CONTROL_FIELDS = (
@@ -119,7 +128,7 @@ def _command_feedback(expected: Any, state: Any, *, language: str = "en",
     missing feedback. These strings are presentation only: no ACK, probe,
     ownership or retry decision depends on them.
     """
-    locale = language.replace("_", "-").split("-")[0].lower()
+    locale = resolve_language(language)
     labels = {
         "en": ("Temperature setpoint", "Lower temperature setpoint",
                "Upper temperature setpoint", "Humidity setpoint", "Fan mode",
@@ -135,12 +144,14 @@ def _command_feedback(expected: Any, state: Any, *, language: str = "en",
                "Λειτουργία ταλάντωσης", "Οριζόντια ταλάντωση",
                "Τρόπος λειτουργίας", "μη διαθέσιμη"),
     }
-    words = labels.get(locale, labels["en"])
+    words = labels.get(locale)
+    if words is None:
+        words = tuple(translated_text(text, locale) for text in labels["en"])
     fields = _CONTROL_FIELDS[:-1]  # hvac_action is feedback, never a target.
     names = dict(zip(fields, words[:9]))
     unavailable = words[-1]
     if not isinstance(expected, dict):
-        return "unverified command", unavailable
+        return translated_text("unverified command", locale), unavailable
     current = getattr(state, "state", None)
     live = isinstance(current, str) and current not in ("unknown", "unavailable")
     native = getattr(state, "attributes", {})

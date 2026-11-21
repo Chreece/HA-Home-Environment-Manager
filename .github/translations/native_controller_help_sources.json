@@ -1,0 +1,166 @@
+[
+  {
+    "id": 19,
+    "en": "Configure each selected room independently. A fresh room temperature sensor and exact room-assigned actuators are required. Direct relay/PWM is permitted only for independently protected non-compressor loads, with confirmed on/off limits and explicit actuation opt-in. Occupied, unoccupied, away and sleep heating/cooling targets are independent."
+  },
+  {
+    "id": 20,
+    "en": "Exact same-room switch or number output for independently protected heating. Never use the direct driver for an AC compressor or unknown load."
+  },
+  {
+    "id": 21,
+    "en": "Exact same-room switch or number output for independently protected non-compressor cooling load. Verify interlocks and electrical ratings."
+  },
+  {
+    "id": 29,
+    "en": "For Existing room controller: No room-presence restriction allows demand-based control in either room state. Only while room is occupied requires presence in this room. Only while someone is home requires whole-home presence. Unknown required presence pauses new commands; the separate absence action applies after confirmed absence. Automatic and PID use the presence choice on the individual device controller."
+  },
+  {
+    "id": 30,
+    "en": "When a selected room is sleeping, choose normal operation, pause device control or sleep targets. Unknown sleep evidence does not trigger shutdown."
+  },
+  {
+    "id": 31,
+    "en": "Choose extraction (ventilating CO₂) or filtration (reducing PM2.5). The role determines which sensor and safety rules apply."
+  },
+  {
+    "id": 44,
+    "en": "Installer attests independent compressor minimum-OFF, defrost, electrical and manufacturer protections on this exact AC. A checkbox alone cannot verify hardware."
+  },
+  {
+    "id": 45,
+    "en": "Extra explicit consent when native DRY/FAN_ONLY switching must work without a verified room window contact. Does not bypass other safety interlocks."
+  },
+  {
+    "id": 46,
+    "en": "Attest independent overflow, frost, overtemperature, electrical and any compressor-cycle protections appropriate to this exact humidity device."
+  },
+  {
+    "id": 47,
+    "en": "Extra consent to run dedicated moisture equipment in this room without a known window contact. Does not waive source freshness or safety bounds."
+  },
+  {
+    "id": 48,
+    "en": "Attest the selected extractor/purifier has independent electrical, fire, backdraft and ventilation pressure protection suitable for automatic switching."
+  },
+  {
+    "id": 50,
+    "en": "Confirm these are independently protected, slow, non-compressor heating/cooling loads. This check must never be used to authorize a generic AC compressor relay."
+  },
+  {
+    "id": 51,
+    "en": "Confirm you have independently checked protection of this exact device. The checkbox is an assertion by the installer, not a software hardware-certification test."
+  },
+  {
+    "id": 61,
+    "en": "Enables per-room climate planning and status. It does not authorize actuator commands; Allow actuation and each device's separate opt-in are required."
+  },
+  {
+    "id": 62,
+    "en": "Separate consent to switch between supported heating and cooling modes, subject to dwell and device interlocks. Does not bypass equipment compressor protection."
+  },
+  {
+    "id": 63,
+    "en": "When a thermostat genuinely supports native HEAT_COOL with two target temperatures, prefer its built-in control over simulated mode switching."
+  },
+  {
+    "id": 64,
+    "en": "Choose the control strategy supported by installed equipment: native thermostat, or independently protected slow direct actuator. Do not use relays for compressors."
+  },
+  {
+    "id": 65,
+    "en": "Separate permission to adjust humidity targets of an already-running native humidifier. Does not power on equipment or overrule manual settings."
+  },
+  {
+    "id": 67,
+    "en": "Experimental opt-in for supported native DRY/FAN_ONLY transitions. Requires exact-device commissioning, mode dwell and independent compressor protections."
+  },
+  {
+    "id": 68,
+    "en": "Separate experimental permission to turn verified dedicated humidifier/dehumidifier power on/off. Requires hardware protection, measured RH and strict runtime bounds."
+  },
+  {
+    "id": 69,
+    "en": "Separate opt-in to adjust the temperature setpoint of an already-running secondary heat/cool climate device. Never powers it on or changes unsupported modes."
+  },
+  {
+    "id": 70,
+    "en": "Separate permission to increase percentage only on an already-running extraction or purifier fan with verified air measurements. Never changes fan power."
+  },
+  {
+    "id": 71,
+    "en": "Experimental opt-in for bounded ON/OFF of the exact room fan.* device, using verified demand and hardware safety. Cannot share ownership with fan-speed automation."
+  },
+  {
+    "id": 72,
+    "en": "Master opt-in for this exact device. OFF means monitoring/advice only. When enabled, all other device-specific capability and safety gates still apply."
+  },
+  {
+    "id": 73,
+    "en": "Select a control supported by this device: thermostat setpoints, verified native modes, humidity setpoint, fan speed or separately protected power. Unsupported modes are blocked."
+  },
+  {
+    "id": 74,
+    "en": "Select HOLD or OFF when occupancy requirement is not met. OFF is allowed only for explicitly commissioned supported equipment after safety dwell; no automatic restart."
+  },
+  {
+    "id": 140,
+    "en": "Temperature separation in °C before changing heating/cooling direction. Prevents rapid oscillation; native mode dwell protections also apply."
+  },
+  {
+    "id": 141,
+    "en": "Fixed setpoints, small measured-humidity adjustment without guessed clothes/air speed, or advanced ISO 7730 with all verified inputs."
+  },
+  {
+    "id": 142,
+    "en": "Maximum absolute °C offset from the chosen temperature target when the qualified PMV/PPD comfort estimate is available. Avoids uncontrolled target shifts."
+  },
+  {
+    "id": 143,
+    "en": "Lower desired relative humidity (%) for humidifier advice. Sustained values below it may cause discomfort; prevents over-drying."
+  },
+  {
+    "id": 144,
+    "en": "Upper desired relative humidity (%) for dehumidification advice. Persistent high RH can promote condensation and mold on cold surfaces."
+  },
+  {
+    "id": 146,
+    "en": "Operational instantaneous PM2.5 threshold (µg/m³) for purifier-fan demand. Not a WHO daily exposure limit; a short spike is interpreted conservatively."
+  },
+  {
+    "id": 147,
+    "en": "Maximum extraction-fan speed (%) when verified CO₂ demand requires more airflow. Applies only to a supported fan already ON."
+  },
+  {
+    "id": 148,
+    "en": "Maximum purifier-fan speed (%) when PM2.5 demand exists. Changing percentage does not switch power or confirm filter efficiency."
+  },
+  {
+    "id": 150,
+    "en": "Maximum selected percentage for an already-running supported fan when demand exists. It does not authorize turning the fan on."
+  },
+  {
+    "id": 151,
+    "en": "Desired RH (%) while the room follows the normal humidifier profile, bounded by device capability. Avoid overly humid conditions that promote condensation."
+  },
+  {
+    "id": 178,
+    "en": "Allows commands only through the separately enabled, capability-checked room controllers. Leave off for monitoring/advice only."
+  },
+  {
+    "id": 179,
+    "en": "Heating, cooling, or automatic decision only when those modes truly exist on the device. An unsupported mode remains advisory and does not send commands."
+  },
+  {
+    "id": 180,
+    "en": "Explicitly override the automatically selected home/unoccupied/away/sleep profile for this room. Use for diagnostics or deliberate preferences; it still obeys safety gates."
+  },
+  {
+    "id": 181,
+    "en": "Select optional extra HVAC, humidifiers, dehumidifiers, extraction and purification fans in this room. The planner checks actual modes and assigns exclusive roles. Secondary devices are advisory only until their safe drivers are verified."
+  },
+  {
+    "id": 182,
+    "en": "Select an actual same-room CO2/PM2.5 sensor, confirm NDIR/PM sensor quality, and optionally permit bounded speed increases only for already-on fans. No on/off, preset, AC mode or compressor commands are permitted."
+  }
+]

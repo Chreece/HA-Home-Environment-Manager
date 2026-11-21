@@ -18,7 +18,7 @@
 # HEM - Home Environment Manager
 
 <!-- HEM-TRANSLATION-UNREVIEWED-START -->
-> ⚠️ **Unreviewed machine translation.** This page has not been checked for linguistic or technical accuracy, and some descriptions may be wrong. For installation, device control and safety instructions, refer to the <a href="../../README.md">English README</a>.
+> ⚠️ **Nepregledan strojni prijevod.** Jezična i tehnička točnost ove stranice nije provjerena i neki opisi mogu biti pogrešni. Upute za instalaciju, upravljanje uređajima i sigurnost potražite u <a href="../../README.md">README datoteci na engleskom</a>.
 <!-- HEM-TRANSLATION-UNREVIEWED-END -->
 
 <p align="center">
@@ -75,7 +75,8 @@ HEM održava zajedničke politike odvojene od lokalnih odluka.
 | **-Zamlja.** | Izvori unutarnje temperature i vlažnosti, pragove kvalitete zraka, kontaktne prozore i vrata, ponašanje spavanja i zauzimanja, specifične ciljeve udobnosti prostorije, izbore ventilacije i sjene. |
 | **Uloženje za pojedinačno uređenje** | Svojim dostupnim režimima kontrole, automatski/ručni/PID S obzirom na to da se u skladu s člankom 1. stavkom 1. stavkom 1. stavkom 1. stavkom 1. točka 1. točka 1. |
 
-Sve tri razine dostupne su putem grupiranih, pretraživa postavki u kartici. Home Assistant promjene postavke.
+Postavke doma, prostorija i uređaja grupirane su na kartici i mogu se pretraživati. Odaberite **Osnovno**, **Napredno** ili **Stručno** kako biste odredili koje se postavke prikazuju. Osnovno uključuje svakodnevne kontrole i nužno postavljanje. Napredno dodaje ručno podešavanje PID koeficijenata i detaljne prilagodbe. Stručno dodaje specijalizirane modele i podešavanje kapaciteta. Svaka razina uključuje prethodne. Dostupne izvore možete osvježiti kada se promijeni vaša instalacija sustava Home Assistant. <!-- HEM-I18N:levels -->
+
 
 <a id="climate-control-and-pid-device-by-device"></a>
 ### Klimatska kontrola i PID, uređaj po uređaj
@@ -124,7 +125,9 @@ Priprema nije naredba da se sve uključi. uređajima još uvijek trebaju prava p
 HEM upoređuje **što soba treba** s **Da li vanjski zrak može pomoći**.
 
 - Priporočiti otvaranje ili zatvaranje prozora uz korištenje trenutnih mjerenja unutar kuće, vlažnosti na otvorenom, onečišćenja, temperature, vjetra, upozorenja na vrijeme i opcionalnog konteksta pollenova.
+- Indeks AQI nije obvezan. Ako ljestvica davatelja nije postavljena, HEM prijavljuje nepotpune podatke; to samo po sebi ne sprječava prozračivanje niti je razlog za zatvaranje prozora. Valjana mjerenja onečišćujućih tvari i doista opasne vrijednosti AQI-ja, protumačene prema ispravnoj ljestvici, i dalje se uzimaju u obzir. <!-- HEM-I18N:aqi -->
 - Koristite odabrane kontaktne prozore i vrata kako biste objasnili uvjete sobe i izbjegli tretiranje nepoznatog kontakta kao zatvorenog.
+- Balkonska ili terasna vrata s klasom binarnog senzora Home Assistant `door` ili `opening` možete po želji uključiti kao **ulaze za prozore**. Pojavljuju se u odabiru prozora prostorije, ali **nikad nisu unaprijed odabrana**. Uobičajeni nadzor vrata ostaje neovisan. <!-- HEM-I18N:balcony -->
 - Opcionalno vam je zatražiti da pokušate otvoriti prozor prije pokretanja podržane automatske uređaje, a zatim nastaviti normalno upravljanje nakon konfiguriranog odgovora čekati ako je potrebno.
 - Koristite informacije o vratima za prepoznavanje granica prostora, upozorenja na ventilaciju i opcionalno zaštitno ekološko ponašanje.
 - U skladu s člankom 4. stavkom 1. stavkom 1. stavkom 1. točka 1.

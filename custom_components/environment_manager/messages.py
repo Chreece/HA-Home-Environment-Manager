@@ -130,27 +130,35 @@ TEXT = {
 
 
 def _extra_messages(entry: dict) -> dict[str, str]:
-    ui = entry["ui"]
+    # Name the shared locale-pack schema before composing human-readable text.
+    # Numeric offsets previously selected "measurements" / "notifications"
+    # for window-opening and closing titles in every supplemental language.
+    ui = dict(zip((
+        "rooms", "exclude_windows", "exclude_air", "outdoor_air", "weather",
+        "announcements", "thresholds", "air_quality", "good", "attention",
+        "missing", "windows", "measurements", "open", "close",
+        "automatic_notifications", "automatic_tts", "language", "outside",
+    ), entry["ui"]))
     say = entry["speech"]
     missing = entry["card"][5]
     return {
         "open": say[0],
         "close": say[1],
-        "title_open": f"{ui[7]} - {ui[14]} {ui[12]}",
-        "title_close": f"{ui[7]} - {ui[15]} {ui[12]}",
+        "title_open": f"{ui['air_quality']} - {ui['open']} {ui['windows']}",
+        "title_close": f"{ui['air_quality']} - {ui['close']} {ui['windows']}",
         "inside": say[2],
         "outside": say[3],
-        "no_outdoor_data": f"{ui[3]} - {missing}",
-        "unavailable_outdoor": f"{ui[3]} - {missing}: {{name}}",
-        "no_weather_data": f"{ui[4]} - {missing}",
-        "unavailable_weather": f"{ui[4]} - {missing}",
-        "weather_condition": f"{ui[4]}: {{value}}",
-        "weather_cold": f"{ui[18]} - {{value}}",
-        "weather_hot": f"{ui[18]} - {{value}}",
-        "weather_humid": f"{ui[18]} - {{value}}",
-        "weather_wind": f"{ui[4]} - {{value}}",
-        "active_warning": f"{ui[4]}: {{name}}",
-        "unavailable_warning": f"{ui[4]} - {missing}: {{name}}",
+        "no_outdoor_data": f"{ui['outdoor_air']} - {missing}",
+        "unavailable_outdoor": f"{ui['outdoor_air']} - {missing}: {{name}}",
+        "no_weather_data": f"{ui['weather']} - {missing}",
+        "unavailable_weather": f"{ui['weather']} - {missing}",
+        "weather_condition": f"{ui['weather']}: {{value}}",
+        "weather_cold": f"{ui['outside']} - {{value}}",
+        "weather_hot": f"{ui['outside']} - {{value}}",
+        "weather_humid": f"{ui['outside']} - {{value}}",
+        "weather_wind": f"{ui['weather']} - {{value}}",
+        "active_warning": f"{ui['weather']}: {{name}}",
+        "unavailable_warning": f"{ui['weather']} - {missing}: {{name}}",
     }
 
 
