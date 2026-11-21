@@ -7393,16 +7393,23 @@
     }
     const width=Math.max(240,Math.min(800,saved.width114||
       Math.min(560,window.innerWidth-24)-32));
-    const targetValues075=controlPoints075.filter(point=>point.t<=viewEnd&&point.until>=viewStart)
-      .flatMap(point=>[point.target,point.target_low,point.target_high]).filter(Number.isFinite);
+    const visibleControls075=controlPoints075.filter(point=>point.t<=viewEnd&&point.until>=viewStart);
+    const targetValues075=visibleControls075.flatMap(point=>
+      [point.target,point.target_low,point.target_high]).filter(Number.isFinite);
+    const output075=visibleControls075.some(point=>
+      Number.isFinite(point.demand_percent)||Number.isFinite(point.output_percent));
+    const outputBinary075=output075&&visibleControls075.every(point=>
+      !Number.isFinite(point.demand_percent)&&(!Number.isFinite(point.output_percent)||
+        ['activity','binary'].includes(point.output_kind)));
     const inspect075=controls075.length?[...new Set([...visible.map(point=>point.t),
       ...controlPoints075.flatMap(point=>[point.t,point.until])])]
       .filter(stamp=>stamp>=viewStart&&stamp<=viewEnd).sort((a,b)=>a-b).map(t=>({t})):null;
     const values=[...visible.map(p=>p.v),...targetValues075],low=values.length?Math.min(...values):0;
     const high=values.length?Math.max(...values):1;
     const padding=Math.max((high-low)*.15,Math.abs(low)*.005,.1);
-    return { ...data,visible,first,last,eventHistory,heldUntil,measuredLast075,controls075,timeline075,inspect075,start:viewStart,end:viewEnd,
-      width,left:48,right:width-14,top:18,bottom:164,min:low-padding,max:high+padding,
+    return { ...data,visible,first,last,eventHistory,heldUntil,measuredLast075,controls075,timeline075,inspect075,
+      output075,outputBinary075,physicalValues075:values.length>0,start:viewStart,end:viewEnd,
+      width,left:48,right:width-(output075?(outputBinary075?64:48):14),top:18,bottom:164,min:low-padding,max:high+padding,
       older:!!state.range&&start>first,newer:!!state.range&&end<last,
       unit:evidence.entity_id?evidence.unit:saved.metric==='temperature'?'°C':saved.metric==='humidity'?'%':
         (safeArray(evidence.room.readings).find(r=>r.metric===saved.metric)?.unit||''),
@@ -7430,7 +7437,10 @@
       // before snapping so a nearby valid source event cannot erase it.
       const inGap=model.gaps.some(([a,b])=>
         (time>a||time===a&&model.missingStarts.includes(a))&&time<b);
-      const snapped=!inGap&&nearest&&Math.abs(nearest.t-time)<=tolerance?nearest:null;
+      // A shared control timeline must keep its exact inspection time. A
+      // nearby Recorder event can otherwise skip a target/output transition
+      // and trap keyboard navigation on the same measurement repeatedly.
+      const snapped=!model.controls075.length&&!inGap&&nearest&&Math.abs(nearest.t-time)<=tolerance?nearest:null;
       const inspectedAt=snapped?snapped.t:time;
       const latest=snapped||model.visible.filter(p=>p.t<=inspectedAt).at(-1);
       const unavailable=model.gaps.some(([a,b])=>
@@ -7506,8 +7516,8 @@
       const val=model.max-(model.max-model.min)*i/3;
       const y=trendY114(model,val).toFixed(2);
       return '<line x1="'+model.left+'" y1="'+y+'" x2="'+model.right+'" y2="'+y+
-        '" class="hem-trend-grid114"/><text x="'+(model.left-8)+'" y="'+(Number(y)+4)+
-        '" text-anchor="end">'+escape(this._format(val,axisDigits))+'</text>';
+        '" class="hem-trend-grid114"/>'+(model.physicalValues075?'<text x="'+(model.left-8)+'" y="'+(Number(y)+4)+
+        '" text-anchor="end">'+escape(this._format(val,axisDigits))+'</text>':'');
     }).join('');
     const timeTicks=[0,.5,1].map(fraction=>{
       const time=model.start+(model.end-model.start)*fraction;
@@ -7889,7 +7899,8 @@
   /* HEM_RECORDED_CONTROL_TRENDS075_START
    * Targets are recorded control evidence, never today's setting projected
    * backwards. Their observed intervals share the measured chart's time axis;
-   * requested demand and native reported output have their own percentage lane.
+   * requested demand and native reported output share that plot with a
+   * separately labelled right-hand percentage or activity scale.
    */
   const controlTrend075=AirQualityAdvisorCard.prototype;
   const controlMetrics075=new Set(['temperature','humidity','mold','co2','pm25']);
@@ -8024,7 +8035,7 @@
     return group.points.filter(point=>point.t<=time&&point.until>=time).at(-1)||null;
   };
   controlTrend075._controlTrendPath075=function(group,model,field,output=false){
-    const y=value=>output?70-value*.52:trendY114(model,value);
+    const y=value=>output?model.bottom-(model.bottom-model.top)*value/100:trendY114(model,value);
     let path='',previous=null;
     for(const point of group.points){
       if(point.t>model.end||point.until<model.start||!Number.isFinite(point[field])){previous=null;continue;}
@@ -8046,11 +8057,34 @@
     const text=value=>controlText075(this,value);
     const targetLabel=group=>group.kind==='physical_device'
       ?text('Physical device')+' · '+text('Target'):text('HEM target');
-    const marker=(group,dashed=true)=>'<i aria-hidden="true" style="--hem-control-color075:'+group.color+
-      '" class="hem-control-key075'+(dashed?' hem-control-target-key075':'')+'"></i>';
+    const marker=(group,kind='target')=>'<i aria-hidden="true" style="--hem-control-color075:'+group.color+
+      '" class="hem-control-key075'+(kind==='target'?' hem-control-target-key075':
+        kind==='demand'?' hem-control-demand-key075':'')+'"></i>';
+    const outputSeries=groups.map((group,index)=>{
+      const points=group.points.filter(point=>point.t<=model.end&&point.until>=model.start);
+      return {group,index,points,
+        demand:this._controlTrendPath075(group,model,'demand_percent',true),
+        output:this._controlTrendPath075(group,model,'output_percent',true),
+        binaryOnly:points.every(point=>point.output_percent===null||
+          ['activity','binary'].includes(point.output_kind))};
+    });
+    const scaleLabel=text('Output evidence')+' · '+(model.outputBinary075?
+      word105(this,'off')+' / '+word105(this,'on'):'%');
     const legend='<div class="hem-control-legend075"><span><i class="hem-control-measured-key075" aria-hidden="true"></i>'+
-      escape(tw114(this,'sample'))+'</span>'+groups.map(group=>'<span>'+marker(group)+
-      escape(targetLabel(group)+' · '+group.name)+'</span>').join('')+'</div>';
+      escape(tw114(this,'sample')+' · '+model.unit)+'</span>'+
+      (model.output075?'<span class="hem-control-output-scale075">'+escape(scaleLabel)+'</span>':'')+
+      outputSeries.map(({group,points,demand,output,binaryOnly})=>{
+        const hasTarget=points.some(point=>[point.target,point.target_low,point.target_high].some(Number.isFinite));
+        if(!hasTarget&&!demand&&!output)return '';
+        return '<div class="hem-control-output-legend075"><strong>'+escape(group.name)+'</strong>'+
+          (hasTarget?'<span>'+marker(group)+escape(targetLabel(group)+' · '+group.unit)+'</span>':'')+
+          (demand?'<span>'+marker(group,'demand')+escape(text('PID demand')+' · %')+'</span>':'')+
+          (output?'<span>'+marker(group,'output')+escape(binaryOnly?
+            text('Physical device')+' · '+(model.outputBinary075?
+              word105(this,'off')+' / '+word105(this,'on'):
+              '0% '+word105(this,'off')+' / 100% '+word105(this,'on')):
+            text('Reported output setting')+' · %')+'</span>':'')+'</div>';
+      }).join('')+'</div>';
     const targetPaths=groups.map(group=>{
       const range=group.points.filter(point=>Number.isFinite(point.target_low)&&Number.isFinite(point.target_high)&&
         point.t<=model.end&&point.until>=model.start).map(point=>{
@@ -8070,7 +8104,35 @@
           return (path?'<path data-control-field075="'+field+'" d="'+path+'"/>':'')+isolated;
         }).join('')+'</g>';
     }).join('');
-    html=html.replace('<g class="hem-trend-cursor114"',targetPaths+'<g class="hem-trend-cursor114"');
+    const outputPaths=outputSeries.map(({group,index,demand,output})=>{
+      if(!demand&&!output)return '';
+      const isolated=['demand_percent','output_percent'].map(field=>group.points.filter(point=>
+        point.t===point.until&&point.t>=model.start&&point.t<=model.end&&Number.isFinite(point[field])).map(point=>
+        '<circle class="hem-control-sample075" cx="'+trendX114(model,point.t).toFixed(2)+
+        '" cy="'+(model.bottom-(model.bottom-model.top)*point[field]/100).toFixed(2)+'" r="2.5"/>').join('')).join('');
+      return '<g class="hem-control-output-series075" data-control-output-series075="'+index+
+        '" style="--hem-control-color075:'+group.color+'" aria-label="'+escape(text('Output evidence')+' · '+group.name)+'">'+
+        (demand?'<path class="hem-control-demand075" data-control-field075="demand_percent" d="'+demand+'"/>':'')+
+        (output?'<path class="hem-control-reported075" data-control-field075="output_percent" d="'+output+'"/>':'')+
+        isolated+'</g>';
+    }).join('');
+    const outputAxis=model.output075?(model.physicalValues075?
+      '<text class="hem-control-unit075" x="'+model.left+'" y="9">'+escape(model.unit)+'</text>':'')+
+      '<g class="hem-control-output-axis075" aria-label="'+escape(scaleLabel)+'">'+
+      '<title>'+escape(scaleLabel)+'</title>'+
+      '<line x1="'+model.right+'" x2="'+model.right+'" y1="'+model.top+'" y2="'+model.bottom+'"/>'+
+      (model.outputBinary075?[100,0]:[100,50,0]).map(value=>{
+        const y=model.bottom-(model.bottom-model.top)*value/100;
+        const label=model.outputBinary075?word105(this,value?'on':'off'):value+'%';
+        return '<line x1="'+model.right+'" x2="'+(model.right+4)+'" y1="'+y+'" y2="'+y+'"/>'+
+          '<text x="'+(model.right+8)+'" y="'+(y+4)+'" text-anchor="start"'+
+          (model.outputBinary075?' textLength="'+Math.min(50,[...label].length*6)+
+            '" lengthAdjust="spacingAndGlyphs"':'')+'>'+escape(label)+'</text>';
+      }).join('')+'</g>':'';
+    // Output uses the same plot and timeline, below the measured curve and
+    // targets so an equal screen position cannot hide those physical values.
+    html=html.replace('<path class="hem-avg-line105"',outputPaths+'<path class="hem-avg-line105"');
+    html=html.replace('<g class="hem-trend-cursor114"',targetPaths+outputAxis+'<g class="hem-trend-cursor114"');
     const rows=groups.map((group,index)=>'<div class="hem-control-readout075" data-control-row075="'+index+'">'+
       '<div class="hem-control-name075">'+marker(group)+'<strong>'+escape(group.name)+'</strong>'+
       '<span data-control-context075="'+index+'"></span></div>'+
@@ -8089,38 +8151,10 @@
     const readout='<section class="hem-control-details075" aria-live="polite" aria-label="'+escape(text('Control evidence'))+'">'+
       legend+statusHtml+rows+'</section>';
     html=html.replace('<div class="hem-trend-plot114">',readout+'<div class="hem-trend-plot114">');
-    const outputs=groups.map((group,index)=>{
-      const demand=this._controlTrendPath075(group,model,'demand_percent',true);
-      const output=this._controlTrendPath075(group,model,'output_percent',true);
-      if(!demand&&!output)return '';
-      const binaryOnly=!demand&&group.points.every(point=>point.output_percent===null||
-        ['activity','binary'].includes(point.output_kind));
-      const title=text('Output evidence')+' · '+group.name;
-      const isolated=['demand_percent','output_percent'].map(field=>group.points.filter(point=>
-        point.t===point.until&&point.t>=model.start&&point.t<=model.end&&Number.isFinite(point[field])).map(point=>
-        '<circle class="hem-control-sample075" cx="'+trendX114(model,point.t).toFixed(2)+
-        '" cy="'+(70-point[field]*.52).toFixed(2)+'" r="2.5"/>').join('')).join('');
-      return '<section class="hem-control-output075"><div><strong>'+escape(title)+'</strong>'+
-        '<span class="hem-control-output-legend075">'+
-        (demand?'<span>'+marker(group)+escape(text('PID demand'))+'</span>':'')+
-        (output?'<span>'+marker(group,false)+escape(binaryOnly?text('Physical device'):text('Reported output setting'))+'</span>':'')+'</span></div>'+
-        '<svg class="hem-trend-chart114 hem-control-output-chart075" data-trend-chart114 data-output-chart075="'+index+
-        '" viewBox="0 0 '+model.width+' 90" role="slider" tabindex="0" aria-label="'+escape(title)+
-        '" aria-orientation="horizontal" aria-valuemin="0" aria-valuemax="'+Math.max(0,(model.inspect075||model.points).length-1)+
-        '" aria-valuenow="0" style="--hem-control-color075:'+group.color+'">'+
-        '<text x="'+(binaryOnly?model.left:model.left-8)+'" y="'+(binaryOnly?12:22)+'" text-anchor="'+
-        (binaryOnly?'start':'end')+'">'+escape(binaryOnly?word105(this,'on'):'100%')+'</text>'+
-        '<text x="'+(binaryOnly?model.left:model.left-8)+'" y="'+(binaryOnly?86:74)+'" text-anchor="'+
-        (binaryOnly?'start':'end')+'">'+escape(binaryOnly?word105(this,'off'):'0%')+'</text>'+
-        '<line class="hem-trend-grid114" x1="'+model.left+'" x2="'+model.right+'" y1="70" y2="70"/>'+
-        (demand?'<path class="hem-control-demand075" d="'+demand+'"/>':'')+
-        (output?'<path class="hem-control-reported075" d="'+output+'"/>':'')+isolated+
-        '<g class="hem-control-cursor075" pointer-events="none"><line y1="12" y2="76"/></g></svg></section>';
-    }).join('');
     const first=groups.length?Math.min(...groups.flatMap(group=>group.points.map(point=>point.t))):null;
     const recorded=first===null?'':'<p class="hem-control-recorded075">'+escape(text('Target')+' · '+
       ew122(this,'recent')+' · '+this._trendDate114(first,'period'))+'</p>';
-    return html.replace('<p class="hem-trend-help114"',outputs+recorded+'<p class="hem-trend-help114"');
+    return html.replace('<p class="hem-trend-help114"',recorded+'<p class="hem-trend-help114"');
   };
   const inspectControl075=controlTrend075._inspectTrend114;
   const selectControl075=controlTrend075._trendSelection114;
@@ -8162,8 +8196,6 @@
         (demand!=='—'?' · '+controlText075(this,'PID demand')+' '+demand:'')+
         (output!=='—'?' · '+controlText075(this,binary?'Output evidence':'Reported output setting')+' '+output:''));
     }
-    for(const cursor of root.querySelectorAll?.('.hem-control-cursor075')||[])
-      cursor.setAttribute('transform','translate('+trendX114(model,selected.time).toFixed(2)+' 0)');
     if(descriptions.length)for(const chart of root.querySelectorAll?.('[data-trend-chart114]')||[]){
       chart.setAttribute('aria-valuenow',String(Math.max(0,selected.index)));
       chart.setAttribute('aria-valuetext',(selected.point?this._format(selected.point.v,3)+' '+model.unit:
@@ -8211,7 +8243,7 @@
     '.hem-control-legend075{display:flex;flex-wrap:wrap;gap:5px 14px;font-size:11px;line-height:1.5;color:var(--hem-trend-muted114)}',
     '.hem-control-legend075>span{display:inline-flex;align-items:center;gap:6px;min-width:0;overflow-wrap:anywhere}',
     '.hem-control-key075,.hem-control-measured-key075{display:inline-block;flex:0 0 22px;width:22px;border-top:2px solid var(--hem-control-color075);height:0}',
-    '.hem-control-target-key075{border-top-style:dashed}.hem-control-measured-key075{border-color:var(--hem-trend-accent114)}',
+    '.hem-control-target-key075{border-top-style:dashed}.hem-control-demand-key075{border-top-style:dotted}.hem-control-measured-key075{border-color:var(--hem-trend-accent114)}',
     '.hem-control-target075 path{stroke:var(--hem-control-color075);stroke-width:2;stroke-dasharray:7 4;fill:none;vector-effect:non-scaling-stroke}',
     '.hem-control-sample075{fill:var(--hem-control-color075);stroke:var(--card-background-color,#202830);stroke-width:1}',
     '.hem-control-band075{fill:var(--hem-control-color075);fill-opacity:.08}',
@@ -8222,12 +8254,13 @@
     '.hem-control-readout075 dt{font-size:10px;color:var(--hem-trend-muted114)}.hem-control-readout075 dd{margin:2px 0 0;font-size:14px;font-weight:500}',
     '.hem-control-status075{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:9px 0;font-size:11px;color:var(--hem-trend-muted114)}',
     '.hem-control-status075 small{flex-basis:100%;font-size:11px}.hem-control-status075 button{color:inherit;border:1px solid var(--divider-color,#556070);background:transparent;border-radius:7px;padding:6px 10px;min-height:32px}',
-    '.hem-control-output075{border-top:1px solid var(--divider-color,#3b4654);padding:9px 0 0;margin-top:7px}',
-    '.hem-control-output075>div{display:flex;flex-wrap:wrap;gap:3px 10px;font-size:11px;line-height:1.45}',
-    '.hem-control-output075 strong{font-weight:500;overflow-wrap:anywhere}.hem-control-output075 span{color:var(--hem-trend-muted114)}',
-    '.hem-control-output-legend075{display:flex;flex-wrap:wrap;gap:4px 12px}.hem-control-output-legend075>span{display:inline-flex;gap:6px;align-items:center}',
-    '.hem-control-output-chart075{margin:3px 0}.hem-control-output-chart075 path{fill:none;stroke:var(--hem-control-color075);stroke-width:1.8;vector-effect:non-scaling-stroke}',
-    '.hem-control-demand075{stroke-dasharray:6 4}.hem-control-cursor075 line{stroke:var(--primary-text-color,#e8edf4);stroke-opacity:.5;stroke-dasharray:3 4}',
+    '.hem-control-output-scale075{margin-inline-start:auto}',
+    '.hem-control-output-legend075{display:flex;flex-basis:100%;min-width:0;flex-wrap:wrap;gap:4px 12px}',
+    '.hem-control-output-legend075 strong{flex-basis:100%;font-weight:500;overflow-wrap:anywhere}',
+    '.hem-control-output-legend075>span{display:inline-flex;min-width:0;gap:6px;align-items:center;overflow-wrap:anywhere}',
+    '.hem-control-output-series075 path{fill:none;stroke:var(--hem-control-color075);stroke-width:1.6;stroke-opacity:.85;vector-effect:non-scaling-stroke}',
+    '.hem-control-demand075{stroke-dasharray:1 4;stroke-linecap:round}',
+    '.hem-control-output-axis075 line{stroke:var(--hem-trend-muted114);stroke-opacity:.5;stroke-width:1;vector-effect:non-scaling-stroke}',
     '.hem-control-recorded075{font-size:10px;color:var(--hem-trend-muted114);line-height:1.5;margin:6px 0}',
     '@media(max-width:380px){.hem-control-name075>span{margin-inline-start:28px;flex-basis:100%}.hem-control-readout075 dl{gap:6px 12px}.hem-control-legend075{font-size:10px}}',
     '</style>',
