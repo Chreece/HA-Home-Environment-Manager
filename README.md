@@ -124,7 +124,7 @@ HEM can give ventilation advice without any controllable windows. It does not op
 
 HEM combines supported readings such as **temperature, humidity, CO₂, particulate matter, VOC, AQI and illuminance** to help you understand each room. Available measurements depend on what your Home Assistant setup provides.
 
-Its **mold indication** estimates moisture conditions at a cold surface from room and outdoor temperatures and a calibration measurement. When properly configured, it can influence a supported automatic humidity controller's effective target.
+Its **mold indication** estimates moisture conditions at a cold surface from room and outdoor temperatures and a calibration measurement. When enabled for a monitored room, an Automatic/PID dehumidifier uses the **active profile's saved target** for this indication. With mold indication disabled, that target applies to room-air relative humidity. The separate mold warning threshold does not replace the profile target.
 
 **Mold indication is an estimate, not a mold or spore detector.** Missing or stale sensor data cannot justify a new mold-based device command.
 

@@ -95,10 +95,24 @@ def scoped_help(key: str, language: str, ordinary: str) -> str:
         }
     elif target_field(key):
         prefix = {
-            "en": "Target for this mode and profile. Until explicitly edited, it follows the room profile. Native limits and room safety limits still apply; a qualified mold demand can require a lower humidity target.",
-            "el": "Στόχος για αυτή τη λειτουργία και το προφίλ. Μέχρι να αλλάξει, ακολουθεί το προφίλ του δωματίου. Ισχύουν τα όρια της συσκευής και του δωματίου· επιβεβαιωμένος κίνδυνος μούχλας μπορεί να απαιτεί χαμηλότερο στόχο υγρασίας.",
-            "de": "Sollwert für diese Betriebsart und dieses Profil. Bis zur ersten Änderung folgt er dem Raumprofil. Geräte- und Raumgrenzen gelten weiter; bestätigter Schimmelbedarf kann einen niedrigeren Feuchtesollwert erfordern.",
+            "en": "Target for this operating mode and profile. It follows the room profile until edited; profiles keep separate values.",
+            "el": "Στόχος για τη συγκεκριμένη λειτουργία και το προφίλ. Μέχρι να τον αλλάξεις, ακολουθεί το προφίλ του δωματίου· κάθε προφίλ διατηρεί τη δική του τιμή.",
+            "de": "Sollwert für diese Betriebsart und dieses Profil. Bis zur ersten Änderung gilt der Wert des Raumprofils; jedes Profil behält seinen eigenen Wert.",
         }
+        if target_field(key)[1] == "humidity":
+            detail = {
+                "en": "Automatic/PID dehumidification uses surface relative humidity (%) when mold indication is enabled for this monitored room; otherwise it uses room relative humidity (%). Device and room RH limits apply after conversion. Missing mold data pauses drying.",
+                "el": "Στην αφύγρανση με Αυτόματο έλεγχο ή PID, ο στόχος αφορά τη σχετική υγρασία της επιφάνειας (%) όταν η ένδειξη μούχλας είναι ενεργή για το δωμάτιο που παρακολουθείται· διαφορετικά αφορά τη σχετική υγρασία του αέρα (%). Τα όρια υγρασίας της συσκευής και του δωματίου εφαρμόζονται μετά τη μετατροπή. Αν λείπουν δεδομένα για την ένδειξη μούχλας, η αφύγρανση τίθεται σε παύση.",
+                "de": "Bei automatischer oder PID-geregelter Entfeuchtung gilt die relative Oberflächenfeuchte (%), wenn der Schimmelindikator für diesen überwachten Raum aktiviert ist; andernfalls gilt die relative Raumluftfeuchte (%). Die Feuchtegrenzen von Gerät und Raum greifen nach der Umrechnung. Fehlen Daten für den Schimmelindikator, pausiert die Entfeuchtung.",
+            }
+        else:
+            detail = {
+                "en": "Device and room limits apply.",
+                "el": "Ισχύουν τα όρια της συσκευής και του δωματίου.",
+                "de": "Die Grenzwerte von Gerät und Raum gelten weiterhin.",
+            }
+        return (prefix.get(language, translated_text(prefix["en"], language)) + "\n"
+                + detail.get(language, translated_text(detail["en"], language)))
     else:
         return ordinary
     return prefix.get(language, translated_text(prefix["en"], language)) + ("\n" + ordinary if ordinary else "")

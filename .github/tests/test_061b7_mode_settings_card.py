@@ -248,6 +248,179 @@ test('qualified mold demand is separate from physical availability and saved tar
   presentation=card._controllerPresentation7(card._managedControllers('room0')[0]);
   assert.equal(presentation.qualified,false);assert.equal(presentation.status,'within_target_band');
 });
+test('legacy satisfied mold cap explains the HEM cutoff without relabeling native humidity or creating demand',()=>{
+  const card=setup(),states=clone(card._hass.states),attrs=states['climate.managed_0_0'].attributes;
+  attrs.humidity_demand={mold_protection_required:false,status:'within_mold_limit',
+    mold_surface_rh:64.4,mold_surface_limit:70,mold_target_active:true,
+    requested_humidity_target:60,effective_humidity_target:53};
+  attrs.current_humidity=49.4;attrs.humidity=53;
+  attrs.controller_status={status:'within_target_band',reason:'within_target_band'};
+  const d=states['sensor.control_0_0'].attributes;
+  Object.assign(d,{status_code:'within_target_band',status_reason_code:'within_target_band',
+    pid_target_reached:true,pid_control_metric:'humidity',pid_control_measurement:49.4,
+    pid_control_target:53,pid_pwm_state:'target_reached',demand_percent:0});
+  states['climate.physical_0_0'].state='off';
+  Object.assign(states['climate.physical_0_0'].attributes,{current_humidity:44,humidity:60});
+  refresh(card,states);
+  const before=plain(card._hass.states),entry=card._managedControllers('room0')[0];
+  let view=card._controllerPresentation7(entry);
+  assert.equal(view.status,'within_target_band');assert.equal(view.qualified,false);
+  assert.equal(view.waiting,false);assert.equal(view.demand,null);
+  for(const value of ['64.4%','70%','49.4%','53%'])
+    assert.ok(view.evidence.some(row=>row.includes(value)),value);
+  assert.equal(view.evidence.filter(row=>row.includes('53%')).length,1);
+  assert.ok(view.evidence.some(row=>row.startsWith('Control measurement')));
+  assert.ok(view.evidence.some(row=>row.startsWith('HEM target')));
+  const html=card._deviceSummary65(entry);
+  assert.ok(html.includes('<span>Target · Physical device</span><b>60%</b>'));
+  assert.ok(html.includes('title="Physical device · Target · Humidity: 60%"'));
+  assert.ok(html.includes('<span>Humidity</span><b>44%</b>'));
+  assert.ok(!html.includes('<span>Target · Physical device</span><b>53%</b>'));
+  assert.deepEqual(plain(card._hass.states),before);assert.equal(card.calls.length,0);
+  // The mold-derived bound stays readable when no completed PID snapshot exists.
+  d.pid_target_reached=false;refresh(card,states);
+  view=card._controllerPresentation7(card._managedControllers('room0')[0]);
+  assert.ok(view.evidence.some(row=>row.includes('53%')));
+  assert.ok(!view.evidence.some(row=>row.startsWith('Control measurement')));
+  // A PWM rest already explains that same HEM humidity target; do not repeat it.
+  Object.assign(d,{status_code:'pid_output_inactive',pid_pwm_state:'zero_demand'});refresh(card,states);
+  view=card._controllerPresentation7(card._managedControllers('room0')[0]);
+  assert.equal(view.evidence.filter(row=>row.includes('53%')).length,1);
+});
+test('configured mold target is distinct from the advisory limit, derived room RH and native device target',()=>{
+  const card=setup(),states=clone(card._hass.states),attrs=states['climate.managed_0_0'].attributes;
+  const demand={target_basis:'mold_surface_rh',target_ready:true,control_target:60,
+    control_measurement:64.4,mold_protection_required:false,status:'within_mold_limit',
+    mold_surface_rh:64.4,mold_surface_limit:70,mold_target_active:true,
+    mold_control_demand_required:true,requested_humidity_target:60,effective_humidity_target:46};
+  attrs.humidity_demand=demand;attrs.current_humidity=49.4;attrs.humidity=46;
+  attrs.active_profile='eco';attrs.effective_preset='eco';
+  attrs.controller_status={status:'controlling'};
+  const d=states['sensor.control_0_0'].attributes;
+  Object.assign(d,{status_code:'controlling',status_reason_code:'controlling',
+    pid_target_reached:false,pid_control_metric:'humidity',pid_control_measurement:49.4,
+    pid_control_target:46});
+  Object.assign(states['climate.physical_0_0'].attributes,{current_humidity:44,humidity:60});
+  refresh(card,states);
+  let entry=card._managedControllers('room0')[0],view=card._controllerPresentation7(entry);
+  assert.equal(view.status,'controlling');assert.equal(view.qualified,false);
+  assert.ok(view.evidence.includes('Control measurement · Mold indication: 64.4%'));
+  assert.ok(view.evidence.includes('HEM target · Mold indication: 60%'));
+  assert.ok(view.evidence.includes('HEM target · Humidity: 46%'));
+  assert.ok(view.evidence.includes('Profile: '+card._controllerStatusLabel('eco')));
+  const signature=card._controllerSignature();
+  attrs.active_profile='comfort';attrs.effective_preset='comfort';refresh(card,states);
+  assert.notEqual(card._controllerSignature(),signature,'Profile labels must refresh even with equal targets');
+  view=card._controllerPresentation7(card._managedControllers('room0')[0]);
+  assert.ok(view.evidence.includes('Profile: '+card._controllerStatusLabel('comfort')));
+  assert.ok(!view.evidence.some(row=>row.includes('70%')),'Global advisory limit is not the configured target');
+  assert.ok(card._deviceSummary65(entry).includes('<span>Target · Physical device</span><b>60%</b>'));
+  // Reaching the configured surface target retains its basis and one RH target.
+  Object.assign(demand,{control_measurement:59.4,mold_surface_rh:59.4,effective_humidity_target:49});
+  Object.assign(d,{status_code:'within_target_band',status_reason_code:'within_target_band',
+    pid_target_reached:true,pid_control_measurement:49,pid_control_target:49});
+  refresh(card,states);view=card._controllerPresentation7(card._managedControllers('room0')[0]);
+  assert.equal(view.status,'within_target_band');assert.equal(view.qualified,false);
+  assert.ok(view.evidence.includes('Control measurement · Mold indication: 59.4%'));
+  assert.ok(view.evidence.includes('HEM target · Mold indication: 60%'));
+  assert.equal(view.evidence.filter(row=>row==='HEM target · Humidity: 49%').length,1);
+  // A global warning may remain above70 while the active profile's target80 is met.
+  Object.assign(demand,{control_target:80,control_measurement:75,mold_surface_rh:75,
+    mold_protection_required:true,mold_control_demand_required:false,reason:'mold_above_limit'});
+  refresh(card,states);view=card._controllerPresentation7(card._managedControllers('room0')[0]);
+  assert.equal(view.status,'within_target_band');assert.equal(view.demand,null);
+  assert.ok(view.evidence.includes('HEM target · Mold indication: 80%'));
+  assert.ok(view.evidence.some(row=>row.includes('70%')));
+  // Missing calibration must never present an old RH cutoff as current evidence.
+  Object.assign(demand,{target_ready:false,control_measurement:null,effective_humidity_target:null,
+    control_target:60,mold_protection_required:false,target_unavailable_reason:'needs_calibration'});
+  refresh(card,states);view=card._controllerPresentation7(card._managedControllers('room0')[0]);
+  assert.ok(view.evidence.includes('Control measurement · Mold indication: '+card._t('missing')));
+  assert.ok(view.evidence.includes('HEM target · Mold indication: 60%'));
+  assert.ok(!view.evidence.some(row=>row.includes('59.4%')||row.includes('Humidity:')));
+  // Disabling the mold basis returns the displayed control evidence to room RH.
+  attrs.humidity_demand={target_basis:'room_relative_humidity',target_ready:true,
+    mold_protection_required:false,mold_target_active:false};
+  Object.assign(d,{pid_control_measurement:49.4,pid_control_target:60});refresh(card,states);
+  view=card._controllerPresentation7(card._managedControllers('room0')[0]);
+  assert.ok(view.evidence.includes('HEM target · Humidity: 60%'));
+  assert.ok(!view.evidence.some(row=>row.includes('Mold indication')));
+  assert.equal(card.calls.length,0);
+});
+test('folded mold controller uses its matching metric while room and physical readings stay RH',()=>{
+  const card=setup(),states=clone(card._hass.states),attrs=states['climate.managed_0_0'].attributes;
+  attrs.measurements={temperature:20,humidity:49.4};
+  attrs.current_humidity=64.4;attrs.humidity=60;attrs.target_humidity_basis='mold_surface_rh';
+  attrs.humidity_demand={target_basis:'mold_surface_rh',target_ready:true,
+    control_measurement:64.4,control_target:60,mold_protection_required:false};
+  const room=states['sensor.hem'].attributes.dashboard.rooms[0];
+  room.readings.push({metric:'humidity',value:49.4,unit:'%',available:true,entity_id:'sensor.room_humidity'});
+  room.environment.measurement_evidence={humidity:{value:49.4}};
+  Object.assign(states['climate.physical_0_0'].attributes,{current_humidity:44,humidity:60});
+  const header=()=>{
+    const container=new Node();container.setAttribute('data-managed-climate93','climate.managed_0_0');
+    container.setAttribute('data-controller-area','room0');
+    const shell={dataset:{},classList:{add(){}},querySelector(){return null;},
+      querySelectorAll:selector=>selector==='.managed-controller'?[container]:[]};
+    card._compactAfterRender87(shell);return container.children[0].children[0].innerHTML;
+  };
+  refresh(card,states);let html=header();
+  assert.ok(html.includes('title="Mold indication'));
+  assert.ok(html.includes('mdi:water-alert-outline'));
+  assert.ok(html.includes('64.4%'));assert.ok(!html.includes('49.4%'));
+  assert.equal(card._roomGlance122(room).humidity,49.4);
+  assert.ok(card._deviceSummary65(card._managedControllers('room0')[0]).includes('<span>Humidity</span><b>44%</b>'));
+  attrs.humidity_demand.target_ready=false;attrs.humidity_demand.control_measurement=null;
+  refresh(card,states);html=header();
+  assert.ok(html.includes('title="Mold indication'));
+  assert.ok(!html.includes('64.4%')&&!html.includes('49.4%'));assert.ok(html.includes('—'));
+  attrs.humidity_demand={target_basis:'room_relative_humidity',mold_protection_required:false};
+  refresh(card,states);html=header();
+  assert.ok(html.includes('mdi:water-percent'));assert.ok(html.includes('49.4%'));
+  assert.ok(!html.includes('Mold indication'));assert.equal(card.calls.length,0);
+});
+test('each mold target editor identifies its own profile and preserves an explicit user name',()=>{
+  const card=setup();
+  for(const profile of ['home','away','sleep','comfort','eco']){
+    const state={state:'60',attributes:{setting_key:'target_'+profile+'_humidity',
+      target_basis:'mold_surface_rh',target_metric:'mold',setting_label:'Old humidity target'}};
+    const label=card._hemSettingLabel062('number.profile',state,{}, {},false);
+    assert.equal(label,card._controllerStatusLabel(profile)+' · Mold indication · Target');
+    assert.equal(card._hemSettingLabel062('number.profile',state,{name:'My chosen target'}, {},false),'My chosen target');
+    state.attributes.target_basis='room_relative_humidity';state.attributes.target_metric='humidity';
+    assert.equal(card._hemSettingLabel062('number.profile',state,{}, {},false),'Old humidity target');
+  }
+  assert.equal(card.calls.length,0);
+});
+test('within-target explanations require a valid current cutoff snapshot and preserve localized status',()=>{
+  const card=setup(),states=clone(card._hass.states),attrs=states['climate.managed_0_0'].attributes;
+  attrs.humidity_demand={mold_protection_required:false};
+  attrs.controller_status={status:'within_target_band',pid_target_reached:true,
+    pid_control_metric:'temperature',pid_control_target:15,pid_control_measurement:16};
+  const d=states['sensor.control_0_0'].attributes;
+  Object.assign(d,{status_code:'within_target_band',pid_target_reached:true,
+    pid_control_metric:'temperature',pid_control_target:21,pid_control_measurement:21.2});
+  for(const [locale,label] of [['en','HEM target'],['el','Στόχος HEM'],['de','HEM-Sollwert']]){
+    refresh(card,states);card._hass.language=locale;
+    const view=card._controllerPresentation7(card._managedControllers('room0')[0]);
+    assert.equal(view.label,card._controllerStatusLabel('within_target_band'));
+    assert.ok(view.evidence.some(row=>row.startsWith(label)&&row.includes('21 °C')));
+    assert.ok(view.evidence.some(row=>row.includes(card._format(21.2)+' °C')));
+    assert.equal(view.waiting,false);
+  }
+  for(const invalid of [{pid_target_reached:false},{pid_target_reached:null},
+      {pid_control_target:null},{pid_control_measurement:NaN},{pid_control_metric:'mold'},
+      {pid_control_metric:'humidity',pid_control_target:101}]){
+    const changed=clone(states);Object.assign(changed['sensor.control_0_0'].attributes,invalid);
+    refresh(card,changed);
+    const view=card._controllerPresentation7(card._managedControllers('room0')[0]);
+    assert.equal(view.evidence.length,0,'Invalid current evidence must not revive an old target');
+    assert.equal(view.status,'within_target_band');
+  }
+  d.status_code='manual';refresh(card,states);
+  assert.equal(card._controllerPresentation7(card._managedControllers('room0')[0]).evidence.length,0);
+  assert.equal(card.calls.length,0);
+});
 (async()=>{let failed=0;for(const {name,run} of tests){try{await run();console.log('PASS: '+name);}
  catch(error){failed++;console.error('FAIL: '+name+'\n'+error.stack);}}
  if(failed)process.exitCode=1;else console.log('HEM_061B7_SCOPED_MODE_CARD_LOGIC=PASS ('+tests.length+' cases)');})();

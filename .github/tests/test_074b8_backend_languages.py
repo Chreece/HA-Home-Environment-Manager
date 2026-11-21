@@ -88,6 +88,38 @@ class BackendLanguageTests(unittest.TestCase):
         expected.update(values[0] for group in options.OPTION_TEXT.values() for values in group.values())
         self.assertFalse(expected - text.TEXT.keys())
 
+    def test_mode_target_help_uses_localized_units_and_separate_profile_values(self):
+        tree = ast.parse((SOURCE / "equipment_mode_entities.py").read_text())
+        functions = [node for node in tree.body if isinstance(node, ast.FunctionDef)
+                     and node.name in ("target_field", "scoped_help")]
+        profiles = next(ast.literal_eval(node.value) for node in tree.body
+                        if isinstance(node, ast.Assign) and any(
+                            isinstance(target, ast.Name) and target.id == "TARGET_PROFILES"
+                            for target in node.targets))
+        scope = {"TARGET_PROFILES": profiles, "mode_locale": mode.mode_locale,
+                 "translated_text": text.translated_text}
+        exec(compile(ast.Module(body=functions, type_ignores=[]),
+                     str(SOURCE / "equipment_mode_entities.py"), "exec"), scope)
+        composed = json.loads((ROOT / ".github/localization/backend_composed_help.json").read_text())
+        english = {key: scope["scoped_help"](key, "en", equipment.equipment_configuration_help(key, "en"))
+                   for key in ("target_home_heat", "target_home_humidity")}
+        self.assertIn("profiles keep separate values", english["target_home_humidity"])
+        self.assertIn("Automatic/PID dehumidification", english["target_home_humidity"])
+        self.assertIn("surface relative humidity", english["target_home_humidity"])
+        self.assertIn("room relative humidity", english["target_home_humidity"])
+        self.assertIn("after conversion", english["target_home_humidity"])
+        self.assertNotIn("mold", english["target_home_heat"].lower())
+        for key, source in english.items():
+            self.assertEqual(set(composed[source]), set(languages.SUPPORTED_LANGUAGE_TAGS))
+            for locale in languages.SUPPORTED_LANGUAGE_TAGS:
+                with self.subTest(key=key, locale=locale):
+                    actual = scope["scoped_help"](key, locale, equipment.equipment_configuration_help(key, locale))
+                    self.assertEqual(actual, composed[source][locale])
+                    self.assertNotIn(equipment.equipment_configuration_help("future_setting", locale), actual)
+                    if locale != "en":
+                        for clause in source.splitlines():
+                            self.assertNotIn(clause, actual)
+
     def test_reviewed_help_replaces_legacy_generic_form_prose(self):
         rejected = json.loads((ROOT / ".github/localization/backend_rejected_generic_help.json").read_text())
         for key, variants in settings.SETTING_HELP.items():

@@ -13,6 +13,7 @@ from pathlib import Path
 import runpy
 from types import SimpleNamespace as N
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
 b = runpy.run_path(str(ROOT / '.github/tests/test_beta110_device_setting.py'))
@@ -34,6 +35,26 @@ for filename, names in {
     tree = ast.parse((ROOT / filename).read_text())
     nodes = [n for n in tree.body if isinstance(n, (ast.FunctionDef, ast.ClassDef)) and n.name in names]
     exec(compile(ast.Module(nodes, []), filename, 'exec'), ns)
+
+# Execute the actual facade properties and target writer; only unrelated HA
+# platform construction is omitted. Physical readings stay on the appliance.
+climate = next(node for node in ast.parse((ROOT / 'climate.py').read_text()).body
+               if isinstance(node, ast.ClassDef) and node.name == 'ManagedClimate')
+facade_names = {'current_humidity', '_target', 'min_humidity', 'max_humidity',
+                'async_set_humidity'}
+facade = ast.ClassDef(name='HumidityFacade', bases=[ast.Name(id='EquipmentEntity', ctx=ast.Load())],
+    keywords=[], decorator_list=[], body=[node for node in climate.body
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name in facade_names
+        or isinstance(node, ast.Assign) and any(isinstance(target, ast.Name)
+            and target.id == 'target_humidity' for target in node.targets)])
+ns.update(model=model, finite=model.finite, HomeAssistantError=ValueError)
+exec(compile(ast.fix_missing_locations(ast.Module([facade], [])), 'climate.py', 'exec'), ns)
+runtime = next(node for node in ast.parse((ROOT / 'equipment_runtime.py').read_text()).body
+               if isinstance(node, ast.ClassDef) and node.name == 'EquipmentRuntime')
+setter = next(node for node in runtime.body
+              if isinstance(node, ast.AsyncFunctionDef) and node.name == 'async_set_targets')
+setter_ns = {**ns, 'deepcopy': deepcopy}
+exec(compile(ast.Module([setter], []), 'equipment_runtime.py', 'exec'), setter_ns)
 
 class ModeEntities(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
@@ -99,6 +120,107 @@ class ModeEntities(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(dry.native_value, 51)
         self.assertNotIn('humidity', model.settings_for_mode(self.m, self.spec, 'heat')['profile_targets']['home'])
         self.assertEqual([r[2] for r in self.writes], ['heat', 'dry'])
+
+    async def test_mold_profile_editors_keep_surface_targets_and_independent_profiles(self):
+        self.m.entry.data.update(areas=['room'], use_mold_indicator=True)
+        raw = self.m.entry.options[model.SETTINGS][self.spec.identifier]
+        values = {'home': 88., 'comfort': 60., 'eco': 92., 'sleep': 55., 'away': 85.}
+        raw['mode_settings']['dry'] = {'control_mode': 'automatic',
+            'profile_targets': {profile: {'humidity': target} for profile, target in values.items()}}
+        before_heat = deepcopy(raw['mode_settings']['heat'])
+        editors = {profile: self.entity('Number', f'target_{profile}_humidity', 'dry')
+                   for profile in values}
+        for profile, editor in editors.items():
+            with self.subTest(profile=profile):
+                self.assertEqual(editor.native_value, values[profile])
+                self.assertEqual((editor._attr_native_min_value, editor._attr_native_max_value), (1., 100.))
+                self.assertEqual(editor.extra_state_attributes['target_basis'], 'mold_surface_rh')
+                self.assertEqual(editor.extra_state_attributes['target_metric'], 'mold')
+        await editors['eco'].async_set_native_value(90.)
+        self.assertEqual(editors['eco'].native_value, 90.)
+        for profile in values.keys() - {'eco'}:
+            self.assertEqual(editors[profile].native_value, values[profile])
+        self.assertEqual(self.m.entry.options[model.SETTINGS][self.spec.identifier]['mode_settings']['heat'], before_heat)
+        manual = self.entity('Number', 'target_manual_humidity', 'dry')
+        self.assertEqual((manual._attr_native_min_value, manual._attr_native_max_value), (30, 75))
+        self.assertEqual(manual.extra_state_attributes['target_basis'], 'room_relative_humidity')
+
+    def test_mold_editor_basis_tracks_enablement_and_control_method_without_calibration(self):
+        self.m.entry.data.update(areas=['room'], use_mold_indicator=True)
+        raw = self.m.entry.options[model.SETTINGS][self.spec.identifier]
+        raw['mode_settings']['dry'] = {'control_mode': 'pid',
+            'profile_targets': {'home': {'humidity': 88.}}}
+        editor = self.entity('Number', 'target_home_humidity', 'dry')
+        self.assertEqual(editor.native_value, 88., 'A target remains editable while calibration is unavailable')
+        for changes, method, expected in (
+            ({'use_mold_indicator': False}, 'pid', (30, 75)),
+            ({'use_mold_indicator': True, 'areas': ['other']}, 'pid', (30, 75)),
+            ({'areas': ['room']}, 'manual', (30, 75)),
+            ({}, 'existing', (30, 75)),
+            ({}, 'automatic', (1., 100.)),
+        ):
+            with self.subTest(changes=changes, method=method):
+                self.m.entry.data.update(changes)
+                raw['mode_settings']['dry']['control_mode'] = method
+                editor._sync_mode_target_bounds()
+                self.assertEqual((editor._attr_native_min_value, editor._attr_native_max_value), expected)
+                self.assertEqual(editor.extra_state_attributes['target_basis'],
+                                 'mold_surface_rh' if expected == (1., 100.) else 'room_relative_humidity')
+
+    async def test_facade_profile_target_roundtrip_uses_the_declared_measurement_basis(self):
+        self.m.entry.data.update(areas=['room'], use_mold_indicator=True)
+        raw = self.m.entry.options[model.SETTINGS][self.spec.identifier]
+        values = {'home': 65., 'comfort': 60., 'eco': 90., 'sleep': 55., 'away': 85.}
+        raw['mode_settings']['dry'] = {'control_mode': 'pid', 'preset': 'none',
+            'profile_targets': {profile: {'humidity': target} for profile, target in values.items()}}
+        self.m.equipment.active_control_mode = lambda spec: 'dry'
+        self.m.equipment.measurements = lambda *args: {'humidity': 49.4}
+        self.m.equipment.async_set_targets = lambda spec, target: setter_ns['async_set_targets'](
+            self.m.equipment, spec, target)
+        view = ns['HumidityFacade']()
+        view._equipment_init(self.m, self.spec, 'climate')
+        view._caps = model.capabilities(self.m, self.spec)
+        view._state = self.f.states['climate.a']
+        view._state.attributes.update(current_humidity=47., humidity=50.)
+        physical = deepcopy(view._state.attributes)
+        live = {'away': 'home', 'occupancy': 'occupied', 'sleeping': False}
+        ready = True
+
+        def evidence(manager, spec, cap, config, requested, limits):
+            mold = model.uses_mold_target(manager, spec, cap, config)
+            return {'target_basis': 'mold_surface_rh' if mold else 'room_relative_humidity',
+                'control_target': requested, 'control_measurement': 64.4 if mold else 49.4,
+                'target_ready': ready if mold else True,
+                'effective_humidity_target': 46. if mold and ready else None if mold else requested}
+
+        with patch.object(model, 'plan_for', side_effect=lambda *args: live), \
+             patch.object(model, '_humidity_demand', side_effect=evidence):
+            for plan, expected in (
+                ({'away': 'home', 'occupancy': 'occupied', 'sleeping': False}, 'comfort'),
+                ({'away': 'home', 'occupancy': 'unoccupied', 'sleeping': False}, 'home'),
+                ({'away': 'home', 'occupancy': 'unoccupied', 'sleeping': False, 'door_eco_active': True}, 'eco'),
+                ({'away': 'home', 'occupancy': 'occupied', 'sleeping': True}, 'sleep'),
+                ({'away': 'away', 'occupancy': 'unoccupied', 'sleeping': False}, 'away'),
+            ):
+                with self.subTest(profile=expected):
+                    live.clear(); live.update(plan)
+                    self.assertEqual(view.target_humidity, values[expected])
+                    self.assertEqual(view.current_humidity, 64.4)
+                    self.assertEqual((view.min_humidity, view.max_humidity), (1., 100.))
+            live.clear(); live.update(away='home', occupancy='unoccupied', sleeping=False, door_eco_active=True)
+            await view.async_set_humidity(95.)
+            self.assertEqual(view.target_humidity, 95.)
+            saved = self.m.entry.options[model.SETTINGS][self.spec.identifier]['mode_settings']['dry']['profile_targets']
+            self.assertEqual(saved['eco']['humidity'], 95.)
+            self.assertEqual(saved['comfort']['humidity'], 60.)
+            ready = False
+            self.assertIsNone(view.current_humidity)
+            self.assertEqual(view.target_humidity, 95.)
+            self.m.entry.data['use_mold_indicator'] = False
+            self.assertEqual(view.current_humidity, 49.4)
+            self.assertEqual((view.min_humidity, view.max_humidity), (30, 75))
+            self.assertEqual(view.target_humidity, 75.)
+        self.assertEqual(view._state.attributes, physical, 'The physical appliance keeps its own RH readings and target')
 
     async def test_native_choices_switches_and_calibration_route_to_own_mode(self):
         quiet = switch.EquipmentQuietSwitch(self.m, self.spec, 'quiet_sleep', operating_mode='cool')

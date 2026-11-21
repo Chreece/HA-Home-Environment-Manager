@@ -1196,8 +1196,35 @@ def profile_name(config: dict, plan: dict) -> str:
     return "home"
 
 
+def uses_mold_target(manager: Any, spec: ManagedDevice, cap: Capabilities,
+                     config: dict | None = None) -> bool:
+    """Humidity profiles select surface RH only for supervised drying.
+
+    The warning threshold remains independent. A missing calibration cannot
+    silently change the units of an enabled room's saved profile target.
+    """
+    cfg = settings(manager, spec) if config is None else config
+    direction = cfg.get("operating_mode") or cfg.get("requested_mode")
+    drying = (getattr(cap, "domain", None) == "humidifier" or direction == "dry"
+              or direction is None and "dry" in getattr(cap, "modes", ()))
+    return bool(getattr(cap, "humidity", False) and not getattr(cap, "humidifying", False)
+                and drying
+                and cfg.get("control_mode") in ("automatic", "pid")
+                and manager.settings.get("use_mold_indicator") is True
+                and spec.area_id in manager.settings.get("areas", ()))
+
+
+def humidity_target_bounds(manager: Any, spec: ManagedDevice, cap: Capabilities,
+                           config: dict | None = None) -> tuple[float, float]:
+    """Editable profile units, separate from converted actuator RH limits."""
+    if uses_mold_target(manager, spec, cap, config):
+        return 1.0, 100.0
+    limits = device_limits(manager, spec, cap)
+    return limits["humidity_min_limit"], limits["humidity_max_limit"]
+
+
 def targets(manager: Any, spec: ManagedDevice, cap: Capabilities, config: dict,
-            plan: dict, *, mold_protection: bool = True) -> dict[str, float]:
+            plan: dict, *, mold_protection: bool = True) -> dict[str, float | None]:
     room = room_config(manager, spec)
     profile = profile_name(config, plan)
     limits = device_limits(manager, spec, cap)
@@ -1271,8 +1298,8 @@ def targets(manager: Any, spec: ManagedDevice, cap: Capabilities, config: dict,
                        min(limits["temperature_max_limit"],float(result["heat"])))
     result["cool"]=max(limits["temperature_min_limit"],
                        min(limits["temperature_max_limit"],float(result["cool"])))
-    result["humidity"]=max(limits["humidity_min_limit"],
-                           min(limits["humidity_max_limit"],float(result["humidity"])))
+    humidity_low, humidity_high = humidity_target_bounds(manager, spec, cap, config)
+    result["humidity"]=max(humidity_low, min(humidity_high, float(result["humidity"])))
     if mold_protection and cap.humidity and config.get("control_mode") in ("automatic", "pid"):
         result["humidity"] = _humidity_demand(
             manager, spec, cap, config, result["humidity"], limits,
@@ -1286,8 +1313,47 @@ def _humidity_demand(manager: Any, spec: ManagedDevice, cap: Capabilities,
     evidence = room_mold_demand(manager, spec.area_id) if cap.humidity else {
         "status": "not_supported", "mold_protection_required": False,
     }
+    surface_target = uses_mold_target(manager, spec, cap, config)
     result = {**evidence, "requested_humidity_target": requested,
-              "effective_humidity_target": requested, "mold_target_active": False}
+              "effective_humidity_target": requested, "mold_target_active": False,
+              "target_basis": "mold_surface_rh" if surface_target else "room_relative_humidity",
+              "control_target": requested,
+              "control_measurement": evidence.get("mold_surface_rh" if surface_target else "indoor_humidity"),
+              "target_ready": not surface_target,
+              "requested_mold_target": requested if surface_target else None,
+              "measured_mold_surface_rh": evidence.get("mold_surface_rh") if surface_target else None,
+              "converted_room_rh_target": None}
+    if surface_target:
+        from .mold import indoor_humidity_for_surface_limit
+        # The selected profile is the control target. indoor_mold is only the
+        # separate room warning threshold, never a replacement for that target.
+        required = (indoor_humidity_for_surface_limit(
+            evidence.get("indoor_temperature_c"), evidence.get("outdoor_temperature_c"),
+            evidence.get("calibration_factor"), requested,
+        ) if evidence.get("status") in ("within_mold_limit", "mold_reduction_needed") else None)
+        measured = finite(evidence.get("indoor_humidity"), 0.000001, 100)
+        result.update(effective_humidity_target=None, mold_target_active=True,
+                      target_provenance="configured_surface_rh_profile",
+                      mold_control_demand_required=None)
+        if required is None or measured is None:
+            result["target_unavailable_reason"] = evidence.get("status", "calculation_unavailable")
+            return result
+        quantized = (float(math.floor(required)) if cap.native_humidity_target
+                     or cap.domain == "humidifier" else required)
+        lower, upper = limits["humidity_min_limit"], limits["humidity_max_limit"]
+        bounded = max(lower, min(upper, quantized))
+        needed = measured > required
+        limited = bounded > required
+        result.update(target_ready=True, converted_room_rh_target=required,
+                      effective_humidity_target=bounded,
+                      mold_control_demand_required=needed,
+                      mold_target_limited=limited,
+                      mold_target_limit_reason="humidity_minimum_limit" if limited else None,
+                      target_blocked_by_limits=bool(needed and limited and measured <= bounded))
+        if needed and limited:
+            result["status"] = ("mold_target_blocked_by_limits" if measured <= bounded
+                                else "mold_target_limited")
+        return result
     required = finite(evidence.get("mold_required_humidity_target"), 0.000001, 100)
     if required is None or config.get("control_mode") not in ("automatic", "pid"):
         return result
@@ -1318,10 +1384,10 @@ def _humidity_demand(manager: Any, spec: ManagedDevice, cap: Capabilities,
 
 def humidity_demand(manager: Any, spec: ManagedDevice, cap: Capabilities,
                     config: dict, plan: dict) -> dict:
-    """Requested/effective RH targets and current calibrated mold provenance.
+    """Declared profile target, effective room RH and current mold provenance.
 
-    Saved target editors use targets(..., mold_protection=False). Runtime and
-    its physical facade use the default effective target. This read-only
+    Saved target editors and the declared-basis facade use targets(...,
+    mold_protection=False). Runtime uses the converted room-RH target. This read-only
     diagnostic does not alter saved comfort values or operating permissions.
     """
     requested = targets(manager, spec, cap, config, plan, mold_protection=False)["humidity"]

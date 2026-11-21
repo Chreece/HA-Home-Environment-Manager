@@ -10,6 +10,7 @@ from typing import Any
 
 from .const import UNIT_LABEL
 from .logic import Plan, Reading, Reason, Room, Weather, Warning
+from .room_data import classify as classify_room_data
 
 _MISSING_OUTSIDE = frozenset({
     "no_outdoor_data", "no_weather_data", "unavailable_weather", "unavailable_warning",
@@ -82,7 +83,7 @@ def _warning(item: Warning) -> dict[str, Any]:
 
 
 def _room(room: Room, plan: Plan, limits: dict[str, float], *,
-          climate_only: bool = False) -> dict[str, Any]:
+          climate_only: bool = False, control_inputs: list[dict] | None = None) -> dict[str, Any]:
     evidence = plan.environment.get(room.area_id, {}).get("measurement_evidence", {})
     readings = []
     for item in room.readings:
@@ -95,14 +96,7 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
                 data["average_evidence"] = {**aggregate, "area_id": room.area_id}
         readings.append(data)
     high = [item for item in readings if item["exceeded"]]
-    # Estimated eCO₂ is displayed, but cannot alone certify that room air is
-    # safe or complete the genuine pollutant evidence used by ventilation.
-    air_readings = [item for item in readings
-                    if item["metric"] not in ("illuminance", "eco2")]
-    known = any(item["available"] for item in air_readings)
-    incomplete_air = any(not item["available"] for item in air_readings)
     opened = [item for item in room.windows if item.opened is True]
-    incomplete_windows = not room.windows or any(item.opened is None for item in room.windows)
     recommended = next((rec for rec in
                         (*plan.recommendations,*plan.climate_recommendations)
                         if rec.area_id == room.area_id), None)
@@ -115,12 +109,11 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
     radon = extended.get("radon", {})
     evidence_high = ((hcho.get("status") == "ready" and hcho.get("above_who_100ug_m3"))
                      or (radon.get("status") == "annual_screening" and radon.get("above_reference")))
-    if climate_only:
-        # A room enabled only for HVAC must never appear as air-quality safe.
-        status = "unknown"
-    elif high or evidence_high or (recommended and recommended.action == "close"):
+    availability = classify_room_data(
+        room, plan.environment.get(room.area_id, {}), control_inputs)
+    if high or evidence_high or (recommended and recommended.action == "close"):
         status = "attention"
-    elif not known or incomplete_air or incomplete_windows:
+    elif availability["status"] == "missing":
         status = "unknown"
     else:
         status = "safe"
@@ -130,7 +123,6 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
         None,
     )
     mold_details = (missing_mold or {}).get("details", {}) or {}
-    mold_data_status = mold_details.get("status")
     mold_warnings = [
         code for code in mold_details.get("missing_inputs", [])
         if code in {
@@ -148,17 +140,11 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
          and item["available"]),
         None,
     )
-    if status == "unknown":
-        if mold_data_status == "needs_calibration":
-            status_detail = "mold_not_calibrated"
-        elif mold_data_status == "inputs_unavailable":
-            status_detail = "mold_inputs_unavailable"
-        elif known:
-            status_detail = "partial_indoor_data"
-        else:
-            status_detail = "no_indoor_data"
-    else:
-        status_detail = None
+    status_detail = ("required_control_data_missing" if (availability["missing_required_metrics"]
+                                                       or availability["unavailable_controllers"])
+                     else "no_indoor_data" if availability["status"] == "missing"
+                     else "partial_indoor_data" if availability["status"] == "partial"
+                     else None)
 
     return {
         "area_id": room.area_id,
@@ -166,6 +152,7 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
         "climate_only": climate_only,
         "status": status,
         "status_detail": status_detail,
+        "data_availability": availability,
         "mold_warnings": mold_warnings,
         "environment": plan.environment.get(room.area_id, {}),
         "rh_fallback": (
@@ -192,24 +179,29 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
     }
 
 
-def dashboard_snapshot(plan: Plan, limits: dict[str, float]) -> dict[str, Any]:
+def dashboard_snapshot(plan: Plan, limits: dict[str, float], *,
+                       control_inputs: dict[str, list[dict]] | None = None) -> dict[str, Any]:
     """Describe *all* monitored rooms, not only actionable recommendations.
 
-    Missing sensors are explicitly marked unknown, never optimistically green.
+    Missing required feedback or all basic room data is explicitly unknown.
+    Optional sensor/window diagnostics do not imply the room has no data.
     Incomplete outside air readings are not a known hazard and must not trigger
     closing a window, but the UI must not imply complete verification either.
     """
-    room_data = [_room(room, plan, limits) for room in plan.rooms]
-    # Distinct from monitored rooms: show explicitly configured climate-only
-    # rooms without making up window advice or inflating AQ summary totals.
+    inputs = control_inputs or {}
+    room_data = [_room(room, plan, limits, control_inputs=inputs.get(room.area_id))
+                 for room in plan.rooms]
+    # Count exactly the rendered rooms. Climate-only membership does not mean
+    # missing measurements and still creates no window or air-quality advice.
     already={room.area_id for room in plan.rooms}
-    extra=[_room(room,plan,limits,climate_only=True)
+    extra=[_room(room,plan,limits,climate_only=True,control_inputs=inputs.get(room.area_id))
            for room in plan.climate_rooms if room.area_id not in already]
+    all_rooms = room_data + extra
     summary = {
-        "total": len(room_data),
-        "safe": sum(room["status"] == "safe" for room in room_data),
-        "attention": sum(room["status"] == "attention" for room in room_data),
-        "unknown": sum(room["status"] == "unknown" for room in room_data),
+        "total": len(all_rooms),
+        "safe": sum(room["status"] == "safe" for room in all_rooms),
+        "attention": sum(room["status"] == "attention" for room in all_rooms),
+        "unknown": sum(room["status"] == "unknown" for room in all_rooms),
     }
     missing_conditions = bool(plan.unavailable_outdoor) or any(
         reason.code in _MISSING_OUTSIDE for reason in plan.outside_reasons
@@ -233,7 +225,7 @@ def dashboard_snapshot(plan: Plan, limits: dict[str, float]) -> dict[str, Any]:
     return {
         "version": 1,
         "summary": summary,
-        "rooms": room_data+extra,
+        "rooms": all_rooms,
         "climate_only_count":len(extra),
         "outdoor": {
             "status": outside_status,
@@ -256,3 +248,10 @@ def dashboard_snapshot(plan: Plan, limits: dict[str, float]) -> dict[str, Any]:
             "unevaluated_aqi_sensors": unevaluated_aqi,
         },
     }
+
+
+def manager_dashboard_snapshot(manager: Any, *, area_id: str | None = None) -> dict[str, Any]:
+    """Use the same read-only live input projection for WS and room entities."""
+    from .room_data import controller_inputs
+    return dashboard_snapshot(manager.plan, manager.thresholds,
+                              control_inputs=controller_inputs(manager, area_id=area_id))

@@ -171,6 +171,7 @@ target_scope = {
         if isinstance(node, ast.Assign) and any(
             isinstance(target, ast.Name) and target.id == "MODE_KEYS" for target in node.targets)),
     "room_config": Model.room_config,
+    "settings": Model.settings,
     "profile_name": Model.profile_name,
     "device_limits": Model.device_limits,
     "DEFAULT_PROFILE_TARGETS": strategy.DEFAULT_PROFILE_TARGETS,
@@ -180,14 +181,17 @@ target_scope = {
         and any(isinstance(target, ast.Name) and target.id == "PRESETS" for target in node.targets)
     )),
 }
-profile_guard = next(node for node in target_source.body
-                     if isinstance(node, ast.FunctionDef) and node.name == "automatic_profile_reason")
+target_helpers = [node for node in target_source.body
+                  if isinstance(node, ast.FunctionDef) and node.name in (
+                      "automatic_profile_reason", "uses_mold_target", "humidity_target_bounds")]
 target_tree = ast.Module(body=[ast.ImportFrom(
     module="__future__", names=[ast.alias(name="annotations")], level=0,
-), target_function, profile_guard], type_ignores=[])
+), target_function, *target_helpers], type_ignores=[])
 exec(compile(ast.fix_missing_locations(target_tree), "equipment_model.py", "exec"), target_scope)
 Model.targets = staticmethod(target_scope["targets"])
 Model.automatic_profile_reason = staticmethod(target_scope["automatic_profile_reason"])
+Model.uses_mold_target = staticmethod(target_scope["uses_mold_target"])
+Model.humidity_target_bounds = staticmethod(target_scope["humidity_target_bounds"])
 sys.modules["hem_beta88_fixture.equipment_model"] = Model
 pkg.equipment_model = Model
 runtime_module = ModuleType("hem_beta88_fixture.equipment_runtime")

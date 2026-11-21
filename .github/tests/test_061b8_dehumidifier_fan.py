@@ -158,12 +158,17 @@ class FanStagesTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(current.compensated_duty_percent, 100.)
 
     async def test_dry_compressor_retains_pwm_and_native_minimum_off_with_staged_fan(self):
-        d = Driver(kp=1.)
+        # This regression needs a small demand. A 70% surface profile with
+        # the fixture's physical 80% surface reading converts to 48.825% RH,
+        # leaving 6.975 RH points of error at Kp=1 (the same small PWM case).
+        d = Driver(kp=1., profile_targets={
+            'home': {'humidity': 70.}, 'comfort': {'humidity': 70.}})
         await d.at(0)
         r = d.r
         self.assertEqual(d.events[0][1:], ('set_hvac_mode', {'hvac_mode': 'dry'}))
         self.assertIn((0, 'set_fan_mode', {'fan_mode': 'Low'}), d.events)
         self.assertIsNotNone(r.status['pid_pwm_effective_cycle_seconds'])
+        self.assertEqual(r.humidity_info()['control_target'], 70.)
         self.assertLess(r.status['demand_percent'], 10.)
         await d.at(126)
         self.assertEqual(d.events[-1][1:], ('set_hvac_mode', {'hvac_mode': 'off'}))

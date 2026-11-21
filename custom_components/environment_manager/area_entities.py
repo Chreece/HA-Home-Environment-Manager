@@ -19,7 +19,7 @@ from .const import (
     CONF_AREAS, CONF_CLIMATE_ROOMS, CONF_MOLD_ROOMS, CONF_PID_ROOMS,
     CONF_USE_MOLD, DOMAIN, SIGNAL_UPDATED,
 )
-from .dashboard import dashboard_snapshot
+from .dashboard import dashboard_snapshot, manager_dashboard_snapshot
 from .device_hierarchy import (
     async_register_hierarchy, configured_area_ids, hierarchy_attributes,
 )
@@ -40,8 +40,13 @@ _ACTUATOR_STATUS_KEYS = (
 
 
 
-def room_snapshot(manager: Any, area_id: str) -> dict[str, Any] | None:
-    snapshot = dashboard_snapshot(manager.plan, manager.thresholds)
+def room_snapshot(manager: Any, area_id: str, *,
+                  include_control_inputs: bool = True) -> dict[str, Any] | None:
+    # Calculated mold getters need only the saved plan reading. Overview
+    # assessments include live feedback availability through the shared path.
+    snapshot = (manager_dashboard_snapshot(manager, area_id=area_id)
+                if include_control_inputs else
+                dashboard_snapshot(manager.plan, manager.thresholds))
     return next((item for item in snapshot["rooms"]
                  if item["area_id"] == area_id), None)
 
@@ -159,6 +164,7 @@ def overview_attributes(manager: Any, area_id: str) -> dict[str, Any]:
     assessment = {
         "status": room.get("status"),
         "detail": room.get("status_detail"),
+        "data_availability": room.get("data_availability", {}),
         "window_action": room.get("action"),
         "action_windows": room.get("action_window_ids", []),
         "reasons": room.get("reasons", [])[:12],
@@ -282,9 +288,6 @@ class AreaOverview(_AreaEntity):
         room = room_snapshot(self._manager, self._area_id)
         if room is None:
             return "unknown"
-        if room.get("climate_only"):
-            climate = room.get("environment", {}).get("climate_plan", {})
-            return climate.get("status", "unknown") if isinstance(climate, dict) else "unknown"
         return room.get("status", "unknown")
 
     @property
@@ -305,12 +308,14 @@ class AreaMoldSurfaceHumidity(_AreaEntity):
 
     @property
     def native_value(self):
-        mold = calculated_mold(room_snapshot(self._manager, self._area_id))
+        mold = calculated_mold(room_snapshot(self._manager, self._area_id,
+                                             include_control_inputs=False))
         return mold.get("value") if mold and mold.get("available") else None
 
     @property
     def extra_state_attributes(self):
-        mold = calculated_mold(room_snapshot(self._manager, self._area_id))
+        mold = calculated_mold(room_snapshot(self._manager, self._area_id,
+                                             include_control_inputs=False))
         if mold is None:
             return {"calibration_status": "not_configured"}
         details = mold.get("details") or {}

@@ -17,7 +17,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import entity_registry as er
 
 from .const import DOMAIN
-from .dashboard import dashboard_snapshot
+from .dashboard import manager_dashboard_snapshot
 from .controller_inventory import controller_inventory
 from .environment_history import AVG_ALLOWED, AVG_MAX_AGE, AVG_MIN_SAMPLE_SECONDS
 
@@ -81,9 +81,9 @@ def websocket_dashboard(
         return
     entry_id = manager.entry.entry_id
 
-    # Pure transformation of the latest validated Plan; no I/O, no physical
-    # control, no registry changes, and no Recorder/database writes.
-    result = dashboard_snapshot(manager.plan, manager.thresholds)
+    # Read-only validated plan and exact configured control measurements;
+    # no physical control, registry changes or Recorder/database writes.
+    result = manager_dashboard_snapshot(manager)
     # This entry ID has already been verified against the caller's readable
     # recommendation sensor. Disambiguate multiple HEM Home devices without
     # trusting names, registry order, or a sometimes absent frontend entity map.

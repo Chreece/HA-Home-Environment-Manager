@@ -319,11 +319,18 @@ class EquipmentRuntime:
             if cap is not None:
                 demand = model.humidity_demand(self.manager, spec, cap, cfg, model.plan_for(self.manager, spec))
                 value["humidity_demand"] = demand
+                surface_target = demand.get("target_basis") == "mold_surface_rh"
                 if demand.get("mold_protection_required") is True:
                     value["demand_reason"] = "mold_above_limit"
-                    if status == "within_target_band":
+                    if status == "within_target_band" and not surface_target:
                         value["status"] = "awaiting_evaluation"
                         value["reason"] = "mold_above_limit"
+                if surface_target and status == "within_target_band":
+                    if demand.get("target_ready") is not True:
+                        value.update(status="target_unavailable", reason="target_unavailable")
+                    elif demand.get("target_blocked_by_limits") is True:
+                        value.update(status="target_outside_device_limits",
+                                     reason="target_outside_device_limits", pid_target_reached=False)
         if key in self._fan_allocations:
             value["pid_fan_capacity"] = self._fan_allocations[key]
         if key in self._pid_offline_previews:
@@ -447,10 +454,27 @@ class EquipmentRuntime:
                     from .dry_mode import automatic_mode
                     allowed_native = {model.mode_descriptor(self.manager, spec, key)["native_mode"]
                                       for key in eligible}
+                    selection_measurements = self.measurements(spec, cap)
+                    dry_profile = eligible.get("dry")
+                    if dry_profile is not None and model.uses_mold_target(
+                            self.manager, spec, cap, dry_profile):
+                        humidity_info = model.humidity_demand(
+                            self.manager, spec, cap, dry_profile, plan)
+                        ready = humidity_info.get("target_ready") is True
+                        # The current mode may be heating, whose legacy RH
+                        # source is not the calibrated room mean used by Dry.
+                        # Inspect Dry's exact feedback without changing any
+                        # thermal measurement or selecting the profile early.
+                        selection_measurements = {**selection_measurements,
+                            "humidity": humidity_info.get("indoor_humidity") if ready else None}
+                        combined["humidity"] = max(
+                            humidity_info["converted_room_rh_target"],
+                            humidity_info["effective_humidity_target"],
+                        ) if ready else None
                     native_mode = automatic_mode(
                         replace(cap, modes=tuple(mode for mode in cap.modes
                                                  if mode == "off" or mode in allowed_native)),
-                        self.hass.states.get(cap.primary), self.measurements(spec, cap), combined,
+                        self.hass.states.get(cap.primary), selection_measurements, combined,
                         dedicated_dry=model.room_config(self.manager, spec).get("dry_climate_entity") == cap.primary,
                         # The legacy fallback does not choose the algorithm
                         # for an independently configured native AUTO/range
@@ -3021,7 +3045,21 @@ class EquipmentRuntime:
                     raise HomeAssistantError("Invalid profile targets for this operating mode")
                 for key, value in values.items():
                     low, high = (cap.min_humidity, cap.max_humidity) if key == "humidity" else (cap.min_temp, cap.max_temp)
-                    if limits is not None:
+                    target_config = {**new, "control_mode": "manual"} if profile == "manual" else new
+                    if key == "humidity":
+                        low, high = model.humidity_target_bounds(self.manager, spec, cap, target_config)
+                        old_profiles = old.get("profile_targets", {})
+                        old_values = old_profiles.get(profile, {}) if isinstance(old_profiles, dict) else {}
+                        if (profile != "manual" and isinstance(old_values, dict)
+                                and old_values.get(key) == value):
+                            # Surface-RH targets can exceed native room-RH
+                            # bounds. Preserve unchanged saved profiles when
+                            # mold or its control method is disabled, so an
+                            # inert target cannot prevent Off or other edits.
+                            # New values still use the current editor bounds;
+                            # runtime targets always apply current limits.
+                            low, high = 1.0, 100.0
+                    elif limits is not None:
                         prefix = "humidity" if key == "humidity" else "temperature"
                         low, high = max(low, limits[prefix + "_min_limit"]), min(high, limits[prefix + "_max_limit"])
                     if isinstance(value, bool) or finite(value, low, high) is None:
@@ -3798,10 +3836,12 @@ class EquipmentRuntime:
                   **(existing if isinstance(existing,dict) else {})}
 
             if "humidity" in values:
+                humidity_low, humidity_high = model.humidity_target_bounds(
+                    self.manager, spec, cap, effective)
                 humidity=finite(
                     values["humidity"],
-                    limits["humidity_min_limit"],
-                    limits["humidity_max_limit"],
+                    humidity_low,
+                    humidity_high,
                 )
                 if humidity is None:
                     raise HomeAssistantError("Humidity target outside Room Environment limits")
@@ -4657,6 +4697,25 @@ class EquipmentRuntime:
                 "reported_at": max(timestamps.values()) if timestamps
                                and len(timestamps) == len(contributors) else None,
             }
+        if model.uses_mold_target(self.manager, spec, cap):
+            # Surface RH and its inverse must use the very same physical
+            # humidity evidence, including legacy rooms with pinned devices.
+            # Never compare a room-wide mold estimate with another RH sensor.
+            from .mold_control_demand import room_mold_demand
+            evidence = room_mold_demand(self.manager, spec.area_id)
+            humidity = evidence.get("indoor_humidity")
+            entities = list(evidence.get("humidity_entities", ()))
+            timestamps = {entity: at for entity in entities
+                          if (at := _reported_timestamp(self.hass.states.get(entity))) is not None}
+            values.update(humidity=humidity, humidity_entity=None,
+                          humidity_selected_entities=entities, humidity_source="room_selected_mean",
+                          humidity_control_basis="mold_surface_rh")
+            values["humidity_provenance"] = {
+                "source_ids": entities, "contributor_ids": entities if humidity is not None else [],
+                "aggregation": "mean", "source_reported_at": timestamps,
+                "reported_at": max(timestamps.values()) if timestamps
+                               and len(timestamps) == len(entities) else None,
+            }
         return values
 
     def _quiet_context(self, spec: model.ManagedDevice, cfg: dict, plan: dict) -> bool:
@@ -4850,6 +4909,13 @@ class EquipmentRuntime:
             if conflict := _physical_climate_conflict(self.hass, spec.area_id, room, cap.primary, mode):
                 return conflict
         if automatic:
+            if (cap.domain == "humidifier" or mode == "dry") and model.uses_mold_target(
+                    self.manager, spec, cap, cfg):
+                humidity_info = model.humidity_demand(self.manager, spec, cap, cfg, plan)
+                if humidity_info.get("target_ready") is not True:
+                    return "target_unavailable"
+                if humidity_info.get("target_blocked_by_limits") is True:
+                    return "target_outside_device_limits"
             if (cap.humidifying and hasattr(model, "humidity_demand")
                     and model.humidity_demand(self.manager, spec, cap, cfg, plan).get("mold_protection_required") is True):
                 return "mold_above_limit"
@@ -4906,7 +4972,8 @@ class EquipmentRuntime:
                     if not cap.humidifying and other.state in ("cool", "heat_cool", "auto"):
                         humidity = self.measurements(spec, cap)["humidity"]
                         target = model.targets(self.manager, spec, cap, cfg, plan)["humidity"]
-                        if humidity is None or humidity < target + float(room.get("cooling_dry_deferral_rh_points", 10)):
+                        if (humidity is None or target is None
+                                or humidity < target + float(room.get("cooling_dry_deferral_rh_points", 10))):
                             return "cooling_priority_defer_dehumidifier"
         return None
 
@@ -6432,6 +6499,10 @@ class EquipmentRuntime:
             # misleading "controlling" status when the target was not sent.
             return True if sent else None
         if cap.domain == "humidifier" or cap.humidity and (mode == "dry" or manual_humidity):
+            humidity_target = finite(targets.get("humidity"), 0, 100)
+            if humidity_target is None:
+                self._status(spec, "target_unavailable")
+                return None
             if cap.domain == "climate" and not (model.features(state) & model.HUMIDITY):
                 return False
             binary_humidity_output = (
@@ -6480,7 +6551,7 @@ class EquipmentRuntime:
                     self._record(spec)["target_at"] = self.clock()
                 return True if sent else None
             value = round(max(limits["humidity_min_limit"],
-                              min(limits["humidity_max_limit"], targets["humidity"])))
+                              min(limits["humidity_max_limit"], humidity_target)))
             if automatic:
                 actual = finite(state.attributes.get("humidity"), 0, 100)
                 if actual is None:
