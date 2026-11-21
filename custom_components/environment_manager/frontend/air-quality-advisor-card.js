@@ -9786,7 +9786,7 @@
       approveButton:"Annehmen",discardButton:"Ablehnen"},
   },"HEM_PID_ACTIONS_B18:9693");
   const pidActionsB18=card=>HEM_PID_ACTIONS_B18[card._language()]||HEM_PID_ACTIONS_B18.en;
-  const pidKeyB18=key=>/^(?:pid_[a-z0-9_]+|kp|ki|kd|cycle_seconds|sample_seconds)$/.test(key);
+  const scopedEditorKeyB9=key=>/^(?:pid_[a-z0-9_]+|kp|ki|kd|cycle_seconds|sample_seconds|quiet_(?:sleep|occupied|fan_mode|percentage))$/.test(key);
   const tr127=(card,key)=>(HEM_FULL_WORDS127[card._language()]||HEM_FULL_WORDS127.en)[key]||key;
   const DOMAINS127=new Set(["number","select","switch","button","time"]);
   const ORDER127=["mode","targets","pid","fan","power","presence","ventilation","alerts","schedule","other"];
@@ -9887,13 +9887,13 @@
 
     const ordered=result.sort((a,b)=>a.label.localeCompare(b.label,this._language())||a.id.localeCompare(b.id));
     if(scope!=="device")return ordered;
-    // Per-operating-mode PID controls supersede the original controller-wide
-    // editors. Match the actual immutable registry IDs and controller owner;
+    // Per-operating-mode PID and quiet controls supersede the original
+    // controller-wide editors. Match immutable registry IDs and controller owner;
     // never guess by display labels, state entity IDs or source product names.
     const scoped=new Map();
     for(const field of ordered){
       const a=field.state?.attributes||{},key=a.setting_key;
-      if(a.settings_scope!=="operating_mode"||!pidKeyB18(key)||
+      if(a.settings_scope!=="operating_mode"||!scopedEditorKeyB9(key)||
          typeof a.controller_id!=="string"||typeof a.operating_mode!=="string"||
          field.reg?.unique_id!==a.controller_id+"_mode_"+a.operating_mode+"_"+key)continue;
       const index=a.controller_id+"|"+field.domain+"|"+key;
@@ -9905,7 +9905,7 @@
       if(a.settings_scope==="operating_mode"||typeof owner!=="string"||
          typeof unique!=="string"||!unique.startsWith(owner+"_"))return true;
       const key=unique.slice(owner.length+1);
-      if(!pidKeyB18(key))return true;
+      if(!scopedEditorKeyB9(key))return true;
       const replacements=scoped.get(owner+"|"+field.domain+"|"+key);
       if(!replacements?.length)return true;
       const edit=saved.nativeEdits?.get(field.id);
@@ -9913,7 +9913,7 @@
       const usable=record=>!record.disabled&&record.state&&
         record.state.state!=="unavailable"&&
         (record.domain==="button"||record.state.state!=="unknown");
-      // A live legacy action remains reachable if every new mode control is offline.
+      // A live legacy editor remains reachable if every new mode control is offline.
       if(usable(field)&&!replacements.some(usable))return true;
       return false;
     });

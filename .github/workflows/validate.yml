@@ -67,6 +67,7 @@ jobs:
           python -I .github/tests/test_native_flow_error_coverage.py
           python -I .github/tests/test_native_error_meaning.py
           python -I .github/tests/test_074b8_backend_languages.py
+          python -I .github/tests/test_074b9_mode_labels.py
           node tools/check_frontend_locales.js
           python -I .github/tests/test_074b8_readme_content.py
       - name: Reproduce bundled translations from checked-in sources
@@ -507,6 +508,8 @@ jobs:
         run: python -I .github/tests/test_061b13_all_settings.py
       - name: B18 PID settings deduplication, paired decisions and responsive labels
         run: python -I .github/tests/test_062b18_device_pid_actions.py
+      - name: B9 quiet settings deduplication across supported device types
+        run: python -I .github/tests/test_074b9_quiet_settings.py --with-browser
       - name: B19 per-device door preferences, exact area safety and native menu ownership
         run: |
           set -euo pipefail
