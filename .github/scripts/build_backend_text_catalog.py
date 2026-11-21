@@ -125,10 +125,14 @@ for count in range(1, 5):
         export(lambda locale, modes=modes: help_module.equipment_configuration_help(
             "native_full_output", locale, modes=modes), dependencies)
 
-for key, prefix in (("control_mode", prefixes[0]), ("target_home_heat", prefixes[1])):
+for key in ("control_mode", "target_home_heat", "target_home_humidity"):
     ordinary = help_module.equipment_configuration_help(key, "en")
+    english = scope["scoped_help"](key, "en", ordinary)
+    dependencies = [source for source in prefixes if source in english]
+    if ordinary in english:
+        dependencies.append(ordinary)
     export(lambda locale, key=key: scope["scoped_help"](
-        key, locale, help_module.equipment_configuration_help(key, locale)), [prefix, ordinary])
+        key, locale, help_module.equipment_configuration_help(key, locale)), dependencies)
 
 serialized = json.dumps(composed, ensure_ascii=False, indent=2) + "\n"
 write_atomic(LOCALIZATION / "backend_composed_help.json", serialized)

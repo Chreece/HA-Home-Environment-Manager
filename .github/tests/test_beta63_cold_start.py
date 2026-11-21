@@ -117,6 +117,9 @@ presence_scope = {"PRESETS": ast.literal_eval(next(
 Model.automatic_profile_reason = staticmethod(load_functions(
     "equipment_model.py", ("automatic_profile_reason",), presence_scope,
 )[0])
+Model.uses_mold_target = staticmethod(load_functions(
+    "equipment_model.py", ("uses_mold_target",), {"settings": Model.settings},
+)[0])
 
 
 spec = NS(

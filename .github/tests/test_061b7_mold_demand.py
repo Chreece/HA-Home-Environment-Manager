@@ -107,7 +107,7 @@ class MoldDemandTests(unittest.TestCase):
                      (20, 5, 1.63, 0), (20, 5, float("nan"), 70), (20, 5, 1.63, True)):
             self.assertIsNone(mold.indoor_humidity_for_surface_limit(*args))
 
-    def test_above_surface_limit_creates_drying_below_comfort_rh_target(self):
+    def test_above_surface_profile_creates_drying_with_lower_ambient_humidity(self):
         before = deepcopy(self.settings)
         for method in ("automatic", "pid"):
             cfg = {**self.cfg, "control_mode": method}
@@ -133,9 +133,9 @@ class MoldDemandTests(unittest.TestCase):
 
     def test_native_integer_target_stays_below_surface_limit_and_dry_pwm_keeps_precision(self):
         info = self.info()
-        exact = info["mold_required_humidity_target"]
+        exact = info["converted_room_rh_target"]
         self.assertEqual(info["effective_humidity_target"], math.floor(exact))
-        self.assertLessEqual(mold.estimate_mold(20, 5, info["effective_humidity_target"], 1.63).surface_humidity, 70)
+        self.assertLessEqual(mold.estimate_mold(20, 5, info["effective_humidity_target"], 1.63).surface_humidity, 60)
         dry = model.Capabilities("climate.dry", "climate", ("off", "dry"), humidity=True)
         self.assertAlmostEqual(self.info(cap=dry)["effective_humidity_target"], exact)
 
@@ -148,12 +148,13 @@ class MoldDemandTests(unittest.TestCase):
         self.assertTrue(info["mold_protection_required"])
         self.assertEqual(info["mold_target_limit_reason"], "humidity_minimum_limit")
 
-    def test_stricter_existing_target_survives_mold_limit(self):
+    def test_stricter_profile_is_converted_before_actuator_limits(self):
         cfg = {**self.cfg, "operating_mode": "dry", "profile_targets": {"home": {"humidity": 40}}}
         info = self.info(cfg=cfg)
         self.assertEqual(info["requested_humidity_target"], 40)
-        self.assertEqual(info["effective_humidity_target"], 40)
-        self.assertFalse(info["mold_target_active"])
+        self.assertLess(info["converted_room_rh_target"], 40)
+        self.assertEqual(info["effective_humidity_target"], self.limits["humidity_min_limit"])
+        self.assertTrue(info["mold_target_active"])
 
     def test_recovery_keeps_calibrated_upper_bound_for_humidification(self):
         self.sensor("sensor.room_humidity", 40, "humidity", "%")
@@ -164,13 +165,15 @@ class MoldDemandTests(unittest.TestCase):
         self.assertLess(info["effective_humidity_target"], 60)
         self.assertEqual(info["target_provenance"], "calibrated_surface_rh_limit")
 
-    def test_current_threshold_changes_target_without_saving_comfort_target(self):
+    def test_global_warning_threshold_does_not_replace_profile_target(self):
         target70 = self.info()["effective_humidity_target"]
         self.settings[self.threshold_key]["indoor_mold"] = 80
-        self.assertGreater(self.info()["effective_humidity_target"], target70)
+        self.assertEqual(self.info()["effective_humidity_target"], target70)
         self.settings[self.threshold_key]["indoor_mold"] = 95
         self.assertFalse(self.info()["mold_protection_required"])
-        self.assertEqual(self.info()["effective_humidity_target"], 60)
+        self.assertEqual(self.info()["effective_humidity_target"], target70)
+        self.assertEqual(self.info()["control_target"], 60)
+        self.assertTrue(self.info()["mold_control_demand_required"])
 
     def test_stale_restored_or_moved_feedback_never_creates_mold_demand(self):
         for sensor, kind, unit, value in (("sensor.room_humidity", "humidity", "%", 55.8),
@@ -181,7 +184,8 @@ class MoldDemandTests(unittest.TestCase):
                     info = self.info()
                     self.assertFalse(info["mold_protection_required"])
                     self.assertEqual(info["status"], "inputs_unavailable")
-                    self.assertEqual(info["effective_humidity_target"], 60)
+                    self.assertIsNone(info["effective_humidity_target"])
+                    self.assertFalse(info["target_ready"])
                     self.sensor(sensor, value, kind, unit)
         self.weather(5, age=91)
         self.assertFalse(self.info()["mold_protection_required"])
@@ -252,7 +256,8 @@ class MoldDemandTests(unittest.TestCase):
         for value in (None, True, 0, float("nan")):
             self.settings["mold_rooms"]["room"]["calibration_factor"] = value
             self.assertEqual(self.info()["status"], "needs_calibration")
-            self.assertEqual(self.info()["effective_humidity_target"], 60)
+            self.assertIsNone(self.info()["effective_humidity_target"])
+            self.assertFalse(self.info()["target_ready"])
         self.settings["mold_rooms"]["room"] = original
         self.settings["room_sources"]["room"]["humidity"] = []
         self.assertEqual(self.info()["status"], "inputs_unavailable")

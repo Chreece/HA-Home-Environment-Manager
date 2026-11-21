@@ -29,6 +29,7 @@ Missing feedback has needed=None, which cannot authorize active output.
     plan = model.plan_for(runtime.manager, spec)
     targets = model.targets(runtime.manager, spec, cap, cfg, plan)
     measured = runtime.measurements(spec, cap)
+    humidity_info = None
     if mode is None:
         mode = cfg.get("requested_mode")
         if mode is None and native is not None and native.state in ("heat", "cool", "dry"):
@@ -50,6 +51,9 @@ Missing feedback has needed=None, which cannot authorize active output.
         metric, increasing = "humidity", bool(cap.humidifying)
         target = finite(targets.get("humidity"), 0, 100)
         value = finite(measured.get(metric), 0, 100)
+        if model.uses_mold_target(runtime.manager, spec, cap, cfg):
+            humidity_info = model.humidity_demand(runtime.manager, spec, cap, cfg, plan)
+            value = finite(humidity_info.get("indoor_humidity"), 0, 100)
     elif mode in ("heat", "cool"):
         metric, increasing = "temperature", mode == "heat"
         target = finite(targets.get(mode), -60, 85)
@@ -86,8 +90,17 @@ Missing feedback has needed=None, which cannot authorize active output.
         error = target - value if increasing else value - target
         needed = (None if native is None or native.state in ("unknown", "unavailable")
                   else error > (-band if running else band))
+    if humidity_info is not None:
+        if humidity_info.get("target_ready") is not True:
+            needed = None
+        elif needed is not None and humidity_info.get("mold_control_demand_required") is False:
+            # Bounding a converted native RH target must not create demand
+            # after the selected surface-RH profile has already been met.
+            needed = False
     return {"mode": mode, "metric": metric, "measured": value,
-            "target": target, "increasing": increasing, "needed": needed}
+            "target": target, "increasing": increasing, "needed": needed,
+            "target_reached": needed is False and not (
+                humidity_info is not None and humidity_info.get("target_blocked_by_limits") is True)}
 
 
 def reducing_command(runtime: Any, cap: Any, service: str,
@@ -217,7 +230,8 @@ async def remember_cutoff(runtime: Any, spec: Any, current: dict | None) -> None
     changed = record.pop("pid_checkpoint", None) is not None
     changed = record.pop("pid_pwm_run", None) is not None or changed
     evidence = {"mode": current["mode"], "metric": current["metric"],
-                "measured": current["measured"], "target": current["target"]}
+                "measured": current["measured"], "target": current["target"],
+                "target_reached": current.get("target_reached", True)}
     if record.get("pid_target_cutoff") != evidence:
         record["pid_target_cutoff"] = evidence
         changed = True
@@ -235,7 +249,7 @@ def status_details(record: dict) -> dict:
             or finite(evidence.get("target"), *bounds) is None
             or finite(evidence.get("measured"), *bounds) is None):
         return {}
-    return {"demand_percent": 0.0, "pid_target_reached": True,
+    return {"demand_percent": 0.0, "pid_target_reached": evidence.get("target_reached", True),
             "pid_control_metric": evidence["metric"],
             "pid_control_target": evidence["target"],
             "pid_control_measurement": evidence["measured"],

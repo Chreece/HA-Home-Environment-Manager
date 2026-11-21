@@ -172,6 +172,39 @@ for(const language of ['en','el','de']){
   assert.ok(!optional.includes('No window sensors')&&!optional.includes('Δεν έχουν επιλεγεί αισθητήρες παραθύρων'));
   assert.deepEqual(counts(c._summary({unknown:99},rooms(c))),{safe:6,attention:1,unknown:2});
 }
+// Fresh room RH and temperature do not establish a calibrated mold target.
+// Explain the exact affected controller without inventing an indoor outage.
+const unready=structuredClone(get(c,'living'));
+unready.status='unknown';unready.readings=unready.readings.filter(row=>row.available);
+unready.data_availability={status:'missing',required_metrics:['temperature','humidity'],
+  missing_required_metrics:[],missing_basic_metrics:[],controllers:[{
+    controller_id:'mold_dryer',name:'Mold dehumidifier',metrics:['temperature','humidity'],
+    missing_metrics:[],target_ready:false,unavailable_reason:'needs_calibration',missing_inputs:[]}],
+  unavailable_controllers:[{controller_id:'mold_dryer',name:'Mold dehumidifier',reason:'needs_calibration'}]};
+const unreadyBefore=JSON.stringify(unready),control=unready.data_availability.controllers[0];
+for(const language of ['en','el','de']){
+  c._hass.language=language;c._roomIssues114.set('living','missing');
+  assert.deepEqual(c._roomInputs071(unready),{temperature:true,humidity:true});
+  assert.equal(c._roomControlMissing075(unready).length,1);
+  assert.deepEqual(c._roomControlMissing075(unready)[0].metrics,[]);
+  for(const html of [c._roomMissingInfo071(unready),c._roomIssueDetail114(unready)]){
+    assert.ok(html.includes('Mold dehumidifier'),language+' lost unready controller');
+    assert.ok(html.includes(c._t('moldNotCalibrated')),language+' missing calibration explanation');
+    assert.ok(!html.includes('needs_calibration'),'Internal reason leaked into room help');
+  }
+}
+assert.equal(JSON.stringify(unready),unreadyBefore,'Prerequisite display mutated room evidence');
+control.unavailable_reason='inputs_unavailable';control.missing_inputs=['outdoor_temperature'];
+for(const language of ['en','el','de']){
+  c._hass.language=language;
+  const html=c._roomMissingInfo071(unready);
+  assert.ok(html.includes(c._t('moldInputsUnavailable')));
+  assert.ok(html.includes(c._t('outside')+' · '+c._metricName('temperature')));
+  assert.ok(!html.includes('inputs_unavailable')&&!html.includes('outdoor_temperature'));
+  assert.deepEqual(c._roomControlMissing075(unready)[0].metrics,[]);
+}
+control.target_ready=true;control.missing_inputs=[];unready.data_availability.unavailable_controllers=[];
+assert.equal(c._roomMissingInfo071(unready),'','Resolved prerequisites must not leave stale missing-data help');
 c._hass.language='en';
 c._floorRegistry140={floors:[{floor_id:'ground',name:'Ground floor'},{floor_id:'upper',name:'Upper floor'}],
   membership:new Map(rooms(c).map(r=>[r.area_id,input.ground.includes(r.area_id)?'ground':'upper']))};

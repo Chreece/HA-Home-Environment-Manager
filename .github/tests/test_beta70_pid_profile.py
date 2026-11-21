@@ -42,9 +42,9 @@ phase_ns = {"math": math, "TARGET_CHANGE_C": 0.25, "COMFORT_ERROR_C": 0.5}
                      "binary_pwm_off_phase", "sampled_binary_pwm_plan"), phase_ns
 )
 model_ns = {"math": math, "dataclass": dataclass}
-PIDMemory, pid_step, duty_on, profile_name, automatic_profile_reason = extract(
+PIDMemory, pid_step, duty_on, profile_name, automatic_profile_reason, uses_mold_target = extract(
     "equipment_model.py", ("PIDMemory", "pid_step", "duty_on", "profile_name",
-                           "automatic_profile_reason"),
+                           "automatic_profile_reason", "uses_mold_target"),
     model_ns, constants=("PRESETS",),
 )
 assert duty_on(12.0, 0.0, 3600, 600, 600, starting=True) is False
@@ -139,6 +139,7 @@ model = N(
     capabilities=lambda manager, spec: Cap(),
     profile_name=make_profile,
     automatic_profile_reason=automatic_profile_reason,
+    uses_mold_target=uses_mold_target,
     targets=lambda manager, spec, cap, cfg, plan: {
         "heat": manager.goals[make_profile(cfg, plan)],
         "cool": 26., "humidity": 50.,
@@ -147,6 +148,7 @@ model = N(
     timing=lambda manager, spec, cap: (600., 600., 7200.),
     pid_step=pid_step, duty_on=duty_on,
 )
+model_ns["settings"] = model.settings
 runtime_ns = {
     "__name__": "test_beta70.equipment_runtime",
     "__package__": "test_beta70",

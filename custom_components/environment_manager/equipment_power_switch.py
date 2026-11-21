@@ -664,12 +664,90 @@ def approved_demand(runtime: Any, spec: Any, cfg: dict,
         return False
     targets = model.targets(runtime.manager, spec, cap, cfg, plan)
     observed = runtime.measurements(spec, cap)
+    direction = cfg.get("operating_mode") or cfg.get("requested_mode")
+    unresolved_thermal = None
+    # An explicit native Off is independently verified absence of demand;
+    # missing mold inputs must not keep an already-idle owned relay powered.
+    # The existing physical OFF, ownership and cooldown checks still apply.
+    if (cfg.get("requested_mode") != "off"
+            and model.uses_mold_target(runtime.manager, spec, cap, cfg)):
+        humidity_cfg = cfg
+        scoped = direction is None and model.has_mode_settings(model.raw_settings(runtime.manager, spec))
+        if scoped:
+            # Scope inspection is read-only. The unresolved device still has
+            # one physical owner and its original policy; an inactive Dry
+            # profile cannot inherit a flat Automatic/PID humidity demand.
+            if "dry" not in model.operating_modes(runtime.manager, spec):
+                humidity_cfg = None
+            else:
+                candidate = model.settings_for_mode(runtime.manager, spec, "dry")
+                humidity_cfg = (candidate if candidate.get("control_mode") in ("automatic", "pid")
+                                else None)
+        humidity_info = (model.humidity_demand(runtime.manager, spec, cap, humidity_cfg, plan)
+                         if humidity_cfg is not None else {"target_ready": False})
+        if direction is None:
+            # A shared supply serves every eligible direction. A satisfied
+            # temperature band is not proof that calibrated Dry is idle.
+            # Resolve each scoped method/target without activating that mode.
+            unresolved_thermal = {}
+            for native_mode in ("heat", "cool", "heat_cool", "auto"):
+                if native_mode not in cap.modes:
+                    continue
+                local = (model.settings_for_mode(runtime.manager, spec, native_mode)
+                         if scoped else cfg)
+                if local.get("control_mode") in ("automatic", "pid"):
+                    unresolved_thermal[native_mode] = (local, model.targets(
+                        runtime.manager, spec, cap, local, plan))
+            observed = {**observed, "humidity": humidity_info.get("indoor_humidity")}
+        if cap.domain == "humidifier" or direction == "dry":
+            if humidity_info.get("target_ready") is not True:
+                return None
+            if (humidity_info.get("mold_control_demand_required") is False
+                    or humidity_info.get("target_blocked_by_limits") is True):
+                return False
+        elif direction is None and humidity_info.get("target_ready") is True:
+            # An unresolved multi-mode appliance may still need heating or
+            # cooling. Keep those demands intact, but never infer a drying
+            # start solely from clipping an already-satisfied surface target.
+            targets = {**targets, "humidity": max(
+                humidity_info["effective_humidity_target"],
+                humidity_info["converted_room_rh_target"])}
+        elif direction is None:
+            targets = {**targets, "humidity": None}
     if getattr(runtime.manager, "window_open_wait", None) is not None:
         from .window_open_wait import managed_start_hold
         if managed_start_hold(runtime, spec, cap, cfg, supply=True):
             # A pending/user-response wait may delay a new supply ON. It is
             # never evidence that an already running appliance is idle/OFF.
             return None
+    if unresolved_thermal is not None:
+        if {"heat", "cool"} <= unresolved_thermal.keys():
+            heat = unresolved_thermal["heat"][1]["heat"]
+            cool = unresolved_thermal["cool"][1]["cool"]
+            if cool - heat < 1:
+                return None  # Native mode selection cannot resolve this band.
+        thermal_demand = [output_required(
+            cap, local_targets, observed, method=local["control_mode"],
+            requested_mode=native_mode, fan_purpose=live.get("fan_purpose"), plan=plan,
+        ) for native_mode, (local, local_targets) in unresolved_thermal.items()]
+        if any(value is True for value in thermal_demand):
+            return True  # Independent thermal need retains priority.
+        if humidity_cfg is None:
+            drying = False  # Scoped Off/Manual/Existing cannot infer a start.
+        elif humidity_info.get("target_ready") is not True:
+            drying = None
+        elif (humidity_info.get("mold_control_demand_required") is False
+                or humidity_info.get("target_blocked_by_limits") is True):
+            drying = False
+        else:
+            drying = output_required(
+                cap, targets, observed, method=humidity_cfg["control_mode"],
+                requested_mode="dry", fan_purpose=live.get("fan_purpose"), plan=plan,
+            )
+        # Missing calibration or live feedback is unknown demand, never
+        # evidence authorizing a relay OFF after the thermal band is met.
+        return True if drying is True else (
+            None if drying is None or any(value is None for value in thermal_demand) else False)
     return output_required(
         cap, targets, observed, method=method,
         requested_mode=cfg.get("requested_mode"),

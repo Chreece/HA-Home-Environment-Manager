@@ -69,21 +69,31 @@ def classify(room: Any, environment: dict, controllers: list[dict] | None = None
         metrics = [metric for metric in METRICS if metric in item.get("metrics", ())]
         if not metrics:
             continue
-        rows.append({
+        row = {
             "controller_id": str(item.get("controller_id", "")),
             "name": str(item.get("name", "")),
             "metrics": metrics,
             "missing_metrics": [metric for metric in metrics
                                 if metric in item.get("missing_metrics", ())],
-        })
+        }
+        if "target_ready" in item:
+            row.update(target_ready=item.get("target_ready") is True,
+                       unavailable_reason=str(item.get("unavailable_reason") or ""),
+                       missing_inputs=[value for value in item.get("missing_inputs", ())
+                                       if isinstance(value, str)])
+        rows.append(row)
     required = [metric for metric in METRICS if any(metric in row["metrics"] for row in rows)]
     missing = [metric for metric in required if any(metric in row["missing_metrics"] for row in rows)]
-    status = ("missing" if missing else "ready") if required else (
+    unavailable = [{"controller_id": row["controller_id"], "name": row["name"],
+                    "reason": row["unavailable_reason"]}
+                   for row in rows if row.get("target_ready") is False]
+    status = ("missing" if missing or unavailable else "ready") if required else (
         "missing" if len(missing_basic) == 2 else "partial" if missing_basic else "ready")
     return {
         "status": status,
         "required_metrics": required,
         "missing_required_metrics": missing,
+        "unavailable_controllers": unavailable,
         "controllers": rows,
         "missing_basic_metrics": missing_basic,
     }
@@ -265,8 +275,33 @@ def controller_inputs(manager: Any, *, area_id: str | None = None) -> dict[str, 
             continue
         measured = resolver(spec, source) if callable(resolver) else {}
         measured = measured if isinstance(measured, dict) else {}
-        result.setdefault(spec.area_id, []).append(_row(
-            spec.identifier, spec.name, {metric: measured.get(metric)}))
+        values = {metric: measured.get(metric)}
+        demand = None
+        if (metric == "humidity" and cap is not None
+                and equipment.uses_mold_target(manager, spec, cap, cfg)):
+            demand = equipment.humidity_demand(
+                manager, spec, cap, cfg, equipment.plan_for(manager, spec))
+            # The calibrated model can pin a different temperature source.
+            # Preserve its exact partial evidence: absent weather must not be
+            # represented as absent indoor temperature or a stale RH fallback.
+            if "indoor_temperature_c" in demand:
+                values["temperature"] = demand.get("indoor_temperature_c")
+            if "indoor_humidity" in demand:
+                values["humidity"] = demand.get("indoor_humidity")
+        row = _row(spec.identifier, spec.name, values)
+        if demand is not None:
+            ready = demand.get("target_ready") is True
+            if not ready and "indoor_humidity" not in demand:
+                # Calibration can reject the target before reading any RH.
+                # That is an unavailable derived target, not evidence that
+                # the selected physical humidity sensors have disappeared.
+                row["missing_metrics"] = [value for value in row["missing_metrics"]
+                                          if value != "humidity"]
+            row.update(target_ready=ready,
+                       unavailable_reason="" if ready else demand.get(
+                           "target_unavailable_reason", "control_measurement_missing_or_stale"),
+                       missing_inputs=demand.get("missing_inputs", []))
+        result.setdefault(spec.area_id, []).append(row)
 
     # Retain the old room PID's exact input only while it still owns targets.
     # Claimed native endpoints are removed by the same projection used by the

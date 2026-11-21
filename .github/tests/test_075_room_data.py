@@ -72,7 +72,7 @@ timestamp = next(node for node in tree.body if isinstance(node, ast.FunctionDef)
 runtime_class = ast.ClassDef(name="ReadOnlyRuntime", bases=[], keywords=[],
                             body=methods, decorator_list=[])
 scope = {"__name__": PACKAGE + ".equipment_runtime", "__package__": PACKAGE,
-         "Any": Any, "model": equipment, "datetime": datetime,
+         "Any": Any, "model": equipment, "datetime": datetime, "finite": equipment.finite,
          "entity_area": discovery.entity_area, "reading": discovery.reading,
          "temperature_sensor_c": discovery.temperature_sensor_c,
          "CONF_EXCLUDED_INDOOR": constants.CONF_EXCLUDED_INDOOR}
@@ -430,6 +430,64 @@ class RoomDataTests(unittest.TestCase):
         self.assertEqual(result["missing_required_metrics"], ["humidity"])
         self.assertEqual(result["controllers"][0]["missing_metrics"], [])
         self.assertEqual(result["controllers"][1]["missing_metrics"], ["humidity"])
+
+    def test_enabled_mold_target_requires_calibration_even_with_valid_room_rh(self):
+        spec = self.controller("humidifier.dry", mode="dry", method="pid")
+        self.sensor("temperature", 20.4)
+        self.sensor("humidity", 49.4)
+        self.selection(temperature=("sensor.temperature",), humidity=("sensor.humidity",))
+        self.manager.settings[constants.CONF_USE_MOLD] = True
+        snapshot = self.snapshot()
+        room = snapshot["rooms"][0]
+        self.assertEqual(room["status"], "unknown")
+        self.assertEqual(room["status_detail"], "required_control_data_missing")
+        self.assertEqual(room["data_availability"]["missing_required_metrics"], [])
+        unavailable = room["data_availability"]["unavailable_controllers"]
+        self.assertEqual(unavailable, [{"controller_id": spec.identifier,
+                         "name": spec.name, "reason": "needs_calibration"}])
+        self.assertEqual(snapshot["summary"]["unknown"], 1)
+        self.assertEqual(areas.AreaOverview(self.manager, "entry", "room").native_value,
+                         "unknown")
+        self.manager.settings[constants.CONF_USE_MOLD] = False
+        self.assertEqual(self.room()["status"], "safe")
+        self.manager.settings[constants.CONF_USE_MOLD] = True
+        self.manager.settings["equipment_controllers"][spec.identifier]["control_mode"] = "manual"
+        self.assertEqual(self.room()["status"], "safe")
+
+    def test_mold_weather_gap_does_not_invent_missing_indoor_temperature(self):
+        self.controller("humidifier.dry", mode="dry", method="pid")
+        self.sensor("temperature", 20.4)
+        self.sensor("humidity", 49.4)
+        self.selection(temperature=("sensor.temperature",), humidity=("sensor.humidity",))
+        self.state("weather.outdoor", "unavailable", area="outdoors")
+        self.manager.settings.update({
+            constants.CONF_USE_MOLD: True,
+            constants.CONF_WEATHER: ["weather.outdoor"],
+            constants.CONF_MOLD_ROOMS: {"room": {
+                "calibration_factor": 1.310048,
+                "indoor_temperature_entity": "sensor.temperature",
+                "indoor_temperature_entities": ["sensor.temperature"],
+                "outdoor_weather_entity": "weather.outdoor",
+                "outdoor_weather_entities": ["weather.outdoor"],
+            }},
+        })
+        before = deepcopy((self.manager.settings, self.runtime.records))
+        result = self.room()["data_availability"]
+        self.assertEqual(result["status"], "missing")
+        self.assertEqual(result["required_metrics"], ["temperature", "humidity"])
+        self.assertEqual(result["missing_required_metrics"], [])
+        self.assertEqual(result["controllers"][0]["missing_inputs"], ["outdoor_temperature"])
+        self.assertEqual(result["unavailable_controllers"][0]["reason"], "inputs_unavailable")
+        self.state("weather.outdoor", "cloudy", area="outdoors",
+                   attrs={"temperature": 5., "temperature_unit": "°C"})
+        result = self.room()["data_availability"]
+        self.assertEqual(result["status"], "ready")
+        self.assertEqual(result["unavailable_controllers"], [])
+        self.states["sensor.temperature"].state = "unavailable"
+        result = self.room()["data_availability"]
+        self.assertEqual(result["status"], "missing")
+        self.assertEqual(result["missing_required_metrics"], ["temperature"])
+        self.assertEqual((self.manager.settings, self.runtime.records), before)
 
     def test_fan_control_uses_exact_pollutant_not_aqi_or_other_basic_readings(self):
         spec = self.controller("fan.cleaner", mode="fan_only", fan_purpose="filtration")

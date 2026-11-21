@@ -226,6 +226,18 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
     @property
     def current_humidity(self):
         cap = self._caps
+        if cap is not None and model.uses_mold_target(
+            self._manager, self._spec, cap, self.controller_settings,
+        ):
+            demand = model.humidity_demand(
+                self._manager, self._spec, cap, self.controller_settings,
+                model.plan_for(self._manager, self._spec),
+            )
+            # This is the HEM control facade, not the physical appliance.
+            # Its current and target values must use the same declared basis.
+            # Missing calibration must not silently substitute room RH.
+            return (finite(demand.get("control_measurement"), 0, 100)
+                    if demand.get("target_ready") is True else None)
         return self._manager.equipment.measurements(self._spec, cap)["humidity"] if cap else None
 
     def _target(self, kind):
@@ -243,7 +255,14 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
             if value is None and kind != "humidity":
                 value = state.attributes.get("temperature")
             return finite(value, 0, 100) if kind == "humidity" else target_from_unit(value, state.attributes.get("temperature_unit", "°C"))
-        values = model.targets(self._manager, self._spec, cap, self.controller_settings, model.plan_for(self._manager, self._spec))
+        saved_mold_target = kind == "humidity" and model.uses_mold_target(
+            self._manager, self._spec, cap, cfg,
+        )
+        values = model.targets(
+            self._manager, self._spec, cap, cfg,
+            model.plan_for(self._manager, self._spec),
+            **({"mold_protection": False} if saved_mold_target else {}),
+        )
         return values[kind]
 
     @property
@@ -275,12 +294,16 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
     @property
     def min_humidity(self):
         cap = self._caps
-        return model.device_limits(self._manager, self._spec, cap)["humidity_min_limit"] if cap else 20
+        return model.humidity_target_bounds(
+            self._manager, self._spec, cap, self.controller_settings,
+        )[0] if cap else 20
 
     @property
     def max_humidity(self):
         cap = self._caps
-        return model.device_limits(self._manager, self._spec, cap)["humidity_max_limit"] if cap else 80
+        return model.humidity_target_bounds(
+            self._manager, self._spec, cap, self.controller_settings,
+        )[1] if cap else 80
     preset_modes = property(lambda self: list(model.PRESETS))
 
     @property
@@ -337,6 +360,8 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
             selected_mode = choose_mode(self._spec)
         if cfg.get("requested_mode") == "off":
             selected_mode = None
+        humidity_demand = (model.humidity_demand(self._manager, self._spec, cap, cfg, plan)
+                           if cap is not None and cap.humidity else {})
         return {**super().extra_state_attributes, "control_mode": cfg["control_mode"],
                 "supported_operating_modes": list(model.operating_modes(self._manager, self._spec)),
                 "selected_operating_mode": selected_mode,
@@ -345,8 +370,9 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
                     language: operating_mode_ui_labels(language)
                     for language in presentation_languages(locale)
                 },
-                "humidity_demand": model.humidity_demand(self._manager, self._spec, cap, cfg, plan)
-                    if cap is not None and cap.humidity else {},
+                "humidity_demand": humidity_demand,
+                "target_basis": humidity_demand.get("target_basis"),
+                "target_humidity_basis": humidity_demand.get("target_basis"),
                 "requested_hvac_mode": cfg["requested_mode"],
                 "active_profile": active,
                 "preset_override": cfg["preset"],

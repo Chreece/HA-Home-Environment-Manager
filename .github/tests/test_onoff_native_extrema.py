@@ -97,6 +97,7 @@ model.__dict__.update(dataclass=dataclass, math=math, finite=maths.finite,
 extract(ROOT / "equipment_model.py", (
     "Capabilities", "_strings", "features", "capabilities", "PIDMemory",
     "pid_step", "duty_on", "profile_name", "automatic_profile_reason",
+    "uses_mold_target", "humidity_target_bounds",
 ), model.__dict__, constants=("TEMP", "RANGE", "HUMIDITY", "FAN", "PRESET", "SWING",
                              "SWING_H", "HVAC_MODES", "PRESETS"))
 # The feature constants share a tuple assignment in the production source.

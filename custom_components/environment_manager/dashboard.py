@@ -140,7 +140,8 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
          and item["available"]),
         None,
     )
-    status_detail = ("required_control_data_missing" if availability["missing_required_metrics"]
+    status_detail = ("required_control_data_missing" if (availability["missing_required_metrics"]
+                                                       or availability["unavailable_controllers"])
                      else "no_indoor_data" if availability["status"] == "missing"
                      else "partial_indoor_data" if availability["status"] == "partial"
                      else None)

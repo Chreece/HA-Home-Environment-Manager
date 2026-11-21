@@ -20,9 +20,17 @@ klass = next(node for node in ast.parse((ROOT / "equipment_runtime.py").read_tex
              if isinstance(node, ast.ClassDef) and node.name == "EquipmentRuntime")
 method = next(node for node in klass.body if getattr(node, "name", None) == "measurements")
 scope = {"__package__": "hem65test", "model": N(room_config=lambda *args: {},
-           device_config=lambda *args: {}), "entity_area": discovery.entity_area,
+           device_config=lambda *args: {}, settings=lambda manager, spec: manager.settings),
+         "entity_area": discovery.entity_area,
          "temperature_sensor_c": discovery.temperature_sensor_c,
          "reading": discovery.reading, "CONF_EXCLUDED_INDOOR": "excluded_indoor_entities"}
+# Execute the real basis predicate; this fixture has no enabled mold control.
+basis = next(node for node in ast.parse((ROOT / "equipment_model.py").read_text()).body
+             if isinstance(node, ast.FunctionDef) and node.name == "uses_mold_target")
+basis_scope = {"settings": scope["model"].settings}
+exec(compile(ast.Module(body=[ast.parse("from __future__ import annotations").body[0], basis],
+                        type_ignores=[]), "equipment_model.py", "exec"), basis_scope)
+scope["model"].uses_mold_target = basis_scope["uses_mold_target"]
 exec(compile(ast.Module(body=[ast.parse("from __future__ import annotations").body[0], method],
                         type_ignores=[]), "equipment_runtime.py", "exec"), scope)
 

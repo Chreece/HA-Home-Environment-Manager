@@ -510,11 +510,15 @@ the active profile.
 
 Each mode's target numbers initially follow the room's profile. An explicit
 mode target overrides only that mode and profile, including a separate Manual
-target. The card and native configuration numbers retain the requested value;
-the controller also reports an effective humidity target when calibrated mold
-protection needs a lower value.
+target. The card and native configuration numbers retain the requested value.
+For Automatic/PID dehumidification in a monitored room with mold indication
+enabled, each profile's percentage target applies to the calibrated surface
+humidity indication. With mold indication disabled, it applies to room-air
+relative humidity. Switching profile immediately selects that profile's saved
+target and recomputes the required room-air target. The general mold warning
+threshold is separate from these control targets.
 
-| Profile | Default humidity target when no target is saved |
+| Profile | Default percentage target when no target is saved |
 | --- | --- |
 | Comfort, Home, Away, Sleep | **65%** |
 | Eco | **70%** |
@@ -772,14 +776,22 @@ further automatic ownership until you explicitly re-enable it.
 Mold indication estimates humidity at the coldest surface using a calibrated
 temperature relationship. It does not detect mold growth or spores.
 
-For an authorized Automatic/PID humidity controller, valid calibration also
-sets the upper room-humidity target needed to respect the configured surface
-humidity limit. A room can therefore need dehumidification even when its room
-humidity is below its usual comfort target. HEM derives this target from the
-same current temperatures and calibration as the indication, keeps your saved
-comfort target, and reports both values. Missing or stale evidence does not
-create mold-based device demand. Native and room minimum limits still apply;
-diagnostics identify a mold target that those limits cannot reach.
+For an authorized Automatic/PID dehumidifier, enabling mold indication makes
+the active **Home, Away, Comfort, Eco or Sleep target** a surface-humidity
+target. The exact per-device and operating-mode override takes precedence over
+the room profile, as it does for ordinary humidity control. HEM converts that
+target into the room-air humidity needed under the current temperatures and
+calibration. It displays the chosen surface target and measured indication
+separately from the derived room-air target and the physical appliance's own
+reported setpoint.
+
+The general mold warning threshold remains an advisory threshold; it does not
+replace the active profile target. A profile can therefore request drying
+before the warning threshold is crossed. Missing calibration or required fresh
+inputs makes the selected mold target unavailable, instead of silently using
+the same percentage as a room-air target. Native and room operating limits
+still apply, and diagnostics identify a target those limits cannot reach.
+Humidifying devices retain their room-air targets and existing mold protection.
 
 Mold-based control requires selected indoor temperature and humidity reports
 no older than **10 minutes**, or the configured maximum age if that is shorter.

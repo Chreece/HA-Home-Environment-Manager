@@ -743,7 +743,9 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
         if target and cap is not None:
             limits = equipment.device_limits(manager, spec, cap)
             if target[1] == "humidity":
-                bounds = (limits["humidity_min_limit"], limits["humidity_max_limit"], 1.0, "%")
+                bounds = (*equipment.humidity_target_bounds(
+                    manager, spec, cap, self._profile_target_settings(target[0]),
+                ), 1.0, "%")
             else:
                 bounds = (limits["temperature_min_limit"], limits["temperature_max_limit"], cap.temp_step, "°C")
         elif key in equipment.FAN_LIMIT_FIELDS:
@@ -804,6 +806,18 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
     @property
     def extra_state_attributes(self):
         attributes = super().extra_state_attributes
+        if getattr(self, "_operating_mode", None):
+            from .equipment_mode_entities import target_field
+            target = target_field(self._key)
+            cap = equipment.mode_capabilities(self._manager, self._spec) if target else None
+            if target and target[1] == "humidity" and cap is not None:
+                mold_basis = equipment.uses_mold_target(
+                    self._manager, self._spec, cap,
+                    self._profile_target_settings(target[0]),
+                )
+                attributes = {**attributes,
+                    "target_basis": "mold_surface_rh" if mold_basis else "room_relative_humidity",
+                    "target_metric": "mold" if mold_basis else "humidity"}
         if self._key == "window_open_timeout_minutes":
             return {**attributes, "window_announcement_role": "timeout",
                     "announce_before_start": self.controller_settings.get("announce_before_start") is True}
@@ -824,6 +838,13 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
             return {**attributes, "pid_calibration_field": self._key}
         return attributes
 
+    def _profile_target_settings(self, profile):
+        """Read an editor's saved profile without changing its control basis."""
+        config = {**self.controller_settings, "preset": profile}
+        if profile == "manual":
+            config.update(control_mode="manual", preset="none")
+        return config
+
     @property
     def native_value(self):
         if getattr(self, "_operating_mode", None):
@@ -836,9 +857,7 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
                 if cap is None:
                     return None
                 profile, field = target
-                cfg = {**self.controller_settings,
-                       "control_mode": "manual" if profile == "manual" else "automatic",
-                       "preset": "none" if profile == "manual" else profile}
+                cfg = self._profile_target_settings(profile)
                 return equipment.targets(self._manager, self._spec, cap, cfg, {},
                                          mold_protection=False).get(field)
         if self._key in equipment.FAN_LIMIT_FIELDS:
@@ -909,8 +928,13 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
             return
         limits = equipment.device_limits(self._manager, self._spec, cap)
         prefix = "humidity" if target[1] == "humidity" else "temperature"
-        self._attr_native_min_value = limits[prefix + "_min_limit"]
-        self._attr_native_max_value = limits[prefix + "_max_limit"]
+        if prefix == "humidity":
+            self._attr_native_min_value, self._attr_native_max_value = equipment.humidity_target_bounds(
+                self._manager, self._spec, cap, self._profile_target_settings(target[0]),
+            )
+        else:
+            self._attr_native_min_value = limits[prefix + "_min_limit"]
+            self._attr_native_max_value = limits[prefix + "_max_limit"]
         self._attr_native_step = 1.0 if prefix == "humidity" else cap.temp_step
 
     @callback

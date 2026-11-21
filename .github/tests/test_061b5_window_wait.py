@@ -82,12 +82,18 @@ wait = importlib.import_module(PKG + ".window_open_wait")
 
 def production_method(path, name, namespace):
     tree = ast.parse((ROOT / path).read_text())
-    source = next(child for node in tree.body if isinstance(node, ast.ClassDef)
-                  for child in node.body
-                  if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef))
-                  and child.name == name)
+    functions = [node for node in tree.body if isinstance(
+        node, (ast.FunctionDef, ast.AsyncFunctionDef))]
+    functions.extend(child for node in tree.body if isinstance(node, ast.ClassDef)
+                     for child in node.body
+                     if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef)))
+    source = next(node for node in functions if node.name == name)
     exec(compile(ast.Module(body=[source], type_ignores=[]), str(ROOT / path), "exec"), namespace)
     return namespace[name]
+
+
+model.uses_mold_target = production_method(
+    "equipment_model.py", "uses_mold_target", model.__dict__)
 
 
 class Runtime:

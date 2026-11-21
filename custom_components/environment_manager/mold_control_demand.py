@@ -112,6 +112,8 @@ def room_mold_demand(manager: Any, area: str) -> dict:
         "weather_entities": list(weather_ids),
         "feedback_max_age_minutes": feedback_age,
         "weather_max_age_minutes": weather_age,
+        "indoor_temperature_c": indoor, "outdoor_temperature_c": outdoor,
+        "indoor_humidity": humidity, "calibration_factor": float(factor),
     }
     if missing:
         return {**result, **provenance, "status": "inputs_unavailable", "missing_inputs": missing}
