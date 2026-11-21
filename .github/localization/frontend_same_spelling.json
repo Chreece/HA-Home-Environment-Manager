@@ -1,0 +1,275 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "source": "Absent",
+      "locales": [
+        "fr",
+        "ro"
+      ],
+      "reason": "The French and Romanian adjective is spelled absent."
+    },
+    {
+      "source": "Area",
+      "locales": [
+        "id",
+        "it"
+      ],
+      "reason": "Italian area and the Indonesian loanword area retain this spelling."
+    },
+    {
+      "source": "Code",
+      "locales": [
+        "de",
+        "fr",
+        "nl"
+      ],
+      "reason": "The German, French and Dutch noun is Code/code."
+    },
+    {
+      "source": "Comfort",
+      "locales": [
+        "it",
+        "nl"
+      ],
+      "reason": "Comfort is the standard Dutch noun and an established Italian loanword."
+    },
+    {
+      "source": "Conditions",
+      "locales": [
+        "fr"
+      ],
+      "reason": "The French plural noun conditions has the same spelling."
+    },
+    {
+      "source": "Details",
+      "locales": [
+        "de",
+        "nl"
+      ],
+      "reason": "The German and Dutch plural noun is Details/details."
+    },
+    {
+      "source": "Eco",
+      "locales": [
+        "es",
+        "nl",
+        "pt",
+        "pt-BR",
+        "ro",
+        "sv"
+      ],
+      "reason": "This is the established Eco profile label, matching the native integration catalog."
+    },
+    {
+      "source": "Expert",
+      "locales": [
+        "fr",
+        "nl",
+        "sv",
+        "ro"
+      ],
+      "reason": "The localized expert level label uses the same established noun in these languages."
+    },
+    {
+      "source": "Exterior",
+      "locales": [
+        "es",
+        "pt"
+      ],
+      "reason": "The Spanish and Portuguese adjective exterior is identically spelled."
+    },
+    {
+      "source": "Extraction",
+      "locales": [
+        "fr"
+      ],
+      "reason": "The French technical noun extraction is identically spelled."
+    },
+    {
+      "source": "Fan",
+      "locales": [
+        "tr"
+      ],
+      "reason": "Fan is an established Turkish technical noun."
+    },
+    {
+      "source": "Filtration",
+      "locales": [
+        "de",
+        "fr"
+      ],
+      "reason": "Filtration is the German and French technical noun."
+    },
+    {
+      "source": "General",
+      "locales": [
+        "es"
+      ],
+      "reason": "The Spanish adjective general is identically spelled."
+    },
+    {
+      "source": "Humidification",
+      "locales": [
+        "fr"
+      ],
+      "reason": "The French noun humidification is identically spelled."
+    },
+    {
+      "source": "Information",
+      "locales": [
+        "da",
+        "de",
+        "sv"
+      ],
+      "reason": "Information is the Danish, German and Swedish noun."
+    },
+    {
+      "source": "Interior",
+      "locales": [
+        "es",
+        "pt"
+      ],
+      "reason": "The Spanish and Portuguese adjective interior is identically spelled."
+    },
+    {
+      "source": "Limit",
+      "locales": [
+        "cs",
+        "sk"
+      ],
+      "reason": "Limit is the Czech and Slovak technical noun."
+    },
+    {
+      "source": "Manual",
+      "locales": [
+        "es",
+        "id",
+        "pt",
+        "pt-BR",
+        "ro"
+      ],
+      "reason": "Manual is the established localized mode adjective in these languages."
+    },
+    {
+      "source": "PWM period",
+      "locales": [
+        "hr"
+      ],
+      "reason": "PWM is invariant; period is an established Croatian technical noun."
+    },
+    {
+      "source": "Parameters",
+      "locales": [
+        "nl"
+      ],
+      "reason": "The Dutch plural noun parameters is identically spelled."
+    },
+    {
+      "source": "Percentage",
+      "locales": [
+        "nl"
+      ],
+      "reason": "The Dutch noun percentage is identically spelled."
+    },
+    {
+      "source": "Sources",
+      "locales": [
+        "fr"
+      ],
+      "reason": "The French plural noun sources is identically spelled."
+    },
+    {
+      "source": "Status",
+      "locales": [
+        "da",
+        "de",
+        "id",
+        "nb",
+        "nl",
+        "sv"
+      ],
+      "reason": "Status is the established localized status noun in these languages."
+    },
+    {
+      "source": "Target",
+      "locales": [
+        "id"
+      ],
+      "reason": "Target is an established Indonesian loanword used for the control target."
+    },
+    {
+      "source": "Ventilation",
+      "locales": [
+        "da",
+        "sv"
+      ],
+      "reason": "Ventilation is the Danish and Swedish technical noun."
+    },
+    {
+      "source": "Ventilation/extraction",
+      "locales": [
+        "fr"
+      ],
+      "reason": "Both ventilation and extraction are French technical nouns."
+    },
+    {
+      "source": "Wind",
+      "locales": [
+        "de",
+        "nl"
+      ],
+      "reason": "The German and Dutch noun is Wind/wind."
+    },
+    {
+      "source": "control",
+      "locales": [
+        "es",
+        "ro"
+      ],
+      "reason": "Control is the Spanish and Romanian noun."
+    },
+    {
+      "source": "sensor",
+      "locales": [
+        "de",
+        "es"
+      ],
+      "reason": "Sensor is the German and Spanish technical noun; capitalization follows its label context."
+    },
+    {
+      "source": "source",
+      "locales": [
+        "fr"
+      ],
+      "reason": "The French noun source is identically spelled."
+    },
+    {
+      "source": "target",
+      "locales": [
+        "id"
+      ],
+      "reason": "Target is an established Indonesian loanword used for the control target."
+    },
+    {
+      "source": "tolerance",
+      "locales": [
+        "cs",
+        "da"
+      ],
+      "reason": "Tolerance is the Czech and Danish technical noun."
+    },
+    {
+      "source": "total",
+      "locales": [
+        "es",
+        "fr",
+        "id",
+        "pt",
+        "pt-BR",
+        "ro"
+      ],
+      "reason": "Total is an established localized total label in these languages."
+    }
+  ]
+}

@@ -15,6 +15,7 @@ target = base["native_target"]
 names = importlib.import_module(PACKAGE + ".equipment_name_catalog")
 help_module = importlib.import_module(PACKAGE + ".equipment_help")
 mode_names = importlib.import_module(PACKAGE + ".operating_mode_catalog")
+text_helpers = importlib.import_module(PACKAGE + ".backend_text")
 
 
 def extract(filename, wanted, namespace):
@@ -30,6 +31,7 @@ ns = {"__package__": PACKAGE, "model": model, "equipment": model,
       "callback": lambda fn: fn, "DOMAIN": base["const"].DOMAIN,
       "localized_equipment_name": names.localized_equipment_name,
       "equipment_configuration_help": help_module.equipment_configuration_help,
+      "presentation_languages": text_helpers.presentation_languages,
       "SwitchEntity": object, "EntityCategory": N(CONFIG="config")}
 extract("equipment_entity.py", ("EquipmentEntity",), ns)
 extract("switch.py", ("_device_option_metadata", "EquipmentNativeFullOutputSwitch"), ns)

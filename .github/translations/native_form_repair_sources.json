@@ -1,0 +1,14 @@
+[
+  "Notify about new recommendations automatically",
+  "Disabled by default. No repeated alerts on every sensor reading.",
+  "Home · Away · cooldown (min)",
+  "Avoid window ventilation when pollen is high (opt in)",
+  "After a fresh occupied-room source becomes empty, wait this many minutes before applying Away. Unknown or stale occupancy never starts Away.",
+  "If enabled, a high trusted pollen reading becomes an outside blocker. Leave off unless this is appropriate for your household.",
+  "Maximum thermostat setpoint trim (°C)",
+  "Lowest permitted setpoint (°C)",
+  "Highest permitted setpoint (°C)",
+  "Maximum adjustment of the actual thermostat setpoint above heating or below cooling demand (°C). This limits PID authority without changing HVAC mode.",
+  "Hard minimum thermostat setpoint in °C. Device's native minimum and other manufacturer protections still apply.",
+  "Hard maximum thermostat setpoint in °C. Device's native maximum and independent thermal limits still apply."
+]

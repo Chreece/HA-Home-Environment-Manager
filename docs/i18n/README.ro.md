@@ -18,7 +18,7 @@
 # HEM - Home Environment Manager
 
 <!-- HEM-TRANSLATION-UNREVIEWED-START -->
-> ⚠️ **Unreviewed machine translation.** This page has not been checked for linguistic or technical accuracy, and some descriptions may be wrong. For installation, device control and safety instructions, refer to the <a href="../../README.md">English README</a>.
+> ⚠️ **Traducere automată nerevizuită.** Corectitudinea lingvistică și tehnică a acestei pagini nu a fost verificată, iar unele descrieri pot fi greșite. Pentru instrucțiuni de instalare, control al dispozitivelor și siguranță, consultați <a href="../../README.md">README în engleză</a>.
 <!-- HEM-TRANSLATION-UNREVIEWED-END -->
 
 <p align="center">
@@ -75,7 +75,8 @@ HEM ține politicile împărțite separate de deciziile locale.
 | **Camera** | Surse de temperatură și umiditate din interior, praguri de calitate a aerului, contacte cu ferestrele și ușile, comportament de somn și de ocupare, obiective de confort specifice camerei, ventilație și opțiuni de umbră. |
 | **Dispozitiv individual** | Modurile sale de control disponibile, automat/manual/PID metoda, țintele pe profil, senzorii, setările de ventilator liniștit, timpul minim de funcționare, protecțiile de alimentare, comportamentul fereastră și notificările de eroare a dispozitivului. |
 
-Toate cele trei niveluri sunt accesibile prin setări grupate, căutabile din card. Home Assistant modificări de setare.
+Setările locuinței, camerelor și dispozitivelor sunt grupate în card și pot fi căutate. Alegeți **De bază**, **Avansat** sau **Expert** pentru a stabili ce setări sunt afișate. Nivelul de bază include comenzile zilnice și configurarea necesară. Avansat adaugă coeficienții PID manuali și ajustările detaliate. Expert adaugă modele specializate și reglaje de capacitate. Fiecare nivel le include pe cele anterioare. Puteți actualiza sursele disponibile când configurația Home Assistant se schimbă. <!-- HEM-I18N:levels -->
+
 
 <a id="climate-control-and-pid-device-by-device"></a>
 ### Controlul climatic și PID, dispozitiv după dispozitiv
@@ -124,7 +125,9 @@ Pregatirea nu este o comandă pentru a porni totul. Dispozitivele au nevoie înc
 HEM compară **ce are nevoie o cameră** cu **dacă aerul exterior poate ajuta**.
 
 - Recomandă deschiderea sau închiderea ferestrelor folosind măsurătorile actuale de interior, umiditatea exterioră, poluarea, temperatura, vântul, avertismentele meteorologice și contextul opțional al polenului.
+- Indicele AQI este opțional. Dacă scara furnizorului nu este configurată, HEM semnalează date incomplete; acest lucru singur nu blochează aerisirea și nu justifică închiderea unei ferestre. Măsurătorile valide ale poluanților și valorile AQI cu adevărat periculoase, interpretate folosind scara corectă, rămân luate în considerare. <!-- HEM-I18N:aqi -->
 - Utilizaţi contacturile selectate pentru ferestre şi uşi pentru a explica condiţiile camerei şi evitaţi să trataţi un contact necunoscut ca fiind închis.
+- Puteți include opțional uși de balcon sau de terasă cu clasa de senzor binar Home Assistant `door` sau `opening` ca **intrări pentru ferestre**. Ele apar în selectorul ferestrelor camerei, dar **nu sunt niciodată preselectate**. Monitorizarea obișnuită a ușilor rămâne independentă. <!-- HEM-I18N:balcony -->
 - În opțiune, vă rugăm să încercați să deschideți o fereastră înainte de a porni un aparat automat suportat, apoi să continuați controlul normal după ce răspunsul configurat așteaptă, dacă este necesar.
 - Utilizați informațiile de la ușă pentru conștientizarea granițelor camerei, avertismentele de ventilație și comportamentul ecologic protejat opțional.
 - Gestionarea obturărilor opționale, a persienilor și a umbrelor folosind ferestrele adecvate, temperatura, vremea, înălțimea soarelui și dovezile opționale de iluminare.

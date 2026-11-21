@@ -18,7 +18,7 @@
 # HEM - Home Environment Manager
 
 <!-- HEM-TRANSLATION-UNREVIEWED-START -->
-> ⚠️ **Unreviewed machine translation.** This page has not been checked for linguistic or technical accuracy, and some descriptions may be wrong. For installation, device control and safety instructions, refer to the <a href="../../README.md">English README</a>.
+> ⚠️ **Tarkistamaton konekäännös.** Tämän sivun kielellistä tai teknistä oikeellisuutta ei ole tarkistettu, ja osa kuvauksista voi olla virheellisiä. Katso asennus-, laiteohjaus- ja turvallisuusohjeet <a href="../../README.md">englanninkielisestä README-tiedostosta</a>.
 <!-- HEM-TRANSLATION-UNREVIEWED-END -->
 
 <p align="center">
@@ -75,7 +75,8 @@ HEM Se pitää yhteiset politiikat erillään paikallisista päätöksistä.
 | **Huone** | Sisätilojen lämpötila- ja kosteuslähteet, ilmanlaatujen kynnykset, ikkunan ja oven yhteydet, nukkumisen ja asennuksen käyttäytyminen, huoneen erityiset mukavuuden tavoitteet, tuuletus- ja varjostusvaihtoehdot. |
 | **Yksittäinen laite** | Sen käytettävissä olevat ohjauslaitteet: automaattinen/käsikirjainen/PID menetelmä, profiilikohtaiset kohteet, anturit, hiljaiset ventilaattoriasetukset, vähimmäis käyttöajat, sähkön suojat, ikkunan käyttäytyminen ja laitteen virheilmoitukset. |
 
-Kaikki kolme tasoa on käytettävissä kortin ryhmitettyihin, etsimiseen käytettävissä oleviin asetuksiin. Home Assistant asennusmuutokset.
+Kodin, huoneiden ja laitteiden asetukset on ryhmitelty korttiin, ja niistä voi hakea. Valitse **Perus**, **Laajennettu** tai **Asiantuntija** määrittääksesi, mitkä asetukset näkyvät. Perus sisältää päivittäiset ohjaimet ja välttämättömät määritykset. Laajennettu lisää PID-kertoimien käsisäädön ja yksityiskohtaiset asetukset. Asiantuntija lisää erikoismallit ja kapasiteetin säädön. Kukin taso sisältää edeltävät tasot. Voit päivittää käytettävissä olevat lähteet, kun Home Assistant -kokoonpano muuttuu. <!-- HEM-I18N:levels -->
+
 
 <a id="climate-control-and-pid-device-by-device"></a>
 ### Ilmastonhallinta ja PID, laite laite
@@ -124,7 +125,9 @@ Valmistelu ei ole käsky käynnistää kaikkea. Laitteet tarvitsevat edelleen to
 HEM vertailut **mitä huone tarvitsee** ja **Voiko ulkona oleva ilma auttaa?**.
 
 - Suosittelemme, että ikkunat avautuvat tai suljetaan käyttämällä nykyisiä sisätilojen mittauksia, ulkona olevaa kosteutta, saastumista, lämpötilaa, tuulta, sääilmoituksia ja valinnaista siipikarjan kontekstia.
+- AQI-indeksi on valinnainen. Jos palveluntarjoajan asteikkoa ei ole määritetty, tiedot merkitään puutteellisiksi; pelkästään tämä ei estä tuuletusta eikä ole syy sulkea ikkunaa. Kelvolliset epäpuhtausmittaukset ja oikealla asteikolla tulkitut, aidosti vaaralliset AQI-arvot otetaan edelleen huomioon. <!-- HEM-I18N:aqi -->
 - Käytä valittuja ikkunan ja oven yhteyksiä, jotta voit selittää huoneen olosuhteet ja välttää tuntemattoman yhteyden käsittelyn suljetuksi.
+- Voit halutessasi lisätä parvekkeen tai terassin ovet, joiden Home Assistant -binäärianturiluokka on `door` tai `opening`, **ikkunatuloiksi**. Ne näkyvät huoneen ikkunavalitsimessa, mutta niitä **ei koskaan esivalita**. Tavallinen ovien valvonta toimii edelleen erillään. <!-- HEM-I18N:balcony -->
 - Valitettavasti pyydetään avaamaan ikkunan, ennen kuin käynnistetään tukematon automaattinen laitteen, ja jatketaan normaalia ohjausta, kun konfiguroitu vastaus odottaa tarvittaessa.
 - Käytä oven tietoja huoneen rajojen tiedostamiseksi, ilmanvaihdon varoituksille ja valinnaisesti vartioituun ympäristökäyttäytymiseen.
 - Käsittele valinnut lukit, persiinit ja varjoja käyttämällä asianmukaisia ikkunoita, lämpötilaa, säätä, auringonnousua ja valinnaista valaistusta.

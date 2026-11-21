@@ -20,14 +20,19 @@ CARD = ROOT / "custom_components/environment_manager/frontend/air-quality-adviso
 NODE = r"""
 const fs=require('node:fs'),assert=require('node:assert/strict');
 const src=fs.readFileSync(process.argv[1],'utf8');
+// Isolated production sections use the same bundled locale helpers as the full card.
+const localeStart=src.indexOf('  /* HEM_TRANSLATION_DATA_B8_START */');
+const localeEnd=src.indexOf('  const BRAND_TITLE =',localeStart);
+assert(localeStart>0&&localeEnd>localeStart);
+const localeBootstrap=src.slice(localeStart,localeEnd);
 const escape=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 const start=src.indexOf('  const HEM_PID_WORDS074=');
 const end=src.indexOf('  AirQualityAdvisorCard.prototype._hemPidStatusRender074=',start);
 assert(start>0&&end>start);
-const api=new Function('escape',src.slice(start,end)+'\nreturn {pidStatusModels074,pidStatusHtml074,HEM_PID_REASONS074,HEM_PID_WORDS074};')(escape);
+const api=new Function('escape',localeBootstrap+src.slice(start,end)+'\nreturn {pidStatusModels074,pidStatusHtml074,HEM_PID_REASONS074,HEM_PID_WORDS074};')(escape);
 const NOW=Date.now()/1000;
 const auditStart=src.indexOf('  const auditPolicyB8='),auditEnd=src.indexOf('  const auditProto=',auditStart);
-const audit=new Function(src.slice(auditStart,auditEnd)+'\nreturn {auditPolicyB8,auditLevelB8,auditVisibleB8};')();
+const audit=new Function(localeBootstrap+src.slice(auditStart,auditEnd)+'\nreturn {auditPolicyB8,auditLevelB8,auditVisibleB8};')();
 assert.deepEqual(audit.auditPolicyB8,JSON.parse(fs.readFileSync(process.argv[2],'utf8')));
 function field(mode,key,value){return {id:(key.includes('method')||key==='control_mode'?'select.':'number.')+mode+'_'+key,
  domain:key.includes('method')||key==='control_mode'?'select':'number',label:key,

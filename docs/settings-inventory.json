@@ -9,8 +9,8 @@
     "Visibility does not change saved values, permissions, validation, calibration or physical safety rules."
   ],
   "counts": {
-    "native_catalog": 178,
-    "form_catalog": 722,
+    "native_catalog": 179,
+    "form_catalog": 724,
     "dynamic_door": 4,
     "dynamic_device": 7,
     "dynamic_mode_target": 18,
@@ -1669,8 +1669,19 @@
     {
       "kind": "native_catalog",
       "platform": "number",
+      "key": "equipment_power_switch_cooldown_seconds",
+      "name": "Power · Idle cooldown before supply OFF (seconds)",
+      "presentation": "basic",
+      "same_property_options_alias": null,
+      "catalog_path": "strings.json/entity/number/equipment_power_switch_cooldown_seconds",
+      "literal_references": [],
+      "consumer_status": "capability_and_registry_dependent_native_control"
+    },
+    {
+      "kind": "native_catalog",
+      "platform": "number",
       "key": "equipment_particle_cadr_m3h",
-      "name": "Rated air purifier particle CADR (m³/h)",
+      "name": "Rated particle CADR of this air purifier (m³/h)",
       "presentation": "advanced",
       "same_property_options_alias": null,
       "catalog_path": "strings.json/entity/number/equipment_particle_cadr_m3h",
@@ -1732,7 +1743,7 @@
       "same_property_options_alias": null,
       "catalog_path": "strings.json/entity/number/home_aqi_custom_limit",
       "literal_references": [
-        "custom_components/environment_manager/aqi_sources.py:92",
+        "custom_components/environment_manager/aqi_sources.py:93",
         "custom_components/environment_manager/number.py:530"
       ],
       "consumer_status": "capability_and_registry_dependent_native_control"
@@ -1806,7 +1817,7 @@
       "same_property_options_alias": null,
       "catalog_path": "strings.json/entity/select/area_manual_profile",
       "literal_references": [
-        "custom_components/environment_manager/equipment_mode_entities.py:83"
+        "custom_components/environment_manager/equipment_mode_entities.py:84"
       ],
       "consumer_status": "capability_and_registry_dependent_native_control"
     },
@@ -2021,7 +2032,7 @@
       "same_property_options_alias": null,
       "catalog_path": "strings.json/entity/select/home_aqi_scale",
       "literal_references": [
-        "custom_components/environment_manager/aqi_sources.py:92",
+        "custom_components/environment_manager/aqi_sources.py:93",
         "custom_components/environment_manager/select.py:254"
       ],
       "consumer_status": "capability_and_registry_dependent_native_control"
@@ -2035,7 +2046,7 @@
       "same_property_options_alias": null,
       "catalog_path": "strings.json/entity/select/shade_lux_entity",
       "literal_references": [
-        "custom_components/environment_manager/select.py:610"
+        "custom_components/environment_manager/select.py:611"
       ],
       "consumer_status": "capability_and_registry_dependent_native_control"
     },
@@ -2331,7 +2342,7 @@
       "kind": "native_catalog",
       "platform": "switch",
       "key": "equipment_announce_before_start",
-      "name": "Announcement · {channel}Ask to open windows",
+      "name": "Suggest opening windows to avoid using this device",
       "presentation": "basic",
       "same_property_options_alias": null,
       "catalog_path": "strings.json/entity/switch/equipment_announce_before_start",
@@ -2594,7 +2605,7 @@
       "presentation": "native_flow_unchanged",
       "catalog_path": "strings.json/config/step/outdoor/data/outdoor_sensors",
       "literal_references": [
-        "custom_components/environment_manager/aqi_sources.py:110",
+        "custom_components/environment_manager/aqi_sources.py:111",
         "custom_components/environment_manager/aqi_sources.py:21",
         "custom_components/environment_manager/aqi_sources.py:74",
         "custom_components/environment_manager/const.py:16",
@@ -2645,7 +2656,7 @@
         "custom_components/environment_manager/__init__.py:70",
         "custom_components/environment_manager/ai_rewrite.py:101",
         "custom_components/environment_manager/ai_rewrite.py:263",
-        "custom_components/environment_manager/aqi_sources.py:89",
+        "custom_components/environment_manager/aqi_sources.py:90",
         "custom_components/environment_manager/away_windows.py:210"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -2660,6 +2671,7 @@
       "catalog_path": "strings.json/config/step/delivery/data/automatic_tts",
       "literal_references": [
         "custom_components/environment_manager/const.py:20",
+        "custom_components/environment_manager/messages.py:140",
         "custom_components/environment_manager/sensor.py:130"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -2674,6 +2686,7 @@
       "catalog_path": "strings.json/config/step/delivery/data/automatic_notifications",
       "literal_references": [
         "custom_components/environment_manager/const.py:21",
+        "custom_components/environment_manager/messages.py:140",
         "custom_components/environment_manager/sensor.py:129"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -3179,8 +3192,8 @@
       "literal_references": [
         "custom_components/environment_manager/climate.py:222",
         "custom_components/environment_manager/climate.py:244",
-        "custom_components/environment_manager/climate.py:400",
-        "custom_components/environment_manager/climate.py:404",
+        "custom_components/environment_manager/climate.py:405",
+        "custom_components/environment_manager/climate.py:409",
         "custom_components/environment_manager/climate_commissioning.py:20",
         "custom_components/environment_manager/climate_commissioning.py:83"
       ],
@@ -3200,7 +3213,7 @@
         "custom_components/environment_manager/climate.py:243",
         "custom_components/environment_manager/climate.py:245",
         "custom_components/environment_manager/climate.py:262",
-        "custom_components/environment_manager/climate.py:421"
+        "custom_components/environment_manager/climate.py:426"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -3264,7 +3277,7 @@
       "presentation": "native_flow_unchanged",
       "catalog_path": "strings.json/config/step/setup_general/data/outdoor_sensors",
       "literal_references": [
-        "custom_components/environment_manager/aqi_sources.py:110",
+        "custom_components/environment_manager/aqi_sources.py:111",
         "custom_components/environment_manager/aqi_sources.py:21",
         "custom_components/environment_manager/aqi_sources.py:74",
         "custom_components/environment_manager/const.py:16",
@@ -3448,7 +3461,7 @@
         "custom_components/environment_manager/__init__.py:70",
         "custom_components/environment_manager/ai_rewrite.py:101",
         "custom_components/environment_manager/ai_rewrite.py:263",
-        "custom_components/environment_manager/aqi_sources.py:89",
+        "custom_components/environment_manager/aqi_sources.py:90",
         "custom_components/environment_manager/away_windows.py:210"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -7227,8 +7240,8 @@
       "literal_references": [
         "custom_components/environment_manager/climate.py:222",
         "custom_components/environment_manager/climate.py:244",
-        "custom_components/environment_manager/climate.py:400",
-        "custom_components/environment_manager/climate.py:404",
+        "custom_components/environment_manager/climate.py:405",
+        "custom_components/environment_manager/climate.py:409",
         "custom_components/environment_manager/climate_commissioning.py:20",
         "custom_components/environment_manager/climate_commissioning.py:83"
       ],
@@ -7248,7 +7261,7 @@
         "custom_components/environment_manager/climate.py:243",
         "custom_components/environment_manager/climate.py:245",
         "custom_components/environment_manager/climate.py:262",
-        "custom_components/environment_manager/climate.py:421"
+        "custom_components/environment_manager/climate.py:426"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7366,8 +7379,8 @@
       "literal_references": [
         "custom_components/environment_manager/climate.py:222",
         "custom_components/environment_manager/climate.py:244",
-        "custom_components/environment_manager/climate.py:400",
-        "custom_components/environment_manager/climate.py:404",
+        "custom_components/environment_manager/climate.py:405",
+        "custom_components/environment_manager/climate.py:409",
         "custom_components/environment_manager/climate_commissioning.py:20",
         "custom_components/environment_manager/climate_commissioning.py:83"
       ],
@@ -7387,7 +7400,7 @@
         "custom_components/environment_manager/climate.py:243",
         "custom_components/environment_manager/climate.py:245",
         "custom_components/environment_manager/climate.py:262",
-        "custom_components/environment_manager/climate.py:421"
+        "custom_components/environment_manager/climate.py:426"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7441,6 +7454,24 @@
         "custom_components/environment_manager/compact_options.py:325",
         "custom_components/environment_manager/config_flow.py:1013",
         "custom_components/environment_manager/config_flow.py:1030"
+      ],
+      "consumer_status": "catalog_only_step_reachability_not_proven"
+    },
+    {
+      "kind": "form_catalog",
+      "surface": "config",
+      "step": "edit_room",
+      "key": "door_sensors",
+      "name": "Interior door contacts",
+      "presentation": "native_flow_unchanged",
+      "catalog_path": "strings.json/config/step/edit_room/data/door_sensors",
+      "literal_references": [
+        "custom_components/environment_manager/door_settings.py:21",
+        "custom_components/environment_manager/equipment_door_policy.py:70",
+        "custom_components/environment_manager/equipment_model.py:1089",
+        "custom_components/environment_manager/manager.py:383",
+        "custom_components/environment_manager/manager.py:706",
+        "custom_components/environment_manager/number.py:327"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7573,7 +7604,7 @@
       "presentation": "native_flow_unchanged",
       "catalog_path": "strings.json/options/step/outdoor/data/outdoor_sensors",
       "literal_references": [
-        "custom_components/environment_manager/aqi_sources.py:110",
+        "custom_components/environment_manager/aqi_sources.py:111",
         "custom_components/environment_manager/aqi_sources.py:21",
         "custom_components/environment_manager/aqi_sources.py:74",
         "custom_components/environment_manager/const.py:16",
@@ -7624,7 +7655,7 @@
         "custom_components/environment_manager/__init__.py:70",
         "custom_components/environment_manager/ai_rewrite.py:101",
         "custom_components/environment_manager/ai_rewrite.py:263",
-        "custom_components/environment_manager/aqi_sources.py:89",
+        "custom_components/environment_manager/aqi_sources.py:90",
         "custom_components/environment_manager/away_windows.py:210"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -7639,6 +7670,7 @@
       "catalog_path": "strings.json/options/step/delivery/data/automatic_tts",
       "literal_references": [
         "custom_components/environment_manager/const.py:20",
+        "custom_components/environment_manager/messages.py:140",
         "custom_components/environment_manager/sensor.py:130"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -7653,6 +7685,7 @@
       "catalog_path": "strings.json/options/step/delivery/data/automatic_notifications",
       "literal_references": [
         "custom_components/environment_manager/const.py:21",
+        "custom_components/environment_manager/messages.py:140",
         "custom_components/environment_manager/sensor.py:129"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -11315,8 +11348,8 @@
       "literal_references": [
         "custom_components/environment_manager/climate.py:222",
         "custom_components/environment_manager/climate.py:244",
-        "custom_components/environment_manager/climate.py:400",
-        "custom_components/environment_manager/climate.py:404",
+        "custom_components/environment_manager/climate.py:405",
+        "custom_components/environment_manager/climate.py:409",
         "custom_components/environment_manager/climate_commissioning.py:20",
         "custom_components/environment_manager/climate_commissioning.py:83"
       ],
@@ -11336,7 +11369,7 @@
         "custom_components/environment_manager/climate.py:243",
         "custom_components/environment_manager/climate.py:245",
         "custom_components/environment_manager/climate.py:262",
-        "custom_components/environment_manager/climate.py:421"
+        "custom_components/environment_manager/climate.py:426"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -11400,7 +11433,7 @@
       "presentation": "basic",
       "catalog_path": "strings.json/options/step/setup_general/data/outdoor_sensors",
       "literal_references": [
-        "custom_components/environment_manager/aqi_sources.py:110",
+        "custom_components/environment_manager/aqi_sources.py:111",
         "custom_components/environment_manager/aqi_sources.py:21",
         "custom_components/environment_manager/aqi_sources.py:74",
         "custom_components/environment_manager/const.py:16",
@@ -11584,7 +11617,7 @@
         "custom_components/environment_manager/__init__.py:70",
         "custom_components/environment_manager/ai_rewrite.py:101",
         "custom_components/environment_manager/ai_rewrite.py:263",
-        "custom_components/environment_manager/aqi_sources.py:89",
+        "custom_components/environment_manager/aqi_sources.py:90",
         "custom_components/environment_manager/away_windows.py:210"
       ],
       "consumer_status": "card_adapts_options_form"
@@ -12208,8 +12241,8 @@
       "literal_references": [
         "custom_components/environment_manager/climate.py:222",
         "custom_components/environment_manager/climate.py:244",
-        "custom_components/environment_manager/climate.py:400",
-        "custom_components/environment_manager/climate.py:404",
+        "custom_components/environment_manager/climate.py:405",
+        "custom_components/environment_manager/climate.py:409",
         "custom_components/environment_manager/climate_commissioning.py:20",
         "custom_components/environment_manager/climate_commissioning.py:83"
       ],
@@ -12229,7 +12262,7 @@
         "custom_components/environment_manager/climate.py:243",
         "custom_components/environment_manager/climate.py:245",
         "custom_components/environment_manager/climate.py:262",
-        "custom_components/environment_manager/climate.py:421"
+        "custom_components/environment_manager/climate.py:426"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -12347,8 +12380,8 @@
       "literal_references": [
         "custom_components/environment_manager/climate.py:222",
         "custom_components/environment_manager/climate.py:244",
-        "custom_components/environment_manager/climate.py:400",
-        "custom_components/environment_manager/climate.py:404",
+        "custom_components/environment_manager/climate.py:405",
+        "custom_components/environment_manager/climate.py:409",
         "custom_components/environment_manager/climate_commissioning.py:20",
         "custom_components/environment_manager/climate_commissioning.py:83"
       ],
@@ -12368,7 +12401,7 @@
         "custom_components/environment_manager/climate.py:243",
         "custom_components/environment_manager/climate.py:245",
         "custom_components/environment_manager/climate.py:262",
-        "custom_components/environment_manager/climate.py:421"
+        "custom_components/environment_manager/climate.py:426"
       ],
       "consumer_status": "card_adapts_options_form"
     },
@@ -12422,6 +12455,24 @@
         "custom_components/environment_manager/compact_options.py:325",
         "custom_components/environment_manager/config_flow.py:1013",
         "custom_components/environment_manager/config_flow.py:1030"
+      ],
+      "consumer_status": "card_adapts_options_form"
+    },
+    {
+      "kind": "form_catalog",
+      "surface": "options",
+      "step": "edit_room",
+      "key": "door_sensors",
+      "name": "Interior door contacts",
+      "presentation": "basic",
+      "catalog_path": "strings.json/options/step/edit_room/data/door_sensors",
+      "literal_references": [
+        "custom_components/environment_manager/door_settings.py:21",
+        "custom_components/environment_manager/equipment_door_policy.py:70",
+        "custom_components/environment_manager/equipment_model.py:1089",
+        "custom_components/environment_manager/manager.py:383",
+        "custom_components/environment_manager/manager.py:706",
+        "custom_components/environment_manager/number.py:327"
       ],
       "consumer_status": "card_adapts_options_form"
     },

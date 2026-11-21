@@ -18,7 +18,7 @@
 # HEM - Home Environment Manager
 
 <!-- HEM-TRANSLATION-UNREVIEWED-START -->
-> ⚠️ **Unreviewed machine translation.** This page has not been checked for linguistic or technical accuracy, and some descriptions may be wrong. For installation, device control and safety instructions, refer to the <a href="../../README.md">English README</a>.
+> ⚠️ **Terjemahan mesin yang belum ditinjau.** Ketepatan bahasa dan teknis halaman ini belum diperiksa, sehingga beberapa deskripsi mungkin salah. Untuk petunjuk pemasangan, kontrol perangkat, dan keselamatan, lihat <a href="../../README.md">README berbahasa Inggris</a>.
 <!-- HEM-TRANSLATION-UNREVIEWED-END -->
 
 <p align="center">
@@ -75,7 +75,8 @@ HEM menjaga kebijakan bersama terpisah dari keputusan lokal.
 | **Kamar** | Sumber suhu dan kelembaban dalam ruangan, ambang-ambang kualitas udara, kontak jendela dan pintu, perilaku tidur dan tempat tinggal, target kenyamanan khusus ruangan, pilihan ventilasi dan bayangan. |
 | **Perangkat individual** | Mode kontrol yang tersedia, Otomatis/Manual/PID metode, target per profil, sensor, pengaturan kipas yang tenang, waktu operasi minimum, perlindungan daya, perilaku jendela dan pemberitahuan kesalahan perangkat. |
 
-Semua tiga tingkat dapat diakses melalui pengaturan yang dikelompokkan dan dapat dicari di kartu. Kontrol lanjutan tersedia ketika diperlukan, tanpa menggenangi pengaturan sehari-hari. Anda dapat menyegarkan pilihan sumber sebagai pilihan Anda Home Assistant perubahan pengaturan.
+Pengaturan rumah, ruangan, dan perangkat dikelompokkan di kartu dan dapat dicari. Pilih **Dasar**, **Lanjutan**, atau **Ahli** untuk menentukan pengaturan yang ditampilkan. Dasar mencakup kontrol sehari-hari dan konfigurasi yang diperlukan. Lanjutan menambahkan pengaturan koefisien PID secara manual dan penyesuaian terperinci. Ahli menambahkan model khusus dan penyetelan kapasitas. Setiap tingkat mencakup tingkat sebelumnya. Anda dapat menyegarkan pilihan sumber saat konfigurasi Home Assistant berubah. <!-- HEM-I18N:levels -->
+
 
 <a id="climate-control-and-pid-device-by-device"></a>
 ### Pengendalian iklim dan PID, perangkat demi perangkat
@@ -124,7 +125,9 @@ Persiapan bukanlah perintah untuk mengaktifkan semuanya. Perangkat masih membutu
 HEM membandingkan **apa yang dibutuhkan sebuah kamar** dengan **apakah udara di luar ruangan dapat membantu**.
 
 - Rekomendasi membuka atau menutup jendela menggunakan pengukuran dalam ruangan saat ini, kelembaban di luar ruangan, polusi, suhu, angin, peringatan cuaca dan konteks serbuk sari opsional.
+- Indeks AQI bersifat opsional. Jika skala penyedia belum dikonfigurasi, HEM melaporkan data yang tidak lengkap; hal itu saja tidak menghalangi ventilasi atau menjadi alasan menutup jendela. Pengukuran polutan yang valid dan nilai AQI yang benar-benar berbahaya dengan skala yang tepat tetap diperhitungkan. <!-- HEM-I18N:aqi -->
 - Gunakan kontak jendela dan pintu yang dipilih untuk menjelaskan kondisi ruangan dan hindari memperlakukan kontak yang tidak diketahui sebagai tertutup.
+- Anda dapat menambahkan pintu balkon atau teras dengan kelas sensor biner Home Assistant `door` atau `opening` sebagai **masukan jendela**. Pintu tersebut muncul di pemilih jendela ruangan, tetapi **tidak pernah dipilih secara bawaan**. Pemantauan pintu biasa tetap terpisah. <!-- HEM-I18N:balcony -->
 - Opsional meminta Anda untuk mencoba membuka jendela sebelum memulai perangkat otomatis yang didukung, kemudian melanjutkan kontrol normal setelah respon yang dikonfigurasi menunggu jika diperlukan.
 - Gunakan informasi pintu untuk kesadaran batas ruangan, peringatan ventilasi dan perilaku Eco yang terjaga secara opsional.
 - Mengelola persilatan, blinds dan shades yang dipilih dengan menggunakan jendela, suhu, cuaca, ketinggian matahari dan bukti pencahayaan opsional yang sesuai.

@@ -1,0 +1,812 @@
+[
+  {
+    "english": "The selected method does not learn automatically.",
+    "key": "manual_calibration",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Η επιλεγμένη μέθοδος δεν εκτελεί αυτόματη εκμάθηση.",
+      "de": "Das gewählte Verfahren lernt nicht automatisch."
+    }
+  },
+  {
+    "english": "PID control is not selected for this mode.",
+    "key": "pid_not_active",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Δεν έχει επιλεγεί έλεγχος PID για αυτή τη λειτουργία.",
+      "de": "Für diese Betriebsart ist keine PID-Regelung gewählt."
+    }
+  },
+  {
+    "english": "The controller is not active.",
+    "key": "controller_inactive",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Ο ελεγκτής δεν είναι ενεργός.",
+      "de": "Der Regler ist nicht aktiv."
+    }
+  },
+  {
+    "english": "This operating mode cannot supply suitable learning cycles.",
+    "key": "unsupported_operating_mode",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Αυτή η λειτουργία δεν παρέχει κατάλληλους κύκλους εκμάθησης.",
+      "de": "Diese Betriebsart liefert keine geeigneten Lernzyklen."
+    }
+  },
+  {
+    "english": "Passive learning requires a supported ON/OFF output.",
+    "key": "unsupported_output",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Η παθητική εκμάθηση απαιτεί υποστηριζόμενη έξοδο με έλεγχο ανοίγματος και κλεισίματος.",
+      "de": "Passives Lernen benötigt einen unterstützten Ein/Aus-Ausgang."
+    }
+  },
+  {
+    "english": "The physical device is unavailable.",
+    "key": "device_unavailable",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Η φυσική συσκευή δεν είναι διαθέσιμη.",
+      "de": "Das physische Gerät ist nicht verfügbar."
+    }
+  },
+  {
+    "english": "The selected power supply is unavailable.",
+    "key": "upstream_device_unavailable",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Η επιλεγμένη παροχή ρεύματος δεν είναι διαθέσιμη.",
+      "de": "Die gewählte Stromversorgung ist nicht verfügbar."
+    }
+  },
+  {
+    "english": "Learning is paused while the power supply is on hold.",
+    "key": "upstream_controller_paused",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Η εκμάθηση έχει παύσει όσο η παροχή ρεύματος βρίσκεται σε αναμονή.",
+      "de": "Das Lernen pausiert, solange die Stromversorgung angehalten ist."
+    }
+  },
+  {
+    "english": "Learning requires one reliable feedback sensor.",
+    "key": "single_feedback_sensor_required",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Η εκμάθηση χρειάζεται έναν αξιόπιστο αισθητήρα ανάδρασης.",
+      "de": "Zum Lernen wird ein einzelner zuverlässiger Rückmeldesensor benötigt."
+    }
+  },
+  {
+    "english": "The device must confirm when it is running and when it is off.",
+    "key": "verified_activity_required",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Η συσκευή πρέπει να επιβεβαιώνει πότε λειτουργεί και πότε είναι κλειστή.",
+      "de": "Das Gerät muss seinen Betriebs- und AUS-Zustand bestätigen."
+    }
+  },
+  {
+    "english": "The required control permissions have not been enabled.",
+    "key": "permissions_required",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Δεν έχουν ενεργοποιηθεί τα απαιτούμενα δικαιώματα ελέγχου.",
+      "de": "Die erforderlichen Steuerungsfreigaben fehlen."
+    }
+  },
+  {
+    "english": "A device command is awaiting confirmation.",
+    "key": "pending_command",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Μια εντολή προς τη συσκευή περιμένει επιβεβαίωση.",
+      "de": "Eine Geräteanweisung wartet auf Bestätigung."
+    }
+  },
+  {
+    "english": "Learning is paused with the controller.",
+    "key": "controller_paused",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Η εκμάθηση έχει παύσει μαζί με τον ελεγκτή.",
+      "de": "Das Lernen pausiert zusammen mit dem Regler."
+    }
+  },
+  {
+    "english": "More complete, suitable operating cycles are needed.",
+    "key": "waiting_for_complete_cycles",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Χρειάζονται περισσότεροι πλήρεις και κατάλληλοι κύκλοι λειτουργίας.",
+      "de": "Weitere vollständige, geeignete Betriebszyklen werden benötigt."
+    }
+  },
+  {
+    "english": "The readings while off were not stable for long enough.",
+    "key": "off_baseline_not_stable_or_too_short",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Οι μετρήσεις με τη συσκευή κλειστή δεν έμειναν σταθερές για αρκετή ώρα.",
+      "de": "Die Messwerte im AUS-Zustand waren nicht lange genug stabil."
+    }
+  },
+  {
+    "english": "Too few measurements were collected while running.",
+    "key": "insufficient_on_samples",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Συλλέχθηκαν πολύ λίγες μετρήσεις όσο λειτουργούσε η συσκευή.",
+      "de": "Im Betrieb wurden zu wenige Messwerte erfasst."
+    }
+  },
+  {
+    "english": "The running period was too short to identify the response.",
+    "key": "on_cycle_too_short",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Η συσκευή λειτούργησε πολύ λίγο για να εκτιμηθεί η απόκρισή της.",
+      "de": "Die Laufzeit war zu kurz, um die Reaktion zu bestimmen."
+    }
+  },
+  {
+    "english": "The measured change was too small for reliable tuning.",
+    "key": "response_too_small",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Η μεταβολή ήταν πολύ μικρή για αξιόπιστη βαθμονόμηση.",
+      "de": "Die gemessene Änderung war für eine zuverlässige Abstimmung zu klein."
+    }
+  },
+  {
+    "english": "The measured response was outside the accepted range.",
+    "key": "response_outside_physical_limits",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Η μετρημένη απόκριση ήταν εκτός του αποδεκτού εύρους.",
+      "de": "Die gemessene Reaktion lag außerhalb des zulässigen Bereichs."
+    }
+  },
+  {
+    "english": "The response had not settled to a stable level.",
+    "key": "no_stable_plateau",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Η απόκριση δεν είχε σταθεροποιηθεί.",
+      "de": "Die Reaktion hatte sich noch nicht auf einen stabilen Wert eingependelt."
+    }
+  },
+  {
+    "english": "A sudden sensor jump made this cycle unsuitable.",
+    "key": "sensor_jump",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Μια απότομη μεταβολή του αισθητήρα έκανε τον κύκλο ακατάλληλο.",
+      "de": "Ein plötzlicher Messwertsprung machte diesen Zyklus ungeeignet."
+    }
+  },
+  {
+    "english": "The measurements did not fit the response model reliably.",
+    "key": "response_model_fit_rejected",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Οι μετρήσεις δεν ταίριαζαν αρκετά καλά στο μοντέλο απόκρισης.",
+      "de": "Die Messwerte passten nicht zuverlässig zum Reaktionsmodell."
+    }
+  },
+  {
+    "english": "A clock change or measurement gap interrupted this cycle.",
+    "key": "observation_clock_or_gap",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Αλλαγή ώρας ή κενό στις μετρήσεις διέκοψε αυτόν τον κύκλο.",
+      "de": "Eine Zeitänderung oder Messlücke unterbrach diesen Zyklus."
+    }
+  },
+  {
+    "english": "The cycle was interrupted because its measurements or conditions were unsuitable.",
+    "key": "unsafe_or_invalid_observation",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Ο κύκλος διακόπηκε επειδή οι μετρήσεις ή οι συνθήκες δεν ήταν κατάλληλες.",
+      "de": "Der Zyklus wurde wegen ungeeigneter Messwerte oder Bedingungen unterbrochen."
+    }
+  },
+  {
+    "english": "This run was not confirmed as controlled by HEM.",
+    "key": "unowned_native_output",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Δεν επιβεβαιώθηκε ότι αυτή η λειτουργία της συσκευής ελεγχόταν από το HEM.",
+      "de": "Für diesen Lauf wurde keine Steuerung durch HEM bestätigt."
+    }
+  },
+  {
+    "english": "The accepted cycles show inconsistent responses.",
+    "key": "inconsistent_plant_response",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Οι αποδεκτοί κύκλοι δείχνουν ασυνεπή απόκριση.",
+      "de": "Die akzeptierten Zyklen zeigen uneinheitliche Reaktionen."
+    }
+  },
+  {
+    "english": "The calculated gains exceed the permitted limits.",
+    "key": "identified_gains_outside_safe_bounds",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Οι υπολογισμένες τιμές υπερβαίνουν τα επιτρεπτά όρια.",
+      "de": "Die berechneten Werte überschreiten die zulässigen Grenzen."
+    }
+  },
+  {
+    "english": "Review the proposed values before approving them.",
+    "key": "recommendation_pending",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Έλεγξε τις προτεινόμενες τιμές πριν τις εγκρίνεις.",
+      "de": "Die vorgeschlagenen Werte vor der Bestätigung prüfen."
+    }
+  },
+  {
+    "english": "The proposal expired after 48 hours. A new accepted cycle is needed.",
+    "key": "recommendation_expired",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Η πρόταση έληξε μετά από 48 ώρες. Χρειάζεται ένας νέος αποδεκτός κύκλος.",
+      "de": "Der Vorschlag ist nach 48 Stunden abgelaufen. Ein neuer akzeptierter Zyklus wird benötigt."
+    }
+  },
+  {
+    "english": "The proposal was discarded. A new accepted cycle is needed for another proposal.",
+    "key": "recommendation_discarded",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Η πρόταση απορρίφθηκε. Χρειάζεται ένας νέος αποδεκτός κύκλος για νέα πρόταση.",
+      "de": "Der Vorschlag wurde verworfen. Für einen neuen Vorschlag wird ein weiterer akzeptierter Zyklus benötigt."
+    }
+  },
+  {
+    "english": "The proposal no longer matches the active settings. A new complete cycle is needed.",
+    "key": "recommendation_stale",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Η πρόταση δεν αντιστοιχεί πλέον στις ενεργές ρυθμίσεις. Χρειάζεται ένας νέος πλήρης κύκλος.",
+      "de": "Der Vorschlag passt nicht mehr zu den aktiven Einstellungen. Ein neuer vollständiger Zyklus wird benötigt."
+    }
+  },
+  {
+    "english": "Timing settings changed. The previous proposal was withdrawn; a new complete cycle is needed.",
+    "key": "tuning_settings_changed",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Οι ρυθμίσεις χρονισμού άλλαξαν. Η προηγούμενη πρόταση αποσύρθηκε· χρειάζεται ένας νέος πλήρης κύκλος.",
+      "de": "Die Zeiteinstellungen wurden geändert. Der bisherige Vorschlag wurde zurückgenommen; ein neuer vollständiger Zyklus wird benötigt."
+    }
+  },
+  {
+    "english": "The unfinished observation was discarded. Completed learning cycles are retained.",
+    "key": "observation_interrupted",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Η ημιτελής παρατήρηση απορρίφθηκε. Οι ολοκληρωμένοι κύκλοι εκμάθησης διατηρούνται.",
+      "de": "Die unvollständige Beobachtung wurde verworfen. Abgeschlossene Lernzyklen bleiben erhalten."
+    }
+  },
+  {
+    "english": "Saved cycles for these settings were restored. A new complete cycle is needed.",
+    "key": "saved_context_resumed",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Ανακτήθηκαν οι αποθηκευμένοι κύκλοι για αυτές τις ρυθμίσεις. Χρειάζεται ένας νέος πλήρης κύκλος.",
+      "de": "Gespeicherte Zyklen für diese Einstellungen wurden wiederhergestellt. Ein neuer vollständiger Zyklus wird benötigt."
+    }
+  },
+  {
+    "english": "A new complete cycle is needed before calibration can continue.",
+    "key": "new_cycle_required",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Χρειάζεται ένας νέος πλήρης κύκλος για να συνεχιστεί η βαθμονόμηση.",
+      "de": "Ein neuer vollständiger Zyklus wird benötigt, bevor die Kalibrierung fortgesetzt werden kann."
+    }
+  },
+  {
+    "english": "New gains can only be applied while the device is confirmed off.",
+    "key": "waiting_for_safe_off",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Οι νέες τιμές μπορούν να εφαρμοστούν μόνο όταν επιβεβαιωθεί ότι η συσκευή είναι κλειστή.",
+      "de": "Neue Werte können nur bei bestätigtem AUS-Zustand des Geräts übernommen werden."
+    }
+  },
+  {
+    "english": "The minimum interval between automatic adjustments has not elapsed.",
+    "key": "calibration_cooldown",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Δεν έχει περάσει το ελάχιστο διάστημα μεταξύ αυτόματων προσαρμογών.",
+      "de": "Der Mindestabstand zwischen automatischen Anpassungen ist noch nicht erreicht."
+    }
+  },
+  {
+    "english": "New accepted cycles are needed after the previous adjustment.",
+    "key": "new_cycles_required",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Χρειάζονται νέοι αποδεκτοί κύκλοι μετά την προηγούμενη προσαρμογή.",
+      "de": "Nach der letzten Anpassung werden neue akzeptierte Zyklen benötigt."
+    }
+  },
+  {
+    "english": "The displayed calibration has been saved.",
+    "key": "applied",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Η εμφανιζόμενη βαθμονόμηση έχει αποθηκευτεί.",
+      "de": "Die angezeigte Kalibrierung wurde gespeichert."
+    }
+  },
+  {
+    "english": "No useful bounded change is available.",
+    "key": "no_gain_change",
+    "catalog": "HEM_PID_REASONS074",
+    "translations": {
+      "el": "Δεν προκύπτει χρήσιμη αλλαγή εντός των επιτρεπτών ορίων.",
+      "de": "Es liegt keine sinnvolle Änderung innerhalb der Grenzen vor."
+    }
+  },
+  {
+    "english": "Waiting for the next valid control observation.",
+    "key": "awaiting_observation",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Αναμονή για την επόμενη έγκυρη παρατήρηση ελέγχου.",
+      "de": "Warten auf die nächste gültige Regelungsbeobachtung."
+    }
+  },
+  {
+    "english": "Settings or measurement sources changed; fresh observations are needed.",
+    "key": "context_changed",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Άλλαξαν οι ρυθμίσεις ή οι πηγές μέτρησης· χρειάζονται νέες παρατηρήσεις.",
+      "de": "Einstellungen oder Messwertquellen haben sich geändert; neue Beobachtungen sind nötig."
+    }
+  },
+  {
+    "english": "The target is being maintained; no gain change is needed.",
+    "key": "tracking_well",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Ο στόχος διατηρείται· δεν χρειάζεται αλλαγή συντελεστών.",
+      "de": "Der Zielbereich wird eingehalten; eine Änderung ist nicht nötig."
+    }
+  },
+  {
+    "english": "More valid observations are needed to judge the response.",
+    "key": "insufficient_evidence",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Χρειάζονται περισσότερες έγκυρες παρατηρήσεις για να αξιολογηθεί η απόκριση.",
+      "de": "Weitere gültige Beobachtungen sind nötig, um die Reaktion zu beurteilen."
+    }
+  },
+  {
+    "english": "Output variation is too small to identify a reliable adjustment.",
+    "key": "insufficient_excitation",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Η μεταβολή της εξόδου είναι πολύ μικρή για να τεκμηριωθεί αξιόπιστη προσαρμογή.",
+      "de": "Die Ausgangsänderungen sind zu klein für eine verlässliche Anpassung."
+    }
+  },
+  {
+    "english": "The applied output cannot be verified; gains are retained.",
+    "key": "output_unverified",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Δεν επιβεβαιώνεται η εφαρμοσμένη έξοδος· οι συντελεστές διατηρούνται.",
+      "de": "Der tatsächlich angewendete Ausgang ist nicht bestätigt; die Werte bleiben erhalten."
+    }
+  },
+  {
+    "english": "The output is at its limit. Increasing gains cannot add capacity.",
+    "key": "capacity_limited",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Η έξοδος βρίσκεται στο όριό της. Η αύξηση συντελεστών δεν αυξάνει τη διαθέσιμη ισχύ.",
+      "de": "Der Ausgang ist am Limit. Höhere Reglerwerte schaffen keine zusätzliche Leistung."
+    }
+  },
+  {
+    "english": "An output restriction is active; these observations are not used for tuning.",
+    "key": "actuator_limited",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Ισχύει περιορισμός εξόδου· αυτές οι παρατηρήσεις δεν χρησιμοποιούνται για προσαρμογή.",
+      "de": "Eine Ausgangsbeschränkung ist aktiv; diese Beobachtungen werden nicht zur Anpassung verwendet."
+    }
+  },
+  {
+    "english": "Measurement noise is too high for a reliable gain change.",
+    "key": "measurement_noise",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Ο θόρυβος των μετρήσεων είναι πολύ μεγάλος για αξιόπιστη αλλαγή συντελεστών.",
+      "de": "Das Messrauschen ist zu hoch für eine verlässliche Anpassung."
+    }
+  },
+  {
+    "english": "The configured control measurement is missing or outdated.",
+    "key": "measurement_unavailable",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Η ρυθμισμένη μέτρηση ελέγχου λείπει ή δεν είναι πρόσφατη.",
+      "de": "Der konfigurierte Regelmesswert fehlt oder ist veraltet."
+    }
+  },
+  {
+    "english": "The contributing sensors changed; a new observation segment has started.",
+    "key": "source_membership_changed",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Άλλαξαν οι αισθητήρες που συνεισφέρουν στη μέτρηση· ξεκίνησε νέο τμήμα παρατήρησης.",
+      "de": "Die beitragenden Sensoren haben sich geändert; ein neuer Beobachtungsabschnitt beginnt."
+    }
+  },
+  {
+    "english": "The observed response does not yet support a reliable model.",
+    "key": "model_not_validated",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Η παρατηρούμενη απόκριση δεν τεκμηριώνει ακόμη αξιόπιστο μοντέλο.",
+      "de": "Die beobachtete Reaktion reicht noch nicht für ein verlässliches Modell."
+    }
+  },
+  {
+    "english": "No supported improvement was found; current gains are retained.",
+    "key": "no_supported_improvement",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Δεν τεκμηριώθηκε βελτίωση· οι τρέχοντες συντελεστές διατηρούνται.",
+      "de": "Keine ausreichend belegte Verbesserung gefunden; die aktuellen Werte bleiben erhalten."
+    }
+  },
+  {
+    "english": "Tracking worsened after the adjustment; the previous gains are recommended.",
+    "key": "performance_worsened",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Η απόκριση επιδεινώθηκε μετά την προσαρμογή· προτείνεται επαναφορά των προηγούμενων τιμών.",
+      "de": "Das Regelverhalten hat sich verschlechtert; die vorherigen Werte werden empfohlen."
+    }
+  },
+  {
+    "english": "Fresh observations are needed after restart before evaluating another change.",
+    "key": "restart_verification_required",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Μετά την επανεκκίνηση χρειάζονται νέες παρατηρήσεις πριν αξιολογηθεί άλλη αλλαγή.",
+      "de": "Nach dem Neustart sind neue Beobachtungen nötig, bevor eine weitere Änderung bewertet wird."
+    }
+  },
+  {
+    "english": "A bounded adjustment is being checked against current settings and operating limits.",
+    "key": "candidate_ready",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Ελέγχεται μια περιορισμένη προσαρμογή με βάση τις τρέχουσες ρυθμίσεις και τα όρια λειτουργίας.",
+      "de": "Eine begrenzte Anpassung wird anhand der aktuellen Einstellungen und Betriebsgrenzen geprüft."
+    }
+  },
+  {
+    "english": "Comparing normal operation after the change with the previous observations.",
+    "key": "verification_in_progress",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Συγκρίνεται η κανονική λειτουργία μετά την αλλαγή με τις προηγούμενες παρατηρήσεις.",
+      "de": "Der normale Betrieb nach der Änderung wird mit den bisherigen Beobachtungen verglichen."
+    }
+  },
+  {
+    "english": "Comparable observations support retaining the adjustment.",
+    "key": "performance_improved",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Οι συγκρίσιμες παρατηρήσεις υποστηρίζουν τη διατήρηση της προσαρμογής.",
+      "de": "Vergleichbare Beobachtungen sprechen dafür, die Anpassung beizubehalten."
+    }
+  },
+  {
+    "english": "The previous gains have been restored after performance deteriorated.",
+    "key": "gains_reverted",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Οι προηγούμενες τιμές επανήλθαν μετά την επιδείνωση της απόκρισης.",
+      "de": "Die vorherigen Werte wurden nach verschlechtertem Regelverhalten wiederhergestellt."
+    }
+  },
+  {
+    "english": "A current, verified proposal is not available for approval.",
+    "key": "proposal_unavailable",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Δεν υπάρχει τρέχουσα, επαληθευμένη πρόταση για έγκριση.",
+      "de": "Es liegt kein aktueller, geprüfter Vorschlag zur Bestätigung vor."
+    }
+  },
+  {
+    "english": "Waiting for fresh observations from the configured control inputs.",
+    "key": "fresh_observations_required",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Αναμονή νέων παρατηρήσεων από τις ρυθμισμένες εισόδους ελέγχου.",
+      "de": "Warten auf neue Beobachtungen aus den konfigurierten Regeleingängen."
+    }
+  },
+  {
+    "english": "More observations after the last evaluation are needed before considering another adjustment.",
+    "key": "new_evidence_required",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Χρειάζονται περισσότερες παρατηρήσεις μετά την τελευταία αξιολόγηση πριν εξεταστεί νέα προσαρμογή.",
+      "de": "Vor einer weiteren Anpassung sind mehr Beobachtungen seit der letzten Bewertung nötig."
+    }
+  },
+  {
+    "english": "Operating limits are active; current gains are retained.",
+    "key": "operating_limits",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Ισχύουν όρια λειτουργίας· οι τρέχοντες συντελεστές διατηρούνται.",
+      "de": "Betriebsgrenzen sind aktiv; die aktuellen Werte bleiben erhalten."
+    }
+  },
+  {
+    "english": "Another controller affects this measurement; the response cannot be attributed to this device alone.",
+    "key": "other_controller_active",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Άλλος ελεγκτής επηρεάζει αυτή τη μέτρηση· η απόκριση δεν μπορεί να αποδοθεί μόνο σε αυτή τη συσκευή.",
+      "de": "Ein anderer Regler beeinflusst diesen Messwert; die Reaktion lässt sich diesem Gerät nicht allein zuordnen."
+    }
+  },
+  {
+    "english": "Monitoring continues, but this output has no verified tuning model yet.",
+    "key": "actuator_model_unverified",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Η παρακολούθηση συνεχίζεται, αλλά δεν υπάρχει ακόμη επαληθευμένο μοντέλο προσαρμογής για αυτή την έξοδο.",
+      "de": "Die Beobachtung läuft weiter; für diesen Ausgang liegt noch kein geprüftes Abstimmungsmodell vor."
+    }
+  },
+  {
+    "english": "The measured response has not varied enough to assess another gain setting.",
+    "key": "insufficient_response_variation",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Η μετρημένη απόκριση δεν έχει μεταβληθεί αρκετά για να αξιολογηθεί άλλη ρύθμιση συντελεστών.",
+      "de": "Der Messwert hat sich noch nicht genug verändert, um andere Reglerwerte zu beurteilen."
+    }
+  },
+  {
+    "english": "A bounded candidate passed model checks; it has not been applied yet.",
+    "key": "validated_improvement",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Μια περιορισμένη υποψήφια αλλαγή πέρασε τους ελέγχους μοντέλου· δεν έχει εφαρμοστεί ακόμη.",
+      "de": "Ein begrenzter Vorschlag hat die Modellprüfungen bestanden; er wurde noch nicht angewendet."
+    }
+  },
+  {
+    "english": "Comparing observations after the change before deciding whether to retain it.",
+    "key": "evaluating_adjustment",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Συγκρίνονται οι παρατηρήσεις μετά την αλλαγή πριν αποφασιστεί αν θα διατηρηθεί.",
+      "de": "Beobachtungen nach der Änderung werden verglichen, bevor sie dauerhaft beibehalten wird."
+    }
+  },
+  {
+    "english": "Comparable observations support keeping the applied gains.",
+    "key": "adjustment_verified",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Οι συγκρίσιμες παρατηρήσεις υποστηρίζουν τη διατήρηση των εφαρμοσμένων συντελεστών.",
+      "de": "Vergleichbare Beobachtungen sprechen dafür, die angewendeten Werte beizubehalten."
+    }
+  },
+  {
+    "english": "The previous gains have been restored; normal observation continues.",
+    "key": "previous_gains_restored",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Οι προηγούμενοι συντελεστές επανήλθαν· η κανονική παρακολούθηση συνεχίζεται.",
+      "de": "Die vorherigen Werte wurden wiederhergestellt; die normale Beobachtung läuft weiter."
+    }
+  },
+  {
+    "english": "Operating conditions changed; more comparable observations are needed.",
+    "key": "verification_conditions_changed",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Άλλαξαν οι συνθήκες λειτουργίας· χρειάζονται περισσότερες συγκρίσιμες παρατηρήσεις.",
+      "de": "Die Betriebsbedingungen haben sich geändert; weitere vergleichbare Beobachtungen sind nötig."
+    }
+  },
+  {
+    "english": "The comparison model is unavailable; the adjustment has not been verified.",
+    "key": "verification_model_unavailable",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Το μοντέλο σύγκρισης δεν είναι διαθέσιμο· η προσαρμογή δεν έχει επαληθευτεί.",
+      "de": "Das Vergleichsmodell ist nicht verfügbar; die Anpassung wurde noch nicht bestätigt."
+    }
+  },
+  {
+    "english": "The active gains changed; the previous evaluation no longer applies.",
+    "key": "verification_settings_changed",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Άλλαξαν οι ενεργοί συντελεστές· η προηγούμενη αξιολόγηση δεν ισχύει πλέον.",
+      "de": "Die aktiven Reglerwerte wurden geändert; die bisherige Bewertung gilt nicht mehr."
+    }
+  },
+  {
+    "english": "The control context changed; the previous evaluation was ended.",
+    "key": "verification_context_changed",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Άλλαξαν οι συνθήκες ελέγχου· η προηγούμενη αξιολόγηση τερματίστηκε.",
+      "de": "Der Regelungskontext hat sich geändert; die bisherige Bewertung wurde beendet."
+    }
+  },
+  {
+    "english": "The comparison ended without a reliable conclusion. Current gains are retained; new observations are needed before another adjustment.",
+    "key": "verification_inconclusive",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Η σύγκριση ολοκληρώθηκε χωρίς αξιόπιστο συμπέρασμα. Οι τρέχοντες συντελεστές διατηρούνται· χρειάζονται νέες παρατηρήσεις πριν από άλλη προσαρμογή.",
+      "de": "Der Vergleich endete ohne verlässliches Ergebnis. Die aktuellen Werte bleiben erhalten; vor einer weiteren Anpassung sind neue Beobachtungen nötig."
+    }
+  },
+  {
+    "english": "The target is being maintained after the adjustment; current gains are retained.",
+    "key": "stable_after_adjustment",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Ο στόχος διατηρείται μετά την προσαρμογή· οι τρέχοντες συντελεστές διατηρούνται.",
+      "de": "Der Zielbereich wird nach der Anpassung eingehalten; die aktuellen Werte bleiben erhalten."
+    }
+  },
+  {
+    "english": "An older proposal was withdrawn because the learning method changed.",
+    "key": "calibration_algorithm_updated",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Μια παλαιότερη πρόταση αποσύρθηκε επειδή άλλαξε η μέθοδος εκμάθησης.",
+      "de": "Ein älterer Vorschlag wurde zurückgezogen, weil sich das Lernverfahren geändert hat."
+    }
+  },
+  {
+    "english": "The control observation is incomplete or invalid; it was not used for learning.",
+    "key": "invalid_observation",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Η παρατήρηση ελέγχου είναι ελλιπής ή μη έγκυρη· δεν χρησιμοποιήθηκε για εκμάθηση.",
+      "de": "Die Regelungsbeobachtung ist unvollständig oder ungültig und wurde nicht zum Lernen verwendet."
+    }
+  },
+  {
+    "english": "The configured measurement is outdated; waiting for a fresh report.",
+    "key": "measurement_outdated",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Η ρυθμισμένη μέτρηση δεν είναι πρόσφατη· αναμένεται νέα αναφορά.",
+      "de": "Der konfigurierte Messwert ist veraltet; eine neue Meldung wird abgewartet."
+    }
+  },
+  {
+    "english": "A gap in the sensor reports ended this observation segment.",
+    "key": "measurement_gap",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Κενό στις αναφορές του αισθητήρα τερμάτισε αυτό το τμήμα παρατήρησης.",
+      "de": "Eine Lücke in den Sensormeldungen hat diesen Beobachtungsabschnitt beendet."
+    }
+  },
+  {
+    "english": "The observation segment was interrupted; fresh data is needed to continue.",
+    "key": "observation_interrupted",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Το τμήμα παρατήρησης διακόπηκε· χρειάζονται νέα δεδομένα για τη συνέχεια.",
+      "de": "Der Beobachtungsabschnitt wurde unterbrochen; zum Fortsetzen werden neue Daten benötigt."
+    }
+  },
+  {
+    "english": "A clock change or observation gap ended this segment.",
+    "key": "observation_clock_or_gap",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Αλλαγή ώρας ή κενό παρατηρήσεων τερμάτισε αυτό το τμήμα.",
+      "de": "Eine Zeitänderung oder Beobachtungslücke hat diesen Abschnitt beendet."
+    }
+  },
+  {
+    "english": "The device limits how quickly its output can change.",
+    "key": "output_rate_limited",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Η συσκευή περιορίζει τον ρυθμό μεταβολής της εξόδου.",
+      "de": "Das Gerät begrenzt, wie schnell sich sein Ausgang ändern darf."
+    }
+  },
+  {
+    "english": "Requested output is below the device minimum; gains are retained.",
+    "key": "below_minimum_output",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Η ζητούμενη έξοδος είναι κάτω από το ελάχιστο της συσκευής· οι συντελεστές διατηρούνται.",
+      "de": "Der angeforderte Ausgang liegt unter dem Geräteminimum; die Werte bleiben erhalten."
+    }
+  },
+  {
+    "english": "The configured output limit is active; gains are retained.",
+    "key": "output_limit",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Το ρυθμισμένο όριο εξόδου είναι ενεργό· οι συντελεστές διατηρούνται.",
+      "de": "Die konfigurierte Ausgangsgrenze ist aktiv; die Werte bleiben erhalten."
+    }
+  },
+  {
+    "english": "Quiet mode is limiting output; gains are retained.",
+    "key": "quiet_output_limit",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Η αθόρυβη λειτουργία περιορίζει την έξοδο· οι συντελεστές διατηρούνται.",
+      "de": "Der Ruhemodus begrenzt den Ausgang; die Werte bleiben erhalten."
+    }
+  },
+  {
+    "english": "The proposal expired; fresh observations are needed before another proposal.",
+    "key": "recommendation_expired",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Η πρόταση έληξε· χρειάζονται νέες παρατηρήσεις πριν από άλλη πρόταση.",
+      "de": "Der Vorschlag ist abgelaufen; vor einem neuen Vorschlag sind neue Beobachtungen nötig."
+    }
+  },
+  {
+    "english": "The proposal was discarded; normal observation continues.",
+    "key": "recommendation_discarded",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Η πρόταση απορρίφθηκε· η κανονική παρακολούθηση συνεχίζεται.",
+      "de": "Der Vorschlag wurde verworfen; die normale Beobachtung läuft weiter."
+    }
+  },
+  {
+    "english": "The proposal no longer matches the active settings or evidence.",
+    "key": "recommendation_stale",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Η πρόταση δεν αντιστοιχεί πλέον στις ενεργές ρυθμίσεις ή στα διαθέσιμα δεδομένα.",
+      "de": "Der Vorschlag passt nicht mehr zu den aktiven Einstellungen oder Beobachtungen."
+    }
+  },
+  {
+    "english": "Timing settings changed; the previous proposal was withdrawn.",
+    "key": "tuning_settings_changed",
+    "catalog": "HEM_PID_PERFORMANCE_REASONS074B4",
+    "translations": {
+      "el": "Άλλαξαν οι ρυθμίσεις χρονισμού· η προηγούμενη πρόταση αποσύρθηκε.",
+      "de": "Die Zeiteinstellungen wurden geändert; der bisherige Vorschlag wurde zurückgenommen."
+    }
+  }
+]

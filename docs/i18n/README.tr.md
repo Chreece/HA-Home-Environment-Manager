@@ -18,7 +18,7 @@
 # HEM - Home Environment Manager
 
 <!-- HEM-TRANSLATION-UNREVIEWED-START -->
-> ⚠️ **Unreviewed machine translation.** This page has not been checked for linguistic or technical accuracy, and some descriptions may be wrong. For installation, device control and safety instructions, refer to the <a href="../../README.md">English README</a>.
+> ⚠️ **İncelenmemiş makine çevirisi.** Bu sayfanın dilsel ve teknik doğruluğu kontrol edilmemiştir; bazı açıklamalar yanlış olabilir. Kurulum, cihaz kontrolü ve güvenlik talimatları için <a href="../../README.md">İngilizce README dosyasına</a> bakın.
 <!-- HEM-TRANSLATION-UNREVIEWED-END -->
 
 <p align="center">
@@ -75,7 +75,8 @@ HEM paylaşılan politikaları yerel kararlardan ayrı tutar.
 | **Oda** | Ev içi sıcaklık ve nem kaynakları, hava kalitesi eşiği, pencere ve kapı kontaktları, uyku ve işlev davranışları, oda özel konfor hedefleri, havalandırma ve gölgelik seçenekleri. |
 | **Bireysel cihaz** | Kullanılabilir kontrol modları, Otomatik/Elçi/PID yöntem, profil başına hedefler, sensörler, sessiz fan ayarları, minimum çalışma süreleri, güç koruması, pencere davranışları ve cihaz hata bildirimleri. |
 
-Tüm üç seviyede de karttaki gruplanmış, arama yapılabilir ayarlar aracılığıyla erişilebilir. Gerektiğinde, günlük ayarları sıkıştırmadan gelişmiş kontroller mevcuttur. Home Assistant Yapılandırma değişiklikleri.
+Ev, oda ve cihaz ayarları kartta gruplandırılır ve aranabilir. Hangi ayarların gösterileceğini belirlemek için **Temel**, **Gelişmiş** veya **Uzman** düzeyini seçin. Temel düzey günlük kontrolleri ve gerekli kurulumu içerir. Gelişmiş düzey elle ayarlanan PID katsayılarını ve ayrıntılı ayarları ekler. Uzman düzeyi özel modelleri ve kapasite ayarlarını ekler. Her düzey önceki düzeyleri de kapsar. Home Assistant kurulumunuz değiştiğinde kullanılabilir kaynakları yenileyebilirsiniz. <!-- HEM-I18N:levels -->
+
 
 <a id="climate-control-and-pid-device-by-device"></a>
 ### İklim kontrolü ve PID, cihazla cihaz
@@ -124,7 +125,9 @@ Hazırlık, her şeyi çalıştırmak için bir komut değildir. Cihazların hal
 HEM karşılaştırır **bir odanın neye ihtiyacı var** ile **Dış hava yardım edebilir mi?**.
 
 - Ev içindeki mevcut ölçümleri, dış mekan nemini, kirliliği, sıcaklığı, rüzgarı, hava uyarıları ve seçmeli polen bağlamını kullanarak pencerelerin açılmasını veya kapatılmasını önerin.
+- AQI endeksi isteğe bağlıdır. Sağlayıcının ölçeği yapılandırılmamışsa HEM eksik veri bildirir; bu durum tek başına havalandırmayı engellemez veya pencereyi kapatma nedeni oluşturmaz. Geçerli kirletici ölçümleri ve doğru ölçekle yorumlanan, gerçekten tehlikeli AQI değerleri dikkate alınmaya devam eder. <!-- HEM-I18N:aqi -->
 - Oda koşullarını açıklamak için seçilmiş pencere ve kapı bağlantılarını kullanın ve bilinmeyen bir temasın kapalı olarak görmemek için kullanın.
+- Home Assistant ikili sensör sınıfı `door` veya `opening` olan balkon ya da teras kapılarını isteğe bağlı olarak **pencere girişlerine** ekleyebilirsiniz. Odanın pencere seçicisinde görünürler ancak **asla önceden seçili gelmezler**. Normal kapı izleme işlevi bağımsız kalır. <!-- HEM-I18N:balcony -->
 - Seçenek olarak, desteklenen otomatik cihazı başlatmadan önce bir pencereyi açmaya çalışmanıza izin verin. Gerekirse yapılandırılmış yanıt bekledikten sonra normal kontrolü sürdürün.
 - Oda sınırları farkındalığı, havalandırma uyarıları ve seçmeli olarak korunmuş Eco davranış için kapı bilgileri kullanın.
 - Seçilen pencereleri, perdeleri ve gölgeleri uygun pencere, sıcaklık, hava durumu, güneş yüksekliği ve seçmeli aydınlatma kanıtlarını kullanarak yönetin.

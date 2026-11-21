@@ -35,7 +35,7 @@ room_sources.room_temperature_evidence=lambda *_a,**_kw:(None,{})
 room_sources.selected=lambda *_a,**_kw:None
 discovery=module("discovery")
 faults=module("device_faults")
-languages=module("languages")
+languages=module("languages","languages.py")
 watch=module("off_state_watchdog","off_state_watchdog.py")
 runtime_module=module("off_state_runtime","off_state_runtime.py")
 

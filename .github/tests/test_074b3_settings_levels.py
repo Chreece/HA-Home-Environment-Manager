@@ -23,10 +23,15 @@ POLICY = CARD.with_name("settings-audit-policy.json")
 NODE = r"""
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const source=fs.readFileSync(process.argv[1],'utf8');
+// Isolated production sections use the same bundled locale helpers as the full card.
+const localeStart=source.indexOf('  /* HEM_TRANSLATION_DATA_B8_START */');
+const localeEnd=source.indexOf('  const BRAND_TITLE =',localeStart);
+assert(localeStart>0&&localeEnd>localeStart);
+const localeBootstrap=source.slice(localeStart,localeEnd);
 const policy=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
 const start=source.indexOf('  const auditPolicyB8='),end=source.indexOf('  const auditProto=',start);
 assert(start>0&&end>start);
-const api=new Function(source.slice(start,end)+
+const api=new Function(localeBootstrap+source.slice(start,end)+
  '\nreturn {auditPolicyB8,auditLevelB8,auditVisibleB8};')();
 assert.deepEqual(api.auditPolicyB8,policy);
 assert.deepEqual(policy.levels,['basic','advanced','expert']);

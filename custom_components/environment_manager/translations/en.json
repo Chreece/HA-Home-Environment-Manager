@@ -669,7 +669,7 @@
           "climate_area": "Room to configure"
         },
         "data_description": {
-          "climate_area": "This setting governs Room to configure. Physical commands require a separate device opt-in and appropriate protections."
+          "climate_area": "Choose which room's climate settings to edit. Device commands require separate permission for each device and appropriate protections."
         }
       },
       "climate_room": {
@@ -1185,8 +1185,8 @@
       "missing_mold_outdoor_temperature": "No selected weather entity supplies a valid recent outdoor temperature. Configure weather first or wait for a valid measurement.",
       "invalid_mold_surface_temperature": "Enter a finite measured surface temperature in °C.",
       "invalid_mold_calibration": "Calibration needs room, outdoor and cold-surface temperatures measured together, with at least 3°C difference between room and outside. Check the three readings.",
-      "invalid_setup_rooms": "Invalid: Rooms to monitor",
-      "invalid_room_source": "Invalid: Room · source",
+      "invalid_setup_rooms": "Select at least one available room to monitor.",
+      "invalid_room_source": "This value is not valid. Choose an available option or enter a value within the allowed range.",
       "invalid_away_windows_recipients": "Select at least one person and one delivery channel for the open-window departure alert.",
       "invalid_environment_scale": "Select a supported AQI/pollen scale and a valid threshold; no scale is guessed automatically.",
       "invalid_environment_measurement": "Check this room's numeric values and allowed units/ranges.",
@@ -1207,30 +1207,38 @@
       "climate_target_required": "Select a supported climate entity assigned to this room.",
       "climate_direct_actuator_not_ready": "Relay/PWM/proportional drivers are still under safety testing; they cannot be enabled.",
       "climate_controller_invalid": "Choose a supported control method.",
-      "climate_mode_invalid": "Choose auto, heat, cool or off.",
-      "climate_occupancy_invalid": "An occupancy sensor does not belong to this room.",
+      "climate_mode_invalid": "Check the climate mode, operating profile, unknown-occupancy choice and humidity limits. Use only offered choices and allowed ranges.",
+      "climate_occupancy_invalid": "Check occupancy sensors and presence settings. Select sensors assigned to this room and use only the available policy, profile and target options.",
       "climate_away_invalid": "Select a valid people/tracker entity.",
       "climate_deadband_invalid": "Cooling target must be at least 1°C above heating target in every profile.",
       "climate_attestation_required": "Confirm explicitly that selected outputs are independently protected, non-compressor thermal actuators before allowing switching.",
       "climate_direct_targets_invalid": "Select one or two real, unique and room-assigned actuator entities of the required device type.",
       "climate_direct_timing_invalid": "Check sample period, PWM cycle, minimum on/off durations and maximum continuous runtime.",
-      "general_invalid_presence": "Invalid · Occupancy · settings",
-      "general_invalid_trackers": "Invalid · Home · settings",
-      "general_invalid_rooms_entity": "Invalid · Room · settings",
-      "general_invalid_attribute": "Invalid · source · settings",
-      "general_invalid_source_age": "Invalid · source · settings",
-      "invalid_selected_devices": "Invalid · Devices · settings",
-      "device_policy_invalid": "Invalid · Occupancy · settings",
-      "device_method_invalid": "Invalid · control · settings",
-      "device_hardware_required": "Invalid · Required · settings",
-      "device_power_required_for_off": "Invalid · Power · settings",
-      "device_temperature_required": "Invalid · Temperature · settings",
-      "device_humidity_required": "Invalid · Humidity · settings",
-      "device_air_sensor_required": "Invalid · sensor · settings",
-      "device_temperature_band_invalid": "Invalid · Temperature · settings",
-      "device_humidity_invalid": "Invalid · Humidity · settings",
-      "device_runtime_invalid": "Invalid · Power · settings",
-      "wake_sources_pair": "Select both the next-alarm entity and the minutes-before-alarm entity, or clear both."
+      "general_invalid_presence": "Choose occupancy or presence sensors from the available list.",
+      "general_invalid_trackers": "Choose people, device trackers or home-presence sensors from the available list.",
+      "general_invalid_rooms_entity": "Choose an available source for the list of occupied rooms or rooms where people are sleeping.",
+      "general_invalid_attribute": "Choose the source’s state or one of its available room-list attributes.",
+      "general_invalid_source_age": "Enter a source validity time from 10 to 1,440 minutes.",
+      "invalid_selected_devices": "Check the device selection and source-configuration option. Only devices offered for this room are allowed.",
+      "device_policy_invalid": "Check the presence, absence and sleep settings. Switching off on absence requires a presence rule. Other devices in this room must not use conflicting methods or the same fan role.",
+      "device_method_invalid": "Choose a control method supported by this device’s actual features. Native mode control also requires support for switching off.",
+      "device_hardware_required": "Verify this device’s type and confirm that it supports the requested on/off or mode control before granting hardware permission.",
+      "device_power_required_for_off": "To switch this device off when nobody is present, select on/off control and confirm the hardware permission.",
+      "device_temperature_required": "Select a valid temperature sensor assigned to this room and not excluded from control.",
+      "device_humidity_required": "Select a valid humidity sensor assigned to this room and not excluded from control.",
+      "device_air_sensor_required": "Choose air extraction with a verified CO₂ sensor, or particle filtration with a verified PM2.5 sensor, assigned to this room.",
+      "device_temperature_band_invalid": "Set heating targets to 5–35 °C and cooling targets to 6–40 °C, with cooling at least 1 °C above heating in every profile.",
+      "device_humidity_invalid": "Set both the normal and sleep humidity targets between 20% and 80%.",
+      "device_runtime_invalid": "Enter permitted minimum on/off times and a maximum run time greater than the minimum on time.",
+      "wake_sources_pair": "Select both the next-alarm entity and the minutes-before-alarm entity, or clear both.",
+      "device_conflicting_control": "Another automatic fan or humidity controller in this room uses a conflicting method. Disable that controller before enabling this one.",
+      "device_dry_advisory_only": "This device only supports DRY. Select humidity-based control and a humidity sensor from this room.",
+      "climate_pid_separate_configuration": "Configure and enable the room PID controller in the dedicated PID settings; this form cannot authorize it.",
+      "climate_invalid_sleep_schedule": "Enter different sleep start and end times in 24-hour HH:MM format.",
+      "climate_invalid_occupancy_timing": "Set the vacancy delay to 0–240 minutes and the occupancy-data freshness limit to 10–1440 minutes.",
+      "climate_invalid_comfort_adjustment": "Set the maximum comfort target adjustment between 0 and 2.5°C.",
+      "climate_proportional_requires_percent": "Proportional control requires a number entity with unit %, minimum 0, maximum 100 and a numeric step.",
+      "invalid_freshness_mode": "Choose Automatic or Custom for the sensor freshness limit."
     },
     "abort": {
       "already_configured": "Home Environment Manager is already configured.",
@@ -1750,7 +1758,7 @@
           "climate_area": "Room to configure"
         },
         "data_description": {
-          "climate_area": "This setting governs Room to configure. Physical commands require a separate device opt-in and appropriate protections."
+          "climate_area": "Choose which room's climate settings to edit. Device commands require separate permission for each device and appropriate protections."
         }
       },
       "climate_room": {
@@ -2427,33 +2435,41 @@
       "climate_target_required": "Select a supported climate entity assigned to this room.",
       "climate_direct_actuator_not_ready": "Relay/PWM/proportional drivers are still under safety testing; they cannot be enabled.",
       "climate_controller_invalid": "Choose a supported control method.",
-      "climate_mode_invalid": "Choose auto, heat, cool or off.",
-      "climate_occupancy_invalid": "An occupancy sensor does not belong to this room.",
+      "climate_mode_invalid": "Check the climate mode, operating profile, unknown-occupancy choice and humidity limits. Use only offered choices and allowed ranges.",
+      "climate_occupancy_invalid": "Check occupancy sensors and presence settings. Select sensors assigned to this room and use only the available policy, profile and target options.",
       "climate_away_invalid": "Select a valid people/tracker entity.",
       "climate_deadband_invalid": "Cooling target must be at least 1°C above heating target in every profile.",
       "climate_attestation_required": "Confirm explicitly that selected outputs are independently protected, non-compressor thermal actuators before allowing switching.",
       "climate_direct_targets_invalid": "Select one or two real, unique and room-assigned actuator entities of the required device type.",
       "climate_direct_timing_invalid": "Check sample period, PWM cycle, minimum on/off durations and maximum continuous runtime.",
-      "general_invalid_presence": "Invalid · Occupancy · settings",
-      "general_invalid_trackers": "Invalid · Home · settings",
-      "general_invalid_rooms_entity": "Invalid · Room · settings",
-      "general_invalid_attribute": "Invalid · source · settings",
-      "general_invalid_source_age": "Invalid · source · settings",
-      "invalid_selected_devices": "Invalid · Devices · settings",
-      "device_policy_invalid": "Invalid · Occupancy · settings",
-      "device_method_invalid": "Invalid · control · settings",
-      "device_hardware_required": "Invalid · Required · settings",
-      "device_power_required_for_off": "Invalid · Power · settings",
-      "device_temperature_required": "Invalid · Temperature · settings",
-      "device_humidity_required": "Invalid · Humidity · settings",
-      "device_air_sensor_required": "Invalid · sensor · settings",
-      "device_temperature_band_invalid": "Invalid · Temperature · settings",
-      "device_humidity_invalid": "Invalid · Humidity · settings",
-      "device_runtime_invalid": "Invalid · Power · settings",
-      "invalid_setup_rooms": "Invalid: Rooms to monitor",
-      "invalid_room_source": "Invalid: Room · source",
+      "general_invalid_presence": "Choose occupancy or presence sensors from the available list.",
+      "general_invalid_trackers": "Choose people, device trackers or home-presence sensors from the available list.",
+      "general_invalid_rooms_entity": "Choose an available source for the list of occupied rooms or rooms where people are sleeping.",
+      "general_invalid_attribute": "Choose the source’s state or one of its available room-list attributes.",
+      "general_invalid_source_age": "Enter a source validity time from 10 to 1,440 minutes.",
+      "invalid_selected_devices": "Check the device selection and source-configuration option. Only devices offered for this room are allowed.",
+      "device_policy_invalid": "Check the presence, absence and sleep settings. Switching off on absence requires a presence rule. Other devices in this room must not use conflicting methods or the same fan role.",
+      "device_method_invalid": "Choose a control method supported by this device’s actual features. Native mode control also requires support for switching off.",
+      "device_hardware_required": "Verify this device’s type and confirm that it supports the requested on/off or mode control before granting hardware permission.",
+      "device_power_required_for_off": "To switch this device off when nobody is present, select on/off control and confirm the hardware permission.",
+      "device_temperature_required": "Select a valid temperature sensor assigned to this room and not excluded from control.",
+      "device_humidity_required": "Select a valid humidity sensor assigned to this room and not excluded from control.",
+      "device_air_sensor_required": "Choose air extraction with a verified CO₂ sensor, or particle filtration with a verified PM2.5 sensor, assigned to this room.",
+      "device_temperature_band_invalid": "Set heating targets to 5–35 °C and cooling targets to 6–40 °C, with cooling at least 1 °C above heating in every profile.",
+      "device_humidity_invalid": "Set both the normal and sleep humidity targets between 20% and 80%.",
+      "device_runtime_invalid": "Enter permitted minimum on/off times and a maximum run time greater than the minimum on time.",
+      "invalid_setup_rooms": "Select at least one available room to monitor.",
+      "invalid_room_source": "This value is not valid. Choose an available option or enter a value within the allowed range.",
       "invalid_away_windows_recipients": "Select at least one person and one delivery channel for the open-window departure alert.",
-      "wake_sources_pair": "Select both the next-alarm entity and the minutes-before-alarm entity, or clear both."
+      "wake_sources_pair": "Select both the next-alarm entity and the minutes-before-alarm entity, or clear both.",
+      "device_conflicting_control": "Another automatic fan or humidity controller in this room uses a conflicting method. Disable that controller before enabling this one.",
+      "device_dry_advisory_only": "This device only supports DRY. Select humidity-based control and a humidity sensor from this room.",
+      "climate_pid_separate_configuration": "Configure and enable the room PID controller in the dedicated PID settings; this form cannot authorize it.",
+      "climate_invalid_sleep_schedule": "Enter different sleep start and end times in 24-hour HH:MM format.",
+      "climate_invalid_occupancy_timing": "Set the vacancy delay to 0–240 minutes and the occupancy-data freshness limit to 10–1440 minutes.",
+      "climate_invalid_comfort_adjustment": "Set the maximum comfort target adjustment between 0 and 2.5°C.",
+      "climate_proportional_requires_percent": "Proportional control requires a number entity with unit %, minimum 0, maximum 100 and a numeric step.",
+      "invalid_freshness_mode": "Choose Automatic or Custom for the sensor freshness limit."
     },
     "abort": {
       "setup_area_removed": "Invalid: Rooms to monitor",
@@ -4242,7 +4258,7 @@
         "state": {
           "normal": "Automatic",
           "pause": "Hold",
-          "sleep_targets": "Sleep · target"
+          "sleep_targets": "Sleep targets"
         },
         "state_attributes": {
           "configuration_help": {
@@ -4253,8 +4269,8 @@
       "equipment_fan_purpose": {
         "name": "Fan · {channel}Purpose",
         "state": {
-          "extraction": "Outside · control",
-          "filtration": "PM2.5 · control",
+          "extraction": "Air extraction",
+          "filtration": "Particle filtration",
           "auto": "Automatic"
         },
         "state_attributes": {
@@ -4556,8 +4572,8 @@
     },
     "device_method": {
       "options": {
-        "setpoint": "target · control",
-        "native": "Devices · control",
+        "setpoint": "Target adjustment only",
+        "native": "Device on/off and mode control",
         "power": "Power",
         "speed": "Speed"
       }
@@ -4579,13 +4595,13 @@
       "options": {
         "normal": "Automatic",
         "pause": "Hold",
-        "sleep_targets": "Sleep · target"
+        "sleep_targets": "Sleep targets"
       }
     },
     "device_fan_purpose": {
       "options": {
-        "extraction": "Outside · control",
-        "filtration": "PM2.5 · control"
+        "extraction": "Air extraction",
+        "filtration": "Particle filtration"
       }
     },
     "outside_aqi_scale": {

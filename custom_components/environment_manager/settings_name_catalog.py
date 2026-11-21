@@ -5573,6 +5573,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
              'arrival_preparation_timeout': '家中 - 準備 - 最長時間'}}
 
 from .window_open_text import WINDOW_OPEN_TEXT
+from .backend_text import complete_catalog, translated_text, resolve_language
 
 _WINDOW_TIMEOUT_KEY = "global_setting_window_open_timeout_minutes"
 SETTING_GROUPS[_WINDOW_TIMEOUT_KEY] = "ventilation"
@@ -5582,7 +5583,7 @@ for _locale, _text in WINDOW_OPEN_TEXT.items():
     )
 
 
-# Room-level door policy is opt-in. Other locales fall back to English.
+# Room-level door policy is opt-in; the static catalog completes all locales.
 SETTING_GROUPS["area_climate_operating_closed_door_eco"] = "room_presence"
 for _locale, _label in {
     "en": "Door · Eco if closed and room is empty",
@@ -5618,10 +5619,26 @@ SETTING_NAMES['en']['area_climate_policy_occupancy_freshness_mode'] = 'Room occu
 SETTING_NAMES['el']['area_climate_policy_occupancy_freshness_mode'] = 'Παρουσία χώρου · Εγκυρότητα μετρητών'
 SETTING_NAMES['de']['area_climate_policy_occupancy_freshness_mode'] = 'Raumbelegung · Aktualität der Zählwerte'
 
+# Complete newly introduced labels and replace legacy raw placeholder text.
+SETTING_NAMES = complete_catalog(SETTING_NAMES)
+_REPAIRED_SETTING_NAMES = (
+    "area_pid_gain_source", "area_pid_max_setpoint_c", "area_pid_min_setpoint_c",
+    "area_pid_offset_c", "global_occupancy_away_cooldown_minutes",
+    "home_aqi_custom_limit", "home_automatic_notifications",
+    "home_global_environment_pollen_avoid_ventilation",
+    "home_global_occupancy_away_cooldown_minutes",
+    "global_threshold_max_age_minutes", "global_occupancy_source_stale_minutes",
+    "area_climate_operating_occupancy_stale_minutes",
+    "area_device_target_fan_speed_percent",
+    "area_climate_operating_unoccupied_delay_minutes", "area_manual_profile",
+)
+for _locale, _names in SETTING_NAMES.items():
+    for _key in _REPAIRED_SETTING_NAMES:
+        _names[_key] = translated_text(SETTING_NAMES["en"][_key], _locale)
+
+
 def setting_locale(locale: str) -> str:
-    tag = str(locale or "en").replace("_", "-").casefold()
-    exact = next((key for key in SETTING_NAMES if key.casefold() == tag), None)
-    return exact or (tag.split("-")[0] if tag.split("-")[0] in SETTING_NAMES else "en")
+    return resolve_language(locale)
 
 
 def localized_setting_name(key: str, locale: str) -> str | None:

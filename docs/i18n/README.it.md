@@ -18,7 +18,7 @@
 # HEM - Home Environment Manager
 
 <!-- HEM-TRANSLATION-UNREVIEWED-START -->
-> ⚠️ **Unreviewed machine translation.** This page has not been checked for linguistic or technical accuracy, and some descriptions may be wrong. For installation, device control and safety instructions, refer to the <a href="../../README.md">English README</a>.
+> ⚠️ **Traduzione automatica non revisionata.** L’accuratezza linguistica e tecnica di questa pagina non è stata verificata e alcune descrizioni potrebbero essere errate. Per l’installazione, il controllo dei dispositivi e le istruzioni di sicurezza, consulta il <a href="../../README.md">README in inglese</a>.
 <!-- HEM-TRANSLATION-UNREVIEWED-END -->
 
 <p align="center">
@@ -75,7 +75,8 @@ HEM mantenere le politiche condivise separate dalle decisioni locali.
 | **Camera** | Fonti di temperatura e umidità interne, soglie di qualità dell'aria, contatti tra finestre e porte, comportamento di sonno e di occupazione, obiettivi di comfort specifici per la stanza, ventilazione e ombra. |
 | **Dispositivo individuale** | Le sue modalità di controllo disponibili, Automatica/Manuale/PID metodo, obiettivi per profilo, sensori, impostazioni di ventilatore tranquillo, tempi minimi di funzionamento, protezioni di alimentazione, comportamento delle finestre e notifiche di errore del dispositivo. |
 
-Tutti e tre i livelli sono accessibili attraverso impostazioni raggruppate e ricercabili nella scheda. Home Assistant modifiche di configurazione.
+Le impostazioni di casa, stanze e dispositivi sono raggruppate nella scheda e possono essere cercate. Scegli **Base**, **Avanzato** o **Esperto** per decidere quali impostazioni visualizzare. Base comprende i comandi quotidiani e la configurazione necessaria. Avanzato aggiunge la regolazione manuale dei coefficienti PID e le impostazioni dettagliate. Esperto aggiunge modelli specialistici e regolazioni della capacità. Ogni livello include quelli precedenti. Puoi aggiornare le fonti disponibili quando cambia la configurazione di Home Assistant. <!-- HEM-I18N:levels -->
+
 
 <a id="climate-control-and-pid-device-by-device"></a>
 ### Controllo del clima e PID, dispositivo per dispositivo
@@ -124,7 +125,9 @@ La preparazione non è un comando per accendere tutto. I dispositivi hanno ancor
 HEM confronto **che cosa serve una stanza** con **se l'aria esterna può aiutare**.
 
 - Si consiglia di aprire o chiudere le finestre utilizzando le misurazioni attuali di interni, di umidità esterna, di inquinamento, di temperatura, di vento, di allarmi meteorologici e di contesti di polline opzionali.
+- L’indice AQI è facoltativo. Se la scala del fornitore non è configurata, HEM segnala dati incompleti: questo, da solo, non impedisce di arieggiare e non è un motivo per chiudere una finestra. Restano valide le misurazioni degli inquinanti e le letture AQI realmente pericolose interpretate con la scala corretta. <!-- HEM-I18N:aqi -->
 - Utilizzare i contatti delle finestre e delle porte selezionati per spiegare le condizioni della stanza e evitare di trattare un contatto sconosciuto come chiuso.
+- Puoi includere le porte di balconi o terrazze con classe di sensore binario Home Assistant `door` o `opening` come **ingressi finestra**. Compaiono nel selettore delle finestre della stanza, ma **non vengono mai preselezionate**. Il normale monitoraggio delle porte rimane indipendente. <!-- HEM-I18N:balcony -->
 - In alternativa, chiedi di provare ad aprire una finestra prima di avviare un apparecchio automatico supportato, quindi continua il controllo normale dopo che la risposta configurata aspetta se necessario.
 - Utilizzare le informazioni sulle porte per la consapevolezza dei confini delle stanze, le precauzioni di ventilazione e il comportamento ecologico facoltativo.
 - Gestione dei persiani, dei persiani e delle sfumature utilizzando la finestra, la temperatura, il tempo, l'elevazione solare e le prove di illuminazione opzionali.

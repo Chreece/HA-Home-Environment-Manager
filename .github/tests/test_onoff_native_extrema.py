@@ -43,7 +43,9 @@ def module(name):
 
 
 package = module(PACKAGE)
-package.__path__ = []
+# Resolve pure production dependencies such as the bundled language catalogs.
+# HA transport and device-policy modules remain explicitly isolated below.
+package.__path__ = [str(ROOT)]
 
 
 def load_pure(name, filename):

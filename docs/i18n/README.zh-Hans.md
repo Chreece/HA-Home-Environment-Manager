@@ -18,7 +18,7 @@
 # HEM - Home Environment Manager
 
 <!-- HEM-TRANSLATION-UNREVIEWED-START -->
-> ⚠️ **Unreviewed machine translation.** This page has not been checked for linguistic or technical accuracy, and some descriptions may be wrong. For installation, device control and safety instructions, refer to the <a href="../../README.md">English README</a>.
+> ⚠️ **未经审核的机器翻译。** 本页尚未经过语言和技术准确性检查，部分描述可能有误。有关安装、设备控制和安全的说明，请参阅<a href="../../README.md">英文 README</a>。
 <!-- HEM-TRANSLATION-UNREVIEWED-END -->
 
 <p align="center">
@@ -75,7 +75,8 @@ HEM 保持共享政策与地方决策分开.
 | **房间** | 室内温度和湿度来源,空气质量门 ⁇ ,窗户和门接触,睡眠和居住行为,房间特定的舒适目标,通风和阴影选择. |
 | **单个设备** | 它的可用控制模式,自动/手动/PID 方法,每个配置文件的目标,传感器,静音风扇设置,最低运行时间,电源保护,窗口行为和设备错误通知. |
 
-所有三个级别都可以通过卡片中的集成,可搜索的设置访问.需要时可提供高级控制,而不需要拥挤日常设置. Home Assistant 设置变化.
+住宅、房间和设备的设置在卡片中分组显示，并支持搜索。选择**基础**、**高级**或**专家**，即可决定显示哪些设置。基础级包含日常控制和必要的初始配置；高级增加 PID 系数的手动设置及详细调整；专家级增加专用模型和容量调校。每个级别都包含此前级别的设置。Home Assistant 配置发生变化后，可以刷新可用的数据源。 <!-- HEM-I18N:levels -->
+
 
 <a id="climate-control-and-pid-device-by-device"></a>
 ### 气候控制和 PID设备对设备
@@ -124,7 +125,9 @@ HEM 暂时应用配置 **家庭目标** 符合条件的自动/PID 控制器,以�
 HEM 相比较 **一个房间需要什么** 在 **室外空气是否可以帮助**.
 
 - 建议使用当前的室内测量,室外湿度,污染,温度,风,天气警报和可选花粉环境打开或关闭窗户.
+- AQI 指数是可选的。如果未配置数据提供方所用的指数标度，HEM 会提示数据不完整，但不会仅因此阻止通风或建议关窗。有效的污染物实测值，以及按正确标度判断为确实危险的 AQI 数值，仍会纳入判断。 <!-- HEM-I18N:aqi -->
 - 使用选定的窗户和门接口来解释房间状况,避免把未知接触者视为已关闭.
+- 可将 Home Assistant 二进制传感器类别为 `door` 或 `opening` 的阳台门、露台门选作**窗户输入**。它们会出现在房间的窗户选择列表中，但**绝不会默认选中**；常规门状态监控仍然独立。 <!-- HEM-I18N:balcony -->
 - 选项请您在启动支持自动设备之前尝试打开窗口,然后在必要时,设置响应等待后继续正常控制.
 - 使用门的信息来了解房间边界,通风预警和可选保护的环保行为.
 - 使用适当的窗户,温度,天气,太阳升高和可选的照明证据来管理选中的窗户,窗 ⁇ 和阴影.

@@ -1,0 +1,8 @@
+[
+  "The default assumes US AQI.",
+  "Instantaneous readings are not a WHO 24-hour mean.",
+  "This does not replace time-averaged exposure assessment.",
+  "VOC mixtures and sensor calibration vary.",
+  "Conversion between ppb and µg/m³ depends on gas identity.",
+  "Smallest meaningful setpoint difference (°C) before issuing a command. Avoids needless small repeated adjustments and device quantization noise."
+]

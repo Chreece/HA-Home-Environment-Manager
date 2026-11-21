@@ -324,6 +324,7 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
         cfg = self.controller_settings
         from .device_activation import resolved_fan_purpose
         from .operating_mode_catalog import operating_mode_ui_labels
+        from .backend_text import presentation_languages
         locale = self._manager.settings.get("language", "auto")
         if locale == "auto":
             locale = getattr(getattr(self._manager.hass, "config", None), "language", "en")
@@ -340,6 +341,10 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
                 "supported_operating_modes": list(model.operating_modes(self._manager, self._spec)),
                 "selected_operating_mode": selected_mode,
                 "operating_mode_ui_labels": operating_mode_ui_labels(locale),
+                "operating_mode_ui_labels_locales": {
+                    language: operating_mode_ui_labels(language)
+                    for language in presentation_languages(locale)
+                },
                 "humidity_demand": model.humidity_demand(self._manager, self._spec, cap, cfg, plan)
                     if cap is not None and cap.humidity else {},
                 "requested_hvac_mode": cfg["requested_mode"],

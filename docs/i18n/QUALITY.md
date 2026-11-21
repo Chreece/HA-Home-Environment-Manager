@@ -51,6 +51,13 @@ The previous automated translation run used the NLLB-200 machine-translation mod
 
 **Unreviewed translations remain available only with a visible warning.** When following instructions about device control, electrical or operating protections, PID, or installation, consult the [English README](../../README.md).
 
+The v0.7.4b8 language correction adds the previously missing settings-level,
+optional-AQI and balcony-door explanations in every supported language. Review
+notices are now written in the page language. These targeted additions do not
+change the review status of the rest of each guide. Their source and translations
+are maintained in `.github/localization/readme_updates.json`, with checks for
+missing paragraphs, English copies, technical identifiers and source drift.
+
 ## How to review and improve a language
 
 1. Start from the current English [README.md](../../README.md) and edit `docs/i18n/README.<locale>.md` as fluent, natural writing in that language. Do not patch one malformed phrase while leaving a paragraph with incorrect meaning.

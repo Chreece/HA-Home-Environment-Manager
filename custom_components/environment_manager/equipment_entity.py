@@ -7,6 +7,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from .const import DOMAIN, SIGNAL_UPDATED
 from . import equipment_model as model
 from .equipment_help import equipment_configuration_help
+from .backend_text import presentation_languages
 from .equipment_name_catalog import localized_equipment_name
 
 
@@ -128,7 +129,7 @@ class EquipmentEntity:
         # announcement language. Only the current controller's help travels
         # with its state; this does not alter announcements or physical logic.
         translated = {}
-        for language in ("en", "el", "de"):
+        for language in presentation_languages(locale):
             detail = equipment_configuration_help(key, language, modes=modes) if modes is not None else (
                 equipment_configuration_help(key, language))
             translated[language] = scoped_help(key, language, detail) if mode else detail
@@ -141,10 +142,10 @@ class EquipmentEntity:
                 door_device_policy=True,
                 door_room_configured=configured(self._manager, self._spec),
                 setting_label=words(locale)[key],
-                setting_label_locales={lang: words(lang)[key] for lang in ("en", "el", "de")},
+                setting_label_locales={lang: words(lang)[key] for lang in presentation_languages(locale)},
                 configuration_help=words(locale)[help_key],
                 configuration_help_locales={
-                    lang: words(lang)[help_key] for lang in ("en", "el", "de")
+                    lang: words(lang)[help_key] for lang in presentation_languages(locale)
                 },
             )
             if key == "door_start_coordination":
@@ -152,7 +153,7 @@ class EquipmentEntity:
                 attributes["option_labels"] = {key: words(locale)[key] for key in attrs}
                 attributes["option_labels_locales"] = {
                     lang: {key: words(lang)[key] for key in attrs}
-                    for lang in ("en", "el", "de")
+                    for lang in presentation_languages(locale)
                 }
         return attributes
 

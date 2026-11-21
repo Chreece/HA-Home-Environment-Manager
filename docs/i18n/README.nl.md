@@ -18,7 +18,7 @@
 # HEM - Home Environment Manager
 
 <!-- HEM-TRANSLATION-UNREVIEWED-START -->
-> ⚠️ **Unreviewed machine translation.** This page has not been checked for linguistic or technical accuracy, and some descriptions may be wrong. For installation, device control and safety instructions, refer to the <a href="../../README.md">English README</a>.
+> ⚠️ **Niet nagekeken machinevertaling.** De taalkundige en technische juistheid van deze pagina is niet gecontroleerd; sommige beschrijvingen kunnen onjuist zijn. Raadpleeg voor installatie, apparaatbesturing en veiligheidsinstructies de <a href="../../README.md">Engelse README</a>.
 <!-- HEM-TRANSLATION-UNREVIEWED-END -->
 
 <p align="center">
@@ -75,7 +75,8 @@ HEM Het is een belangrijk onderdeel van de Europese Unie.
 | **Kamer** | Inrichtingstemperatuur en vochtigheidsbronnen, luchtkwaliteitsdrempels, venster- en deurcontacten, slaap- en bezettingsgedrag, kamerspecifieke comfortdoelstellingen, ventilatie- en schaduwkeuzes. |
 | **Individueel apparaat** | De beschikbare besturingsmodus, automatisch/handmatig/PID methode, doelwitten per profiel, sensoren, stilte ventilatorinstellingen, minimale werktijden, stroombeschermingen, venstergedrag en berichten over apparaatfouten. |
 
-Alle drie de niveaus zijn toegankelijk via gegroepeerde, zoekbare instellingen in de kaart. Home Assistant instellingswijzigingen.
+De instellingen voor de woning, kamers en apparaten staan gegroepeerd in de kaart en zijn doorzoekbaar. Kies **Basis**, **Geavanceerd** of **Expert** om te bepalen welke instellingen zichtbaar zijn. Basis bevat dagelijkse bediening en noodzakelijke configuratie. Geavanceerd voegt handmatige PID-coëfficiënten en gedetailleerde aanpassingen toe. Expert voegt specialistische modellen en capaciteitsafstemming toe. Elk niveau omvat de voorgaande niveaus. U kunt de beschikbare bronnen vernieuwen wanneer uw Home Assistant-installatie verandert. <!-- HEM-I18N:levels -->
+
 
 <a id="climate-control-and-pid-device-by-device"></a>
 ### Klimaatcontrole en PID, apparaat voor apparaat
@@ -124,7 +125,9 @@ Voorbereiding is geen opdracht om alles aan te zetten. Apparaten hebben nog stee
 HEM vergelijkt **wat een kamer nodig heeft** met **of buitenlucht kan helpen**.
 
 - Aanbeveling van het openen of sluiten van ramen met behulp van de huidige binnenmetingen, luchtvochtigheid, vervuiling, temperatuur, wind, weerwaarschuwingen en de optieve pollencontext.
+- De AQI-index is optioneel. Als de schaal van de aanbieder niet is ingesteld, meldt HEM onvolledige gegevens; dat alleen blokkeert ventilatie niet en is geen reden om een raam te sluiten. Geldige metingen van verontreinigende stoffen en werkelijk onveilige AQI-waarden met de juiste schaal blijven meetellen. <!-- HEM-I18N:aqi -->
 - Gebruik geselecteerde venster- en deurcontacten om de kameromstandigheden te verklaren en vermijd een onbekend contact als gesloten te behandelen.
+- U kunt balkon- of terrasdeuren met de Home Assistant-klasse voor binaire sensoren `door` of `opening` optioneel als **raamcontacten** opnemen. Ze verschijnen in de raamkeuze van de kamer, maar zijn **nooit vooraf geselecteerd**. De gewone deurbewaking blijft onafhankelijk. <!-- HEM-I18N:balcony -->
 - Als optie wordt gevraagd om een venster te proberen te openen voordat een ondersteund automatisch apparaat wordt gestart, en vervolgens de normale besturing voort te zetten nadat de geconfigureerde reactie wacht indien nodig.
 - Gebruik deurinformatie voor ruimtegrensbewustzijn, ventilatievoorzorgingen en optioneel beschermd ecologisch gedrag.
 - Beheer van de ingeschakelde sluizen, blinds en schaduwen met behulp van geschikt venster, temperatuur, weer, zonsopgang en optionele belichtingsbewijs.

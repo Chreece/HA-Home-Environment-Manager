@@ -71,7 +71,8 @@ HEM separa las reglas generales del hogar de las decisiones que afectan a una ha
 | **Habitación** | Sensores de temperatura y humedad, umbrales de calidad del aire, contactos de ventanas y puertas, reglas de presencia y sueño, objetivos de confort, ventilación y protección solar. |
 | **Dispositivo** | Modos compatibles, método Automatic/Manual/PID, consignas por perfil, sensores, ajustes silenciosos, tiempos mínimos de funcionamiento, protecciones eléctricas, comportamiento ante ventanas abiertas y avisos de fallo. |
 
-Los tres niveles están disponibles desde menús agrupados con búsqueda en la propia tarjeta. Las opciones avanzadas siguen siendo accesibles sin recargar los ajustes cotidianos. Puedes actualizar las fuentes disponibles cuando cambie tu instalación de Home Assistant.
+Los ajustes de la vivienda, las habitaciones y los dispositivos están agrupados y se pueden buscar en la tarjeta. Elige **Básico**, **Avanzado** o **Experto** para decidir qué ajustes se muestran. Básico incluye los controles habituales y la configuración necesaria. Avanzado añade los coeficientes PID manuales y ajustes detallados. Experto añade modelos especializados y ajustes de capacidad. Cada nivel incluye los anteriores. Puedes actualizar las fuentes disponibles cuando cambie tu instalación de Home Assistant. <!-- HEM-I18N:levels -->
+
 
 <a id="climate-control-and-pid-device-by-device"></a>
 ### Climatización y PID, dispositivo por dispositivo
@@ -120,7 +121,9 @@ Preparar la llegada no significa encenderlo todo. Debe existir una necesidad rea
 HEM compara **lo que necesita una habitación** con **la utilidad del aire exterior para cubrir esa necesidad**.
 
 - Recomienda abrir o cerrar ventanas según las mediciones interiores, la humedad y la contaminación exteriores, la temperatura, el viento, los avisos meteorológicos y, opcionalmente, los datos de polen.
+- El índice AQI es opcional. Si no se ha configurado la escala del proveedor, HEM indica que faltan datos; esto por sí solo no impide ventilar ni justifica cerrar una ventana. Se siguen teniendo en cuenta las mediciones válidas de contaminantes y los valores AQI realmente peligrosos interpretados con la escala correcta. <!-- HEM-I18N:aqi -->
 - Usa los contactos de puertas y ventanas elegidos para interpretar las condiciones de la habitación sin asumir que un contacto de estado desconocido está cerrado.
+- Puedes incluir puertas de balcón o terraza con la clase de sensor binario de Home Assistant `door` u `opening` como **entradas de ventana**. Aparecen en el selector de ventanas de la habitación, pero **nunca se seleccionan de antemano**. La supervisión habitual de puertas sigue siendo independiente. <!-- HEM-I18N:balcony -->
 - Si lo deseas, puede sugerirte abrir una ventana antes de activar automáticamente un equipo compatible y retomar el control normal tras el tiempo de espera configurado cuando proceda.
 - La información de las puertas ayuda a comprender la separación entre estancias, emitir advertencias de ventilación y aplicar reglas Eco opcionales con comprobaciones de seguridad.
 - Permite controlar persianas, estores y toldos autorizados a partir de datos adecuados de ventanas, temperatura, meteorología, elevación solar y, opcionalmente, luminosidad.

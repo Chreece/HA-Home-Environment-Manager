@@ -60,6 +60,31 @@ jobs:
         run: python -I .github/tests/test_readme_localizations.py
       - name: Enforce translation quality disclosure and editorial safety checks
         run: python -I .github/tests/test_readme_translation_quality.py
+      - name: Complete native, backend, card and README coverage in all 38 languages
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_native_translation_coverage.py
+          python -I .github/tests/test_native_flow_error_coverage.py
+          python -I .github/tests/test_native_error_meaning.py
+          python -I .github/tests/test_074b8_backend_languages.py
+          node tools/check_frontend_locales.js
+          python -I .github/tests/test_074b8_readme_content.py
+      - name: Reproduce bundled translations from checked-in sources
+        run: |
+          set -euo pipefail
+          python -I .github/scripts/build_native_translations.py --check
+          python -I .github/scripts/build_profile_help.py --check
+          python -I .github/scripts/build_pid_reason_translations.py --check
+          python -I .github/scripts/build_presence_help.py --check
+          python -I .github/scripts/build_presence_options.py --check
+          python -I .github/scripts/build_door_translations.py --check
+          python -I .github/scripts/build_backend_native_crosswalk.py --check
+          python -I .github/scripts/build_native_backend_residual.py --check
+          python -I .github/scripts/build_native_controller_help.py --check
+          python -I tools/build_native_environment_translations.py --check
+          python -I tools/build_frontend_locales.py --check
+          python -I .github/scripts/build_backend_text_catalog.py
+          git diff --exit-code -- custom_components/environment_manager/backend_text_catalog.py .github/localization/backend_help.json .github/localization/backend_composed_help.json
       - name: Prepare legacy unit test source paths (CI only, never packaged)
         run: |
           python - <<'PYCODE'
@@ -391,6 +416,8 @@ jobs:
           python -I .github/tests/test_061b8_dehumidifier_fan.py
       - name: Install runner-only Home Assistant and browser test packages
         run: python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
+      - name: B22 readable setting help and option details in the real card
+        run: python -I .github/tests/test_062b22_setting_info_browser.py
       - name: Lifecycle through real Home Assistant startup and stop events
         run: python -I .github/tests/test_074b5_ha_lifecycle.py --with-ha
       - name: B3 native HA door entities, metadata writes and responsive context popup
@@ -487,8 +514,6 @@ jobs:
           python -I .github/tests/test_062b19_eco2_classification.py
           python -I .github/tests/test_062b19_ai_agent_nonblocking.py
           python -I .github/tests/test_062b19_device_door_ui.py
-      - name: B22 readable setting help and option details in the real card
-        run: python -I .github/tests/test_062b22_setting_info_browser.py
       - name: B15 actual backend Home Options menu and UI step contract
         run: python -I .github/tests/test_061b15_home_options_contract.py
       - name: B14 unified Home and room settings, exact registry and Options saves

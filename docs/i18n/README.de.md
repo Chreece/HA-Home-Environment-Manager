@@ -71,7 +71,8 @@ HEM trennt übergreifende Regeln von den Anforderungen einzelner Räume und Ger�
 | **Raum** | Temperatur- und Feuchtigkeitssensoren, Luftqualitätsgrenzen, Fenster- und Türkontakte, Anwesenheit und Schlafzustand, Komfortziele, Lüftung und Beschattung. |
 | **Einzelnes Gerät** | Unterstützte Betriebsarten, Regelverfahren Automatic/Manual/PID, Sollwerte je Profil, Sensoren, leise Lüfterstufen, Mindestlaufzeiten, Stromversorgungsschutz, Verhalten bei offenen Fenstern und Fehlermeldungen. |
 
-Alle Ebenen erreichen Sie über übersichtlich gruppierte und durchsuchbare Einstellungen in der Karte. Erweiterte Optionen bleiben verfügbar, ohne die Alltagsansicht zu überladen. Ändert sich Ihre Home-Assistant-Installation, können Sie die verfügbaren Quellen neu einlesen.
+Die Einstellungen für Zuhause, Räume und Geräte sind in der Karte übersichtlich gruppiert und durchsuchbar. Wählen Sie **Basis**, **Erweitert** oder **Experten**, um den Umfang der angezeigten Einstellungen festzulegen. Basis enthält die alltäglichen Bedienelemente und die erforderliche Einrichtung. Erweitert ergänzt manuelle PID-Koeffizienten und detaillierte Anpassungen. Experten fügt spezielle Modelle und die Abstimmung der Geräteleistung hinzu. Jede Stufe umfasst auch die vorherigen Stufen. Wenn sich Ihre Home-Assistant-Installation ändert, können Sie die verfügbaren Quellen neu einlesen. <!-- HEM-I18N:levels -->
+
 
 <a id="climate-control-and-pid-device-by-device"></a>
 ### Klimaregelung und PID für jedes Gerät
@@ -120,7 +121,9 @@ Die Vorbereitung ist kein Befehl, alle Geräte einzuschalten. Es müssen tatsäc
 HEM stellt gegenüber, **was ein Raum benötigt** und **ob die Außenluft dabei helfen kann**.
 
 - Empfehlungen zum Öffnen oder Schließen von Fenstern beruhen auf Innenmessungen sowie Außenfeuchte, Schadstoffen, Temperatur, Wind, Wetterwarnungen und optionalen Pollendaten.
+- Der AQI-Index ist optional. Eine nicht konfigurierte Anbieterskala wird als unvollständige Datengrundlage angezeigt; sie allein verhindert weder das Lüften noch begründet sie eine Aufforderung zum Fensterschließen. Gültige Schadstoffmessungen und tatsächlich bedenkliche AQI-Werte mit korrekt zugeordneter Skala werden weiterhin berücksichtigt. <!-- HEM-I18N:aqi -->
 - Ausgewählte Fenster- und Türkontakte helfen dabei, die Raumsituation einzuschätzen. Ein unbekannter Kontaktzustand wird nicht einfach als „geschlossen“ gewertet.
+- Balkon- oder Terrassentüren mit der Home-Assistant-Binärsensorklasse `door` oder `opening` können Sie optional als **Fensterkontakte** einbeziehen. Sie erscheinen in der Fensterauswahl des Raums, werden aber **nie automatisch vorausgewählt**. Die normale Türüberwachung bleibt davon unabhängig. <!-- HEM-I18N:balcony -->
 - Auf Wunsch fordert HEM vor dem Start eines unterstützten automatischen Geräts zunächst zum Lüften auf. Nach der eingestellten Wartezeit kann die normale Regelung gegebenenfalls fortgesetzt werden.
 - Türinformationen fließen in die Einschätzung von Raumgrenzen, Lüftungshinweisen und optionalen, abgesicherten Eco-Regeln ein.
 - Freigegebene Rollläden, Jalousien und andere Beschattungssysteme lassen sich anhand geeigneter Fenster-, Temperatur-, Wetter- und Sonnenstandsdaten sowie optionaler Helligkeitsmessungen steuern.

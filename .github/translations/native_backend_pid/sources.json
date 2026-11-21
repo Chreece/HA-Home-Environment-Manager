@@ -1,0 +1,138 @@
+[
+  {
+    "id": 16,
+    "en": "Optional and disabled by default. Choose exactly one monitored room. A room's PID never controls climate devices in a different assigned Home Assistant area.",
+    "paths": [
+      "config.step.pid.description",
+      "options.step.pid.description"
+    ]
+  },
+  {
+    "id": 17,
+    "en": "Enable PID only after selecting real room temperature measurements and the climate devices you authorize. The existing thermostat must already be in heat or cool mode. Windows with open or unknown contacts stop PID commands. No HVAC mode or compressor switching is performed.",
+    "paths": [
+      "config.step.pid_room.description",
+      "options.step.pid_room.description"
+    ]
+  },
+  {
+    "id": 18,
+    "en": "Kp in %/°C, Ki in %/(°C·minute), Kd in %·minute/°C. The output only trims the existing thermostat setpoint within a bounded range, at limited intervals. Start with defaults; tune gradually after reviewing room trends. Manual setpoint changes pause PID until you explicitly resume it.",
+    "paths": [
+      "config.step.pid_tuning.description",
+      "options.step.pid_tuning.description"
+    ]
+  },
+  {
+    "id": 22,
+    "en": "Proportional PID coefficient controlling how strongly current temperature error changes direct thermal demand. Too large may oscillate.",
+    "paths": [
+      "config.step.climate_actuators.data_description.kp",
+      "options.step.climate_actuators.data_description.kp"
+    ]
+  },
+  {
+    "id": 23,
+    "en": "Integral PID coefficient accumulating persistent thermal error. Anti-windup and saturation limits apply; too high causes overshoot.",
+    "paths": [
+      "config.step.climate_actuators.data_description.ki",
+      "options.step.climate_actuators.data_description.ki"
+    ]
+  },
+  {
+    "id": 24,
+    "en": "Derivative PID coefficient responding to the rate of measured temperature change. Noisy sensors can make large derivative gains unstable.",
+    "paths": [
+      "config.step.climate_actuators.data_description.kd",
+      "options.step.climate_actuators.data_description.kd"
+    ]
+  },
+  {
+    "id": 54,
+    "en": "Only that room's explicitly selected climate entities may be controlled.",
+    "paths": [
+      "config.step.pid.data_description.pid_area",
+      "options.step.pid.data_description.pid_area"
+    ]
+  },
+  {
+    "id": 55,
+    "en": "Opt in to supervisory PID that adjusts setpoints only on chosen, already operating thermostats. It does not power HVAC on or defeat native compressor controls.",
+    "paths": [
+      "config.step.pid_room.data_description.pid_enabled",
+      "options.step.pid_room.data_description.pid_enabled"
+    ]
+  },
+  {
+    "id": 56,
+    "en": "Choose HEAT or COOL only to match the actual already active thermostat mode. Supervisory PID never switches mode or powers on a compressor.",
+    "paths": [
+      "config.step.pid_room.data_description.pid_mode",
+      "options.step.pid_room.data_description.pid_mode"
+    ]
+  },
+  {
+    "id": 57,
+    "en": "Stop new thermostat setpoint changes when a selected room window is open or sensor state unknown. Prevents unwanted heating/cooling while airing.",
+    "paths": [
+      "config.step.pid_room.data_description.pid_pause_on_window_open",
+      "options.step.pid_room.data_description.pid_pause_on_window_open"
+    ]
+  },
+  {
+    "id": 58,
+    "en": "Proportional PID gain (% per °C): immediate response to room-temperature error. Default 22; too high can cause oscillation and frequent target changes.",
+    "paths": [
+      "config.step.pid_tuning.data_description.pid_kp",
+      "options.step.pid_tuning.data_description.pid_kp"
+    ]
+  },
+  {
+    "id": 59,
+    "en": "Integral PID gain (% per °C·minute): compensates persistent temperature error. Default 0.25; anti-windup applies, but very high values can overshoot.",
+    "paths": [
+      "config.step.pid_tuning.data_description.pid_ki",
+      "options.step.pid_tuning.data_description.pid_ki"
+    ]
+  },
+  {
+    "id": 60,
+    "en": "Derivative PID gain (%·minute/°C): responds to filtered temperature change rate. Default 0; high values amplify sensor noise.",
+    "paths": [
+      "config.step.pid_tuning.data_description.pid_kd",
+      "options.step.pid_tuning.data_description.pid_kd"
+    ]
+  },
+  {
+    "id": 86,
+    "en": "Exact climate.* devices this room's PID is authorized to adjust. No area-wide broadcast or automatic assignment; manually switched-off devices remain off.",
+    "paths": [
+      "config.step.pid_room.data_description.pid_climate_entities",
+      "options.step.pid_room.data_description.pid_climate_entities"
+    ]
+  },
+  {
+    "id": 87,
+    "en": "Independent room temperature source (°C/°F) refreshed in the last 10 minutes. Stale or unavailable values suspend setpoint commands.",
+    "paths": [
+      "config.step.pid_room.data_description.pid_temperature_entity",
+      "options.step.pid_room.data_description.pid_temperature_entity"
+    ]
+  },
+  {
+    "id": 134,
+    "en": "Requested room temperature (°C) used as PID reference. The controller adjusts thermostat setpoints within safety bounds; this does not guarantee comfort.",
+    "paths": [
+      "config.step.pid_room.data_description.pid_target_c",
+      "options.step.pid_room.data_description.pid_target_c"
+    ]
+  },
+  {
+    "id": 138,
+    "en": "Maximum thermostat setpoint step per control cycle (°C), default 0.5. Even a large temperature error cannot bypass this rate limit.",
+    "paths": [
+      "config.step.pid_tuning.data_description.pid_max_change_c",
+      "options.step.pid_tuning.data_description.pid_max_change_c"
+    ]
+  }
+]

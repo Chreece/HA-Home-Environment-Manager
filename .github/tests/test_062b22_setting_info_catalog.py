@@ -15,6 +15,7 @@ SRC = ROOT / "custom_components/environment_manager"
 catalog = json.loads((SRC / "strings.json").read_text(encoding="utf-8"))
 descriptions = runpy.run_path(str(SRC / "setting_option_explanations.py"))
 option_help_locales = descriptions["option_help_locales"]
+supported_languages = set(descriptions["SUPPORTED_LANGUAGE_TAGS"])
 
 # One retired PID adaptation selector remains in legacy translations solely
 # for compatibility; it is not exposed by the current device menus.
@@ -34,13 +35,19 @@ expected = {
 }
 for key, options in expected.items():
     mapped = option_help_locales(key)
-    assert set(mapped) == {"en", "el", "de"}, (key, mapped)
+    assert set(mapped) == supported_languages, (key, set(mapped))
     for locale, descriptions_for_locale in mapped.items():
         assert set(descriptions_for_locale) == set(options), (locale, key, options)
         for value, explanation in descriptions_for_locale.items():
-            assert isinstance(explanation, str) and len(explanation.strip()) >= 40, (
+            assert isinstance(explanation, str) and explanation.strip(), (
                 locale, key, value, explanation,
             )
+            # Retain the original prose-length guard for its three languages.
+            # CJK scripts can express the same explanation in fewer characters.
+            if locale in {"en", "el", "de"}:
+                assert len(explanation.strip()) >= 40, (locale, key, value, explanation)
+            if locale != "en":
+                assert explanation != mapped["en"][value], (locale, key, value)
             assert explanation.strip() != value, (locale, key, value)
             assert "<script" not in explanation.lower(), (locale, key, value)
 
@@ -72,5 +79,5 @@ for locale, prefix in (("en", "What it does:"), ("el", "Τι κάνει:"), ("de
         assert prefix in door[locale][topic] and "\n\n" in door[locale][topic]
 
 assert option_help_locales("nonexistent_future_field") == {}
-print("PASS: complete fixed native choices in EN/EL/DE; legacy navigation, "
+print("PASS: complete fixed native choices in all 38 languages; legacy navigation, "
       "per-device door purpose, native metadata and form explanations")

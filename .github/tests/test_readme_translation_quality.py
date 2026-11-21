@@ -4,6 +4,7 @@ Structural parity cannot prove native fluency. These checks only prevent
 unreviewed machine translations from being presented as verified documentation.
 """
 from pathlib import Path
+import json
 import re
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -12,6 +13,7 @@ DIRECTORY = ROOT / "docs/i18n"
 LOCALES = {p.stem for p in (ROOT / "custom_components/environment_manager/translations").glob("*.json")}
 REWRITTEN = {"el", "de", "fr", "es"}
 UNREVIEWED = LOCALES - REWRITTEN - {"en"}
+UPDATES = json.loads((ROOT / '.github/localization/readme_updates.json').read_text())['translations']
 
 assert len(LOCALES) == 38
 assert len(UNREVIEWED) == 33
@@ -24,7 +26,8 @@ for code in UNREVIEWED:
     data = path.read_text(encoding="utf-8")
     assert data.count("<!-- HEM-TRANSLATION-UNREVIEWED-START -->") == 1, code
     assert data.count("<!-- HEM-TRANSLATION-UNREVIEWED-END -->") == 1, code
-    assert "**Unreviewed machine translation.**" in data, code
+    assert UPDATES[code]['warning'] in data, code
+    assert UPDATES[code]['warning'] != UPDATES['en']['warning'], code
     assert 'href="../../README.md"' in data, code
     assert data.index("<!-- HEM-TRANSLATION-UNREVIEWED-START -->") < data.index("## "), code
 

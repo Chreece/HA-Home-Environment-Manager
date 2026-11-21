@@ -4,6 +4,16 @@ Pure in-memory metadata: no Home Assistant import or filesystem I/O at setup.
 """
 from __future__ import annotations
 
+if __package__:
+    from .backend_text import translated_text, resolve_language
+else:
+    from pathlib import Path
+    from runpy import run_path
+    _text_helpers = run_path(str(Path(__file__).with_name("backend_text.py")))
+    translated_text = _text_helpers["translated_text"]
+    resolve_language = _text_helpers["resolve_language"]
+
+
 MODE_LABELS = {'ar': {'parameters': 'المعلمات',
         'selected': 'الوضع المحدد',
         'humidify': 'ترطيب',
@@ -1008,10 +1018,14 @@ MODE_OPTION_LABELS = {'ar': {'control_mode': {'existing': 'متحكم الغرف
                         'comfort': '舒適',
                         'eco': '節能'}}}
 
+for _locale, _groups in MODE_OPTION_LABELS.items():
+    for _key in ("adaptive_suggest", "adaptive_auto"):
+        _groups["pid_calibration_method"][_key] = translated_text(
+            MODE_OPTION_LABELS["en"]["pid_calibration_method"][_key], _locale)
+
+
 def mode_locale(language: str) -> str:
-    tag = str(language or "en").replace("_", "-").casefold()
-    exact = next((key for key in MODE_LABELS if key.casefold() == tag), None)
-    return exact or (tag.partition("-")[0] if tag.partition("-")[0] in MODE_LABELS else "en")
+    return resolve_language(language)
 
 
 def operating_mode_label(mode: str, language: str) -> str:

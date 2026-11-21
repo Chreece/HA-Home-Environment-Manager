@@ -6,6 +6,15 @@ existing durable journal and live authority checks. This module has no I/O.
 """
 from __future__ import annotations
 
+if __package__:
+    from .backend_text import complete_catalog
+else:
+    from pathlib import Path
+    from runpy import run_path
+    _text_helpers = run_path(str(Path(__file__).with_name("backend_text.py")))
+    complete_catalog = _text_helpers["complete_catalog"]
+
+
 from dataclasses import dataclass, field
 from math import isfinite
 
@@ -75,6 +84,9 @@ MESSAGES = {
         ),
     },
 }
+
+
+MESSAGES = complete_catalog(MESSAGES)
 
 
 def verified_heat_shutdown(domain: str, modes: tuple[str, ...],

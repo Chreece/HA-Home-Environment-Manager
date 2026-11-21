@@ -1,0 +1,229 @@
+{
+  "schema": 1,
+  "entries": [
+    {
+      "source": "Include verified high pollen among outdoor cautions and keep automatic outside-air use blocked while it persists. Useful manual airing may still be suggested conditionally with the pollen warning. The selected source, high threshold and provider maximum define high pollen; enable when pollen avoidance matters to occupants.",
+      "paths": [
+        "config.step.pollen.data_description.pollen_avoid_ventilation",
+        "config.step.setup_general.data_description.pollen_avoid_ventilation",
+        "options.step.pollen.data_description.pollen_avoid_ventilation",
+        "options.step.setup_general.data_description.pollen_avoid_ventilation"
+      ],
+      "decision": "exact_source",
+      "setting_key": "home_global_environment_pollen_avoid_ventilation",
+      "reason": "Native English and runtime English are byte-for-byte identical; all original conditions are retained."
+    },
+    {
+      "source": "Maximum change of requested proportional output percentage points each cycle. Prevents sudden steps and oversized corrections.",
+      "paths": [
+        "config.step.climate_actuators.data_description.max_demand_change",
+        "options.step.climate_actuators.data_description.max_demand_change"
+      ],
+      "decision": "reviewed_same_field",
+      "setting_key": "area_direct_tuning_max_demand_change",
+      "base_source": "Largest output change in percentage points per direct proportional-control cycle. It limits abrupt demand changes; it does not set the maximum total output.",
+      "reason": "Both descriptions bound the change in proportional output percentage points per control cycle; limiting abrupt steps retains the original oversized-correction condition. The form and number entity store the same direct-control key.",
+      "code_evidence": "config_flow.py:1553; device_controls.py:151"
+    },
+    {
+      "source": "Minimum output change (percentage points) considered meaningful enough to send to a proportional actuator. Avoids tiny repeated updates.",
+      "paths": [
+        "config.step.climate_actuators.data_description.min_demand_change",
+        "options.step.climate_actuators.data_description.min_demand_change"
+      ],
+      "decision": "reviewed_same_field",
+      "setting_key": "area_direct_tuning_min_demand_change",
+      "base_source": "Smallest output change in percentage points sent to a direct proportional actuator. Smaller proposed changes are ignored to reduce needless commands.",
+      "reason": "Both describe the minimum output change in percentage points sent to the direct proportional actuator, with smaller changes suppressed to avoid repeated tiny updates.",
+      "code_evidence": "config_flow.py:1554; device_controls.py:152"
+    },
+    {
+      "source": "Suggest opening a closed window when measured outdoor-air benefit can help current heating, cooling or drying demand, including before a device starts. Detected outside concerns are included as cautions. Windows are opened by the user; running devices are not stopped for the request. The configured window-opening timeout may defer new qualifying automatic starts.",
+      "paths": [
+        "config.step.climate_equipment.data_description.climate_window_efficiency_notify",
+        "options.step.climate_equipment.data_description.climate_window_efficiency_notify"
+      ],
+      "decision": "exact_source",
+      "setting_key": "area_climate_operating_window_efficiency_notify",
+      "reason": "Native English and runtime English are byte-for-byte identical; all original conditions are retained."
+    },
+    {
+      "source": "Outdoor AQI ceiling used for ventilation. Confirm the provider scale with the AQI selector; per-source custom limits override this general ceiling. Exceeding the applicable limit is an outdoor caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with the air-quality caution included. The default assumes US AQI.",
+      "paths": [
+        "config.step.setup_general.data_description.global_threshold_outdoor_aqi",
+        "config.step.thresholds.data_description.outdoor_aqi",
+        "options.step.setup_general.data_description.global_threshold_outdoor_aqi",
+        "options.step.thresholds.data_description.outdoor_aqi"
+      ],
+      "decision": "exact_prefix_requires_suffix",
+      "setting_key": "global_threshold_outdoor_aqi",
+      "base_source": "Outdoor AQI ceiling used for ventilation. Confirm the provider scale with the AQI selector; per-source custom limits override this general ceiling. Exceeding the applicable limit is an outdoor caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with the air-quality caution included.",
+      "suffix": "The default assumes US AQI.",
+      "reason": "Reuse the completed base paragraph only if the distinct native suffix is also translated and appended."
+    },
+    {
+      "source": "Outdoor CO₂ (ppm) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.",
+      "paths": [
+        "config.step.setup_general.data_description.global_threshold_outdoor_co2",
+        "config.step.thresholds.data_description.outdoor_co2",
+        "options.step.setup_general.data_description.global_threshold_outdoor_co2",
+        "options.step.thresholds.data_description.outdoor_co2"
+      ],
+      "decision": "exact_source",
+      "setting_key": "global_threshold_outdoor_co2",
+      "reason": "Native English and runtime English are byte-for-byte identical; all original conditions are retained."
+    },
+    {
+      "source": "Outdoor PM2.5 (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard. Instantaneous readings are not a WHO 24-hour mean.",
+      "paths": [
+        "config.step.setup_general.data_description.global_threshold_outdoor_pm25",
+        "config.step.thresholds.data_description.outdoor_pm25",
+        "options.step.setup_general.data_description.global_threshold_outdoor_pm25",
+        "options.step.thresholds.data_description.outdoor_pm25"
+      ],
+      "decision": "exact_prefix_requires_suffix",
+      "setting_key": "global_threshold_outdoor_pm25",
+      "base_source": "Outdoor PM2.5 (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.",
+      "suffix": "Instantaneous readings are not a WHO 24-hour mean.",
+      "reason": "Reuse the completed base paragraph only if the distinct native suffix is also translated and appended."
+    },
+    {
+      "source": "Outdoor PM10 (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard. This does not replace time-averaged exposure assessment.",
+      "paths": [
+        "config.step.setup_general.data_description.global_threshold_outdoor_pm10",
+        "config.step.thresholds.data_description.outdoor_pm10",
+        "options.step.setup_general.data_description.global_threshold_outdoor_pm10",
+        "options.step.thresholds.data_description.outdoor_pm10"
+      ],
+      "decision": "exact_prefix_requires_suffix",
+      "setting_key": "global_threshold_outdoor_pm10",
+      "base_source": "Outdoor PM10 (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.",
+      "suffix": "This does not replace time-averaged exposure assessment.",
+      "reason": "Reuse the completed base paragraph only if the distinct native suffix is also translated and appended."
+    },
+    {
+      "source": "Outdoor VOC (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard. VOC mixtures and sensor calibration vary.",
+      "paths": [
+        "config.step.setup_general.data_description.global_threshold_outdoor_voc",
+        "config.step.thresholds.data_description.outdoor_voc",
+        "options.step.setup_general.data_description.global_threshold_outdoor_voc",
+        "options.step.thresholds.data_description.outdoor_voc"
+      ],
+      "decision": "exact_prefix_requires_suffix",
+      "setting_key": "global_threshold_outdoor_voc",
+      "base_source": "Outdoor VOC (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.",
+      "suffix": "VOC mixtures and sensor calibration vary.",
+      "reason": "Reuse the completed base paragraph only if the distinct native suffix is also translated and appended."
+    },
+    {
+      "source": "Outdoor VOC (ppb) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard. Conversion between ppb and µg/m³ depends on gas identity.",
+      "paths": [
+        "config.step.setup_general.data_description.global_threshold_outdoor_voc_parts",
+        "config.step.thresholds.data_description.outdoor_voc_parts",
+        "options.step.setup_general.data_description.global_threshold_outdoor_voc_parts",
+        "options.step.thresholds.data_description.outdoor_voc_parts"
+      ],
+      "decision": "exact_prefix_requires_suffix",
+      "setting_key": "global_threshold_outdoor_voc_parts",
+      "base_source": "Outdoor VOC (ppb) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.",
+      "suffix": "Conversion between ppb and µg/m³ depends on gas identity.",
+      "reason": "Reuse the completed base paragraph only if the distinct native suffix is also translated and appended."
+    },
+    {
+      "source": "Outdoor NO₂ (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.",
+      "paths": [
+        "config.step.setup_general.data_description.global_threshold_outdoor_no2",
+        "config.step.thresholds.data_description.outdoor_no2",
+        "options.step.setup_general.data_description.global_threshold_outdoor_no2",
+        "options.step.thresholds.data_description.outdoor_no2"
+      ],
+      "decision": "exact_source",
+      "setting_key": "global_threshold_outdoor_no2",
+      "reason": "Native English and runtime English are byte-for-byte identical; all original conditions are retained."
+    },
+    {
+      "source": "Outdoor O₃ (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.",
+      "paths": [
+        "config.step.setup_general.data_description.global_threshold_outdoor_o3",
+        "config.step.thresholds.data_description.outdoor_o3",
+        "options.step.setup_general.data_description.global_threshold_outdoor_o3",
+        "options.step.thresholds.data_description.outdoor_o3"
+      ],
+      "decision": "exact_source",
+      "setting_key": "global_threshold_outdoor_o3",
+      "reason": "Native English and runtime English are byte-for-byte identical; all original conditions are retained."
+    },
+    {
+      "source": "Outdoor SO₂ (µg/m³) ceiling for window-ventilation checks. A current reading above it is reported as a caution and keeps automatic outside-air use blocked. Useful manual airing may still be suggested conditionally, with detected outside concerns included. This operational screen is not a timed health-exposure standard.",
+      "paths": [
+        "config.step.setup_general.data_description.global_threshold_outdoor_so2",
+        "config.step.thresholds.data_description.outdoor_so2",
+        "options.step.setup_general.data_description.global_threshold_outdoor_so2",
+        "options.step.thresholds.data_description.outdoor_so2"
+      ],
+      "decision": "exact_source",
+      "setting_key": "global_threshold_outdoor_so2",
+      "reason": "Native English and runtime English are byte-for-byte identical; all original conditions are retained."
+    },
+    {
+      "source": "Below this outdoor temperature (°C), report cold-air discomfort and heating-loss cautions and keep automatic outside-air use blocked. Useful brief manual airing may still be suggested conditionally with those cautions. This is a ventilation threshold, not a heating setpoint.",
+      "paths": [
+        "config.step.setup_general.data_description.global_threshold_min_outdoor_temp",
+        "config.step.thresholds.data_description.min_outdoor_temp",
+        "options.step.setup_general.data_description.global_threshold_min_outdoor_temp",
+        "options.step.thresholds.data_description.min_outdoor_temp"
+      ],
+      "decision": "exact_source",
+      "setting_key": "global_threshold_min_outdoor_temp",
+      "reason": "Native English and runtime English are byte-for-byte identical; all original conditions are retained."
+    },
+    {
+      "source": "Above this outdoor temperature (°C), report a heat caution and keep automatic outside-air use blocked. Useful manual airing for another verified need may still be suggested conditionally, with the hot outside air disclosed. This does not set the air-conditioner target.",
+      "paths": [
+        "config.step.setup_general.data_description.global_threshold_max_outdoor_temp",
+        "config.step.thresholds.data_description.max_outdoor_temp",
+        "options.step.setup_general.data_description.global_threshold_max_outdoor_temp",
+        "options.step.thresholds.data_description.max_outdoor_temp"
+      ],
+      "decision": "exact_source",
+      "setting_key": "global_threshold_max_outdoor_temp",
+      "reason": "Native English and runtime English are byte-for-byte identical; all original conditions are retained."
+    },
+    {
+      "source": "Outdoor relative-humidity ceiling (%) for ventilation checks. Higher values become an outdoor caution and keep automatic outside-air use blocked. Useful manual airing may still be suggested conditionally. Drying benefit compares indoor and outdoor water-vapour content because relative humidity depends on temperature.",
+      "paths": [
+        "config.step.setup_general.data_description.global_threshold_max_outdoor_humidity",
+        "config.step.thresholds.data_description.max_outdoor_humidity",
+        "options.step.setup_general.data_description.global_threshold_max_outdoor_humidity",
+        "options.step.thresholds.data_description.max_outdoor_humidity"
+      ],
+      "decision": "exact_source",
+      "setting_key": "global_threshold_max_outdoor_humidity",
+      "reason": "Native English and runtime English are byte-for-byte identical; all original conditions are retained."
+    },
+    {
+      "source": "Smallest meaningful setpoint difference (°C) before issuing a command. Avoids needless small repeated adjustments and device quantization noise.",
+      "paths": [
+        "config.step.pid_tuning.data_description.pid_min_change_c",
+        "options.step.pid_tuning.data_description.pid_min_change_c"
+      ],
+      "decision": "same_field_requires_unit",
+      "setting_key": "area_pid_min_change_c",
+      "base_source": "Smallest proposed thermostat-setpoint change worth sending. Smaller differences are skipped to avoid unnecessary commands and device quantization noise.",
+      "reason": "The behavioral explanation is equivalent, but the native original explicitly specifies °C and the backend paragraph does not. Preserve that unit in any composed reuse.",
+      "required_unit": "°C"
+    },
+    {
+      "source": "RH percentage-point margin before changing humidify/dry decisions. Prevents repeated switching around a target.",
+      "paths": [
+        "config.step.climate_equipment.data_description.climate_humidity_hysteresis_rh",
+        "options.step.climate_equipment.data_description.climate_humidity_hysteresis_rh"
+      ],
+      "decision": "reviewed_same_field",
+      "setting_key": "area_climate_operating_humidity_hysteresis_rh",
+      "base_source": "Relative-humidity margin in percentage points around the humidity decision thresholds. It reduces repeated humidify/dry changes near a boundary; it is a margin, not a target relative humidity.",
+      "reason": "Both describe a relative-humidity percentage-point margin that suppresses repeated humidify/dry decisions around the thresholds. The runtime explanation additionally distinguishes this margin from a humidity target.",
+      "code_evidence": "config_flow.py:1270; device_controls.py:140"
+    }
+  ]
+}

@@ -7,6 +7,16 @@ prepended ahead of PID / Power / Control. This module is read-only and contains
 no Home Assistant imports or blocking runtime file access.
 """
 
+if __package__:
+    from .backend_text import translated_text, resolve_language
+else:
+    from pathlib import Path
+    from runpy import run_path
+    _text_helpers = run_path(str(Path(__file__).with_name("backend_text.py")))
+    translated_text = _text_helpers["translated_text"]
+    resolve_language = _text_helpers["resolve_language"]
+
+
 EQUIPMENT_TRANSLATED_NAMES = {'en': {'climate': 'Climate · {channel}',
         'control_mode': 'Control · {channel}Method',
         'control_status': 'Status · {channel}Controller state',
@@ -2011,6 +2021,11 @@ for _locale, _label in _NATIVE_FULL_OUTPUT_LABELS.items():
     )
 
 
+for _locale, _names in EQUIPMENT_TRANSLATED_NAMES.items():
+    for _key in ("pid_adaptation_mode", "pid_review_approve", "pid_review_discard"):
+        _names[_key] = translated_text(EQUIPMENT_TRANSLATED_NAMES["en"][_key], _locale)
+
+
 def _native_target_modes(modes) -> tuple[str, ...]:
     """Format only supplied canonical modes; never infer a device capability."""
     values = (modes,) if isinstance(modes, str) else modes or ()
@@ -2046,17 +2061,7 @@ def localized_equipment_name(key: str, language: str, channel: str = "") -> str:
     translation_key remains present for enum state and option translations.
     This lookup is in-memory only; it never performs blocking I/O at setup.
     """
-    locale = str(language or "en").replace("_", "-")
-    canonical = next(
-        (name for name in EQUIPMENT_TRANSLATED_NAMES
-         if name.casefold() == locale.casefold()), None
-    )
-    if canonical is None:
-        base = locale.partition("-")[0].casefold()
-        canonical = next(
-            (name for name in EQUIPMENT_TRANSLATED_NAMES
-             if name.casefold() == base), "en"
-        )
+    canonical = resolve_language(language)
     template = EQUIPMENT_TRANSLATED_NAMES[canonical].get(key)
     if template is None:
         template = EQUIPMENT_TRANSLATED_NAMES["en"].get(key, key.replace("_", " ").title())

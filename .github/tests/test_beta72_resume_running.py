@@ -80,7 +80,7 @@ class Model:
         return (600.0, 600.0, 7200.0)
 
 
-pkg=ModuleType("beta72_fixture");pkg.__path__=[]
+pkg=ModuleType("beta72_fixture");pkg.__path__=[str(BASE)]
 power_mod=ModuleType("beta72_fixture.equipment_power_switch")
 activation=ModuleType("beta72_fixture.device_activation")
 power_mod.permitted_supply=lambda manager, spec, entity, expected=None: (

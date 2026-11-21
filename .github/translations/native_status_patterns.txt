@@ -1,0 +1,420 @@
+# Build-time semantic clauses. Each state retains its own conditions; no runtime fallback.
+above_horizon|Sun|Above the horizon
+active_compressor_wait_for_idle|Compressor|Running; waiting for idle
+active_device_preset|Device preset|Active; automatic adjustment is blocked
+activity_blocked|Activity|Blocked
+actuator_not_binary|Actuator|A binary on/off device is required
+actuator_unknown_or_unavailable|Actuator|Unknown or unavailable
+actuator_wrong_domain_or_area|Actuator|Wrong device type or room
+advisory_only|Suggestions only - automatic changes are disabled
+advisory_only_or_conflicting_driver|Controller|Suggestions only or conflicting controller
+advisory_only_or_conflicting_humidity_driver|Humidity|Suggestions only or conflicting controller
+air_quality_decision_expired|Air quality|Decision has expired
+air_quality_policy_missing|Air quality|Policy is missing
+already_in_suitable_mode|Operating mode|Already suitable
+already_sufficient_speed|Fan speed|Already sufficient
+ambiguous_fan_roles|Fan|Role is ambiguous
+announcement_unavailable_hold|Announcement|Unavailable; control is paused
+at_device_setpoint|Device|Target reached
+at_setpoint|Target reached
+at_target_speed|Fan speed|Target reached
+authority_or_evidence_changed_before_dispatch|Permission or evidence|Changed before dispatch
+authorization_changed_during_persistence|Permission|Changed while saving
+authorization_withdrawn|Permission|Withdrawn
+automatically_opened|Shade|Reopened automatically
+awaiting_close_confirmation|Shade|Waiting for closed-state confirmation
+awaiting_evaluation|Controller|Waiting for the first evaluation
+awaiting_open_confirmation|Shade|Waiting for open-state confirmation
+awaiting_physical_acknowledgement|Device|Waiting for state confirmation
+away|Away
+below_horizon|Sun|Below the horizon
+both_dry_and_fan_only_required|Operating mode|Both drying and fan-only modes are required
+climate_device_wrong_area|Thermostat|Wrong room
+climate_service_unavailable|Thermostat|Control service is unavailable
+climate_target_wrong_room|Temperature target|Wrong room
+climate_unavailable|Thermostat|Unavailable
+close_command_sent|Shade|Close command sent
+close_service_failed_hold|Closing|Service failed; control is paused
+close_service_unavailable|Closing|Control service is unavailable
+closed|Closed
+closing_recommended|Shade|Closing is recommended
+closing_requested|Closing|Requested
+comfort_deadband_no_command|Comfort|Within tolerance; no command sent
+command_sent|Device|Command sent; waiting for confirmation
+commanded|Output|Command sent
+competing_climate_active_or_armed|Other climate device|Active or ready to start
+competing_climate_unavailable|Other climate device|Unavailable
+competing_climate_wrong_room|Other climate device|Wrong room
+competing_hvac_unverified|Other climate device|Unverified
+compressor_idle_confirmation_pending|Compressor|Waiting for idle confirmation
+conditions_changed_after_announcement|Conditions|Changed after announcement
+conflicting_controller|Device|Already managed by another controller
+conflicting_controller_or_equipment_owner|Controller or device assignment|Conflict
+conflicting_fan_power_owner|Fan power|Conflicting control ownership
+conflicting_humidity_power_owner|Humidity device power|Conflicting control ownership
+conflicting_native_humidity_controller|Humidity controller|Conflict
+conflicting_or_missing_actuator|Actuator|Conflicting or missing
+conflicting_pid_room|PID|Conflicting room assignment
+control_measurement_missing_or_stale|Control measurement|Missing or outdated
+control_method_missing|Control method|Missing
+controller_exception|Controller|Unexpected error
+controller_inactive|Controller|Not running
+controller_not_active_or_paused|Controller|Inactive or paused
+controller_paused|Controller|Paused
+controlling|Automatic control|Active
+cooling_priority_defer_dehumidifier|Cooling has priority; dehumidification will wait
+coordination_hold|Device|Waiting for another controller to release it
+cover_state_uncertain_hold|Shade|State is uncertain; control is paused
+cross_entry_control_hold|Device|Control paused because another HEM entry is involved
+dedicated_dry_climate_required|Drying|A dedicated climate device is required
+demand_within_tolerance|Target|Within tolerance; no adjustment needed
+detected_override|Manual override|Detected
+device_does_not_support_single_setpoint|Thermostat|A single temperature target is unsupported
+device_limits_or_resolution_unknown|Device limits or resolution|Unknown
+device_limits_or_temperature_unknown|Device limits or temperature|Unknown
+device_limits_unknown|Device limits|Unknown
+device_not_selected|Device|Not selected
+device_off_no_automatic_start|Device|Off; automatic start is not permitted
+device_step_unknown|Device adjustment step|Unknown
+device_unavailable|Device|Unavailable
+device_unavailable_or_not_verified|Device|Unavailable or unverified
+device_unit_conversion_failed|Device units|Conversion failed
+disabled|Controller|Disabled
+duplicate_device_owner|Device|Assigned to more than one controller
+duplicate_equipment_owner|Device|Assigned to more than one controller
+duplicate_fan_owner|Fan|Assigned to more than one controller
+duplicate_humidity_device_owner|Humidity device|Assigned to more than one controller
+duplicate_or_ambiguous_fan_assignment|Fan|Duplicate or ambiguous assignment
+duplicate_target|Device|Assigned to more than one controller
+equipment_plan_unknown|Equipment plan|Unknown
+equipment_plan_unverified|Equipment plan|Unverified
+existing|Control is handled by the existing device integration
+existing_controller_selected|Existing controller|Selected
+explicit_fresh_humidity_sensor_required|Humidity sensor|An explicitly selected sensor with fresh readings is required
+explicit_room_humidity_sensor_required|Humidity sensor|An explicitly selected room sensor is required
+fan_limits_have_no_supported_step|Fan limits|No supported adjustment step
+fan_off_no_automatic_power_on|Fan|Off; automatic start is not permitted
+fan_percentage_or_step_unknown|Fan speed percentage or step|Unknown
+fan_power_commanded|Fan power|Command sent
+fan_power_off_acknowledged|Fan|Shutdown confirmed
+fan_power_service_missing|Fan power|Control service is missing
+fan_power_unknown|Fan power|Unknown
+fan_speed_increased|Fan speed|Increased to meet demand
+fan_speed_not_supported|Fan speed|Unsupported
+fan_speed_service_unavailable|Fan speed|Control service is unavailable
+fan_state_or_compressor_unknown|Fan state or compressor|Unknown
+fan_unavailable_or_wrong_room|Fan|Unavailable or in the wrong room
+foreign_equipment_owner|Device|Owned by another controller
+hold|Control paused until safety conditions are verified
+holding|Maintaining the current safe output
+home|Home
+humidifier_service_missing|Humidifier|Control service is missing
+humidity_intent_changed|Humidity demand|Changed
+humidity_measurement_stale_or_invalid|Humidity measurement|Outdated or invalid
+humidity_parameters_invalid|Humidity settings|Invalid
+humidity_sensor_invalid_or_stale|Humidity sensor|Invalid or outdated
+humidity_sensor_stale|Humidity sensor|Outdated
+humidity_sensor_unverified|Humidity sensor|Unverified
+inactive|Controller|Not running
+incompatible_speed_quantization|Fan speed|Adjustment increments are incompatible
+insufficient_pid_history|PID|Not enough valid measurements
+interlock_unconfirmed|Safety interlock|Unconfirmed
+interlock_wait_opposite_off|Safety interlock|Waiting for the opposing output to switch off
+invalid_ack_state|Confirmation state|Invalid
+invalid_configuration|Configuration|Invalid
+invalid_fan_or_sensor_assignment|Fan or sensor assignment|Invalid
+invalid_fan_power_timing|Fan power timing|Invalid
+invalid_hardware_dwell_config|Minimum device runtime settings|Invalid
+invalid_hysteresis|Hysteresis|Invalid
+invalid_maximum_runtime|Maximum runtime|Invalid
+invalid_mode_dwell|Minimum time in mode|Invalid
+invalid_moisture_intent|Humidity demand|Invalid
+invalid_percentage_step_or_rate|Percentage step or change rate|Invalid
+invalid_pid_sample|PID sample|Invalid
+invalid_proportional_input|Proportional input|Invalid
+invalid_pwm|PWM|Invalid
+invalid_pwm_period|PWM period|Invalid
+invalid_sample_seconds|Sampling interval|Invalid
+invalid_setpoint_result|Calculated target|Invalid
+invalid_temperature_target|Temperature target|Invalid
+legacy_manual_hold|Legacy manual control|Paused
+manual|Device|Manual control
+manual_change|Manual change
+manual_fan_preset_active|Fan preset|Manually activated
+manual_hvac_mode_change_or_unacknowledged_write|Operating mode|Manual change or unconfirmed command
+manual_no_request|Manual control|No change requested
+manual_or_unknown_cover_motion|Shade|Manual movement or movement cannot be confirmed
+manual_override|Manual adjustment detected; automatic control is paused
+manual_setpoint_or_unacknowledged_write|Temperature target|Manual change or unconfirmed command
+measured_need_resolved|Measured demand|Resolved
+minimum_fan_off_hold|Fan|Waiting for the minimum off time
+minimum_fan_on_hold|Fan|Waiting for the minimum on time
+minimum_native_device_off_hold|Device|Waiting for the minimum off time
+minimum_off_hold|Device|Waiting for the minimum off time before starting
+minimum_on_hold|Device|Stays on until the minimum runtime is reached
+minimum_on_hold_before_safe_off|Device|Waiting for the minimum on time before stopping
+missing_percent_or_native_step|Percentage or device adjustment step|Missing
+missing_room_plan|Room plan|Missing
+missing_temperature_or_climate|Temperature sensor or thermostat|Not configured
+mode_commanded|Operating mode|Change requested
+mode_dwell|Operating mode|Waiting for the minimum time in mode
+mode_has_no_verified_actuator|Operating mode|No verified actuator
+mode_history_unavailable|Operating mode history|Unavailable
+mode_mismatch_auto_switch_disabled|Operating mode|Mismatch; automatic switching is disabled
+mode_service_failure|Operating mode|Control service failed
+mode_service_missing|Operating mode|Control service is missing
+mode_transfer_dwell|Operating mode|Waiting before changing mode
+mode_transition_dwell|Operating mode|Waiting before changing mode
+modulating|Adjusting output level
+monitored_room_missing|Monitored room|Missing
+native_absence_off_mode_unsupported|Shutdown when absent|Unsupported by the device
+native_absence_off_wait_dwell|Shutdown when absent|Waiting for the minimum runtime
+native_ac_drying_already_active|Air conditioner|Drying is already active
+native_already_off|Climate device|Already off
+native_defrost_protection|Device is defrosting; changing output is blocked
+native_device_stabilizing|Device available · Checking stability
+native_fan_preset_active|Device fan preset|Active
+native_humidity_device_unavailable|Humidity device|Unavailable
+native_mode_commanded|Operating mode|Command sent
+native_mode_dwell_not_met|Operating mode|Minimum time has not elapsed
+native_mode_dwell_policy_changed|Minimum time in mode|Policy changed
+native_mode_mismatch_no_mode_switch|Operating mode|Mismatch; mode switching is not permitted
+native_mode_permission_revoked|Operating mode|Permission withdrawn
+native_mode_service_missing|Operating mode|Control service is missing
+native_mode_service_unavailable|Operating mode|Control service is unavailable
+native_off_ack_storage_failed|Device shutdown confirmation|Could not be saved
+native_off_intent_storage_failed|Device shutdown request|Could not be saved
+native_off_no_power_permission|Device|Off; power-on is not permitted
+native_off_permission_revoked_after_intent|Device shutdown|Permission withdrawn after the request
+native_off_requested_for_absence|Device shutdown|Requested because the home is empty
+native_off_requires_manual_reconciliation|Device shutdown|Manual state verification is required
+native_off_service_unacknowledged|Device shutdown|Command is unconfirmed
+native_off_state_changed_after_intent|Device shutdown|State changed after the request
+native_power_mode_unsupported|Device power mode|Unsupported
+native_preset_active|Device preset|Active; automatic adjustment is blocked
+native_range_at_setpoint|Target range|Target reached
+native_range_commanded|Target range|Command sent
+native_service_unavailable|Device|Control service is unavailable
+native_setpoint_limits_unknown|Temperature target limits|Unknown
+native_setpoint_unavailable|Current temperature target|Unavailable
+native_step_exceeds_safe_ramp|Device adjustment step|Exceeds the safe change rate
+native_step_exceeds_setpoint_rate_limit|Device adjustment step|Exceeds the target change-rate limit
+native_target_must_be_commissioned|Device target|Must be explicitly authorized
+native_target_unavailable_or_ambiguous|Device target|Unavailable or ambiguous
+night|Night
+no_actuator|Actuator|Missing
+no_fresh_air_policy|Fresh-air policy|Missing
+no_humidity_power_demand|No dehumidification or humidification demand
+no_meaningful_change|No adjustment is necessary
+no_room_plan|Room plan|No reliable plan is available
+no_selected_native_humidity_device|Humidity device|Not selected
+no_selected_shades|Shade|None selected for automatic control
+no_single_setpoint|Single temperature target|Missing
+no_target|Target|No valid target is configured
+no_target_profile|Target profile|Missing
+no_verified_fan_speed_demand|Fan speed|No verified demand
+no_verified_secondary_demand|Secondary device|No verified demand
+no_verified_selected_device|Selected device|Unverified
+not_direct_strategy|Control strategy|Not direct control
+not_owned_already_closed|Shade|Already closed; not closed by this controller
+occupied|Occupied
+off|Controller|Off
+open|Open
+open_blocked_window_contact|Opening|Blocked by the window contact
+open_command_failed_hold|Opening|Command failed; control is paused
+open_command_sent|Shade|Open command sent
+open_failed_hold|Opening|Failed; control is paused
+open_not_supported|Opening|Unsupported
+open_or_unknown_window|Window|Open or state unknown
+open_service_unavailable|Opening|Control service is unavailable
+opening|Opening
+opening_requested|Opening|Requested
+opposing_humidity_climate_active|Opposing humidity control|Climate device is active
+opposing_humidity_device_active_or_unknown|Opposing humidity device|Active or state unknown
+opposing_humidity_output_on_or_unknown|Opposing humidity output|On or state unknown
+other_climate_unavailable|Other climate device|Unavailable
+other_climate_wrong_room|Other climate device|Wrong room
+other_endpoint_acknowledgement_pending|Other output|Waiting for confirmation
+other_humidity_device_active_or_unverified|Other humidity device|Active or unverified
+other_hvac_active|Other climate device|Active
+other_hvac_armed|Other climate device|Ready to start
+other_thermostat_action_unknown|Other thermostat action|Unknown
+other_thermostat_active|Other thermostat|Active
+other_thermostat_opposing_mode_armed|Other thermostat|Opposing mode is ready to start
+out_of_device_range|Requested value|Outside the device range
+outside_air_not_verified|Outdoor air|Unverified
+owned_closed|Shade|Closed by automatic control
+owned_closed_weather_still_warrants_shade|Shade|Closed by automatic control; weather still requires shading
+owned_fan_running|Managed fan|Running
+owned_running|Managed device|Running
+owned_shutdown_identity_or_dwell_hold|Device shutdown|Waiting for identity verification or minimum runtime
+particle_sensor_not_verified|Particle sensor|Unverified
+particle_sensor_verification_required|Particle sensor|Verification required
+paused|Automatic control|Paused
+paused_away|Automatic control|Paused because the home is empty
+physical_capabilities_unavailable|Device capabilities|Cannot be read
+physical_device_startup_timeout|Device|Did not reconnect within 60 seconds after power-on
+physical_device_unavailable|Device|Unavailable
+pid_already_owns_device|Device|Already managed by another PID controller
+pid_not_ready|PID|More valid readings are required before control can start
+pid_output_inactive|PID waiting for the next safe ON interval
+plan_missing|Plan|Missing
+plan_or_permission_changed|Plan or permission|Changed
+power_command_sent|Power|Command sent; waiting for confirmation
+power_control_not_commissioned|Automatic power switching|Not authorized
+power_off_acknowledged|Device|Shutdown confirmed
+presence_changed_before_off|Presence|Changed before shutdown
+presence_hold|Presence|Control is paused
+proportional_output_not_commissioned|Proportional output|Not authorized
+proportional_output_not_verified|Proportional output limits|Unverified
+proportional_rate_limit|Proportional output|Change-rate limit reached
+quiet_context_unknown|Quiet hours|Conditions cannot be verified
+ready|Ready
+recent_close_hold|Shade|Waiting before another change
+recent_fan_state_change|Fan|State changed recently
+reconciled_waiting_minimum_off|Device|Verified; waiting before restarting
+released|Control released
+released_for_today|Shade|Automatic control has finished for today
+restart_reconciliation_required|After restart, verify the device is off before resuming control
+retired_identity_requires_manual_reconciliation|Previous device identity|Manual state verification is required
+retired_outputs_reconciled|Previous outputs|State verified
+retired_requires_manual_reconciliation|Previous device|Manual state verification is required
+retiring_previous_output|Previous output|Releasing control
+room_below_cooling_threshold|Room|Not warm enough to require shading
+room_cooled|Room|Cooled sufficiently
+room_occupied|Room|Occupied
+room_permissions_or_equipment_changed|Room permissions or equipment|Changed
+room_pid_conflict|Room|Conflicting PID controllers
+room_plan_superseded|Room plan|Replaced by a newer plan
+room_unoccupied|Room|Confirmed empty
+running_device_requires_off_before_automatic_power_ownership|Turn off the running device before assigning automatic power control
+safe_off|Device|Safely switched off
+safety_history_unsupported|Safety history|Unsupported
+secondary_device_unavailable_or_unsupported|Secondary device|Unavailable or unsupported
+secondary_setpoint_conflict|Secondary target|Conflict
+select_control_method_to_authorize_current_device_sources|Select an authorized control method for this device
+select_fan_purpose_on_controller_device|Choose whether the fan extracts or filters air
+select_single_direction_for_pid|Select heating or cooling direction for PID
+selected_source_missing|Selected source|Missing
+sensor_unknown_or_stale|Sensor measurement|Unknown or outdated
+set_humidity_service_missing|Humidity target|Control service is missing
+setpoint_commanded|Target|Command sent
+setpoint_service_failure|Target|Control service failed
+settings_updated|Controller settings|Saved
+sleep_evidence_unknown|Sleep status|Cannot be verified
+sleep_room_evidence_unknown|Room sleep status|Cannot be verified
+source_deselected_or_moved|Device|No longer assigned to this room
+stale_temperature|Temperature measurement|Outdated
+startup_warmup|Waiting for startup checks to finish
+storage_failure_no_command|Storage|Failed; no command sent
+storage_unavailable|Safety history could not be loaded; automatic control is suspended
+sun_below_shading_threshold|Sun|Below the shading elevation threshold
+sun_low|Sun|Low elevation
+sun_not_verified|Sun position|Cannot be verified
+target_commanded|Target|Command sent
+target_outside_device_limits|Target|Outside the device limits
+target_outside_native_limits|Target|Outside the device operating range
+target_unavailable|Target|Unavailable
+temperature_controller_owns_same_device|Device|Already managed by a temperature controller
+temperature_not_verified|Temperature|Unverified
+temperature_sensor_wrong_area|Temperature sensor|Wrong room
+temperature_service_unavailable|Temperature|Control service is unavailable
+temperature_source_missing_or_wrong_area|Temperature source|Missing or in the wrong room
+temperature_stale_or_wrong_room|Temperature|Outdated or from the wrong room
+temperature_unavailable_or_stale|Temperature measurement|Unavailable or outdated
+suspected_heating_after_off|Possible heating despite reported OFF
+suspected_output_after_off|Possible continued output despite reported OFF
+thermal_priority_defer_dry|Heating or cooling has priority over drying
+thermal_temperature_control_has_priority|Temperature control|Has priority
+thermostat_turned_off|Thermostat|Switched off
+unattributed_direct_write_intent|Direct command request|Control ownership is unknown
+unavailable|Controller data|Unavailable
+uncommissioned_absence_off|Shutdown when absent|Not authorized
+unconfirmed_close_manual_hold|Closing|Unconfirmed; manual control is paused
+unexpected_mode|Operating mode|Unexpected
+unexpected_task_exception|Control task|Unexpected error
+unit_must_be_running_dry_or_fan_only|Device|Must be running in drying or fan-only mode
+unknown|Unknown
+unknown_native_power|Device power|Unknown
+unknown_presence_hold|Presence|Unknown; control is paused
+unknown_window_contacts|Window contacts|Closed state is unconfirmed
+unoccupied|Unoccupied
+unrecognized_status|Controller condition not recognized - check status_code
+unsafe_mode_selection|Operating mode selection|Unsafe
+unsafe_or_unsupported_mode_change|Operating mode change|Unsafe or unsupported
+unsupported_action|Action|Unsupported
+unsupported_control_method|Control method|Unsupported
+unsupported_device|Device|Unsupported
+unsupported_fractional_humidity_steps|Humidity adjustment|Fractional steps are unsupported
+unsupported_hvac_mode|Operating mode|Unsupported by this controller
+unsupported_mode|Operating mode|Unsupported
+unsupported_strategy|Control strategy|Unsupported
+unsupported_temperature_unit|Temperature unit|Unsupported
+unsupported_unit|Unit|Unsupported
+unverified_equipment_plan|Equipment plan|Unverified
+unverified_humidity_device_or_area|Humidity device or room assignment|Unverified
+unverified_proportional_range|Proportional output range|Unverified
+user_paused|Paused by the user
+waiting_for_ack|Device|Waiting for command confirmation
+waiting_for_device_ack|Device|Waiting for confirmation
+waiting_for_fan_power_ack|Fan power|Waiting for confirmation
+waiting_for_fan_speed_ack|Fan speed|Waiting for confirmation
+waiting_for_first_control_cycle|Waiting for the first control cycle
+waiting_for_native_ack|Thermostat|Waiting for confirmation
+waiting_for_native_mode_ack|Operating mode change|Waiting for confirmation
+waiting_for_output_ack|Output change|Waiting for confirmation
+waiting_for_physical_device|Device|Waiting for availability
+waiting_for_pid_samples|PID|Waiting for enough temperature measurements
+waiting_for_power_ack|Power state|Waiting for confirmation
+waiting_for_stable_release|Control|Waiting for stable release
+waiting_for_target_ack|Target|Waiting for confirmation
+weather_cloudy|Weather|Cloudy
+weather_hazard_hold|Weather|Safety conditions prevent shade adjustment
+weather_no_solar_gain|Weather|Insufficient solar heat to justify closing shades
+weather_solar|Weather|Solar heat gain
+window_already_open_or_unknown|Window|Already open or state unknown
+window_changed_since_plan|Window|State changed since the plan was created
+window_contact_or_explicit_exception_required|Window|Confirmed closed contact or explicit exception required
+window_contacts_invalid|Window contacts|Invalid
+window_contacts_missing|Window sensors|Missing
+window_evidence_missing|Window evidence|Missing
+window_interlock|Window safety interlock|Action blocked
+window_interlock_or_missing_plan|Window safety check or room plan|Missing
+window_not_assigned|Window|Not assigned
+window_not_eligible|Window|Not eligible for the requested shading action
+window_open_or_unavailable|Window|Open or sensor unavailable
+window_open_or_unknown|Window|Open or sensor state unknown
+window_plan_blocked|Window plan|Blocked
+window_plan_unsafe|Window plan|Unsafe
+window_wrong_room|Window|Wrong room
+within_target_band|Within the configured target range
+wrong_room_window_contact|Window contact|Wrong room
+device_auto_control_disabled|Device automatic control|Disabled
+device_policy_approved|Device automatic control|Approved
+house_occupancy_unknown|Home occupancy|Cannot be verified
+house_unoccupied|Nobody is home
+invalid_presence_policy|Presence policy|Invalid
+invalid_sleep_policy|Sleep policy|Invalid
+room_not_absent|Room|Occupied; absence-only control is paused
+room_not_occupied|Room|Empty; occupancy-only control is paused
+room_occupancy_unknown|Room occupancy|Cannot be verified
+sleep_room_control_paused|Control is paused because this room is sleeping
+idle|Idle
+selected_mean|Mean of selected sensors
+selected_sensor|Mean of selected sensors
+selected_partial_mean|Mean of available sensors
+selected_partial_sensor|Mean of available sensors
+room_selected_mean|Mean of selected sensors
+complete_measured_stage_capacities_required|Enter valid measurements for every stage
+ready_to_apply_when_physical_off|Ready
+not_configured|Not configured
+environment_only_no_hvac|Room summary only. Each device below has its own controller.
+environment_only_no_primary_hvac|Room summary only. Each device below has its own controller.
+sleep|Sleep
+comfort|Comfort
+eco|Energy saving
+window_open_pause|Paused for an open window
+window_close_warmup|Waiting after windows closed
+window_state_unknown|Waiting for window status
+window_open_wait|Waiting for you to open the window
+window_request_pending|Sending a request to open the window

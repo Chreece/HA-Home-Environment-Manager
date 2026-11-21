@@ -218,7 +218,13 @@ class OperatingTimingUi(unittest.TestCase):
             self.assertIn(retained_cycle, help_for(FIELDS[0], locale))
         self.assertIn("remain stopped", help_for(FIELDS[1], "en"))
         self.assertIn("keeps the observed OFF time", help_for(FIELDS[1], "en"))
-        self.assertEqual(help_for(FIELDS[0], "fr"), help_for(FIELDS[0], "en"))
+        for key in MINIMA:
+            french = help_for(key, "fr")
+            self.assertNotEqual(french, help_for(key, "en"))
+            for required in ("0", "minutes", "confirmation", "fabricant"):
+                self.assertIn(required, french)
+        self.assertIn("cycle en cours doit d'abord se terminer", help_for(FIELDS[0], "fr"))
+        self.assertIn("conserve l'heure d'arrêt observée", help_for(FIELDS[1], "fr"))
 
 
 if __name__ == "__main__":

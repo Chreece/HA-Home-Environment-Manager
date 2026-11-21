@@ -1,0 +1,464 @@
+{
+  "schema_version": 1,
+  "groups": {
+    "034": [
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43
+    ],
+    "000": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "027": [
+      27,
+      28,
+      32,
+      33,
+      49,
+      52,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85
+    ],
+    "152": [
+      152,
+      153,
+      156,
+      157,
+      158,
+      159,
+      200
+    ]
+  },
+  "sources": [
+    {
+      "index": 0,
+      "source": "Choose the ambient room temperature sensor (°C/°F). Only supported temperature sensors assigned to this room are offered. The reading is captured together with the outdoor weather temperature when you save a new calibration."
+    },
+    {
+      "index": 1,
+      "source": "Choose State when the entity state itself is a valid room list, or select an actual attribute that contains that list. Choices refresh when changing entity."
+    },
+    {
+      "index": 2,
+      "source": "Choose the State field or a verified room-list attribute from the selected sleep entity. A missing or unrecognized list makes sleep state unknown."
+    },
+    {
+      "index": 3,
+      "source": "Pollen reading at or above which the selected provider counts as high. Use the provider's own scale, from 0 up to the configured maximum; e.g. 3 with a maximum of 5. With Avoid ventilation enabled, valid high readings caution against automatic outdoor-air intake."
+    },
+    {
+      "index": 4,
+      "source": "Positive maximum of the selected provider's pollen index (1–100), not the current reading. For a 0–5 scale enter 5. All selected pollen sources must use compatible index scales; HEM does not convert between providers. A zero or invalid scale cannot classify pollen."
+    },
+    {
+      "index": 6,
+      "source": "Optional. Declare each AQI provider's scale explicitly: EPA 0-500, European six-category index, or your provider's custom limit. An unknown AQI scale is NEVER treated as the US scale. A pollen forecast can come from any Home Assistant integration and is advisory unless you deliberately enable blocking."
+    },
+    {
+      "index": 8,
+      "source": "Choose only the scale documented by the sensor's data provider; source entity IDs are shown above."
+    },
+    {
+      "index": 9,
+      "source": "Configure extra sensors and assumptions for one selected room. All are optional. The basic Home Environment Manager features work without any of them."
+    },
+    {
+      "index": 10,
+      "source": "Only the selected room is edited. Return here to configure another room."
+    },
+    {
+      "index": 11,
+      "source": "Room air volume and sensors. Rated particle CADR belongs to each purifier device."
+    },
+    {
+      "index": 12,
+      "source": "Optional. Select only sensors actually measuring the requested pollutant and units. Confirm independent hardware/calibration; synthetic HCHO, eCO₂ and generic sound-level signals are not acceptable substitutes for validated observations. Radon guidelines need nearly a full year of history."
+    },
+    {
+      "index": 13,
+      "source": "Annual radon screening reference appropriate to local rules. WHO recommends 100 Bq/m³ where feasible (national references differ, not above 300); compare annual averages only."
+    },
+    {
+      "index": 14,
+      "source": "Optional advanced ISO 7730. Simple automatic comfort requires no clothing, activity, radiant or air-speed inputs."
+    },
+    {
+      "index": 15,
+      "source": "Opt in to ISO 7730 Predicted Mean Vote/Predicted Percentage Dissatisfied analysis. Needs real radiant temperature, air speed, clothing and activity assumptions; off by default."
+    },
+    {
+      "index": 27,
+      "source": "Choose US EPA (0-500), EEA categories or custom only if this exactly matches the selected AQI provider. Unknown scales cannot certify safe outside air."
+    },
+    {
+      "index": 28,
+      "source": "No configured supported outdoor AQI source is available. First choose a real AQI entity under Outside data → Outdoor air quality."
+    },
+    {
+      "index": 32,
+      "source": "Choose the monitored Home Assistant room whose settings you want to edit. Selecting a room does not move any sensor or device, and does not change its saved settings."
+    },
+    {
+      "index": 33,
+      "source": "Check only after measuring the coldest surface again now. Otherwise changing sensor exclusions must not silently overwrite the original calibration."
+    },
+    {
+      "index": 34,
+      "source": "Measured indoor air volume in m³ (usable floor area multiplied by ceiling height). Required to estimate nominal clean-air changes from purifier CADR."
+    },
+    {
+      "index": 35,
+      "source": "Manufacturer-rated particle clean-air delivery rate in m³/h at the selected fan speed, not simple fan airflow. Filter performance for gases is not inferred."
+    },
+    {
+      "index": 36,
+      "source": "Enable only after independently verifying that the selected CO₂ source is true NDIR or equivalent measured hardware, not estimated eCO₂ derived from VOC."
+    },
+    {
+      "index": 37,
+      "source": "Confirm the device really measures radon with dedicated calibrated hardware. Ordinary VOC-based sensors are unsuitable; annual risk estimates need enough history."
+    },
+    {
+      "index": 38,
+      "source": "Confirm this is a genuine HCHO measurement before using its 30-minute average. WHO short-term guidance is 100 µg/m³ (30 min), not a universal single-reading threshold."
+    },
+    {
+      "index": 39,
+      "source": "Enable only if the selected source produces calibrated equivalent levels over known intervals. Peak-only or guessed readings cannot form valid LAeq estimates."
+    },
+    {
+      "index": 40,
+      "source": "Confirm independent actual spectral evidence for the melanopic EDI source. The system will not infer it from color temperature or ordinary lux."
+    },
+    {
+      "index": 41,
+      "source": "Explicit assumed air speed in m/s only when no real sensor is available. Enter a defensible estimate; results remain labelled as estimated."
+    },
+    {
+      "index": 42,
+      "source": "Human metabolic activity in met units. Roughly 1.0 for sitting quietly, 1.2 for light desk work; set actual occupant activity, not equipment output."
+    },
+    {
+      "index": 43,
+      "source": "Clothing insulation in clo; roughly 0.5 for light summer clothing, 1.0 for common winter clothing. Impacts comfort estimates, not a sensor reading."
+    },
+    {
+      "index": 49,
+      "source": "Confirm that the selected sensor directly measures PM2.5 mass concentration (µg/m³), not an uncalibrated proxy or arbitrary AQI."
+    },
+    {
+      "index": 52,
+      "source": "This confirms the PM2.5 sensor used for this purifier's automatic particle filtration. ON: enable only after checking that the selected same-room sensor measures real PM2.5 concentration in µg/m³, not AQI, eCO₂ or VOC estimates. OFF: automatic filtration needs separate confirmation of the room's PM2.5 source or stays blocked. It does not select a sensor, start the purifier or bypass device safety checks."
+    },
+    {
+      "index": 75,
+      "source": "Direct outputs when Announcement Hub is not used."
+    },
+    {
+      "index": 76,
+      "source": "Select a current numeric pollen-index entity produced by any local HA integration; nothing is fetched from a fixed national service."
+    },
+    {
+      "index": 77,
+      "source": "Choose the measured ambient air temperature of this room, not an external sensor. Used for room science and moisture calculations when multiple sources exist."
+    },
+    {
+      "index": 78,
+      "source": "Choose the purifier's real power/fan state. The environmental analysis can describe nominal filtration while the device is running; merely selecting it does not switch it on."
+    },
+    {
+      "index": 79,
+      "source": "Select the existing mechanical extraction fan/switch for contextual humidity-event advice. A humidity rise alone does not prove a shower or cooking event."
+    },
+    {
+      "index": 80,
+      "source": "Select a dedicated radon monitor with Bq/m³ or pCi/L output. Use long observation periods to assess exposure; radon is associated with lung cancer risk."
+    },
+    {
+      "index": 81,
+      "source": "Select a real HCHO sensor measuring formaldehyde (µg/m³ or mg/m³), not a generic VOC-estimated value. Only verified concentration can inform exposure analysis."
+    },
+    {
+      "index": 82,
+      "source": "Choose calibrated A-weighted equivalent sound level in dB(A). The integration uses logarithmic sound-energy averaging; uncalibrated phone peaks are not suitable."
+    },
+    {
+      "index": 83,
+      "source": "Select a real spectral sensor providing melanopic equivalent daylight illuminance in lux. Never derive it from ordinary photopic lux with an arbitrary multiplier."
+    },
+    {
+      "index": 84,
+      "source": "Measured mean radiant temperature (°C), not ordinary room air temperature. Required for credible PMV/PPD thermal comfort calculations."
+    },
+    {
+      "index": 85,
+      "source": "True local air-speed sensor in m/s; if provided, it overrides the static estimated airflow value used in PMV/PPD."
+    },
+    {
+      "index": 152,
+      "source": "Select one or more Home Assistant areas. Adding a room only adds it to monitoring; it does not start heating, cooling or other equipment. Removing a room safely disables its previous automatic controls."
+    },
+    {
+      "index": 153,
+      "source": "Windows. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control."
+    },
+    {
+      "index": 154,
+      "source": "Temperature. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control."
+    },
+    {
+      "index": 155,
+      "source": "Humidity. Select inputs for this room. Each choice shows device name - entity name (state), omitting empty parts. Empty groups stay unused; they never enable automatic discovery or equipment control."
+    },
+    {
+      "index": 156,
+      "source": "Select this room's real window and door-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window."
+    },
+    {
+      "index": 157,
+      "source": "Select the room's actual indoor temperature sensors. When several valid sensors are selected, the manager combines them; unavailable readings are ignored."
+    },
+    {
+      "index": 158,
+      "source": "Select indoor relative-humidity sensors. Valid readings inform comfort, drying and mold-risk advice; missing readings are not treated as zero."
+    },
+    {
+      "index": 159,
+      "source": "Select this room's real window-contact sensors. They tell the advisor which openings are currently open or closed; they never operate a window."
+    },
+    {
+      "index": 200,
+      "source": "Choose the Home Assistant room whose occupancy sources you want to configure. This choice changes only which room you are editing; it does not itself report occupancy."
+    }
+  ],
+  "prefix_families": [
+    {
+      "base": 153,
+      "indices": [
+        154,
+        155
+      ],
+      "labels": {
+        "en": [
+          "Windows",
+          "Temperature",
+          "Humidity"
+        ],
+        "de": [
+          "Fenster",
+          "Temperatur",
+          "Luftfeuchtigkeit"
+        ],
+        "el": [
+          "Παράθυρα",
+          "Θερμοκρασία",
+          "Υγρασία"
+        ],
+        "fr": [
+          "Fenêtres",
+          "Température",
+          "Humidité"
+        ],
+        "es": [
+          "Ventanas",
+          "Temperatura",
+          "Humedad"
+        ],
+        "it": [
+          "Finestre",
+          "Temperatura",
+          "Umidità"
+        ],
+        "pt": [
+          "Janelas",
+          "Temperatura",
+          "Humidade"
+        ],
+        "pt-BR": [
+          "Janelas",
+          "Temperatura",
+          "Umidade"
+        ],
+        "nl": [
+          "Ramen",
+          "Temperatuur",
+          "Luchtvochtigheid"
+        ],
+        "da": [
+          "Vinduer",
+          "Temperatur",
+          "Luftfugtighed"
+        ],
+        "sv": [
+          "Fönster",
+          "Temperatur",
+          "Luftfuktighet"
+        ],
+        "nb": [
+          "Vinduer",
+          "Temperatur",
+          "Luftfuktighet"
+        ],
+        "fi": [
+          "Ikkunat",
+          "Lämpötila",
+          "Kosteus"
+        ],
+        "cs": [
+          "Okna",
+          "Teplota",
+          "Vlhkost"
+        ],
+        "pl": [
+          "Okna",
+          "Temperatura",
+          "Wilgotność"
+        ],
+        "sk": [
+          "Okná",
+          "Teplota",
+          "Vlhkosť"
+        ],
+        "hu": [
+          "Ablakok",
+          "Hőmérséklet",
+          "Páratartalom"
+        ],
+        "ro": [
+          "Ferestre",
+          "Temperatură",
+          "Umiditate"
+        ],
+        "hr": [
+          "Prozori",
+          "Temperatura",
+          "Vlažnost"
+        ],
+        "sr": [
+          "Прозори",
+          "Температура",
+          "Влажност"
+        ],
+        "bg": [
+          "Прозорци",
+          "Температура",
+          "Влажност"
+        ],
+        "uk": [
+          "Вікна",
+          "Температура",
+          "Вологість"
+        ],
+        "ru": [
+          "Окна",
+          "Температура",
+          "Влажность"
+        ],
+        "tr": [
+          "Pencereler",
+          "Sıcaklık",
+          "Nem"
+        ],
+        "ar": [
+          "النوافذ",
+          "درجة الحرارة",
+          "الرطوبة"
+        ],
+        "he": [
+          "חלונות",
+          "טמפרטורה",
+          "לחות"
+        ],
+        "fa": [
+          "پنجره‌ها",
+          "دما",
+          "رطوبت"
+        ],
+        "ur": [
+          "کھڑکیاں",
+          "درجۂ حرارت",
+          "نمی"
+        ],
+        "hi": [
+          "खिड़कियाँ",
+          "तापमान",
+          "आर्द्रता"
+        ],
+        "bn": [
+          "জানালা",
+          "তাপমাত্রা",
+          "আর্দ্রতা"
+        ],
+        "ta": [
+          "சாளரங்கள்",
+          "வெப்பநிலை",
+          "ஈரப்பதம்"
+        ],
+        "id": [
+          "Jendela",
+          "Suhu",
+          "Kelembapan"
+        ],
+        "ja": [
+          "窓",
+          "温度",
+          "湿度"
+        ],
+        "ko": [
+          "창문",
+          "온도",
+          "습도"
+        ],
+        "th": [
+          "หน้าต่าง",
+          "อุณหภูมิ",
+          "ความชื้น"
+        ],
+        "vi": [
+          "Cửa sổ",
+          "Nhiệt độ",
+          "Độ ẩm"
+        ],
+        "zh-Hans": [
+          "窗户",
+          "温度",
+          "湿度"
+        ],
+        "zh-Hant": [
+          "窗戶",
+          "溫度",
+          "濕度"
+        ]
+      }
+    }
+  ]
+}

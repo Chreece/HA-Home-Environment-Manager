@@ -5,10 +5,19 @@ runtime consumers. They do not change control, targets, or entity identity.
 """
 from __future__ import annotations
 
+if __package__:
+    from .backend_text import translated_text, resolve_language
+else:
+    from pathlib import Path
+    from runpy import run_path
+    _text_helpers = run_path(str(Path(__file__).with_name("backend_text.py")))
+    translated_text = _text_helpers["translated_text"]
+    resolve_language = _text_helpers["resolve_language"]
 
-# English, Greek and German are kept together so a setting cannot accidentally
-# reuse the description of a neighbouring field. Other UI locales use English
-# for these explanations while keeping their existing translated entity names.
+
+
+# English, Greek and German remain next to each setting's definition. Other
+# supported locales resolve the same exact source through the static catalog.
 HELP = {
     "off_state_watchdog_mode": (
         "Choose how HEM monitors this physical device after an HEM-commanded OFF. "
@@ -631,8 +640,10 @@ _NATIVE_MODE_TARGET_HELP = {
 
 def equipment_configuration_help(key: str, locale: str = "en", *, modes=None) -> str:
     """Describe one setting, using only supplied device modes when applicable."""
-    language = str(locale or "en").replace("_", "-").casefold().split("-")[0]
-    index = {"el": 1, "de": 2}.get(language, 0)
+    language = resolve_language(locale)
+    index = {"en": 0, "el": 1, "de": 2}.get(language)
+    def localized(values):
+        return values[index] if index is not None else translated_text(values[0], language)
     # An unknown future control must not receive the climate façade help: that
     # would explain the wrong action and mislead the person editing it.
     fallback = (
@@ -640,7 +651,7 @@ def equipment_configuration_help(key: str, locale: str = "en", *, modes=None) ->
         "Η συγκεκριμένη ρύθμιση δεν έχει ακόμη τεκμηριωμένη περιγραφή. Έλεγξε τις δυνατότητες της συσκευής πριν την αλλάξεις.",
         "Für diese Einstellung liegt noch keine genaue Verhaltensbeschreibung vor. Vor dem Ändern die Gerätefähigkeit prüfen.",
     )
-    description = HELP.get(key, fallback)[index]
+    description = localized(HELP.get(key, fallback))
     if key != "native_full_output" or modes is None:
         return description
     if __package__:
@@ -655,12 +666,12 @@ def equipment_configuration_help(key: str, locale: str = "en", *, modes=None) ->
         operating_mode_label = catalog["operating_mode_label"]
     applicable = _native_target_modes(modes)
     if not applicable:
-        return (
+        return localized((
             "This device currently has no verified operating mode that supports this optional native target.",
             "Η συσκευή δεν έχει αυτή τη στιγμή επιβεβαιωμένη λειτουργία που να υποστηρίζει αυτόν τον προαιρετικό στόχο.",
             "Für dieses Gerät ist derzeit keine Betriebsart bestätigt, die diesen optionalen nativen Sollwert unterstützt.",
-        )[index]
+        ))
     paragraphs = description.split("\n\n")
-    paragraphs[1:1] = [_NATIVE_MODE_TARGET_HELP[mode][index].format(
+    paragraphs[1:1] = [localized(_NATIVE_MODE_TARGET_HELP[mode]).format(
         mode=operating_mode_label(mode, locale)) for mode in applicable]
     return "\n\n".join(paragraphs)
