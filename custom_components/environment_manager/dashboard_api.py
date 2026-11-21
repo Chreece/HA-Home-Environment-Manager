@@ -20,9 +20,11 @@ from .const import DOMAIN
 from .dashboard import manager_dashboard_snapshot
 from .controller_inventory import controller_inventory
 from .environment_history import AVG_ALLOWED, AVG_MAX_AGE, AVG_MIN_SAMPLE_SECONDS
+from .control_history import CONTROL_METRICS, CONTROL_MAX_AGE, CONTROL_SAMPLE_SECONDS
 
 COMMAND = f"{DOMAIN}/dashboard"
 TREND_COMMAND = f"{DOMAIN}/trend"
+CONTROL_TREND_COMMAND = f"{DOMAIN}/control_trend"
 
 
 def _readable_manager(
@@ -88,6 +90,7 @@ def websocket_dashboard(
     # recommendation sensor. Disambiguate multiple HEM Home devices without
     # trusting names, registry order, or a sometimes absent frontend entity map.
     result["owner_entry_id"] = entry_id
+    result["control_trend_version"] = 1
     # Configured source membership is independent of an unavailable HA state.
     # This is scoped to the already authorized recommendation sensor response.
     result["controllers"] = controller_inventory(manager)
@@ -152,8 +155,83 @@ def websocket_trend(
     })
 
 
+@websocket_api.websocket_command({
+    probatio.Required("type"): CONTROL_TREND_COMMAND,
+    probatio.Required("entity_id"): str,
+    probatio.Required("area_id"): str,
+    probatio.Required("metric"): probatio.In(sorted(CONTROL_METRICS)),
+    probatio.Required("source_ids"): list,
+})
+@callback
+def websocket_control_trend(
+    hass: HomeAssistant,
+    connection: websocket_api.ActiveConnection,
+    msg: dict[str, Any],
+) -> None:
+    """Copy target/output observations for this exact readable chart context.
+
+    Physical Recorder charts, HEM contributor means and derived mold keep
+    their original measurement transport. This endpoint adds no live sample,
+    device command, Recorder query or storage write, and cannot substitute a
+    different room's or contributor set's controller target.
+    """
+    manager = _readable_manager(hass, connection, msg)
+    if manager is None:
+        return
+    area, metric, requested = msg["area_id"], msg["metric"], msg["source_ids"]
+    plan = manager.plan
+    if (not isinstance(area, str) or not area or len(area) > 128
+            or not isinstance(metric, str) or metric not in CONTROL_METRICS
+            or not any(room.area_id == area for room in (*plan.rooms, *plan.climate_rooms))
+            or not isinstance(requested, list) or len(requested) > 32
+            or any(not isinstance(source, str) or not source.startswith("sensor.")
+                   or len(source) > 255 for source in requested)
+            or len(set(requested)) != len(requested)
+            or (bool(requested) if metric == "mold" else not requested)):
+        connection.send_error(msg["id"], websocket_api.ERR_NOT_FOUND, "Control trend not found")
+        return
+    report = plan.environment.get(area, {})
+    report = report if isinstance(report, dict) else {}
+    measurements = report.get("measurement_evidence")
+    evidence = (report.get("mold_trend") if metric == "mold" else
+                measurements.get(metric) if isinstance(measurements, dict) else None)
+    sources = evidence.get("source_ids") if isinstance(evidence, dict) else None
+    count = evidence.get("source_count") if isinstance(evidence, dict) else None
+    valid_evidence = (
+        isinstance(sources, list) and type(count) is int and len(sources) == count
+        and all(isinstance(source, str) and source.startswith("sensor.")
+                and len(source) <= 255 for source in sources)
+        and len(set(sources)) == len(sources)
+        and (count == 0 if metric == "mold" else 1 <= count <= 32)
+    )
+    full_context = valid_evidence and sorted(sources) == sorted(requested)
+    # A native sensor in a room's displayed mean can still open its own
+    # Recorder chart. Authorize that exact contributor without overlaying a
+    # mean-controlled target onto it; history.view requires exact feedback IDs.
+    # Current configured room readings also retain the sensor's identity while
+    # its present value is unavailable, so genuine old samples remain readable.
+    single_context = metric != "mold" and len(requested) == 1 and (
+        valid_evidence and requested[0] in sources
+        or any(getattr(reading, "entity_id", None) == requested[0]
+               and getattr(reading, "metric", None) == metric
+               for room in (*plan.rooms, *plan.climate_rooms) if room.area_id == area
+               for reading in getattr(room, "readings", ()))
+    )
+    if not (full_context or single_context):
+        connection.send_error(msg["id"], websocket_api.ERR_NOT_FOUND, "Control trend not found")
+        return
+    history = manager._environment_history.control
+    connection.send_result(msg["id"], {
+        "version": 1, "area_id": area, "metric": metric, "source_ids": sorted(requested),
+        "controllers": history.view(area, metric, requested, now=time.time()),
+        "retention_seconds": CONTROL_MAX_AGE,
+        "sample_interval_seconds": CONTROL_SAMPLE_SECONDS,
+    })
+
+
 @callback
 def async_register_dashboard_api(hass: HomeAssistant) -> None:
     """Register once when the canonical integration is initialized."""
     websocket_api.async_register_command(hass, websocket_dashboard)
     websocket_api.async_register_command(hass, websocket_trend)
+    websocket_api.async_register_command(hass, websocket_control_trend)
