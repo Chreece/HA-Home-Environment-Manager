@@ -104,6 +104,7 @@ jobs:
             path=Path(b.decode())
             if path in (original,overlay) or not path.is_file() or path.is_symlink(): continue
             if path.parts[:2]==('.github','releases'): continue
+            if path.parts[:2]==('.github','workflows'): continue
             if path.suffix.lower() not in ('.py','.js','.json','.md','.yml','.yaml','.sh','.txt','.html','.css'): continue
             if path.stat().st_size>20_000_000: continue
             try: data=path.read_text(encoding='utf-8')
@@ -170,10 +171,10 @@ jobs:
           PY
           node --check custom_components/environment_manager/frontend/home-environment-manager-card.js
           python -I .github/tests/test_061b11_branding.py
-          git rm --force .github/workflows/one-time-hem-card-rename.yml
           # The renamed bundled card had one pre-existing whitespace-only line.
           sed -i '14877s/[[:blank:]]*$//' custom_components/environment_manager/frontend/home-environment-manager-card.js
           git add -A
+          git diff --cached --quiet -- .github/workflows || { echo 'workflow changes forbidden'; exit 1; }
           git diff --cached --check
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
