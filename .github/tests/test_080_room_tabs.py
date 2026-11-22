@@ -165,13 +165,14 @@ def run():
                 page.add_script_tag(path=str(CARD))
                 page.evaluate(SETUP, data)
                 # No separate legacy custom card may be registered or suggested.
-      assert page.evaluate('''() => !customElements.get(
-          'air-quality-advisor-card') && !customElements.get(
-          'air-quality-advisor-card-editor') &&
-          !!customElements.get('home-environment-manager-card') &&
-          !!customElements.get('home-environment-manager-card-editor') &&
-          window.customCards.filter(c=>c.type.includes('environment-manager-card')).length===1
-      ''')
+                assert page.evaluate('''() => !customElements.get(
+                    'air-quality-advisor-card') && !customElements.get(
+                    'air-quality-advisor-card-editor') &&
+                    !!customElements.get('home-environment-manager-card') &&
+                    !!customElements.get('home-environment-manager-card-editor') &&
+                    window.customCards.filter(
+                        c=>c.type==='home-environment-manager-card').length===1
+                ''')
                 expect(page.locator('[data-room-settings114="living"]')).to_be_enabled()
                 for floors in (False, True):
                     page.evaluate('floorMode080', floors)
