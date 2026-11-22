@@ -231,7 +231,10 @@
           "general_wake_alarm_entity": "Sonno · Prossima sveglia",
           "general_wake_lead_minutes_entity": "Sonno · Minuti prima della sveglia",
           "window_open_timeout_minutes": "Attesa apertura finestra (min)",
-          "window_close_cooldown_minutes": "Attesa prima di suggerire la chiusura della finestra (min)"
+          "window_close_cooldown_minutes": "Attesa prima di suggerire la chiusura della finestra (min)",
+          "quiet_hours_enabled": "Ore di silenzio",
+          "quiet_hours_start": "Inizio delle ore di silenzio",
+          "quiet_hours_end": "Fine delle ore di silenzio"
         },
         "data_description": {
           "weather_entities": "Seleziona: Meteo e allerte · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -285,7 +288,10 @@
           "general_wake_alarm_entity": "Seleziona un’entità con l’ora o la data e ora della prossima sveglia e un’entità per i minuti di anticipo. HEM termina il sonno automatico con questo anticipo e ripristina gli obiettivi normali. Gli orari senza data usano il fuso di Home Assistant. Assenza, controllo manuale e protezioni mantengono la priorità.",
           "general_wake_lead_minutes_entity": "Seleziona un’entità numerica con minuti non negativi, con unità min o senza unità. Una sveglia alle 07:00 e un valore di 30 terminano il sonno automatico alle 06:30; 0 significa al suono della sveglia. Per disattivare, cancella entrambe le fonti.",
           "window_open_timeout_minutes": "Attesa dopo l’accettazione di una richiesta di aerazione prima di consentire nuovi avvii automatici/PID se ancora necessari. 0–30 minuti, predefinito 5; 0 disattiva l’attesa. Restano attive le protezioni per finestre aperte e i tempi minimi dei dispositivi.",
-          "window_close_cooldown_minutes": "Quando una finestra viene aperta dopo un suggerimento di aerazione di HEM, attende questo numero di minuti prima di suggerire di chiuderla, anche se le condizioni esterne non sono adatte. L’attesa si applica indipendentemente a ogni stanza. 0–60 minuti, valore predefinito 5; 0 disattiva l’attesa. Le regole di pausa e protezione dei dispositivi restano attive."
+          "window_close_cooldown_minutes": "Quando una finestra viene aperta dopo un suggerimento di aerazione di HEM, attende questo numero di minuti prima di suggerire di chiuderla, anche se le condizioni esterne non sono adatte. L’attesa si applica indipendentemente a ogni stanza. 0–60 minuti, valore predefinito 5; 0 disattiva l’attesa. Le regole di pausa e protezione dei dispositivi restano attive.",
+          "quiet_hours_enabled": "Usa questa fascia giornaliera per i dispositivi con «Silenzioso durante le ore di silenzio» attivo. Gli orari seguono il fuso orario locale di Home Assistant; la fascia può superare la mezzanotte. Disattivato per impostazione predefinita.",
+          "quiet_hours_start": "Ora di inizio giornaliera, inclusa nelle ore di silenzio. Scegli un’ora diversa da quella di fine.",
+          "quiet_hours_end": "Ora di fine giornaliera, esclusa dalle ore di silenzio. Se precede l’inizio, la fascia termina il giorno successivo."
         }
       },
       "reconfigure": {
@@ -938,7 +944,10 @@
           "general_sleep_rooms_attribute": "Sonno · Stanza · fonte (attribute)",
           "general_source_stale_minutes": "Presenza in casa · Età massima dei dati di tracciamento/conteggio (min)",
           "general_wake_alarm_entity": "Sonno · Prossima sveglia",
-          "general_wake_lead_minutes_entity": "Sonno · Minuti prima della sveglia"
+          "general_wake_lead_minutes_entity": "Sonno · Minuti prima della sveglia",
+          "quiet_hours_enabled": "Ore di silenzio",
+          "quiet_hours_start": "Inizio delle ore di silenzio",
+          "quiet_hours_end": "Fine delle ore di silenzio"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Una lista valida di stanze occupate nello stato o attributo scelto ha priorità: quelle elencate sono occupate, quelle omesse vuote. Senza lista, un sensore di presenza attivo è sufficiente; tutti spenti o nessuno selezionato significa vuoto. Una fonte selezionata non disponibile o non valida resta sconosciuta. Liste e stati binari invariati non scadono.",
@@ -950,7 +959,10 @@
           "general_sleep_rooms_attribute": "Scegliere il campo Stato o un attributo verificato con l’elenco delle stanze nell’entità sonno selezionata. Un elenco assente o non riconosciuto rende sconosciuto lo stato di sonno.",
           "general_source_stale_minutes": "Il limite di età riguarda i rapporti dei tracciatori e i conteggi numerici delle persone. Le liste delle stanze e gli stati binari di presenza non scadono finché non cambiano. Fonti non disponibili, ripristinate o non valide restano sconosciute. Non è una durata del sonno.",
           "general_wake_alarm_entity": "Seleziona un’entità con l’ora o la data e ora della prossima sveglia e un’entità per i minuti di anticipo. HEM termina il sonno automatico con questo anticipo e ripristina gli obiettivi normali. Gli orari senza data usano il fuso di Home Assistant. Assenza, controllo manuale e protezioni mantengono la priorità.",
-          "general_wake_lead_minutes_entity": "Seleziona un’entità numerica con minuti non negativi, con unità min o senza unità. Una sveglia alle 07:00 e un valore di 30 terminano il sonno automatico alle 06:30; 0 significa al suono della sveglia. Per disattivare, cancella entrambe le fonti."
+          "general_wake_lead_minutes_entity": "Seleziona un’entità numerica con minuti non negativi, con unità min o senza unità. Una sveglia alle 07:00 e un valore di 30 terminano il sonno automatico alle 06:30; 0 significa al suono della sveglia. Per disattivare, cancella entrambe le fonti.",
+          "quiet_hours_enabled": "Usa questa fascia giornaliera per i dispositivi con «Silenzioso durante le ore di silenzio» attivo. Gli orari seguono il fuso orario locale di Home Assistant; la fascia può superare la mezzanotte. Disattivato per impostazione predefinita.",
+          "quiet_hours_start": "Ora di inizio giornaliera, inclusa nelle ore di silenzio. Scegli un’ora diversa da quella di fine.",
+          "quiet_hours_end": "Ora di fine giornaliera, esclusa dalle ore di silenzio. Se precede l’inizio, la fascia termina il giorno successivo."
         }
       },
       "pollen": {
@@ -1240,7 +1252,8 @@
       "climate_invalid_occupancy_timing": "Imposta il ritardo dopo che la stanza si svuota su 0–240 minuti e l’età massima dei dati di presenza su 10–1440 minuti.",
       "climate_invalid_comfort_adjustment": "Imposta la correzione massima del valore obiettivo di comfort tra 0 e 2,5°C.",
       "climate_proportional_requires_percent": "Il controllo proporzionale richiede un’entità number con unità %, minimo 0, massimo 100 e passo numerico.",
-      "invalid_freshness_mode": "Scegli Automatico o Personalizzato per il limite di validità delle letture del sensore."
+      "invalid_freshness_mode": "Scegli Automatico o Personalizzato per il limite di validità delle letture del sensore.",
+      "invalid_quiet_hours": "Scegli orari di inizio e fine validi e diversi per le ore di silenzio."
     },
     "abort": {
       "already_configured": "Home Environment Manager - già configurato.",
@@ -2025,7 +2038,10 @@
           "general_sleep_rooms_attribute": "Sonno · Stanza · fonte (attribute)",
           "general_source_stale_minutes": "Presenza in casa · Età massima dei dati di tracciamento/conteggio (min)",
           "general_wake_alarm_entity": "Sonno · Prossima sveglia",
-          "general_wake_lead_minutes_entity": "Sonno · Minuti prima della sveglia"
+          "general_wake_lead_minutes_entity": "Sonno · Minuti prima della sveglia",
+          "quiet_hours_enabled": "Ore di silenzio",
+          "quiet_hours_start": "Inizio delle ore di silenzio",
+          "quiet_hours_end": "Fine delle ore di silenzio"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Una lista valida di stanze occupate nello stato o attributo scelto ha priorità: quelle elencate sono occupate, quelle omesse vuote. Senza lista, un sensore di presenza attivo è sufficiente; tutti spenti o nessuno selezionato significa vuoto. Una fonte selezionata non disponibile o non valida resta sconosciuta. Liste e stati binari invariati non scadono.",
@@ -2037,7 +2053,10 @@
           "general_sleep_rooms_attribute": "Scegliere il campo Stato o un attributo verificato con l’elenco delle stanze nell’entità sonno selezionata. Un elenco assente o non riconosciuto rende sconosciuto lo stato di sonno.",
           "general_source_stale_minutes": "Il limite di età riguarda i rapporti dei tracciatori e i conteggi numerici delle persone. Le liste delle stanze e gli stati binari di presenza non scadono finché non cambiano. Fonti non disponibili, ripristinate o non valide restano sconosciute. Non è una durata del sonno.",
           "general_wake_alarm_entity": "Seleziona un’entità con l’ora o la data e ora della prossima sveglia e un’entità per i minuti di anticipo. HEM termina il sonno automatico con questo anticipo e ripristina gli obiettivi normali. Gli orari senza data usano il fuso di Home Assistant. Assenza, controllo manuale e protezioni mantengono la priorità.",
-          "general_wake_lead_minutes_entity": "Seleziona un’entità numerica con minuti non negativi, con unità min o senza unità. Una sveglia alle 07:00 e un valore di 30 terminano il sonno automatico alle 06:30; 0 significa al suono della sveglia. Per disattivare, cancella entrambe le fonti."
+          "general_wake_lead_minutes_entity": "Seleziona un’entità numerica con minuti non negativi, con unità min o senza unità. Una sveglia alle 07:00 e un valore di 30 terminano il sonno automatico alle 06:30; 0 significa al suono della sveglia. Per disattivare, cancella entrambe le fonti.",
+          "quiet_hours_enabled": "Usa questa fascia giornaliera per i dispositivi con «Silenzioso durante le ore di silenzio» attivo. Gli orari seguono il fuso orario locale di Home Assistant; la fascia può superare la mezzanotte. Disattivato per impostazione predefinita.",
+          "quiet_hours_start": "Ora di inizio giornaliera, inclusa nelle ore di silenzio. Scegli un’ora diversa da quella di fine.",
+          "quiet_hours_end": "Ora di fine giornaliera, esclusa dalle ore di silenzio. Se precede l’inizio, la fascia termina il giorno successivo."
         }
       },
       "pollen": {
@@ -2251,7 +2270,10 @@
           "window_open_timeout_minutes": "Attesa apertura finestra (min)",
           "general_source_freshness_mode": "Occupazione della casa · Criterio di validità",
           "global_threshold_max_age_mode": "Ambiente · Criterio di validità",
-          "window_close_cooldown_minutes": "Attesa prima di suggerire la chiusura della finestra (min)"
+          "window_close_cooldown_minutes": "Attesa prima di suggerire la chiusura della finestra (min)",
+          "quiet_hours_enabled": "Ore di silenzio",
+          "quiet_hours_start": "Inizio delle ore di silenzio",
+          "quiet_hours_end": "Fine delle ore di silenzio"
         },
         "data_description": {
           "weather_entities": "Seleziona: Meteo e allerte · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2307,7 +2329,10 @@
           "window_open_timeout_minutes": "Attesa dopo l’accettazione di una richiesta di aerazione prima di consentire nuovi avvii automatici/PID se ancora necessari. 0–30 minuti, predefinito 5; 0 disattiva l’attesa. Restano attive le protezioni per finestre aperte e i tempi minimi dei dispositivi.",
           "general_source_freshness_mode": "Automatico: i contatori numerici delle persone e le segnalazioni di assenza dei localizzatori domestici sono accettati per un massimo di 240 minuti; uno stato Casa valido e invariato può restare tale finché non cambia. Fonti sconosciute, ripristinate o non disponibili non dimostrano assenza. Personalizzato: usa il valore in minuti sotto per i rapporti campionati. Gli elenchi delle stanze restano basati sui cambiamenti di stato.",
           "global_threshold_max_age_mode": "Automatico: le entità meteo possono restare valide per 180 minuti e le altre misure ambientali numeriche per 90 minuti; i contatti binari validi basati su cambiamenti di stato restano utilizzabili senza scadenza per inattività. Personalizzato: usa il valore in minuti sotto. I controlli di disponibilità e stato ripristinato si applicano sempre. In Home Assistant, last_reported avanza quando lo stato viene riscritto, anche con lo stesso valore, non semplicemente perché passa il tempo.",
-          "window_close_cooldown_minutes": "Quando una finestra viene aperta dopo un suggerimento di aerazione di HEM, attende questo numero di minuti prima di suggerire di chiuderla, anche se le condizioni esterne non sono adatte. L’attesa si applica indipendentemente a ogni stanza. 0–60 minuti, valore predefinito 5; 0 disattiva l’attesa. Le regole di pausa e protezione dei dispositivi restano attive."
+          "window_close_cooldown_minutes": "Quando una finestra viene aperta dopo un suggerimento di aerazione di HEM, attende questo numero di minuti prima di suggerire di chiuderla, anche se le condizioni esterne non sono adatte. L’attesa si applica indipendentemente a ogni stanza. 0–60 minuti, valore predefinito 5; 0 disattiva l’attesa. Le regole di pausa e protezione dei dispositivi restano attive.",
+          "quiet_hours_enabled": "Usa questa fascia giornaliera per i dispositivi con «Silenzioso durante le ore di silenzio» attivo. Gli orari seguono il fuso orario locale di Home Assistant; la fascia può superare la mezzanotte. Disattivato per impostazione predefinita.",
+          "quiet_hours_start": "Ora di inizio giornaliera, inclusa nelle ore di silenzio. Scegli un’ora diversa da quella di fine.",
+          "quiet_hours_end": "Ora di fine giornaliera, esclusa dalle ore di silenzio. Se precede l’inizio, la fascia termina il giorno successivo."
         }
       },
       "room_occupancy": {
@@ -2473,7 +2498,8 @@
       "climate_invalid_occupancy_timing": "Imposta il ritardo dopo che la stanza si svuota su 0–240 minuti e l’età massima dei dati di presenza su 10–1440 minuti.",
       "climate_invalid_comfort_adjustment": "Imposta la correzione massima del valore obiettivo di comfort tra 0 e 2,5°C.",
       "climate_proportional_requires_percent": "Il controllo proporzionale richiede un’entità number con unità %, minimo 0, massimo 100 e passo numerico.",
-      "invalid_freshness_mode": "Scegli Automatico o Personalizzato per il limite di validità delle letture del sensore."
+      "invalid_freshness_mode": "Scegli Automatico o Personalizzato per il limite di validità delle letture del sensore.",
+      "invalid_quiet_hours": "Scegli orari di inizio e fine validi e diversi per le ore di silenzio."
     },
     "abort": {
       "setup_area_removed": "Non valido: Stanze da monitorare",
@@ -4086,6 +4112,22 @@
             "name": "Aiuto"
           }
         }
+      },
+      "home_quiet_hours_enabled": {
+        "name": "Ore di silenzio",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
+      },
+      "equipment_quiet_hours": {
+        "name": "Silenzioso durante le ore di silenzio",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
       }
     },
     "select": {
@@ -4407,6 +4449,22 @@
       },
       "area_climate_sleep_end": {
         "name": "Sonno · Dispositivi · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
+      },
+      "home_quiet_hours_start": {
+        "name": "Inizio delle ore di silenzio",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Aiuto"
+          }
+        }
+      },
+      "home_quiet_hours_end": {
+        "name": "Fine delle ore di silenzio",
         "state_attributes": {
           "configuration_help": {
             "name": "Aiuto"

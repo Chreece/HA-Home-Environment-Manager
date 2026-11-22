@@ -244,7 +244,10 @@ with sync_playwright() as playwright:
     assert page.evaluate('info.length')==original
     for width in (320,360,430,590):
       page.set_viewport_size({'width':width,'height':990})
-      assert row.locator('.hem-room-glance87').bounding_box()['height']<=55
+      header=row.locator('.hem-room-glance87')
+      assert 60 <= header.bounding_box()['height'] <= 100
+      assert header.locator('.hem-room-name87').bounding_box()['y'] < \
+          header.locator('.hem-room-reading87').first.bounding_box()['y']
     assert not errors,errors
     browser.close()
 print('BETA105_AVERAGE_TRENDS_NATIVE_LINKS_PHYSICS_COVER_FOLDS_AQI=PASS')

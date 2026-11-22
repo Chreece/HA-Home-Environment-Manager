@@ -231,7 +231,10 @@
           "general_wake_alarm_entity": "수면 · 다음 알람",
           "general_wake_lead_minutes_entity": "수면 · 알람 몇 분 전에 해제할지",
           "window_open_timeout_minutes": "창문 열기 대기 시간(분)",
-          "window_close_cooldown_minutes": "창문 닫기 권고 전 대기 시간(분)"
+          "window_close_cooldown_minutes": "창문 닫기 권고 전 대기 시간(분)",
+          "quiet_hours_enabled": "조용한 시간",
+          "quiet_hours_start": "조용한 시간 시작",
+          "quiet_hours_end": "조용한 시간 종료"
         },
         "data_description": {
           "weather_entities": "선택하세요: 날씨 및 경보 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -285,7 +288,10 @@
           "general_wake_alarm_entity": "다음 알람의 시간 또는 날짜·시간 엔티티와 미리 해제할 분 수의 엔티티를 선택하세요. HEM은 그만큼 일찍 자동 수면 모드를 끝내고 일반 목표값으로 돌아갑니다. 날짜 없는 시간에는 Home Assistant의 시간대를 사용합니다. 외출, 수동 제어와 기기 보호 기능이 계속 우선합니다.",
           "general_wake_lead_minutes_entity": "0 이상의 분 수를 나타내는 숫자 엔티티를 선택하세요. 단위는 min이거나 없어야 합니다. 알람이 07:00이고 값이 30이면 06:30에 자동 수면이 끝납니다. 0은 알람이 울리는 시각입니다. 비활성화하려면 두 선택을 모두 지우세요.",
           "window_open_timeout_minutes": "환기 요청이 수락된 후, 필요한 경우 새로운 자동/PID 시작을 허용하기 전까지 기다리는 시간입니다. 0~30분, 기본값 5; 0은 대기를 끕니다. 창문 열림 보호와 기기의 최소 작동·정지 시간은 계속 적용됩니다.",
-          "window_close_cooldown_minutes": "HEM의 창문 열기 권고에 따라 창문이 열리면, 설정한 시간만큼 기다린 후 닫기를 권고합니다. 실외 조건이 적합하지 않아도 대기하며, 대기 시간은 방마다 따로 계산합니다. 0–60분, 기본값 5; 0으로 설정하면 대기하지 않습니다. 기기 일시 중지 및 보호 규칙은 계속 적용됩니다."
+          "window_close_cooldown_minutes": "HEM의 창문 열기 권고에 따라 창문이 열리면, 설정한 시간만큼 기다린 후 닫기를 권고합니다. 실외 조건이 적합하지 않아도 대기하며, 대기 시간은 방마다 따로 계산합니다. 0–60분, 기본값 5; 0으로 설정하면 대기하지 않습니다. 기기 일시 중지 및 보호 규칙은 계속 적용됩니다.",
+          "quiet_hours_enabled": "«조용한 시간에 저소음 운전»이 켜진 기기에 이 일일 시간대를 적용합니다. 시간은 Home Assistant의 현지 시간대를 따르며 자정을 넘길 수 있습니다. 기본값은 꺼짐입니다.",
+          "quiet_hours_start": "매일 시작 시각으로, 조용한 시간에 포함됩니다. 종료 시각과 다른 시각을 선택하세요.",
+          "quiet_hours_end": "매일 종료 시각으로, 조용한 시간에 포함되지 않습니다. 시작 시각보다 이르면 다음 날에 끝납니다."
         }
       },
       "reconfigure": {
@@ -938,7 +944,10 @@
           "general_sleep_rooms_attribute": "수면 · 방 · 정보원 (attribute)",
           "general_source_stale_minutes": "재택 상태 · 추적·인원수 데이터의 최대 경과 시간(분)",
           "general_wake_alarm_entity": "수면 · 다음 알람",
-          "general_wake_lead_minutes_entity": "수면 · 알람 몇 분 전에 해제할지"
+          "general_wake_lead_minutes_entity": "수면 · 알람 몇 분 전에 해제할지",
+          "quiet_hours_enabled": "조용한 시간",
+          "quiet_hours_start": "조용한 시간 시작",
+          "quiet_hours_end": "조용한 시간 종료"
         },
         "data_description": {
           "general_room_occupancy_sensors": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다.",
@@ -950,7 +959,10 @@
           "general_sleep_rooms_attribute": "선택한 수면 엔티티의 상태 필드 또는 검증된 방 목록 속성을 선택하세요. 목록이 없거나 인식되지 않으면 수면 상태는 알 수 없음이 됩니다.",
           "general_source_stale_minutes": "경과 시간 제한은 추적 보고와 숫자 인원수 데이터에 적용됩니다. 방 목록과 이진 재실 상태는 변하지 않아도 만료되지 않습니다. 사용할 수 없거나 복원되었거나 잘못된 소스는 알 수 없음으로 남습니다. 수면 시간 설정이 아닙니다.",
           "general_wake_alarm_entity": "다음 알람의 시간 또는 날짜·시간 엔티티와 미리 해제할 분 수의 엔티티를 선택하세요. HEM은 그만큼 일찍 자동 수면 모드를 끝내고 일반 목표값으로 돌아갑니다. 날짜 없는 시간에는 Home Assistant의 시간대를 사용합니다. 외출, 수동 제어와 기기 보호 기능이 계속 우선합니다.",
-          "general_wake_lead_minutes_entity": "0 이상의 분 수를 나타내는 숫자 엔티티를 선택하세요. 단위는 min이거나 없어야 합니다. 알람이 07:00이고 값이 30이면 06:30에 자동 수면이 끝납니다. 0은 알람이 울리는 시각입니다. 비활성화하려면 두 선택을 모두 지우세요."
+          "general_wake_lead_minutes_entity": "0 이상의 분 수를 나타내는 숫자 엔티티를 선택하세요. 단위는 min이거나 없어야 합니다. 알람이 07:00이고 값이 30이면 06:30에 자동 수면이 끝납니다. 0은 알람이 울리는 시각입니다. 비활성화하려면 두 선택을 모두 지우세요.",
+          "quiet_hours_enabled": "«조용한 시간에 저소음 운전»이 켜진 기기에 이 일일 시간대를 적용합니다. 시간은 Home Assistant의 현지 시간대를 따르며 자정을 넘길 수 있습니다. 기본값은 꺼짐입니다.",
+          "quiet_hours_start": "매일 시작 시각으로, 조용한 시간에 포함됩니다. 종료 시각과 다른 시각을 선택하세요.",
+          "quiet_hours_end": "매일 종료 시각으로, 조용한 시간에 포함되지 않습니다. 시작 시각보다 이르면 다음 날에 끝납니다."
         }
       },
       "pollen": {
@@ -1240,7 +1252,8 @@
       "climate_invalid_occupancy_timing": "방이 비어 있는 상태의 지연 시간을 0–240분으로, 재실 데이터의 최대 유효 시간을 10–1440분으로 설정하세요.",
       "climate_invalid_comfort_adjustment": "쾌적 목표의 최대 조정 폭을 0~2.5°C로 설정하세요.",
       "climate_proportional_requires_percent": "비례 제어에는 단위가 %이고 최솟값 0, 최댓값 100, 숫자 단계 값을 가진 number 엔터티가 필요합니다.",
-      "invalid_freshness_mode": "센서 측정값의 유효 기간에 대해 자동 또는 사용자 지정을 선택하세요."
+      "invalid_freshness_mode": "센서 측정값의 유효 기간에 대해 자동 또는 사용자 지정을 선택하세요.",
+      "invalid_quiet_hours": "조용한 시간의 시작과 종료에 유효하고 서로 다른 시각을 선택하세요."
     },
     "abort": {
       "already_configured": "Home Environment Manager - 이미 설정됨.",
@@ -2025,7 +2038,10 @@
           "general_sleep_rooms_attribute": "수면 · 방 · 정보원 (attribute)",
           "general_source_stale_minutes": "재택 상태 · 추적·인원수 데이터의 최대 경과 시간(분)",
           "general_wake_alarm_entity": "수면 · 다음 알람",
-          "general_wake_lead_minutes_entity": "수면 · 알람 몇 분 전에 해제할지"
+          "general_wake_lead_minutes_entity": "수면 · 알람 몇 분 전에 해제할지",
+          "quiet_hours_enabled": "조용한 시간",
+          "quiet_hours_start": "조용한 시간 시작",
+          "quiet_hours_end": "조용한 시간 종료"
         },
         "data_description": {
           "general_room_occupancy_sensors": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다.",
@@ -2037,7 +2053,10 @@
           "general_sleep_rooms_attribute": "선택한 수면 엔티티의 상태 필드 또는 검증된 방 목록 속성을 선택하세요. 목록이 없거나 인식되지 않으면 수면 상태는 알 수 없음이 됩니다.",
           "general_source_stale_minutes": "경과 시간 제한은 추적 보고와 숫자 인원수 데이터에 적용됩니다. 방 목록과 이진 재실 상태는 변하지 않아도 만료되지 않습니다. 사용할 수 없거나 복원되었거나 잘못된 소스는 알 수 없음으로 남습니다. 수면 시간 설정이 아닙니다.",
           "general_wake_alarm_entity": "다음 알람의 시간 또는 날짜·시간 엔티티와 미리 해제할 분 수의 엔티티를 선택하세요. HEM은 그만큼 일찍 자동 수면 모드를 끝내고 일반 목표값으로 돌아갑니다. 날짜 없는 시간에는 Home Assistant의 시간대를 사용합니다. 외출, 수동 제어와 기기 보호 기능이 계속 우선합니다.",
-          "general_wake_lead_minutes_entity": "0 이상의 분 수를 나타내는 숫자 엔티티를 선택하세요. 단위는 min이거나 없어야 합니다. 알람이 07:00이고 값이 30이면 06:30에 자동 수면이 끝납니다. 0은 알람이 울리는 시각입니다. 비활성화하려면 두 선택을 모두 지우세요."
+          "general_wake_lead_minutes_entity": "0 이상의 분 수를 나타내는 숫자 엔티티를 선택하세요. 단위는 min이거나 없어야 합니다. 알람이 07:00이고 값이 30이면 06:30에 자동 수면이 끝납니다. 0은 알람이 울리는 시각입니다. 비활성화하려면 두 선택을 모두 지우세요.",
+          "quiet_hours_enabled": "«조용한 시간에 저소음 운전»이 켜진 기기에 이 일일 시간대를 적용합니다. 시간은 Home Assistant의 현지 시간대를 따르며 자정을 넘길 수 있습니다. 기본값은 꺼짐입니다.",
+          "quiet_hours_start": "매일 시작 시각으로, 조용한 시간에 포함됩니다. 종료 시각과 다른 시각을 선택하세요.",
+          "quiet_hours_end": "매일 종료 시각으로, 조용한 시간에 포함되지 않습니다. 시작 시각보다 이르면 다음 날에 끝납니다."
         }
       },
       "pollen": {
@@ -2251,7 +2270,10 @@
           "window_open_timeout_minutes": "창문 열기 대기 시간(분)",
           "general_source_freshness_mode": "집 재실 상태 · 유효성 정책",
           "global_threshold_max_age_mode": "환경 · 유효성 정책",
-          "window_close_cooldown_minutes": "창문 닫기 권고 전 대기 시간(분)"
+          "window_close_cooldown_minutes": "창문 닫기 권고 전 대기 시간(분)",
+          "quiet_hours_enabled": "조용한 시간",
+          "quiet_hours_start": "조용한 시간 시작",
+          "quiet_hours_end": "조용한 시간 종료"
         },
         "data_description": {
           "weather_entities": "선택하세요: 날씨 및 경보 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2307,7 +2329,10 @@
           "window_open_timeout_minutes": "환기 요청이 수락된 후, 필요한 경우 새로운 자동/PID 시작을 허용하기 전까지 기다리는 시간입니다. 0~30분, 기본값 5; 0은 대기를 끕니다. 창문 열림 보호와 기기의 최소 작동·정지 시간은 계속 적용됩니다.",
           "general_source_freshness_mode": "자동: 숫자형 인원수 카운터와 가정 추적기의 부정 보고는 최대 240분 동안 허용됩니다. 유효하고 변하지 않은 „재택” 상태는 변경될 때까지 유지할 수 있습니다. 알 수 없음, 복원됨, 사용 불가 상태의 출처는 부재를 입증할 수 없습니다. 사용자 지정: 표본으로 수집한 보고에 아래 분 값을 사용합니다. 방 목록 출처는 계속 변경에 따라 작동합니다.",
           "global_threshold_max_age_mode": "자동: 날씨 엔티티는 180분, 다른 숫자형 환경 측정값은 90분 동안 유효할 수 있으며, 변경에 따라 작동하는 유효한 이진 접점은 비활성 시간 제한 없이 계속 사용할 수 있습니다. 사용자 지정: 아래 분 값을 사용합니다. 가용성과 복원된 상태 점검은 항상 적용됩니다. Home Assistant의 last_reported는 동일한 값이 다시 기록될 때 갱신되며, 단지 시간이 지났다고 갱신되지는 않습니다.",
-          "window_close_cooldown_minutes": "HEM의 창문 열기 권고에 따라 창문이 열리면, 설정한 시간만큼 기다린 후 닫기를 권고합니다. 실외 조건이 적합하지 않아도 대기하며, 대기 시간은 방마다 따로 계산합니다. 0–60분, 기본값 5; 0으로 설정하면 대기하지 않습니다. 기기 일시 중지 및 보호 규칙은 계속 적용됩니다."
+          "window_close_cooldown_minutes": "HEM의 창문 열기 권고에 따라 창문이 열리면, 설정한 시간만큼 기다린 후 닫기를 권고합니다. 실외 조건이 적합하지 않아도 대기하며, 대기 시간은 방마다 따로 계산합니다. 0–60분, 기본값 5; 0으로 설정하면 대기하지 않습니다. 기기 일시 중지 및 보호 규칙은 계속 적용됩니다.",
+          "quiet_hours_enabled": "«조용한 시간에 저소음 운전»이 켜진 기기에 이 일일 시간대를 적용합니다. 시간은 Home Assistant의 현지 시간대를 따르며 자정을 넘길 수 있습니다. 기본값은 꺼짐입니다.",
+          "quiet_hours_start": "매일 시작 시각으로, 조용한 시간에 포함됩니다. 종료 시각과 다른 시각을 선택하세요.",
+          "quiet_hours_end": "매일 종료 시각으로, 조용한 시간에 포함되지 않습니다. 시작 시각보다 이르면 다음 날에 끝납니다."
         }
       },
       "room_occupancy": {
@@ -2473,7 +2498,8 @@
       "climate_invalid_occupancy_timing": "방이 비어 있는 상태의 지연 시간을 0–240분으로, 재실 데이터의 최대 유효 시간을 10–1440분으로 설정하세요.",
       "climate_invalid_comfort_adjustment": "쾌적 목표의 최대 조정 폭을 0~2.5°C로 설정하세요.",
       "climate_proportional_requires_percent": "비례 제어에는 단위가 %이고 최솟값 0, 최댓값 100, 숫자 단계 값을 가진 number 엔터티가 필요합니다.",
-      "invalid_freshness_mode": "센서 측정값의 유효 기간에 대해 자동 또는 사용자 지정을 선택하세요."
+      "invalid_freshness_mode": "센서 측정값의 유효 기간에 대해 자동 또는 사용자 지정을 선택하세요.",
+      "invalid_quiet_hours": "조용한 시간의 시작과 종료에 유효하고 서로 다른 시각을 선택하세요."
     },
     "abort": {
       "setup_area_removed": "잘못됨: 모니터링할 방",
@@ -4086,6 +4112,22 @@
             "name": "도움말"
           }
         }
+      },
+      "home_quiet_hours_enabled": {
+        "name": "조용한 시간",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "도움말"
+          }
+        }
+      },
+      "equipment_quiet_hours": {
+        "name": "조용한 시간에 저소음 운전",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "도움말"
+          }
+        }
       }
     },
     "select": {
@@ -4407,6 +4449,22 @@
       },
       "area_climate_sleep_end": {
         "name": "수면 · 장치 · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "도움말"
+          }
+        }
+      },
+      "home_quiet_hours_start": {
+        "name": "조용한 시간 시작",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "도움말"
+          }
+        }
+      },
+      "home_quiet_hours_end": {
+        "name": "조용한 시간 종료",
         "state_attributes": {
           "configuration_help": {
             "name": "도움말"

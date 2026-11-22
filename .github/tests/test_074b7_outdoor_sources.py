@@ -77,6 +77,9 @@ class Selectors:
     def BooleanSelector(self):
         return ("boolean",)
 
+    def TimeSelector(self):
+        return ("time",)
+
 
 defaults = {}
 

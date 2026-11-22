@@ -88,7 +88,9 @@ with sync_playwright() as playwright:
         assert metric in text,(metric,text)
     assert all(name not in text for name in ('Lux','PM10','TVOC','HCHO','Rn')), text
     assert '900' not in text
-    assert glance.bounding_box()['height']<=52,glance.bounding_box()
+    assert 60 <= glance.bounding_box()['height'] <= 100, glance.bounding_box()
+    assert glance.locator('.hem-room-name87').bounding_box()['y'] < \
+        glance.locator('.hem-room-reading87').first.bounding_box()['y']
     # Names open entities; the leading icon opens this HEM controller's own
     # device page. Neither action toggles its disclosure.
     glance.click()

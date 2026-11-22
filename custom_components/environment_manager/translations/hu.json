@@ -231,7 +231,10 @@
           "general_wake_alarm_entity": "Alvás · Következő ébresztő",
           "general_wake_lead_minutes_entity": "Alvás · Percek az ébresztő előtt",
           "window_open_timeout_minutes": "Várakozás ablaknyitásra (perc)",
-          "window_close_cooldown_minutes": "Várakozás az ablak bezárására vonatkozó javaslat előtt (perc)"
+          "window_close_cooldown_minutes": "Várakozás az ablak bezárására vonatkozó javaslat előtt (perc)",
+          "quiet_hours_enabled": "Csendes időszak",
+          "quiet_hours_start": "Csendes időszak kezdete",
+          "quiet_hours_end": "Csendes időszak vége"
         },
         "data_description": {
           "weather_entities": "Válassz: Időjárás és riasztások · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -285,7 +288,10 @@
           "general_wake_alarm_entity": "Válassza ki a következő ébresztő idő- vagy időbélyeg-entitását és a perceket megadó entitást. A HEM ennyi perccel korábban kilép az automatikus alvásból, és visszatér a normál célértékekhez. A dátum nélküli idő a Home Assistant időzónáját használja. A távollét, a kézi vezérlés és a védelmek elsőbbsége megmarad.",
           "general_wake_lead_minutes_entity": "Válasszon nemnegatív percszámot adó numerikus entitást min egységgel vagy egység nélkül. A 07:00-s ébresztő és a 30-as érték 06:30-kor zárja le az automatikus alvást; a 0 a csörgés időpontját jelenti. Kikapcsoláshoz törölje mindkét forrást.",
           "window_open_timeout_minutes": "Várakozás a szellőztetési kérés elfogadása után, mielőtt szükség esetén új automatikus/PID-indítások engedélyezhetők. 0–30 perc, alapérték 5; 0 kikapcsolja a várakozást. A nyitott ablak és a minimális működési idők védelmei továbbra is érvényesek.",
-          "window_close_cooldown_minutes": "Ha a HEM szellőztetési javaslata után kinyitnak egy ablakot, ennyi percet vár, mielőtt annak bezárását javasolná, akkor is, ha a kinti körülmények nem megfelelőek. A várakozási időt helyiségenként külön számítja. 0–60 perc, alapérték 5; a 0 kikapcsolja a várakozást. Az eszközök szüneteltetési és védelmi szabályai továbbra is érvényesek."
+          "window_close_cooldown_minutes": "Ha a HEM szellőztetési javaslata után kinyitnak egy ablakot, ennyi percet vár, mielőtt annak bezárását javasolná, akkor is, ha a kinti körülmények nem megfelelőek. A várakozási időt helyiségenként külön számítja. 0–60 perc, alapérték 5; a 0 kikapcsolja a várakozást. Az eszközök szüneteltetési és védelmi szabályai továbbra is érvényesek.",
+          "quiet_hours_enabled": "Ezt a napi időszakot használja azoknál az eszközöknél, amelyeken a „Halk működés a csendes időszakban” be van kapcsolva. Az időpontok a Home Assistant helyi időzónáját követik; az időszak átnyúlhat éjfélen. Alapértelmezés szerint kikapcsolva.",
+          "quiet_hours_start": "Napi kezdési időpont, amely már a csendes időszakhoz tartozik. A befejezéstől eltérő időpontot válasszon.",
+          "quiet_hours_end": "Napi befejezési időpont, amely már nem tartozik a csendes időszakhoz. Ha korábbi a kezdésnél, az időszak másnap ér véget."
         }
       },
       "reconfigure": {
@@ -938,7 +944,10 @@
           "general_sleep_rooms_attribute": "Alvás · Szoba · forrás (attribute)",
           "general_source_stale_minutes": "Otthoni jelenlét · Követési/létszámadatok legnagyobb kora (perc)",
           "general_wake_alarm_entity": "Alvás · Következő ébresztő",
-          "general_wake_lead_minutes_entity": "Alvás · Percek az ébresztő előtt"
+          "general_wake_lead_minutes_entity": "Alvás · Percek az ébresztő előtt",
+          "quiet_hours_enabled": "Csendes időszak",
+          "quiet_hours_start": "Csendes időszak kezdete",
+          "quiet_hours_end": "Csendes időszak vége"
         },
         "data_description": {
           "general_room_occupancy_sensors": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el.",
@@ -950,7 +959,10 @@
           "general_sleep_rooms_attribute": "Válassza az Állapot mezőt vagy a kiválasztott alvási entitás ellenőrzött szobalista-attribútumát. Hiányzó vagy fel nem ismert lista esetén az alvási állapot ismeretlen.",
           "general_source_stale_minutes": "A korhatár a követési jelentésekre és a numerikus létszámadatokra vonatkozik. A helyiséglisták és bináris jelenlétállapotok változatlanul nem évülnek el. Az elérhetetlen, visszaállított vagy hibás források ismeretlenek maradnak. Ez nem az alvás időtartama.",
           "general_wake_alarm_entity": "Válassza ki a következő ébresztő idő- vagy időbélyeg-entitását és a perceket megadó entitást. A HEM ennyi perccel korábban kilép az automatikus alvásból, és visszatér a normál célértékekhez. A dátum nélküli idő a Home Assistant időzónáját használja. A távollét, a kézi vezérlés és a védelmek elsőbbsége megmarad.",
-          "general_wake_lead_minutes_entity": "Válasszon nemnegatív percszámot adó numerikus entitást min egységgel vagy egység nélkül. A 07:00-s ébresztő és a 30-as érték 06:30-kor zárja le az automatikus alvást; a 0 a csörgés időpontját jelenti. Kikapcsoláshoz törölje mindkét forrást."
+          "general_wake_lead_minutes_entity": "Válasszon nemnegatív percszámot adó numerikus entitást min egységgel vagy egység nélkül. A 07:00-s ébresztő és a 30-as érték 06:30-kor zárja le az automatikus alvást; a 0 a csörgés időpontját jelenti. Kikapcsoláshoz törölje mindkét forrást.",
+          "quiet_hours_enabled": "Ezt a napi időszakot használja azoknál az eszközöknél, amelyeken a „Halk működés a csendes időszakban” be van kapcsolva. Az időpontok a Home Assistant helyi időzónáját követik; az időszak átnyúlhat éjfélen. Alapértelmezés szerint kikapcsolva.",
+          "quiet_hours_start": "Napi kezdési időpont, amely már a csendes időszakhoz tartozik. A befejezéstől eltérő időpontot válasszon.",
+          "quiet_hours_end": "Napi befejezési időpont, amely már nem tartozik a csendes időszakhoz. Ha korábbi a kezdésnél, az időszak másnap ér véget."
         }
       },
       "pollen": {
@@ -1240,7 +1252,8 @@
       "climate_invalid_occupancy_timing": "A szoba kiürülése utáni késleltetés 0–240 perc, a jelenléti adatok megengedett kora 10–1440 perc legyen.",
       "climate_invalid_comfort_adjustment": "A komfortcél maximális módosítását 0 és 2,5°C közötti értékre állítsd.",
       "climate_proportional_requires_percent": "Az arányos szabályozáshoz %-os mértékegységű, 0 minimumú, 100 maximumú és számszerű lépésközű number entitás szükséges.",
-      "invalid_freshness_mode": "Az érzékelőadatok érvényességi idejéhez válaszd az Automatikus vagy az Egyéni beállítást."
+      "invalid_freshness_mode": "Az érzékelőadatok érvényességi idejéhez válaszd az Automatikus vagy az Egyéni beállítást.",
+      "invalid_quiet_hours": "Válasszon érvényes, egymástól eltérő kezdési és befejezési időpontot a csendes időszakhoz."
     },
     "abort": {
       "already_configured": "Home Environment Manager - már be van állítva.",
@@ -2025,7 +2038,10 @@
           "general_sleep_rooms_attribute": "Alvás · Szoba · forrás (attribute)",
           "general_source_stale_minutes": "Otthoni jelenlét · Követési/létszámadatok legnagyobb kora (perc)",
           "general_wake_alarm_entity": "Alvás · Következő ébresztő",
-          "general_wake_lead_minutes_entity": "Alvás · Percek az ébresztő előtt"
+          "general_wake_lead_minutes_entity": "Alvás · Percek az ébresztő előtt",
+          "quiet_hours_enabled": "Csendes időszak",
+          "quiet_hours_start": "Csendes időszak kezdete",
+          "quiet_hours_end": "Csendes időszak vége"
         },
         "data_description": {
           "general_room_occupancy_sensors": "A kiválasztott állapotban vagy attribútumban lévő érvényes foglaltsági lista az irányadó: a felsorolt helyiségek foglaltak, a kimaradók üresek. Lista nélkül bármely aktív jelenlétérzékelő foglaltságot jelent; minden érzékelő kikapcsolva vagy nincs kiválasztott érzékelő üreset jelent. Az elérhetetlen vagy hibás kiválasztott forrás ismeretlen marad. A változatlan listák és bináris állapotok nem évülnek el.",
@@ -2037,7 +2053,10 @@
           "general_sleep_rooms_attribute": "Válassza az Állapot mezőt vagy a kiválasztott alvási entitás ellenőrzött szobalista-attribútumát. Hiányzó vagy fel nem ismert lista esetén az alvási állapot ismeretlen.",
           "general_source_stale_minutes": "A korhatár a követési jelentésekre és a numerikus létszámadatokra vonatkozik. A helyiséglisták és bináris jelenlétállapotok változatlanul nem évülnek el. Az elérhetetlen, visszaállított vagy hibás források ismeretlenek maradnak. Ez nem az alvás időtartama.",
           "general_wake_alarm_entity": "Válassza ki a következő ébresztő idő- vagy időbélyeg-entitását és a perceket megadó entitást. A HEM ennyi perccel korábban kilép az automatikus alvásból, és visszatér a normál célértékekhez. A dátum nélküli idő a Home Assistant időzónáját használja. A távollét, a kézi vezérlés és a védelmek elsőbbsége megmarad.",
-          "general_wake_lead_minutes_entity": "Válasszon nemnegatív percszámot adó numerikus entitást min egységgel vagy egység nélkül. A 07:00-s ébresztő és a 30-as érték 06:30-kor zárja le az automatikus alvást; a 0 a csörgés időpontját jelenti. Kikapcsoláshoz törölje mindkét forrást."
+          "general_wake_lead_minutes_entity": "Válasszon nemnegatív percszámot adó numerikus entitást min egységgel vagy egység nélkül. A 07:00-s ébresztő és a 30-as érték 06:30-kor zárja le az automatikus alvást; a 0 a csörgés időpontját jelenti. Kikapcsoláshoz törölje mindkét forrást.",
+          "quiet_hours_enabled": "Ezt a napi időszakot használja azoknál az eszközöknél, amelyeken a „Halk működés a csendes időszakban” be van kapcsolva. Az időpontok a Home Assistant helyi időzónáját követik; az időszak átnyúlhat éjfélen. Alapértelmezés szerint kikapcsolva.",
+          "quiet_hours_start": "Napi kezdési időpont, amely már a csendes időszakhoz tartozik. A befejezéstől eltérő időpontot válasszon.",
+          "quiet_hours_end": "Napi befejezési időpont, amely már nem tartozik a csendes időszakhoz. Ha korábbi a kezdésnél, az időszak másnap ér véget."
         }
       },
       "pollen": {
@@ -2251,7 +2270,10 @@
           "window_open_timeout_minutes": "Várakozás ablaknyitásra (perc)",
           "general_source_freshness_mode": "Otthoni jelenlét · Érvényességi szabályzat",
           "global_threshold_max_age_mode": "Környezet · Érvényességi szabályzat",
-          "window_close_cooldown_minutes": "Várakozás az ablak bezárására vonatkozó javaslat előtt (perc)"
+          "window_close_cooldown_minutes": "Várakozás az ablak bezárására vonatkozó javaslat előtt (perc)",
+          "quiet_hours_enabled": "Csendes időszak",
+          "quiet_hours_start": "Csendes időszak kezdete",
+          "quiet_hours_end": "Csendes időszak vége"
         },
         "data_description": {
           "weather_entities": "Válassz: Időjárás és riasztások · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2307,7 +2329,10 @@
           "window_open_timeout_minutes": "Várakozás a szellőztetési kérés elfogadása után, mielőtt szükség esetén új automatikus/PID-indítások engedélyezhetők. 0–30 perc, alapérték 5; 0 kikapcsolja a várakozást. A nyitott ablak és a minimális működési idők védelmei továbbra is érvényesek.",
           "general_source_freshness_mode": "Automatikus: a számszerű személyszámlálók és az otthoni nyomkövetők negatív jelentései legfeljebb 240 percig fogadhatók el; az érvényes, változatlan „Otthon” állapot a megváltozásáig „Otthon” maradhat. Az ismeretlen, visszaállított vagy nem elérhető források nem igazolhatják a távollétet. Egyéni: a mintavételezett jelentésekhez az alábbi percértéket használja. A helyiséglisták forrásai továbbra is változásvezéreltek.",
           "global_threshold_max_age_mode": "Automatikus: az időjárási entitások 180 percig, az egyéb számszerű környezeti mérések 90 percig maradhatnak érvényesek, míg az érvényes, változásvezérelt bináris kontaktusok inaktivitási időkorlát nélkül használhatók. Egyéni: az alábbi percértéket használja. Az elérhetőség és a visszaállított állapot ellenőrzése mindig érvényes. A Home Assistant last_reported értéke ugyanazon érték ismételt írásakor frissül, nem pusztán az idő múlása miatt.",
-          "window_close_cooldown_minutes": "Ha a HEM szellőztetési javaslata után kinyitnak egy ablakot, ennyi percet vár, mielőtt annak bezárását javasolná, akkor is, ha a kinti körülmények nem megfelelőek. A várakozási időt helyiségenként külön számítja. 0–60 perc, alapérték 5; a 0 kikapcsolja a várakozást. Az eszközök szüneteltetési és védelmi szabályai továbbra is érvényesek."
+          "window_close_cooldown_minutes": "Ha a HEM szellőztetési javaslata után kinyitnak egy ablakot, ennyi percet vár, mielőtt annak bezárását javasolná, akkor is, ha a kinti körülmények nem megfelelőek. A várakozási időt helyiségenként külön számítja. 0–60 perc, alapérték 5; a 0 kikapcsolja a várakozást. Az eszközök szüneteltetési és védelmi szabályai továbbra is érvényesek.",
+          "quiet_hours_enabled": "Ezt a napi időszakot használja azoknál az eszközöknél, amelyeken a „Halk működés a csendes időszakban” be van kapcsolva. Az időpontok a Home Assistant helyi időzónáját követik; az időszak átnyúlhat éjfélen. Alapértelmezés szerint kikapcsolva.",
+          "quiet_hours_start": "Napi kezdési időpont, amely már a csendes időszakhoz tartozik. A befejezéstől eltérő időpontot válasszon.",
+          "quiet_hours_end": "Napi befejezési időpont, amely már nem tartozik a csendes időszakhoz. Ha korábbi a kezdésnél, az időszak másnap ér véget."
         }
       },
       "room_occupancy": {
@@ -2473,7 +2498,8 @@
       "climate_invalid_occupancy_timing": "A szoba kiürülése utáni késleltetés 0–240 perc, a jelenléti adatok megengedett kora 10–1440 perc legyen.",
       "climate_invalid_comfort_adjustment": "A komfortcél maximális módosítását 0 és 2,5°C közötti értékre állítsd.",
       "climate_proportional_requires_percent": "Az arányos szabályozáshoz %-os mértékegységű, 0 minimumú, 100 maximumú és számszerű lépésközű number entitás szükséges.",
-      "invalid_freshness_mode": "Az érzékelőadatok érvényességi idejéhez válaszd az Automatikus vagy az Egyéni beállítást."
+      "invalid_freshness_mode": "Az érzékelőadatok érvényességi idejéhez válaszd az Automatikus vagy az Egyéni beállítást.",
+      "invalid_quiet_hours": "Válasszon érvényes, egymástól eltérő kezdési és befejezési időpontot a csendes időszakhoz."
     },
     "abort": {
       "setup_area_removed": "Érvénytelen: Figyelendő helyiségek",
@@ -4086,6 +4112,22 @@
             "name": "Súgó"
           }
         }
+      },
+      "home_quiet_hours_enabled": {
+        "name": "Csendes időszak",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Súgó"
+          }
+        }
+      },
+      "equipment_quiet_hours": {
+        "name": "Halk működés a csendes időszakban",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Súgó"
+          }
+        }
       }
     },
     "select": {
@@ -4407,6 +4449,22 @@
       },
       "area_climate_sleep_end": {
         "name": "Alvás · Eszközök · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Súgó"
+          }
+        }
+      },
+      "home_quiet_hours_start": {
+        "name": "Csendes időszak kezdete",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Súgó"
+          }
+        }
+      },
+      "home_quiet_hours_end": {
+        "name": "Csendes időszak vége",
         "state_attributes": {
           "configuration_help": {
             "name": "Súgó"

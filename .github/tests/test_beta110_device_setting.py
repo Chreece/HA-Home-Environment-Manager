@@ -38,7 +38,7 @@ class Device:
 
 package = module(PKG, __path__=[str(ROOT)])
 keys = ("CONF_AREAS CONF_AUTO_NOTIFY CONF_AUTO_TTS CONF_HUB CONF_AI_REWRITE "
-        "CONF_SHADE_ANNOUNCE CONF_AWAY_WINDOWS_ALERT SIGNAL_UPDATED").split()
+        "CONF_SHADE_ANNOUNCE CONF_AWAY_WINDOWS_ALERT CONF_QUIET_HOURS_ENABLED SIGNAL_UPDATED").split()
 module(PKG+".const", DOMAIN="environment_manager", **{k: k.lower() for k in keys})
 module(PKG+".device_hierarchy", ManagedDevice=Device, configured_area_ids=lambda cfg: (),
        configured_sources=lambda cfg, area: cfg["sources"][area])

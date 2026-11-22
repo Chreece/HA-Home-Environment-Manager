@@ -231,7 +231,10 @@
           "general_wake_alarm_entity": "Søvn · Neste alarm",
           "general_wake_lead_minutes_entity": "Søvn · Minutter før alarmen",
           "window_open_timeout_minutes": "Ventetid for vindusåpning (min)",
-          "window_close_cooldown_minutes": "Ventetid før lukking av vinduet foreslås (min)"
+          "window_close_cooldown_minutes": "Ventetid før lukking av vinduet foreslås (min)",
+          "quiet_hours_enabled": "Stille timer",
+          "quiet_hours_start": "Start på stille timer",
+          "quiet_hours_end": "Slutt på stille timer"
         },
         "data_description": {
           "weather_entities": "Velg: Vær og varsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -285,7 +288,10 @@
           "general_wake_alarm_entity": "Velg en tids- eller tidsstempelentitet for neste alarm og en entitet for minuttene. HEM avslutter automatisk søvn så mange minutter før alarmen og gjenopptar vanlige mål. Klokkeslett uten dato bruker Home Assistants tidssone. Fravær, manuell styring og enhetsbeskyttelse beholder prioritet.",
           "general_wake_lead_minutes_entity": "Velg en numerisk entitet med et ikke-negativt antall minutter, med enheten min eller uten enhet. Alarm kl. 07:00 og verdien 30 avslutter automatisk søvn kl. 06:30; 0 betyr når alarmen ringer. Tøm begge kildene for å deaktivere.",
           "window_open_timeout_minutes": "Ventetid etter at en lufteforespørsel er godtatt, før nye automatiske/PID-starter tillates ved fortsatt behov. 0–30 minutter, standard 5; 0 slår av ventingen. Beskyttelse ved åpne vinduer og apparatenes minstetider gjelder fortsatt.",
-          "window_close_cooldown_minutes": "Når et vindu åpnes etter et lufteforslag fra HEM, venter HEM så mange minutter før det foreslår å lukke vinduet, selv om forholdene ute er uegnede. Ventetiden beregnes separat for hvert rom. 0–60 minutter, standard 5; 0 slår av ventetiden. Reglene for å sette enheter på pause og beskytte dem gjelder fortsatt."
+          "window_close_cooldown_minutes": "Når et vindu åpnes etter et lufteforslag fra HEM, venter HEM så mange minutter før det foreslår å lukke vinduet, selv om forholdene ute er uegnede. Ventetiden beregnes separat for hvert rom. 0–60 minutter, standard 5; 0 slår av ventetiden. Reglene for å sette enheter på pause og beskytte dem gjelder fortsatt.",
+          "quiet_hours_enabled": "Bruk dette daglige intervallet for enheter med «Stille under stille timer» aktivert. Tidene følger den lokale tidssonen i Home Assistant; intervallet kan gå over midnatt. Av som standard.",
+          "quiet_hours_start": "Daglig starttid, som er med i de stille timene. Velg en annen tid enn sluttiden.",
+          "quiet_hours_end": "Daglig sluttid, som ikke lenger er med i de stille timene. Er den før starttiden, slutter intervallet neste dag."
         }
       },
       "reconfigure": {
@@ -938,7 +944,10 @@
           "general_sleep_rooms_attribute": "Søvn · Rom · kilde (attribute)",
           "general_source_stale_minutes": "Tilstedeværelse hjemme · Maksimal alder på sporings-/persontallsdata (min)",
           "general_wake_alarm_entity": "Søvn · Neste alarm",
-          "general_wake_lead_minutes_entity": "Søvn · Minutter før alarmen"
+          "general_wake_lead_minutes_entity": "Søvn · Minutter før alarmen",
+          "quiet_hours_enabled": "Stille timer",
+          "quiet_hours_start": "Start på stille timer",
+          "quiet_hours_end": "Slutt på stille timer"
         },
         "data_description": {
           "general_room_occupancy_sensors": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke.",
@@ -950,7 +959,10 @@
           "general_sleep_rooms_attribute": "Velg feltet Tilstand eller en verifisert romlisteattributt fra den valgte søvnentiteten. En manglende eller ukjent liste gjør søvntilstanden ukjent.",
           "general_source_stale_minutes": "Aldersgrensen gjelder sporingsrapporter og numeriske persontall. Romlister og binære tilstedeværelsestilstander utløper ikke mens de er uendret. Utilgjengelige, gjenopprettede eller ugyldige kilder er ukjente. Dette er ikke søvnens varighet.",
           "general_wake_alarm_entity": "Velg en tids- eller tidsstempelentitet for neste alarm og en entitet for minuttene. HEM avslutter automatisk søvn så mange minutter før alarmen og gjenopptar vanlige mål. Klokkeslett uten dato bruker Home Assistants tidssone. Fravær, manuell styring og enhetsbeskyttelse beholder prioritet.",
-          "general_wake_lead_minutes_entity": "Velg en numerisk entitet med et ikke-negativt antall minutter, med enheten min eller uten enhet. Alarm kl. 07:00 og verdien 30 avslutter automatisk søvn kl. 06:30; 0 betyr når alarmen ringer. Tøm begge kildene for å deaktivere."
+          "general_wake_lead_minutes_entity": "Velg en numerisk entitet med et ikke-negativt antall minutter, med enheten min eller uten enhet. Alarm kl. 07:00 og verdien 30 avslutter automatisk søvn kl. 06:30; 0 betyr når alarmen ringer. Tøm begge kildene for å deaktivere.",
+          "quiet_hours_enabled": "Bruk dette daglige intervallet for enheter med «Stille under stille timer» aktivert. Tidene følger den lokale tidssonen i Home Assistant; intervallet kan gå over midnatt. Av som standard.",
+          "quiet_hours_start": "Daglig starttid, som er med i de stille timene. Velg en annen tid enn sluttiden.",
+          "quiet_hours_end": "Daglig sluttid, som ikke lenger er med i de stille timene. Er den før starttiden, slutter intervallet neste dag."
         }
       },
       "pollen": {
@@ -1240,7 +1252,8 @@
       "climate_invalid_occupancy_timing": "Sett forsinkelsen etter at rommet forlates til 0–240 minutter og maksimal alder på tilstedeværelsesdata til 10–1440 minutter.",
       "climate_invalid_comfort_adjustment": "Sett maksimal justering av komfortmålet til mellom 0 og 2,5°C.",
       "climate_proportional_requires_percent": "Proporsjonal styring krever en number-entitet med enheten %, minimum 0, maksimum 100 og et numerisk trinn.",
-      "invalid_freshness_mode": "Velg Automatisk eller Egendefinert for maksimal alder på sensorverdiene."
+      "invalid_freshness_mode": "Velg Automatisk eller Egendefinert for maksimal alder på sensorverdiene.",
+      "invalid_quiet_hours": "Velg gyldige, forskjellige start- og sluttider for de stille timene."
     },
     "abort": {
       "already_configured": "Home Environment Manager - allerede konfigurert.",
@@ -2025,7 +2038,10 @@
           "general_sleep_rooms_attribute": "Søvn · Rom · kilde (attribute)",
           "general_source_stale_minutes": "Tilstedeværelse hjemme · Maksimal alder på sporings-/persontallsdata (min)",
           "general_wake_alarm_entity": "Søvn · Neste alarm",
-          "general_wake_lead_minutes_entity": "Søvn · Minutter før alarmen"
+          "general_wake_lead_minutes_entity": "Søvn · Minutter før alarmen",
+          "quiet_hours_enabled": "Stille timer",
+          "quiet_hours_start": "Start på stille timer",
+          "quiet_hours_end": "Slutt på stille timer"
         },
         "data_description": {
           "general_room_occupancy_sensors": "En gyldig liste over opptatte rom i valgt tilstand eller attributt har forrang: oppførte rom er opptatte, utelatte rom tomme. Uten liste betyr én aktiv tilstedeværelsessensor opptatt; alle av eller ingen valgte sensorer betyr tomt. En utilgjengelig eller ugyldig valgt kilde er ukjent. Uendrede lister og binære tilstander utløper ikke.",
@@ -2037,7 +2053,10 @@
           "general_sleep_rooms_attribute": "Velg feltet Tilstand eller en verifisert romlisteattributt fra den valgte søvnentiteten. En manglende eller ukjent liste gjør søvntilstanden ukjent.",
           "general_source_stale_minutes": "Aldersgrensen gjelder sporingsrapporter og numeriske persontall. Romlister og binære tilstedeværelsestilstander utløper ikke mens de er uendret. Utilgjengelige, gjenopprettede eller ugyldige kilder er ukjente. Dette er ikke søvnens varighet.",
           "general_wake_alarm_entity": "Velg en tids- eller tidsstempelentitet for neste alarm og en entitet for minuttene. HEM avslutter automatisk søvn så mange minutter før alarmen og gjenopptar vanlige mål. Klokkeslett uten dato bruker Home Assistants tidssone. Fravær, manuell styring og enhetsbeskyttelse beholder prioritet.",
-          "general_wake_lead_minutes_entity": "Velg en numerisk entitet med et ikke-negativt antall minutter, med enheten min eller uten enhet. Alarm kl. 07:00 og verdien 30 avslutter automatisk søvn kl. 06:30; 0 betyr når alarmen ringer. Tøm begge kildene for å deaktivere."
+          "general_wake_lead_minutes_entity": "Velg en numerisk entitet med et ikke-negativt antall minutter, med enheten min eller uten enhet. Alarm kl. 07:00 og verdien 30 avslutter automatisk søvn kl. 06:30; 0 betyr når alarmen ringer. Tøm begge kildene for å deaktivere.",
+          "quiet_hours_enabled": "Bruk dette daglige intervallet for enheter med «Stille under stille timer» aktivert. Tidene følger den lokale tidssonen i Home Assistant; intervallet kan gå over midnatt. Av som standard.",
+          "quiet_hours_start": "Daglig starttid, som er med i de stille timene. Velg en annen tid enn sluttiden.",
+          "quiet_hours_end": "Daglig sluttid, som ikke lenger er med i de stille timene. Er den før starttiden, slutter intervallet neste dag."
         }
       },
       "pollen": {
@@ -2251,7 +2270,10 @@
           "window_open_timeout_minutes": "Ventetid for vindusåpning (min)",
           "general_source_freshness_mode": "Boligens belegg · Gyldighetsregel",
           "global_threshold_max_age_mode": "Miljø · Gyldighetsregel",
-          "window_close_cooldown_minutes": "Ventetid før lukking av vinduet foreslås (min)"
+          "window_close_cooldown_minutes": "Ventetid før lukking av vinduet foreslås (min)",
+          "quiet_hours_enabled": "Stille timer",
+          "quiet_hours_start": "Start på stille timer",
+          "quiet_hours_end": "Slutt på stille timer"
         },
         "data_description": {
           "weather_entities": "Velg: Vær og varsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2307,7 +2329,10 @@
           "window_open_timeout_minutes": "Ventetid etter at en lufteforespørsel er godtatt, før nye automatiske/PID-starter tillates ved fortsatt behov. 0–30 minutter, standard 5; 0 slår av ventingen. Beskyttelse ved åpne vinduer og apparatenes minstetider gjelder fortsatt.",
           "general_source_freshness_mode": "Automatisk: numeriske persontellere og fraværsmeldinger fra hjemmets sporere godtas i opptil 240 minutter; en gyldig uendret Hjemme-tilstand kan bestå til den endres. Ukjente, gjenopprettede og utilgjengelige kilder kan ikke bevise fravær. Egendefinert: bruk minuttverdien nedenfor for utvalgsbaserte meldinger. Romlister forblir endringsstyrte.",
           "global_threshold_max_age_mode": "Automatisk: værentiteter kan være gyldige i 180 minutter og andre numeriske miljømålinger i 90 minutter; gyldige binære kontakter styrt av tilstandsendringer forblir brukbare uten utløp ved inaktivitet. Egendefinert: bruk minuttverdien nedenfor. Kontroll av tilgjengelighet og gjenopprettet tilstand gjelder alltid. Home Assistants last_reported oppdateres når tilstanden skrives på nytt, også med samme verdi, ikke bare fordi tiden går.",
-          "window_close_cooldown_minutes": "Når et vindu åpnes etter et lufteforslag fra HEM, venter HEM så mange minutter før det foreslår å lukke vinduet, selv om forholdene ute er uegnede. Ventetiden beregnes separat for hvert rom. 0–60 minutter, standard 5; 0 slår av ventetiden. Reglene for å sette enheter på pause og beskytte dem gjelder fortsatt."
+          "window_close_cooldown_minutes": "Når et vindu åpnes etter et lufteforslag fra HEM, venter HEM så mange minutter før det foreslår å lukke vinduet, selv om forholdene ute er uegnede. Ventetiden beregnes separat for hvert rom. 0–60 minutter, standard 5; 0 slår av ventetiden. Reglene for å sette enheter på pause og beskytte dem gjelder fortsatt.",
+          "quiet_hours_enabled": "Bruk dette daglige intervallet for enheter med «Stille under stille timer» aktivert. Tidene følger den lokale tidssonen i Home Assistant; intervallet kan gå over midnatt. Av som standard.",
+          "quiet_hours_start": "Daglig starttid, som er med i de stille timene. Velg en annen tid enn sluttiden.",
+          "quiet_hours_end": "Daglig sluttid, som ikke lenger er med i de stille timene. Er den før starttiden, slutter intervallet neste dag."
         }
       },
       "room_occupancy": {
@@ -2473,7 +2498,8 @@
       "climate_invalid_occupancy_timing": "Sett forsinkelsen etter at rommet forlates til 0–240 minutter og maksimal alder på tilstedeværelsesdata til 10–1440 minutter.",
       "climate_invalid_comfort_adjustment": "Sett maksimal justering av komfortmålet til mellom 0 og 2,5°C.",
       "climate_proportional_requires_percent": "Proporsjonal styring krever en number-entitet med enheten %, minimum 0, maksimum 100 og et numerisk trinn.",
-      "invalid_freshness_mode": "Velg Automatisk eller Egendefinert for maksimal alder på sensorverdiene."
+      "invalid_freshness_mode": "Velg Automatisk eller Egendefinert for maksimal alder på sensorverdiene.",
+      "invalid_quiet_hours": "Velg gyldige, forskjellige start- og sluttider for de stille timene."
     },
     "abort": {
       "setup_area_removed": "Ugyldig: Rom som skal overvåkes",
@@ -4086,6 +4112,22 @@
             "name": "Hjelp"
           }
         }
+      },
+      "home_quiet_hours_enabled": {
+        "name": "Stille timer",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjelp"
+          }
+        }
+      },
+      "equipment_quiet_hours": {
+        "name": "Stille under stille timer",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjelp"
+          }
+        }
       }
     },
     "select": {
@@ -4407,6 +4449,22 @@
       },
       "area_climate_sleep_end": {
         "name": "Søvn · Enheter · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjelp"
+          }
+        }
+      },
+      "home_quiet_hours_start": {
+        "name": "Start på stille timer",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hjelp"
+          }
+        }
+      },
+      "home_quiet_hours_end": {
+        "name": "Slutt på stille timer",
         "state_attributes": {
           "configuration_help": {
             "name": "Hjelp"

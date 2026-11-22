@@ -7,12 +7,14 @@ from __future__ import annotations
 
 if __package__:
     from .backend_text import translated_text, resolve_language
+    from .quiet_hours_text import QUIET_HOURS_TEXT
 else:
     from pathlib import Path
     from runpy import run_path
     _text_helpers = run_path(str(Path(__file__).with_name("backend_text.py")))
     translated_text = _text_helpers["translated_text"]
     resolve_language = _text_helpers["resolve_language"]
+    QUIET_HOURS_TEXT = run_path(str(Path(__file__).with_name("quiet_hours_text.py")))["QUIET_HOURS_TEXT"]
 
 
 
@@ -636,6 +638,11 @@ _NATIVE_MODE_TARGET_HELP = {
         "{mode}: den höchsten vom Gerät tatsächlich als unterstützt gemeldeten Sollwert der relativen Luftfeuchtigkeit anfordern.",
     ),
 }
+
+
+HELP["quiet_hours"] = tuple(
+    QUIET_HOURS_TEXT[locale]["device_help"] for locale in ("en", "el", "de")
+)
 
 
 def equipment_configuration_help(key: str, locale: str = "en", *, modes=None) -> str:

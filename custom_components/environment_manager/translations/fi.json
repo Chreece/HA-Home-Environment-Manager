@@ -231,7 +231,10 @@
           "general_wake_alarm_entity": "Uni · Seuraava herätys",
           "general_wake_lead_minutes_entity": "Uni · Minuutteja ennen herätystä",
           "window_open_timeout_minutes": "Ikkunan avaamisen odotusaika (min)",
-          "window_close_cooldown_minutes": "Odotusaika ennen ikkunan sulkemisehdotusta (min)"
+          "window_close_cooldown_minutes": "Odotusaika ennen ikkunan sulkemisehdotusta (min)",
+          "quiet_hours_enabled": "Hiljaiset tunnit",
+          "quiet_hours_start": "Hiljaisten tuntien alku",
+          "quiet_hours_end": "Hiljaisten tuntien loppu"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -285,7 +288,10 @@
           "general_wake_alarm_entity": "Valitse seuraavan herätyksen aika- tai aikaleimaentiteetti sekä minuuttien entiteetti. HEM lopettaa automaattisen unitilan näin monta minuuttia ennen herätystä ja palauttaa normaalit tavoitteet. Pelkkä kellonaika käyttää Home Assistantin aikavyöhykettä. Poissaolo, käsiohjaus ja laitesuojaukset ovat edelleen etusijalla.",
           "general_wake_lead_minutes_entity": "Valitse numeerinen entiteetti, jonka ei-negatiivinen arvo ilmaisee minuutit. Yksikkö on min tai puuttuu. Herätys 07:00 ja arvo 30 lopettavat automaattisen unitilan 06:30; 0 tarkoittaa herätyshetkeä. Poista molemmat lähteet käytöstä poistamista varten.",
           "window_open_timeout_minutes": "Odotusaika tuuletuspyynnön hyväksymisen jälkeen ennen uusia automaattisia/PID-käynnistyksiä, jos niitä edelleen tarvitaan. 0–30 minuuttia, oletus 5; 0 poistaa odotuksen. Avoimen ikkunan suojaukset ja laitteiden vähimmäisajat säilyvät.",
-          "window_close_cooldown_minutes": "Kun ikkuna avataan HEMin tuuletusehdotuksen jälkeen, HEM odottaa näin monta minuuttia ennen kuin ehdottaa sen sulkemista, vaikka ulko-olosuhteet olisivat epäsuotuisat. Odotusaika lasketaan erikseen kullekin huoneelle. 0–60 minuuttia, oletus 5; 0 poistaa odotusajan käytöstä. Laitteiden tauko- ja suojaussäännöt pysyvät voimassa."
+          "window_close_cooldown_minutes": "Kun ikkuna avataan HEMin tuuletusehdotuksen jälkeen, HEM odottaa näin monta minuuttia ennen kuin ehdottaa sen sulkemista, vaikka ulko-olosuhteet olisivat epäsuotuisat. Odotusaika lasketaan erikseen kullekin huoneelle. 0–60 minuuttia, oletus 5; 0 poistaa odotusajan käytöstä. Laitteiden tauko- ja suojaussäännöt pysyvät voimassa.",
+          "quiet_hours_enabled": "Käytä tätä päivittäistä aikaväliä laitteille, joilla ”Hiljainen toiminta hiljaisina tunteina” on käytössä. Ajat noudattavat Home Assistantin paikallista aikavyöhykettä; aikaväli voi ylittää keskiyön. Oletuksena pois käytöstä.",
+          "quiet_hours_start": "Päivittäinen alkamisaika, joka sisältyy hiljaisiin tunteihin. Valitse eri aika kuin päättymisaika.",
+          "quiet_hours_end": "Päivittäinen päättymisaika, joka ei enää sisälly hiljaisiin tunteihin. Jos se on ennen alkamisaikaa, aikaväli päättyy seuraavana päivänä."
         }
       },
       "reconfigure": {
@@ -938,7 +944,10 @@
           "general_sleep_rooms_attribute": "Uni · Huone · lähde (attribute)",
           "general_source_stale_minutes": "Kotonaolo · Seuranta- ja henkilömäärätietojen enimmäisikä (min)",
           "general_wake_alarm_entity": "Uni · Seuraava herätys",
-          "general_wake_lead_minutes_entity": "Uni · Minuutteja ennen herätystä"
+          "general_wake_lead_minutes_entity": "Uni · Minuutteja ennen herätystä",
+          "quiet_hours_enabled": "Hiljaiset tunnit",
+          "quiet_hours_start": "Hiljaisten tuntien alku",
+          "quiet_hours_end": "Hiljaisten tuntien loppu"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene.",
@@ -950,7 +959,10 @@
           "general_sleep_rooms_attribute": "Valitse Tila-kenttä tai valitun unientiteetin varmennettu huoneluetteloattribuutti. Puuttuva tai tunnistamaton luettelo tekee unitilasta tuntemattoman.",
           "general_source_stale_minutes": "Ikäraja koskee seurantalaitteiden raportteja ja numeerisia henkilömäärätietoja. Huonelistat ja binääriset huoneläsnäolotilat eivät vanhene muuttumattomina. Puuttuvat, palautetut tai virheelliset lähteet ovat tuntemattomia. Tämä ei ole unen kesto.",
           "general_wake_alarm_entity": "Valitse seuraavan herätyksen aika- tai aikaleimaentiteetti sekä minuuttien entiteetti. HEM lopettaa automaattisen unitilan näin monta minuuttia ennen herätystä ja palauttaa normaalit tavoitteet. Pelkkä kellonaika käyttää Home Assistantin aikavyöhykettä. Poissaolo, käsiohjaus ja laitesuojaukset ovat edelleen etusijalla.",
-          "general_wake_lead_minutes_entity": "Valitse numeerinen entiteetti, jonka ei-negatiivinen arvo ilmaisee minuutit. Yksikkö on min tai puuttuu. Herätys 07:00 ja arvo 30 lopettavat automaattisen unitilan 06:30; 0 tarkoittaa herätyshetkeä. Poista molemmat lähteet käytöstä poistamista varten."
+          "general_wake_lead_minutes_entity": "Valitse numeerinen entiteetti, jonka ei-negatiivinen arvo ilmaisee minuutit. Yksikkö on min tai puuttuu. Herätys 07:00 ja arvo 30 lopettavat automaattisen unitilan 06:30; 0 tarkoittaa herätyshetkeä. Poista molemmat lähteet käytöstä poistamista varten.",
+          "quiet_hours_enabled": "Käytä tätä päivittäistä aikaväliä laitteille, joilla ”Hiljainen toiminta hiljaisina tunteina” on käytössä. Ajat noudattavat Home Assistantin paikallista aikavyöhykettä; aikaväli voi ylittää keskiyön. Oletuksena pois käytöstä.",
+          "quiet_hours_start": "Päivittäinen alkamisaika, joka sisältyy hiljaisiin tunteihin. Valitse eri aika kuin päättymisaika.",
+          "quiet_hours_end": "Päivittäinen päättymisaika, joka ei enää sisälly hiljaisiin tunteihin. Jos se on ennen alkamisaikaa, aikaväli päättyy seuraavana päivänä."
         }
       },
       "pollen": {
@@ -1240,7 +1252,8 @@
       "climate_invalid_occupancy_timing": "Aseta huoneen tyhjenemisen jälkeiseksi viiveeksi 0–240 minuuttia ja läsnäolotietojen enimmäisiäksi 10–1440 minuuttia.",
       "climate_invalid_comfort_adjustment": "Aseta mukavuustavoitteen enimmäiskorjaus välille 0–2,5°C.",
       "climate_proportional_requires_percent": "Suhteellinen ohjaus edellyttää number-entiteettiä, jonka yksikkö on %, minimi 0, maksimi 100 ja askel numeerinen.",
-      "invalid_freshness_mode": "Valitse anturimittausten enimmäisiäksi Automaattinen tai Mukautettu."
+      "invalid_freshness_mode": "Valitse anturimittausten enimmäisiäksi Automaattinen tai Mukautettu.",
+      "invalid_quiet_hours": "Valitse kelvolliset, toisistaan poikkeavat hiljaisten tuntien alkamis- ja päättymisajat."
     },
     "abort": {
       "already_configured": "Home Environment Manager - on jo määritetty.",
@@ -2025,7 +2038,10 @@
           "general_sleep_rooms_attribute": "Uni · Huone · lähde (attribute)",
           "general_source_stale_minutes": "Kotonaolo · Seuranta- ja henkilömäärätietojen enimmäisikä (min)",
           "general_wake_alarm_entity": "Uni · Seuraava herätys",
-          "general_wake_lead_minutes_entity": "Uni · Minuutteja ennen herätystä"
+          "general_wake_lead_minutes_entity": "Uni · Minuutteja ennen herätystä",
+          "quiet_hours_enabled": "Hiljaiset tunnit",
+          "quiet_hours_start": "Hiljaisten tuntien alku",
+          "quiet_hours_end": "Hiljaisten tuntien loppu"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene.",
@@ -2037,7 +2053,10 @@
           "general_sleep_rooms_attribute": "Valitse Tila-kenttä tai valitun unientiteetin varmennettu huoneluetteloattribuutti. Puuttuva tai tunnistamaton luettelo tekee unitilasta tuntemattoman.",
           "general_source_stale_minutes": "Ikäraja koskee seurantalaitteiden raportteja ja numeerisia henkilömäärätietoja. Huonelistat ja binääriset huoneläsnäolotilat eivät vanhene muuttumattomina. Puuttuvat, palautetut tai virheelliset lähteet ovat tuntemattomia. Tämä ei ole unen kesto.",
           "general_wake_alarm_entity": "Valitse seuraavan herätyksen aika- tai aikaleimaentiteetti sekä minuuttien entiteetti. HEM lopettaa automaattisen unitilan näin monta minuuttia ennen herätystä ja palauttaa normaalit tavoitteet. Pelkkä kellonaika käyttää Home Assistantin aikavyöhykettä. Poissaolo, käsiohjaus ja laitesuojaukset ovat edelleen etusijalla.",
-          "general_wake_lead_minutes_entity": "Valitse numeerinen entiteetti, jonka ei-negatiivinen arvo ilmaisee minuutit. Yksikkö on min tai puuttuu. Herätys 07:00 ja arvo 30 lopettavat automaattisen unitilan 06:30; 0 tarkoittaa herätyshetkeä. Poista molemmat lähteet käytöstä poistamista varten."
+          "general_wake_lead_minutes_entity": "Valitse numeerinen entiteetti, jonka ei-negatiivinen arvo ilmaisee minuutit. Yksikkö on min tai puuttuu. Herätys 07:00 ja arvo 30 lopettavat automaattisen unitilan 06:30; 0 tarkoittaa herätyshetkeä. Poista molemmat lähteet käytöstä poistamista varten.",
+          "quiet_hours_enabled": "Käytä tätä päivittäistä aikaväliä laitteille, joilla ”Hiljainen toiminta hiljaisina tunteina” on käytössä. Ajat noudattavat Home Assistantin paikallista aikavyöhykettä; aikaväli voi ylittää keskiyön. Oletuksena pois käytöstä.",
+          "quiet_hours_start": "Päivittäinen alkamisaika, joka sisältyy hiljaisiin tunteihin. Valitse eri aika kuin päättymisaika.",
+          "quiet_hours_end": "Päivittäinen päättymisaika, joka ei enää sisälly hiljaisiin tunteihin. Jos se on ennen alkamisaikaa, aikaväli päättyy seuraavana päivänä."
         }
       },
       "pollen": {
@@ -2251,7 +2270,10 @@
           "window_open_timeout_minutes": "Ikkunan avaamisen odotusaika (min)",
           "general_source_freshness_mode": "Kodin läsnäolo · Kelpoisuuskäytäntö",
           "global_threshold_max_age_mode": "Ympäristö · Kelpoisuuskäytäntö",
-          "window_close_cooldown_minutes": "Odotusaika ennen ikkunan sulkemisehdotusta (min)"
+          "window_close_cooldown_minutes": "Odotusaika ennen ikkunan sulkemisehdotusta (min)",
+          "quiet_hours_enabled": "Hiljaiset tunnit",
+          "quiet_hours_start": "Hiljaisten tuntien alku",
+          "quiet_hours_end": "Hiljaisten tuntien loppu"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2307,7 +2329,10 @@
           "window_open_timeout_minutes": "Odotusaika tuuletuspyynnön hyväksymisen jälkeen ennen uusia automaattisia/PID-käynnistyksiä, jos niitä edelleen tarvitaan. 0–30 minuuttia, oletus 5; 0 poistaa odotuksen. Avoimen ikkunan suojaukset ja laitteiden vähimmäisajat säilyvät.",
           "general_source_freshness_mode": "Automaattinen: numeeriset henkilömäärät ja kodin seurantalähteiden poissaoloilmoitukset hyväksytään enintään 240 minuutin ajan; kelvollinen muuttumaton Kotona-tila voi säilyä, kunnes se muuttuu. Tuntemattomat, palautetut tai saavuttamattomat lähteet eivät todista poissaoloa. Mukautettu: käytä alla olevaa minuuttimäärää näytteistettyihin raportteihin. Huonelistat pysyvät muutosohjattuina.",
           "global_threshold_max_age_mode": "Automaattinen: sääentiteetit voivat olla kelvollisia 180 minuuttia ja muut numeeriset ympäristömittaukset 90 minuuttia; kelvolliset tilamuutoksiin perustuvat binäärikontaktit pysyvät käytettävinä ilman toimettomuuteen perustuvaa vanhenemista. Mukautettu: käytä alla olevaa minuuttimäärää. Saatavuuden ja palautetun tilan tarkistukset pätevät aina. Home Assistantin last_reported päivittyy tilan uudelleenkirjoituksessa myös samalla arvolla, ei pelkästään ajan kulumisen vuoksi.",
-          "window_close_cooldown_minutes": "Kun ikkuna avataan HEMin tuuletusehdotuksen jälkeen, HEM odottaa näin monta minuuttia ennen kuin ehdottaa sen sulkemista, vaikka ulko-olosuhteet olisivat epäsuotuisat. Odotusaika lasketaan erikseen kullekin huoneelle. 0–60 minuuttia, oletus 5; 0 poistaa odotusajan käytöstä. Laitteiden tauko- ja suojaussäännöt pysyvät voimassa."
+          "window_close_cooldown_minutes": "Kun ikkuna avataan HEMin tuuletusehdotuksen jälkeen, HEM odottaa näin monta minuuttia ennen kuin ehdottaa sen sulkemista, vaikka ulko-olosuhteet olisivat epäsuotuisat. Odotusaika lasketaan erikseen kullekin huoneelle. 0–60 minuuttia, oletus 5; 0 poistaa odotusajan käytöstä. Laitteiden tauko- ja suojaussäännöt pysyvät voimassa.",
+          "quiet_hours_enabled": "Käytä tätä päivittäistä aikaväliä laitteille, joilla ”Hiljainen toiminta hiljaisina tunteina” on käytössä. Ajat noudattavat Home Assistantin paikallista aikavyöhykettä; aikaväli voi ylittää keskiyön. Oletuksena pois käytöstä.",
+          "quiet_hours_start": "Päivittäinen alkamisaika, joka sisältyy hiljaisiin tunteihin. Valitse eri aika kuin päättymisaika.",
+          "quiet_hours_end": "Päivittäinen päättymisaika, joka ei enää sisälly hiljaisiin tunteihin. Jos se on ennen alkamisaikaa, aikaväli päättyy seuraavana päivänä."
         }
       },
       "room_occupancy": {
@@ -2473,7 +2498,8 @@
       "climate_invalid_occupancy_timing": "Aseta huoneen tyhjenemisen jälkeiseksi viiveeksi 0–240 minuuttia ja läsnäolotietojen enimmäisiäksi 10–1440 minuuttia.",
       "climate_invalid_comfort_adjustment": "Aseta mukavuustavoitteen enimmäiskorjaus välille 0–2,5°C.",
       "climate_proportional_requires_percent": "Suhteellinen ohjaus edellyttää number-entiteettiä, jonka yksikkö on %, minimi 0, maksimi 100 ja askel numeerinen.",
-      "invalid_freshness_mode": "Valitse anturimittausten enimmäisiäksi Automaattinen tai Mukautettu."
+      "invalid_freshness_mode": "Valitse anturimittausten enimmäisiäksi Automaattinen tai Mukautettu.",
+      "invalid_quiet_hours": "Valitse kelvolliset, toisistaan poikkeavat hiljaisten tuntien alkamis- ja päättymisajat."
     },
     "abort": {
       "setup_area_removed": "Virheellinen: Valvottavat huoneet",
@@ -4086,6 +4112,22 @@
             "name": "Ohje"
           }
         }
+      },
+      "home_quiet_hours_enabled": {
+        "name": "Hiljaiset tunnit",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
+      },
+      "equipment_quiet_hours": {
+        "name": "Hiljainen toiminta hiljaisina tunteina",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
       }
     },
     "select": {
@@ -4407,6 +4449,22 @@
       },
       "area_climate_sleep_end": {
         "name": "Uni · Laitteet · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
+      },
+      "home_quiet_hours_start": {
+        "name": "Hiljaisten tuntien alku",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Ohje"
+          }
+        }
+      },
+      "home_quiet_hours_end": {
+        "name": "Hiljaisten tuntien loppu",
         "state_attributes": {
           "configuration_help": {
             "name": "Ohje"

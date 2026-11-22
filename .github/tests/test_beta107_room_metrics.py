@@ -193,14 +193,19 @@ def assert_layout(report, label):
     for row in report["rows"]:
         context = (label, row["name"], row)
         assert 2 <= len(row["metrics"]) <= row["total"] <= 4, context
-        assert row["box"]["height"] <= 55, ("room must stay on one row", *context)
+        assert 60 <= row["box"]["height"] <= 100, ("room uses two compact rows", *context)
         assert row["scrollWidth"] <= row["clientWidth"] + 1, ("row overflow", *context)
         if report["frameWidth"] >= 480:
             assert len(row["metrics"]) == row["total"], ("wide card lost a reading", *context)
-        leaves = sorted(row["leaves"], key=lambda leaf: leaf["box"]["left"])
-        for first, second in zip(leaves, leaves[1:]):
-            assert first["box"]["right"] <= second["box"]["left"] + 0.5, (
-                "header elements overlap", first, second, *context)
+        # The title tab is above the readings. Compare rectangles in both
+        # dimensions so the new row is allowed without hiding real overlap.
+        leaves = row["leaves"]
+        for index, first in enumerate(leaves):
+            for second in leaves[index + 1:]:
+                a, b = first["box"], second["box"]
+                separate = (a["right"] <= b["left"] + .5 or b["right"] <= a["left"] + .5
+                            or a["bottom"] <= b["top"] + .5 or b["bottom"] <= a["top"] + .5)
+                assert separate, ("header elements overlap", first, second, *context)
         centers = []
         for metric in row["metrics"]:
             box = metric["box"]

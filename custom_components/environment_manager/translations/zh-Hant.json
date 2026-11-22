@@ -231,7 +231,10 @@
           "general_wake_alarm_entity": "睡眠 · 下次鬧鐘",
           "general_wake_lead_minutes_entity": "睡眠 · 鬧鐘響鈴前的分鐘數",
           "window_open_timeout_minutes": "等候開窗時間（分鐘）",
-          "window_close_cooldown_minutes": "建議關窗前的等待時間（分鐘）"
+          "window_close_cooldown_minutes": "建議關窗前的等待時間（分鐘）",
+          "quiet_hours_enabled": "靜音時段",
+          "quiet_hours_start": "靜音開始時間",
+          "quiet_hours_end": "靜音結束時間"
         },
         "data_description": {
           "weather_entities": "請選擇: 天氣與警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -285,7 +288,10 @@
           "general_wake_alarm_entity": "選擇下次鬧鐘的時間或日期時間實體，以及提前分鐘數實體。HEM 會提前這些分鐘結束自動睡眠模式，恢復一般目標值。只有時間的值使用 Home Assistant 的時區。離家、手動控制和裝置保護仍保持優先順序。",
           "general_wake_lead_minutes_entity": "選擇值不小於 0 的數字實體，單位為 min 或無單位。鬧鐘為 07:00、數值為 30 時，自動睡眠於 06:30 結束；0 表示響鈴時。清除兩個來源即可停用。",
           "window_open_timeout_minutes": "開窗請求被接受後，等候一段時間，再依需要允許新的自動/PID啟動。範圍0–30分鐘，預設5；0表示不等候。開窗保護和裝置最短運作／停機時間仍然有效。",
-          "window_close_cooldown_minutes": "依照 HEM 的開窗建議打開窗戶後，等待設定的分鐘數，再建議關窗，即使室外條件不適宜也會等待。各房間的等待時間獨立計算。範圍 0–60 分鐘，預設 5；設為 0 可關閉等待。裝置暫停和保護規則仍然有效。"
+          "window_close_cooldown_minutes": "依照 HEM 的開窗建議打開窗戶後，等待設定的分鐘數，再建議關窗，即使室外條件不適宜也會等待。各房間的等待時間獨立計算。範圍 0–60 分鐘，預設 5；設為 0 可關閉等待。裝置暫停和保護規則仍然有效。",
+          "quiet_hours_enabled": "此每日時段適用於已開啟「在靜音時段內安靜運作」的裝置。時間依照 Home Assistant 的本地時區，時段可以跨越午夜。預設關閉。",
+          "quiet_hours_start": "每日開始時間，計入靜音時段。請選擇與結束時間不同的時間。",
+          "quiet_hours_end": "每日結束時間，不再計入靜音時段。如果早於開始時間，時段將在次日結束。"
         }
       },
       "reconfigure": {
@@ -938,7 +944,10 @@
           "general_sleep_rooms_attribute": "睡眠 · 房間 · 來源 (attribute)",
           "general_source_stale_minutes": "在家狀態 · 追蹤/人數資料的最大有效時間（分鐘）",
           "general_wake_alarm_entity": "睡眠 · 下次鬧鐘",
-          "general_wake_lead_minutes_entity": "睡眠 · 鬧鐘響鈴前的分鐘數"
+          "general_wake_lead_minutes_entity": "睡眠 · 鬧鐘響鈴前的分鐘數",
+          "quiet_hours_enabled": "靜音時段",
+          "quiet_hours_start": "靜音開始時間",
+          "quiet_hours_end": "靜音結束時間"
         },
         "data_description": {
           "general_room_occupancy_sensors": "所選狀態或屬性中的有效有人房間清單具有優先權：列出的房間有人，未列出的房間為空。沒有清單時，所選存在感測器中任意一個 ON 表示有人；全部 OFF 或未選感測器表示空房。已選擇但無法使用或無效的來源仍為未知。未變化的清單和二元狀態不會過期。",
@@ -950,7 +959,10 @@
           "general_sleep_rooms_attribute": "選擇所選睡眠實體的「狀態」欄位或已確認的房間清單屬性。清單缺少或無法辨識時，睡眠狀態為未知。",
           "general_source_stale_minutes": "有效時間限制適用於追蹤報告和數字人數。房間清單及二元存在狀態在未變化時不會過期。無法使用、已還原或無效的來源仍為未知。這不是睡眠時間。",
           "general_wake_alarm_entity": "選擇下次鬧鐘的時間或日期時間實體，以及提前分鐘數實體。HEM 會提前這些分鐘結束自動睡眠模式，恢復一般目標值。只有時間的值使用 Home Assistant 的時區。離家、手動控制和裝置保護仍保持優先順序。",
-          "general_wake_lead_minutes_entity": "選擇值不小於 0 的數字實體，單位為 min 或無單位。鬧鐘為 07:00、數值為 30 時，自動睡眠於 06:30 結束；0 表示響鈴時。清除兩個來源即可停用。"
+          "general_wake_lead_minutes_entity": "選擇值不小於 0 的數字實體，單位為 min 或無單位。鬧鐘為 07:00、數值為 30 時，自動睡眠於 06:30 結束；0 表示響鈴時。清除兩個來源即可停用。",
+          "quiet_hours_enabled": "此每日時段適用於已開啟「在靜音時段內安靜運作」的裝置。時間依照 Home Assistant 的本地時區，時段可以跨越午夜。預設關閉。",
+          "quiet_hours_start": "每日開始時間，計入靜音時段。請選擇與結束時間不同的時間。",
+          "quiet_hours_end": "每日結束時間，不再計入靜音時段。如果早於開始時間，時段將在次日結束。"
         }
       },
       "pollen": {
@@ -1240,7 +1252,8 @@
       "climate_invalid_occupancy_timing": "請將房間無人後的延遲設為 0–240 分鐘，將人員存在資料的最長有效時間設為 10–1440 分鐘。",
       "climate_invalid_comfort_adjustment": "請將舒適目標的最大調整幅度設為 0 至 2.5°C。",
       "climate_proportional_requires_percent": "比例控制需要一個單位為 %、最小值為 0、最大值為 100 且步長為數值的 number 實體。",
-      "invalid_freshness_mode": "請選擇「自動」或「自訂」來設定感測器讀值的有效時間。"
+      "invalid_freshness_mode": "請選擇「自動」或「自訂」來設定感測器讀值的有效時間。",
+      "invalid_quiet_hours": "請為靜音時段選擇有效且不同的開始時間和結束時間。"
     },
     "abort": {
       "already_configured": "Home Environment Manager - 已設定.",
@@ -2025,7 +2038,10 @@
           "general_sleep_rooms_attribute": "睡眠 · 房間 · 來源 (attribute)",
           "general_source_stale_minutes": "在家狀態 · 追蹤/人數資料的最大有效時間（分鐘）",
           "general_wake_alarm_entity": "睡眠 · 下次鬧鐘",
-          "general_wake_lead_minutes_entity": "睡眠 · 鬧鐘響鈴前的分鐘數"
+          "general_wake_lead_minutes_entity": "睡眠 · 鬧鐘響鈴前的分鐘數",
+          "quiet_hours_enabled": "靜音時段",
+          "quiet_hours_start": "靜音開始時間",
+          "quiet_hours_end": "靜音結束時間"
         },
         "data_description": {
           "general_room_occupancy_sensors": "所選狀態或屬性中的有效有人房間清單具有優先權：列出的房間有人，未列出的房間為空。沒有清單時，所選存在感測器中任意一個 ON 表示有人；全部 OFF 或未選感測器表示空房。已選擇但無法使用或無效的來源仍為未知。未變化的清單和二元狀態不會過期。",
@@ -2037,7 +2053,10 @@
           "general_sleep_rooms_attribute": "選擇所選睡眠實體的「狀態」欄位或已確認的房間清單屬性。清單缺少或無法辨識時，睡眠狀態為未知。",
           "general_source_stale_minutes": "有效時間限制適用於追蹤報告和數字人數。房間清單及二元存在狀態在未變化時不會過期。無法使用、已還原或無效的來源仍為未知。這不是睡眠時間。",
           "general_wake_alarm_entity": "選擇下次鬧鐘的時間或日期時間實體，以及提前分鐘數實體。HEM 會提前這些分鐘結束自動睡眠模式，恢復一般目標值。只有時間的值使用 Home Assistant 的時區。離家、手動控制和裝置保護仍保持優先順序。",
-          "general_wake_lead_minutes_entity": "選擇值不小於 0 的數字實體，單位為 min 或無單位。鬧鐘為 07:00、數值為 30 時，自動睡眠於 06:30 結束；0 表示響鈴時。清除兩個來源即可停用。"
+          "general_wake_lead_minutes_entity": "選擇值不小於 0 的數字實體，單位為 min 或無單位。鬧鐘為 07:00、數值為 30 時，自動睡眠於 06:30 結束；0 表示響鈴時。清除兩個來源即可停用。",
+          "quiet_hours_enabled": "此每日時段適用於已開啟「在靜音時段內安靜運作」的裝置。時間依照 Home Assistant 的本地時區，時段可以跨越午夜。預設關閉。",
+          "quiet_hours_start": "每日開始時間，計入靜音時段。請選擇與結束時間不同的時間。",
+          "quiet_hours_end": "每日結束時間，不再計入靜音時段。如果早於開始時間，時段將在次日結束。"
         }
       },
       "pollen": {
@@ -2251,7 +2270,10 @@
           "window_open_timeout_minutes": "等候開窗時間（分鐘）",
           "general_source_freshness_mode": "家中人員狀態 · 有效性策略",
           "global_threshold_max_age_mode": "環境 · 有效性策略",
-          "window_close_cooldown_minutes": "建議關窗前的等待時間（分鐘）"
+          "window_close_cooldown_minutes": "建議關窗前的等待時間（分鐘）",
+          "quiet_hours_enabled": "靜音時段",
+          "quiet_hours_start": "靜音開始時間",
+          "quiet_hours_end": "靜音結束時間"
         },
         "data_description": {
           "weather_entities": "請選擇: 天氣與警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2307,7 +2329,10 @@
           "window_open_timeout_minutes": "開窗請求被接受後，等候一段時間，再依需要允許新的自動/PID啟動。範圍0–30分鐘，預設5；0表示不等候。開窗保護和裝置最短運作／停機時間仍然有效。",
           "general_source_freshness_mode": "自動：數字人數計數器和家庭追蹤器的否定回報最多接受 240 分鐘；有效且未變化的「在家」狀態可以保持到它發生變化。未知、還原或無法使用的來源不能證明無人。自訂：對取樣回報使用下方的分鐘值。房間清單來源仍依變化更新。",
           "global_threshold_max_age_mode": "自動：天氣實體可保持有效 180 分鐘，其他數字環境量測可保持有效 90 分鐘，而依變化更新的有效二元接點不會因長時間無變化而逾時。自訂：使用下方的分鐘值。始終檢查可用性與還原狀態。Home Assistant 的 last_reported 在重複寫入相同值時更新，不會僅因時間流逝而更新。",
-          "window_close_cooldown_minutes": "依照 HEM 的開窗建議打開窗戶後，等待設定的分鐘數，再建議關窗，即使室外條件不適宜也會等待。各房間的等待時間獨立計算。範圍 0–60 分鐘，預設 5；設為 0 可關閉等待。裝置暫停和保護規則仍然有效。"
+          "window_close_cooldown_minutes": "依照 HEM 的開窗建議打開窗戶後，等待設定的分鐘數，再建議關窗，即使室外條件不適宜也會等待。各房間的等待時間獨立計算。範圍 0–60 分鐘，預設 5；設為 0 可關閉等待。裝置暫停和保護規則仍然有效。",
+          "quiet_hours_enabled": "此每日時段適用於已開啟「在靜音時段內安靜運作」的裝置。時間依照 Home Assistant 的本地時區，時段可以跨越午夜。預設關閉。",
+          "quiet_hours_start": "每日開始時間，計入靜音時段。請選擇與結束時間不同的時間。",
+          "quiet_hours_end": "每日結束時間，不再計入靜音時段。如果早於開始時間，時段將在次日結束。"
         }
       },
       "room_occupancy": {
@@ -2473,7 +2498,8 @@
       "climate_invalid_occupancy_timing": "請將房間無人後的延遲設為 0–240 分鐘，將人員存在資料的最長有效時間設為 10–1440 分鐘。",
       "climate_invalid_comfort_adjustment": "請將舒適目標的最大調整幅度設為 0 至 2.5°C。",
       "climate_proportional_requires_percent": "比例控制需要一個單位為 %、最小值為 0、最大值為 100 且步長為數值的 number 實體。",
-      "invalid_freshness_mode": "請選擇「自動」或「自訂」來設定感測器讀值的有效時間。"
+      "invalid_freshness_mode": "請選擇「自動」或「自訂」來設定感測器讀值的有效時間。",
+      "invalid_quiet_hours": "請為靜音時段選擇有效且不同的開始時間和結束時間。"
     },
     "abort": {
       "setup_area_removed": "無效: 要監測的房間",
@@ -4086,6 +4112,22 @@
             "name": "說明"
           }
         }
+      },
+      "home_quiet_hours_enabled": {
+        "name": "靜音時段",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "說明"
+          }
+        }
+      },
+      "equipment_quiet_hours": {
+        "name": "在靜音時段內安靜運作",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "說明"
+          }
+        }
       }
     },
     "select": {
@@ -4407,6 +4449,22 @@
       },
       "area_climate_sleep_end": {
         "name": "睡眠 · 裝置 · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "說明"
+          }
+        }
+      },
+      "home_quiet_hours_start": {
+        "name": "靜音開始時間",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "說明"
+          }
+        }
+      },
+      "home_quiet_hours_end": {
+        "name": "靜音結束時間",
         "state_attributes": {
           "configuration_help": {
             "name": "說明"

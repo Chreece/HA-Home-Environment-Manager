@@ -330,7 +330,7 @@ def browser_checks(states):
         assert page.evaluate(REPORT, "humidify")["metric"][1]["colour"] == COLOURS["humidify"]
         assert page.evaluate(REPORT, "heat")["metric"][0]["colour"] == neutral
         # Existing single-source/average interactions remain read-only.
-        page.locator('[data-room-fold87="humidify"] > .hem-room-glance87 > [data-hem-source105="sensor.humidify_humidity"]').click()
+        page.locator('[data-room-fold87="humidify"] > .hem-room-glance87 [data-hem-source105="sensor.humidify_humidity"]').click()
         assert page.evaluate("info") == []
         assert page.evaluate("card._averageDialog105.entity122") == "sensor.humidify_humidity"
         popup = page.locator('.hem-avg-dialog105')

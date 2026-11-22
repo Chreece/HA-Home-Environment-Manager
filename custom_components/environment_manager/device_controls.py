@@ -21,6 +21,8 @@ from .const import (
     DEFAULT_THRESHOLDS, MAX_REPEAT_MINUTES,
     CONF_WINDOW_OPEN_TIMEOUT_MINUTES, MAX_WINDOW_OPEN_TIMEOUT_MINUTES,
     CONF_WINDOW_CLOSE_COOLDOWN_MINUTES, MAX_WINDOW_CLOSE_COOLDOWN_MINUTES,
+    CONF_QUIET_HOURS_ENABLED, CONF_QUIET_HOURS_START, CONF_QUIET_HOURS_END,
+    DEFAULT_QUIET_HOURS_START, DEFAULT_QUIET_HOURS_END,
 )
 from .pid_math import DEFAULT_PID, validate_settings
 from .climate_strategy import DEFAULT_PROFILE_TARGETS, profile_humidity_target, profiles
@@ -786,7 +788,28 @@ async def update_device_setting(manager: Any, kind: str, key: str,
             if area is not None:
                 raise HomeAssistantError("Home-wide settings cannot target one room")
             from .arrival_preparation import CONF_TIMEOUT, MIN_TIMEOUT, MAX_TIMEOUT
-            if key == CONF_TIMEOUT:
+            if key in (CONF_QUIET_HOURS_ENABLED, CONF_QUIET_HOURS_START, CONF_QUIET_HOURS_END):
+                from datetime import time as ClockTime
+                from .quiet_hours import parse_clock
+                from .quiet_hours_text import QUIET_HOURS_TEXT
+                invalid = QUIET_HOURS_TEXT["en"]["invalid_error"]
+                if key == CONF_QUIET_HOURS_ENABLED:
+                    if type(value) is not bool:
+                        raise HomeAssistantError(invalid)
+                    checked = value
+                else:
+                    clock = parse_clock(value.isoformat() if isinstance(value, ClockTime) else value)
+                    if clock is None:
+                        raise HomeAssistantError(invalid)
+                    checked = clock.isoformat()
+                draft = {**current, key: checked}
+                if draft.get(CONF_QUIET_HOURS_ENABLED) is True:
+                    start = parse_clock(draft.get(CONF_QUIET_HOURS_START, DEFAULT_QUIET_HOURS_START))
+                    end = parse_clock(draft.get(CONF_QUIET_HOURS_END, DEFAULT_QUIET_HOURS_END))
+                    if start is None or end is None or start == end:
+                        raise HomeAssistantError(invalid)
+                options[key] = checked
+            elif key == CONF_TIMEOUT:
                 number = _finite(value, (float(MIN_TIMEOUT), float(MAX_TIMEOUT)))
                 if not number.is_integer():
                     raise HomeAssistantError("Arrival preparation timeout must be whole minutes")

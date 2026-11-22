@@ -231,7 +231,10 @@
           "general_wake_alarm_entity": "Spavanje · Sljedeći alarm",
           "general_wake_lead_minutes_entity": "Spavanje · Minute prije alarma",
           "window_open_timeout_minutes": "Čekanje na otvaranje prozora (min)",
-          "window_close_cooldown_minutes": "Čekanje prije prijedloga za zatvaranje prozora (min)"
+          "window_close_cooldown_minutes": "Čekanje prije prijedloga za zatvaranje prozora (min)",
+          "quiet_hours_enabled": "Vrijeme tišine",
+          "quiet_hours_start": "Početak vremena tišine",
+          "quiet_hours_end": "Kraj vremena tišine"
         },
         "data_description": {
           "weather_entities": "Odaberite: Vrijeme i upozorenja · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -285,7 +288,10 @@
           "general_wake_alarm_entity": "Odaberite entitet vremena ili datuma i vremena sljedećeg alarma te entitet za minute. HEM završava automatsko spavanje toliko minuta ranije i vraća uobičajene ciljeve. Vrijeme bez datuma koristi vremensku zonu Home Assistanta. Odsutnost, ručno upravljanje i zaštite zadržavaju prednost.",
           "general_wake_lead_minutes_entity": "Odaberite brojčani entitet s nenegativnim brojem minuta, s jedinicom min ili bez jedinice. Alarm u 07:00 i vrijednost 30 završavaju automatsko spavanje u 06:30; 0 znači pri zvonjavi. Za isključivanje uklonite oba izvora.",
           "window_open_timeout_minutes": "Čekanje nakon prihvaćanja zahtjeva za prozračivanje prije dopuštanja novih automatskih/PID pokretanja ako su potrebna. 0–30 minuta, zadano 5; 0 isključuje čekanje. Zaštite pri otvorenom prozoru i minimalna vremena rada uređaja i dalje vrijede.",
-          "window_close_cooldown_minutes": "Nakon što se prozor otvori na preporuku HEM-a, čeka ovoliko minuta prije nego što predloži zatvaranje, čak i ako vanjski uvjeti nisu prikladni. Vrijeme čekanja računa se zasebno za svaku prostoriju. 0–60 minuta, zadano 5; 0 isključuje čekanje. Pravila pauziranja rada i zaštite uređaja ostaju aktivna."
+          "window_close_cooldown_minutes": "Nakon što se prozor otvori na preporuku HEM-a, čeka ovoliko minuta prije nego što predloži zatvaranje, čak i ako vanjski uvjeti nisu prikladni. Vrijeme čekanja računa se zasebno za svaku prostoriju. 0–60 minuta, zadano 5; 0 isključuje čekanje. Pravila pauziranja rada i zaštite uređaja ostaju aktivna.",
+          "quiet_hours_enabled": "Upotrebljava ovaj dnevni interval za uređaje s uključenim „Tihim radom tijekom vremena tišine”. Vrijeme slijedi lokalnu vremensku zonu sustava Home Assistant; interval može prijeći ponoć. Zadano isključeno.",
+          "quiet_hours_start": "Dnevno vrijeme početka, uključeno u vrijeme tišine. Odaberite vrijeme različito od završetka.",
+          "quiet_hours_end": "Dnevno vrijeme završetka, koje više nije dio vremena tišine. Ako je prije početka, interval završava sljedeći dan."
         }
       },
       "reconfigure": {
@@ -938,7 +944,10 @@
           "general_sleep_rooms_attribute": "Spavanje · Soba · izvor (attribute)",
           "general_source_stale_minutes": "Prisutnost kod kuće · Najveća starost podataka praćenja/broja osoba (min)",
           "general_wake_alarm_entity": "Spavanje · Sljedeći alarm",
-          "general_wake_lead_minutes_entity": "Spavanje · Minute prije alarma"
+          "general_wake_lead_minutes_entity": "Spavanje · Minute prije alarma",
+          "quiet_hours_enabled": "Vrijeme tišine",
+          "quiet_hours_start": "Početak vremena tišine",
+          "quiet_hours_end": "Kraj vremena tišine"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu.",
@@ -950,7 +959,10 @@
           "general_sleep_rooms_attribute": "Odaberite polje Stanje ili provjereni atribut s popisom soba iz odabranog entiteta spavanja. Nedostajući ili neprepoznati popis znači nepoznato stanje spavanja.",
           "general_source_stale_minutes": "Ograničenje starosti odnosi se na izvješća praćenja i brojčani broj osoba. Popisi soba i binarna stanja prisutnosti ne istječu dok se ne promijene. Nedostupni, obnovljeni ili nevaljani izvori ostaju nepoznati. To nije trajanje spavanja.",
           "general_wake_alarm_entity": "Odaberite entitet vremena ili datuma i vremena sljedećeg alarma te entitet za minute. HEM završava automatsko spavanje toliko minuta ranije i vraća uobičajene ciljeve. Vrijeme bez datuma koristi vremensku zonu Home Assistanta. Odsutnost, ručno upravljanje i zaštite zadržavaju prednost.",
-          "general_wake_lead_minutes_entity": "Odaberite brojčani entitet s nenegativnim brojem minuta, s jedinicom min ili bez jedinice. Alarm u 07:00 i vrijednost 30 završavaju automatsko spavanje u 06:30; 0 znači pri zvonjavi. Za isključivanje uklonite oba izvora."
+          "general_wake_lead_minutes_entity": "Odaberite brojčani entitet s nenegativnim brojem minuta, s jedinicom min ili bez jedinice. Alarm u 07:00 i vrijednost 30 završavaju automatsko spavanje u 06:30; 0 znači pri zvonjavi. Za isključivanje uklonite oba izvora.",
+          "quiet_hours_enabled": "Upotrebljava ovaj dnevni interval za uređaje s uključenim „Tihim radom tijekom vremena tišine”. Vrijeme slijedi lokalnu vremensku zonu sustava Home Assistant; interval može prijeći ponoć. Zadano isključeno.",
+          "quiet_hours_start": "Dnevno vrijeme početka, uključeno u vrijeme tišine. Odaberite vrijeme različito od završetka.",
+          "quiet_hours_end": "Dnevno vrijeme završetka, koje više nije dio vremena tišine. Ako je prije početka, interval završava sljedeći dan."
         }
       },
       "pollen": {
@@ -1240,7 +1252,8 @@
       "climate_invalid_occupancy_timing": "Postavite odgodu nakon napuštanja sobe na 0–240 minuta, a najveću dopuštenu starost podataka o prisutnosti na 10–1440 minuta.",
       "climate_invalid_comfort_adjustment": "Postavite najveću prilagodbu ciljne temperature ugode između 0 i 2,5°C.",
       "climate_proportional_requires_percent": "Proporcionalno upravljanje zahtijeva entitet number s jedinicom %, minimumom 0, maksimumom 100 i brojčanim korakom.",
-      "invalid_freshness_mode": "Odaberite Automatski ili Prilagođeno za najveću dopuštenu starost očitanja senzora."
+      "invalid_freshness_mode": "Odaberite Automatski ili Prilagođeno za najveću dopuštenu starost očitanja senzora.",
+      "invalid_quiet_hours": "Odaberite valjana i različita vremena početka i završetka vremena tišine."
     },
     "abort": {
       "already_configured": "Home Environment Manager - već postavljeno.",
@@ -2025,7 +2038,10 @@
           "general_sleep_rooms_attribute": "Spavanje · Soba · izvor (attribute)",
           "general_source_stale_minutes": "Prisutnost kod kuće · Najveća starost podataka praćenja/broja osoba (min)",
           "general_wake_alarm_entity": "Spavanje · Sljedeći alarm",
-          "general_wake_lead_minutes_entity": "Spavanje · Minute prije alarma"
+          "general_wake_lead_minutes_entity": "Spavanje · Minute prije alarma",
+          "quiet_hours_enabled": "Vrijeme tišine",
+          "quiet_hours_start": "Početak vremena tišine",
+          "quiet_hours_end": "Kraj vremena tišine"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu.",
@@ -2037,7 +2053,10 @@
           "general_sleep_rooms_attribute": "Odaberite polje Stanje ili provjereni atribut s popisom soba iz odabranog entiteta spavanja. Nedostajući ili neprepoznati popis znači nepoznato stanje spavanja.",
           "general_source_stale_minutes": "Ograničenje starosti odnosi se na izvješća praćenja i brojčani broj osoba. Popisi soba i binarna stanja prisutnosti ne istječu dok se ne promijene. Nedostupni, obnovljeni ili nevaljani izvori ostaju nepoznati. To nije trajanje spavanja.",
           "general_wake_alarm_entity": "Odaberite entitet vremena ili datuma i vremena sljedećeg alarma te entitet za minute. HEM završava automatsko spavanje toliko minuta ranije i vraća uobičajene ciljeve. Vrijeme bez datuma koristi vremensku zonu Home Assistanta. Odsutnost, ručno upravljanje i zaštite zadržavaju prednost.",
-          "general_wake_lead_minutes_entity": "Odaberite brojčani entitet s nenegativnim brojem minuta, s jedinicom min ili bez jedinice. Alarm u 07:00 i vrijednost 30 završavaju automatsko spavanje u 06:30; 0 znači pri zvonjavi. Za isključivanje uklonite oba izvora."
+          "general_wake_lead_minutes_entity": "Odaberite brojčani entitet s nenegativnim brojem minuta, s jedinicom min ili bez jedinice. Alarm u 07:00 i vrijednost 30 završavaju automatsko spavanje u 06:30; 0 znači pri zvonjavi. Za isključivanje uklonite oba izvora.",
+          "quiet_hours_enabled": "Upotrebljava ovaj dnevni interval za uređaje s uključenim „Tihim radom tijekom vremena tišine”. Vrijeme slijedi lokalnu vremensku zonu sustava Home Assistant; interval može prijeći ponoć. Zadano isključeno.",
+          "quiet_hours_start": "Dnevno vrijeme početka, uključeno u vrijeme tišine. Odaberite vrijeme različito od završetka.",
+          "quiet_hours_end": "Dnevno vrijeme završetka, koje više nije dio vremena tišine. Ako je prije početka, interval završava sljedeći dan."
         }
       },
       "pollen": {
@@ -2251,7 +2270,10 @@
           "window_open_timeout_minutes": "Čekanje na otvaranje prozora (min)",
           "general_source_freshness_mode": "Prisutnost u domu · Pravilo valjanosti",
           "global_threshold_max_age_mode": "Okoliš · Pravilo valjanosti",
-          "window_close_cooldown_minutes": "Čekanje prije prijedloga za zatvaranje prozora (min)"
+          "window_close_cooldown_minutes": "Čekanje prije prijedloga za zatvaranje prozora (min)",
+          "quiet_hours_enabled": "Vrijeme tišine",
+          "quiet_hours_start": "Početak vremena tišine",
+          "quiet_hours_end": "Kraj vremena tišine"
         },
         "data_description": {
           "weather_entities": "Odaberite: Vrijeme i upozorenja · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2307,7 +2329,10 @@
           "window_open_timeout_minutes": "Čekanje nakon prihvaćanja zahtjeva za prozračivanje prije dopuštanja novih automatskih/PID pokretanja ako su potrebna. 0–30 minuta, zadano 5; 0 isključuje čekanje. Zaštite pri otvorenom prozoru i minimalna vremena rada uređaja i dalje vrijede.",
           "general_source_freshness_mode": "Automatski: brojčani brojači osoba i negativna izvješća kućnih uređaja za praćenje prihvaćaju se do 240 minuta; valjano nepromijenjeno stanje „Kod kuće” može ostati takvo dok se ne promijeni. Nepoznati, obnovljeni i nedostupni izvori ne mogu dokazati odsutnost. Prilagođeno: za uzorkovana izvješća koristite broj minuta u nastavku. Izvori popisa prostorija i dalje se temelje na promjenama.",
           "global_threshold_max_age_mode": "Automatski: vremenski entiteti mogu ostati valjani 180 minuta, ostala brojčana mjerenja okoliša 90 minuta, dok valjani binarni kontakti koji se temelje na promjenama ostaju upotrebljivi bez vremenskog ograničenja neaktivnosti. Prilagođeno: koristite broj minuta u nastavku. Provjere dostupnosti i obnovljenog stanja uvijek vrijede. U Home Assistantu last_reported se ažurira ponovnim zapisom iste vrijednosti, a ne samo zbog proteka vremena.",
-          "window_close_cooldown_minutes": "Nakon što se prozor otvori na preporuku HEM-a, čeka ovoliko minuta prije nego što predloži zatvaranje, čak i ako vanjski uvjeti nisu prikladni. Vrijeme čekanja računa se zasebno za svaku prostoriju. 0–60 minuta, zadano 5; 0 isključuje čekanje. Pravila pauziranja rada i zaštite uređaja ostaju aktivna."
+          "window_close_cooldown_minutes": "Nakon što se prozor otvori na preporuku HEM-a, čeka ovoliko minuta prije nego što predloži zatvaranje, čak i ako vanjski uvjeti nisu prikladni. Vrijeme čekanja računa se zasebno za svaku prostoriju. 0–60 minuta, zadano 5; 0 isključuje čekanje. Pravila pauziranja rada i zaštite uređaja ostaju aktivna.",
+          "quiet_hours_enabled": "Upotrebljava ovaj dnevni interval za uređaje s uključenim „Tihim radom tijekom vremena tišine”. Vrijeme slijedi lokalnu vremensku zonu sustava Home Assistant; interval može prijeći ponoć. Zadano isključeno.",
+          "quiet_hours_start": "Dnevno vrijeme početka, uključeno u vrijeme tišine. Odaberite vrijeme različito od završetka.",
+          "quiet_hours_end": "Dnevno vrijeme završetka, koje više nije dio vremena tišine. Ako je prije početka, interval završava sljedeći dan."
         }
       },
       "room_occupancy": {
@@ -2473,7 +2498,8 @@
       "climate_invalid_occupancy_timing": "Postavite odgodu nakon napuštanja sobe na 0–240 minuta, a najveću dopuštenu starost podataka o prisutnosti na 10–1440 minuta.",
       "climate_invalid_comfort_adjustment": "Postavite najveću prilagodbu ciljne temperature ugode između 0 i 2,5°C.",
       "climate_proportional_requires_percent": "Proporcionalno upravljanje zahtijeva entitet number s jedinicom %, minimumom 0, maksimumom 100 i brojčanim korakom.",
-      "invalid_freshness_mode": "Odaberite Automatski ili Prilagođeno za najveću dopuštenu starost očitanja senzora."
+      "invalid_freshness_mode": "Odaberite Automatski ili Prilagođeno za najveću dopuštenu starost očitanja senzora.",
+      "invalid_quiet_hours": "Odaberite valjana i različita vremena početka i završetka vremena tišine."
     },
     "abort": {
       "setup_area_removed": "Neispravno: Sobe za praćenje",
@@ -4086,6 +4112,22 @@
             "name": "Pomoć"
           }
         }
+      },
+      "home_quiet_hours_enabled": {
+        "name": "Vrijeme tišine",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoć"
+          }
+        }
+      },
+      "equipment_quiet_hours": {
+        "name": "Tihi rad tijekom vremena tišine",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoć"
+          }
+        }
       }
     },
     "select": {
@@ -4407,6 +4449,22 @@
       },
       "area_climate_sleep_end": {
         "name": "Spavanje · Uređaji · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoć"
+          }
+        }
+      },
+      "home_quiet_hours_start": {
+        "name": "Početak vremena tišine",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoć"
+          }
+        }
+      },
+      "home_quiet_hours_end": {
+        "name": "Kraj vremena tišine",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoć"

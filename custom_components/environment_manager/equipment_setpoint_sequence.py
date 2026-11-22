@@ -90,12 +90,12 @@ def retry_settings_match(saved, current) -> bool:
     """
     if not isinstance(saved, dict) or not isinstance(current, dict):
         return False
-    # Both independent preferences are enforced again by the live policy,
+    # These independent preferences are enforced again by the live policy,
     # profile, and timing checks. They confer no control authority. Profiles
     # saved before these switches were introduced remain usable.
     independent = {
         "timed_setpoint_sequence", "native_full_output", "sleep_when_everyone_asleep", "pause_on_window_open",
-        "announce_before_start", "window_open_timeout_minutes",
+        "announce_before_start", "window_open_timeout_minutes", "quiet_hours",
     }
     previous = {k: v for k, v in saved.items() if k not in independent}
     latest = {k: v for k, v in current.items() if k not in independent}

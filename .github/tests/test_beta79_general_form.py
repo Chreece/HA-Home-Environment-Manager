@@ -21,6 +21,7 @@ class Selectors:
     def NumberSelectorConfig(self,**kw):return kw
     def NumberSelector(self,config):return ('number',config)
     def BooleanSelector(self):return ('bool',)
+    def TimeSelector(self):return ('time',)
 sel=Selectors()
 def field(k,v):
     keys[k]=v
@@ -40,6 +41,9 @@ configkeys={
 'DEFAULT_WINDOW_OPEN_TIMEOUT_MINUTES':5,'MAX_WINDOW_OPEN_TIMEOUT_MINUTES':30,
 'CONF_WINDOW_CLOSE_COOLDOWN_MINUTES':'window_close_cooldown_minutes',
 'DEFAULT_WINDOW_CLOSE_COOLDOWN_MINUTES':5,'MAX_WINDOW_CLOSE_COOLDOWN_MINUTES':60,
+'CONF_QUIET_HOURS_ENABLED':'quiet_hours_enabled',
+'CONF_QUIET_HOURS_START':'quiet_hours_start','CONF_QUIET_HOURS_END':'quiet_hours_end',
+'DEFAULT_QUIET_HOURS_START':'22:00:00','DEFAULT_QUIET_HOURS_END':'08:00:00',
 }
 limits={
 'outdoor_aqi':50.,'outdoor_co2':800.,'outdoor_pm25':15.,'outdoor_pm10':45.,
@@ -50,7 +54,7 @@ limits={
 'max_outdoor_temp':32.,'max_outdoor_humidity':85.,'max_wind_kmh':35.,
 'max_age_minutes':90.,
 }
-pkg=types.ModuleType('beta79_general');pkg.__path__=[]
+pkg=types.ModuleType('beta79_general');pkg.__path__=[str(ROOT/'custom_components/environment_manager')]
 languages=types.ModuleType('beta79_general.languages')
 languages.SUPPORTED_LANGUAGE_TAGS=('en','el')
 languages.normalize_announcement_language=lambda x:x if x in ('auto','en','el') else None

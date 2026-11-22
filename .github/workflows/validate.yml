@@ -99,6 +99,12 @@ jobs:
           PYCODE
       - name: Validate beta/stable publication guards and canonical ZIP
         run: python -I .github/tests/test_publish_release.py
+      - name: Quiet-hours local clocks, shared device opt-in and guarded fan transitions
+        run: |
+          set -euo pipefail
+          python -I .github/tests/test_080_quiet_hours.py
+          python -I .github/tests/test_080_quiet_hours_settings.py
+          python -I .github/tests/test_080_quiet_card.py
       - name: B23 recorded mold RH trends retain genuine gaps and bounds
         run: python -I .github/tests/test_062b23_mold_history.py
       - name: Detailed trend retention, exact gaps and read-only authorization
@@ -602,6 +608,14 @@ jobs:
           python -I .github/tests/test_beta122_entity_trends.py || hem_ui_status=1
           python -I .github/tests/test_beta122_card_details.py || hem_ui_status=1
           python -I .github/tests/test_061b1_room_fold.py || hem_ui_status=1
+          exit "$hem_ui_status"
+      - name: Two-row room tabs, floor grouping and quiet-hours settings in Chromium
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: |
+          hem_ui_status=0
+          python -I .github/tests/test_080_room_tabs.py || hem_ui_status=1
+          python -I .github/tests/test_080_quiet_card.py --with-browser || hem_ui_status=1
           exit "$hem_ui_status"
       - name: Preserve room interface verification images
         if: always()
