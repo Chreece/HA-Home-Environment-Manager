@@ -1532,7 +1532,7 @@
     },
     {
       "en": "Measured energy by door state",
-      "catalog": "AirQualityAdvisorCard.prototype._doorContext063.energyWords",
+      "catalog": "HomeEnvironmentManagerCard.prototype._doorContext063.energyWords",
       "missing": [
         "ar",
         "bg",
@@ -1577,7 +1577,7 @@
     },
     {
       "en": "observed min",
-      "catalog": "AirQualityAdvisorCard.prototype._doorContext063.energyWords",
+      "catalog": "HomeEnvironmentManagerCard.prototype._doorContext063.energyWords",
       "missing": [
         "ar",
         "bg",
@@ -1622,7 +1622,7 @@
     },
     {
       "en": "excluded intervals",
-      "catalog": "AirQualityAdvisorCard.prototype._doorContext063.energyWords",
+      "catalog": "HomeEnvironmentManagerCard.prototype._doorContext063.energyWords",
       "missing": [
         "ar",
         "bg",
@@ -1667,7 +1667,7 @@
     },
     {
       "en": "Collecting comparable coverage",
-      "catalog": "AirQualityAdvisorCard.prototype._doorContext063.energyWords",
+      "catalog": "HomeEnvironmentManagerCard.prototype._doorContext063.energyWords",
       "missing": [
         "ar",
         "bg",
@@ -1712,7 +1712,7 @@
     },
     {
       "en": "Coverage available",
-      "catalog": "AirQualityAdvisorCard.prototype._doorContext063.energyWords",
+      "catalog": "HomeEnvironmentManagerCard.prototype._doorContext063.energyWords",
       "missing": [
         "ar",
         "bg",
@@ -1757,7 +1757,7 @@
     },
     {
       "en": "Session observations, not energy savings. Other conditions differ; comparisons sharing a meter are not additive.",
-      "catalog": "AirQualityAdvisorCard.prototype._doorContext063.energyWords",
+      "catalog": "HomeEnvironmentManagerCard.prototype._doorContext063.energyWords",
       "missing": [
         "ar",
         "bg",
@@ -1802,7 +1802,7 @@
     },
     {
       "en": "No active delay",
-      "catalog": "AirQualityAdvisorCard.prototype._doorContext063.energyWords",
+      "catalog": "HomeEnvironmentManagerCard.prototype._doorContext063.energyWords",
       "missing": [
         "ar",
         "bg",

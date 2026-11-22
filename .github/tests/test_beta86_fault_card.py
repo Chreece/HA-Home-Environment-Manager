@@ -63,7 +63,7 @@ with sync_playwright() as p:
     failures=[]
     page.on("pageerror",lambda error:failures.append(str(error)))
     page.set_content('<html><body></body></html>')
-    page.add_script_tag(path=str(ROOT/"frontend/air-quality-advisor-card.js"))
+    page.add_script_tag(path=str(ROOT/"frontend/home-environment-manager-card.js"))
     page.evaluate("""({states,room})=>{
         window.calls=[];window.opened=[];window.room=room;
         window.card=document.createElement('home-environment-manager-card');

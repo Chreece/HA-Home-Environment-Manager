@@ -11,7 +11,7 @@ import runpy
 
 ROOT = Path(__file__).resolve().parents[2]
 CC = ROOT / "custom_components/environment_manager"
-CARD = (CC / "frontend/air-quality-advisor-card.js").read_text(encoding="utf-8")
+CARD = (CC / "frontend/home-environment-manager-card.js").read_text(encoding="utf-8")
 NAMES = runpy.run_path(str(CC / "equipment_name_catalog.py"))["EQUIPMENT_TRANSLATED_NAMES"]
 HELP = runpy.run_path(str(CC / "equipment_help.py"))["equipment_configuration_help"]
 

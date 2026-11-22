@@ -12,7 +12,7 @@ import shutil
 from playwright.sync_api import sync_playwright
 
 ROOT=Path(__file__).resolve().parents[2]
-SOURCE=ROOT/"frontend/air-quality-advisor-card.js"
+SOURCE=ROOT/"frontend/home-environment-manager-card.js"
 assert SOURCE.exists()
 controller="entry_controller_battery_trv"
 sources=["climate.zigbee_trv"]

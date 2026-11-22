@@ -11,7 +11,7 @@ import shutil
 from playwright.sync_api import sync_playwright, expect
 
 ROOT = Path(__file__).resolve().parents[2]
-CARD = ROOT / "custom_components/environment_manager/frontend/air-quality-advisor-card.js"
+CARD = ROOT / "custom_components/environment_manager/frontend/home-environment-manager-card.js"
 states = deepcopy(runpy.run_path(
     str(ROOT / ".github/tests/test_beta114_interactive_trends.py")
 )["fixture"]())

@@ -25,8 +25,8 @@ async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
     """Serve the canonical integration."""
     hass.data.setdefault(DOMAIN, {})
     frontend_paths = (
-        ("air-quality-advisor-card.js", Path(__file__).parent / "frontend" / "air-quality-advisor-card.js"),
-        ("room-tab-connected.js", Path(__file__).parent / "frontend" / "room-tab-connected.js"),
+        ("home-environment-manager-card.js", Path(__file__).parent / "frontend" / "home-environment-manager-card.js"),
+        # Connected room styling is now bundled in the main card.
     )
     await hass.http.async_register_static_paths([
         StaticPathConfig(f"/{DOMAIN}/{name}", str(path), True)

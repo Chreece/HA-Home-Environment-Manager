@@ -9,7 +9,7 @@ import shutil
 from playwright.sync_api import sync_playwright, expect
 ROOT=Path(__file__).resolve().parents[2]
 SRC=ROOT/'custom_components/environment_manager'
-CARD=SRC/'frontend/air-quality-advisor-card.js'
+CARD=SRC/'frontend/home-environment-manager-card.js'
 POLICY=json.loads((SRC/'frontend/settings-audit-policy.json').read_text())
 CHROME=os.getenv('CHROME_BIN') or shutil.which('chromium') or shutil.which('google-chrome')
 assert CHROME

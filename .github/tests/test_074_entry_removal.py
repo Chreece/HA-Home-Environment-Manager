@@ -307,7 +307,7 @@ class RemovalTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_frontend_url_removed_only_for_last_entry_and_restored_on_setup(self):
         first, last = self.entry("first"), self.entry("last")
-        url = "/environment_manager/air-quality-advisor-card.js?v=test"
+        url = "/environment_manager/home-environment-manager-card.js?v=test"
         frontend.add_extra_js_url(self.hass, url)
         cleanup.remember_frontend_resource(self.hass, url)
         with patch.object(frontend, "remove_extra_js_url", wraps=frontend.remove_extra_js_url) as remove:

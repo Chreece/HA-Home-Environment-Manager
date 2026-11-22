@@ -11,7 +11,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
-CARD = ROOT / "frontend/air-quality-advisor-card.js"
+CARD = ROOT / "frontend/home-environment-manager-card.js"
 device_module = runpy.run_path(str(ROOT / ".github/tests/test_beta122_card_details.py"))
 base = runpy.run_path(str(ROOT / ".github/tests/test_beta108_setpoint_feedback_browser.py"))
 chrome = shutil.which("chromium") or shutil.which("google-chrome")

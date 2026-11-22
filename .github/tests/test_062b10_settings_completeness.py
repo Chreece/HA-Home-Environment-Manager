@@ -7,7 +7,7 @@ from copy import deepcopy
 import runpy,os,shutil,json
 from playwright.sync_api import sync_playwright, expect
 ROOT=Path(__file__).resolve().parents[2]
-CARD=ROOT/'custom_components/environment_manager/frontend/air-quality-advisor-card.js'
+CARD=ROOT/'custom_components/environment_manager/frontend/home-environment-manager-card.js'
 base=runpy.run_path(str(ROOT/'.github/tests/test_beta108_setpoint_feedback_browser.py'))
 room=runpy.run_path(str(ROOT/'.github/tests/test_beta114_room_settings.py'))
 fixture=runpy.run_path(str(ROOT/'.github/tests/test_beta122_card_details.py'))['fixture']()

@@ -16,7 +16,7 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
-CARD = ROOT / "frontend/air-quality-advisor-card.js"
+CARD = ROOT / "frontend/home-environment-manager-card.js"
 START = 1793520000
 
 

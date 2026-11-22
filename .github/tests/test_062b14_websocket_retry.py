@@ -10,7 +10,7 @@ import shutil
 from playwright.sync_api import sync_playwright
 
 ROOT=Path(__file__).resolve().parents[2]
-SCRIPT=ROOT/"frontend/air-quality-advisor-card.js"
+SCRIPT=ROOT/"frontend/home-environment-manager-card.js"
 browser_path=shutil.which("chromium") or shutil.which("google-chrome")
 assert browser_path, "Chromium is required for actual Lovelace regression"
 

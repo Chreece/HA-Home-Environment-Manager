@@ -19,7 +19,7 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[2]
-CARD = ROOT / "custom_components/environment_manager/frontend/air-quality-advisor-card.js"
+CARD = ROOT / "custom_components/environment_manager/frontend/home-environment-manager-card.js"
 EXPECTED = {"living": "safe", "heating": "unknown", "purifier": "safe",
             "temp_only": "safe", "rh_only": "safe", "empty": "unknown",
             "climate": "safe", "attention": "attention", "legacy": "safe"}

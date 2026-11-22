@@ -117,7 +117,7 @@ for value in (None, 845.0, 25000.0):
 
 sources=(SRC/"room_sources.py").read_text(encoding="utf-8")
 assert 'metric_ids("co2")' in sources  # never pin an eCO₂ estimate as native CO₂
-card=(SRC/"frontend/air-quality-advisor-card.js").read_text(encoding="utf-8")
+card=(SRC/"frontend/home-environment-manager-card.js").read_text(encoding="utf-8")
 assert "eCO₂ (estimated)" in card and "eCO₂ (εκτίμηση)" in card
 assert "eCO₂ ist eine Schätzung" in card
 print("PASS: carbon_dioxide ppm recognized; eCO2 visible informational only; no CO2 control or false room-safe evidence")

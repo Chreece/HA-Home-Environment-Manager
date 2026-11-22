@@ -1,6 +1,6 @@
   // Single bundled locale catalog: no per-render network fetch or filesystem I/O.
   const CARD65 = __BUNDLE65__;
-  const proto65 = AirQualityAdvisorCard.prototype;
+  const proto65 = HomeEnvironmentManagerCard.prototype;
   proto65._l65 = function(key) {
     return (CARD65[this._language()] || CARD65.en).text[key] || CARD65.en.text[key] || '';
   };

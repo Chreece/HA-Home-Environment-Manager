@@ -216,7 +216,7 @@ show_science: true
 ```
 
 Entity IDs can differ with your language, naming and renames. The older
-`custom:air-quality-advisor-card` type remains supported.
+`custom:home-environment-manager-card` type remains supported.
 
 ### Using the card
 

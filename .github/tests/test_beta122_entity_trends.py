@@ -19,7 +19,7 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[2]
-CARD = ROOT / "frontend/air-quality-advisor-card.js"
+CARD = ROOT / "frontend/home-environment-manager-card.js"
 BASE = runpy.run_path(str(ROOT / ".github/tests/test_beta114_interactive_trends.py"))
 START = BASE["START"]
 END = START + 96 * 3600

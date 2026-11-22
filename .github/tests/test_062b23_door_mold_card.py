@@ -15,7 +15,7 @@ import shutil
 from playwright.sync_api import expect, sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
-CARD = ROOT / "custom_components/environment_manager/frontend/air-quality-advisor-card.js"
+CARD = ROOT / "custom_components/environment_manager/frontend/home-environment-manager-card.js"
 states = deepcopy(runpy.run_path(str(ROOT / ".github/tests/test_beta114_interactive_trends.py"))["fixture"]())
 room = states["sensor.hem"]["attributes"]["dashboard"]["rooms"][0]
 START = 1793520000

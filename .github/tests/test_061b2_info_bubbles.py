@@ -16,7 +16,7 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
-CARD = ROOT / "frontend/air-quality-advisor-card.js"
+CARD = ROOT / "frontend/home-environment-manager-card.js"
 ROOM_KEY = "room-info:living"
 DEVICE_KEY = "device-info:climate.hem_heater"
 HELP_KEY = "device-option:switch.hem_announce"

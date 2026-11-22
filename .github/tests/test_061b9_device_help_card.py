@@ -16,7 +16,7 @@ import shutil
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
-CARD = ROOT / "frontend/air-quality-advisor-card.js"
+CARD = ROOT / "frontend/home-environment-manager-card.js"
 BASE = runpy.run_path(str(ROOT / ".github/tests/test_061b8_quick_options_card.py"))
 CATALOG = runpy.run_path(str(ROOT / "equipment_name_catalog.py"))
 NAME = CATALOG["native_full_output_label"]

@@ -14,7 +14,7 @@ import shutil
 from playwright.sync_api import sync_playwright
 
 ROOT=Path(__file__).resolve().parents[2]
-SOURCE=ROOT/"frontend/air-quality-advisor-card.js"
+SOURCE=ROOT/"frontend/home-environment-manager-card.js"
 assert SOURCE.exists()
 room={"area_id":"wohnzimmer","name":"Wohnzimmer",
       "environment":{"climate_plan":{"status":"unavailable"}}}

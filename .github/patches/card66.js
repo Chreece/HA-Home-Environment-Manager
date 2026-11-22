@@ -1,6 +1,6 @@
   /* Persist user disclosure choices synchronously, before live HA renders. */
   const CARD66 = __CARD66__;
-  const proto66 = AirQualityAdvisorCard.prototype;
+  const proto66 = HomeEnvironmentManagerCard.prototype;
   proto66._l66 = function(key) {return (CARD66[this._language()] || CARD66.en)[key] || CARD66.en[key] || '';};
   proto66._installInteractions66 = function() {
     if(this._interactions66) return;

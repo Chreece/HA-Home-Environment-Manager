@@ -37,7 +37,7 @@ with sync_playwright() as playwright:
         --card-background-color:#202020; --secondary-background-color:#292929;
         --divider-color:#444 }
     </style></head><body></body></html>""")
-    page.add_script_tag(path=str(ROOT/'frontend/air-quality-advisor-card.js'))
+    page.add_script_tag(path=str(ROOT/'frontend/home-environment-manager-card.js'))
     origin = page.evaluate("""({states}) => {
       class TestHassLovelaceShell extends HTMLElement {
         connectedCallback() {

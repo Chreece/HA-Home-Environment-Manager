@@ -218,7 +218,7 @@ names_source=names_source.replace('    parameter = _pid_parameter_label(key)',
 names_path.write_text(names_source)
 
 
-card_path = ROOT / 'frontend/air-quality-advisor-card.js'
+card_path = ROOT / 'frontend/home-environment-manager-card.js'
 card = card_path.read_text()
 assert '/* HEM_CARD65_START */' not in card, 'builder must run once on the verified baseline'
 # Preserve all existing service handlers, entity provenance checks and focus handling.
@@ -262,7 +262,7 @@ card = card.replace("      this._expanded = new Set();", '''      this._expanded
         if (event.target.open) this._calibrationExpanded65.add(id);
         else this._calibrationExpanded65.delete(id);
       }, true);''')
-point = "  if (!customElements.get('air-quality-advisor-card'))"
+point = "  if (!customElements.get('home-environment-manager-card'))"
 assert card.count(point) == 1
 extras = (ROOT / '.github/patches/card65.js').read_text()
 extras = extras.replace('__BUNDLE65__', json.dumps(bundle, ensure_ascii=False, separators=(',',':')))

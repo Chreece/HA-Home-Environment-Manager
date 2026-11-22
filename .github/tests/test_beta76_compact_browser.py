@@ -50,7 +50,7 @@ with sync_playwright() as p:
        :root{--primary-text-color:#eee;--secondary-text-color:#aaa;
        --card-background-color:#202020;--secondary-background-color:#292929;
        --divider-color:#444}</style></head><body></body></html>''')
-    page.add_script_tag(path=str(ROOT/'frontend/air-quality-advisor-card.js'))
+    page.add_script_tag(path=str(ROOT/'frontend/home-environment-manager-card.js'))
     page.evaluate('''({states,room})=>{
       window.calls=[];window.card=document.createElement('home-environment-manager-card');
       document.body.append(card);

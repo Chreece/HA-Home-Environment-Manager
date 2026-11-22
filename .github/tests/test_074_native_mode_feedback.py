@@ -17,7 +17,7 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[2]
-CARD = ROOT / "custom_components/environment_manager/frontend/air-quality-advisor-card.js"
+CARD = ROOT / "custom_components/environment_manager/frontend/home-environment-manager-card.js"
 SPEC = importlib.util.spec_from_file_location(
     "native_mode_metric_fixture", ROOT / ".github/tests/test_074b6_metric_activity.py"
 )

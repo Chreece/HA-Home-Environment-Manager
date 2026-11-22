@@ -43,7 +43,7 @@ with sync_playwright() as p:
       <main id="lovelace-scroll"></main>
       <div style="height:800px">Other dashboard content</div>
     </body></html>""")
-    page.add_script_tag(path=str(ROOT/'frontend/air-quality-advisor-card.js'))
+    page.add_script_tag(path=str(ROOT/'frontend/home-environment-manager-card.js'))
     page.evaluate("""({states})=>{
       window.card=document.createElement('home-environment-manager-card');
       document.getElementById('lovelace-scroll').append(card);

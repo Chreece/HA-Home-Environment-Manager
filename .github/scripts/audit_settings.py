@@ -109,7 +109,7 @@ def inventory():
             "definition": "custom_components/environment_manager/reconfigure_rooms.py:async_step_room_settings",
         })
 
-    text = (SOURCE / "frontend/air-quality-advisor-card.js").read_text()
+    text = (SOURCE / "frontend/home-environment-manager-card.js").read_text()
     start = text.index("const auditPolicyB8=") + len("const auditPolicyB8=")
     embedded, _ = json.JSONDecoder().raw_decode(text[start:])
     assert embedded == policy, "Embedded UI policy and audit source differ"

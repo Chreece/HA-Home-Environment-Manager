@@ -15,7 +15,7 @@ import runpy
 import shutil
 
 ROOT = Path(__file__).resolve().parents[2]
-CARD = ROOT / "frontend/air-quality-advisor-card.js"
+CARD = ROOT / "frontend/home-environment-manager-card.js"
 BOUNDS = runpy.run_path(str(ROOT / ".github/tests/test_061b3_text_boundaries.py"))
 PREPARE = "button.renamed_arrival_a"
 CANCEL = "button.renamed_stop_a"

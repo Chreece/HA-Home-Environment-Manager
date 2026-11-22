@@ -66,7 +66,7 @@ assert 'NATIVE_RECONNECT_SETTLE_SECONDS = 30' in source
 status = (ROOT / 'equipment_status.py').read_text()
 assert '"native_minimum_on_until": observed.get("minimum_on_until")' in status
 assert '"native_minimum_off_until": observed.get("minimum_off_until")' in status
-card = (ROOT / 'frontend/air-quality-advisor-card.js').read_text()
+card = (ROOT / 'frontend/home-environment-manager-card.js').read_text()
 assert "state==='minimum_on_hold'" in card
 assert "state==='minimum_off_hold'" in card
 assert "const label=presentation.label+untilLabel;" in card

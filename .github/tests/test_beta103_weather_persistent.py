@@ -30,7 +30,7 @@ with sync_playwright() as browser_api:
     errors=[]
     page.on('pageerror',lambda e:errors.append(str(e)))
     page.set_content('<html><body style="margin:0;background:#111;color:white"></body></html>')
-    page.add_script_tag(path=str(ROOT/'frontend/air-quality-advisor-card.js'))
+    page.add_script_tag(path=str(ROOT/'frontend/home-environment-manager-card.js'))
     page.evaluate("""({states})=>{
        window.card=document.createElement('home-environment-manager-card');
        document.body.append(card);

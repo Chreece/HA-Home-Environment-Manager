@@ -12,7 +12,7 @@ keys=('equipment_sleep_when_everyone_asleep','equipment_native_full_output',
       'equipment_pause_on_window_open','equipment_announce_device_errors')
 with sync_playwright() as pw:
     browser=pw.chromium.launch(executable_path=CHROME,headless=True,args=['--no-sandbox','--disable-dev-shm-usage'])
-    page=browser.new_page();page.add_script_tag(path=str(SRC/'frontend/air-quality-advisor-card.js'))
+    page=browser.new_page();page.add_script_tag(path=str(SRC/'frontend/home-environment-manager-card.js'))
     for language in ('en','el','de'):
         catalog=json.loads((SRC/'translations'/f'{language}.json').read_text())
         names={key:catalog['entity']['switch'][key]['name'] for key in keys}

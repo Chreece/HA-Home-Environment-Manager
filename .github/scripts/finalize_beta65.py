@@ -6,7 +6,7 @@ changes=[
   "    const nativeUnit=a.temperature_unit || '°C';\n    const hasMeasuredTemp=numeric(a.measurements?.temperature);\n    const observedTemp=hasMeasuredTemp?a.measurements.temperature:a.current_temperature;\n    if (numeric(observedTemp)) add(MOLD_DETAIL_LABELS[this._language()]?.[5] || t.physical,value(observedTemp,' '+(hasMeasuredTemp?'°C':nativeUnit)));\n    if (numeric(a.temperature)) add(t.target,value(a.temperature,' '+nativeUnit));"),
  ("add(t.target,this._format(a.target_temp_low)+' - '+this._format(a.target_temp_high)+' °C');", "add(t.target,this._format(a.target_temp_low)+' - '+this._format(a.target_temp_high)+' '+nativeUnit);")
 ]
-for filename in ('frontend/air-quality-advisor-card.js','.github/patches/card65.js'):
+for filename in ('frontend/home-environment-manager-card.js','.github/patches/card65.js'):
  path=ROOT/filename;text=path.read_text()
  for old,new in changes:
   if new in text and old not in text:continue

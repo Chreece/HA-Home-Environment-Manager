@@ -5,7 +5,7 @@
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..');
 const frontend=path.join(root,'custom_components/environment_manager/frontend');
-const file=path.join(frontend,'air-quality-advisor-card.js');
+const file=path.join(frontend,'home-environment-manager-card.js');
 const source=fs.readFileSync(file,'utf8');
 const data=JSON.parse(fs.readFileSync(path.join(root,'.github/localization/frontend.json'),'utf8'));
 for(const filename of data.shared_catalogs){

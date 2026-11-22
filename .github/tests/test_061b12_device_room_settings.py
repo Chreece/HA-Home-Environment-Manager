@@ -10,7 +10,7 @@ import shutil
 from playwright.sync_api import sync_playwright, expect
 
 ROOT=Path(__file__).resolve().parents[2]
-BRAND=ROOT/"custom_components/environment_manager/frontend/air-quality-advisor-card.js"
+BRAND=ROOT/"custom_components/environment_manager/frontend/home-environment-manager-card.js"
 room_test=runpy.run_path(str(ROOT/".github/tests/test_beta114_room_settings.py"))
 before=runpy.run_path(str(ROOT/".github/tests/test_beta108_setpoint_feedback_browser.py"))
 BASIC=room_test["FORM"]

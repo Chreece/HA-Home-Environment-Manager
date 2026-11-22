@@ -22,7 +22,7 @@ import types
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "custom_components/environment_manager"
-CARD = SOURCE / "frontend/air-quality-advisor-card.js"
+CARD = SOURCE / "frontend/home-environment-manager-card.js"
 
 
 def calibration_label_checks():
@@ -94,7 +94,7 @@ const localeEnd=src.indexOf('  const BRAND_TITLE =',localeStart);
 assert(localeStart>0&&localeEnd>localeStart);
 const localeBootstrap=src.slice(localeStart,localeEnd);
 const escape=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
-const start=src.indexOf('  const HEM_PID_WORDS074='),end=src.indexOf('  AirQualityAdvisorCard.prototype._hemPidStatusRender074=',start);
+const start=src.indexOf('  const HEM_PID_WORDS074='),end=src.indexOf('  HomeEnvironmentManagerCard.prototype._hemPidStatusRender074=',start);
 assert(start>0&&end>start);
 const api=new Function('escape',localeBootstrap+src.slice(start,end)+'\nreturn {pidStatusModels074,pidStatusHtml074,HEM_PID_WORDS074,HEM_PID_REASONS074,HEM_PID_PERFORMANCE_WORDS074B4,HEM_PID_PERFORMANCE_REASONS074B4};')(escape);
 const NOW=Date.now()/1000;

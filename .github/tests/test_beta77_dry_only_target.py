@@ -65,7 +65,7 @@ for modes, bits in [
     c = cap(modes, bits)
     assert c.temperature or c.temperature_range, (modes, c)
 
-frontend = (ROOT / "frontend/air-quality-advisor-card.js").read_text(encoding="utf-8")
+frontend = (ROOT / "frontend/home-environment-manager-card.js").read_text(encoding="utf-8")
 # The old card-only Manual editor was removed along with the legacy
 # device-wide method. Real native DRY/FAN_ONLY target gating remains enforced.
 assert "const method=!hasModeSettings" not in frontend
