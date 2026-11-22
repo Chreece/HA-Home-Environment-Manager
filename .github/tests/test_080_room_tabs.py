@@ -16,6 +16,7 @@ from playwright.sync_api import expect, sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
 CARD = ROOT / "custom_components/environment_manager/frontend/air-quality-advisor-card.js"
+CONNECTED_TAB = ROOT / "custom_components/environment_manager/frontend/room-tab-connected.js"
 
 SETUP = r"""data=>{
   window.calls=[];window.settings=[];window.info=[];
@@ -59,6 +60,15 @@ REPORT = r"""()=>{
     rows:[...card.shadowRoot.querySelectorAll('.hem-room-glance87')].map(summary=>({
       area:summary.parentElement.getAttribute('data-room-fold87'),
       header:box(summary),scrollWidth:summary.scrollWidth,clientWidth:summary.clientWidth,
+      tab:box(summary.querySelector('.hem-room-tab080')),
+      tabRow:box(summary.querySelector('.hem-room-tabline080')),
+      tabVisual:{
+        outerBorder:getComputedStyle(summary.parentElement).borderTopWidth,
+        tabBg:getComputedStyle(summary.querySelector('.hem-room-tab080')).backgroundColor,
+        bodyBg:getComputedStyle(summary,'::before').backgroundColor,
+        tabBottom:getComputedStyle(summary.querySelector('.hem-room-tab080')).borderBottomColor,
+        panelStart:parseFloat(getComputedStyle(summary,'::before').top)
+      },
       name:box(summary.querySelector('.hem-room-name87')),
       settings:box(summary.querySelector('[data-room-settings114]')),
       nameText:summary.querySelector('.hem-room-name87').textContent,
@@ -82,6 +92,12 @@ def assert_geometry(report, label):
     assert len(report['rows']) == 2, (label, report)
     for row in report['rows']:
         context = (label, row)
+        assert row['tabVisual']['outerBorder'] == '0px', ('no outer frame above tab', *context)
+        assert row['tabVisual']['tabBg'] == row['tabVisual']['bodyBg'], ('one surface colour', *context)
+        assert row['tabVisual']['tabBottom'] == row['tabVisual']['bodyBg'], ('no tab seam', *context)
+        assert abs(row['tab']['left'] - row['header']['left']) <= 1, ('aligned outer edges', *context)
+        assert abs(row['tab']['top'] - row['header']['top']) <= 1, ('no border above title', *context)
+        assert abs(row['tabVisual']['panelStart'] - (row['tabRow']['height'] - 1)) <= 1, ('continuous outline', *context)
         assert row['scrollWidth'] <= row['clientWidth'] + 1, context
         assert 60 <= row['header']['height'] <= 100, ('two compact rows', *context)
         assert row['settings']['left'] >= row['name']['right'] - 1, context
@@ -148,6 +164,7 @@ def run():
                 # A fresh page keeps custom-element registration and listeners isolated.
                 page.evaluate(icons)
                 page.add_script_tag(path=str(CARD))
+                page.add_script_tag(path=str(CONNECTED_TAB))
                 page.evaluate(SETUP, data)
                 expect(page.locator('[data-room-settings114="living"]')).to_be_enabled()
                 for floors in (False, True):
