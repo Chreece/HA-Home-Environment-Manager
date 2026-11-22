@@ -24,9 +24,13 @@ CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
     """Serve the canonical integration."""
     hass.data.setdefault(DOMAIN, {})
-    card_path = Path(__file__).parent / "frontend" / "air-quality-advisor-card.js"
+    frontend_paths = (
+        ("air-quality-advisor-card.js", Path(__file__).parent / "frontend" / "air-quality-advisor-card.js"),
+        ("room-tab-connected.js", Path(__file__).parent / "frontend" / "room-tab-connected.js"),
+    )
     await hass.http.async_register_static_paths([
-        StaticPathConfig(f"/{DOMAIN}/air-quality-advisor-card.js", str(card_path), True),
+        StaticPathConfig(f"/{DOMAIN}/{name}", str(path), True)
+        for name, path in frontend_paths
     ])
     # This is a native HA frontend registration, not a Lovelace storage mutation.
     # Pin the cache key to the integration version so HACS updates refresh the JS.
@@ -39,11 +43,12 @@ async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
     )
     # Bundled asset and HACS release version share ONE authoritative source.
     # Rebranding must not change the original integration domain/path.
-    url = f"/{DOMAIN}/air-quality-advisor-card.js?v={manifest['version']}"
-    add_extra_js_url(hass, url)
     from .entry_cleanup import remember_frontend_resource
 
-    remember_frontend_resource(hass, url)
+    for name, _ in frontend_paths:
+        url = f"/{DOMAIN}/{name}?v={manifest['version']}"
+        add_extra_js_url(hass, url)
+        remember_frontend_resource(hass, url)
     # A full multi-room dashboard cannot safely fit in Recorder attributes.
     # Its authenticated WebSocket API is read-only and registered just once
     # per canonical integration setup, not once per config entry.

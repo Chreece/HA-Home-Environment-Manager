@@ -100,7 +100,14 @@ def capture_entry_runtime(hass: Any, entry: Any) -> EntryCleanup:
 
 def remember_frontend_resource(hass: Any, url: str) -> None:
     """Remember the exact integration-added URL, without touching Lovelace."""
-    hass.data[DATA_FRONTEND] = {"url": url, "registered": True}
+    resource = hass.data.get(DATA_FRONTEND)
+    if resource is None:
+        hass.data[DATA_FRONTEND] = {"url": url, "urls": [url], "registered": True}
+        return
+    urls = resource.setdefault("urls", [resource["url"]])
+    if url not in urls:
+        urls.append(url)
+    resource["registered"] = True
 
 
 def prepare_entry_setup(hass: Any, entry: Any) -> None:
@@ -113,7 +120,8 @@ def prepare_entry_setup(hass: Any, entry: Any) -> None:
     if resource and not resource["registered"]:
         from homeassistant.components.frontend import add_extra_js_url
 
-        add_extra_js_url(hass, resource["url"])
+        for url in resource.get("urls", [resource["url"]]):
+            add_extra_js_url(hass, url)
         resource["registered"] = True
 
 
@@ -221,7 +229,8 @@ async def async_remove_owned_data(hass: Any, entry: Any) -> None:
         if resource and resource["registered"]:
             from homeassistant.components.frontend import remove_extra_js_url
 
-            remove_extra_js_url(hass, resource["url"])
+            for url in resource.get("urls", [resource["url"]]):
+                remove_extra_js_url(hass, url)
             resource["registered"] = False
     if failed:
         raise RuntimeError(f"Could not remove {len(failed)} HEM owned storage file(s)")
