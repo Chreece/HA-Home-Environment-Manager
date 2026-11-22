@@ -450,6 +450,14 @@ jobs:
           python -I .github/tests/test_061b8_dehumidifier_fan.py
       - name: Install runner-only Home Assistant and browser test packages
         run: python -m pip install 'homeassistant==2026.10.4' 'playwright==1.57.0'
+      - name: Two-row room tabs, floor grouping and quiet-hours settings in Chromium
+        env:
+          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
+        run: |
+          hem_ui_status=0
+          python -I .github/tests/test_080_room_tabs.py || hem_ui_status=1
+          python -I .github/tests/test_080_quiet_card.py --with-browser || hem_ui_status=1
+          exit "$hem_ui_status"
       - name: B22 readable setting help and option details in the real card
         run: python -I .github/tests/test_062b22_setting_info_browser.py
       - name: Lifecycle through real Home Assistant startup and stop events
@@ -608,14 +616,6 @@ jobs:
           python -I .github/tests/test_beta122_entity_trends.py || hem_ui_status=1
           python -I .github/tests/test_beta122_card_details.py || hem_ui_status=1
           python -I .github/tests/test_061b1_room_fold.py || hem_ui_status=1
-          exit "$hem_ui_status"
-      - name: Two-row room tabs, floor grouping and quiet-hours settings in Chromium
-        env:
-          HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
-        run: |
-          hem_ui_status=0
-          python -I .github/tests/test_080_room_tabs.py || hem_ui_status=1
-          python -I .github/tests/test_080_quiet_card.py --with-browser || hem_ui_status=1
           exit "$hem_ui_status"
       - name: Preserve room interface verification images
         if: always()

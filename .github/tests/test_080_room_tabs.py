@@ -108,6 +108,14 @@ def assert_geometry(report, label):
 
 def run():
     base = runpy.run_path(str(ROOT / '.github/tests/test_beta122_card_details.py'))['fixture']()
+    # Header temperature links require the selected room measurement's source
+    # evidence. The shared details fixture only supplies standalone readings.
+    temperature = next(reading for reading in base['room']['readings']
+                       if reading['metric'] == 'temperature')
+    base['room']['environment']['measurement_evidence'] = {
+        'temperature': {'value': temperature['value'], 'source_count': 1,
+                        'source_ids': [temperature['entity_id']]},
+    }
     icons = runpy.run_path(str(ROOT / '.github/tests/test_061b1_room_fold.py'))['icon_fixture']()
     chrome = os.environ.get('CHROME_BIN') or shutil.which('chromium') or shutil.which('google-chrome')
     assert chrome, 'Chromium is required for room-tab layout validation'
