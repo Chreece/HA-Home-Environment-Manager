@@ -10,7 +10,7 @@ with sync_playwright() as p:
  browser=p.chromium.launch(executable_path=os.environ.get('CHROME_BIN') or shutil.which('chromium') or shutil.which('google-chrome'),headless=True,args=['--no-sandbox','--disable-dev-shm-usage'])
  page=browser.new_page(viewport={'width':590,'height':1100});errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
  page.set_content('<html><head><style>body{margin:8px;background:#111;color:#eee;font-family:Arial}:root{--primary-text-color:#eee;--secondary-text-color:#aaa;--card-background-color:#202020;--secondary-background-color:#292929;--divider-color:#444}</style></head><body></body></html>')
- page.add_script_tag(path=str(ROOT/'frontend/air-quality-advisor-card.js'))
+ page.add_script_tag(path=str(ROOT/'frontend/home-environment-manager-card.js'))
  page.evaluate('''({states,room})=>{
   for(let i=0;i<5000;i++)states['sensor.unrelated_'+i]={state:String(i),attributes:{}};
   states['sensor.hem']={state:'safe',attributes:{dashboard:{version:1,rooms:[room],summary:{total:1,safe:1,attention:0,unknown:0},outdoor:{status:'safe',weather:[{condition:'partlycloudy',temperature_c:10,wind_kmh:6}],readings:[{metric:'aqi',value:27,unit:'US AQI',available:true}],warnings:[],blockers:[]}}}};

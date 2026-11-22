@@ -13,7 +13,7 @@ from types import SimpleNamespace
 
 ROOT = Path(__file__).resolve().parents[2]
 PYTHON = ROOT / "custom_components/environment_manager"
-CARD = PYTHON / "frontend/air-quality-advisor-card.js"
+CARD = PYTHON / "frontend/home-environment-manager-card.js"
 SETUP = PYTHON / "reconfigure_rooms.py"
 FLOW = PYTHON / "config_flow.py"
 

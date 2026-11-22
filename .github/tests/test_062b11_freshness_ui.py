@@ -4,7 +4,7 @@ from copy import deepcopy
 import ast,os,runpy,shutil
 from playwright.sync_api import sync_playwright,expect
 ROOT=Path(__file__).resolve().parents[2]
-CARD=ROOT/'custom_components/environment_manager/frontend/air-quality-advisor-card.js'
+CARD=ROOT/'custom_components/environment_manager/frontend/home-environment-manager-card.js'
 ROOM=runpy.run_path(str(ROOT/'.github/tests/test_beta114_room_settings.py'))
 BASE=runpy.run_path(str(ROOT/'.github/tests/test_beta108_setpoint_feedback_browser.py'))
 tree=ast.parse((ROOT/'.github/tests/test_062b7_autosave.py').read_text())

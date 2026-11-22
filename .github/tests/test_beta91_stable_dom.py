@@ -34,7 +34,7 @@ with sync_playwright() as p:
        --divider-color:#444}
        #scroller{height:350px;overflow-y:auto;width:520px}
        </style></head><body><main id="scroller"></main></body></html>""")
-    page.add_script_tag(path=str(ROOT/'frontend/air-quality-advisor-card.js'))
+    page.add_script_tag(path=str(ROOT/'frontend/home-environment-manager-card.js'))
     page.evaluate("""({states})=>{
         window.card=document.createElement('home-environment-manager-card');
         document.getElementById('scroller').append(card);

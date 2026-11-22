@@ -29,7 +29,7 @@ jobs:
         run: |
           set -euo pipefail
           python -I -m compileall -q .
-          node --check custom_components/environment_manager/frontend/air-quality-advisor-card.js
+          node --check custom_components/environment_manager/frontend/home-environment-manager-card.js
           python -I - <<'PYCODE'
           import json
           import re
@@ -299,14 +299,14 @@ jobs:
       - name: Beta105 physical contributor provenance and persisted average trends
         run: |
           python -I .github/tests/test_beta105_averages.py
-          node --check frontend/air-quality-advisor-card.js
+          node --check frontend/home-environment-manager-card.js
       - name: Beta102 reproduce 5°C heating and 4°C cooling native PID hold
         run: python -I .github/tests/test_beta102_pid_target_followthrough.py
       - name: Beta100 native binary setpoint bounds and physical-only telemetry
         run: |
           python -I .github/tests/test_beta100_native_pid.py
           python -I .github/tests/test_beta100_delayed_feedback.py
-          node --check frontend/air-quality-advisor-card.js
+          node --check frontend/home-environment-manager-card.js
       - name: Beta91 native DRY-only PID, low-demand compressor PWM and restart continuity
         run: |
           set -euo pipefail
@@ -690,7 +690,7 @@ jobs:
           names = publisher.inspect_zip(data, version)
           assert 'manifest.json' in names and '__init__.py' in names
           assert 'translations/el.json' in names
-          assert 'frontend/air-quality-advisor-card.js' in names
+          assert 'frontend/home-environment-manager-card.js' in names
           assert all(not name.startswith(publisher.SOURCE) for name in names)
           assert all(name.startswith(('translations/', 'frontend/', 'brand/'))
                      or '/' not in name for name in names)

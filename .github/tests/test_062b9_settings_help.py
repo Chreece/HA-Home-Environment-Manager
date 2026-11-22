@@ -14,7 +14,7 @@ from playwright.sync_api import sync_playwright, expect
 
 ROOT=Path(__file__).resolve().parents[2]
 SOURCE=ROOT/'custom_components/environment_manager'
-CARD=SOURCE/'frontend/air-quality-advisor-card.js'
+CARD=SOURCE/'frontend/home-environment-manager-card.js'
 ARTIFACTS=ROOT/'.github/test-artifacts/b9'
 ARTIFACTS.mkdir(parents=True,exist_ok=True)
 CHROME=os.getenv('CHROME_BIN') or shutil.which('chromium') or shutil.which('google-chrome')

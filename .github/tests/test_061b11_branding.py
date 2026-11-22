@@ -10,8 +10,13 @@ import zlib
 
 ROOT=Path(__file__).resolve().parents[2]
 INTEGRATION=ROOT/'custom_components/environment_manager'
-CARD=INTEGRATION/'frontend/air-quality-advisor-card.js'
+CARD=INTEGRATION/'frontend/home-environment-manager-card.js'
 source=CARD.read_text(encoding='utf-8')
+assert 'air-quality-advisor-card' not in source
+assert 'AirQualityAdvisorCard' not in source
+assert "customElements.define('home-environment-manager-card'," in source
+assert 'HEM_ROOM_TABS081_CONNECTED_START' in source
+assert 'hem-room-glance87::before' in source
 
 for path in (ROOT/'.github/assets/hem-banner.svg',
              ROOT/'.github/assets/hem-mark.svg',

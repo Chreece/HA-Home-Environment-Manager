@@ -15,7 +15,7 @@ from playwright.sync_api import expect, sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
 SRC = ROOT / "custom_components/environment_manager"
-CARD = SRC / "frontend/air-quality-advisor-card.js"
+CARD = SRC / "frontend/home-environment-manager-card.js"
 option_help = runpy.run_path(str(SRC / "setting_option_explanations.py"))["option_help_locales"]
 door_words = runpy.run_path(str(SRC / "equipment_door_policy.py"))["WORDS"]
 browser_path = os.getenv("CHROME_BIN") or shutil.which("chromium") or shutil.which("google-chrome")

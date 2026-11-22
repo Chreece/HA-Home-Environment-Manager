@@ -8,7 +8,7 @@ from pathlib import Path
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
-CARD = ROOT / "frontend/air-quality-advisor-card.js"
+CARD = ROOT / "frontend/home-environment-manager-card.js"
 
 SCRIPT = r"""
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');

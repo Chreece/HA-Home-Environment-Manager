@@ -17,7 +17,7 @@ import shutil
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
-CARD = ROOT / "custom_components/environment_manager/frontend/air-quality-advisor-card.js"
+CARD = ROOT / "custom_components/environment_manager/frontend/home-environment-manager-card.js"
 POLICY = CARD.with_name("settings-audit-policy.json")
 
 NODE = r"""

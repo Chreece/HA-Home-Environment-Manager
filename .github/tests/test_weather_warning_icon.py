@@ -18,7 +18,7 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[2]
-CARD = ROOT / "custom_components/environment_manager/frontend/air-quality-advisor-card.js"
+CARD = ROOT / "custom_components/environment_manager/frontend/home-environment-manager-card.js"
 SOURCE = "binary_sensor.frost_warning"
 DESCRIPTION = "Es tritt leichter Frost zwischen 0 °C und -4 °C auf."
 

@@ -8,7 +8,7 @@ import runpy,os,shutil
 from playwright.sync_api import sync_playwright,expect
 
 ROOT=Path(__file__).resolve().parents[2]
-CARD=ROOT/"custom_components/environment_manager/frontend/air-quality-advisor-card.js"
+CARD=ROOT/"custom_components/environment_manager/frontend/home-environment-manager-card.js"
 room_module=runpy.run_path(str(ROOT/".github/tests/test_beta114_room_settings.py"))
 device_module=runpy.run_path(str(ROOT/".github/tests/test_beta122_card_details.py"))
 base=runpy.run_path(str(ROOT/".github/tests/test_beta108_setpoint_feedback_browser.py"))

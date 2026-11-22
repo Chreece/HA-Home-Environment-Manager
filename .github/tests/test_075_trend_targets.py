@@ -14,7 +14,7 @@ import sys
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
-CARD = ROOT / "custom_components/environment_manager/frontend/air-quality-advisor-card.js"
+CARD = ROOT / "custom_components/environment_manager/frontend/home-environment-manager-card.js"
 BASE = runpy.run_path(str(ROOT / ".github/tests/test_beta122_entity_trends.py"))
 START = BASE["START"]
 

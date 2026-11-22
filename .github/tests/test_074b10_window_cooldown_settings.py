@@ -124,7 +124,7 @@ class CloseCooldownSettingsTests(unittest.IsolatedAsyncioTestCase):
                    for locale, values in text.items()}
         node = shutil.which("node")
         self.assertIsNotNone(node)
-        subprocess.run([node, "-", str(SOURCE / "frontend/air-quality-advisor-card.js"),
+        subprocess.run([node, "-", str(SOURCE / "frontend/home-environment-manager-card.js"),
                         json.dumps(catalog, ensure_ascii=False)], input=NODE,
                        text=True, check=True)
 
@@ -198,7 +198,7 @@ def browser_checks():
             page.on("pageerror", lambda error: errors.append(str(error)))
             page.goto("https://hem-window-cooldown.test/settings")
             page.evaluate(base["icon_fixture"]())
-            page.add_script_tag(path=str(SOURCE / "frontend/air-quality-advisor-card.js"))
+            page.add_script_tag(path=str(SOURCE / "frontend/home-environment-manager-card.js"))
             page.evaluate(room["SETUP"], {"states": states, "form": room["FORM"], "native": False})
             page.evaluate("form=>window.roomSchema=form", room["FORM"])
             page.evaluate(setup)

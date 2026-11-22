@@ -58,7 +58,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="Fail if the bundle is stale.")
     args = parser.parse_args()
-    card = FRONTEND / "air-quality-advisor-card.js"
+    card = FRONTEND / "home-environment-manager-card.js"
     source = card.read_text(encoding="utf-8")
     start, end = source.index(START), source.index(END) + len(END)
     compiled = source[:start] + build() + source[end:]

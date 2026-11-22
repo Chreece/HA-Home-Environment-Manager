@@ -15,7 +15,7 @@ import shutil
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
-CARD = ROOT / "custom_components/environment_manager/frontend/air-quality-advisor-card.js"
+CARD = ROOT / "custom_components/environment_manager/frontend/home-environment-manager-card.js"
 
 NODE = r"""
 const fs=require('node:fs'),assert=require('node:assert/strict');
@@ -27,7 +27,7 @@ assert(localeStart>0&&localeEnd>localeStart);
 const localeBootstrap=src.slice(localeStart,localeEnd);
 const escape=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 const start=src.indexOf('  const HEM_PID_WORDS074=');
-const end=src.indexOf('  AirQualityAdvisorCard.prototype._hemPidStatusRender074=',start);
+const end=src.indexOf('  HomeEnvironmentManagerCard.prototype._hemPidStatusRender074=',start);
 assert(start>0&&end>start);
 const api=new Function('escape',localeBootstrap+src.slice(start,end)+'\nreturn {pidStatusModels074,pidStatusHtml074,HEM_PID_REASONS074,HEM_PID_WORDS074};')(escape);
 const NOW=Date.now()/1000;

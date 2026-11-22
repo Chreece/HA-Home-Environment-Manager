@@ -11,7 +11,7 @@ import shutil
 from playwright.sync_api import sync_playwright, expect
 
 ROOT=Path(__file__).resolve().parents[2]
-CARD=ROOT/"custom_components/environment_manager/frontend/air-quality-advisor-card.js"
+CARD=ROOT/"custom_components/environment_manager/frontend/home-environment-manager-card.js"
 FIXTURE=runpy.run_path(str(ROOT/".github/tests/test_beta122_card_details.py"))["fixture"]
 ICONS=runpy.run_path(str(ROOT/".github/tests/test_beta108_setpoint_feedback_browser.py"))["icon_fixture"]
 CHROME=os.getenv("CHROME_BIN") or shutil.which("chromium") or shutil.which("google-chrome")

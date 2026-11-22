@@ -21,7 +21,7 @@ with sync_playwright() as p:
  page=browser.new_page(viewport={'width':590,'height':1100})
  errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
  page.set_content('<html><head><style>body{background:#101010;color:white;margin:8px;font-family:Arial}*{box-sizing:border-box}:root{--primary-text-color:#eee;--secondary-text-color:#aaa;--card-background-color:#202020;--secondary-background-color:#292929;--divider-color:#404040}</style></head><body></body></html>')
- page.add_script_tag(path=str(ROOT/'frontend/air-quality-advisor-card.js'))
+ page.add_script_tag(path=str(ROOT/'frontend/home-environment-manager-card.js'))
  page.evaluate('''({states,room})=>{
   window.calls=[];window.room=room;window.card=document.createElement('home-environment-manager-card');
   document.body.append(card);card._hass={language:'el',states,localize:()=>undefined,callService:(...args)=>{calls.push(args);return Promise.resolve();}};

@@ -215,7 +215,7 @@ def run():
           #card-frame{width:100%;max-width:100%}
         </style></head><body><main id="card-frame"></main></body></html>""")
         page.evaluate(icon_fixture())
-        page.add_script_tag(path=str(ROOT / "frontend/air-quality-advisor-card.js"))
+        page.add_script_tag(path=str(ROOT / "frontend/home-environment-manager-card.js"))
         for language in LABELS:
             for case in ("setpoint", "missing-target", "mode-only", "manual-check", "exhausted-target"):
                 target_present = case != "missing-target"

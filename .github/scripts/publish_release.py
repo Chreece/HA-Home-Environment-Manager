@@ -44,7 +44,7 @@ REQUIRED = (
     "equipment_mode_settings.py", "equipment_mode_entities.py", "operating_mode_catalog.py",
     "mold_control_demand.py",
     "environment_history.py", "control_history.py", "control_trend.py",
-    "frontend/air-quality-advisor-card.js",
+    "frontend/home-environment-manager-card.js",
 )
 
 

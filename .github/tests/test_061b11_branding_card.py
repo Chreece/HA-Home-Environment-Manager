@@ -24,7 +24,7 @@ with sync_playwright() as p:
             main{width:359px;max-width:100%;margin:0 auto}
             </style></head><body><main></main></body></html>""")
         page.evaluate(icons)
-        page.add_script_tag(path=str(ROOT/'custom_components/environment_manager/frontend/air-quality-advisor-card.js'))
+        page.add_script_tag(path=str(ROOT/'custom_components/environment_manager/frontend/home-environment-manager-card.js'))
         page.evaluate(existing['SETUP'],existing['fixture'](lang))
         page.wait_for_function("Boolean(card._lastState)")
         heading=page.locator('.card-heading h2')

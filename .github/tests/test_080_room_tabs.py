@@ -15,8 +15,7 @@ import shutil
 from playwright.sync_api import expect, sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
-CARD = ROOT / "custom_components/environment_manager/frontend/air-quality-advisor-card.js"
-CONNECTED_TAB = ROOT / "custom_components/environment_manager/frontend/room-tab-connected.js"
+CARD = ROOT / "custom_components/environment_manager/frontend/home-environment-manager-card.js"
 
 SETUP = r"""data=>{
   window.calls=[];window.settings=[];window.info=[];
@@ -164,8 +163,16 @@ def run():
                 # A fresh page keeps custom-element registration and listeners isolated.
                 page.evaluate(icons)
                 page.add_script_tag(path=str(CARD))
-                page.add_script_tag(path=str(CONNECTED_TAB))
                 page.evaluate(SETUP, data)
+                # No separate legacy custom card may be registered or suggested.
+                assert page.evaluate('''() => !customElements.get(
+                    'air-quality-advisor-card') && !customElements.get(
+                    'air-quality-advisor-card-editor') &&
+                    !!customElements.get('home-environment-manager-card') &&
+                    !!customElements.get('home-environment-manager-card-editor') &&
+                    window.customCards.filter(
+                        c=>c.type==='home-environment-manager-card').length===1
+                ''')
                 expect(page.locator('[data-room-settings114="living"]')).to_be_enabled()
                 for floors in (False, True):
                     page.evaluate('floorMode080', floors)

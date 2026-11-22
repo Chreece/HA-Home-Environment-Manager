@@ -9,7 +9,7 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[2]
 PREVIOUS = runpy.run_path(str(ROOT / ".github/tests/test_beta108_setpoint_feedback_browser.py"))
-CARD = ROOT / "frontend/air-quality-advisor-card.js"
+CARD = ROOT / "frontend/home-environment-manager-card.js"
 SWITCH = "switch.native_full_output_"
 CONTROLLER = "climate.managed_0_"
 NAME = runpy.run_path(str(ROOT / "equipment_name_catalog.py"))["native_full_output_label"]

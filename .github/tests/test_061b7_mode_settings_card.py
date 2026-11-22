@@ -429,7 +429,7 @@ test('within-target explanations require a valid current cutoff snapshot and pre
 
 def logic_checks():
     result = subprocess.run(["node", "-e", NODE_BASE + NODE_CHECKS,
-                             str(ROOT / "frontend/air-quality-advisor-card.js"),
+                             str(ROOT / "frontend/home-environment-manager-card.js"),
                              json.dumps({"states": fixture(), "entities": {}})])
     if result.returncode:
         raise SystemExit(result.returncode)
@@ -450,7 +450,7 @@ def run():
                          ':root{--primary-text-color:#eee;--secondary-background-color:#292929;'
                          '--card-background-color:#202020;--divider-color:#444;--primary-color:#03a9f4}</style>')
         page.evaluate(BASE["BASE"]["PREVIOUS"]["icon_fixture"]())
-        page.add_script_tag(path=str(ROOT / "frontend/air-quality-advisor-card.js"))
+        page.add_script_tag(path=str(ROOT / "frontend/home-environment-manager-card.js"))
         page.evaluate("""states=>{
           window.calls=[];
           window.card=document.createElement('home-environment-manager-card');

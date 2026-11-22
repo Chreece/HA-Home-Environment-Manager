@@ -44,7 +44,7 @@ with sync_playwright() as playwright:
          --divider-color:#444}
        body{background:#111;color:#eee;margin:0;}
        </style></head><body></body></html>""")
-    page.add_script_tag(path=str(ROOT/'frontend/air-quality-advisor-card.js'))
+    page.add_script_tag(path=str(ROOT/'frontend/home-environment-manager-card.js'))
     page.evaluate("""({states,entities})=>{
       window.calls=[];
       window.info=[];

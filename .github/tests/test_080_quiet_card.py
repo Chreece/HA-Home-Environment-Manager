@@ -18,7 +18,7 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / 'custom_components/environment_manager'
-CARD = SOURCE / 'frontend/air-quality-advisor-card.js'
+CARD = SOURCE / 'frontend/home-environment-manager-card.js'
 SCHEMA = [
     {'name': 'quiet_hours_enabled', 'default': False, 'selector': {'boolean': {}}},
     {'name': 'quiet_hours_start', 'default': '22:00:00', 'selector': {'time': {}}},

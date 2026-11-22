@@ -17,7 +17,7 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[2]
-CARD = ROOT / "custom_components/environment_manager/frontend/air-quality-advisor-card.js"
+CARD = ROOT / "custom_components/environment_manager/frontend/home-environment-manager-card.js"
 BASELINE = ROOT / ".github/tests/test_beta112_room_activity.py"
 spec = importlib.util.spec_from_file_location("beta112_activity_fixture", BASELINE)
 baseline = importlib.util.module_from_spec(spec)

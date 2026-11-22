@@ -10,7 +10,7 @@ import runpy
 
 ROOT=Path(__file__).resolve().parents[2]
 runtime=(ROOT/"equipment_runtime.py").read_text()
-card=(ROOT/"frontend/air-quality-advisor-card.js").read_text()
+card=(ROOT/"frontend/home-environment-manager-card.js").read_text()
 fixture=runpy.run_path(str(ROOT/".github/tests/test_beta88_power_startup_and_retries.py"))
 SimRuntime,SPEC=fixture["SimRuntime"],fixture["SPEC"]
 

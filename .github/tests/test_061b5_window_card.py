@@ -62,7 +62,7 @@ def run():
                   main{width:625px;max-width:100%;margin:0 auto}home-environment-manager-card{display:block}
                   </style></head><body><main></main></body></html>""")
                 page.evaluate(icons)
-                page.add_script_tag(path=str(ROOT / "frontend/air-quality-advisor-card.js"))
+                page.add_script_tag(path=str(ROOT / "frontend/home-environment-manager-card.js"))
                 data = fixture(language)
                 page.evaluate(SETUP, data)
                 BOUNDS["settle"](page)
