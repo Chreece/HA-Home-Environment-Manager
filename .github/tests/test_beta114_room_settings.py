@@ -18,7 +18,7 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
 CARD = ROOT / "frontend/home-environment-manager-card.js"
-MARKER = "  if (!customElements.get('home-environment-manager-card'))"
+MARKER = "if (!customElements.get('home-environment-manager-card'))"
 KEYS = ["windows", "air_quality", "temperature", "humidity",
         "climate_devices", "shades", "occupancy_sensors"]
 COVERS = ["cover.wohnzimmer_rollo_links_rolo_3", "cover.wohnzimmer_rollo_rechts"]
