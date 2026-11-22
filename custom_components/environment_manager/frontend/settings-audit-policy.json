@@ -213,7 +213,11 @@
     "shade_lux_entity": "advanced",
     "shade_min_lux": "advanced",
     "shade_window_entity": "basic",
-    "global_setting_window_close_cooldown_minutes": "basic"
+    "global_setting_window_close_cooldown_minutes": "basic",
+    "home_quiet_hours_enabled": "basic",
+    "home_quiet_hours_start": "basic",
+    "home_quiet_hours_end": "basic",
+    "equipment_quiet_hours": "basic"
   },
   "home_option_levels": {
     "ai_conversation_agent": "advanced",
@@ -269,7 +273,10 @@
     "weather_entities": "basic",
     "weather_warnings": "basic",
     "window_open_timeout_minutes": "basic",
-    "window_close_cooldown_minutes": "basic"
+    "window_close_cooldown_minutes": "basic",
+    "quiet_hours_enabled": "basic",
+    "quiet_hours_start": "basic",
+    "quiet_hours_end": "basic"
   },
   "room_option_levels": {
     "windows": "basic",
@@ -288,7 +295,10 @@
     "home_global_policy_source_freshness_mode": "general_source_freshness_mode",
     "home_global_threshold_mode_max_age_mode": "global_threshold_max_age_mode",
     "global_threshold_max_age_minutes": "global_threshold_max_age_minutes",
-    "global_setting_window_close_cooldown_minutes": "window_close_cooldown_minutes"
+    "global_setting_window_close_cooldown_minutes": "window_close_cooldown_minutes",
+    "home_quiet_hours_enabled": "quiet_hours_enabled",
+    "home_quiet_hours_start": "quiet_hours_start",
+    "home_quiet_hours_end": "quiet_hours_end"
   },
   "always_basic": {
     "native": [
@@ -364,7 +374,11 @@
       "home_aqi_custom_limit",
       "home_aqi_scale",
       "home_global_policy_source_freshness_mode",
-      "prepare_for_arrival"
+      "prepare_for_arrival",
+      "home_quiet_hours_enabled",
+      "home_quiet_hours_start",
+      "home_quiet_hours_end",
+      "equipment_quiet_hours"
     ],
     "home_options": [
       "away_open_window_alert",
@@ -400,7 +414,10 @@
       "weather_entities",
       "weather_warnings",
       "window_close_cooldown_minutes",
-      "window_open_timeout_minutes"
+      "window_open_timeout_minutes",
+      "quiet_hours_enabled",
+      "quiet_hours_start",
+      "quiet_hours_end"
     ],
     "room_options": [
       "windows",

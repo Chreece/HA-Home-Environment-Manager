@@ -44,6 +44,8 @@ NUMBER_FIELDS = {
     "window_open_timeout_minutes": (0.0, 30.0, 1.0, "min", 5.0),
 }
 QUIET_FLAGS = ("quiet_sleep", "quiet_occupied")
+# Quiet hours are one preference per physical controller, shared by all modes.
+SHARED_QUIET_FLAGS = ("quiet_hours",)
 from .pid_calibration import METHODS as _CLASSIC_PID_CALIBRATION_METHODS, MODEL_FIELDS as PID_MODEL_FIELDS
 from .pid_review import ALL_METHODS as PID_CALIBRATION_METHODS, selected_method, legacy_mode
 from .pid_passive import MODES as PID_ADAPTATION_MODES
@@ -73,7 +75,7 @@ DEFAULTS = {"control_mode": "existing", "preset": "none", "requested_mode": None
             # Optional physical switch supplying an individual managed output.
             # 'None' preserves exact Beta54 behavior on every existing device.
             "power_switch_entity": None,
-            "quiet_sleep": False, "quiet_occupied": False,
+            "quiet_sleep": False, "quiet_occupied": False, "quiet_hours": False,
             "sleep_when_everyone_asleep": False,
             "door_closed_eco": False,
             "door_start_coordination": "inherit",
@@ -178,6 +180,7 @@ def base_settings(manager: Any, spec: ManagedDevice) -> dict:
     # Old installations keep recovery; invalid persisted settings fail closed.
     result["off_state_watchdog_mode"] = _watchdog_option(raw)
     result["native_full_output"] = raw.get("native_full_output", True) is True
+    result["quiet_hours"] = raw.get("quiet_hours") is True
     result["sleep_when_everyone_asleep"] = raw.get("sleep_when_everyone_asleep") is True
     result["announce_before_start"] = raw.get("announce_before_start") is True
     wait = raw.get("window_open_timeout_minutes", 5.0)

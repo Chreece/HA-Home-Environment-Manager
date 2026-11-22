@@ -86,7 +86,9 @@ with sync_playwright() as p:
         assert page.evaluate('document.documentElement.scrollWidth')<=width,width
         assert page.locator('.hem-room-air-chip89').count()<=10
         for heading in page.locator('.hem-room-glance87').all():
-            assert heading.bounding_box()['height']<=58
+            assert 60 <= heading.bounding_box()['height'] <= 100
+            assert heading.locator('.hem-room-name87').bounding_box()['y'] < \
+                heading.locator('.hem-room-reading87').first.bounding_box()['y']
     assert not errors,errors
     browser.close()
 print('BETA90_CARD_STABLE_SCROLL_AND_FOUR_SENSOR_SUMMARY=PASS')

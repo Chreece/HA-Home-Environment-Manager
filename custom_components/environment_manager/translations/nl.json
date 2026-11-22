@@ -231,7 +231,10 @@
           "general_wake_alarm_entity": "Slaap · Volgende wekker",
           "general_wake_lead_minutes_entity": "Slaap · Minuten vóór de wekker",
           "window_open_timeout_minutes": "Wachttijd voor raam openen (min)",
-          "window_close_cooldown_minutes": "Wachttijd voordat sluiten van het raam wordt voorgesteld (min)"
+          "window_close_cooldown_minutes": "Wachttijd voordat sluiten van het raam wordt voorgesteld (min)",
+          "quiet_hours_enabled": "Stille uren",
+          "quiet_hours_start": "Begin van stille uren",
+          "quiet_hours_end": "Einde van stille uren"
         },
         "data_description": {
           "weather_entities": "Kies: Weer en waarschuwingen · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -285,7 +288,10 @@
           "general_wake_alarm_entity": "Kies een tijd- of tijdstempelentiteit voor de volgende wekker en een entiteit voor de minuten. HEM beëindigt automatische slaap zoveel minuten eerder en hervat de normale doelen. Tijden zonder datum gebruiken de Home Assistant-tijdzone. Afwezigheid, handmatige bediening en beveiligingen houden voorrang.",
           "general_wake_lead_minutes_entity": "Kies een numerieke entiteit met een niet-negatief aantal minuten, met eenheid min of zonder eenheid. Een wekker om 07:00 met waarde 30 beëindigt automatische slaap om 06:30; 0 betekent bij het afgaan. Wis beide bronnen om uit te schakelen.",
           "window_open_timeout_minutes": "Wachttijd nadat een verzoek tot luchten is geaccepteerd, voordat nieuwe automatische/PID-starts zo nodig weer mogen. 0–30 minuten, standaard 5; 0 schakelt het wachten uit. Beveiligingen voor open ramen en minimale bedrijfstijden blijven gelden.",
-          "window_close_cooldown_minutes": "Wanneer een raam wordt geopend na een ventilatieadvies van HEM, wacht HEM dit aantal minuten voordat het voorstelt het raam te sluiten, ook als de buitenomstandigheden ongeschikt zijn. De wachttijd geldt afzonderlijk voor elke kamer. 0–60 minuten, standaard 5; 0 schakelt de wachttijd uit. De regels voor het pauzeren en beschermen van apparaten blijven actief."
+          "window_close_cooldown_minutes": "Wanneer een raam wordt geopend na een ventilatieadvies van HEM, wacht HEM dit aantal minuten voordat het voorstelt het raam te sluiten, ook als de buitenomstandigheden ongeschikt zijn. De wachttijd geldt afzonderlijk voor elke kamer. 0–60 minuten, standaard 5; 0 schakelt de wachttijd uit. De regels voor het pauzeren en beschermen van apparaten blijven actief.",
+          "quiet_hours_enabled": "Gebruik dit dagelijkse tijdvak voor apparaten waarvoor ‘Stil tijdens stille uren’ is ingeschakeld. De tijden volgen de lokale tijdzone van Home Assistant; het tijdvak mag over middernacht lopen. Standaard uitgeschakeld.",
+          "quiet_hours_start": "Dagelijkse begintijd, die bij de stille uren hoort. Kies een andere tijd dan de eindtijd.",
+          "quiet_hours_end": "Dagelijkse eindtijd, die niet meer bij de stille uren hoort. Ligt deze vóór de begintijd, dan eindigt het tijdvak de volgende dag."
         }
       },
       "reconfigure": {
@@ -938,7 +944,10 @@
           "general_sleep_rooms_attribute": "Slaap · Kamer · bron (attribute)",
           "general_source_stale_minutes": "Aanwezigheid thuis · Maximale ouderdom van tracker-/telgegevens (min)",
           "general_wake_alarm_entity": "Slaap · Volgende wekker",
-          "general_wake_lead_minutes_entity": "Slaap · Minuten vóór de wekker"
+          "general_wake_lead_minutes_entity": "Slaap · Minuten vóór de wekker",
+          "quiet_hours_enabled": "Stille uren",
+          "quiet_hours_start": "Begin van stille uren",
+          "quiet_hours_end": "Einde van stille uren"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet.",
@@ -950,7 +959,10 @@
           "general_sleep_rooms_attribute": "Kies het veld Status of een gecontroleerd kamerlijstattribuut van de geselecteerde slaapentiteit. Een ontbrekende of niet herkende lijst maakt de slaapstatus onbekend.",
           "general_source_stale_minutes": "De ouderdomsgrens geldt voor trackerberichten en numerieke personentellingen. Kamerlijsten en binaire aanwezigheidsstatussen verlopen niet zolang ze ongewijzigd zijn. Onbeschikbare, herstelde of ongeldige bronnen blijven onbekend. Dit is geen slaapduur.",
           "general_wake_alarm_entity": "Kies een tijd- of tijdstempelentiteit voor de volgende wekker en een entiteit voor de minuten. HEM beëindigt automatische slaap zoveel minuten eerder en hervat de normale doelen. Tijden zonder datum gebruiken de Home Assistant-tijdzone. Afwezigheid, handmatige bediening en beveiligingen houden voorrang.",
-          "general_wake_lead_minutes_entity": "Kies een numerieke entiteit met een niet-negatief aantal minuten, met eenheid min of zonder eenheid. Een wekker om 07:00 met waarde 30 beëindigt automatische slaap om 06:30; 0 betekent bij het afgaan. Wis beide bronnen om uit te schakelen."
+          "general_wake_lead_minutes_entity": "Kies een numerieke entiteit met een niet-negatief aantal minuten, met eenheid min of zonder eenheid. Een wekker om 07:00 met waarde 30 beëindigt automatische slaap om 06:30; 0 betekent bij het afgaan. Wis beide bronnen om uit te schakelen.",
+          "quiet_hours_enabled": "Gebruik dit dagelijkse tijdvak voor apparaten waarvoor ‘Stil tijdens stille uren’ is ingeschakeld. De tijden volgen de lokale tijdzone van Home Assistant; het tijdvak mag over middernacht lopen. Standaard uitgeschakeld.",
+          "quiet_hours_start": "Dagelijkse begintijd, die bij de stille uren hoort. Kies een andere tijd dan de eindtijd.",
+          "quiet_hours_end": "Dagelijkse eindtijd, die niet meer bij de stille uren hoort. Ligt deze vóór de begintijd, dan eindigt het tijdvak de volgende dag."
         }
       },
       "pollen": {
@@ -1240,7 +1252,8 @@
       "climate_invalid_occupancy_timing": "Stel de vertraging na het verlaten van de kamer in op 0–240 minuten en de maximale ouderdom van aanwezigheidsgegevens op 10–1440 minuten.",
       "climate_invalid_comfort_adjustment": "Stel de maximale aanpassing van de comfortdoelwaarde in tussen 0 en 2,5°C.",
       "climate_proportional_requires_percent": "Proportionele regeling vereist een number-entiteit met eenheid %, minimum 0, maximum 100 en een numerieke stapgrootte.",
-      "invalid_freshness_mode": "Kies Automatisch of Aangepast voor de maximale ouderdom van sensormetingen."
+      "invalid_freshness_mode": "Kies Automatisch of Aangepast voor de maximale ouderdom van sensormetingen.",
+      "invalid_quiet_hours": "Kies geldige, verschillende begin- en eindtijden voor de stille uren."
     },
     "abort": {
       "already_configured": "Home Environment Manager - al ingesteld.",
@@ -2025,7 +2038,10 @@
           "general_sleep_rooms_attribute": "Slaap · Kamer · bron (attribute)",
           "general_source_stale_minutes": "Aanwezigheid thuis · Maximale ouderdom van tracker-/telgegevens (min)",
           "general_wake_alarm_entity": "Slaap · Volgende wekker",
-          "general_wake_lead_minutes_entity": "Slaap · Minuten vóór de wekker"
+          "general_wake_lead_minutes_entity": "Slaap · Minuten vóór de wekker",
+          "quiet_hours_enabled": "Stille uren",
+          "quiet_hours_start": "Begin van stille uren",
+          "quiet_hours_end": "Einde van stille uren"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Een geldige lijst met bezette kamers in de gekozen status of het attribuut is leidend: vermelde kamers zijn bezet, ontbrekende kamers leeg. Zonder lijst betekent één actieve aanwezigheidssensor bezet; allemaal uit of geen geselecteerde sensoren betekent leeg. Een onbeschikbare of ongeldige geselecteerde bron blijft onbekend. Ongewijzigde lijsten en binaire statussen verlopen niet.",
@@ -2037,7 +2053,10 @@
           "general_sleep_rooms_attribute": "Kies het veld Status of een gecontroleerd kamerlijstattribuut van de geselecteerde slaapentiteit. Een ontbrekende of niet herkende lijst maakt de slaapstatus onbekend.",
           "general_source_stale_minutes": "De ouderdomsgrens geldt voor trackerberichten en numerieke personentellingen. Kamerlijsten en binaire aanwezigheidsstatussen verlopen niet zolang ze ongewijzigd zijn. Onbeschikbare, herstelde of ongeldige bronnen blijven onbekend. Dit is geen slaapduur.",
           "general_wake_alarm_entity": "Kies een tijd- of tijdstempelentiteit voor de volgende wekker en een entiteit voor de minuten. HEM beëindigt automatische slaap zoveel minuten eerder en hervat de normale doelen. Tijden zonder datum gebruiken de Home Assistant-tijdzone. Afwezigheid, handmatige bediening en beveiligingen houden voorrang.",
-          "general_wake_lead_minutes_entity": "Kies een numerieke entiteit met een niet-negatief aantal minuten, met eenheid min of zonder eenheid. Een wekker om 07:00 met waarde 30 beëindigt automatische slaap om 06:30; 0 betekent bij het afgaan. Wis beide bronnen om uit te schakelen."
+          "general_wake_lead_minutes_entity": "Kies een numerieke entiteit met een niet-negatief aantal minuten, met eenheid min of zonder eenheid. Een wekker om 07:00 met waarde 30 beëindigt automatische slaap om 06:30; 0 betekent bij het afgaan. Wis beide bronnen om uit te schakelen.",
+          "quiet_hours_enabled": "Gebruik dit dagelijkse tijdvak voor apparaten waarvoor ‘Stil tijdens stille uren’ is ingeschakeld. De tijden volgen de lokale tijdzone van Home Assistant; het tijdvak mag over middernacht lopen. Standaard uitgeschakeld.",
+          "quiet_hours_start": "Dagelijkse begintijd, die bij de stille uren hoort. Kies een andere tijd dan de eindtijd.",
+          "quiet_hours_end": "Dagelijkse eindtijd, die niet meer bij de stille uren hoort. Ligt deze vóór de begintijd, dan eindigt het tijdvak de volgende dag."
         }
       },
       "pollen": {
@@ -2251,7 +2270,10 @@
           "window_open_timeout_minutes": "Wachttijd voor raam openen (min)",
           "general_source_freshness_mode": "Woningbezetting · Geldigheidsbeleid",
           "global_threshold_max_age_mode": "Omgeving · Geldigheidsbeleid",
-          "window_close_cooldown_minutes": "Wachttijd voordat sluiten van het raam wordt voorgesteld (min)"
+          "window_close_cooldown_minutes": "Wachttijd voordat sluiten van het raam wordt voorgesteld (min)",
+          "quiet_hours_enabled": "Stille uren",
+          "quiet_hours_start": "Begin van stille uren",
+          "quiet_hours_end": "Einde van stille uren"
         },
         "data_description": {
           "weather_entities": "Kies: Weer en waarschuwingen · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2307,7 +2329,10 @@
           "window_open_timeout_minutes": "Wachttijd nadat een verzoek tot luchten is geaccepteerd, voordat nieuwe automatische/PID-starts zo nodig weer mogen. 0–30 minuten, standaard 5; 0 schakelt het wachten uit. Beveiligingen voor open ramen en minimale bedrijfstijden blijven gelden.",
           "general_source_freshness_mode": "Automatisch: numerieke personentellers en afwezigheidsmeldingen van woningtrackers worden maximaal 240 minuten geaccepteerd; een geldige ongewijzigde status Thuis kan geldig blijven tot die verandert. Onbekende, uit opslag herstelde en niet-beschikbare bronnen bewijzen geen afwezigheid. Aangepast: gebruik de minutenwaarde hieronder voor bemonsterde meldingen. Kamerlijsten blijven afhankelijk van statusveranderingen.",
           "global_threshold_max_age_mode": "Automatisch: weerentiteiten kunnen 180 minuten geldig blijven en andere numerieke omgevingsmetingen 90 minuten; geldige binaire contacten die door statusveranderingen worden gestuurd blijven bruikbaar zonder inactiviteitsverval. Aangepast: gebruik de minutenwaarde hieronder. Beschikbaarheidscontroles en controles op herstelde status blijven altijd gelden. In Home Assistant verandert last_reported bij opnieuw schrijven van de status, ook met dezelfde waarde, en niet alleen door het verstrijken van tijd.",
-          "window_close_cooldown_minutes": "Wanneer een raam wordt geopend na een ventilatieadvies van HEM, wacht HEM dit aantal minuten voordat het voorstelt het raam te sluiten, ook als de buitenomstandigheden ongeschikt zijn. De wachttijd geldt afzonderlijk voor elke kamer. 0–60 minuten, standaard 5; 0 schakelt de wachttijd uit. De regels voor het pauzeren en beschermen van apparaten blijven actief."
+          "window_close_cooldown_minutes": "Wanneer een raam wordt geopend na een ventilatieadvies van HEM, wacht HEM dit aantal minuten voordat het voorstelt het raam te sluiten, ook als de buitenomstandigheden ongeschikt zijn. De wachttijd geldt afzonderlijk voor elke kamer. 0–60 minuten, standaard 5; 0 schakelt de wachttijd uit. De regels voor het pauzeren en beschermen van apparaten blijven actief.",
+          "quiet_hours_enabled": "Gebruik dit dagelijkse tijdvak voor apparaten waarvoor ‘Stil tijdens stille uren’ is ingeschakeld. De tijden volgen de lokale tijdzone van Home Assistant; het tijdvak mag over middernacht lopen. Standaard uitgeschakeld.",
+          "quiet_hours_start": "Dagelijkse begintijd, die bij de stille uren hoort. Kies een andere tijd dan de eindtijd.",
+          "quiet_hours_end": "Dagelijkse eindtijd, die niet meer bij de stille uren hoort. Ligt deze vóór de begintijd, dan eindigt het tijdvak de volgende dag."
         }
       },
       "room_occupancy": {
@@ -2473,7 +2498,8 @@
       "climate_invalid_occupancy_timing": "Stel de vertraging na het verlaten van de kamer in op 0–240 minuten en de maximale ouderdom van aanwezigheidsgegevens op 10–1440 minuten.",
       "climate_invalid_comfort_adjustment": "Stel de maximale aanpassing van de comfortdoelwaarde in tussen 0 en 2,5°C.",
       "climate_proportional_requires_percent": "Proportionele regeling vereist een number-entiteit met eenheid %, minimum 0, maximum 100 en een numerieke stapgrootte.",
-      "invalid_freshness_mode": "Kies Automatisch of Aangepast voor de maximale ouderdom van sensormetingen."
+      "invalid_freshness_mode": "Kies Automatisch of Aangepast voor de maximale ouderdom van sensormetingen.",
+      "invalid_quiet_hours": "Kies geldige, verschillende begin- en eindtijden voor de stille uren."
     },
     "abort": {
       "setup_area_removed": "Ongeldig: Te bewaken kamers",
@@ -4086,6 +4112,22 @@
             "name": "Hulp"
           }
         }
+      },
+      "home_quiet_hours_enabled": {
+        "name": "Stille uren",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hulp"
+          }
+        }
+      },
+      "equipment_quiet_hours": {
+        "name": "Stil tijdens stille uren",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hulp"
+          }
+        }
       }
     },
     "select": {
@@ -4407,6 +4449,22 @@
       },
       "area_climate_sleep_end": {
         "name": "Slaap · Apparaten · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hulp"
+          }
+        }
+      },
+      "home_quiet_hours_start": {
+        "name": "Begin van stille uren",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hulp"
+          }
+        }
+      },
+      "home_quiet_hours_end": {
+        "name": "Einde van stille uren",
         "state_attributes": {
           "configuration_help": {
             "name": "Hulp"

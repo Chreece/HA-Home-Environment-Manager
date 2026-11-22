@@ -77,6 +77,27 @@ def synchronize_setting_metadata(obj, locale, names, help_catalog):
         general = obj[flow]['step']['setup_general']
         general['data'][key] = close_text['label']
         general['data_description'][key] = close_text['help']
+    quiet_text = importlib.import_module(
+        '_hem_native_translation_build.quiet_hours_text'
+    ).QUIET_HOURS_TEXT[locale]
+    for flow in ('config', 'options'):
+        for step_id in ('setup_general', 'general_settings'):
+            general = obj[flow]['step'][step_id]
+            for field in ('enabled', 'start', 'end'):
+                key = 'quiet_hours_' + field
+                general['data'][key] = quiet_text[field + '_label']
+                general['data_description'][key] = quiet_text[field + '_help']
+        obj[flow]['error']['invalid_quiet_hours'] = quiet_text['invalid_error']
+    for domain, key, label in (
+        ('switch', 'home_quiet_hours_enabled', 'enabled_label'),
+        ('time', 'home_quiet_hours_start', 'start_label'),
+        ('time', 'home_quiet_hours_end', 'end_label'),
+        ('switch', 'equipment_quiet_hours', 'device_label'),
+    ):
+        obj['entity'][domain][key] = {
+            'name': quiet_text[label],
+            'state_attributes': {'configuration_help': {'name': help_name}},
+        }
     for domain in ('number', 'select', 'switch', 'button', 'time'):
         for key, entry in obj['entity'][domain].items():
             if key.startswith('equipment_'):

@@ -39,6 +39,7 @@ REQUIRED = (
     "languages.py", "tts_languages.py", "announcement_text.py",
     "recommendation_text.py", "window_open_wait.py", "window_open_text.py", "window_option_catalog.py",
     "window_close_cooldown.py", "window_close_cooldown_text.py",
+    "quiet_hours.py", "quiet_hours_text.py", "time.py",
     "device_command_text.py",
     "equipment_mode_settings.py", "equipment_mode_entities.py", "operating_mode_catalog.py",
     "mold_control_demand.py",

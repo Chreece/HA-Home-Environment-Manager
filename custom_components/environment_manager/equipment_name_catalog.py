@@ -9,12 +9,14 @@ no Home Assistant imports or blocking runtime file access.
 
 if __package__:
     from .backend_text import translated_text, resolve_language
+    from .quiet_hours_text import QUIET_HOURS_TEXT
 else:
     from pathlib import Path
     from runpy import run_path
     _text_helpers = run_path(str(Path(__file__).with_name("backend_text.py")))
     translated_text = _text_helpers["translated_text"]
     resolve_language = _text_helpers["resolve_language"]
+    QUIET_HOURS_TEXT = run_path(str(Path(__file__).with_name("quiet_hours_text.py")))["QUIET_HOURS_TEXT"]
 
 
 EQUIPMENT_TRANSLATED_NAMES = {'en': {'climate': 'Climate · {channel}',
@@ -2024,6 +2026,10 @@ for _locale, _label in _NATIVE_FULL_OUTPUT_LABELS.items():
 for _locale, _names in EQUIPMENT_TRANSLATED_NAMES.items():
     for _key in ("pid_adaptation_mode", "pid_review_approve", "pid_review_discard"):
         _names[_key] = translated_text(EQUIPMENT_TRANSLATED_NAMES["en"][_key], _locale)
+
+
+for _locale, _text in QUIET_HOURS_TEXT.items():
+    EQUIPMENT_TRANSLATED_NAMES[_locale]["quiet_hours"] = _text["device_label"]
 
 
 def _native_target_modes(modes) -> tuple[str, ...]:

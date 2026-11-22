@@ -11,12 +11,12 @@ from homeassistant.helpers.entity import EntityCategory
 
 from .const import (
     CONF_AUTO_NOTIFY, CONF_AUTO_TTS, CONF_HUB, CONF_AI_REWRITE,
-    CONF_SHADE_ANNOUNCE, CONF_AWAY_WINDOWS_ALERT, DOMAIN, SIGNAL_UPDATED,
+    CONF_SHADE_ANNOUNCE, CONF_AWAY_WINDOWS_ALERT, CONF_QUIET_HOURS_ENABLED, DOMAIN, SIGNAL_UPDATED,
 )
 from .device_controls import update_device_setting
 
 CONTROLS = (CONF_AUTO_NOTIFY, CONF_AUTO_TTS, CONF_HUB, CONF_AI_REWRITE,
-            CONF_SHADE_ANNOUNCE, CONF_AWAY_WINDOWS_ALERT)
+            CONF_SHADE_ANNOUNCE, CONF_AWAY_WINDOWS_ALERT, CONF_QUIET_HOURS_ENABLED)
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
@@ -138,6 +138,7 @@ class HomeSettingSwitch(SettingsMetadata, SwitchEntity):
             CONF_AI_REWRITE: "mdi:robot-outline",
             CONF_SHADE_ANNOUNCE: "mdi:blinds-horizontal",
             CONF_AWAY_WINDOWS_ALERT: "mdi:window-open-variant",
+            CONF_QUIET_HOURS_ENABLED: "mdi:weather-night",
             "pollen_avoid_ventilation": "mdi:flower-pollen",
             "sleep_room": "mdi:bed",
             "enable_pmv": "mdi:human-male-board-poll",
@@ -220,7 +221,8 @@ def _device_option_metadata(entity):
     full = localized_equipment_name(entity._key, locale)
     label = full.partition(" · ")[2] or full.rstrip(" ·")
     return {"setting_key": entity._key, "setting_label": label,
-            "equipment_option_role": "policy"}
+            "equipment_option_role": "policy",
+            **({"settings_scope": "device"} if entity._key == "quiet_hours" else {})}
 
 
 class EquipmentQuietSwitch(EquipmentEntity, SwitchEntity):
@@ -230,7 +232,8 @@ class EquipmentQuietSwitch(EquipmentEntity, SwitchEntity):
     def __init__(self, manager, spec, key, *, operating_mode=None):
         self._equipment_init(manager, spec, key, operating_mode=operating_mode)
         self._attr_icon = {"sensor_verified": "mdi:check-decagram-outline",
-                           "door_closed_eco": "mdi:door-closed-lock"}.get(key, "mdi:fan-speed-1")
+                           "door_closed_eco": "mdi:door-closed-lock",
+                           "quiet_hours": "mdi:weather-night"}.get(key, "mdi:fan-speed-1")
 
     @property
     def available(self):
@@ -240,14 +243,14 @@ class EquipmentQuietSwitch(EquipmentEntity, SwitchEntity):
         if getattr(self, "_operating_mode", None):
             descriptor = equipment.mode_descriptor(self._manager, self._spec, self._operating_mode)
             return bool(descriptor and self._key in descriptor.get("switch_fields", ()))
-        if self._key in equipment.QUIET_FLAGS:
+        if self._key in equipment.QUIET_FLAGS + equipment.SHARED_QUIET_FLAGS:
             cap = equipment.capabilities(self._manager, self._spec)
             return bool(cap and cap.fan_modes)
         return super().available
 
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
-        if self._key in equipment.QUIET_FLAGS:
+        if self._key in equipment.QUIET_FLAGS + equipment.SHARED_QUIET_FLAGS:
             self._watch_native_updates()
 
     @property

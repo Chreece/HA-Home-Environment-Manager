@@ -1,4 +1,4 @@
-"""Room sleep schedule as Home Assistant Time entities, not setup questions."""
+"""Home quiet hours and room sleep schedules as Home Assistant Time entities."""
 from __future__ import annotations
 
 from .room_hubs import async_add_grouped_entities
@@ -12,19 +12,60 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity import EntityCategory
 
 from .device_hierarchy import configured_area_ids
-from .const import DOMAIN, SIGNAL_UPDATED
+from .const import (
+    DOMAIN, SIGNAL_UPDATED, CONF_QUIET_HOURS_START, CONF_QUIET_HOURS_END,
+    DEFAULT_QUIET_HOURS_START, DEFAULT_QUIET_HOURS_END,
+)
 from .device_controls import climate_settings, update_device_setting
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
     manager = entry.runtime_data
-    result = []
+    result = [HomeQuietHoursTime(manager, entry.entry_id, key)
+              for key in (CONF_QUIET_HOURS_START, CONF_QUIET_HOURS_END)]
     for area in configured_area_ids(manager.settings):
         if climate_settings(manager.settings, area) is None:
             continue
         for key in ("sleep_start", "sleep_end"):
             result.append(AreaScheduleTime(manager, entry.entry_id, area, key))
     async_add_grouped_entities(entry.runtime_data, async_add_entities, result)
+
+
+class HomeQuietHoursTime(SettingsMetadata, TimeEntity):
+    """Edit the same home schedule shown in General settings."""
+
+    _attr_has_entity_name = False
+    _attr_entity_category = EntityCategory.CONFIG
+    _attr_should_poll = False
+    _attr_icon = "mdi:clock-outline"
+
+    def __init__(self, manager, entry_id, key):
+        self._manager = manager
+        self._key = key
+        self._attr_unique_id = f"{entry_id}_home_{key}"
+        self._attr_translation_key = f"home_{key}"
+        self._attr_device_info = {"identifiers": {(DOMAIN, entry_id)}}
+
+    @property
+    def native_value(self) -> time | None:
+        from .quiet_hours import parse_clock
+        default = (DEFAULT_QUIET_HOURS_START if self._key == CONF_QUIET_HOURS_START
+                   else DEFAULT_QUIET_HOURS_END)
+        return parse_clock(self._manager.settings.get(self._key, default))
+
+    async def async_set_value(self, value: time):
+        await update_device_setting(self._manager, "global_setting", self._key, value)
+        self.async_write_ha_state()
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        self.async_on_remove(async_dispatcher_connect(
+            self.hass, f"{SIGNAL_UPDATED}_{self._manager.entry.entry_id}", self._update,
+        ))
+
+    @callback
+    def _update(self):
+        self.async_write_ha_state()
 
 
 class AreaScheduleTime(SettingsMetadata, TimeEntity):

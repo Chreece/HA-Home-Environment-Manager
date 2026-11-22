@@ -347,6 +347,41 @@ class IntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(restored.points), 0)
         self.assertFalse(restored.snapshot()["fresh_evidence"])
 
+    async def test_quiet_hours_upgrade_restores_old_learning_without_reusing_it_for_opt_in(self):
+        runtime = Runtime(method="adaptive_suggest")
+        runtime.state.attributes.update(fan_modes=["low", "high"], fan_mode="high")
+        runtime.state.attributes["supported_features"] |= model.FAN
+        sample = runtime.sample()
+        # A 0.7.5 journal could not include the new shared quiet-hours key.
+        old_context = json.loads(sample["context"])
+        old_context["policy"].pop("quiet_hours", None)
+        old_context = json.dumps(old_context, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+        window = {"evidence_id": "c" * 64, "at": runtime.now - 60,
+                  "samples": 20, "observed_seconds": 2400.,
+                  "performance": {"mean_error": .3},
+                  "status": "stable", "reason": "stable_control"}
+        runtime._pid_adaptive_remember(runtime.record, old_context, {
+            "version": 1, "algorithm": store.ALGORITHM, "context": old_context,
+            "raw_history_saved": False, "windows": [window], "assessment": {},
+        })
+        await runtime._pid_adaptive_observe_sample(SPEC, runtime.cfg, sample)
+        restored = runtime._pid_adaptive_observers[SPEC.identifier]
+        self.assertEqual(restored.context, old_context)
+        self.assertEqual(restored.windows, [window])
+        self.assertLessEqual(len(restored.points), 1, "Upgrade must not invent raw observations")
+
+        await runtime.async_update(SPEC, {"quiet_hours": True})
+        opted_in = runtime.sample()
+        self.assertNotEqual(opted_in["context"], old_context)
+        await runtime._pid_adaptive_observe_sample(SPEC, runtime.cfg, opted_in)
+        self.assertEqual(runtime._pid_adaptive_observers[SPEC.identifier].windows, [])
+        await runtime.async_update(SPEC, {"quiet_hours": False})
+        opted_out = runtime.sample()
+        self.assertEqual(opted_out["context"], old_context)
+        await runtime._pid_adaptive_observe_sample(SPEC, runtime.cfg, opted_out)
+        self.assertEqual(runtime._pid_adaptive_observers[SPEC.identifier].windows, [window])
+        self.assertEqual(runtime.hardware_calls, [])
+
     async def test_native_trim_uses_reported_target_without_clipping_foreign_targets(self):
         runtime = Runtime()
         runtime.trim_control()

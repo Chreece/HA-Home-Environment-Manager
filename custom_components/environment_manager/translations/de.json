@@ -231,7 +231,10 @@
           "general_wake_alarm_entity": "Schlaf · Nächster Wecker",
           "general_wake_lead_minutes_entity": "Schlaf · Minuten vor dem Wecker",
           "window_open_timeout_minutes": "Wartezeit zum Fensteröffnen (min)",
-          "window_close_cooldown_minutes": "Wartezeit vor dem Hinweis zum Fensterschließen (min)"
+          "window_close_cooldown_minutes": "Wartezeit vor dem Hinweis zum Fensterschließen (min)",
+          "quiet_hours_enabled": "Ruhezeiten",
+          "quiet_hours_start": "Beginn der Ruhezeiten",
+          "quiet_hours_end": "Ende der Ruhezeiten"
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
@@ -285,7 +288,10 @@
           "general_wake_alarm_entity": "Home-Assistant-Quelle für den nächsten Weckalarm auswählen. HEM kann das automatische Schlafprofil nur vor dem Alarm verlassen, wenn auch eine Quelle für die Minuten davor konfiguriert ist. Beide Quellen zusammen auswählen oder beide frei lassen. Unbekannte Werte beweisen keine Weckzeit.",
           "general_wake_lead_minutes_entity": "Quelle mit der Anzahl Minuten vor dem nächsten Alarm wählen, zu denen HEM den automatischen Schlaf beenden soll. Erfordert die Weckalarmquelle oder beide bleiben leer. Ein unbekannter Wert löst kein Aufwachen aus.",
           "window_open_timeout_minutes": "Wartezeit nach Annahme einer Lüftungsaufforderung, bevor neue Automatik-/PID-Starts bei weiterem Bedarf wieder erlaubt sind. 0–30 Minuten, Standard 5; 0 deaktiviert das Warten. Fensterschutz und Gerätemindestzeiten gelten weiterhin.",
-          "window_close_cooldown_minutes": "Wird ein Fenster nach einem Lüftungshinweis von HEM geöffnet, wartet HEM so viele Minuten, bevor es zum Schließen auffordert, auch bei ungeeigneten Außenbedingungen. Die Wartezeit gilt für jeden Raum unabhängig. 0–60 Minuten, Standard 5; 0 deaktiviert die Wartezeit. Die Regeln zum Pausieren und Schützen der Geräte bleiben aktiv."
+          "window_close_cooldown_minutes": "Wird ein Fenster nach einem Lüftungshinweis von HEM geöffnet, wartet HEM so viele Minuten, bevor es zum Schließen auffordert, auch bei ungeeigneten Außenbedingungen. Die Wartezeit gilt für jeden Raum unabhängig. 0–60 Minuten, Standard 5; 0 deaktiviert die Wartezeit. Die Regeln zum Pausieren und Schützen der Geräte bleiben aktiv.",
+          "quiet_hours_enabled": "Dieses tägliche Zeitfenster gilt für Geräte mit aktivierter Option „Leise während der Ruhezeiten“. Die Zeiten folgen der lokalen Zeitzone von Home Assistant; das Zeitfenster darf über Mitternacht reichen. Standardmäßig ausgeschaltet.",
+          "quiet_hours_start": "Tägliche Startzeit, die zur Ruhezeit gehört. Eine andere Zeit als die Endzeit wählen.",
+          "quiet_hours_end": "Tägliche Endzeit, die nicht mehr zur Ruhezeit gehört. Liegt sie vor der Startzeit, endet das Zeitfenster am nächsten Tag."
         }
       },
       "reconfigure": {
@@ -938,7 +944,10 @@
           "general_sleep_rooms_attribute": "Schlaf · Raum · Quelle (attribute)",
           "general_source_stale_minutes": "Anwesenheit zu Hause · Höchstalter von Tracker-/Zählwerten (min)",
           "general_wake_alarm_entity": "Schlaf · Nächster Wecker",
-          "general_wake_lead_minutes_entity": "Schlaf · Minuten vor dem Wecker"
+          "general_wake_lead_minutes_entity": "Schlaf · Minuten vor dem Wecker",
+          "quiet_hours_enabled": "Ruhezeiten",
+          "quiet_hours_start": "Beginn der Ruhezeiten",
+          "quiet_hours_end": "Ende der Ruhezeiten"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab.",
@@ -950,7 +959,10 @@
           "general_sleep_rooms_attribute": "Das Feld Zustand oder ein geprüftes Raumlistenattribut der ausgewählten Schlafentität wählen. Eine fehlende oder nicht erkannte Liste macht den Schlafstatus unbekannt.",
           "general_source_stale_minutes": "Maximales Meldealter für die Bestätigung von Abwesenheit durch Personen-/Geräte-Tracker und für numerische Personenzähler (Standard: 240 Minuten). Unveränderte positive Zuhause-Zustände von Trackern oder ON-Zustände binärer Hausanwesenheitssensoren bleiben über Nacht gültig, ebenso Belegungs-/Schlaflisten. Fehlende, unbekannte, nicht verfügbare oder wiederhergestellte Quellen bestätigen keine Abwesenheit.",
           "general_wake_alarm_entity": "Home-Assistant-Quelle für den nächsten Weckalarm auswählen. HEM kann das automatische Schlafprofil nur vor dem Alarm verlassen, wenn auch eine Quelle für die Minuten davor konfiguriert ist. Beide Quellen zusammen auswählen oder beide frei lassen. Unbekannte Werte beweisen keine Weckzeit.",
-          "general_wake_lead_minutes_entity": "Quelle mit der Anzahl Minuten vor dem nächsten Alarm wählen, zu denen HEM den automatischen Schlaf beenden soll. Erfordert die Weckalarmquelle oder beide bleiben leer. Ein unbekannter Wert löst kein Aufwachen aus."
+          "general_wake_lead_minutes_entity": "Quelle mit der Anzahl Minuten vor dem nächsten Alarm wählen, zu denen HEM den automatischen Schlaf beenden soll. Erfordert die Weckalarmquelle oder beide bleiben leer. Ein unbekannter Wert löst kein Aufwachen aus.",
+          "quiet_hours_enabled": "Dieses tägliche Zeitfenster gilt für Geräte mit aktivierter Option „Leise während der Ruhezeiten“. Die Zeiten folgen der lokalen Zeitzone von Home Assistant; das Zeitfenster darf über Mitternacht reichen. Standardmäßig ausgeschaltet.",
+          "quiet_hours_start": "Tägliche Startzeit, die zur Ruhezeit gehört. Eine andere Zeit als die Endzeit wählen.",
+          "quiet_hours_end": "Tägliche Endzeit, die nicht mehr zur Ruhezeit gehört. Liegt sie vor der Startzeit, endet das Zeitfenster am nächsten Tag."
         }
       },
       "pollen": {
@@ -1240,7 +1252,8 @@
       "climate_invalid_occupancy_timing": "Stelle die Verzögerung nach Verlassen des Raums auf 0–240 Minuten und das zulässige Alter der Anwesenheitsdaten auf 10–1440 Minuten ein.",
       "climate_invalid_comfort_adjustment": "Stelle die maximale Anpassung des Komfortsollwerts auf einen Wert zwischen 0 und 2,5°C ein.",
       "climate_proportional_requires_percent": "Die proportionale Regelung benötigt eine number-Entität mit der Einheit %, Minimum 0, Maximum 100 und numerischer Schrittweite.",
-      "invalid_freshness_mode": "Wähle Automatisch oder Benutzerdefiniert für das zulässige Alter der Sensorwerte."
+      "invalid_freshness_mode": "Wähle Automatisch oder Benutzerdefiniert für das zulässige Alter der Sensorwerte.",
+      "invalid_quiet_hours": "Gültige, unterschiedliche Start- und Endzeiten für die Ruhezeiten wählen."
     },
     "abort": {
       "already_configured": "Home Environment Manager ist bereits eingerichtet.",
@@ -2025,7 +2038,10 @@
           "general_sleep_rooms_attribute": "Schlaf · Raum · Quelle (attribute)",
           "general_source_stale_minutes": "Anwesenheit zu Hause · Höchstalter von Tracker-/Zählwerten (min)",
           "general_wake_alarm_entity": "Schlaf · Nächster Wecker",
-          "general_wake_lead_minutes_entity": "Schlaf · Minuten vor dem Wecker"
+          "general_wake_lead_minutes_entity": "Schlaf · Minuten vor dem Wecker",
+          "quiet_hours_enabled": "Ruhezeiten",
+          "quiet_hours_start": "Beginn der Ruhezeiten",
+          "quiet_hours_end": "Ende der Ruhezeiten"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab.",
@@ -2037,7 +2053,10 @@
           "general_sleep_rooms_attribute": "Das Feld Zustand oder ein geprüftes Raumlistenattribut der ausgewählten Schlafentität wählen. Eine fehlende oder nicht erkannte Liste macht den Schlafstatus unbekannt.",
           "general_source_stale_minutes": "Maximales Meldealter für die Bestätigung von Abwesenheit durch Personen-/Geräte-Tracker und für numerische Personenzähler (Standard: 240 Minuten). Unveränderte positive Zuhause-Zustände von Trackern oder ON-Zustände binärer Hausanwesenheitssensoren bleiben über Nacht gültig, ebenso Belegungs-/Schlaflisten. Fehlende, unbekannte, nicht verfügbare oder wiederhergestellte Quellen bestätigen keine Abwesenheit.",
           "general_wake_alarm_entity": "Home-Assistant-Quelle für den nächsten Weckalarm auswählen. HEM kann das automatische Schlafprofil nur vor dem Alarm verlassen, wenn auch eine Quelle für die Minuten davor konfiguriert ist. Beide Quellen zusammen auswählen oder beide frei lassen. Unbekannte Werte beweisen keine Weckzeit.",
-          "general_wake_lead_minutes_entity": "Quelle mit der Anzahl Minuten vor dem nächsten Alarm wählen, zu denen HEM den automatischen Schlaf beenden soll. Erfordert die Weckalarmquelle oder beide bleiben leer. Ein unbekannter Wert löst kein Aufwachen aus."
+          "general_wake_lead_minutes_entity": "Quelle mit der Anzahl Minuten vor dem nächsten Alarm wählen, zu denen HEM den automatischen Schlaf beenden soll. Erfordert die Weckalarmquelle oder beide bleiben leer. Ein unbekannter Wert löst kein Aufwachen aus.",
+          "quiet_hours_enabled": "Dieses tägliche Zeitfenster gilt für Geräte mit aktivierter Option „Leise während der Ruhezeiten“. Die Zeiten folgen der lokalen Zeitzone von Home Assistant; das Zeitfenster darf über Mitternacht reichen. Standardmäßig ausgeschaltet.",
+          "quiet_hours_start": "Tägliche Startzeit, die zur Ruhezeit gehört. Eine andere Zeit als die Endzeit wählen.",
+          "quiet_hours_end": "Tägliche Endzeit, die nicht mehr zur Ruhezeit gehört. Liegt sie vor der Startzeit, endet das Zeitfenster am nächsten Tag."
         }
       },
       "pollen": {
@@ -2251,7 +2270,10 @@
           "window_open_timeout_minutes": "Wartezeit zum Fensteröffnen (min)",
           "general_source_freshness_mode": "Anwesenheit zu Hause · Gültigkeitsrichtlinie",
           "global_threshold_max_age_mode": "Umgebung · Gültigkeitsrichtlinie",
-          "window_close_cooldown_minutes": "Wartezeit vor dem Hinweis zum Fensterschließen (min)"
+          "window_close_cooldown_minutes": "Wartezeit vor dem Hinweis zum Fensterschließen (min)",
+          "quiet_hours_enabled": "Ruhezeiten",
+          "quiet_hours_start": "Beginn der Ruhezeiten",
+          "quiet_hours_end": "Ende der Ruhezeiten"
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
@@ -2307,7 +2329,10 @@
           "window_open_timeout_minutes": "Wartezeit nach Annahme einer Lüftungsaufforderung, bevor neue Automatik-/PID-Starts bei weiterem Bedarf wieder erlaubt sind. 0–30 Minuten, Standard 5; 0 deaktiviert das Warten. Fensterschutz und Gerätemindestzeiten gelten weiterhin.",
           "general_source_freshness_mode": "Automatisch: Numerische Personenzähler und negative Anwesenheitsmeldungen gelten bis zu 240 Minuten; bestätigtes Zuhausebleiben bleibt auch ohne Änderung gültig. Unbekannte, wiederhergestellte und nicht verfügbare Werte beweisen keine Abwesenheit. Benutzerdefiniert: Minutengrenze für Meldungen. Raumlisten bleiben zustandsbasiert.",
           "global_threshold_max_age_mode": "Automatisch: Wetterdaten höchstens 180 Minuten und numerische Umweltdaten 90 Minuten gültig; gültige zustandsgetriebene Binärkontakte verfallen nicht wegen Inaktivität. Benutzerdefiniert: Minutengrenze unten. Nicht verfügbare oder wiederhergestellte Werte bleiben ungültig. last_reported wird nur bei erneutem Zustandsbericht aktualisiert, auch bei gleichem Wert.",
-          "window_close_cooldown_minutes": "Wird ein Fenster nach einem Lüftungshinweis von HEM geöffnet, wartet HEM so viele Minuten, bevor es zum Schließen auffordert, auch bei ungeeigneten Außenbedingungen. Die Wartezeit gilt für jeden Raum unabhängig. 0–60 Minuten, Standard 5; 0 deaktiviert die Wartezeit. Die Regeln zum Pausieren und Schützen der Geräte bleiben aktiv."
+          "window_close_cooldown_minutes": "Wird ein Fenster nach einem Lüftungshinweis von HEM geöffnet, wartet HEM so viele Minuten, bevor es zum Schließen auffordert, auch bei ungeeigneten Außenbedingungen. Die Wartezeit gilt für jeden Raum unabhängig. 0–60 Minuten, Standard 5; 0 deaktiviert die Wartezeit. Die Regeln zum Pausieren und Schützen der Geräte bleiben aktiv.",
+          "quiet_hours_enabled": "Dieses tägliche Zeitfenster gilt für Geräte mit aktivierter Option „Leise während der Ruhezeiten“. Die Zeiten folgen der lokalen Zeitzone von Home Assistant; das Zeitfenster darf über Mitternacht reichen. Standardmäßig ausgeschaltet.",
+          "quiet_hours_start": "Tägliche Startzeit, die zur Ruhezeit gehört. Eine andere Zeit als die Endzeit wählen.",
+          "quiet_hours_end": "Tägliche Endzeit, die nicht mehr zur Ruhezeit gehört. Liegt sie vor der Startzeit, endet das Zeitfenster am nächsten Tag."
         }
       },
       "room_occupancy": {
@@ -2473,7 +2498,8 @@
       "climate_invalid_occupancy_timing": "Stelle die Verzögerung nach Verlassen des Raums auf 0–240 Minuten und das zulässige Alter der Anwesenheitsdaten auf 10–1440 Minuten ein.",
       "climate_invalid_comfort_adjustment": "Stelle die maximale Anpassung des Komfortsollwerts auf einen Wert zwischen 0 und 2,5°C ein.",
       "climate_proportional_requires_percent": "Die proportionale Regelung benötigt eine number-Entität mit der Einheit %, Minimum 0, Maximum 100 und numerischer Schrittweite.",
-      "invalid_freshness_mode": "Wähle Automatisch oder Benutzerdefiniert für das zulässige Alter der Sensorwerte."
+      "invalid_freshness_mode": "Wähle Automatisch oder Benutzerdefiniert für das zulässige Alter der Sensorwerte.",
+      "invalid_quiet_hours": "Gültige, unterschiedliche Start- und Endzeiten für die Ruhezeiten wählen."
     },
     "abort": {
       "setup_area_removed": "Ungültig: Zu überwachende Räume",
@@ -4086,6 +4112,22 @@
             "name": "Hilfe"
           }
         }
+      },
+      "home_quiet_hours_enabled": {
+        "name": "Ruhezeiten",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
+      },
+      "equipment_quiet_hours": {
+        "name": "Leise während der Ruhezeiten",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
       }
     },
     "select": {
@@ -4407,6 +4449,22 @@
       },
       "area_climate_sleep_end": {
         "name": "Schlaf · Ende (Ortszeit)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
+      },
+      "home_quiet_hours_start": {
+        "name": "Beginn der Ruhezeiten",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Hilfe"
+          }
+        }
+      },
+      "home_quiet_hours_end": {
+        "name": "Ende der Ruhezeiten",
         "state_attributes": {
           "configuration_help": {
             "name": "Hilfe"

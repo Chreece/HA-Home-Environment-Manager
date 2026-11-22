@@ -256,15 +256,22 @@ def browser_checks(states):
         for width in (320, 390, 590):
             page.set_viewport_size({"width": width, "height": 960})
             for header in page.locator(".hem-room-glance87").all():
-                result = header.evaluate("""el=>({width:el.clientWidth,scroll:el.scrollWidth,
-                  height:el.getBoundingClientRect().height,
-                  left:el.querySelector('.hem-room-name87').previousElementSibling.hasAttribute('data-room-settings114'),
-                  first:el.firstElementChild.hasAttribute('data-room-settings114'),
-                  homes:el.querySelectorAll('.hem-room-icon112,[icon="mdi:home-outline"]').length})""")
+                result = header.evaluate("""el=>{
+                  const name=el.querySelector('.hem-room-name87');
+                  const settings=el.querySelector('[data-room-settings114]');
+                  const title=name.getBoundingClientRect(),button=settings.getBoundingClientRect();
+                  const overview=el.querySelector('.hem-room-overview080').getBoundingClientRect();
+                  return {width:el.clientWidth,scroll:el.scrollWidth,
+                    height:el.getBoundingClientRect().height,
+                    sameTab:name.parentElement===settings.parentElement,
+                    beside:button.left>=title.right-1&&button.top<title.bottom&&title.top<button.bottom,
+                    below:overview.top>=Math.max(title.bottom,button.bottom),
+                    homes:el.querySelectorAll('.hem-room-icon112,[icon="mdi:home-outline"]').length};
+                }""")
                 assert result["scroll"] <= result["width"] + 1, (width, result)
-                assert result["height"] <= 52, (width, result)
-                assert result["left"], result
-                assert result["first"] and result["homes"] == 0, result
+                assert 60 <= result["height"] <= 100, (width, result)
+                assert result["sameTab"] and result["beside"] and result["below"], result
+                assert result["homes"] == 0, result
         name = lambda area: page.locator(f'[data-room-fold87="{area}"] .hem-room-name87')
         colors = [name(area).evaluate("el=>getComputedStyle(el).color")
                   for area in ("occupied", "empty", "missing")]

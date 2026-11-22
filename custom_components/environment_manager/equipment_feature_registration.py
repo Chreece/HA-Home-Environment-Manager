@@ -91,7 +91,7 @@ def quiet_keys(manager: Any, registry: Any, spec: Any,
     """
     cap = equipment.capabilities(manager, spec)
     if platform == "switch":
-        choices = equipment.QUIET_FLAGS
+        choices = equipment.QUIET_FLAGS + equipment.SHARED_QUIET_FLAGS
         offered = bool(cap and cap.fan_modes)
     elif platform == "select":
         choices = ("quiet_fan_mode",)

@@ -231,7 +231,10 @@
           "general_wake_alarm_entity": "Spánek · Příští budík",
           "general_wake_lead_minutes_entity": "Spánek · Minuty před budíkem",
           "window_open_timeout_minutes": "Čekání na otevření okna (min)",
-          "window_close_cooldown_minutes": "Čekání před doporučením zavřít okno (min)"
+          "window_close_cooldown_minutes": "Čekání před doporučením zavřít okno (min)",
+          "quiet_hours_enabled": "Doba klidu",
+          "quiet_hours_start": "Začátek doby klidu",
+          "quiet_hours_end": "Konec doby klidu"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasí a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -285,7 +288,10 @@
           "general_wake_alarm_entity": "Vyberte entitu času nebo časového razítka příštího budíku a také entitu s minutami předstihu. HEM ukončí automatický spánek s tímto předstihem a obnoví běžné cíle. Samotný čas používá časové pásmo Home Assistant. Nepřítomnost, ruční ovládání a ochrany zařízení mají nadále přednost.",
           "general_wake_lead_minutes_entity": "Vyberte číselnou entitu s nezáporným počtem minut, s jednotkou min nebo bez jednotky. Budík v 07:00 a hodnota 30 ukončí automatický spánek v 06:30; 0 znamená při zazvonění. Funkci vypnete vymazáním obou zdrojů.",
           "window_open_timeout_minutes": "Čekání po přijetí žádosti o větrání, než budou při trvající potřebě povolena nová automatická/PID spuštění. 0–30 minut, výchozí 5; 0 čekání vypne. Ochrana při otevřeném okně a minimální provozní časy zařízení zůstávají v platnosti.",
-          "window_close_cooldown_minutes": "Po otevření okna na základě doporučení HEM vyčká tento počet minut, než doporučí jeho zavření, i když jsou venkovní podmínky nevhodné. Doba čekání se počítá pro každou místnost samostatně. 0–60 minut, výchozí hodnota 5; 0 čekání vypne. Pravidla pro pozastavení provozu a ochranu zařízení zůstávají aktivní."
+          "window_close_cooldown_minutes": "Po otevření okna na základě doporučení HEM vyčká tento počet minut, než doporučí jeho zavření, i když jsou venkovní podmínky nevhodné. Doba čekání se počítá pro každou místnost samostatně. 0–60 minut, výchozí hodnota 5; 0 čekání vypne. Pravidla pro pozastavení provozu a ochranu zařízení zůstávají aktivní.",
+          "quiet_hours_enabled": "Použije tento denní interval pro zařízení se zapnutou volbou „Tichý chod v době klidu“. Časy se řídí místním časovým pásmem Home Assistant; interval může přecházet přes půlnoc. Ve výchozím stavu vypnuto.",
+          "quiet_hours_start": "Denní čas začátku, který patří do doby klidu. Zvolte jiný čas než čas konce.",
+          "quiet_hours_end": "Denní čas konce, který již nepatří do doby klidu. Je-li dřívější než začátek, interval končí následující den."
         }
       },
       "reconfigure": {
@@ -938,7 +944,10 @@
           "general_sleep_rooms_attribute": "Spánek · Místnost · zdroj (attribute)",
           "general_source_stale_minutes": "Přítomnost doma · Maximální stáří údajů sledování/počtu osob (min)",
           "general_wake_alarm_entity": "Spánek · Příští budík",
-          "general_wake_lead_minutes_entity": "Spánek · Minuty před budíkem"
+          "general_wake_lead_minutes_entity": "Spánek · Minuty před budíkem",
+          "quiet_hours_enabled": "Doba klidu",
+          "quiet_hours_start": "Začátek doby klidu",
+          "quiet_hours_end": "Konec doby klidu"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší.",
@@ -950,7 +959,10 @@
           "general_sleep_rooms_attribute": "Vyberte pole Stav nebo ověřený atribut se seznamem místností z vybrané entity spánku. Chybějící nebo nerozpoznaný seznam znamená neznámý stav spánku.",
           "general_source_stale_minutes": "Věkové omezení platí pro hlášení sledovačů a číselné počty osob. Seznamy místností a binární přítomnostní stavy při nezměněné hodnotě nevyprší. Nedostupné, obnovené nebo neplatné zdroje zůstávají neznámé. Nejde o délku spánku.",
           "general_wake_alarm_entity": "Vyberte entitu času nebo časového razítka příštího budíku a také entitu s minutami předstihu. HEM ukončí automatický spánek s tímto předstihem a obnoví běžné cíle. Samotný čas používá časové pásmo Home Assistant. Nepřítomnost, ruční ovládání a ochrany zařízení mají nadále přednost.",
-          "general_wake_lead_minutes_entity": "Vyberte číselnou entitu s nezáporným počtem minut, s jednotkou min nebo bez jednotky. Budík v 07:00 a hodnota 30 ukončí automatický spánek v 06:30; 0 znamená při zazvonění. Funkci vypnete vymazáním obou zdrojů."
+          "general_wake_lead_minutes_entity": "Vyberte číselnou entitu s nezáporným počtem minut, s jednotkou min nebo bez jednotky. Budík v 07:00 a hodnota 30 ukončí automatický spánek v 06:30; 0 znamená při zazvonění. Funkci vypnete vymazáním obou zdrojů.",
+          "quiet_hours_enabled": "Použije tento denní interval pro zařízení se zapnutou volbou „Tichý chod v době klidu“. Časy se řídí místním časovým pásmem Home Assistant; interval může přecházet přes půlnoc. Ve výchozím stavu vypnuto.",
+          "quiet_hours_start": "Denní čas začátku, který patří do doby klidu. Zvolte jiný čas než čas konce.",
+          "quiet_hours_end": "Denní čas konce, který již nepatří do doby klidu. Je-li dřívější než začátek, interval končí následující den."
         }
       },
       "pollen": {
@@ -1240,7 +1252,8 @@
       "climate_invalid_occupancy_timing": "Nastavte prodlevu po opuštění místnosti na 0–240 minut a maximální stáří údajů o přítomnosti na 10–1440 minut.",
       "climate_invalid_comfort_adjustment": "Nastavte maximální úpravu cílové komfortní teploty mezi 0 a 2,5°C.",
       "climate_proportional_requires_percent": "Proporcionální řízení vyžaduje entitu number s jednotkou %, minimem 0, maximem 100 a číselným krokem.",
-      "invalid_freshness_mode": "Pro maximální stáří údajů čidla vyberte Automaticky nebo Vlastní."
+      "invalid_freshness_mode": "Pro maximální stáří údajů čidla vyberte Automaticky nebo Vlastní.",
+      "invalid_quiet_hours": "Zvolte platné a rozdílné časy začátku a konce doby klidu."
     },
     "abort": {
       "already_configured": "Home Environment Manager - již nastaveno.",
@@ -2025,7 +2038,10 @@
           "general_sleep_rooms_attribute": "Spánek · Místnost · zdroj (attribute)",
           "general_source_stale_minutes": "Přítomnost doma · Maximální stáří údajů sledování/počtu osob (min)",
           "general_wake_alarm_entity": "Spánek · Příští budík",
-          "general_wake_lead_minutes_entity": "Spánek · Minuty před budíkem"
+          "general_wake_lead_minutes_entity": "Spánek · Minuty před budíkem",
+          "quiet_hours_enabled": "Doba klidu",
+          "quiet_hours_start": "Začátek doby klidu",
+          "quiet_hours_end": "Konec doby klidu"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší.",
@@ -2037,7 +2053,10 @@
           "general_sleep_rooms_attribute": "Vyberte pole Stav nebo ověřený atribut se seznamem místností z vybrané entity spánku. Chybějící nebo nerozpoznaný seznam znamená neznámý stav spánku.",
           "general_source_stale_minutes": "Věkové omezení platí pro hlášení sledovačů a číselné počty osob. Seznamy místností a binární přítomnostní stavy při nezměněné hodnotě nevyprší. Nedostupné, obnovené nebo neplatné zdroje zůstávají neznámé. Nejde o délku spánku.",
           "general_wake_alarm_entity": "Vyberte entitu času nebo časového razítka příštího budíku a také entitu s minutami předstihu. HEM ukončí automatický spánek s tímto předstihem a obnoví běžné cíle. Samotný čas používá časové pásmo Home Assistant. Nepřítomnost, ruční ovládání a ochrany zařízení mají nadále přednost.",
-          "general_wake_lead_minutes_entity": "Vyberte číselnou entitu s nezáporným počtem minut, s jednotkou min nebo bez jednotky. Budík v 07:00 a hodnota 30 ukončí automatický spánek v 06:30; 0 znamená při zazvonění. Funkci vypnete vymazáním obou zdrojů."
+          "general_wake_lead_minutes_entity": "Vyberte číselnou entitu s nezáporným počtem minut, s jednotkou min nebo bez jednotky. Budík v 07:00 a hodnota 30 ukončí automatický spánek v 06:30; 0 znamená při zazvonění. Funkci vypnete vymazáním obou zdrojů.",
+          "quiet_hours_enabled": "Použije tento denní interval pro zařízení se zapnutou volbou „Tichý chod v době klidu“. Časy se řídí místním časovým pásmem Home Assistant; interval může přecházet přes půlnoc. Ve výchozím stavu vypnuto.",
+          "quiet_hours_start": "Denní čas začátku, který patří do doby klidu. Zvolte jiný čas než čas konce.",
+          "quiet_hours_end": "Denní čas konce, který již nepatří do doby klidu. Je-li dřívější než začátek, interval končí následující den."
         }
       },
       "pollen": {
@@ -2251,7 +2270,10 @@
           "window_open_timeout_minutes": "Čekání na otevření okna (min)",
           "general_source_freshness_mode": "Obsazenost domácnosti · Pravidla platnosti",
           "global_threshold_max_age_mode": "Prostředí · Pravidla platnosti",
-          "window_close_cooldown_minutes": "Čekání před doporučením zavřít okno (min)"
+          "window_close_cooldown_minutes": "Čekání před doporučením zavřít okno (min)",
+          "quiet_hours_enabled": "Doba klidu",
+          "quiet_hours_start": "Začátek doby klidu",
+          "quiet_hours_end": "Konec doby klidu"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasí a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2307,7 +2329,10 @@
           "window_open_timeout_minutes": "Čekání po přijetí žádosti o větrání, než budou při trvající potřebě povolena nová automatická/PID spuštění. 0–30 minut, výchozí 5; 0 čekání vypne. Ochrana při otevřeném okně a minimální provozní časy zařízení zůstávají v platnosti.",
           "general_source_freshness_mode": "Automaticky: číselné počty osob a hlášení nepřítomnosti domácích sledovačů jsou přijímány nejvýše 240 minut; platný nezměněný stav Doma může trvat až do změny. Neznámé, obnovené a nedostupné zdroje nemohou prokázat nepřítomnost. Vlastní: pro vzorkovaná hlášení použije počet minut níže. Seznamy místností se nadále řídí změnami stavu.",
           "global_threshold_max_age_mode": "Automaticky: entity počasí mohou být platné 180 minut a ostatní číselná měření prostředí 90 minut; platné binární kontakty řízené změnami stavu zůstávají použitelné bez vypršení kvůli nečinnosti. Vlastní: použije počet minut níže. Kontroly dostupnosti a obnoveného stavu vždy platí. Home Assistant aktualizuje last_reported při opětovném zápisu stavu, i se stejnou hodnotou, nikoli jen plynutím času.",
-          "window_close_cooldown_minutes": "Po otevření okna na základě doporučení HEM vyčká tento počet minut, než doporučí jeho zavření, i když jsou venkovní podmínky nevhodné. Doba čekání se počítá pro každou místnost samostatně. 0–60 minut, výchozí hodnota 5; 0 čekání vypne. Pravidla pro pozastavení provozu a ochranu zařízení zůstávají aktivní."
+          "window_close_cooldown_minutes": "Po otevření okna na základě doporučení HEM vyčká tento počet minut, než doporučí jeho zavření, i když jsou venkovní podmínky nevhodné. Doba čekání se počítá pro každou místnost samostatně. 0–60 minut, výchozí hodnota 5; 0 čekání vypne. Pravidla pro pozastavení provozu a ochranu zařízení zůstávají aktivní.",
+          "quiet_hours_enabled": "Použije tento denní interval pro zařízení se zapnutou volbou „Tichý chod v době klidu“. Časy se řídí místním časovým pásmem Home Assistant; interval může přecházet přes půlnoc. Ve výchozím stavu vypnuto.",
+          "quiet_hours_start": "Denní čas začátku, který patří do doby klidu. Zvolte jiný čas než čas konce.",
+          "quiet_hours_end": "Denní čas konce, který již nepatří do doby klidu. Je-li dřívější než začátek, interval končí následující den."
         }
       },
       "room_occupancy": {
@@ -2473,7 +2498,8 @@
       "climate_invalid_occupancy_timing": "Nastavte prodlevu po opuštění místnosti na 0–240 minut a maximální stáří údajů o přítomnosti na 10–1440 minut.",
       "climate_invalid_comfort_adjustment": "Nastavte maximální úpravu cílové komfortní teploty mezi 0 a 2,5°C.",
       "climate_proportional_requires_percent": "Proporcionální řízení vyžaduje entitu number s jednotkou %, minimem 0, maximem 100 a číselným krokem.",
-      "invalid_freshness_mode": "Pro maximální stáří údajů čidla vyberte Automaticky nebo Vlastní."
+      "invalid_freshness_mode": "Pro maximální stáří údajů čidla vyberte Automaticky nebo Vlastní.",
+      "invalid_quiet_hours": "Zvolte platné a rozdílné časy začátku a konce doby klidu."
     },
     "abort": {
       "setup_area_removed": "Neplatné: Sledované místnosti",
@@ -4086,6 +4112,22 @@
             "name": "Nápověda"
           }
         }
+      },
+      "home_quiet_hours_enabled": {
+        "name": "Doba klidu",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Nápověda"
+          }
+        }
+      },
+      "equipment_quiet_hours": {
+        "name": "Tichý chod v době klidu",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Nápověda"
+          }
+        }
       }
     },
     "select": {
@@ -4407,6 +4449,22 @@
       },
       "area_climate_sleep_end": {
         "name": "Spánek · Zařízení · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Nápověda"
+          }
+        }
+      },
+      "home_quiet_hours_start": {
+        "name": "Začátek doby klidu",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Nápověda"
+          }
+        }
+      },
+      "home_quiet_hours_end": {
+        "name": "Konec doby klidu",
         "state_attributes": {
           "configuration_help": {
             "name": "Nápověda"

@@ -143,7 +143,7 @@ with sync_playwright() as p:
     assert page.locator(".hem-room-fold87:not([open])").count()==5
     assert page.locator(".hem-room-glance87").count()==5
     height=page.locator(".hem-room-glance87").first.bounding_box()["height"]
-    if height>52:
+    if not 60 <= height <= 100:
         diag=page.locator(".hem-room-glance87").first.evaluate("""node=>({
             client:node.clientWidth,scroll:node.scrollWidth,height:node.clientHeight,
             children:[...node.children].map(c=>({
@@ -152,7 +152,7 @@ with sync_playwright() as p:
                 height:c.getBoundingClientRect().height, display:getComputedStyle(c).display
             }))
         })""")
-        raise AssertionError(("room summary must be one line",height,diag))
+        raise AssertionError(("room summary must use two compact rows",height,diag))
 
     outdoor=page.locator(".outside")
     assert outdoor.count()==1
@@ -224,7 +224,10 @@ with sync_playwright() as p:
         assert page.evaluate("document.documentElement.scrollWidth")<=width,width
         assert page.locator(".hem-room-fold87:not([open])").count()==5
         assert page.locator(".hem-overview87").bounding_box()["height"]<=58
-        assert page.locator(".hem-room-glance87").first.bounding_box()["height"]<=57
+        room_header = page.locator(".hem-room-glance87").first
+        assert 60 <= room_header.bounding_box()["height"] <= 100
+        assert room_header.locator(".hem-room-name87").bounding_box()["y"] < \
+            room_header.locator(".hem-room-reading87").first.bounding_box()["y"]
         assert page.locator(".outside").bounding_box()["height"]<=89
     assert not errors,errors
     browser.close()

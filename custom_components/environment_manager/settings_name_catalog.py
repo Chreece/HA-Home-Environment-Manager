@@ -5574,6 +5574,7 @@ SETTING_NAMES = {'ar': {'area_area_environment_air_speed_m_s': 'الراحة ا�
 
 from .window_open_text import WINDOW_OPEN_TEXT
 from .window_close_cooldown_text import WINDOW_CLOSE_COOLDOWN_TEXT
+from .quiet_hours_text import QUIET_HOURS_TEXT
 from .backend_text import complete_catalog, translated_text, resolve_language
 
 _WINDOW_TIMEOUT_KEY = "global_setting_window_open_timeout_minutes"
@@ -5589,6 +5590,12 @@ for _locale, _text in WINDOW_CLOSE_COOLDOWN_TEXT.items():
     SETTING_NAMES[_locale][_WINDOW_CLOSE_COOLDOWN_KEY] = (
         f"{GROUP_LABELS[_locale]['ventilation']} · {_text['label']}"
     )
+
+for _field in ("enabled", "start", "end"):
+    _key = f"home_quiet_hours_{_field}"
+    SETTING_GROUPS[_key] = "noise"
+    for _locale, _text in QUIET_HOURS_TEXT.items():
+        SETTING_NAMES[_locale][_key] = _text[f"{_field}_label"]
 
 
 # Room-level door policy is opt-in; the static catalog completes all locales.

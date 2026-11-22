@@ -231,7 +231,10 @@
           "general_wake_alarm_entity": "Sleep · Next alarm",
           "general_wake_lead_minutes_entity": "Sleep · Minutes before alarm",
           "window_open_timeout_minutes": "Wait for window opening (min)",
-          "window_close_cooldown_minutes": "Wait before suggesting window closure (min)"
+          "window_close_cooldown_minutes": "Wait before suggesting window closure (min)",
+          "quiet_hours_enabled": "Quiet hours",
+          "quiet_hours_start": "Quiet hours start",
+          "quiet_hours_end": "Quiet hours end"
         },
         "data_description": {
           "weather_entities": "At least one weather provider. Rain, storms and extreme wind/temperature block opening. Mold indication uses the current temperature attribute (°C/°F) of a selected weather entity for outdoor temperature. Choose a source that reports temperature.",
@@ -285,7 +288,10 @@
           "general_wake_alarm_entity": "Select the Home Assistant source reporting the next wake alarm. HEM can end an automatically selected sleep profile before the alarm only when a corresponding minutes-before-alarm source is also configured. Both sources must be selected together; an unavailable source never proves that a wake time was reached.",
           "general_wake_lead_minutes_entity": "Select the source reporting how many minutes before the next wake alarm HEM should end automatic sleep. This must be paired with the next-alarm source, or both left unselected. An invalid/unknown value does not force a wake transition.",
           "window_open_timeout_minutes": "Wait after an opening request is accepted before new automatic/PID starts resume if still needed. 0–30 minutes, default 5; 0 disables waiting. Existing open-window and device timing protections still apply.",
-          "window_close_cooldown_minutes": "After a window opens following HEM opening advice, wait this many minutes before suggesting that it be closed, even when outside conditions are unsuitable. Applies independently to each room. 0–60 minutes, default 5; 0 disables the delay. Device pause and protection rules remain active."
+          "window_close_cooldown_minutes": "After a window opens following HEM opening advice, wait this many minutes before suggesting that it be closed, even when outside conditions are unsuitable. Applies independently to each room. 0–60 minutes, default 5; 0 disables the delay. Device pause and protection rules remain active.",
+          "quiet_hours_enabled": "Use this daily interval for devices with Quiet during quiet hours enabled. Times follow Home Assistant's local time zone; intervals can cross midnight. Off by default.",
+          "quiet_hours_start": "Daily start time, included in quiet hours. Choose a different time from the end.",
+          "quiet_hours_end": "Daily end time, excluded from quiet hours. A time earlier than the start ends the interval the next day."
         }
       },
       "reconfigure": {
@@ -938,7 +944,10 @@
           "general_sleep_rooms_attribute": "Sleep · Room · source (attribute)",
           "general_source_stale_minutes": "Home Occupancy · Maximum tracker/count report age (min)",
           "general_wake_alarm_entity": "Sleep · Next alarm",
-          "general_wake_lead_minutes_entity": "Sleep · Minutes before alarm"
+          "general_wake_lead_minutes_entity": "Sleep · Minutes before alarm",
+          "quiet_hours_enabled": "Quiet hours",
+          "quiet_hours_start": "Quiet hours start",
+          "quiet_hours_end": "Quiet hours end"
         },
         "data_description": {
           "general_room_occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight.",
@@ -950,7 +959,10 @@
           "general_sleep_rooms_attribute": "Choose the State field or a verified room-list attribute from the selected sleep entity. A missing or unrecognized list makes sleep state unknown.",
           "general_source_stale_minutes": "Maximum report age for confirming Away from person/device trackers and for sampled numeric counts (default 240 minutes). An unchanged positive Home state on a person/device tracker or an ON whole-home binary sensor remains valid overnight. Room-presence and sleep lists also remain valid while unchanged. Missing, unknown, unavailable and restored sources cannot establish Away.",
           "general_wake_alarm_entity": "Select the Home Assistant source reporting the next wake alarm. HEM can end an automatically selected sleep profile before the alarm only when a corresponding minutes-before-alarm source is also configured. Both sources must be selected together; an unavailable source never proves that a wake time was reached.",
-          "general_wake_lead_minutes_entity": "Select the source reporting how many minutes before the next wake alarm HEM should end automatic sleep. This must be paired with the next-alarm source, or both left unselected. An invalid/unknown value does not force a wake transition."
+          "general_wake_lead_minutes_entity": "Select the source reporting how many minutes before the next wake alarm HEM should end automatic sleep. This must be paired with the next-alarm source, or both left unselected. An invalid/unknown value does not force a wake transition.",
+          "quiet_hours_enabled": "Use this daily interval for devices with Quiet during quiet hours enabled. Times follow Home Assistant's local time zone; intervals can cross midnight. Off by default.",
+          "quiet_hours_start": "Daily start time, included in quiet hours. Choose a different time from the end.",
+          "quiet_hours_end": "Daily end time, excluded from quiet hours. A time earlier than the start ends the interval the next day."
         }
       },
       "pollen": {
@@ -1240,7 +1252,8 @@
       "climate_invalid_occupancy_timing": "Set the vacancy delay to 0–240 minutes and the occupancy-data freshness limit to 10–1440 minutes.",
       "climate_invalid_comfort_adjustment": "Set the maximum comfort target adjustment between 0 and 2.5°C.",
       "climate_proportional_requires_percent": "Proportional control requires a number entity with unit %, minimum 0, maximum 100 and a numeric step.",
-      "invalid_freshness_mode": "Choose Automatic or Custom for the sensor freshness limit."
+      "invalid_freshness_mode": "Choose Automatic or Custom for the sensor freshness limit.",
+      "invalid_quiet_hours": "Choose valid, different start and end times for quiet hours."
     },
     "abort": {
       "already_configured": "Home Environment Manager is already configured.",
@@ -2025,7 +2038,10 @@
           "general_sleep_rooms_attribute": "Sleep · Room · source (attribute)",
           "general_source_stale_minutes": "Home Occupancy · Maximum tracker/count report age (min)",
           "general_wake_alarm_entity": "Sleep · Next alarm",
-          "general_wake_lead_minutes_entity": "Sleep · Minutes before alarm"
+          "general_wake_lead_minutes_entity": "Sleep · Minutes before alarm",
+          "quiet_hours_enabled": "Quiet hours",
+          "quiet_hours_start": "Quiet hours start",
+          "quiet_hours_end": "Quiet hours end"
         },
         "data_description": {
           "general_room_occupancy_sensors": "A valid occupied-room list in the selected state or attribute has priority: listed rooms are occupied and omitted rooms are empty. When no list is configured, or its source is unavailable, selected room sensors supply fallback evidence. Any ON means occupied; all OFF, or no selected sensors and no configured list, means empty. Numeric counts use 0 for empty and a positive value for occupied. Malformed lists, unknown room names and unavailable or restored selected sources can remain unknown. Unchanged lists and binary room states do not expire overnight.",
@@ -2037,7 +2053,10 @@
           "general_sleep_rooms_attribute": "Choose the State field or a verified room-list attribute from the selected sleep entity. A missing or unrecognized list makes sleep state unknown.",
           "general_source_stale_minutes": "Maximum report age for confirming Away from person/device trackers and for sampled numeric counts (default 240 minutes). An unchanged positive Home state on a person/device tracker or an ON whole-home binary sensor remains valid overnight. Room-presence and sleep lists also remain valid while unchanged. Missing, unknown, unavailable and restored sources cannot establish Away.",
           "general_wake_alarm_entity": "Select the Home Assistant source reporting the next wake alarm. HEM can end an automatically selected sleep profile before the alarm only when a corresponding minutes-before-alarm source is also configured. Both sources must be selected together; an unavailable source never proves that a wake time was reached.",
-          "general_wake_lead_minutes_entity": "Select the source reporting how many minutes before the next wake alarm HEM should end automatic sleep. This must be paired with the next-alarm source, or both left unselected. An invalid/unknown value does not force a wake transition."
+          "general_wake_lead_minutes_entity": "Select the source reporting how many minutes before the next wake alarm HEM should end automatic sleep. This must be paired with the next-alarm source, or both left unselected. An invalid/unknown value does not force a wake transition.",
+          "quiet_hours_enabled": "Use this daily interval for devices with Quiet during quiet hours enabled. Times follow Home Assistant's local time zone; intervals can cross midnight. Off by default.",
+          "quiet_hours_start": "Daily start time, included in quiet hours. Choose a different time from the end.",
+          "quiet_hours_end": "Daily end time, excluded from quiet hours. A time earlier than the start ends the interval the next day."
         }
       },
       "pollen": {
@@ -2251,7 +2270,10 @@
           "window_open_timeout_minutes": "Wait for window opening (min)",
           "general_source_freshness_mode": "Home occupancy · Validity policy",
           "global_threshold_max_age_mode": "Environment · Validity policy",
-          "window_close_cooldown_minutes": "Wait before suggesting window closure (min)"
+          "window_close_cooldown_minutes": "Wait before suggesting window closure (min)",
+          "quiet_hours_enabled": "Quiet hours",
+          "quiet_hours_start": "Quiet hours start",
+          "quiet_hours_end": "Quiet hours end"
         },
         "data_description": {
           "weather_entities": "At least one weather provider. Rain, storms and extreme wind/temperature block opening. Mold indication uses the current temperature attribute (°C/°F) of a selected weather entity for outdoor temperature. Choose a source that reports temperature.",
@@ -2307,7 +2329,10 @@
           "window_open_timeout_minutes": "Wait after an opening request is accepted before new automatic/PID starts resume if still needed. 0–30 minutes, default 5; 0 disables waiting. Existing open-window and device timing protections still apply.",
           "general_source_freshness_mode": "Automatic: numeric people counters and negative home-tracker reports are accepted for up to 240 minutes; a valid unchanged Home state can remain Home until it changes. Unknown, restored and unavailable sources cannot prove absence. Custom: use the minute value below for sampled reports. Room-list sources remain change-driven.",
           "global_threshold_max_age_mode": "Automatic: weather entities can remain valid for 180 minutes, other numeric environmental measurements for 90 minutes, while valid change-driven binary contacts remain usable without an inactivity timeout. Custom: use the minute value below. Availability and restored-state checks always apply. Home Assistant last_reported advances on a repeated same-value write, not merely because time has passed.",
-          "window_close_cooldown_minutes": "After a window opens following HEM opening advice, wait this many minutes before suggesting that it be closed, even when outside conditions are unsuitable. Applies independently to each room. 0–60 minutes, default 5; 0 disables the delay. Device pause and protection rules remain active."
+          "window_close_cooldown_minutes": "After a window opens following HEM opening advice, wait this many minutes before suggesting that it be closed, even when outside conditions are unsuitable. Applies independently to each room. 0–60 minutes, default 5; 0 disables the delay. Device pause and protection rules remain active.",
+          "quiet_hours_enabled": "Use this daily interval for devices with Quiet during quiet hours enabled. Times follow Home Assistant's local time zone; intervals can cross midnight. Off by default.",
+          "quiet_hours_start": "Daily start time, included in quiet hours. Choose a different time from the end.",
+          "quiet_hours_end": "Daily end time, excluded from quiet hours. A time earlier than the start ends the interval the next day."
         }
       },
       "room_occupancy": {
@@ -2473,7 +2498,8 @@
       "climate_invalid_occupancy_timing": "Set the vacancy delay to 0–240 minutes and the occupancy-data freshness limit to 10–1440 minutes.",
       "climate_invalid_comfort_adjustment": "Set the maximum comfort target adjustment between 0 and 2.5°C.",
       "climate_proportional_requires_percent": "Proportional control requires a number entity with unit %, minimum 0, maximum 100 and a numeric step.",
-      "invalid_freshness_mode": "Choose Automatic or Custom for the sensor freshness limit."
+      "invalid_freshness_mode": "Choose Automatic or Custom for the sensor freshness limit.",
+      "invalid_quiet_hours": "Choose valid, different start and end times for quiet hours."
     },
     "abort": {
       "setup_area_removed": "Invalid: Rooms to monitor",
@@ -4086,6 +4112,22 @@
             "name": "Help"
           }
         }
+      },
+      "home_quiet_hours_enabled": {
+        "name": "Quiet hours",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "equipment_quiet_hours": {
+        "name": "Quiet during quiet hours",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
       }
     },
     "select": {
@@ -4407,6 +4449,22 @@
       },
       "area_climate_sleep_end": {
         "name": "Sleep · End time (local)",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "home_quiet_hours_start": {
+        "name": "Quiet hours start",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Help"
+          }
+        }
+      },
+      "home_quiet_hours_end": {
+        "name": "Quiet hours end",
         "state_attributes": {
           "configuration_help": {
             "name": "Help"

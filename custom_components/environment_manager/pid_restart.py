@@ -149,6 +149,11 @@ def control_intent(settings: dict, mode: str | None = None) -> dict:
         "pid_fan_capacity_models", "fan_speed_limits",
     )
     result = {key: deepcopy(settings.get(key)) for key in fields}
+    # Pre-0.8 checkpoints have no quiet-hours key. The opt-out default is the
+    # same control intent, so upgrading must not discard a running PID cycle.
+    # Opting in or later opting out still changes this dictionary normally.
+    if settings.get("quiet_hours") is True:
+        result["quiet_hours"] = True
     direction = settings.get("operating_mode") or mode or settings.get("requested_mode")
     keys = ({direction} if direction in ("heat", "cool") else
             {"humidity"} if direction in ("dry", "humidify") else

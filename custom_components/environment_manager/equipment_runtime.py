@@ -1689,6 +1689,11 @@ class EquipmentRuntime:
                 "quiet_percentage", "quiet_fan_mode", "fan_speed_limits", "pid_fan_capacity_mode",
                 "pid_fan_capacity_models", "fan_purpose", "fan_mode", "profile_fans")},
         }
+        # The default opt-out must keep pre-0.8 adaptive evidence compatible.
+        # A real opt-in still identifies a different actuator policy; opting
+        # out can resume the separately retained normal-policy evidence.
+        if cfg.get("quiet_hours") is True:
+            context_data["policy"]["quiet_hours"] = True
         if actuator["actuator_kind"] == "binary" and cap.fan_entity and cap.fan_modes:
             fan = self.hass.states.get(cap.fan_entity)
             attribute = "percentage" if cap.fan_percentage else "fan_mode" if cap.fan_entity.startswith("climate.") else "preset_mode"
@@ -2546,6 +2551,55 @@ class EquipmentRuntime:
         """Validate edits to one operating profile or shared physical settings."""
         if "timed_setpoint_sequence" in changes:
             raise HomeAssistantError("The timed target setting has been removed")
+        if "quiet_hours" in changes:
+            # One shared opt-in, independent of native command journals and
+            # mode selection. Saving it does not claim or power an appliance.
+            enabled = changes["quiet_hours"]
+            if (operating_mode is not None or set(changes) != {"quiet_hours"}
+                    or type(enabled) is not bool):
+                raise HomeAssistantError("Unsupported controller setting")
+            lock = getattr(self.manager, "_device_settings_write_lock", None)
+            if lock is None:
+                lock = self.manager._device_settings_write_lock = asyncio.Lock()
+            async with lock:
+                if not self._ready or not self._current_spec(spec):
+                    raise HomeAssistantError("Controller storage or source identity is unavailable")
+                cap = model.capabilities(self.manager, spec)
+                if enabled and (cap is None or not cap.fan_entity or not cap.fan_modes):
+                    raise HomeAssistantError("Quiet control requires an adjustable native fan")
+                if enabled and not cap.fan_percentage:
+                    from .pid_output_allocator import quiet_discrete_fan_speed
+                    effective = model.settings(self.manager, spec)
+                    profiles = [effective] + [
+                        model.settings_for_mode(self.manager, spec, mode)
+                        for mode in model.operating_modes(self.manager, spec)
+                        if (descriptor := model.mode_descriptor(self.manager, spec, mode))
+                        and descriptor.get("fan")
+                    ]
+                    # Every Automatic/PID mode must have a real quiet speed.
+                    # Unsupported/fanless modes neither block the preference
+                    # nor acquire a quiet control from it.
+                    needed = [cfg for cfg in profiles
+                              if cfg.get("control_mode") in ("automatic", "pid")]
+                    for cfg in needed or [effective]:
+                        if quiet_discrete_fan_speed(
+                            cap.fan_modes[-1], modes=cap.fan_modes,
+                            quiet_mode=cfg.get("quiet_fan_mode"),
+                        ) is None:
+                            raise HomeAssistantError(
+                                "Select an advertised quiet fan mode before enabling quiet control")
+                options = deepcopy(self.manager.entry.options)
+                profiles = deepcopy(self.manager.settings.get(model.SETTINGS, {}))
+                profiles = profiles if isinstance(profiles, dict) else {}
+                previous = profiles.get(spec.identifier)
+                previous = previous if isinstance(previous, dict) else {}
+                profiles[spec.identifier] = {**previous, "quiet_hours": enabled}
+                options[model.SETTINGS] = profiles
+                self.hass.config_entries.async_update_entry(self.manager.entry, options=options)
+            self._presentation_updates.request(spec.identifier)
+            if getattr(self.manager, "_active", False):
+                self.manager._recalculate(initial=True)
+            return
         if set(changes) & {"door_closed_eco", "door_start_coordination"}:
             # Configuration-only: one physical device, never an actuator write.
             from .equipment_door_policy import configured, COORDINATION_OPTIONS
@@ -3036,6 +3090,15 @@ class EquipmentRuntime:
             if (any(new[k] for k in model.QUIET_FLAGS) and not cap.fan_percentage
                     and "low" not in cap.fan_modes and new.get("quiet_fan_mode") is None):
                 raise HomeAssistantError("Select an advertised quiet fan mode before enabling quiet control")
+            if (new.get("quiet_hours") is True and cap.fan_modes and not cap.fan_percentage
+                    and new.get("control_mode") in ("automatic", "pid")):
+                from .pid_output_allocator import quiet_discrete_fan_speed
+                if quiet_discrete_fan_speed(
+                    cap.fan_modes[-1], modes=cap.fan_modes,
+                    quiet_mode=new.get("quiet_fan_mode"),
+                ) is None:
+                    raise HomeAssistantError(
+                        "Select an advertised quiet fan mode before enabling quiet control")
             for key, choices in (("fan_mode", cap.fan_modes), ("quiet_fan_mode", cap.fan_modes),
                                  ("swing_mode", cap.swing_modes), ("swing_horizontal_mode", cap.swing_horizontal_modes)):
                 if new.get(key) is not None and str(new[key]) not in choices:
@@ -4726,7 +4789,12 @@ class EquipmentRuntime:
         return values
 
     def _quiet_context(self, spec: model.ManagedDevice, cfg: dict, plan: dict) -> bool:
-        """Do not raise fan speed on missing sleep/presence evidence."""
+        """Combine the shared clock interval with existing sleep/presence quieting."""
+        if cfg.get("quiet_hours") is True:
+            from .quiet_hours import active as quiet_hours_active
+            zone = getattr(getattr(self.hass, "config", None), "time_zone", None) or "UTC"
+            if quiet_hours_active(self.manager.settings, self.clock(), zone):
+                return True
         if not (cfg.get("quiet_sleep") or cfg.get("quiet_occupied")):
             return False
         room = model.room_config(self.manager, spec)

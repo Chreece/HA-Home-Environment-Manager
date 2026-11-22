@@ -11,6 +11,7 @@ import importlib
 from itertools import combinations
 import json
 from pathlib import Path
+from runpy import run_path
 import string
 import sys
 from types import ModuleType
@@ -25,6 +26,11 @@ if WORK is not None:
     memory = {item["en"]: {"en": item["en"], **item["existing"]} for item in requests}
 else:
     memory = json.loads((LOCALIZATION / "backend_help.json").read_text())
+# Forms, native entity attributes and the card share one quiet-hours catalog.
+# Merge it during every build so generated copies cannot drift independently.
+quiet_hours = run_path(str(SOURCE / "quiet_hours_text.py"))["QUIET_HOURS_TEXT"]
+for field, source in quiet_hours["en"].items():
+    memory[source] = {locale: values[field] for locale, values in quiet_hours.items()}
 required = set(memory)
 
 def fields(value):

@@ -1292,6 +1292,7 @@ SETTING_HELP = {'area_area_environment_air_speed_m_s': {'de': 'Gemessene Luftges
 
 from .window_open_text import WINDOW_OPEN_TEXT
 from .window_close_cooldown_text import WINDOW_CLOSE_COOLDOWN_TEXT
+from .quiet_hours_text import QUIET_HOURS_TEXT
 
 SETTING_HELP["global_setting_window_open_timeout_minutes"] = {
     locale: text["help"] for locale, text in WINDOW_OPEN_TEXT.items()
@@ -1300,6 +1301,11 @@ SETTING_HELP["global_setting_window_open_timeout_minutes"] = {
 SETTING_HELP["global_setting_window_close_cooldown_minutes"] = {
     locale: text["help"] for locale, text in WINDOW_CLOSE_COOLDOWN_TEXT.items()
 }
+
+for _field in ("enabled", "start", "end"):
+    SETTING_HELP[f"home_quiet_hours_{_field}"] = {
+        locale: text[f"{_field}_help"] for locale, text in QUIET_HOURS_TEXT.items()
+    }
 
 
 SETTING_HELP["area_climate_operating_closed_door_eco"] = {

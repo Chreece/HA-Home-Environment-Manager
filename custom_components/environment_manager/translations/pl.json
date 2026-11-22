@@ -231,7 +231,10 @@
           "general_wake_alarm_entity": "Sen · Następny budzik",
           "general_wake_lead_minutes_entity": "Sen · Minuty przed budzikiem",
           "window_open_timeout_minutes": "Oczekiwanie na otwarcie okna (min)",
-          "window_close_cooldown_minutes": "Czas oczekiwania przed sugestią zamknięcia okna (min)"
+          "window_close_cooldown_minutes": "Czas oczekiwania przed sugestią zamknięcia okna (min)",
+          "quiet_hours_enabled": "Godziny ciszy",
+          "quiet_hours_start": "Początek godzin ciszy",
+          "quiet_hours_end": "Koniec godzin ciszy"
         },
         "data_description": {
           "weather_entities": "Wybierz: Pogoda i ostrzeżenia · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -285,7 +288,10 @@
           "general_wake_alarm_entity": "Wybierz encję godziny lub daty i godziny następnego budzika oraz encję minut wyprzedzenia. HEM kończy automatyczny sen o tyle minut wcześniej i przywraca zwykłe cele. Godziny bez daty używają strefy Home Assistant. Nieobecność, sterowanie ręczne i zabezpieczenia zachowują pierwszeństwo.",
           "general_wake_lead_minutes_entity": "Wybierz encję liczbową z nieujemną liczbą minut, z jednostką min lub bez jednostki. Budzik o 07:00 i wartość 30 kończą automatyczny sen o 06:30; 0 oznacza moment dzwonienia. Aby wyłączyć, usuń oba źródła.",
           "window_open_timeout_minutes": "Czas oczekiwania po przyjęciu prośby o wietrzenie przed ponownym zezwoleniem na automatyczne uruchomienia/PID, jeśli są potrzebne. 0–30 minut, domyślnie 5; 0 wyłącza oczekiwanie. Ochrona przy otwartym oknie i minimalne czasy pracy urządzeń nadal obowiązują.",
-          "window_close_cooldown_minutes": "Po otwarciu okna zgodnie z sugestią HEM odczekuje tyle minut, zanim zasugeruje jego zamknięcie, nawet jeśli warunki na zewnątrz są nieodpowiednie. Czas oczekiwania jest liczony niezależnie dla każdego pomieszczenia. 0–60 minut, domyślnie 5; 0 wyłącza opóźnienie. Zasady wstrzymywania pracy i ochrony urządzeń pozostają aktywne."
+          "window_close_cooldown_minutes": "Po otwarciu okna zgodnie z sugestią HEM odczekuje tyle minut, zanim zasugeruje jego zamknięcie, nawet jeśli warunki na zewnątrz są nieodpowiednie. Czas oczekiwania jest liczony niezależnie dla każdego pomieszczenia. 0–60 minut, domyślnie 5; 0 wyłącza opóźnienie. Zasady wstrzymywania pracy i ochrony urządzeń pozostają aktywne.",
+          "quiet_hours_enabled": "Używaj tego codziennego przedziału dla urządzeń z włączoną opcją „Cicho w godzinach ciszy”. Czas jest zgodny z lokalną strefą czasową Home Assistant; przedział może przechodzić przez północ. Domyślnie wyłączone.",
+          "quiet_hours_start": "Codzienna godzina rozpoczęcia, należąca do godzin ciszy. Wybierz godzinę inną niż godzina zakończenia.",
+          "quiet_hours_end": "Codzienna godzina zakończenia, nienależąca już do godzin ciszy. Jeśli jest wcześniejsza niż początek, przedział kończy się następnego dnia."
         }
       },
       "reconfigure": {
@@ -938,7 +944,10 @@
           "general_sleep_rooms_attribute": "Sen · Pokój · źródło (attribute)",
           "general_source_stale_minutes": "Obecność w domu · Maksymalny wiek danych śledzenia/liczby osób (min)",
           "general_wake_alarm_entity": "Sen · Następny budzik",
-          "general_wake_lead_minutes_entity": "Sen · Minuty przed budzikiem"
+          "general_wake_lead_minutes_entity": "Sen · Minuty przed budzikiem",
+          "quiet_hours_enabled": "Godziny ciszy",
+          "quiet_hours_start": "Początek godzin ciszy",
+          "quiet_hours_end": "Koniec godzin ciszy"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności.",
@@ -950,7 +959,10 @@
           "general_sleep_rooms_attribute": "Wybierz pole Stan lub zweryfikowany atrybut z listą pomieszczeń z wybranej encji snu. Brakująca lub nierozpoznana lista powoduje nieznany stan snu.",
           "general_source_stale_minutes": "Limit wieku dotyczy raportów śledzenia i liczbowych danych o liczbie osób. Listy pokoi i binarne stany obecności nie tracą ważności, gdy się nie zmieniają. Niedostępne, przywrócone lub błędne źródła pozostają nieznane. To nie jest długość snu.",
           "general_wake_alarm_entity": "Wybierz encję godziny lub daty i godziny następnego budzika oraz encję minut wyprzedzenia. HEM kończy automatyczny sen o tyle minut wcześniej i przywraca zwykłe cele. Godziny bez daty używają strefy Home Assistant. Nieobecność, sterowanie ręczne i zabezpieczenia zachowują pierwszeństwo.",
-          "general_wake_lead_minutes_entity": "Wybierz encję liczbową z nieujemną liczbą minut, z jednostką min lub bez jednostki. Budzik o 07:00 i wartość 30 kończą automatyczny sen o 06:30; 0 oznacza moment dzwonienia. Aby wyłączyć, usuń oba źródła."
+          "general_wake_lead_minutes_entity": "Wybierz encję liczbową z nieujemną liczbą minut, z jednostką min lub bez jednostki. Budzik o 07:00 i wartość 30 kończą automatyczny sen o 06:30; 0 oznacza moment dzwonienia. Aby wyłączyć, usuń oba źródła.",
+          "quiet_hours_enabled": "Używaj tego codziennego przedziału dla urządzeń z włączoną opcją „Cicho w godzinach ciszy”. Czas jest zgodny z lokalną strefą czasową Home Assistant; przedział może przechodzić przez północ. Domyślnie wyłączone.",
+          "quiet_hours_start": "Codzienna godzina rozpoczęcia, należąca do godzin ciszy. Wybierz godzinę inną niż godzina zakończenia.",
+          "quiet_hours_end": "Codzienna godzina zakończenia, nienależąca już do godzin ciszy. Jeśli jest wcześniejsza niż początek, przedział kończy się następnego dnia."
         }
       },
       "pollen": {
@@ -1240,7 +1252,8 @@
       "climate_invalid_occupancy_timing": "Ustaw opóźnienie po opuszczeniu pokoju na 0–240 minut, a maksymalny wiek danych o obecności na 10–1440 minut.",
       "climate_invalid_comfort_adjustment": "Ustaw maksymalną korektę docelowej temperatury komfortu w zakresie od 0 do 2,5°C.",
       "climate_proportional_requires_percent": "Sterowanie proporcjonalne wymaga encji number z jednostką %, minimum 0, maksimum 100 i liczbowym krokiem.",
-      "invalid_freshness_mode": "Wybierz Automatyczny lub Własny dla maksymalnego wieku odczytów czujnika."
+      "invalid_freshness_mode": "Wybierz Automatyczny lub Własny dla maksymalnego wieku odczytów czujnika.",
+      "invalid_quiet_hours": "Wybierz poprawne, różne godziny rozpoczęcia i zakończenia godzin ciszy."
     },
     "abort": {
       "already_configured": "Home Environment Manager - już skonfigurowano.",
@@ -2025,7 +2038,10 @@
           "general_sleep_rooms_attribute": "Sen · Pokój · źródło (attribute)",
           "general_source_stale_minutes": "Obecność w domu · Maksymalny wiek danych śledzenia/liczby osób (min)",
           "general_wake_alarm_entity": "Sen · Następny budzik",
-          "general_wake_lead_minutes_entity": "Sen · Minuty przed budzikiem"
+          "general_wake_lead_minutes_entity": "Sen · Minuty przed budzikiem",
+          "quiet_hours_enabled": "Godziny ciszy",
+          "quiet_hours_start": "Początek godzin ciszy",
+          "quiet_hours_end": "Koniec godzin ciszy"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności.",
@@ -2037,7 +2053,10 @@
           "general_sleep_rooms_attribute": "Wybierz pole Stan lub zweryfikowany atrybut z listą pomieszczeń z wybranej encji snu. Brakująca lub nierozpoznana lista powoduje nieznany stan snu.",
           "general_source_stale_minutes": "Limit wieku dotyczy raportów śledzenia i liczbowych danych o liczbie osób. Listy pokoi i binarne stany obecności nie tracą ważności, gdy się nie zmieniają. Niedostępne, przywrócone lub błędne źródła pozostają nieznane. To nie jest długość snu.",
           "general_wake_alarm_entity": "Wybierz encję godziny lub daty i godziny następnego budzika oraz encję minut wyprzedzenia. HEM kończy automatyczny sen o tyle minut wcześniej i przywraca zwykłe cele. Godziny bez daty używają strefy Home Assistant. Nieobecność, sterowanie ręczne i zabezpieczenia zachowują pierwszeństwo.",
-          "general_wake_lead_minutes_entity": "Wybierz encję liczbową z nieujemną liczbą minut, z jednostką min lub bez jednostki. Budzik o 07:00 i wartość 30 kończą automatyczny sen o 06:30; 0 oznacza moment dzwonienia. Aby wyłączyć, usuń oba źródła."
+          "general_wake_lead_minutes_entity": "Wybierz encję liczbową z nieujemną liczbą minut, z jednostką min lub bez jednostki. Budzik o 07:00 i wartość 30 kończą automatyczny sen o 06:30; 0 oznacza moment dzwonienia. Aby wyłączyć, usuń oba źródła.",
+          "quiet_hours_enabled": "Używaj tego codziennego przedziału dla urządzeń z włączoną opcją „Cicho w godzinach ciszy”. Czas jest zgodny z lokalną strefą czasową Home Assistant; przedział może przechodzić przez północ. Domyślnie wyłączone.",
+          "quiet_hours_start": "Codzienna godzina rozpoczęcia, należąca do godzin ciszy. Wybierz godzinę inną niż godzina zakończenia.",
+          "quiet_hours_end": "Codzienna godzina zakończenia, nienależąca już do godzin ciszy. Jeśli jest wcześniejsza niż początek, przedział kończy się następnego dnia."
         }
       },
       "pollen": {
@@ -2251,7 +2270,10 @@
           "window_open_timeout_minutes": "Oczekiwanie na otwarcie okna (min)",
           "general_source_freshness_mode": "Obecność w domu · Zasady ważności",
           "global_threshold_max_age_mode": "Środowisko · Zasady ważności",
-          "window_close_cooldown_minutes": "Czas oczekiwania przed sugestią zamknięcia okna (min)"
+          "window_close_cooldown_minutes": "Czas oczekiwania przed sugestią zamknięcia okna (min)",
+          "quiet_hours_enabled": "Godziny ciszy",
+          "quiet_hours_start": "Początek godzin ciszy",
+          "quiet_hours_end": "Koniec godzin ciszy"
         },
         "data_description": {
           "weather_entities": "Wybierz: Pogoda i ostrzeżenia · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2307,7 +2329,10 @@
           "window_open_timeout_minutes": "Czas oczekiwania po przyjęciu prośby o wietrzenie przed ponownym zezwoleniem na automatyczne uruchomienia/PID, jeśli są potrzebne. 0–30 minut, domyślnie 5; 0 wyłącza oczekiwanie. Ochrona przy otwartym oknie i minimalne czasy pracy urządzeń nadal obowiązują.",
           "general_source_freshness_mode": "Automatycznie: liczniki osób i negatywne zgłoszenia lokalizatorów domowych są akceptowane przez maksymalnie 240 minut; prawidłowy niezmieniony stan „W domu” może pozostać takim stanem, dopóki się nie zmieni. Źródła nieznane, przywrócone i niedostępne nie mogą potwierdzić nieobecności. Własne: użyj poniższej liczby minut dla raportów próbkowanych. Źródła list pomieszczeń nadal działają na podstawie zmian.",
           "global_threshold_max_age_mode": "Automatycznie: encje pogodowe mogą pozostać aktualne przez 180 minut, inne liczbowe pomiary środowiskowe przez 90 minut, a prawidłowe styki binarne sterowane zmianami pozostają użyteczne bez limitu bezczynności. Własne: użyj poniższej liczby minut. Kontrole dostępności i przywróconego stanu obowiązują zawsze. W Home Assistant last_reported aktualizuje się po ponownym zapisie tej samej wartości, a nie wskutek samego upływu czasu.",
-          "window_close_cooldown_minutes": "Po otwarciu okna zgodnie z sugestią HEM odczekuje tyle minut, zanim zasugeruje jego zamknięcie, nawet jeśli warunki na zewnątrz są nieodpowiednie. Czas oczekiwania jest liczony niezależnie dla każdego pomieszczenia. 0–60 minut, domyślnie 5; 0 wyłącza opóźnienie. Zasady wstrzymywania pracy i ochrony urządzeń pozostają aktywne."
+          "window_close_cooldown_minutes": "Po otwarciu okna zgodnie z sugestią HEM odczekuje tyle minut, zanim zasugeruje jego zamknięcie, nawet jeśli warunki na zewnątrz są nieodpowiednie. Czas oczekiwania jest liczony niezależnie dla każdego pomieszczenia. 0–60 minut, domyślnie 5; 0 wyłącza opóźnienie. Zasady wstrzymywania pracy i ochrony urządzeń pozostają aktywne.",
+          "quiet_hours_enabled": "Używaj tego codziennego przedziału dla urządzeń z włączoną opcją „Cicho w godzinach ciszy”. Czas jest zgodny z lokalną strefą czasową Home Assistant; przedział może przechodzić przez północ. Domyślnie wyłączone.",
+          "quiet_hours_start": "Codzienna godzina rozpoczęcia, należąca do godzin ciszy. Wybierz godzinę inną niż godzina zakończenia.",
+          "quiet_hours_end": "Codzienna godzina zakończenia, nienależąca już do godzin ciszy. Jeśli jest wcześniejsza niż początek, przedział kończy się następnego dnia."
         }
       },
       "room_occupancy": {
@@ -2473,7 +2498,8 @@
       "climate_invalid_occupancy_timing": "Ustaw opóźnienie po opuszczeniu pokoju na 0–240 minut, a maksymalny wiek danych o obecności na 10–1440 minut.",
       "climate_invalid_comfort_adjustment": "Ustaw maksymalną korektę docelowej temperatury komfortu w zakresie od 0 do 2,5°C.",
       "climate_proportional_requires_percent": "Sterowanie proporcjonalne wymaga encji number z jednostką %, minimum 0, maksimum 100 i liczbowym krokiem.",
-      "invalid_freshness_mode": "Wybierz Automatyczny lub Własny dla maksymalnego wieku odczytów czujnika."
+      "invalid_freshness_mode": "Wybierz Automatyczny lub Własny dla maksymalnego wieku odczytów czujnika.",
+      "invalid_quiet_hours": "Wybierz poprawne, różne godziny rozpoczęcia i zakończenia godzin ciszy."
     },
     "abort": {
       "setup_area_removed": "Nieprawidłowe: Pomieszczenia do monitorowania",
@@ -4086,6 +4112,22 @@
             "name": "Pomoc"
           }
         }
+      },
+      "home_quiet_hours_enabled": {
+        "name": "Godziny ciszy",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
+      },
+      "equipment_quiet_hours": {
+        "name": "Cicho w godzinach ciszy",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
       }
     },
     "select": {
@@ -4407,6 +4449,22 @@
       },
       "area_climate_sleep_end": {
         "name": "Sen · Urządzenia · END",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
+      },
+      "home_quiet_hours_start": {
+        "name": "Początek godzin ciszy",
+        "state_attributes": {
+          "configuration_help": {
+            "name": "Pomoc"
+          }
+        }
+      },
+      "home_quiet_hours_end": {
+        "name": "Koniec godzin ciszy",
         "state_attributes": {
           "configuration_help": {
             "name": "Pomoc"
