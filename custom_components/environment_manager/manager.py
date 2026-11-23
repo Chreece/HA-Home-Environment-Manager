@@ -342,6 +342,11 @@ class AirQualityManager:
         # These sources decide whole-home presence even when their legacy
         # room controller is disabled. Arrival must be observed immediately.
         self._tracked.update(environment_trackers)
+        from .arrival_distance import active_trackers
+        proximity_sources = active_trackers(shared_presence)
+        if proximity_sources:
+            self._tracked.update(proximity_sources)
+            self._tracked.add("zone.home")
         shared_presence["_room_occupancy_selections"] = {
             area: list(cfg["occupancy_sensors"]) for area, cfg in room_climate_configs.items()
             if isinstance(cfg, dict) and isinstance(cfg.get("occupancy_sensors"), list)

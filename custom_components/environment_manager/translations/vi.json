@@ -234,7 +234,10 @@
           "window_close_cooldown_minutes": "Thời gian chờ trước khi đề nghị đóng cửa sổ (phút)",
           "quiet_hours_enabled": "Giờ yên tĩnh",
           "quiet_hours_start": "Bắt đầu giờ yên tĩnh",
-          "quiet_hours_end": "Kết thúc giờ yên tĩnh"
+          "quiet_hours_end": "Kết thúc giờ yên tĩnh",
+          "general_proximity_trackers": "Thành viên cần theo dõi",
+          "general_occupied_radius_m": "Bán kính tính là có người (m, 0 = tắt)",
+          "general_arrival_radius_m": "Bán kính chuẩn bị (m, 0 = tắt)"
         },
         "data_description": {
           "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -291,7 +294,10 @@
           "window_close_cooldown_minutes": "Sau khi cửa sổ được mở theo đề nghị của HEM, chờ số phút này trước khi đề nghị đóng lại, ngay cả khi điều kiện bên ngoài không phù hợp. Thời gian chờ được tính riêng cho từng phòng. 0–60 phút, mặc định 5; 0 tắt thời gian chờ. Các quy tắc tạm dừng và bảo vệ thiết bị vẫn có hiệu lực.",
           "quiet_hours_enabled": "Dùng khoảng thời gian hằng ngày này cho các thiết bị đã bật «Chạy êm trong giờ yên tĩnh». Thời gian theo múi giờ địa phương của Home Assistant; khoảng thời gian có thể qua nửa đêm. Mặc định tắt.",
           "quiet_hours_start": "Giờ bắt đầu hằng ngày, được tính vào giờ yên tĩnh. Chọn giờ khác với giờ kết thúc.",
-          "quiet_hours_end": "Giờ kết thúc hằng ngày, không còn tính vào giờ yên tĩnh. Nếu sớm hơn giờ bắt đầu, khoảng thời gian kết thúc vào ngày hôm sau."
+          "quiet_hours_end": "Giờ kết thúc hằng ngày, không còn tính vào giờ yên tĩnh. Nếu sớm hơn giờ bắt đầu, khoảng thời gian kết thúc vào ngày hôm sau.",
+          "general_proximity_trackers": "Chọn một người trong Home Assistant hoặc một thiết bị định vị GPS cho mỗi thành viên.",
+          "general_occupied_radius_m": "Nhà được xem là có người khi còn ai đó trong khoảng cách này.",
+          "general_arrival_radius_m": "Bắt đầu chuẩn bị khi người đầu tiên vào trong bán kính sau khi tất cả đã ở ngoài."
         }
       },
       "reconfigure": {
@@ -947,7 +953,10 @@
           "general_wake_lead_minutes_entity": "Ngủ · Số phút trước báo thức",
           "quiet_hours_enabled": "Giờ yên tĩnh",
           "quiet_hours_start": "Bắt đầu giờ yên tĩnh",
-          "quiet_hours_end": "Kết thúc giờ yên tĩnh"
+          "quiet_hours_end": "Kết thúc giờ yên tĩnh",
+          "general_proximity_trackers": "Thành viên cần theo dõi",
+          "general_occupied_radius_m": "Bán kính tính là có người (m, 0 = tắt)",
+          "general_arrival_radius_m": "Bán kính chuẩn bị (m, 0 = tắt)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn.",
@@ -962,7 +971,10 @@
           "general_wake_lead_minutes_entity": "Chọn thực thể số có giá trị phút không âm, đơn vị min hoặc không có đơn vị. Báo thức 07:00 và giá trị 30 kết thúc ngủ tự động lúc 06:30; 0 nghĩa là khi báo thức reo. Để tắt tính năng, xóa cả hai nguồn.",
           "quiet_hours_enabled": "Dùng khoảng thời gian hằng ngày này cho các thiết bị đã bật «Chạy êm trong giờ yên tĩnh». Thời gian theo múi giờ địa phương của Home Assistant; khoảng thời gian có thể qua nửa đêm. Mặc định tắt.",
           "quiet_hours_start": "Giờ bắt đầu hằng ngày, được tính vào giờ yên tĩnh. Chọn giờ khác với giờ kết thúc.",
-          "quiet_hours_end": "Giờ kết thúc hằng ngày, không còn tính vào giờ yên tĩnh. Nếu sớm hơn giờ bắt đầu, khoảng thời gian kết thúc vào ngày hôm sau."
+          "quiet_hours_end": "Giờ kết thúc hằng ngày, không còn tính vào giờ yên tĩnh. Nếu sớm hơn giờ bắt đầu, khoảng thời gian kết thúc vào ngày hôm sau.",
+          "general_proximity_trackers": "Chọn một người trong Home Assistant hoặc một thiết bị định vị GPS cho mỗi thành viên.",
+          "general_occupied_radius_m": "Nhà được xem là có người khi còn ai đó trong khoảng cách này.",
+          "general_arrival_radius_m": "Bắt đầu chuẩn bị khi người đầu tiên vào trong bán kính sau khi tất cả đã ở ngoài."
         }
       },
       "pollen": {
@@ -2041,7 +2053,10 @@
           "general_wake_lead_minutes_entity": "Ngủ · Số phút trước báo thức",
           "quiet_hours_enabled": "Giờ yên tĩnh",
           "quiet_hours_start": "Bắt đầu giờ yên tĩnh",
-          "quiet_hours_end": "Kết thúc giờ yên tĩnh"
+          "quiet_hours_end": "Kết thúc giờ yên tĩnh",
+          "general_proximity_trackers": "Thành viên cần theo dõi",
+          "general_occupied_radius_m": "Bán kính tính là có người (m, 0 = tắt)",
+          "general_arrival_radius_m": "Bán kính chuẩn bị (m, 0 = tắt)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Danh sách phòng có người hợp lệ trong trạng thái hoặc thuộc tính đã chọn có ưu tiên: phòng trong danh sách có người, phòng bị bỏ qua trống. Không có danh sách thì một cảm biến hiện diện bật là có người; tất cả tắt hoặc không chọn cảm biến là trống. Nguồn đã chọn không khả dụng hoặc không hợp lệ vẫn là chưa rõ. Danh sách và trạng thái nhị phân không đổi không hết hạn.",
@@ -2056,7 +2071,10 @@
           "general_wake_lead_minutes_entity": "Chọn thực thể số có giá trị phút không âm, đơn vị min hoặc không có đơn vị. Báo thức 07:00 và giá trị 30 kết thúc ngủ tự động lúc 06:30; 0 nghĩa là khi báo thức reo. Để tắt tính năng, xóa cả hai nguồn.",
           "quiet_hours_enabled": "Dùng khoảng thời gian hằng ngày này cho các thiết bị đã bật «Chạy êm trong giờ yên tĩnh». Thời gian theo múi giờ địa phương của Home Assistant; khoảng thời gian có thể qua nửa đêm. Mặc định tắt.",
           "quiet_hours_start": "Giờ bắt đầu hằng ngày, được tính vào giờ yên tĩnh. Chọn giờ khác với giờ kết thúc.",
-          "quiet_hours_end": "Giờ kết thúc hằng ngày, không còn tính vào giờ yên tĩnh. Nếu sớm hơn giờ bắt đầu, khoảng thời gian kết thúc vào ngày hôm sau."
+          "quiet_hours_end": "Giờ kết thúc hằng ngày, không còn tính vào giờ yên tĩnh. Nếu sớm hơn giờ bắt đầu, khoảng thời gian kết thúc vào ngày hôm sau.",
+          "general_proximity_trackers": "Chọn một người trong Home Assistant hoặc một thiết bị định vị GPS cho mỗi thành viên.",
+          "general_occupied_radius_m": "Nhà được xem là có người khi còn ai đó trong khoảng cách này.",
+          "general_arrival_radius_m": "Bắt đầu chuẩn bị khi người đầu tiên vào trong bán kính sau khi tất cả đã ở ngoài."
         }
       },
       "pollen": {
@@ -2273,7 +2291,10 @@
           "window_close_cooldown_minutes": "Thời gian chờ trước khi đề nghị đóng cửa sổ (phút)",
           "quiet_hours_enabled": "Giờ yên tĩnh",
           "quiet_hours_start": "Bắt đầu giờ yên tĩnh",
-          "quiet_hours_end": "Kết thúc giờ yên tĩnh"
+          "quiet_hours_end": "Kết thúc giờ yên tĩnh",
+          "general_proximity_trackers": "Thành viên cần theo dõi",
+          "general_occupied_radius_m": "Bán kính tính là có người (m, 0 = tắt)",
+          "general_arrival_radius_m": "Bán kính chuẩn bị (m, 0 = tắt)"
         },
         "data_description": {
           "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2332,7 +2353,10 @@
           "window_close_cooldown_minutes": "Sau khi cửa sổ được mở theo đề nghị của HEM, chờ số phút này trước khi đề nghị đóng lại, ngay cả khi điều kiện bên ngoài không phù hợp. Thời gian chờ được tính riêng cho từng phòng. 0–60 phút, mặc định 5; 0 tắt thời gian chờ. Các quy tắc tạm dừng và bảo vệ thiết bị vẫn có hiệu lực.",
           "quiet_hours_enabled": "Dùng khoảng thời gian hằng ngày này cho các thiết bị đã bật «Chạy êm trong giờ yên tĩnh». Thời gian theo múi giờ địa phương của Home Assistant; khoảng thời gian có thể qua nửa đêm. Mặc định tắt.",
           "quiet_hours_start": "Giờ bắt đầu hằng ngày, được tính vào giờ yên tĩnh. Chọn giờ khác với giờ kết thúc.",
-          "quiet_hours_end": "Giờ kết thúc hằng ngày, không còn tính vào giờ yên tĩnh. Nếu sớm hơn giờ bắt đầu, khoảng thời gian kết thúc vào ngày hôm sau."
+          "quiet_hours_end": "Giờ kết thúc hằng ngày, không còn tính vào giờ yên tĩnh. Nếu sớm hơn giờ bắt đầu, khoảng thời gian kết thúc vào ngày hôm sau.",
+          "general_proximity_trackers": "Chọn một người trong Home Assistant hoặc một thiết bị định vị GPS cho mỗi thành viên.",
+          "general_occupied_radius_m": "Nhà được xem là có người khi còn ai đó trong khoảng cách này.",
+          "general_arrival_radius_m": "Bắt đầu chuẩn bị khi người đầu tiên vào trong bán kính sau khi tất cả đã ở ngoài."
         }
       },
       "room_occupancy": {

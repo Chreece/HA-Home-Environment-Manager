@@ -458,6 +458,12 @@ class RoomSetupMixin:
         old = self._values.get(CONF_OCCUPANCY_GLOBAL, {})
         old = old if isinstance(old, dict) else {}
         options = self._general_options()
+        proximity_choices = {item["value"]: item for item in options["general_home_trackers"]
+                             if item["value"].startswith(("person.", "device_tracker."))}
+        for entity in old.get("proximity_trackers", []):
+            if isinstance(entity, str) and entity.startswith(("person.", "device_tracker.")):
+                proximity_choices.setdefault(entity, {"value": entity, "label": entity})
+        options["general_proximity_trackers"] = list(proximity_choices.values())
         env = self._values.get(CONF_ENVIRONMENT_GLOBAL, {})
         env = env if isinstance(env, dict) else {}
         limits = self._values.get(CONF_THRESHOLDS, {})
@@ -512,6 +518,9 @@ class RoomSetupMixin:
                 and float(reading.state) <= first_pollen_max
             ],
             CONF_HUB: bool(self._values.get(CONF_HUB, False)),
+            "general_proximity_trackers": old.get("proximity_trackers", []),
+            "general_occupied_radius_m": old.get("occupied_radius_m", 0),
+            "general_arrival_radius_m": old.get("arrival_radius_m", 0),
             "general_home_trackers": old.get("home_trackers", []),
             "general_away_cooldown_minutes": old.get("away_cooldown_minutes", 10),
             "general_source_stale_minutes": old.get("source_stale_minutes", 240),
@@ -531,7 +540,7 @@ class RoomSetupMixin:
                for prefix in ("occupied", "sleep")},
         }
         multi = {CONF_WEATHER, CONF_OUTDOOR, CONF_WARNINGS, CONF_NOTIFY_TARGETS, CONF_MEDIA_PLAYERS,
-                 "general_home_trackers", "pollen_entities",
+                 "general_home_trackers", "general_proximity_trackers", "pollen_entities",
                   CONF_AWAY_WINDOWS_PERSONS, CONF_AWAY_WINDOWS_DELIVERY}
         errors = {}
         value = {**defaults, **(user_input or {})}
@@ -608,6 +617,16 @@ class RoomSetupMixin:
             else:
                 if not 0 <= away_cooldown <= 240:
                     errors["general_away_cooldown_minutes"] = "invalid_room_source"
+            radii = {}
+            for key in ("occupied_radius_m", "arrival_radius_m"):
+                raw = value["general_" + key]
+                if (isinstance(raw, bool) or not isinstance(raw, (int, float))
+                        or not 0 <= raw <= 1_000_000 or int(raw) != raw):
+                    errors["general_" + key] = "invalid_room_source"
+                else:
+                    radii[key] = int(raw)
+            if any(radii.values()) and not value["general_proximity_trackers"]:
+                errors["general_proximity_trackers"] = "invalid_room_source"
             if value["general_home_policy"] not in ("any_home", "all_home"):
                 errors["general_home_policy"] = "invalid_room_source"
             try:
@@ -739,6 +758,8 @@ class RoomSetupMixin:
                 checked_limits["max_age_mode"] = value["global_threshold_max_age_mode"]
                 self._values[CONF_THRESHOLDS] = checked_limits
                 occupancy = deepcopy(old)
+                occupancy.update(radii)
+                occupancy["proximity_trackers"] = list(dict.fromkeys(value["general_proximity_trackers"]))
                 occupancy["home_trackers"] = list(dict.fromkeys(value["general_home_trackers"]))
                 occupancy["away_cooldown_minutes"] = float(value["general_away_cooldown_minutes"])
                 occupancy["source_stale_minutes"] = source_age
@@ -758,7 +779,7 @@ class RoomSetupMixin:
                 return await self._finish()
         fields = {}
         for key in (CONF_WEATHER, CONF_OUTDOOR, CONF_WARNINGS,
-                    "general_home_trackers", "general_occupied_rooms_entity", "general_sleep_rooms_entity",
+                    "general_home_trackers", "general_proximity_trackers", "general_occupied_rooms_entity", "general_sleep_rooms_entity",
                     "general_wake_alarm_entity", "general_wake_lead_minutes_entity",
                     "pollen_entities", CONF_NOTIFY_TARGETS, CONF_MEDIA_PLAYERS, CONF_TTS_ENGINE, CONF_AI_AGENT):
             fields[field(key, value[key])] = select(options[key], multiple=key in multi)
@@ -781,6 +802,10 @@ class RoomSetupMixin:
                     attrs = list(attrs_by_value.values())
                 chosen = value[attr_key] if value[attr_key] in attrs_by_value else "__state__"
                 fields[field(attr_key, chosen)] = select(attrs)
+        for key in ("general_occupied_radius_m", "general_arrival_radius_m"):
+            fields[field(key, value[key])] = selector.NumberSelector(selector.NumberSelectorConfig(
+                min=0, max=1_000_000, step=1, unit_of_measurement="m",
+                mode=selector.NumberSelectorMode.BOX))
         fields[field("general_away_cooldown_minutes", value["general_away_cooldown_minutes"])] = (
             selector.NumberSelector(selector.NumberSelectorConfig(
                 min=0, max=240, step=1, unit_of_measurement="min",

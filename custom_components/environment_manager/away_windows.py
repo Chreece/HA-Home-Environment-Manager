@@ -90,6 +90,8 @@ def confirmed_home_state(hass: Any, settings: Mapping[str, Any]) -> str:
     # No debounce/cooldown for a confirmed absence alert. Other climate/area
     # controls still use their saved Away cooldown through the normal policy.
     alert_policy = {**global_cfg, "away_cooldown_minutes": 0}
+    # This notification concerns a physical departure, even if HEM keeps Home targets nearby.
+    alert_policy.pop("proximity_trackers", None)
     state, _, _ = home_presence(hass, alert_policy, fallback_trackers=fallbacks)
     return state if state in ("home", "away") else "unknown"
 

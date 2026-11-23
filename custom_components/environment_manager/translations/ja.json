@@ -234,7 +234,10 @@
           "window_close_cooldown_minutes": "窓を閉める提案までの待ち時間（分）",
           "quiet_hours_enabled": "静音時間帯",
           "quiet_hours_start": "静音時間帯の開始",
-          "quiet_hours_end": "静音時間帯の終了"
+          "quiet_hours_end": "静音時間帯の終了",
+          "general_proximity_trackers": "位置を確認する居住者",
+          "general_occupied_radius_m": "在宅とみなす半径（m、0 で無効）",
+          "general_arrival_radius_m": "到着準備の半径（m、0 で無効）"
         },
         "data_description": {
           "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -291,7 +294,10 @@
           "window_close_cooldown_minutes": "HEMの提案に従って窓が開けられた後、ここで設定した分数が経過してから窓を閉めるよう提案します。屋外の条件が適していない場合も同様です。待ち時間は部屋ごとに計測します。0–60分、初期値は5。0にすると待ち時間が無効になります。機器の一時停止と保護のルールは引き続き適用されます。",
           "quiet_hours_enabled": "「静音時間帯に静かに運転」が有効な機器に、この毎日の時間帯を適用します。時刻は Home Assistant のローカルタイムゾーンに従い、時間帯は午前0時をまたぐことができます。初期設定では無効です。",
           "quiet_hours_start": "毎日の開始時刻。この時刻から静音時間帯に入ります。終了とは異なる時刻を選んでください。",
-          "quiet_hours_end": "毎日の終了時刻。この時刻は静音時間帯に含まれません。開始より早い時刻の場合、翌日に終了します。"
+          "quiet_hours_end": "毎日の終了時刻。この時刻は静音時間帯に含まれません。開始より早い時刻の場合、翌日に終了します。",
+          "general_proximity_trackers": "居住者ごとに Home Assistant の人物または GPS トラッカーを1つ選びます。",
+          "general_occupied_radius_m": "誰かがこの距離内にいる間は在宅とみなします。",
+          "general_arrival_radius_m": "全員が範囲外に出た後、最初の居住者が範囲内に入ると到着準備を開始します。"
         }
       },
       "reconfigure": {
@@ -947,7 +953,10 @@
           "general_wake_lead_minutes_entity": "睡眠 · アラームの何分前に解除するか",
           "quiet_hours_enabled": "静音時間帯",
           "quiet_hours_start": "静音時間帯の開始",
-          "quiet_hours_end": "静音時間帯の終了"
+          "quiet_hours_end": "静音時間帯の終了",
+          "general_proximity_trackers": "位置を確認する居住者",
+          "general_occupied_radius_m": "在宅とみなす半径（m、0 で無効）",
+          "general_arrival_radius_m": "到着準備の半径（m、0 で無効）"
         },
         "data_description": {
           "general_room_occupancy_sensors": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。",
@@ -962,7 +971,10 @@
           "general_wake_lead_minutes_entity": "0 以上の分数を持つ数値エンティティを選択します。単位は min または単位なしです。アラームが 07:00、値が 30 なら 06:30 に自動睡眠モードを終了します。0 はアラーム時刻を意味します。無効にするには両方の選択を解除します。",
           "quiet_hours_enabled": "「静音時間帯に静かに運転」が有効な機器に、この毎日の時間帯を適用します。時刻は Home Assistant のローカルタイムゾーンに従い、時間帯は午前0時をまたぐことができます。初期設定では無効です。",
           "quiet_hours_start": "毎日の開始時刻。この時刻から静音時間帯に入ります。終了とは異なる時刻を選んでください。",
-          "quiet_hours_end": "毎日の終了時刻。この時刻は静音時間帯に含まれません。開始より早い時刻の場合、翌日に終了します。"
+          "quiet_hours_end": "毎日の終了時刻。この時刻は静音時間帯に含まれません。開始より早い時刻の場合、翌日に終了します。",
+          "general_proximity_trackers": "居住者ごとに Home Assistant の人物または GPS トラッカーを1つ選びます。",
+          "general_occupied_radius_m": "誰かがこの距離内にいる間は在宅とみなします。",
+          "general_arrival_radius_m": "全員が範囲外に出た後、最初の居住者が範囲内に入ると到着準備を開始します。"
         }
       },
       "pollen": {
@@ -2041,7 +2053,10 @@
           "general_wake_lead_minutes_entity": "睡眠 · アラームの何分前に解除するか",
           "quiet_hours_enabled": "静音時間帯",
           "quiet_hours_start": "静音時間帯の開始",
-          "quiet_hours_end": "静音時間帯の終了"
+          "quiet_hours_end": "静音時間帯の終了",
+          "general_proximity_trackers": "位置を確認する居住者",
+          "general_occupied_radius_m": "在宅とみなす半径（m、0 で無効）",
+          "general_arrival_radius_m": "到着準備の半径（m、0 で無効）"
         },
         "data_description": {
           "general_room_occupancy_sensors": "選択した状態や属性の有効な在室リストが優先されます。記載された部屋は在室、それ以外は空室です。リストがなければ、選択した在室センサーのどれかが ON なら在室、すべて OFF または未選択なら空室です。選択済みでも利用不可・無効の情報源は不明のままです。変化のないリストやバイナリ状態は期限切れになりません。",
@@ -2056,7 +2071,10 @@
           "general_wake_lead_minutes_entity": "0 以上の分数を持つ数値エンティティを選択します。単位は min または単位なしです。アラームが 07:00、値が 30 なら 06:30 に自動睡眠モードを終了します。0 はアラーム時刻を意味します。無効にするには両方の選択を解除します。",
           "quiet_hours_enabled": "「静音時間帯に静かに運転」が有効な機器に、この毎日の時間帯を適用します。時刻は Home Assistant のローカルタイムゾーンに従い、時間帯は午前0時をまたぐことができます。初期設定では無効です。",
           "quiet_hours_start": "毎日の開始時刻。この時刻から静音時間帯に入ります。終了とは異なる時刻を選んでください。",
-          "quiet_hours_end": "毎日の終了時刻。この時刻は静音時間帯に含まれません。開始より早い時刻の場合、翌日に終了します。"
+          "quiet_hours_end": "毎日の終了時刻。この時刻は静音時間帯に含まれません。開始より早い時刻の場合、翌日に終了します。",
+          "general_proximity_trackers": "居住者ごとに Home Assistant の人物または GPS トラッカーを1つ選びます。",
+          "general_occupied_radius_m": "誰かがこの距離内にいる間は在宅とみなします。",
+          "general_arrival_radius_m": "全員が範囲外に出た後、最初の居住者が範囲内に入ると到着準備を開始します。"
         }
       },
       "pollen": {
@@ -2273,7 +2291,10 @@
           "window_close_cooldown_minutes": "窓を閉める提案までの待ち時間（分）",
           "quiet_hours_enabled": "静音時間帯",
           "quiet_hours_start": "静音時間帯の開始",
-          "quiet_hours_end": "静音時間帯の終了"
+          "quiet_hours_end": "静音時間帯の終了",
+          "general_proximity_trackers": "位置を確認する居住者",
+          "general_occupied_radius_m": "在宅とみなす半径（m、0 で無効）",
+          "general_arrival_radius_m": "到着準備の半径（m、0 で無効）"
         },
         "data_description": {
           "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2332,7 +2353,10 @@
           "window_close_cooldown_minutes": "HEMの提案に従って窓が開けられた後、ここで設定した分数が経過してから窓を閉めるよう提案します。屋外の条件が適していない場合も同様です。待ち時間は部屋ごとに計測します。0–60分、初期値は5。0にすると待ち時間が無効になります。機器の一時停止と保護のルールは引き続き適用されます。",
           "quiet_hours_enabled": "「静音時間帯に静かに運転」が有効な機器に、この毎日の時間帯を適用します。時刻は Home Assistant のローカルタイムゾーンに従い、時間帯は午前0時をまたぐことができます。初期設定では無効です。",
           "quiet_hours_start": "毎日の開始時刻。この時刻から静音時間帯に入ります。終了とは異なる時刻を選んでください。",
-          "quiet_hours_end": "毎日の終了時刻。この時刻は静音時間帯に含まれません。開始より早い時刻の場合、翌日に終了します。"
+          "quiet_hours_end": "毎日の終了時刻。この時刻は静音時間帯に含まれません。開始より早い時刻の場合、翌日に終了します。",
+          "general_proximity_trackers": "居住者ごとに Home Assistant の人物または GPS トラッカーを1つ選びます。",
+          "general_occupied_radius_m": "誰かがこの距離内にいる間は在宅とみなします。",
+          "general_arrival_radius_m": "全員が範囲外に出た後、最初の居住者が範囲内に入ると到着準備を開始します。"
         }
       },
       "room_occupancy": {

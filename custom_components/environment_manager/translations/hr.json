@@ -234,7 +234,10 @@
           "window_close_cooldown_minutes": "Čekanje prije prijedloga za zatvaranje prozora (min)",
           "quiet_hours_enabled": "Vrijeme tišine",
           "quiet_hours_start": "Početak vremena tišine",
-          "quiet_hours_end": "Kraj vremena tišine"
+          "quiet_hours_end": "Kraj vremena tišine",
+          "general_proximity_trackers": "Stanari za praćenje",
+          "general_occupied_radius_m": "Polumjer prisutnosti (m, 0 = isključeno)",
+          "general_arrival_radius_m": "Polumjer pripreme (m, 0 = isključeno)"
         },
         "data_description": {
           "weather_entities": "Odaberite: Vrijeme i upozorenja · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -291,7 +294,10 @@
           "window_close_cooldown_minutes": "Nakon što se prozor otvori na preporuku HEM-a, čeka ovoliko minuta prije nego što predloži zatvaranje, čak i ako vanjski uvjeti nisu prikladni. Vrijeme čekanja računa se zasebno za svaku prostoriju. 0–60 minuta, zadano 5; 0 isključuje čekanje. Pravila pauziranja rada i zaštite uređaja ostaju aktivna.",
           "quiet_hours_enabled": "Upotrebljava ovaj dnevni interval za uređaje s uključenim „Tihim radom tijekom vremena tišine”. Vrijeme slijedi lokalnu vremensku zonu sustava Home Assistant; interval može prijeći ponoć. Zadano isključeno.",
           "quiet_hours_start": "Dnevno vrijeme početka, uključeno u vrijeme tišine. Odaberite vrijeme različito od završetka.",
-          "quiet_hours_end": "Dnevno vrijeme završetka, koje više nije dio vremena tišine. Ako je prije početka, interval završava sljedeći dan."
+          "quiet_hours_end": "Dnevno vrijeme završetka, koje više nije dio vremena tišine. Ako je prije početka, interval završava sljedeći dan.",
+          "general_proximity_trackers": "Za svakog stanara odaberite osobu u Home Assistantu ili GPS uređaj za praćenje.",
+          "general_occupied_radius_m": "Dom se smatra zauzetim dok je netko unutar ove udaljenosti.",
+          "general_arrival_radius_m": "Priprema počinje kada prvi stanar uđe u krug nakon što su svi bili izvan njega."
         }
       },
       "reconfigure": {
@@ -947,7 +953,10 @@
           "general_wake_lead_minutes_entity": "Spavanje · Minute prije alarma",
           "quiet_hours_enabled": "Vrijeme tišine",
           "quiet_hours_start": "Početak vremena tišine",
-          "quiet_hours_end": "Kraj vremena tišine"
+          "quiet_hours_end": "Kraj vremena tišine",
+          "general_proximity_trackers": "Stanari za praćenje",
+          "general_occupied_radius_m": "Polumjer prisutnosti (m, 0 = isključeno)",
+          "general_arrival_radius_m": "Polumjer pripreme (m, 0 = isključeno)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu.",
@@ -962,7 +971,10 @@
           "general_wake_lead_minutes_entity": "Odaberite brojčani entitet s nenegativnim brojem minuta, s jedinicom min ili bez jedinice. Alarm u 07:00 i vrijednost 30 završavaju automatsko spavanje u 06:30; 0 znači pri zvonjavi. Za isključivanje uklonite oba izvora.",
           "quiet_hours_enabled": "Upotrebljava ovaj dnevni interval za uređaje s uključenim „Tihim radom tijekom vremena tišine”. Vrijeme slijedi lokalnu vremensku zonu sustava Home Assistant; interval može prijeći ponoć. Zadano isključeno.",
           "quiet_hours_start": "Dnevno vrijeme početka, uključeno u vrijeme tišine. Odaberite vrijeme različito od završetka.",
-          "quiet_hours_end": "Dnevno vrijeme završetka, koje više nije dio vremena tišine. Ako je prije početka, interval završava sljedeći dan."
+          "quiet_hours_end": "Dnevno vrijeme završetka, koje više nije dio vremena tišine. Ako je prije početka, interval završava sljedeći dan.",
+          "general_proximity_trackers": "Za svakog stanara odaberite osobu u Home Assistantu ili GPS uređaj za praćenje.",
+          "general_occupied_radius_m": "Dom se smatra zauzetim dok je netko unutar ove udaljenosti.",
+          "general_arrival_radius_m": "Priprema počinje kada prvi stanar uđe u krug nakon što su svi bili izvan njega."
         }
       },
       "pollen": {
@@ -2041,7 +2053,10 @@
           "general_wake_lead_minutes_entity": "Spavanje · Minute prije alarma",
           "quiet_hours_enabled": "Vrijeme tišine",
           "quiet_hours_start": "Početak vremena tišine",
-          "quiet_hours_end": "Kraj vremena tišine"
+          "quiet_hours_end": "Kraj vremena tišine",
+          "general_proximity_trackers": "Stanari za praćenje",
+          "general_occupied_radius_m": "Polumjer prisutnosti (m, 0 = isključeno)",
+          "general_arrival_radius_m": "Polumjer pripreme (m, 0 = isključeno)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Valjan popis zauzetih soba u odabranom stanju ili atributu ima prednost: navedene sobe su zauzete, izostavljene prazne. Bez popisa bilo koji aktivni senzor prisutnosti znači zauzeto; svi isključeni ili nijedan odabran znači prazno. Nedostupan ili nevaljan odabrani izvor ostaje nepoznat. Nepromijenjeni popisi i binarna stanja ne istječu.",
@@ -2056,7 +2071,10 @@
           "general_wake_lead_minutes_entity": "Odaberite brojčani entitet s nenegativnim brojem minuta, s jedinicom min ili bez jedinice. Alarm u 07:00 i vrijednost 30 završavaju automatsko spavanje u 06:30; 0 znači pri zvonjavi. Za isključivanje uklonite oba izvora.",
           "quiet_hours_enabled": "Upotrebljava ovaj dnevni interval za uređaje s uključenim „Tihim radom tijekom vremena tišine”. Vrijeme slijedi lokalnu vremensku zonu sustava Home Assistant; interval može prijeći ponoć. Zadano isključeno.",
           "quiet_hours_start": "Dnevno vrijeme početka, uključeno u vrijeme tišine. Odaberite vrijeme različito od završetka.",
-          "quiet_hours_end": "Dnevno vrijeme završetka, koje više nije dio vremena tišine. Ako je prije početka, interval završava sljedeći dan."
+          "quiet_hours_end": "Dnevno vrijeme završetka, koje više nije dio vremena tišine. Ako je prije početka, interval završava sljedeći dan.",
+          "general_proximity_trackers": "Za svakog stanara odaberite osobu u Home Assistantu ili GPS uređaj za praćenje.",
+          "general_occupied_radius_m": "Dom se smatra zauzetim dok je netko unutar ove udaljenosti.",
+          "general_arrival_radius_m": "Priprema počinje kada prvi stanar uđe u krug nakon što su svi bili izvan njega."
         }
       },
       "pollen": {
@@ -2273,7 +2291,10 @@
           "window_close_cooldown_minutes": "Čekanje prije prijedloga za zatvaranje prozora (min)",
           "quiet_hours_enabled": "Vrijeme tišine",
           "quiet_hours_start": "Početak vremena tišine",
-          "quiet_hours_end": "Kraj vremena tišine"
+          "quiet_hours_end": "Kraj vremena tišine",
+          "general_proximity_trackers": "Stanari za praćenje",
+          "general_occupied_radius_m": "Polumjer prisutnosti (m, 0 = isključeno)",
+          "general_arrival_radius_m": "Polumjer pripreme (m, 0 = isključeno)"
         },
         "data_description": {
           "weather_entities": "Odaberite: Vrijeme i upozorenja · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2332,7 +2353,10 @@
           "window_close_cooldown_minutes": "Nakon što se prozor otvori na preporuku HEM-a, čeka ovoliko minuta prije nego što predloži zatvaranje, čak i ako vanjski uvjeti nisu prikladni. Vrijeme čekanja računa se zasebno za svaku prostoriju. 0–60 minuta, zadano 5; 0 isključuje čekanje. Pravila pauziranja rada i zaštite uređaja ostaju aktivna.",
           "quiet_hours_enabled": "Upotrebljava ovaj dnevni interval za uređaje s uključenim „Tihim radom tijekom vremena tišine”. Vrijeme slijedi lokalnu vremensku zonu sustava Home Assistant; interval može prijeći ponoć. Zadano isključeno.",
           "quiet_hours_start": "Dnevno vrijeme početka, uključeno u vrijeme tišine. Odaberite vrijeme različito od završetka.",
-          "quiet_hours_end": "Dnevno vrijeme završetka, koje više nije dio vremena tišine. Ako je prije početka, interval završava sljedeći dan."
+          "quiet_hours_end": "Dnevno vrijeme završetka, koje više nije dio vremena tišine. Ako je prije početka, interval završava sljedeći dan.",
+          "general_proximity_trackers": "Za svakog stanara odaberite osobu u Home Assistantu ili GPS uređaj za praćenje.",
+          "general_occupied_radius_m": "Dom se smatra zauzetim dok je netko unutar ove udaljenosti.",
+          "general_arrival_radius_m": "Priprema počinje kada prvi stanar uđe u krug nakon što su svi bili izvan njega."
         }
       },
       "room_occupancy": {

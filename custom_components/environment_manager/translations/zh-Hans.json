@@ -234,7 +234,10 @@
           "window_close_cooldown_minutes": "建议关窗前的等待时间（分钟）",
           "quiet_hours_enabled": "静音时段",
           "quiet_hours_start": "静音开始时间",
-          "quiet_hours_end": "静音结束时间"
+          "quiet_hours_end": "静音结束时间",
+          "general_proximity_trackers": "要定位的住户",
+          "general_occupied_radius_m": "判定有人在家的半径（米，0 表示关闭）",
+          "general_arrival_radius_m": "到家准备半径（米，0 表示关闭）"
         },
         "data_description": {
           "weather_entities": "请选择: 天气与预警 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -291,7 +294,10 @@
           "window_close_cooldown_minutes": "按照 HEM 的开窗建议打开窗户后，等待设定的分钟数，再建议关窗，即使室外条件不适宜也会等待。各房间的等待时间独立计算。范围 0–60 分钟，默认 5；设为 0 可关闭等待。设备暂停和保护规则仍然有效。",
           "quiet_hours_enabled": "此每日时段适用于已开启“在静音时段内安静运行”的设备。时间遵循 Home Assistant 的本地时区，时段可以跨越午夜。默认关闭。",
           "quiet_hours_start": "每日开始时间，计入静音时段。请选择与结束时间不同的时间。",
-          "quiet_hours_end": "每日结束时间，不再计入静音时段。如果早于开始时间，时段将在次日结束。"
+          "quiet_hours_end": "每日结束时间，不再计入静音时段。如果早于开始时间，时段将在次日结束。",
+          "general_proximity_trackers": "为每位住户选择一个 Home Assistant 人员实体或 GPS 定位器。",
+          "general_occupied_radius_m": "只要有人在此距离内，就视为家中有人。",
+          "general_arrival_radius_m": "所有人都在半径外后，第一位住户进入范围时开始到家准备。"
         }
       },
       "reconfigure": {
@@ -947,7 +953,10 @@
           "general_wake_lead_minutes_entity": "睡眠 · 闹钟响铃前的分钟数",
           "quiet_hours_enabled": "静音时段",
           "quiet_hours_start": "静音开始时间",
-          "quiet_hours_end": "静音结束时间"
+          "quiet_hours_end": "静音结束时间",
+          "general_proximity_trackers": "要定位的住户",
+          "general_occupied_radius_m": "判定有人在家的半径（米，0 表示关闭）",
+          "general_arrival_radius_m": "到家准备半径（米，0 表示关闭）"
         },
         "data_description": {
           "general_room_occupancy_sensors": "所选状态或属性中的有效有人房间列表具有优先权：列出的房间有人，未列出的房间为空。没有列表时，所选存在传感器中任意一个 ON 表示有人；全部 OFF 或未选传感器表示空房。已选择但不可用或无效的来源仍为未知。未变化的列表和二元状态不会过期。",
@@ -962,7 +971,10 @@
           "general_wake_lead_minutes_entity": "选择值不小于 0 的数字实体，单位为 min 或无单位。闹钟为 07:00、数值为 30 时，自动睡眠于 06:30 结束；0 表示响铃时。清除两个来源即可禁用。",
           "quiet_hours_enabled": "此每日时段适用于已开启“在静音时段内安静运行”的设备。时间遵循 Home Assistant 的本地时区，时段可以跨越午夜。默认关闭。",
           "quiet_hours_start": "每日开始时间，计入静音时段。请选择与结束时间不同的时间。",
-          "quiet_hours_end": "每日结束时间，不再计入静音时段。如果早于开始时间，时段将在次日结束。"
+          "quiet_hours_end": "每日结束时间，不再计入静音时段。如果早于开始时间，时段将在次日结束。",
+          "general_proximity_trackers": "为每位住户选择一个 Home Assistant 人员实体或 GPS 定位器。",
+          "general_occupied_radius_m": "只要有人在此距离内，就视为家中有人。",
+          "general_arrival_radius_m": "所有人都在半径外后，第一位住户进入范围时开始到家准备。"
         }
       },
       "pollen": {
@@ -2041,7 +2053,10 @@
           "general_wake_lead_minutes_entity": "睡眠 · 闹钟响铃前的分钟数",
           "quiet_hours_enabled": "静音时段",
           "quiet_hours_start": "静音开始时间",
-          "quiet_hours_end": "静音结束时间"
+          "quiet_hours_end": "静音结束时间",
+          "general_proximity_trackers": "要定位的住户",
+          "general_occupied_radius_m": "判定有人在家的半径（米，0 表示关闭）",
+          "general_arrival_radius_m": "到家准备半径（米，0 表示关闭）"
         },
         "data_description": {
           "general_room_occupancy_sensors": "所选状态或属性中的有效有人房间列表具有优先权：列出的房间有人，未列出的房间为空。没有列表时，所选存在传感器中任意一个 ON 表示有人；全部 OFF 或未选传感器表示空房。已选择但不可用或无效的来源仍为未知。未变化的列表和二元状态不会过期。",
@@ -2056,7 +2071,10 @@
           "general_wake_lead_minutes_entity": "选择值不小于 0 的数字实体，单位为 min 或无单位。闹钟为 07:00、数值为 30 时，自动睡眠于 06:30 结束；0 表示响铃时。清除两个来源即可禁用。",
           "quiet_hours_enabled": "此每日时段适用于已开启“在静音时段内安静运行”的设备。时间遵循 Home Assistant 的本地时区，时段可以跨越午夜。默认关闭。",
           "quiet_hours_start": "每日开始时间，计入静音时段。请选择与结束时间不同的时间。",
-          "quiet_hours_end": "每日结束时间，不再计入静音时段。如果早于开始时间，时段将在次日结束。"
+          "quiet_hours_end": "每日结束时间，不再计入静音时段。如果早于开始时间，时段将在次日结束。",
+          "general_proximity_trackers": "为每位住户选择一个 Home Assistant 人员实体或 GPS 定位器。",
+          "general_occupied_radius_m": "只要有人在此距离内，就视为家中有人。",
+          "general_arrival_radius_m": "所有人都在半径外后，第一位住户进入范围时开始到家准备。"
         }
       },
       "pollen": {
@@ -2273,7 +2291,10 @@
           "window_close_cooldown_minutes": "建议关窗前的等待时间（分钟）",
           "quiet_hours_enabled": "静音时段",
           "quiet_hours_start": "静音开始时间",
-          "quiet_hours_end": "静音结束时间"
+          "quiet_hours_end": "静音结束时间",
+          "general_proximity_trackers": "要定位的住户",
+          "general_occupied_radius_m": "判定有人在家的半径（米，0 表示关闭）",
+          "general_arrival_radius_m": "到家准备半径（米，0 表示关闭）"
         },
         "data_description": {
           "weather_entities": "请选择: 天气与预警 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2332,7 +2353,10 @@
           "window_close_cooldown_minutes": "按照 HEM 的开窗建议打开窗户后，等待设定的分钟数，再建议关窗，即使室外条件不适宜也会等待。各房间的等待时间独立计算。范围 0–60 分钟，默认 5；设为 0 可关闭等待。设备暂停和保护规则仍然有效。",
           "quiet_hours_enabled": "此每日时段适用于已开启“在静音时段内安静运行”的设备。时间遵循 Home Assistant 的本地时区，时段可以跨越午夜。默认关闭。",
           "quiet_hours_start": "每日开始时间，计入静音时段。请选择与结束时间不同的时间。",
-          "quiet_hours_end": "每日结束时间，不再计入静音时段。如果早于开始时间，时段将在次日结束。"
+          "quiet_hours_end": "每日结束时间，不再计入静音时段。如果早于开始时间，时段将在次日结束。",
+          "general_proximity_trackers": "为每位住户选择一个 Home Assistant 人员实体或 GPS 定位器。",
+          "general_occupied_radius_m": "只要有人在此距离内，就视为家中有人。",
+          "general_arrival_radius_m": "所有人都在半径外后，第一位住户进入范围时开始到家准备。"
         }
       },
       "room_occupancy": {

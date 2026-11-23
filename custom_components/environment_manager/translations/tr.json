@@ -234,7 +234,10 @@
           "window_close_cooldown_minutes": "Pencereyi kapatmayı önermeden önce bekleme (dk)",
           "quiet_hours_enabled": "Sessiz saatler",
           "quiet_hours_start": "Sessiz saatlerin başlangıcı",
-          "quiet_hours_end": "Sessiz saatlerin bitişi"
+          "quiet_hours_end": "Sessiz saatlerin bitişi",
+          "general_proximity_trackers": "İzlenecek hane üyeleri",
+          "general_occupied_radius_m": "Evde sayılma yarıçapı (m, 0 = kapalı)",
+          "general_arrival_radius_m": "Hazırlık yarıçapı (m, 0 = kapalı)"
         },
         "data_description": {
           "weather_entities": "Seçin: Hava durumu ve uyarılar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -291,7 +294,10 @@
           "window_close_cooldown_minutes": "HEM’in havalandırma önerisinin ardından bir pencere açıldığında, dış koşullar uygun olmasa bile kapatılmasını önermeden önce bu kadar dakika bekler. Bekleme süresi her oda için ayrı hesaplanır. 0–60 dakika, varsayılan 5; 0 beklemeyi devre dışı bırakır. Cihazları duraklatma ve koruma kuralları etkin kalır.",
           "quiet_hours_enabled": "Bu günlük aralığı «Sessiz saatlerde sessiz çalış» seçeneği açık cihazlar için kullanır. Saatler Home Assistant’ın yerel saat dilimini izler; aralık gece yarısını aşabilir. Varsayılan olarak kapalıdır.",
           "quiet_hours_start": "Sessiz saatlere dahil olan günlük başlangıç saati. Bitişten farklı bir saat seçin.",
-          "quiet_hours_end": "Sessiz saatlere dahil olmayan günlük bitiş saati. Başlangıçtan erkense aralık ertesi gün sona erer."
+          "quiet_hours_end": "Sessiz saatlere dahil olmayan günlük bitiş saati. Başlangıçtan erkense aralık ertesi gün sona erer.",
+          "general_proximity_trackers": "Her hane üyesi için bir Home Assistant kişisi veya GPS izleyicisi seçin.",
+          "general_occupied_radius_m": "Bu mesafe içinde biri bulunduğu sürece ev dolu sayılır.",
+          "general_arrival_radius_m": "Herkes yarıçapın dışındayken ilk kişi içeri girdiğinde varış hazırlığı başlar."
         }
       },
       "reconfigure": {
@@ -947,7 +953,10 @@
           "general_wake_lead_minutes_entity": "Uyku · Alarmdan kaç dakika önce",
           "quiet_hours_enabled": "Sessiz saatler",
           "quiet_hours_start": "Sessiz saatlerin başlangıcı",
-          "quiet_hours_end": "Sessiz saatlerin bitişi"
+          "quiet_hours_end": "Sessiz saatlerin bitişi",
+          "general_proximity_trackers": "İzlenecek hane üyeleri",
+          "general_occupied_radius_m": "Evde sayılma yarıçapı (m, 0 = kapalı)",
+          "general_arrival_radius_m": "Hazırlık yarıçapı (m, 0 = kapalı)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Seçilen durum veya öznitelikteki geçerli dolu oda listesi önceliklidir: listedeki odalar dolu, listede olmayanlar boştur. Liste yoksa seçilen herhangi bir varlık sensörünün açık olması dolu; hepsinin kapalı olması veya hiç sensör seçilmemesi boş demektir. Kullanılamayan veya geçersiz seçili kaynak bilinmiyor olarak kalır. Değişmeyen listeler ve ikili durumlar eskimez.",
@@ -962,7 +971,10 @@
           "general_wake_lead_minutes_entity": "Negatif olmayan dakika değeri içeren sayısal bir varlık seçin; birim min olmalı veya boş bırakılmalıdır. 07:00 alarmı ve 30 değeri otomatik uykuyu 06:30’da bitirir; 0 alarmın çaldığı an demektir. Kapatmak için iki kaynağı da temizleyin.",
           "quiet_hours_enabled": "Bu günlük aralığı «Sessiz saatlerde sessiz çalış» seçeneği açık cihazlar için kullanır. Saatler Home Assistant’ın yerel saat dilimini izler; aralık gece yarısını aşabilir. Varsayılan olarak kapalıdır.",
           "quiet_hours_start": "Sessiz saatlere dahil olan günlük başlangıç saati. Bitişten farklı bir saat seçin.",
-          "quiet_hours_end": "Sessiz saatlere dahil olmayan günlük bitiş saati. Başlangıçtan erkense aralık ertesi gün sona erer."
+          "quiet_hours_end": "Sessiz saatlere dahil olmayan günlük bitiş saati. Başlangıçtan erkense aralık ertesi gün sona erer.",
+          "general_proximity_trackers": "Her hane üyesi için bir Home Assistant kişisi veya GPS izleyicisi seçin.",
+          "general_occupied_radius_m": "Bu mesafe içinde biri bulunduğu sürece ev dolu sayılır.",
+          "general_arrival_radius_m": "Herkes yarıçapın dışındayken ilk kişi içeri girdiğinde varış hazırlığı başlar."
         }
       },
       "pollen": {
@@ -2041,7 +2053,10 @@
           "general_wake_lead_minutes_entity": "Uyku · Alarmdan kaç dakika önce",
           "quiet_hours_enabled": "Sessiz saatler",
           "quiet_hours_start": "Sessiz saatlerin başlangıcı",
-          "quiet_hours_end": "Sessiz saatlerin bitişi"
+          "quiet_hours_end": "Sessiz saatlerin bitişi",
+          "general_proximity_trackers": "İzlenecek hane üyeleri",
+          "general_occupied_radius_m": "Evde sayılma yarıçapı (m, 0 = kapalı)",
+          "general_arrival_radius_m": "Hazırlık yarıçapı (m, 0 = kapalı)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Seçilen durum veya öznitelikteki geçerli dolu oda listesi önceliklidir: listedeki odalar dolu, listede olmayanlar boştur. Liste yoksa seçilen herhangi bir varlık sensörünün açık olması dolu; hepsinin kapalı olması veya hiç sensör seçilmemesi boş demektir. Kullanılamayan veya geçersiz seçili kaynak bilinmiyor olarak kalır. Değişmeyen listeler ve ikili durumlar eskimez.",
@@ -2056,7 +2071,10 @@
           "general_wake_lead_minutes_entity": "Negatif olmayan dakika değeri içeren sayısal bir varlık seçin; birim min olmalı veya boş bırakılmalıdır. 07:00 alarmı ve 30 değeri otomatik uykuyu 06:30’da bitirir; 0 alarmın çaldığı an demektir. Kapatmak için iki kaynağı da temizleyin.",
           "quiet_hours_enabled": "Bu günlük aralığı «Sessiz saatlerde sessiz çalış» seçeneği açık cihazlar için kullanır. Saatler Home Assistant’ın yerel saat dilimini izler; aralık gece yarısını aşabilir. Varsayılan olarak kapalıdır.",
           "quiet_hours_start": "Sessiz saatlere dahil olan günlük başlangıç saati. Bitişten farklı bir saat seçin.",
-          "quiet_hours_end": "Sessiz saatlere dahil olmayan günlük bitiş saati. Başlangıçtan erkense aralık ertesi gün sona erer."
+          "quiet_hours_end": "Sessiz saatlere dahil olmayan günlük bitiş saati. Başlangıçtan erkense aralık ertesi gün sona erer.",
+          "general_proximity_trackers": "Her hane üyesi için bir Home Assistant kişisi veya GPS izleyicisi seçin.",
+          "general_occupied_radius_m": "Bu mesafe içinde biri bulunduğu sürece ev dolu sayılır.",
+          "general_arrival_radius_m": "Herkes yarıçapın dışındayken ilk kişi içeri girdiğinde varış hazırlığı başlar."
         }
       },
       "pollen": {
@@ -2273,7 +2291,10 @@
           "window_close_cooldown_minutes": "Pencereyi kapatmayı önermeden önce bekleme (dk)",
           "quiet_hours_enabled": "Sessiz saatler",
           "quiet_hours_start": "Sessiz saatlerin başlangıcı",
-          "quiet_hours_end": "Sessiz saatlerin bitişi"
+          "quiet_hours_end": "Sessiz saatlerin bitişi",
+          "general_proximity_trackers": "İzlenecek hane üyeleri",
+          "general_occupied_radius_m": "Evde sayılma yarıçapı (m, 0 = kapalı)",
+          "general_arrival_radius_m": "Hazırlık yarıçapı (m, 0 = kapalı)"
         },
         "data_description": {
           "weather_entities": "Seçin: Hava durumu ve uyarılar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2332,7 +2353,10 @@
           "window_close_cooldown_minutes": "HEM’in havalandırma önerisinin ardından bir pencere açıldığında, dış koşullar uygun olmasa bile kapatılmasını önermeden önce bu kadar dakika bekler. Bekleme süresi her oda için ayrı hesaplanır. 0–60 dakika, varsayılan 5; 0 beklemeyi devre dışı bırakır. Cihazları duraklatma ve koruma kuralları etkin kalır.",
           "quiet_hours_enabled": "Bu günlük aralığı «Sessiz saatlerde sessiz çalış» seçeneği açık cihazlar için kullanır. Saatler Home Assistant’ın yerel saat dilimini izler; aralık gece yarısını aşabilir. Varsayılan olarak kapalıdır.",
           "quiet_hours_start": "Sessiz saatlere dahil olan günlük başlangıç saati. Bitişten farklı bir saat seçin.",
-          "quiet_hours_end": "Sessiz saatlere dahil olmayan günlük bitiş saati. Başlangıçtan erkense aralık ertesi gün sona erer."
+          "quiet_hours_end": "Sessiz saatlere dahil olmayan günlük bitiş saati. Başlangıçtan erkense aralık ertesi gün sona erer.",
+          "general_proximity_trackers": "Her hane üyesi için bir Home Assistant kişisi veya GPS izleyicisi seçin.",
+          "general_occupied_radius_m": "Bu mesafe içinde biri bulunduğu sürece ev dolu sayılır.",
+          "general_arrival_radius_m": "Herkes yarıçapın dışındayken ilk kişi içeri girdiğinde varış hazırlığı başlar."
         }
       },
       "room_occupancy": {

@@ -234,7 +234,10 @@
           "window_close_cooldown_minutes": "창문 닫기 권고 전 대기 시간(분)",
           "quiet_hours_enabled": "조용한 시간",
           "quiet_hours_start": "조용한 시간 시작",
-          "quiet_hours_end": "조용한 시간 종료"
+          "quiet_hours_end": "조용한 시간 종료",
+          "general_proximity_trackers": "위치를 확인할 거주자",
+          "general_occupied_radius_m": "재실 반경(m, 0 = 끄기)",
+          "general_arrival_radius_m": "도착 준비 반경(m, 0 = 끄기)"
         },
         "data_description": {
           "weather_entities": "선택하세요: 날씨 및 경보 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -291,7 +294,10 @@
           "window_close_cooldown_minutes": "HEM의 창문 열기 권고에 따라 창문이 열리면, 설정한 시간만큼 기다린 후 닫기를 권고합니다. 실외 조건이 적합하지 않아도 대기하며, 대기 시간은 방마다 따로 계산합니다. 0–60분, 기본값 5; 0으로 설정하면 대기하지 않습니다. 기기 일시 중지 및 보호 규칙은 계속 적용됩니다.",
           "quiet_hours_enabled": "«조용한 시간에 저소음 운전»이 켜진 기기에 이 일일 시간대를 적용합니다. 시간은 Home Assistant의 현지 시간대를 따르며 자정을 넘길 수 있습니다. 기본값은 꺼짐입니다.",
           "quiet_hours_start": "매일 시작 시각으로, 조용한 시간에 포함됩니다. 종료 시각과 다른 시각을 선택하세요.",
-          "quiet_hours_end": "매일 종료 시각으로, 조용한 시간에 포함되지 않습니다. 시작 시각보다 이르면 다음 날에 끝납니다."
+          "quiet_hours_end": "매일 종료 시각으로, 조용한 시간에 포함되지 않습니다. 시작 시각보다 이르면 다음 날에 끝납니다.",
+          "general_proximity_trackers": "거주자마다 Home Assistant의 사람 또는 GPS 추적기를 하나 선택하세요.",
+          "general_occupied_radius_m": "누군가 이 거리 안에 있으면 집에 사람이 있는 것으로 간주합니다.",
+          "general_arrival_radius_m": "모두 반경 밖에 있다가 첫 거주자가 안으로 들어오면 도착 준비를 시작합니다."
         }
       },
       "reconfigure": {
@@ -947,7 +953,10 @@
           "general_wake_lead_minutes_entity": "수면 · 알람 몇 분 전에 해제할지",
           "quiet_hours_enabled": "조용한 시간",
           "quiet_hours_start": "조용한 시간 시작",
-          "quiet_hours_end": "조용한 시간 종료"
+          "quiet_hours_end": "조용한 시간 종료",
+          "general_proximity_trackers": "위치를 확인할 거주자",
+          "general_occupied_radius_m": "재실 반경(m, 0 = 끄기)",
+          "general_arrival_radius_m": "도착 준비 반경(m, 0 = 끄기)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다.",
@@ -962,7 +971,10 @@
           "general_wake_lead_minutes_entity": "0 이상의 분 수를 나타내는 숫자 엔티티를 선택하세요. 단위는 min이거나 없어야 합니다. 알람이 07:00이고 값이 30이면 06:30에 자동 수면이 끝납니다. 0은 알람이 울리는 시각입니다. 비활성화하려면 두 선택을 모두 지우세요.",
           "quiet_hours_enabled": "«조용한 시간에 저소음 운전»이 켜진 기기에 이 일일 시간대를 적용합니다. 시간은 Home Assistant의 현지 시간대를 따르며 자정을 넘길 수 있습니다. 기본값은 꺼짐입니다.",
           "quiet_hours_start": "매일 시작 시각으로, 조용한 시간에 포함됩니다. 종료 시각과 다른 시각을 선택하세요.",
-          "quiet_hours_end": "매일 종료 시각으로, 조용한 시간에 포함되지 않습니다. 시작 시각보다 이르면 다음 날에 끝납니다."
+          "quiet_hours_end": "매일 종료 시각으로, 조용한 시간에 포함되지 않습니다. 시작 시각보다 이르면 다음 날에 끝납니다.",
+          "general_proximity_trackers": "거주자마다 Home Assistant의 사람 또는 GPS 추적기를 하나 선택하세요.",
+          "general_occupied_radius_m": "누군가 이 거리 안에 있으면 집에 사람이 있는 것으로 간주합니다.",
+          "general_arrival_radius_m": "모두 반경 밖에 있다가 첫 거주자가 안으로 들어오면 도착 준비를 시작합니다."
         }
       },
       "pollen": {
@@ -2041,7 +2053,10 @@
           "general_wake_lead_minutes_entity": "수면 · 알람 몇 분 전에 해제할지",
           "quiet_hours_enabled": "조용한 시간",
           "quiet_hours_start": "조용한 시간 시작",
-          "quiet_hours_end": "조용한 시간 종료"
+          "quiet_hours_end": "조용한 시간 종료",
+          "general_proximity_trackers": "위치를 확인할 거주자",
+          "general_occupied_radius_m": "재실 반경(m, 0 = 끄기)",
+          "general_arrival_radius_m": "도착 준비 반경(m, 0 = 끄기)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "선택한 상태나 속성의 유효한 재실 목록이 우선합니다. 목록에 있는 방은 재실, 빠진 방은 빈방입니다. 목록이 없으면 선택한 재실 센서 중 하나라도 ON이면 재실이며, 모두 OFF이거나 선택한 센서가 없으면 빈방입니다. 선택했지만 사용할 수 없거나 잘못된 소스는 알 수 없음으로 남습니다. 변하지 않은 목록과 이진 상태는 만료되지 않습니다.",
@@ -2056,7 +2071,10 @@
           "general_wake_lead_minutes_entity": "0 이상의 분 수를 나타내는 숫자 엔티티를 선택하세요. 단위는 min이거나 없어야 합니다. 알람이 07:00이고 값이 30이면 06:30에 자동 수면이 끝납니다. 0은 알람이 울리는 시각입니다. 비활성화하려면 두 선택을 모두 지우세요.",
           "quiet_hours_enabled": "«조용한 시간에 저소음 운전»이 켜진 기기에 이 일일 시간대를 적용합니다. 시간은 Home Assistant의 현지 시간대를 따르며 자정을 넘길 수 있습니다. 기본값은 꺼짐입니다.",
           "quiet_hours_start": "매일 시작 시각으로, 조용한 시간에 포함됩니다. 종료 시각과 다른 시각을 선택하세요.",
-          "quiet_hours_end": "매일 종료 시각으로, 조용한 시간에 포함되지 않습니다. 시작 시각보다 이르면 다음 날에 끝납니다."
+          "quiet_hours_end": "매일 종료 시각으로, 조용한 시간에 포함되지 않습니다. 시작 시각보다 이르면 다음 날에 끝납니다.",
+          "general_proximity_trackers": "거주자마다 Home Assistant의 사람 또는 GPS 추적기를 하나 선택하세요.",
+          "general_occupied_radius_m": "누군가 이 거리 안에 있으면 집에 사람이 있는 것으로 간주합니다.",
+          "general_arrival_radius_m": "모두 반경 밖에 있다가 첫 거주자가 안으로 들어오면 도착 준비를 시작합니다."
         }
       },
       "pollen": {
@@ -2273,7 +2291,10 @@
           "window_close_cooldown_minutes": "창문 닫기 권고 전 대기 시간(분)",
           "quiet_hours_enabled": "조용한 시간",
           "quiet_hours_start": "조용한 시간 시작",
-          "quiet_hours_end": "조용한 시간 종료"
+          "quiet_hours_end": "조용한 시간 종료",
+          "general_proximity_trackers": "위치를 확인할 거주자",
+          "general_occupied_radius_m": "재실 반경(m, 0 = 끄기)",
+          "general_arrival_radius_m": "도착 준비 반경(m, 0 = 끄기)"
         },
         "data_description": {
           "weather_entities": "선택하세요: 날씨 및 경보 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2332,7 +2353,10 @@
           "window_close_cooldown_minutes": "HEM의 창문 열기 권고에 따라 창문이 열리면, 설정한 시간만큼 기다린 후 닫기를 권고합니다. 실외 조건이 적합하지 않아도 대기하며, 대기 시간은 방마다 따로 계산합니다. 0–60분, 기본값 5; 0으로 설정하면 대기하지 않습니다. 기기 일시 중지 및 보호 규칙은 계속 적용됩니다.",
           "quiet_hours_enabled": "«조용한 시간에 저소음 운전»이 켜진 기기에 이 일일 시간대를 적용합니다. 시간은 Home Assistant의 현지 시간대를 따르며 자정을 넘길 수 있습니다. 기본값은 꺼짐입니다.",
           "quiet_hours_start": "매일 시작 시각으로, 조용한 시간에 포함됩니다. 종료 시각과 다른 시각을 선택하세요.",
-          "quiet_hours_end": "매일 종료 시각으로, 조용한 시간에 포함되지 않습니다. 시작 시각보다 이르면 다음 날에 끝납니다."
+          "quiet_hours_end": "매일 종료 시각으로, 조용한 시간에 포함되지 않습니다. 시작 시각보다 이르면 다음 날에 끝납니다.",
+          "general_proximity_trackers": "거주자마다 Home Assistant의 사람 또는 GPS 추적기를 하나 선택하세요.",
+          "general_occupied_radius_m": "누군가 이 거리 안에 있으면 집에 사람이 있는 것으로 간주합니다.",
+          "general_arrival_radius_m": "모두 반경 밖에 있다가 첫 거주자가 안으로 들어오면 도착 준비를 시작합니다."
         }
       },
       "room_occupancy": {

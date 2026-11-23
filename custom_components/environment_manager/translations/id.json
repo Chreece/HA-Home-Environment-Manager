@@ -234,7 +234,10 @@
           "window_close_cooldown_minutes": "Jeda sebelum menyarankan penutupan jendela (menit)",
           "quiet_hours_enabled": "Jam tenang",
           "quiet_hours_start": "Awal jam tenang",
-          "quiet_hours_end": "Akhir jam tenang"
+          "quiet_hours_end": "Akhir jam tenang",
+          "general_proximity_trackers": "Penghuni yang dilacak",
+          "general_occupied_radius_m": "Radius kehadiran (m, 0 = nonaktif)",
+          "general_arrival_radius_m": "Radius persiapan (m, 0 = nonaktif)"
         },
         "data_description": {
           "weather_entities": "Pilih: Cuaca dan peringatan · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -291,7 +294,10 @@
           "window_close_cooldown_minutes": "Setelah jendela dibuka mengikuti saran HEM, tunggu selama jumlah menit ini sebelum menyarankan agar jendela ditutup, meskipun kondisi di luar tidak sesuai. Jeda dihitung secara terpisah untuk setiap ruangan. 0–60 menit, bawaan 5; 0 menonaktifkan jeda. Aturan jeda operasi dan perlindungan perangkat tetap aktif.",
           "quiet_hours_enabled": "Gunakan rentang harian ini untuk perangkat dengan opsi «Senyap selama jam tenang» yang aktif. Waktu mengikuti zona waktu lokal Home Assistant; rentang dapat melewati tengah malam. Nonaktif secara bawaan.",
           "quiet_hours_start": "Waktu mulai harian, termasuk dalam jam tenang. Pilih waktu yang berbeda dari waktu berakhir.",
-          "quiet_hours_end": "Waktu berakhir harian, tidak termasuk dalam jam tenang. Jika lebih awal dari waktu mulai, rentang berakhir pada hari berikutnya."
+          "quiet_hours_end": "Waktu berakhir harian, tidak termasuk dalam jam tenang. Jika lebih awal dari waktu mulai, rentang berakhir pada hari berikutnya.",
+          "general_proximity_trackers": "Pilih satu orang di Home Assistant atau satu pelacak GPS untuk setiap penghuni.",
+          "general_occupied_radius_m": "Rumah dianggap berpenghuni selama ada seseorang dalam jarak ini.",
+          "general_arrival_radius_m": "Persiapan dimulai saat penghuni pertama masuk ke radius ini setelah semuanya berada di luar."
         }
       },
       "reconfigure": {
@@ -947,7 +953,10 @@
           "general_wake_lead_minutes_entity": "Tidur · Menit sebelum alarm",
           "quiet_hours_enabled": "Jam tenang",
           "quiet_hours_start": "Awal jam tenang",
-          "quiet_hours_end": "Akhir jam tenang"
+          "quiet_hours_end": "Akhir jam tenang",
+          "general_proximity_trackers": "Penghuni yang dilacak",
+          "general_occupied_radius_m": "Radius kehadiran (m, 0 = nonaktif)",
+          "general_arrival_radius_m": "Radius persiapan (m, 0 = nonaktif)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa.",
@@ -962,7 +971,10 @@
           "general_wake_lead_minutes_entity": "Pilih entitas numerik dengan nilai menit nonnegatif, bersatuan min atau tanpa satuan. Alarm 07:00 dan nilai 30 mengakhiri tidur otomatis pukul 06:30; 0 berarti saat alarm berbunyi. Kosongkan kedua sumber untuk menonaktifkan.",
           "quiet_hours_enabled": "Gunakan rentang harian ini untuk perangkat dengan opsi «Senyap selama jam tenang» yang aktif. Waktu mengikuti zona waktu lokal Home Assistant; rentang dapat melewati tengah malam. Nonaktif secara bawaan.",
           "quiet_hours_start": "Waktu mulai harian, termasuk dalam jam tenang. Pilih waktu yang berbeda dari waktu berakhir.",
-          "quiet_hours_end": "Waktu berakhir harian, tidak termasuk dalam jam tenang. Jika lebih awal dari waktu mulai, rentang berakhir pada hari berikutnya."
+          "quiet_hours_end": "Waktu berakhir harian, tidak termasuk dalam jam tenang. Jika lebih awal dari waktu mulai, rentang berakhir pada hari berikutnya.",
+          "general_proximity_trackers": "Pilih satu orang di Home Assistant atau satu pelacak GPS untuk setiap penghuni.",
+          "general_occupied_radius_m": "Rumah dianggap berpenghuni selama ada seseorang dalam jarak ini.",
+          "general_arrival_radius_m": "Persiapan dimulai saat penghuni pertama masuk ke radius ini setelah semuanya berada di luar."
         }
       },
       "pollen": {
@@ -2041,7 +2053,10 @@
           "general_wake_lead_minutes_entity": "Tidur · Menit sebelum alarm",
           "quiet_hours_enabled": "Jam tenang",
           "quiet_hours_start": "Awal jam tenang",
-          "quiet_hours_end": "Akhir jam tenang"
+          "quiet_hours_end": "Akhir jam tenang",
+          "general_proximity_trackers": "Penghuni yang dilacak",
+          "general_occupied_radius_m": "Radius kehadiran (m, 0 = nonaktif)",
+          "general_arrival_radius_m": "Radius persiapan (m, 0 = nonaktif)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Daftar ruangan terisi yang valid pada status atau atribut terpilih menjadi acuan: ruangan tercantum terisi, yang tidak tercantum kosong. Tanpa daftar, satu sensor kehadiran aktif berarti terisi; semua nonaktif atau tidak ada sensor terpilih berarti kosong. Sumber terpilih yang tidak tersedia atau tidak valid tetap tidak diketahui. Daftar dan status biner yang tidak berubah tidak kedaluwarsa.",
@@ -2056,7 +2071,10 @@
           "general_wake_lead_minutes_entity": "Pilih entitas numerik dengan nilai menit nonnegatif, bersatuan min atau tanpa satuan. Alarm 07:00 dan nilai 30 mengakhiri tidur otomatis pukul 06:30; 0 berarti saat alarm berbunyi. Kosongkan kedua sumber untuk menonaktifkan.",
           "quiet_hours_enabled": "Gunakan rentang harian ini untuk perangkat dengan opsi «Senyap selama jam tenang» yang aktif. Waktu mengikuti zona waktu lokal Home Assistant; rentang dapat melewati tengah malam. Nonaktif secara bawaan.",
           "quiet_hours_start": "Waktu mulai harian, termasuk dalam jam tenang. Pilih waktu yang berbeda dari waktu berakhir.",
-          "quiet_hours_end": "Waktu berakhir harian, tidak termasuk dalam jam tenang. Jika lebih awal dari waktu mulai, rentang berakhir pada hari berikutnya."
+          "quiet_hours_end": "Waktu berakhir harian, tidak termasuk dalam jam tenang. Jika lebih awal dari waktu mulai, rentang berakhir pada hari berikutnya.",
+          "general_proximity_trackers": "Pilih satu orang di Home Assistant atau satu pelacak GPS untuk setiap penghuni.",
+          "general_occupied_radius_m": "Rumah dianggap berpenghuni selama ada seseorang dalam jarak ini.",
+          "general_arrival_radius_m": "Persiapan dimulai saat penghuni pertama masuk ke radius ini setelah semuanya berada di luar."
         }
       },
       "pollen": {
@@ -2273,7 +2291,10 @@
           "window_close_cooldown_minutes": "Jeda sebelum menyarankan penutupan jendela (menit)",
           "quiet_hours_enabled": "Jam tenang",
           "quiet_hours_start": "Awal jam tenang",
-          "quiet_hours_end": "Akhir jam tenang"
+          "quiet_hours_end": "Akhir jam tenang",
+          "general_proximity_trackers": "Penghuni yang dilacak",
+          "general_occupied_radius_m": "Radius kehadiran (m, 0 = nonaktif)",
+          "general_arrival_radius_m": "Radius persiapan (m, 0 = nonaktif)"
         },
         "data_description": {
           "weather_entities": "Pilih: Cuaca dan peringatan · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2332,7 +2353,10 @@
           "window_close_cooldown_minutes": "Setelah jendela dibuka mengikuti saran HEM, tunggu selama jumlah menit ini sebelum menyarankan agar jendela ditutup, meskipun kondisi di luar tidak sesuai. Jeda dihitung secara terpisah untuk setiap ruangan. 0–60 menit, bawaan 5; 0 menonaktifkan jeda. Aturan jeda operasi dan perlindungan perangkat tetap aktif.",
           "quiet_hours_enabled": "Gunakan rentang harian ini untuk perangkat dengan opsi «Senyap selama jam tenang» yang aktif. Waktu mengikuti zona waktu lokal Home Assistant; rentang dapat melewati tengah malam. Nonaktif secara bawaan.",
           "quiet_hours_start": "Waktu mulai harian, termasuk dalam jam tenang. Pilih waktu yang berbeda dari waktu berakhir.",
-          "quiet_hours_end": "Waktu berakhir harian, tidak termasuk dalam jam tenang. Jika lebih awal dari waktu mulai, rentang berakhir pada hari berikutnya."
+          "quiet_hours_end": "Waktu berakhir harian, tidak termasuk dalam jam tenang. Jika lebih awal dari waktu mulai, rentang berakhir pada hari berikutnya.",
+          "general_proximity_trackers": "Pilih satu orang di Home Assistant atau satu pelacak GPS untuk setiap penghuni.",
+          "general_occupied_radius_m": "Rumah dianggap berpenghuni selama ada seseorang dalam jarak ini.",
+          "general_arrival_radius_m": "Persiapan dimulai saat penghuni pertama masuk ke radius ini setelah semuanya berada di luar."
         }
       },
       "room_occupancy": {

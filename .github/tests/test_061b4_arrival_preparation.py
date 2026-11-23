@@ -230,6 +230,140 @@ class ArrivalCase(unittest.IsolatedAsyncioTestCase):
             await context.settle()
 
 
+class DistanceTests(ArrivalCase):
+    phone = "device_tracker.resident"
+    watch = "person.second_resident"
+
+    def fix(self, c, entity, latitude, *, age=1, accuracy=5, state="not_home", **attrs):
+        c.hass.put(entity, state, age=age, attributes={
+            "latitude": latitude, "longitude": 0, "gps_accuracy": accuracy, **attrs,
+        })
+
+    async def setup_distance(self, *, first=.08, second=.08, occupied=500, prepare=5000):
+        c = Context()
+        c.manager.settings["occupancy_global"].update(
+            proximity_trackers=[self.phone, self.watch],
+            occupied_radius_m=occupied, arrival_radius_m=prepare,
+        )
+        c.hass.put("zone.home", "0", attributes={"latitude": 0, "longitude": 0})
+        self.fix(c, self.phone, first)
+        self.fix(c, self.watch, second)
+        self.contexts.append(c)
+        return await c.start()
+
+    async def test_first_crossing_starts_once_then_inner_radius_ends_preparation(self):
+        c = await self.setup_distance()
+        self.fix(c, self.phone, .03)
+        c.helper.observe_current()
+        await c.settle()
+        self.assertTrue(c.helper.armed)
+        self.assertEqual(c.plan()["away"], "away")
+        self.assertEqual(c.profile(), "home")
+        deadline = c.helper.expires_at
+        c.now += 30
+        self.fix(c, self.watch, .025)
+        c.helper.observe_current()
+        await c.settle()
+        self.assertEqual(c.helper.expires_at, deadline)
+        self.fix(c, self.phone, .003)
+        self.assertEqual(c.plan()["away"], "home")
+        self.assertEqual(c.plan()["occupancy"], "unoccupied")
+        c.helper.observe_current()
+        self.assertFalse(c.helper.armed)
+
+    async def test_baseline_inside_and_overlapping_radii_never_start(self):
+        c = await self.setup_distance(first=.03)
+        self.fix(c, self.watch, .03)
+        c.helper.observe_current()
+        await c.settle()
+        self.assertFalse(c.helper.armed)
+        c = await self.setup_distance(occupied=6000)
+        self.fix(c, self.phone, .03)
+        c.helper.observe_current()
+        await c.settle()
+        self.assertEqual(c.helper.home_status(), "home")
+        self.assertFalse(c.helper.armed)
+
+    async def test_missing_stale_restored_or_inaccurate_fix_cannot_arm(self):
+        for age, accuracy, state, attrs in (
+            (241, 1, "not_home", {}), (1, 10000, "not_home", {}),
+            (1, 1, "unavailable", {}), (1, 1, "not_home", {"restored": True}),
+            (1, 1, "not_home", {"longitude": None}),
+        ):
+            with self.subTest(age=age, accuracy=accuracy, state=state, attrs=attrs):
+                c = await self.setup_distance(first=.03)
+                self.fix(c, self.watch, .08, age=age, accuracy=accuracy, state=state, **attrs)
+                self.fix(c, self.phone, .08)
+                c.helper.observe_current()
+                self.fix(c, self.phone, .03)
+                c.helper.observe_current()
+                await c.settle()
+                self.assertFalse(c.helper.armed)
+
+    async def test_first_return_counts_even_if_another_resident_later_lost_gps(self):
+        c = await self.setup_distance()
+        self.fix(c, self.watch, .08, state="unavailable")
+        c.helper.observe_current()
+        self.assertFalse(c.helper.armed)
+        self.fix(c, self.phone, .03)
+        c.helper.observe_current()
+        await c.settle()
+        self.assertTrue(c.helper.armed)
+
+    async def test_cancel_jitter_and_config_changes_require_new_departure(self):
+        c = await self.setup_distance(occupied=0)
+        self.fix(c, self.phone, .03)
+        c.helper.observe_current()
+        await c.helper.async_cancel()  # Also invalidates a start queued in this turn.
+        await c.settle()
+        self.assertFalse(c.helper.armed)
+        self.fix(c, self.phone, .0451)  # Just outside 5 km, within exit margin.
+        c.helper.observe_current()
+        self.fix(c, self.phone, .03)
+        c.helper.observe_current()
+        await c.settle()
+        self.assertFalse(c.helper.armed)
+        self.fix(c, self.phone, .08)
+        c.helper.observe_current()
+        c.manager.settings["occupancy_global"]["arrival_radius_m"] = 10000
+        c.helper.observe_current()
+        await c.settle()
+        self.assertFalse(c.helper.armed)
+        self.fix(c, self.phone, .11)
+        self.fix(c, self.watch, .11)
+        c.helper.observe_current()
+        self.fix(c, self.phone, .02)
+        c.helper.observe_current()
+        await c.settle()
+        self.assertTrue(c.helper.armed)
+
+    async def test_withdrawal_during_save_revokes_pending_start(self):
+        c = await self.setup_distance()
+        c.store.block_next = True
+        self.fix(c, self.phone, .03)
+        c.helper.observe_current()
+        await asyncio.wait_for(c.store.entered.wait(), 1)
+        self.fix(c, self.phone, .08)
+        c.helper.observe_current()
+        c.store.release.set()
+        await c.settle()
+        self.assertFalse(c.helper.armed)
+        self.assertIsNone(c.store.saved["expires_at"])
+
+    async def test_hold_only_and_disabled_features(self):
+        c = await self.setup_distance(prepare=0)
+        self.fix(c, self.phone, .002)
+        self.assertEqual(c.helper.home_status(), "home")
+        self.fix(c, self.phone, .002, age=241)
+        self.assertEqual(c.helper.home_status(), "away")
+        c.manager.settings["occupancy_global"]["occupied_radius_m"] = 0
+        self.fix(c, self.phone, 0, state="home")
+        self.assertEqual(c.helper.home_status(), "away")
+        c.helper.observe_current()
+        await c.settle()
+        self.assertFalse(c.helper.armed)
+
+
 class DeadlineTests(ArrivalCase):
     async def test_prepare_uses_home_targets_without_changing_presence_or_settings(self):
         context = await self.context()

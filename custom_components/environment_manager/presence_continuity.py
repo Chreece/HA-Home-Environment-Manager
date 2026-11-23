@@ -40,6 +40,10 @@ def source_signature(config: dict[str, Any]) -> str:
         "source_stale_minutes": config.get("source_stale_minutes", 240),
         "source_freshness_mode": config.get("source_freshness_mode", "auto"),
     }
+    from .arrival_distance import active_trackers, radius
+    nearby = active_trackers(config)
+    if nearby:
+        fingerprint.update(proximity_trackers=nearby, occupied_radius_m=radius(config, "occupied_radius_m"))
     return hashlib.sha256(
         json.dumps(fingerprint, sort_keys=True, ensure_ascii=True).encode("utf-8")
     ).hexdigest()
