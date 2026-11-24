@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   card-webkit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
