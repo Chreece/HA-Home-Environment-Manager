@@ -145,6 +145,8 @@ async function main() {
     const frame=page.locator('main');
     assert.deepEqual(await headers.locator('.hem-room-name87').allTextContents(),rooms.map(r=>r[1]).sort());
     await page.locator('[data-room-fold87="guest"] .hem-room-tab080 > .hem-room-active87:last-child .hem-activity-heat').waitFor();
+    const aqi = page.locator('[data-room-fold87="living"] summary [data-hem-source105="sensor.living_aqi"]');
+    assert.equal((await aqi.innerText()).replace(/\s+/g, ' ').trim(), '13 AQI');
     await frame.screenshot({path:path.join(output,'hem-dashboard-overview.png')});
     const bathroom=page.locator('[data-room-fold87="bathroom"]');
     await bathroom.locator('summary .hem-room-name87').first().click();

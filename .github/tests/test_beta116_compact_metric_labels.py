@@ -124,6 +124,20 @@ for(const [area,metric,short,friendly,ids] of input.expected){
   if(metric==='voc')assert.ok(badge.includes('µg/m³'), 'VOC mass unit lost');
   if(metric==='voc_parts')assert.ok(badge.includes('ppb'), 'VOC parts unit lost');
 }
+// Both unscaled and provider-qualified AQI names appear only once in a room chip.
+for(const [unit,expected] of [['AQI','13 AQI'],['US AQI','13 US AQI'],['','13 AQI']]){
+  const original=rooms[0];
+  const room=rooms[0]=structuredClone(original);
+  card._hass.states['sensor.test_aqi']={state:'13',attributes:{unit_of_measurement:unit}};
+  room.readings=[{metric:'aqi',name:'Air quality index',value:13,unit,available:true,entity_id:'sensor.test_aqi'}];
+  const markup=card._room(room).split('</summary>')[0];
+  const chip=[...markup.matchAll(/<button[^>]*>[\s\S]*?<\/button>/g)].map(m=>m[0])
+    .find(button=>button.includes('data-hem-source105="sensor.test_aqi"'));
+  assert.ok(chip,'AQI chip should still open its source');
+  assert.equal(chip.replace(/<[^>]*>/g,'').trim(),expected);
+  rooms[0]=original;
+  delete card._hass.states['sensor.test_aqi'];
+}
 // Native source IDs and the incoming room evidence are never rewritten.
 assert.equal(JSON.stringify(input.states),before);
 console.log('BETA116_COMPACT_METRIC_LABELS_RENDER_UNITS_SOURCE_IDS=PASS');

@@ -5210,7 +5210,7 @@
       const {tone,text:actionText}=this._measurementActivityB6(metric,room.area_id,activity);
       const label=String(item.name||short)+' · '+formatted+
         (nativeUnit?' '+nativeUnit:'')+(actionText?' · '+actionText:'');
-      const showLabel=metric!=='illuminance';
+      const showLabel=metric!=='illuminance' && !(metric==='aqi' && /\bAQI\b/i.test(nativeUnit));
       const body=this._icon(icon)+
         '<span class="hem-room-metric-value107">'+escape(formatted)+'</span>'+
         (nativeUnit?' <span class="hem-room-metric-unit107">'+escape(nativeUnit)+'</span>':'')+
