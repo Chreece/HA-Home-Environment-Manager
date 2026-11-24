@@ -151,6 +151,10 @@ async function main() {
     const bathroom=page.locator('[data-room-fold87="bathroom"]');
     await bathroom.locator('summary .hem-room-name87').first().click();
     await bathroom.locator('.hem-room-condition-detail').first().waitFor();
+    for(const [id,expected] of [['heater','19.2°C'],['dehumidifier','58.9%']]){
+      const measures=bathroom.locator('[data-device-fold87="climate.hem_'+id+'"] > summary .hem-device-reading87');
+      assert.deepEqual(await measures.allTextContents(),[expected]);
+    }
     await bathroom.screenshot({path:path.join(output,'hem-room-expanded.png')});
     const detail=await bathroom.innerText();
     for(const label of ['Below the comfort band','Bathroom dehumidifier','Bathroom heater','Bathroom door']) assert.ok(detail.includes(label),label+' missing: '+detail);

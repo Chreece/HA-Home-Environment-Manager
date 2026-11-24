@@ -4817,6 +4817,31 @@
     }
     return found;
   };
+  // Choose feedback for the physical appliance even while its native state is OFF.
+  proto87._controllerMetrics=function(entry,nativeId,native) {
+    const a=entry.climate?.attributes||{}, n=native?.attributes||{};
+    const domain=nativeId?.split('.')[0];
+    const modes=safeArray(a.supported_operating_modes).length ? a.supported_operating_modes :
+      [...safeArray(n.hvac_modes),...safeArray(a.hvac_modes)];
+    const selected=[native?.state,a.selected_operating_mode,a.requested_hvac_mode]
+      .find(value=>['heat','cool','heat_cool','dry','humidify','fan_only','auto'].includes(value));
+    const action={heating:'heat',cooling:'cool',drying:'dry',humidifying:'humidify',fan:'fan_only'};
+    const mode=(selected==='auto'||selected==='heat_cool') && native?.state!=='off'
+      ? action[n.hvac_action]||selected : selected;
+    const relevant=new Set(mode?[mode]:modes);
+    if(domain==='humidifier')return ['humidity'];
+    if(domain==='fan'||mode==='fan_only'||(!mode && modes.includes('fan_only') &&
+        modes.every(value=>['fan_only','off'].includes(value)))) {
+      const role=Object.hasOwn(a,'resolved_fan_purpose')?a.resolved_fan_purpose:entry.fanPurpose?.state;
+      if(role==='filtration')return ['pm25','aqi','speed'];
+      if(role==='extraction')return ['co2','pm25','speed'];
+      return ['speed'];
+    }
+    const feedback=[];
+    if(['heat','cool','heat_cool','auto'].some(value=>relevant.has(value)))feedback.push('temperature');
+    if(relevant.has('dry')||relevant.has('humidify'))feedback.push('humidity');
+    return feedback;
+  };
   const _deviceState87 = (entry,hass) => {
     const found=_nativeActivities112(entry,hass).filter(item=>item.active);
     return found.find(item=>!['fan','neutral'].includes(item.tone)) || found[0] ||
@@ -5760,6 +5785,19 @@
         ?observedNative.state:null;
       // Native DRY is a reported mode; without hvac_action it is not proof of
       // compressor activity. Keep the physical mode visible, not "Unknown".
+      const feedback=this._controllerMetrics(entry,nativeId,observedNative);
+      const room=safeArray(this._dashboard105()?.rooms).find(r=>r.area_id===area);
+      const airReadings=feedback.filter(key=>['pm25','aqi','co2'].includes(key)).map(key=>{
+        const [short,icon,unit]=_airMetric89[key];
+        const air=safeArray(room?.readings).find(r=>r.metric===key && r.available===true && Number.isFinite(r.value));
+        const value=Number.isFinite(measurements[key])?measurements[key]:air?.value;
+        if(!Number.isFinite(value))return '';
+        const suffix=air?.unit||unit||short;
+        return metric(icon,fmt(value,' '+suffix),short,'neutral');
+      }).join('');
+      const percentage=observedNative?.attributes?.percentage;
+      const showSpeed=feedback.includes('speed') && Number.isFinite(percentage) && percentage>=0 &&
+        percentage<=100 && !observedNative?.attributes?.restored && actualMode!==null;
       const stateName=physical.active?this._controllerStatusLabel(physical.action):
         actualMode?this._controllerStatusLabel(actualMode):
         missing?this._controllerStatusLabel('unavailable'):
@@ -5779,13 +5817,15 @@
         this._icon(physical.active?'mdi:power':'mdi:power-standby')+
         escape(stateName)+'</span>'+
         '<span class="hem-device-measures87">'+
-        (temperature!==null?metric('mdi:thermometer',fmt(temperature,'°C'),labels.temperature+
+        (feedback.includes('temperature')?metric('mdi:thermometer',temperature===null?'—':fmt(temperature,'°C'),labels.temperature+
           (physicalTone.thermal.length?' · '+_activityText112(this,physicalTone.thermal):''),physicalTone.temp):'')+
-        (humidity!==null||surfaceTarget?metric(surfaceTarget?'mdi:water-alert-outline':'mdi:water-percent',
+        (feedback.includes('humidity')?metric(surfaceTarget?'mdi:water-alert-outline':'mdi:water-percent',
           humidity===null?'—':fmt(humidity,'%'),humidityLabel+
           (humidity===null?' · '+this._t('missing'):'')+
           (humidityActivity.text?' · '+humidityActivity.text:''),humidityActivity.tone):'')+
-        (demand!==null?metric('mdi:gauge',fmt(demand,'%'),'PID','neutral'): '')+
+        airReadings+
+        (showSpeed?metric('mdi:fan',fmt(percentage,'%'),this._controllerStatusLabel('fan_only'),'neutral'):'')+
+        (demand!==null && method==='pid'?metric('mdi:gauge',fmt(demand,'%'),'PID','neutral'): '')+
         '</span><span class="hem-device-attention87">'+
         (activeFault?_iconHint87('mdi:alert-octagon-outline',issueText,'error'):'')+
         (issue&&!activeFault?_iconHint87('mdi:alert-circle-outline',issueText,'warn'):'')+
