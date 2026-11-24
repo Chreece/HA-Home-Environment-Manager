@@ -33,6 +33,7 @@ room_sources=module("room_sources")
 # The production module imports its source adapter at module-load time.
 room_sources.room_temperature_evidence=lambda *_a,**_kw:(None,{})
 room_sources.selected=lambda *_a,**_kw:None
+room_sources.native=lambda _hass, entity: entity != "climate.hem_controller"
 discovery=module("discovery")
 faults=module("device_faults")
 languages=module("languages","languages.py")
@@ -172,6 +173,34 @@ async def main():
             await tick(now,temp)
         assert len(commands)==start,f"unsafe OFF repeat with {reason}"
         runtime._current_spec=lambda _spec:True
+    # Already OFF when HA starts: the real room scan includes HEM's climate
+    # facade and another thermostat armed for heat but reporting idle.
+    env.update(permission=True, source_available=True, other_heater=False,
+               sensor_device="independent_device")
+    cfg["control_mode"] = "pid"
+    record.pop("thermal_off_watch", None)
+    record.pop("thermal_off_warning", None)
+    runtime._thermal_off_sessions.clear()
+    states.async_all = lambda domain: [
+        NS(entity_id="climate.hem_controller", state="heat", attributes={"hvac_modes": ["off", "heat"]}),
+        NS(entity_id="climate.idle_thermostat", state="heat",
+           attributes={"hvac_modes": ["off", "heat"], "hvac_action": "idle"})]
+    start = len(commands)
+    for at, temp in [(6000, 20), (7800, 21), (8100, 21.3), (8400, 21.8), (8700, 22.4)]:
+        await tick(at, temp)
+    assert len(commands) == start + 1
+    assert record["thermal_off_watch"]["off_since"] == 6000
+    assert record["thermal_off_warning"]["origin"] == "observed_off"
+    # A late temperature fall or a lost reference sensor withdraws recovery.
+    env["temp"] = 20.1
+    assert not runtime_module._guard(runtime,spec,cap,state,record["thermal_off_watch"])
+    # A long uninterrupted OFF episode retains its first retry across days.
+    later = 6000 + 86401
+    count = len(commands)
+    for delta, temp in [(0,20), (1800,21), (2100,21.3), (2400,21.8), (2700,22.4),
+                        (3600,23.2), (4500,24.)]:
+        await tick(later+delta,temp)
+    assert len(commands) == count+1 and record["thermal_off_watch"]["attempts"] == 2
     print("B21_GENERIC_HEM_OFF_MONITOR_GUARDED_REPEAT_NOTICES_AND_PERSISTED_BUDGET=PASS")
 
 

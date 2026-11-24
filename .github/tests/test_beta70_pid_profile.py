@@ -57,11 +57,17 @@ base, reset, prime = phase_decision(
 )
 assert reset and prime
 same, reset, prime = phase_decision(
-    base, metric="temperature", target=21.12, increasing=True,
+    base, metric="temperature", target=21.12, calculated_target=True, increasing=True,
     profile="comfort", mode="heat", preset="none", kp=10., ki=.1, kd=0.,
     cycle_s=3600, min_on_s=600, min_off_s=600, measured=19.8,
 )
 assert same == base and not reset and not prime, "Small target noise must not restart cycles"
+_, reset, _ = phase_decision(
+    base, metric="temperature", target=21.1, increasing=True, profile="comfort",
+    mode="heat", preset="none", kp=10., ki=.1, kd=0., cycle_s=3600,
+    min_on_s=600, min_off_s=600, measured=19.8)
+assert reset, "A deliberate 0.1 degree change starts a fresh logical cycle"
+
 up, reset, prime = phase_decision(
     base, metric="temperature", target=22., increasing=True, profile="comfort",
     mode="heat", preset="none", kp=10., ki=.1, kd=0.,
@@ -133,6 +139,7 @@ def make_profile(config, plan):
     return profile_name(config, plan)
 
 model = N(
+    room_config=lambda manager, spec: {},
     settings=lambda manager, spec: manager.settings,
     plan_for=lambda manager, spec: manager._harness.plan,
     sources_available=lambda manager, spec: True,

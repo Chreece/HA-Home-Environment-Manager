@@ -66,7 +66,11 @@ class EventRuntime(fixture["Runtime"]):
             assert pending["attempts"] == 1, pending
             assert pending["entity"] in SPEC.source_entities, pending
             self.now += 1
-            self.native_event(pending["expected"], entity=pending["entity"])
+            activity = {}
+            if pending["entity"] == PRIMARY and "state" in pending["expected"]:
+                mode = pending["expected"]["state"]
+                activity["hvac_action"] = {"heat": "heating", "cool": "cooling", "off": "off"}.get(mode)
+            self.native_event(pending["expected"], entity=pending["entity"], **activity)
             await self.evaluate()
             acknowledgements += 1
             assert acknowledgements <= 5, "An ordinary adjustment must finish its bounded command sequence"
@@ -77,6 +81,7 @@ class EventRuntime(fixture["Runtime"]):
         # control, but no power permission. The production model resolves both.
         self.state.attributes["hvac_modes"] = ["heat", "cool"]
         self.state.state = "heat"
+        self.state.attributes["hvac_action"] = "heating"
         self.state.attributes["temperature"] = 21.
         assert model.permission(self.manager, SPEC, self.cap) == (True, False)
 
@@ -104,7 +109,7 @@ def percentage_fan():
             patch.object(production, "entity_area", area):
         runtime = EventRuntime(method="adaptive_suggest")
         fan = N(entity_id=entity, state="on", domain="fan",
-                attributes={"supported_features": 1, "percentage_step": 10, "percentage": 20},
+                attributes={"supported_features": 1, "percentage_step": 10, "percentage": 20, "rpm": 280},
                 last_reported=stamp(runtime.now), last_updated=stamp(runtime.now),
                 last_changed=stamp(runtime.now-900), context=N(user_id=None, parent_id=None))
         runtime.extra_states[entity] = fan
@@ -168,6 +173,60 @@ class AdaptiveEventTests(unittest.IsolatedAsyncioTestCase):
         self.assertGreaterEqual(len(observer.events), 4)
         self.assertGreaterEqual(len({output for _, output in observer.events if output is not None}), 2)
         self.assertFalse(runtime.record.get("paused"))
+
+    async def test_heater_already_off_dispatches_recovery_and_ack_keeps_budget(self):
+        runtime = EventRuntime(method="adaptive_suggest")
+        runtime.state.attributes["hvac_modes"] = ["heat", "off"]
+        runtime.native_report(mode="off", action="off")
+        watchdog = importlib.import_module(fixture["PACKAGE"] + ".off_state_runtime")
+        start = runtime.now
+        temp = 21.
+        # Replace only the room sensor transport, peer inventory and notices.
+        # Tick, watchdog, the durable native dispatcher and ACK run together.
+        with (patch.object(watchdog, "_independent_room_temperature",
+                           side_effect=lambda *_: (temp, ("sensor.first", "sensor.second"))),
+              patch.object(watchdog, "_competing_effect_clear", return_value=True),
+              patch.object(watchdog, "_notify")):
+            for elapsed, temp in ((0, 21.), (1800, 21.8), (2100, 22.1),
+                                  (2400, 22.5), (2700, 23.)):
+                runtime.now = start + elapsed
+                runtime.feedback(temp)
+                runtime.state.last_reported = stamp(runtime.now)
+                await runtime.evaluate()
+            self.assertTrue(runtime.record["pending"]["off_state_recovery"])
+            self.assertEqual(runtime.calls[-1]["service"], "set_hvac_mode")
+            self.assertEqual(runtime.calls[-1]["data"]["hvac_mode"], "off")
+            await runtime.acknowledge()
+            self.assertEqual(runtime.record["thermal_off_watch"]["off_since"], start)
+            self.assertEqual(runtime.record["thermal_off_watch"]["attempts"], 1)
+
+    async def test_outage_between_ticks_rebases_math_and_preserves_results(self):
+        runtime = EventRuntime(method="adaptive_suggest")
+        runtime.feedback(19.)
+        await runtime.evaluate()
+        await runtime.acknowledge()
+        runtime.seed_math()
+        before_anchor = runtime._memory[SPEC.identifier][2]
+        # These durable results belong to the completed operating context.
+        observed = runtime.observer
+        result = {"at": runtime.now, "status": "tracking_well"}
+        observed.windows.append(result)
+        runtime._pid_adaptive_remember(runtime.record, observed.context, observed.ledger())
+        bank = deepcopy(runtime.record["pid_adaptive_contexts"])
+        runtime.now += 10
+        state = runtime.state.state
+        runtime.native_event(mode="unavailable")
+        runtime.now += 1
+        runtime.native_event(mode=state)
+        assert SPEC.identifier in runtime._pid_availability_resets
+        runtime.now += 300
+        runtime.feedback(19.)
+        await runtime.evaluate()
+        self.assertNotIn(SPEC.identifier, runtime._pid_availability_resets)
+        fresh = runtime._memory.get(SPEC.identifier)
+        self.assertTrue(fresh is None or fresh[2] > before_anchor)
+        self.assertEqual(runtime.record["pid_adaptive_contexts"][observed.context]["ledger"]["windows"],
+                         bank[observed.context]["ledger"]["windows"])
 
     async def test_short_normal_binary_cycles_keep_observation_segments(self):
         runtime = EventRuntime(method="adaptive_suggest")

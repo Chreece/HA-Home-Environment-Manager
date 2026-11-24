@@ -1371,7 +1371,8 @@ class EquipmentRuntime:
         output = constrained = None
         output_state = state
         kind = "binary"
-        output_kind, physical_activity, native_strategy = "reported_state", None, None
+        from .pid_diagnostics import calibration_activity
+        output_kind, native_strategy = "reported_state", None
         minimum, maximum_percent, step, stages = 0., 100., 1., []
         max_change, step_origin, quantization = 100., 0., "nearest"
         if cap.domain in ("number", "input_number"):
@@ -1474,9 +1475,7 @@ class EquipmentRuntime:
                         constraints.append("output_rate_limited")
             step = cap.temp_step / 1.5 * 100
         else:
-            from .pid_diagnostics import observed_output
-            activity = observed_output(cap.domain, state, mode)
-            physical_activity = activity
+            activity = calibration_activity(cap.domain, state, mode)
             output = 100. if activity == "on" else 0. if activity == "off" else None
             if cap.domain == "climate":
                 output_kind = "reported_activity"
@@ -1484,10 +1483,8 @@ class EquipmentRuntime:
                 native_strategy = full_request(cap, attrs, mode) if cfg.get("native_full_output", True) is True else None
                 if native_strategy is not None:
                     # Identify the end-to-end response to HEM's acknowledged
-                    # enable command. HVAC mode is never labelled measured
-                    # compressor power; reported activity remains separate.
-                    # This command scale is stable across OFF/ON even on
-                    # integrations which omit hvac_action while running.
+                    # enable command. The activity check below separately
+                    # requires a live report that the device is working.
                     output_kind = "acknowledged_native_command"
                     requested = native_strategy["data"]
                     target_confirmed = all(
@@ -1503,6 +1500,16 @@ class EquipmentRuntime:
                     output = (0. if state.state == "off" else
                               100. if state.state == mode and owned and target_confirmed else None)
             constrained = demand
+        domain = getattr(output_state, "domain", None) or cap.domain
+        physical_activity = calibration_activity(domain, output_state, mode)
+        if physical_activity is None or record.get("thermal_off_warning"):
+            output = None
+        elif physical_activity == "off":
+            output = 0.
+        elif output == 0 and kind != "setpoint_trim":
+            # Zero trim means an unbiased setpoint, which can still heat.
+            # For a direct output, zero conflicts with positive activity.
+            output = None
         if (record.get("pending") or record.get("unconfirmed_native_target")
                 or (record.get("upstream") or {}).get("pending")):
             constraints.append("pending_command")
@@ -1675,7 +1682,7 @@ class EquipmentRuntime:
             "contributor_ids": sorted(provenance.get("contributor_ids", [])),
             "aggregation": provenance.get("aggregation"),
             "actuator_kind": actuator["actuator_kind"],
-            "output_kind": actuator["output_kind"],
+            "output_kind": actuator["output_kind"], "activity_evidence_version": 2,
             "native_target_strategy": actuator["native_target_strategy"],
             "adapter": {key: actuator.get(key) for key in (
                 "min_percentage", "max_percentage", "percentage_step", "output_step_origin",
@@ -1867,12 +1874,15 @@ class EquipmentRuntime:
         saved = record.get("pid_adaptive")
         saved = saved if isinstance(saved, dict) else {}
         observer = observers.get(spec.identifier)
-        if observer is not None and observer.context != sample["context"]:
+        switched = observer is not None and observer.context != sample["context"]
+        if switched:
             self._pid_adaptive_remember(record, observer.context, observer.ledger())
             observer = None
         if observer is None:
             if saved.get("context") != sample["context"]:
-                if saved.get("ledger"):
+                # A live observer was just banked above. Its completed windows
+                # can be newer than the last periodic Store snapshot.
+                if saved.get("ledger") and saved.get("context") not in (record.get("pid_adaptive_contexts") or {}):
                     self._pid_adaptive_remember(record, saved.get("context"), saved["ledger"])
                 saved = (record.get("pid_adaptive_contexts") or {}).get(sample["context"], {})
             observer = observers[spec.identifier] = AdaptiveObserver(
@@ -1936,7 +1946,7 @@ class EquipmentRuntime:
                 "context", "windows", "trial", "last_application", "last_result"))
             or status.get("candidate") != (saved_ledger.get("assessment") or {}).get("candidate")
             or self.clock() - saved.get("last_saved_at", 0) >= max(1800., 3*cfg["sample_seconds"]))
-        if substantive or dirty:
+        if substantive or dirty or switched:
             self._pid_adaptive_remember(record, sample["context"], ledger)
             await self._save()
         if changed or dirty or status != previous:
@@ -3561,15 +3571,10 @@ class EquipmentRuntime:
             blocked_reason is None and cfg.get("requested_mode") == mode
             and self._active and self._ready
         )
-        action = state.attributes.get("hvac_action")
-        is_on = not output_off(state)
-        if cap.domain == "climate" and is_on:
-            expected = {"heat": "heating", "cool": "cooling", "dry": "drying"}[mode]
-            valid = valid and action == expected
-        elif cap.domain == "climate" and action not in (None, "off", "idle"):
-            # A contradictory native OFF + heating/cooling/drying report is
-            # not a verified inactive baseline or a completed normal cycle.
-            valid = False
+        from .pid_diagnostics import calibration_activity
+        activity = calibration_activity(cap.domain, state, mode)
+        is_on = activity == "on"
+        valid = valid and activity is not None and not record.get("thermal_off_warning")
         if cap.domain == "humidifier" and mode != "dry":
             valid = False
         if not valid:
@@ -5971,6 +5976,7 @@ class EquipmentRuntime:
             if cfg.get("off_state_watchdog_mode", "monitor_recover") != "monitor_recover":
                 return False
             from .off_state_runtime import _reported_off
+            recovery_watch = record.get("thermal_off_watch")
             if cap.domain == "climate":
                 recovery_operation = ("set_hvac_mode", {"hvac_mode": "off"}, {"state": "off"})
             elif cap.domain in ("number", "input_number"):
@@ -6287,7 +6293,7 @@ class EquipmentRuntime:
             if off_state_recovery:
                 from .off_state_runtime import _guard
                 current_watch = record.get("thermal_off_watch")
-                if not isinstance(current_watch, dict) or not _guard(
+                if current_watch is not recovery_watch or not isinstance(current_watch, dict) or not _guard(
                     self, spec, cap, self.hass.states.get(entity),
                     current_watch, allowed_pending=pending
                 ):
@@ -7023,7 +7029,7 @@ class EquipmentRuntime:
         if not isinstance(entity_id, str):
             return
         live = lambda item: (
-            item is not None
+            item is not None and not (getattr(item, "attributes", {}) or {}).get("restored")
             and getattr(item, "state", None) not in (
                 None, "unavailable", "unknown"
             )
@@ -7088,6 +7094,12 @@ class EquipmentRuntime:
                     discontinuity = "native_control_settings_changed"
             for spec in model.specs(self.manager):
                 if entity_id in spec.source_entities:
+                    if old is not None and old_live != new_live:
+                        # Both edges may precede the next control tick.
+                        resets = getattr(self, "_pid_availability_resets", None)
+                        if resets is None:
+                            resets = self._pid_availability_resets = set()
+                        resets.add(spec.identifier)
                     seen = getattr(self, "_pid_learning_observed_edges", {}).get(
                         spec.identifier, {}
                     ).get(entity_id, 0)
@@ -7147,7 +7159,8 @@ class EquipmentRuntime:
         remaining = 0.0
         for entity in spec.source_entities:
             state = self.hass.states.get(entity)
-            if state is None or state.state in ("unavailable", "unknown"):
+            if (state is None or state.state in ("unavailable", "unknown")
+                    or (getattr(state, "attributes", {}) or {}).get("restored")):
                 self._native_ready_since.pop(entity, None)
                 return None
             since = self._native_ready_since.get(entity)
@@ -7458,6 +7471,10 @@ class EquipmentRuntime:
                 return
             self._invalidated.discard(spec.identifier)
             record = self._record(spec)
+            resets = getattr(self, "_pid_availability_resets", None)
+            if resets and spec.identifier in resets:
+                resets.discard(spec.identifier)
+                await self._reset_pid_cycle(spec, "native_availability_changed")
             maintenance = getattr(self, "_pid_review_maintenance", None)
             if callable(maintenance):
                 await maintenance(spec)
@@ -7642,16 +7659,13 @@ class EquipmentRuntime:
                 return
             record["baseline"].setdefault(cap.primary, snapshot(state))
             await self._observe_native_running(spec, cap, state)
-            # OFF monitoring is independent of PID. Only a genuine journaled
-            # HEM shutdown is eligible, for heat/cool/humidify/dry effects.
-            # Keep the normal control path unaffected if the monitor is absent.
-            if record.get("thermal_off_watch"):
+            # Also observe a dedicated heater first discovered already OFF.
+            # Never infer a previous shutdown or backdate a measured interval.
+            if record.get("thermal_off_watch") or (state.state == "off" and "heat" in cap.modes):
                 try:
                     from .off_state_runtime import watchdog_tick
                     if await watchdog_tick(self, spec, cap, state):
                         return
-                except asyncio.CancelledError:
-                    raise
                 except ImportError:
                     # Missing/partial monitoring components cannot disable HVAC,
                     # but its uncertain interval cannot join a learned response.
@@ -7956,6 +7970,12 @@ class EquipmentRuntime:
                         kp=cfg["kp"], ki=cfg["ki"], kd=cfg["kd"],
                         cycle_s=cfg["cycle_seconds"],
                         min_on_s=on_min, min_off_s=off_min, measured=value,
+                        calculated_target=(
+                            metric == "temperature" and profile in ("comfort", "sleep")
+                            and model.room_config(self.manager, spec).get("target_source") in ("auto_comfort", "pmv")
+                            and mode not in (cfg.get("profile_targets") or {}).get(profile, {})
+                            or metric == "humidity" and model.uses_mold_target(self.manager, spec, cap, cfg)
+                        ),
                     )
                     if rebased:
                         memory, anchor = None, self.clock()

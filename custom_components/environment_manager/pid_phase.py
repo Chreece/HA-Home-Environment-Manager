@@ -19,7 +19,7 @@ def phase_decision(
     *, metric: str, target: float, increasing: bool, profile: str,
     mode: str, preset: str, kp: float, ki: float, kd: float,
     cycle_s: float, min_on_s: float, min_off_s: float,
-    measured: float,
+    measured: float, calculated_target: bool = False,
 ) -> tuple[tuple, bool, bool]:
     """Return stable signature, reset flag, and one-shot comfort wake request.
 
@@ -42,7 +42,8 @@ def phase_decision(
             previous[index] != signature[index]
             for index in range(len(signature)) if index != 1
         )
-        target_changed = abs(signature[1] - previous[1]) >= TARGET_CHANGE_C
+        target_changed = (abs(signature[1] - previous[1]) >= TARGET_CHANGE_C
+                          if calculated_target else signature[1] != previous[1])
         reset = metadata_changed or target_changed
     else:
         reset = True
