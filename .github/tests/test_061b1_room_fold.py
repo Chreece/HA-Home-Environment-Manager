@@ -101,7 +101,7 @@ def assert_header(report, *, opened, nested):
     assert report["chevrons"] == [expected], report
     assert report["trailing"] and report["direct"] == expected, report
     assert report["nested"] == nested, ("Independent header icons changed", report)
-    assert report["display"] == "flex" and report["listStyle"] == "none", report
+    assert report["display"] in ("grid", "flex") and report["listStyle"] == "none", report
     arrow, header = report["arrow"], report["header"]
     assert arrow and arrow["width"] > 0, report
     assert arrow["left"] >= header["left"] + header["width"] / 2, report

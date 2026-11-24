@@ -264,13 +264,13 @@ def browser_checks(states):
                   return {width:el.clientWidth,scroll:el.scrollWidth,
                     height:el.getBoundingClientRect().height,
                     sameTab:name.parentElement===settings.parentElement,
-                    beside:button.left>=title.right-1&&button.top<title.bottom&&title.top<button.bottom,
+                    settingsBeforeName:button.right<=title.left+1&&button.top<title.bottom&&title.top<button.bottom,
                     below:overview.top>=Math.max(title.bottom,button.bottom),
                     homes:el.querySelectorAll('.hem-room-icon112,[icon="mdi:home-outline"]').length};
                 }""")
                 assert result["scroll"] <= result["width"] + 1, (width, result)
                 assert 60 <= result["height"] <= 100, (width, result)
-                assert result["sameTab"] and result["beside"] and result["below"], result
+                assert result["sameTab"] and result["settingsBeforeName"] and result["below"], result
                 assert result["homes"] == 0, result
         name = lambda area: page.locator(f'[data-room-fold87="{area}"] .hem-room-name87')
         colors = [name(area).evaluate("el=>getComputedStyle(el).color")
