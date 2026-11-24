@@ -28,8 +28,10 @@ customElements.whenDefined(tag).then(() => {
 </script><script type="module" src="/environment_manager/RESOURCE?v=fixture"></script>"""
 
 
-def exercise(browser, resource, failures, *, resume=False):
+def exercise(browser, resource, failures, *, resume=False, reported_offline=False):
     page = browser.new_page(viewport={"width": 390, "height": 844})
+    if reported_offline:
+        page.add_init_script("Object.defineProperty(navigator, 'onLine', {get: () => false})")
     urls = []
     documents = []
     held = []
@@ -96,7 +98,7 @@ def run(engine):
         options = {"executable_path": shutil.which("chromium") or shutil.which("google-chrome")} if engine == "chromium" else {}
         with getattr(playwright, engine).launch(**options) as browser:
             exercise(browser, CARD, 1)
-            exercise(browser, LOADER, 0)
+            exercise(browser, LOADER, 0, reported_offline=True)
             exercise(browser, LOADER, 1)
             exercise(browser, LOADER, 4, resume=True)
     print(f"PASS {engine}: cold-load failure, delayed download, automatic retry and foreground recovery")

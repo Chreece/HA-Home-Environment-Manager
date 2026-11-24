@@ -38,7 +38,8 @@ if (!customElements.get(cardTag)) {
       stop();
       return;
     }
-    if (pending || navigator.onLine === false) return;
+    // A local HA server or a cached module can be reachable while iOS reports offline.
+    if (pending) return;
     pending = true;
     const url = new URL(cardURL);
     if (attempt) url.searchParams.set('hem_retry', String(attempt));
