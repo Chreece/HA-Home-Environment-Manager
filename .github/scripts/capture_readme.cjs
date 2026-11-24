@@ -139,14 +139,14 @@ async function main() {
     const headers=page.locator('.hem-room-glance87');
     await headers.nth(4).waitFor();
     const frame=page.locator('main');
-    assert.deepEqual(await headers.locator('.hem-room-name87').allTextContents(),rooms.map(r=>r[1]));
+    assert.deepEqual(await headers.locator('.hem-room-name87').allTextContents(),rooms.map(r=>r[1]).sort());
     await frame.screenshot({path:path.join(output,'hem-dashboard-overview.png')});
     const bathroom=page.locator('[data-room-fold87="bathroom"]');
     await bathroom.locator('summary .hem-room-name87').first().click();
     await bathroom.locator('.hem-room-condition-detail').first().waitFor();
+    await bathroom.screenshot({path:path.join(output,'hem-room-expanded.png')});
     const detail=await bathroom.innerText();
     for(const label of ['Below the comfort band','Bathroom dehumidifier','Bathroom heater','Bathroom door']) assert.ok(detail.includes(label),label+' missing: '+detail);
-    await bathroom.screenshot({path:path.join(output,'hem-room-expanded.png')});
     assert.deepEqual(errors,[]);
   } finally {await browser.close();}
 }

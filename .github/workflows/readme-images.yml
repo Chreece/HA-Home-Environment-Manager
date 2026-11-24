@@ -21,6 +21,7 @@ jobs:
       - name: Render the documented card
         run: NODE_PATH="$RUNNER_TEMP/hem-images/node_modules" node .github/scripts/capture_readme.cjs "$RUNNER_TEMP/hem-docs"
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: hem-english-readme-images
           path: ${{ runner.temp }}/hem-docs/*.png
