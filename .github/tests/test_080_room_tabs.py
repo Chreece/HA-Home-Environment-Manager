@@ -66,19 +66,26 @@ REPORT = r"""()=>{
         tabBg:getComputedStyle(summary.querySelector('.hem-room-tab080')).backgroundColor,
         bodyBg:getComputedStyle(summary,'::before').backgroundColor,
         tabBottom:getComputedStyle(summary.querySelector('.hem-room-tab080')).borderBottomColor,
-        panelStart:parseFloat(getComputedStyle(summary,'::before').top)
+        panelRow:getComputedStyle(summary,'::before').gridRowStart,
+        panelOffset:getComputedStyle(summary,'::before').top
       },
       name:box(summary.querySelector('.hem-room-name87')),
       settings:box(summary.querySelector('[data-room-settings114]')),
+      faces:box(summary.querySelector('.hem-room-faces')),
+      faceLabel:summary.querySelector('.hem-room-faces').getAttribute('aria-label'),
+      alerts:[...summary.querySelectorAll('.hem-room-alerts87 button')].map(button=>({
+        ...box(button),icon:button.querySelector('ha-icon').getAttribute('icon')})),
       nameText:summary.querySelector('.hem-room-name87').textContent,
       nameTitle:summary.querySelector('.hem-room-name87').title,
       settingsLabel:summary.querySelector('[data-room-settings114]').getAttribute('aria-label'),
       metrics:[...summary.querySelectorAll('.hem-room-metric107')].filter(visible).map(node=>({
         box:box(node),scrollWidth:node.scrollWidth,clientWidth:node.clientWidth,
         value:node.querySelector('.hem-room-metric-value107')?.textContent,
+        glyphs:[...node.querySelectorAll('ha-icon')].map(icon=>({
+          ...box(icon.shadowRoot.querySelector('svg')),icon:icon.getAttribute('icon')})),
         valueBox:box(node.querySelector('.hem-room-metric-value107'))})),
-      leaves:[...summary.querySelectorAll('.hem-room-metric107,.hem-room-active87 .hem-hint87,'+
-        '.hem-room-alerts87 .hem-hint87,:scope > ha-icon:last-child')].filter(visible).map(box),
+      leaves:[...summary.querySelectorAll('.hem-room-metric107,'+
+        ':scope > ha-icon:last-child')].filter(visible).map(box),
       chevron:box(summary.querySelector(':scope > ha-icon:last-child')),
       chevronIcon:summary.querySelector(':scope > ha-icon:last-child').getAttribute('icon')
     }))};
@@ -95,11 +102,18 @@ def assert_geometry(report, label):
         assert row['tabVisual']['tabBg'] == row['tabVisual']['bodyBg'], ('one surface colour', *context)
         assert row['tabVisual']['tabBottom'] == row['tabVisual']['bodyBg'], ('no tab seam', *context)
         assert abs(row['tab']['left'] - row['header']['left']) <= 1, ('aligned outer edges', *context)
-        assert abs(row['tab']['top'] - row['header']['top']) <= 1, ('no border above title', *context)
-        assert abs(row['tabVisual']['panelStart'] - (row['tabRow']['height'] - 1)) <= 1, ('continuous outline', *context)
+        assert row['tab']['top'] >= row['header']['top'] - 1, ('no border above title', *context)
+        assert row['tabVisual']['panelRow'] == '2' and row['tabVisual']['panelOffset'] == '-1px', ('continuous outline', *context)
         assert row['scrollWidth'] <= row['clientWidth'] + 1, context
         assert 60 <= row['header']['height'] <= 100, ('two compact rows', *context)
-        assert row['settings']['left'] >= row['name']['right'] - 1, context
+        assert row['settings']['right'] <= row['name']['left'] + 1, context
+        assert row['name']['right'] <= row['faces']['left'] <= row['name']['right'] + 8, context
+        assert row['faceLabel'] and row['name']['width'] > 12, context
+        assert row['alerts'], context
+        assert abs(max(alert['right'] for alert in row['alerts']) - row['header']['right']) <= 2, context
+        for alert in row['alerts']:
+            assert alert['width'] >= 22 and alert['left'] >= row['tab']['right'] - 1, context
+            assert row['tabRow']['top'] <= alert['top'] < alert['bottom'] <= row['tabRow']['bottom'], context
         assert row['settings']['top'] < row['name']['bottom'], context
         assert row['nameText'] in row['nameTitle'], context
         assert row['nameText'] in row['settingsLabel'], context
@@ -113,6 +127,10 @@ def assert_geometry(report, label):
             assert metric['scrollWidth'] <= metric['clientWidth'] + 1, context
             assert metric['value'], context
             assert rect['left'] <= metric['valueBox']['left'] <= metric['valueBox']['right'] <= rect['right'], context
+            value_center = (metric['valueBox']['top'] + metric['valueBox']['bottom']) / 2
+            for glyph in metric['glyphs']:
+                assert glyph['height'] > 0 and abs((glyph['top'] + glyph['bottom']) / 2 - value_center) <= 1, (
+                    'visible glyph and value must share a center', glyph['icon'], *context)
             centers.append((rect['top'] + rect['bottom']) / 2)
         assert max(centers) - min(centers) <= 1, ('overview must remain one row', *context)
         leaves = sorted(row['leaves'], key=lambda rect: rect['left'])
@@ -130,7 +148,10 @@ def run():
     base['room']['environment']['measurement_evidence'] = {
         'temperature': {'value': temperature['value'], 'source_count': 1,
                         'source_ids': [temperature['entity_id']]},
+        'humidity': {'value': 50, 'source_count': 2,
+                     'source_ids': ['sensor.humidity', 'sensor.humidity_second']},
     }
+    base['states']['sensor.humidity_second'] = deepcopy(base['states']['sensor.humidity'])
     icons = runpy.run_path(str(ROOT / '.github/tests/test_061b1_room_fold.py'))['icon_fixture']()
     chrome = os.environ.get('CHROME_BIN') or shutil.which('chromium') or shutil.which('google-chrome')
     assert chrome, 'Chromium is required for room-tab layout validation'
@@ -153,6 +174,11 @@ def run():
                     'de': 'Küche und Essbereich mit außergewöhnlich langem Raumnamen',
                 }[language])
                 data['states']['sensor.hem']['attributes']['dashboard']['rooms'].append(second)
+                # Exercise more simultaneous alerts than the old desktop/mobile caps.
+                second.update(action='close', windows=[
+                    {'entity_id':'binary_sensor.open', 'name':'Open', 'opened':True},
+                    {'entity_id':'binary_sensor.missing', 'name':'Offline', 'opened':None}])
+                second['environment']['room_ventilation']={'air_refresh_status':'refresh_recommended'}
                 data['language'] = language
                 page.set_content('''<!doctype html><style>
                   *{box-sizing:border-box}body{margin:0;background:#101820;color:#e8edf3;font-family:Arial}
@@ -184,6 +210,39 @@ def run():
                         if shots and language == 'el' and (viewport, column) in ((1024, 760), (320, 320)):
                             page.screenshot(path=str(shots / f'room-tabs-{label}.png'), full_page=True)
                         assert_geometry(report, label)
+                        kitchen = next(row for row in report['rows'] if row['area'] == 'kitchen')
+                        assert {'mdi:weather-windy', 'mdi:window-open-variant', 'mdi:window-closed-variant'} <= {
+                            alert['icon'] for alert in kitchen['alerts']}, label
+                        assert len(kitchen['alerts']) >= 5, (label, kitchen['alerts'])
+                        assert any(glyph['icon'] == 'mdi:approximately-equal'
+                                   for metric in kitchen['metrics'] for glyph in metric['glyphs']), label
+                # Render through the real card, including its measurement selection.
+                faces = page.evaluate("""base=>{
+                  function render(t,r,options={}){
+                    const room=structuredClone(base);
+                    room.readings=[
+                      {metric:'temperature',value:t,available:t!==null},
+                      {metric:'humidity',value:r,available:r!==null,threshold:options.rhLimit||65},
+                      ...(options.air||[])];
+                    room.environment={international:{pmv_ppd:options.pmv},thermal_comfort:options.adaptive};
+                    const wrapper=document.createElement('div');
+                    wrapper.innerHTML=card._room(room);
+                    const face=wrapper.querySelector('.hem-room-faces');
+                    if(!face.title||face.title!==face.getAttribute('aria-label')||
+                        !wrapper.querySelector('.hem-room-condition-detail').textContent.includes(face.title))
+                      throw Error('Missing readable condition label');
+                    return face.textContent;
+                  }
+                  const poor={metric:'co2',value:1400,available:true,exceeded:true};
+                  const missing={...poor,available:false,value:null};
+                  return [render(20,30),render(26,64),render(19,29),render(27,65,{air:[poor]}),
+                    render(null,null),render(null,45),render(null,null,{air:[poor]}),
+                    render(22,45,{air:[missing]}),render(22,45,{air:[{...poor,metric:'aqi',
+                      evaluation_status:'configuration_required'}]}),render(22,55,{rhLimit:55}),
+                    render(22,45,{adaptive:{status:'below_band'}}),
+                    render(22,45,{pmv:{status:'estimate',pmv:0.7},adaptive:{status:'below_band'}})];
+                }""", data['room'])
+                assert faces == ['😊','😊','🥶😮‍💨','😷🥵😓','😶','😶','😷','😶','😶','😓','🥶','🥵'], faces
                 room = page.locator('[data-room-fold87="living"]')
                 summary = room.locator(':scope > summary')
                 summary.locator('.hem-room-name87').click()
