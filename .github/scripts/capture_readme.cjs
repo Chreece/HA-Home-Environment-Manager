@@ -76,7 +76,9 @@ function sampleHome() {
     const temperature = rooms.find(row => row[0] === area)[2];
     const attrs={area_id:area, source_entity_ids:[physical], source_device_id:slug,
       friendly_name:name+' controller', physical_primary_entity_id:physical, physical_source_state:nativeMode,
-      control_mode:'automatic', hvac_modes:['off',mode], requested_hvac_mode:nativeMode,
+      control_mode:'automatic', overview_targets:mode==='dry'?{mold:60}:{heat:21},
+      humidity_demand:mode==='dry'?{target_basis:'mold_surface_rh',target_ready:true,control_measurement:rh,control_target:60}:{},
+      hvac_modes:['off',mode], requested_hvac_mode:nativeMode,
       current_temperature:temperature, measurements:{temperature,humidity:rh},
       controller_status:{status:running ? 'controlling' : 'within_target_band'}};
     state(managed,nativeMode,attrs);
@@ -154,6 +156,8 @@ async function main() {
     for(const [id,expected] of [['heater','19.2°C'],['dehumidifier','58.9%']]){
       const measures=bathroom.locator('[data-device-fold87="climate.hem_'+id+'"] > summary .hem-device-reading87');
       assert.deepEqual(await measures.allTextContents(),[expected]);
+      const goal=bathroom.locator('[data-device-fold87="climate.hem_'+id+'"] > summary .hem-controller-target');
+      assert.equal(await goal.textContent(),id==='heater'?'21°C':'60%');
     }
     assert.equal(await bathroom.getByRole('button',{name:/Bathroom door/}).count(),1);
     await bathroom.screenshot({path:path.join(output,'hem-room-expanded.png')});

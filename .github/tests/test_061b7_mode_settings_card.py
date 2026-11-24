@@ -349,7 +349,9 @@ test('configured mold target is distinct from the advisory limit, derived room R
 });
 test('folded mold controller uses its matching metric while room and physical readings stay RH',()=>{
   const card=setup(),states=clone(card._hass.states),attrs=states['climate.managed_0_0'].attributes;
-  attrs.measurements={temperature:20,humidity:49.4};
+  // This fixture is a reversible unit. Exercise its actual drying mode.
+  states['climate.physical_0_0'].state='dry';attrs.selected_operating_mode='dry';
+  attrs.overview_targets={mold:60};attrs.measurements={temperature:20,humidity:49.4};
   attrs.current_humidity=64.4;attrs.humidity=60;attrs.target_humidity_basis='mold_surface_rh';
   attrs.humidity_demand={target_basis:'mold_surface_rh',target_ready:true,
     control_measurement:64.4,control_target:60,mold_protection_required:false};
@@ -368,6 +370,7 @@ test('folded mold controller uses its matching metric while room and physical re
   assert.ok(html.includes('title="Mold indication'));
   assert.ok(html.includes('mdi:water-alert-outline'));
   assert.ok(html.includes('64.4%'));assert.ok(!html.includes('49.4%'));
+  assert.ok(html.includes('mdi:target') && html.includes('60%'));
   assert.equal(card._roomGlance122(room).humidity,49.4);
   assert.ok(card._deviceSummary65(card._managedControllers('room0')[0]).includes('<span>Humidity</span><b>44%</b>'));
   attrs.humidity_demand.target_ready=false;attrs.humidity_demand.control_measurement=null;

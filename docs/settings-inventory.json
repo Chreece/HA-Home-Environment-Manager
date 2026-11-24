@@ -3276,8 +3276,8 @@
       "literal_references": [
         "custom_components/environment_manager/climate.py:222",
         "custom_components/environment_manager/climate.py:256",
-        "custom_components/environment_manager/climate.py:431",
-        "custom_components/environment_manager/climate.py:435",
+        "custom_components/environment_manager/climate.py:460",
+        "custom_components/environment_manager/climate.py:464",
         "custom_components/environment_manager/climate_commissioning.py:20",
         "custom_components/environment_manager/climate_commissioning.py:83"
       ],
@@ -3297,7 +3297,7 @@
         "custom_components/environment_manager/climate.py:255",
         "custom_components/environment_manager/climate.py:257",
         "custom_components/environment_manager/climate.py:258",
-        "custom_components/environment_manager/climate.py:281"
+        "custom_components/environment_manager/climate.py:286"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7529,8 +7529,8 @@
       "literal_references": [
         "custom_components/environment_manager/climate.py:222",
         "custom_components/environment_manager/climate.py:256",
-        "custom_components/environment_manager/climate.py:431",
-        "custom_components/environment_manager/climate.py:435",
+        "custom_components/environment_manager/climate.py:460",
+        "custom_components/environment_manager/climate.py:464",
         "custom_components/environment_manager/climate_commissioning.py:20",
         "custom_components/environment_manager/climate_commissioning.py:83"
       ],
@@ -7550,7 +7550,7 @@
         "custom_components/environment_manager/climate.py:255",
         "custom_components/environment_manager/climate.py:257",
         "custom_components/environment_manager/climate.py:258",
-        "custom_components/environment_manager/climate.py:281"
+        "custom_components/environment_manager/climate.py:286"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7668,8 +7668,8 @@
       "literal_references": [
         "custom_components/environment_manager/climate.py:222",
         "custom_components/environment_manager/climate.py:256",
-        "custom_components/environment_manager/climate.py:431",
-        "custom_components/environment_manager/climate.py:435",
+        "custom_components/environment_manager/climate.py:460",
+        "custom_components/environment_manager/climate.py:464",
         "custom_components/environment_manager/climate_commissioning.py:20",
         "custom_components/environment_manager/climate_commissioning.py:83"
       ],
@@ -7689,7 +7689,7 @@
         "custom_components/environment_manager/climate.py:255",
         "custom_components/environment_manager/climate.py:257",
         "custom_components/environment_manager/climate.py:258",
-        "custom_components/environment_manager/climate.py:281"
+        "custom_components/environment_manager/climate.py:286"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -11728,8 +11728,8 @@
       "literal_references": [
         "custom_components/environment_manager/climate.py:222",
         "custom_components/environment_manager/climate.py:256",
-        "custom_components/environment_manager/climate.py:431",
-        "custom_components/environment_manager/climate.py:435",
+        "custom_components/environment_manager/climate.py:460",
+        "custom_components/environment_manager/climate.py:464",
         "custom_components/environment_manager/climate_commissioning.py:20",
         "custom_components/environment_manager/climate_commissioning.py:83"
       ],
@@ -11749,7 +11749,7 @@
         "custom_components/environment_manager/climate.py:255",
         "custom_components/environment_manager/climate.py:257",
         "custom_components/environment_manager/climate.py:258",
-        "custom_components/environment_manager/climate.py:281"
+        "custom_components/environment_manager/climate.py:286"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -12738,8 +12738,8 @@
       "literal_references": [
         "custom_components/environment_manager/climate.py:222",
         "custom_components/environment_manager/climate.py:256",
-        "custom_components/environment_manager/climate.py:431",
-        "custom_components/environment_manager/climate.py:435",
+        "custom_components/environment_manager/climate.py:460",
+        "custom_components/environment_manager/climate.py:464",
         "custom_components/environment_manager/climate_commissioning.py:20",
         "custom_components/environment_manager/climate_commissioning.py:83"
       ],
@@ -12759,7 +12759,7 @@
         "custom_components/environment_manager/climate.py:255",
         "custom_components/environment_manager/climate.py:257",
         "custom_components/environment_manager/climate.py:258",
-        "custom_components/environment_manager/climate.py:281"
+        "custom_components/environment_manager/climate.py:286"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -12877,8 +12877,8 @@
       "literal_references": [
         "custom_components/environment_manager/climate.py:222",
         "custom_components/environment_manager/climate.py:256",
-        "custom_components/environment_manager/climate.py:431",
-        "custom_components/environment_manager/climate.py:435",
+        "custom_components/environment_manager/climate.py:460",
+        "custom_components/environment_manager/climate.py:464",
         "custom_components/environment_manager/climate_commissioning.py:20",
         "custom_components/environment_manager/climate_commissioning.py:83"
       ],
@@ -12898,7 +12898,7 @@
         "custom_components/environment_manager/climate.py:255",
         "custom_components/environment_manager/climate.py:257",
         "custom_components/environment_manager/climate.py:258",
-        "custom_components/environment_manager/climate.py:281"
+        "custom_components/environment_manager/climate.py:286"
       ],
       "consumer_status": "card_adapts_options_form"
     },
