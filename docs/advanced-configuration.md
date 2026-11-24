@@ -273,8 +273,8 @@ per room; floor-wide environmental overrides are not implied.
   identity. Measurement, target, HEM's requested demand and the device's
   reported activity or output setting share one graph and one time axis.
   Measurements and targets use the left scale in the reading's unit; demand
-  and output use the right percentage or On/Off scale. The legend identifies
-  each controller and line, and one cursor inspects their values at the same
+  and output use the right percentage or On/Off scale. Each recorded series uses a solid line and a distinct color. The legend groups
+  its matching swatches under the controller name, and one cursor inspects their values at the same
   time. A fan percentage or valve position is a reported setting, not measured
   airflow or power.
 - Targets use the exact feedback sources and quantity represented by the
