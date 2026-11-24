@@ -11,6 +11,7 @@ import math
 from time import time
 from typing import Any
 
+from . import arrival_distance
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -68,6 +69,9 @@ class ArrivalPreparation:
         self._generation = 0
         self._timer_generation = 0
         self._preparing = False
+        self._approach_config = None
+        self._all_outside = False
+        self._approach_request = None
         self._cancel_timer = None
         self._tasks: set[asyncio.Task] = set()
 
@@ -167,6 +171,47 @@ class ArrivalPreparation:
         self._tasks.add(task)
         task.add_done_callback(self._tasks.discard)
 
+    def _approach(self):
+        settings = self.manager.settings.get("occupancy_global") or {}
+        meters = arrival_distance.radius(settings, "arrival_radius_m")
+        selected = arrival_distance.trackers(settings) if meters else ()
+        if not selected:
+            return None, "unknown"
+        center = arrival_distance.home_center(self.hass)
+        signature = (selected, meters, center, arrival_distance.radius(settings, "occupied_radius_m"),
+                     settings.get("source_stale_minutes"), settings.get("source_freshness_mode"))
+        return signature, arrival_distance.boundary(self.hass, settings, selected, center, meters)
+
+    def _observe_approach(self, home_status):
+        signature, position = self._approach()
+        if signature != self._approach_config:
+            self._approach_config = signature
+            self._all_outside = False
+            self._approach_request = None
+        if position != "inside" or home_status != "away":
+            self._approach_request = None
+        if position == "outside":
+            self._all_outside = True
+        # A missing fix cannot establish departure or entry. Once everyone was
+        # verified outside, a different resident's good fix still proves return.
+        elif position == "inside" and self._all_outside:
+            self._all_outside = False
+            if (home_status == "away" and self._started and self._store is not None
+                    and not self.armed):
+                request = self._approach_request = (self._generation, signature)
+                task = self.hass.async_create_task(self._auto_prepare(request))
+                self._tasks.add(task)
+                task.add_done_callback(self._tasks.discard)
+
+    async def _auto_prepare(self, request):
+        try:
+            await self.async_prepare(approach=request)
+        except Exception:
+            _LOGGER.exception("Could not start automatic arrival preparation")
+        finally:
+            if self._approach_request is request:
+                self._approach_request = None
+
     def observe(self, home_status: str) -> None:
         """Arrival ends the episode; unknown sources only suspend its effect."""
         if self._preparing and home_status != "away":
@@ -176,10 +221,11 @@ class ArrivalPreparation:
         ):
             self._clear()
             self._persist_later()
+        self._observe_approach(home_status)
 
     def observe_current(self) -> None:
         """Revoke an observed arrival before coalescing a room-plan refresh."""
-        if self.expires_at is not None or self._preparing:
+        if (self.expires_at is not None or self._preparing or self._approach_config is not None):
             self.observe(self.home_status())
 
     def _arm_timer(self) -> None:
@@ -246,9 +292,19 @@ class ArrivalPreparation:
         self.observe(self.home_status())
         self._arm_timer()
 
-    async def async_prepare(self) -> None:
+    async def async_prepare(self, *, approach=None) -> None:
         from homeassistant.exceptions import HomeAssistantError
+        def approach_valid():
+            if approach is None:
+                return True
+            generation, signature = approach
+            return (self._approach_request is approach and self._started and not self.armed
+                    and self._generation == generation
+                    and self._approach() == (signature, "inside") and self.home_status() == "away")
+
         async with self._lock:
+            if not approach_valid():
+                return
             if (not self._started or self._store is None
                     or getattr(self.hass, "is_stopping", False)):
                 raise HomeAssistantError("Arrival preparation is not ready")
@@ -262,7 +318,7 @@ class ArrivalPreparation:
                 # Publish authority only after the original deadline is durable.
                 await self._store.async_save({"started_at": start, "expires_at": end})
                 self._restored = True
-                if (not self._started or generation != self._generation
+                if (not self._started or generation != self._generation or not approach_valid()
                         or self.home_status() != "away" or self.clock() >= end):
                     await self._store.async_save(self._stored())
                     return

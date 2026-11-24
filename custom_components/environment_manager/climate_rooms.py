@@ -184,12 +184,14 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
                 capability[mode]=(valid and attrs.get("unit_of_measurement")=="%"
                     and attrs.get("min")==0 and attrs.get("max")==100)
         cap=capability
-    window_safe=all(win.opened is False for win in room.windows) and (
+    window_safe=not any(win.opened is True for win in room.windows) and (
         bool(room.windows) or not require_window_contact
     )
     window_evidence=("missing_required_contact" if not room.windows and require_window_contact
                      else "no_contact_configured" if not room.windows else
-                     "all_contacts_closed" if window_safe else "open_or_unavailable_contact")
+                     "open_or_unavailable_contact" if not window_safe else
+                     "window_state_unknown" if any(w.opened is None for w in room.windows) else
+                     "all_contacts_closed")
     time_zone=getattr(getattr(hass,"config",None),"time_zone",None) or "UTC"
     local_sleeping,local_evidence=scheduled_sleep(
         settings,time.time() if now is None else now,time_zone,

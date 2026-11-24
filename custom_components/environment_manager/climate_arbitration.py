@@ -14,8 +14,9 @@ from __future__ import annotations
 
 from typing import Any
 
+from .window_contact import permits_operation
 from .climate_coordination import device_inventory
-from .discovery import entity_area, is_window, is_window_contact
+from .discovery import entity_area
 from .pid_math import finite
 
 CHANNELS = ("thermal", "humidity", "extraction", "filtration")
@@ -110,22 +111,7 @@ def _contact_interlock(hass: Any, area: str, plan: dict) -> bool:
     enrolled = plan.get("selected_window_contacts", ())
     if not isinstance(enrolled, (list, tuple, set, frozenset)):
         enrolled = ()
-    for entity in contacts:
-        if not isinstance(entity,str) or entity_area(hass,entity)!=area:
-            return False
-        state=hass.states.get(entity)
-        # Use the same registry-aware window classifier as discovery and
-        # the per-device safety policy. A valid HA contact's device class
-        # can live in the entity registry rather than state.attributes.
-        if (state is None or not (
-                is_window(hass, state) or (
-                    entity in enrolled and is_window_contact(
-                        hass, state, explicitly_selected=True,
-                    )
-                )
-            ) or state.state!="off"):
-            return False
-    return True
+    return all(permits_operation(hass, area, entity, enrolled) for entity in contacts)
 
 
 def room_coordination(hass: Any, area: str, config: dict, plan: dict,

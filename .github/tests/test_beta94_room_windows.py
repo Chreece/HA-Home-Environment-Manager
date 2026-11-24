@@ -94,14 +94,61 @@ async def scenarios():
     assert result['status']=='window_contacts_not_configured',result
     assert not result['blocked']
 
-    # A selected LOCAL unavailable contact still fails closed and must not
-    # be considered closed just because every foreign window is shut.
-    unknown=make(opened=False,native='off')
-    unknown.manager.settings['room_sources'][spec.area_id]['windows']=[
-        'binary_sensor.window','binary_sensor.window_unavailable']
-    p=unknown._window_policy(spec)
-    assert p['blocked'] and p['status']=='window_state_unknown',p
-    assert p['unknown_contacts']==['binary_sensor.window_unavailable'],p
-    print('BETA94_ROOM_SCOPED_WINDOW_OPEN_CLOSE_60S_NO_CROSS_ROOM_PAUSE=PASS')
+    # Loss of one selected contact is informational. Native starts, continued
+    # operation and supply demand use the remaining reporting contacts.
+    tick = b['b']['tick']
+    for lost_state in ('unavailable', 'unknown', 'missing', 'restored'):
+        running = make(opened=False)
+        entity = 'binary_sensor.window'
+        assert not running._window_policy(spec)['blocked']
+        if lost_state == 'missing':
+            del running.states[entity]
+        elif lost_state == 'restored':
+            running.states[entity].attributes['restored'] = True
+        else:
+            contact(running, lost_state)
+        policy = running._window_policy(spec)
+        assert policy['unknown_contacts'] == [entity]
+        assert not policy['blocked'] and not policy['stop_requested']
+        assert approved(running, spec, Model.settings(running.manager, spec), running.manager.cap) is True
+        assert running._gate(spec, running.manager.cap, Model.settings(running.manager, spec),
+                             running.manager.plan, 'dry') is None
+        assert not running._stop_policy_verified(spec, running.manager.cap, 'window')
+
+        # A different contact can still stop and protect this appliance.
+        running.manager.settings['room_sources'][spec.area_id]['windows'].append('binary_sensor.window2')
+        contact(running, 'on', entity='binary_sensor.window2')
+        await tick(running, spec)
+        assert running.issued == [('climate', 'set_hvac_mode', 'climate.comfee', {'hvac_mode': 'off'})]
+        assert await running._reconcile(spec)
+        contact(running, 'off', entity='binary_sensor.window2')
+        assert running._window_policy(spec)['remaining_seconds'] == 60
+        running.now += 30
+        contact(running, 'off', entity=entity)
+        assert running._window_policy(spec)['remaining_seconds'] == 30
+        running.now += 30
+        assert not running._window_policy(spec)['blocked']
+
+    # Editing an offline contact cannot start or reset another contact's delay.
+    edited = make(opened=False, native='off')
+    assert not edited._window_policy(spec)['blocked']
+    chosen = edited.manager.settings['room_sources'][spec.area_id]['windows']
+    chosen.append('binary_sensor.window_missing')
+    assert not edited._window_policy(spec)['blocked']
+    contact(edited, 'on')
+    assert edited._window_policy(spec)['stop_requested']
+    contact(edited, 'off')
+    assert edited._window_policy(spec)['remaining_seconds'] == 60
+    edited.now += 20
+    chosen.remove('binary_sensor.window_missing')
+    policy = edited._window_policy(spec)
+    assert policy['remaining_seconds'] == 40 and policy['stop_requested']
+
+    starting = make(opened=False, native='off')
+    starting.record['capabilities'] = b['b']['asdict'](starting.manager.cap)
+    starting.on_save = lambda: contact(starting, 'unavailable')
+    assert await starting._power(spec, starting.manager.cap, 'dry', automatic=True), starting.statuses
+    assert starting.issued == [('climate', 'set_hvac_mode', 'climate.comfee', {'hvac_mode': 'dry'})]
+    print('PASS: unavailable window contacts permit native operation and preserve other room interlocks')
 
 asyncio.run(scenarios())

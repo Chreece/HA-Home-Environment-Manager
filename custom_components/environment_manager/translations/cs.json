@@ -234,7 +234,10 @@
           "window_close_cooldown_minutes": "Čekání před doporučením zavřít okno (min)",
           "quiet_hours_enabled": "Doba klidu",
           "quiet_hours_start": "Začátek doby klidu",
-          "quiet_hours_end": "Konec doby klidu"
+          "quiet_hours_end": "Konec doby klidu",
+          "general_proximity_trackers": "Sledovaní obyvatelé",
+          "general_occupied_radius_m": "Poloměr přítomnosti (m, 0 = vypnuto)",
+          "general_arrival_radius_m": "Poloměr přípravy (m, 0 = vypnuto)"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasí a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -291,7 +294,10 @@
           "window_close_cooldown_minutes": "Po otevření okna na základě doporučení HEM vyčká tento počet minut, než doporučí jeho zavření, i když jsou venkovní podmínky nevhodné. Doba čekání se počítá pro každou místnost samostatně. 0–60 minut, výchozí hodnota 5; 0 čekání vypne. Pravidla pro pozastavení provozu a ochranu zařízení zůstávají aktivní.",
           "quiet_hours_enabled": "Použije tento denní interval pro zařízení se zapnutou volbou „Tichý chod v době klidu“. Časy se řídí místním časovým pásmem Home Assistant; interval může přecházet přes půlnoc. Ve výchozím stavu vypnuto.",
           "quiet_hours_start": "Denní čas začátku, který patří do doby klidu. Zvolte jiný čas než čas konce.",
-          "quiet_hours_end": "Denní čas konce, který již nepatří do doby klidu. Je-li dřívější než začátek, interval končí následující den."
+          "quiet_hours_end": "Denní čas konce, který již nepatří do doby klidu. Je-li dřívější než začátek, interval končí následující den.",
+          "general_proximity_trackers": "Pro každého obyvatele vyberte osobu v Home Assistant nebo GPS sledovač.",
+          "general_occupied_radius_m": "Domov se považuje za obsazený, pokud je někdo v této vzdálenosti.",
+          "general_arrival_radius_m": "Příprava začne, když se první obyvatel vrátí do okruhu poté, co byli všichni mimo něj."
         }
       },
       "reconfigure": {
@@ -947,7 +953,10 @@
           "general_wake_lead_minutes_entity": "Spánek · Minuty před budíkem",
           "quiet_hours_enabled": "Doba klidu",
           "quiet_hours_start": "Začátek doby klidu",
-          "quiet_hours_end": "Konec doby klidu"
+          "quiet_hours_end": "Konec doby klidu",
+          "general_proximity_trackers": "Sledovaní obyvatelé",
+          "general_occupied_radius_m": "Poloměr přítomnosti (m, 0 = vypnuto)",
+          "general_arrival_radius_m": "Poloměr přípravy (m, 0 = vypnuto)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší.",
@@ -962,7 +971,10 @@
           "general_wake_lead_minutes_entity": "Vyberte číselnou entitu s nezáporným počtem minut, s jednotkou min nebo bez jednotky. Budík v 07:00 a hodnota 30 ukončí automatický spánek v 06:30; 0 znamená při zazvonění. Funkci vypnete vymazáním obou zdrojů.",
           "quiet_hours_enabled": "Použije tento denní interval pro zařízení se zapnutou volbou „Tichý chod v době klidu“. Časy se řídí místním časovým pásmem Home Assistant; interval může přecházet přes půlnoc. Ve výchozím stavu vypnuto.",
           "quiet_hours_start": "Denní čas začátku, který patří do doby klidu. Zvolte jiný čas než čas konce.",
-          "quiet_hours_end": "Denní čas konce, který již nepatří do doby klidu. Je-li dřívější než začátek, interval končí následující den."
+          "quiet_hours_end": "Denní čas konce, který již nepatří do doby klidu. Je-li dřívější než začátek, interval končí následující den.",
+          "general_proximity_trackers": "Pro každého obyvatele vyberte osobu v Home Assistant nebo GPS sledovač.",
+          "general_occupied_radius_m": "Domov se považuje za obsazený, pokud je někdo v této vzdálenosti.",
+          "general_arrival_radius_m": "Příprava začne, když se první obyvatel vrátí do okruhu poté, co byli všichni mimo něj."
         }
       },
       "pollen": {
@@ -2041,7 +2053,10 @@
           "general_wake_lead_minutes_entity": "Spánek · Minuty před budíkem",
           "quiet_hours_enabled": "Doba klidu",
           "quiet_hours_start": "Začátek doby klidu",
-          "quiet_hours_end": "Konec doby klidu"
+          "quiet_hours_end": "Konec doby klidu",
+          "general_proximity_trackers": "Sledovaní obyvatelé",
+          "general_occupied_radius_m": "Poloměr přítomnosti (m, 0 = vypnuto)",
+          "general_arrival_radius_m": "Poloměr přípravy (m, 0 = vypnuto)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Platný seznam obsazených místností ve zvoleném stavu či atributu má přednost: uvedené místnosti jsou obsazené, vynechané prázdné. Bez seznamu znamená kterékoli zapnuté čidlo přítomnost; všechna vypnutá nebo žádná vybraná čidla znamenají prázdný pokoj. Nedostupný nebo neplatný vybraný zdroj zůstává neznámý. Nezměněné seznamy a binární stavy nevyprší.",
@@ -2056,7 +2071,10 @@
           "general_wake_lead_minutes_entity": "Vyberte číselnou entitu s nezáporným počtem minut, s jednotkou min nebo bez jednotky. Budík v 07:00 a hodnota 30 ukončí automatický spánek v 06:30; 0 znamená při zazvonění. Funkci vypnete vymazáním obou zdrojů.",
           "quiet_hours_enabled": "Použije tento denní interval pro zařízení se zapnutou volbou „Tichý chod v době klidu“. Časy se řídí místním časovým pásmem Home Assistant; interval může přecházet přes půlnoc. Ve výchozím stavu vypnuto.",
           "quiet_hours_start": "Denní čas začátku, který patří do doby klidu. Zvolte jiný čas než čas konce.",
-          "quiet_hours_end": "Denní čas konce, který již nepatří do doby klidu. Je-li dřívější než začátek, interval končí následující den."
+          "quiet_hours_end": "Denní čas konce, který již nepatří do doby klidu. Je-li dřívější než začátek, interval končí následující den.",
+          "general_proximity_trackers": "Pro každého obyvatele vyberte osobu v Home Assistant nebo GPS sledovač.",
+          "general_occupied_radius_m": "Domov se považuje za obsazený, pokud je někdo v této vzdálenosti.",
+          "general_arrival_radius_m": "Příprava začne, když se první obyvatel vrátí do okruhu poté, co byli všichni mimo něj."
         }
       },
       "pollen": {
@@ -2273,7 +2291,10 @@
           "window_close_cooldown_minutes": "Čekání před doporučením zavřít okno (min)",
           "quiet_hours_enabled": "Doba klidu",
           "quiet_hours_start": "Začátek doby klidu",
-          "quiet_hours_end": "Konec doby klidu"
+          "quiet_hours_end": "Konec doby klidu",
+          "general_proximity_trackers": "Sledovaní obyvatelé",
+          "general_occupied_radius_m": "Poloměr přítomnosti (m, 0 = vypnuto)",
+          "general_arrival_radius_m": "Poloměr přípravy (m, 0 = vypnuto)"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasí a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2332,7 +2353,10 @@
           "window_close_cooldown_minutes": "Po otevření okna na základě doporučení HEM vyčká tento počet minut, než doporučí jeho zavření, i když jsou venkovní podmínky nevhodné. Doba čekání se počítá pro každou místnost samostatně. 0–60 minut, výchozí hodnota 5; 0 čekání vypne. Pravidla pro pozastavení provozu a ochranu zařízení zůstávají aktivní.",
           "quiet_hours_enabled": "Použije tento denní interval pro zařízení se zapnutou volbou „Tichý chod v době klidu“. Časy se řídí místním časovým pásmem Home Assistant; interval může přecházet přes půlnoc. Ve výchozím stavu vypnuto.",
           "quiet_hours_start": "Denní čas začátku, který patří do doby klidu. Zvolte jiný čas než čas konce.",
-          "quiet_hours_end": "Denní čas konce, který již nepatří do doby klidu. Je-li dřívější než začátek, interval končí následující den."
+          "quiet_hours_end": "Denní čas konce, který již nepatří do doby klidu. Je-li dřívější než začátek, interval končí následující den.",
+          "general_proximity_trackers": "Pro každého obyvatele vyberte osobu v Home Assistant nebo GPS sledovač.",
+          "general_occupied_radius_m": "Domov se považuje za obsazený, pokud je někdo v této vzdálenosti.",
+          "general_arrival_radius_m": "Příprava začne, když se první obyvatel vrátí do okruhu poté, co byli všichni mimo něj."
         }
       },
       "room_occupancy": {

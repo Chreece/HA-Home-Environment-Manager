@@ -48,14 +48,14 @@ class TestWindowEvidence(unittest.TestCase):
         self.assertTrue(info['blocked'])
         self.assertEqual(info['contacts'],[])
 
-    def test_real_unavailable_selected_contact_remains_blocking_and_named(self):
+    def test_unavailable_selected_contact_is_named_without_blocking(self):
         s=make(opened=False)
         s.manager.settings['room_sources'][spec.area_id]['windows']=[
             'binary_sensor.window_unavailable'
         ]
         info=s._window_policy(spec)
         self.assertEqual(info['status'],'window_state_unknown')
-        self.assertTrue(info['blocked'])
+        self.assertFalse(info['blocked'])
         self.assertEqual(info['unknown_contacts'],['binary_sensor.window_unavailable'])
         self.assertEqual(info['contact_states']['binary_sensor.window_unavailable'],'missing')
         self.assertFalse(info['open_contacts'])
@@ -82,12 +82,17 @@ class TestWindowEvidence(unittest.TestCase):
                 self.attributes={} # Original HA registry owns device_class.
         state=State('off')
         hass=Obj(states=Obj(get=lambda id:state))
-        ns={
-            'Any':object,
-            'entity_area':lambda h,e:'bedroom',
-            'is_window':lambda h,s:s.domain=='binary_sensor' and
-                getattr(s,'registry_class','window')=='window',
-        }
+        import sys, types, importlib
+        package='hem_window_live_recheck'
+        mod=types.ModuleType(package)
+        mod.__path__=[str(ROOT/'custom_components/environment_manager')]
+        sys.modules[package]=mod
+        discovery=types.ModuleType(package+'.discovery')
+        discovery.entity_area=lambda h,e:'bedroom'
+        discovery.is_window_contact=lambda h,s,**kw:s.domain=='binary_sensor' and s.registry_class=='window'
+        sys.modules[discovery.__name__]=discovery
+        state.registry_class='window'
+        ns={'Any':object, 'permits_operation':importlib.import_module(package+'.window_contact').permits_operation}
         exec(compile(ast.Module(body=[node],type_ignores=[]),
                      'climate_arbitration.py','exec'),ns)
         gate=ns['_contact_interlock']
@@ -97,9 +102,9 @@ class TestWindowEvidence(unittest.TestCase):
         state.state='on'
         self.assertFalse(gate(hass,'bedroom',plan))
         state.state='unknown'
-        self.assertFalse(gate(hass,'bedroom',plan))
+        self.assertTrue(gate(hass,'bedroom',plan))
         state.state='off'
-        ns['entity_area']=lambda h,e:'other_room'
+        discovery.entity_area=lambda h,e:'other_room'
         self.assertFalse(gate(hass,'bedroom',plan))
 
 if __name__=='__main__':

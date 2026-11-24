@@ -124,7 +124,7 @@ class UI:
           'ai_conversation_agent':[{'value':'none'}],
           'pollen_entities':[],
           'general_room_occupancy_sensors':[],
-          'general_home_trackers':[],
+          'general_home_trackers':[{'value':'person.anna'}, {'value':'sensor.count'}],
           'general_occupied_rooms_entity':[
                {'value':'none'},{'value':'input_text.occupied_rooms'}],
           'general_sleep_rooms_entity':[{'value':'none'}],
@@ -178,6 +178,18 @@ async def run():
     bad=await real(invalid,{'global_threshold_min_outdoor_temp':50.})
     assert bad['errors']['global_threshold_min_outdoor_temp']=='temperature_range',bad['errors']
     assert invalid.saved==0
+    assert keys['general_occupied_radius_m'] == keys['general_arrival_radius_m'] == 0
+    assert keys['general_proximity_trackers'] == []
+    proposed = {'general_occupied_radius_m': 500, 'general_arrival_radius_m': 5000,
+                'general_proximity_trackers': ['person.anna']}
+    geo = UI()
+    out = (await real(geo, proposed))['saved']['occupancy_global']
+    assert (out['occupied_radius_m'], out['arrival_radius_m'], out['proximity_trackers']) == (500, 5000, ['person.anna'])
+    for name, val in [('general_occupied_radius_m', -1), ('general_arrival_radius_m', True),
+                      ('general_proximity_trackers', []), ('general_proximity_trackers', ['sensor.count'])]:
+        broken = UI()
+        result = await real(broken, {**proposed, name: val})
+        assert name in result['errors'] and broken.saved == 0
     print('BETA79_GENERAL_CONSOLIDATED_SCHEMA_AND_VALIDATION=PASS')
 
 asyncio.run(run())

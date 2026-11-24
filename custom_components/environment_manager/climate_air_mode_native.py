@@ -17,6 +17,7 @@ import time
 from datetime import datetime
 from typing import Any, Callable
 
+from .window_contact import permits_operation
 from .climate_coordination import device_inventory, duplicate_owners, room_equipment_plan
 from .climate_entry_ownership import foreign_owner_hold
 from .climate_equipment import humidity_advice
@@ -292,12 +293,7 @@ class NativeAirModeControl:
         if not windows and cfg.get("dry_fan_windowless_confirmed") is not True:
             return "window_contact_or_explicit_exception_required",None
         for entity in windows:
-            if not isinstance(entity,str) or entity_area(self.hass,entity)!=area:
-                return "window_wrong_room",None
-            observed=self.hass.states.get(entity)
-            if (observed is None or observed.domain!="binary_sensor" or
-                    observed.attributes.get("device_class")!="window" or
-                    observed.state!="off"):
+            if not permits_operation(self.hass, area, entity, plan.get("selected_window_contacts", ())):
                 return "window_open_or_unknown",None
         sensor=cfg.get("humidity_entity")
         if not isinstance(sensor,str) or entity_area(self.hass,sensor)!=area:

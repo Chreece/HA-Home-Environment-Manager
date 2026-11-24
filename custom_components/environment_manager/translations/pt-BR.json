@@ -234,7 +234,10 @@
           "window_close_cooldown_minutes": "Espera antes de sugerir fechar a janela (min)",
           "quiet_hours_enabled": "Horário de silêncio",
           "quiet_hours_start": "Início do horário de silêncio",
-          "quiet_hours_end": "Fim do horário de silêncio"
+          "quiet_hours_end": "Fim do horário de silêncio",
+          "general_proximity_trackers": "Moradores a localizar",
+          "general_occupied_radius_m": "Raio de presença (m, 0 = desativado)",
+          "general_arrival_radius_m": "Raio de preparação (m, 0 = desativado)"
         },
         "data_description": {
           "weather_entities": "Selecione: Clima e alertas · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -291,7 +294,10 @@
           "window_close_cooldown_minutes": "Quando uma janela é aberta após uma sugestão de ventilação do HEM, aguarda este número de minutos antes de sugerir que ela seja fechada, mesmo que as condições externas não sejam adequadas. A espera se aplica de forma independente a cada cômodo. 0–60 minutos, padrão 5; 0 desativa a espera. As regras de pausa e proteção dos aparelhos continuam ativas.",
           "quiet_hours_enabled": "Usa este intervalo diário para os dispositivos com «Silencioso no horário de silêncio» ativado. As horas seguem o fuso horário local do Home Assistant; o intervalo pode passar da meia-noite. Desativado por padrão.",
           "quiet_hours_start": "Hora de início diária, incluída no horário de silêncio. Escolha uma hora diferente da hora de término.",
-          "quiet_hours_end": "Hora de término diária, excluída do horário de silêncio. Se for anterior ao início, o intervalo termina no dia seguinte."
+          "quiet_hours_end": "Hora de término diária, excluída do horário de silêncio. Se for anterior ao início, o intervalo termina no dia seguinte.",
+          "general_proximity_trackers": "Escolha uma pessoa do Home Assistant ou um rastreador GPS por morador.",
+          "general_occupied_radius_m": "A casa é considerada ocupada enquanto alguém estiver dentro dessa distância.",
+          "general_arrival_radius_m": "A preparação começa quando o primeiro morador entra no raio depois de todos terem ficado fora."
         }
       },
       "reconfigure": {
@@ -947,7 +953,10 @@
           "general_wake_lead_minutes_entity": "Sono · Minutos antes do despertador",
           "quiet_hours_enabled": "Horário de silêncio",
           "quiet_hours_start": "Início do horário de silêncio",
-          "quiet_hours_end": "Fim do horário de silêncio"
+          "quiet_hours_end": "Fim do horário de silêncio",
+          "general_proximity_trackers": "Moradores a localizar",
+          "general_occupied_radius_m": "Raio de presença (m, 0 = desativado)",
+          "general_arrival_radius_m": "Raio de preparação (m, 0 = desativado)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Uma lista válida de cômodos ocupados no estado ou atributo selecionado tem prioridade: os listados estão ocupados, os omitidos vazios. Sem lista, qualquer sensor de presença ativo significa ocupado; todos desligados ou nenhum selecionado significa vazio. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem mudanças não expiram.",
@@ -962,7 +971,10 @@
           "general_wake_lead_minutes_entity": "Selecione uma entidade numérica com minutos não negativos, com unidade min ou sem unidade. Despertador às 07:00 e valor 30 encerram o sono automático às 06:30; 0 significa ao tocar. Para desativar, limpe as duas fontes.",
           "quiet_hours_enabled": "Usa este intervalo diário para os dispositivos com «Silencioso no horário de silêncio» ativado. As horas seguem o fuso horário local do Home Assistant; o intervalo pode passar da meia-noite. Desativado por padrão.",
           "quiet_hours_start": "Hora de início diária, incluída no horário de silêncio. Escolha uma hora diferente da hora de término.",
-          "quiet_hours_end": "Hora de término diária, excluída do horário de silêncio. Se for anterior ao início, o intervalo termina no dia seguinte."
+          "quiet_hours_end": "Hora de término diária, excluída do horário de silêncio. Se for anterior ao início, o intervalo termina no dia seguinte.",
+          "general_proximity_trackers": "Escolha uma pessoa do Home Assistant ou um rastreador GPS por morador.",
+          "general_occupied_radius_m": "A casa é considerada ocupada enquanto alguém estiver dentro dessa distância.",
+          "general_arrival_radius_m": "A preparação começa quando o primeiro morador entra no raio depois de todos terem ficado fora."
         }
       },
       "pollen": {
@@ -2041,7 +2053,10 @@
           "general_wake_lead_minutes_entity": "Sono · Minutos antes do despertador",
           "quiet_hours_enabled": "Horário de silêncio",
           "quiet_hours_start": "Início do horário de silêncio",
-          "quiet_hours_end": "Fim do horário de silêncio"
+          "quiet_hours_end": "Fim do horário de silêncio",
+          "general_proximity_trackers": "Moradores a localizar",
+          "general_occupied_radius_m": "Raio de presença (m, 0 = desativado)",
+          "general_arrival_radius_m": "Raio de preparação (m, 0 = desativado)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Uma lista válida de cômodos ocupados no estado ou atributo selecionado tem prioridade: os listados estão ocupados, os omitidos vazios. Sem lista, qualquer sensor de presença ativo significa ocupado; todos desligados ou nenhum selecionado significa vazio. Uma fonte selecionada indisponível ou inválida continua desconhecida. Listas e estados binários sem mudanças não expiram.",
@@ -2056,7 +2071,10 @@
           "general_wake_lead_minutes_entity": "Selecione uma entidade numérica com minutos não negativos, com unidade min ou sem unidade. Despertador às 07:00 e valor 30 encerram o sono automático às 06:30; 0 significa ao tocar. Para desativar, limpe as duas fontes.",
           "quiet_hours_enabled": "Usa este intervalo diário para os dispositivos com «Silencioso no horário de silêncio» ativado. As horas seguem o fuso horário local do Home Assistant; o intervalo pode passar da meia-noite. Desativado por padrão.",
           "quiet_hours_start": "Hora de início diária, incluída no horário de silêncio. Escolha uma hora diferente da hora de término.",
-          "quiet_hours_end": "Hora de término diária, excluída do horário de silêncio. Se for anterior ao início, o intervalo termina no dia seguinte."
+          "quiet_hours_end": "Hora de término diária, excluída do horário de silêncio. Se for anterior ao início, o intervalo termina no dia seguinte.",
+          "general_proximity_trackers": "Escolha uma pessoa do Home Assistant ou um rastreador GPS por morador.",
+          "general_occupied_radius_m": "A casa é considerada ocupada enquanto alguém estiver dentro dessa distância.",
+          "general_arrival_radius_m": "A preparação começa quando o primeiro morador entra no raio depois de todos terem ficado fora."
         }
       },
       "pollen": {
@@ -2273,7 +2291,10 @@
           "window_close_cooldown_minutes": "Espera antes de sugerir fechar a janela (min)",
           "quiet_hours_enabled": "Horário de silêncio",
           "quiet_hours_start": "Início do horário de silêncio",
-          "quiet_hours_end": "Fim do horário de silêncio"
+          "quiet_hours_end": "Fim do horário de silêncio",
+          "general_proximity_trackers": "Moradores a localizar",
+          "general_occupied_radius_m": "Raio de presença (m, 0 = desativado)",
+          "general_arrival_radius_m": "Raio de preparação (m, 0 = desativado)"
         },
         "data_description": {
           "weather_entities": "Selecione: Clima e alertas · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2332,7 +2353,10 @@
           "window_close_cooldown_minutes": "Quando uma janela é aberta após uma sugestão de ventilação do HEM, aguarda este número de minutos antes de sugerir que ela seja fechada, mesmo que as condições externas não sejam adequadas. A espera se aplica de forma independente a cada cômodo. 0–60 minutos, padrão 5; 0 desativa a espera. As regras de pausa e proteção dos aparelhos continuam ativas.",
           "quiet_hours_enabled": "Usa este intervalo diário para os dispositivos com «Silencioso no horário de silêncio» ativado. As horas seguem o fuso horário local do Home Assistant; o intervalo pode passar da meia-noite. Desativado por padrão.",
           "quiet_hours_start": "Hora de início diária, incluída no horário de silêncio. Escolha uma hora diferente da hora de término.",
-          "quiet_hours_end": "Hora de término diária, excluída do horário de silêncio. Se for anterior ao início, o intervalo termina no dia seguinte."
+          "quiet_hours_end": "Hora de término diária, excluída do horário de silêncio. Se for anterior ao início, o intervalo termina no dia seguinte.",
+          "general_proximity_trackers": "Escolha uma pessoa do Home Assistant ou um rastreador GPS por morador.",
+          "general_occupied_radius_m": "A casa é considerada ocupada enquanto alguém estiver dentro dessa distância.",
+          "general_arrival_radius_m": "A preparação começa quando o primeiro morador entra no raio depois de todos terem ficado fora."
         }
       },
       "room_occupancy": {

@@ -234,7 +234,10 @@
           "window_close_cooldown_minutes": "Väntetid innan fönsterstängning föreslås (min)",
           "quiet_hours_enabled": "Tysta tider",
           "quiet_hours_start": "Början av tysta tider",
-          "quiet_hours_end": "Slutet av tysta tider"
+          "quiet_hours_end": "Slutet av tysta tider",
+          "general_proximity_trackers": "Boende att spåra",
+          "general_occupied_radius_m": "Radie för närvaro (m, 0 = av)",
+          "general_arrival_radius_m": "Radie för förberedelse (m, 0 = av)"
         },
         "data_description": {
           "weather_entities": "Välj: Väder och varningar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -291,7 +294,10 @@
           "window_close_cooldown_minutes": "När ett fönster öppnas efter ett vädringsförslag från HEM väntar HEM så här många minuter innan det föreslår att fönstret stängs, även om förhållandena utomhus är olämpliga. Väntetiden räknas separat för varje rum. 0–60 minuter, standard 5; 0 stänger av väntetiden. Reglerna för att pausa och skydda enheter gäller fortfarande.",
           "quiet_hours_enabled": "Använd detta dagliga intervall för enheter där ”Tyst under tysta tider” är aktiverat. Tiderna följer Home Assistants lokala tidszon; intervallet kan gå över midnatt. Avstängt som standard.",
           "quiet_hours_start": "Daglig starttid, som ingår i de tysta tiderna. Välj en annan tid än sluttiden.",
-          "quiet_hours_end": "Daglig sluttid, som inte längre ingår i de tysta tiderna. Om den ligger före starttiden slutar intervallet nästa dag."
+          "quiet_hours_end": "Daglig sluttid, som inte längre ingår i de tysta tiderna. Om den ligger före starttiden slutar intervallet nästa dag.",
+          "general_proximity_trackers": "Välj en person i Home Assistant eller en GPS-spårare per boende.",
+          "general_occupied_radius_m": "Hemmet räknas som bebott så länge någon befinner sig inom detta avstånd.",
+          "general_arrival_radius_m": "Förberedelsen startar när den första boende kommer in i området efter att alla har varit utanför."
         }
       },
       "reconfigure": {
@@ -947,7 +953,10 @@
           "general_wake_lead_minutes_entity": "Sömn · Minuter före alarmet",
           "quiet_hours_enabled": "Tysta tider",
           "quiet_hours_start": "Början av tysta tider",
-          "quiet_hours_end": "Slutet av tysta tider"
+          "quiet_hours_end": "Slutet av tysta tider",
+          "general_proximity_trackers": "Boende att spåra",
+          "general_occupied_radius_m": "Radie för närvaro (m, 0 = av)",
+          "general_arrival_radius_m": "Radie för förberedelse (m, 0 = av)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "En giltig lista över upptagna rum i valt tillstånd eller attribut har företräde: listade rum är upptagna, utelämnade rum tomma. Utan lista betyder en aktiv närvarosensor upptaget; alla av eller inga valda sensorer betyder tomt. En otillgänglig eller ogiltig vald källa är okänd. Oförändrade listor och binära tillstånd går inte ut.",
@@ -962,7 +971,10 @@
           "general_wake_lead_minutes_entity": "Välj en numerisk entitet med ett icke-negativt antal minuter, med enheten min eller utan enhet. Alarm 07:00 och värdet 30 avslutar automatisk sömn 06:30; 0 betyder när alarmet ringer. Rensa båda källorna för att inaktivera.",
           "quiet_hours_enabled": "Använd detta dagliga intervall för enheter där ”Tyst under tysta tider” är aktiverat. Tiderna följer Home Assistants lokala tidszon; intervallet kan gå över midnatt. Avstängt som standard.",
           "quiet_hours_start": "Daglig starttid, som ingår i de tysta tiderna. Välj en annan tid än sluttiden.",
-          "quiet_hours_end": "Daglig sluttid, som inte längre ingår i de tysta tiderna. Om den ligger före starttiden slutar intervallet nästa dag."
+          "quiet_hours_end": "Daglig sluttid, som inte längre ingår i de tysta tiderna. Om den ligger före starttiden slutar intervallet nästa dag.",
+          "general_proximity_trackers": "Välj en person i Home Assistant eller en GPS-spårare per boende.",
+          "general_occupied_radius_m": "Hemmet räknas som bebott så länge någon befinner sig inom detta avstånd.",
+          "general_arrival_radius_m": "Förberedelsen startar när den första boende kommer in i området efter att alla har varit utanför."
         }
       },
       "pollen": {
@@ -2041,7 +2053,10 @@
           "general_wake_lead_minutes_entity": "Sömn · Minuter före alarmet",
           "quiet_hours_enabled": "Tysta tider",
           "quiet_hours_start": "Början av tysta tider",
-          "quiet_hours_end": "Slutet av tysta tider"
+          "quiet_hours_end": "Slutet av tysta tider",
+          "general_proximity_trackers": "Boende att spåra",
+          "general_occupied_radius_m": "Radie för närvaro (m, 0 = av)",
+          "general_arrival_radius_m": "Radie för förberedelse (m, 0 = av)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "En giltig lista över upptagna rum i valt tillstånd eller attribut har företräde: listade rum är upptagna, utelämnade rum tomma. Utan lista betyder en aktiv närvarosensor upptaget; alla av eller inga valda sensorer betyder tomt. En otillgänglig eller ogiltig vald källa är okänd. Oförändrade listor och binära tillstånd går inte ut.",
@@ -2056,7 +2071,10 @@
           "general_wake_lead_minutes_entity": "Välj en numerisk entitet med ett icke-negativt antal minuter, med enheten min eller utan enhet. Alarm 07:00 och värdet 30 avslutar automatisk sömn 06:30; 0 betyder när alarmet ringer. Rensa båda källorna för att inaktivera.",
           "quiet_hours_enabled": "Använd detta dagliga intervall för enheter där ”Tyst under tysta tider” är aktiverat. Tiderna följer Home Assistants lokala tidszon; intervallet kan gå över midnatt. Avstängt som standard.",
           "quiet_hours_start": "Daglig starttid, som ingår i de tysta tiderna. Välj en annan tid än sluttiden.",
-          "quiet_hours_end": "Daglig sluttid, som inte längre ingår i de tysta tiderna. Om den ligger före starttiden slutar intervallet nästa dag."
+          "quiet_hours_end": "Daglig sluttid, som inte längre ingår i de tysta tiderna. Om den ligger före starttiden slutar intervallet nästa dag.",
+          "general_proximity_trackers": "Välj en person i Home Assistant eller en GPS-spårare per boende.",
+          "general_occupied_radius_m": "Hemmet räknas som bebott så länge någon befinner sig inom detta avstånd.",
+          "general_arrival_radius_m": "Förberedelsen startar när den första boende kommer in i området efter att alla har varit utanför."
         }
       },
       "pollen": {
@@ -2273,7 +2291,10 @@
           "window_close_cooldown_minutes": "Väntetid innan fönsterstängning föreslås (min)",
           "quiet_hours_enabled": "Tysta tider",
           "quiet_hours_start": "Början av tysta tider",
-          "quiet_hours_end": "Slutet av tysta tider"
+          "quiet_hours_end": "Slutet av tysta tider",
+          "general_proximity_trackers": "Boende att spåra",
+          "general_occupied_radius_m": "Radie för närvaro (m, 0 = av)",
+          "general_arrival_radius_m": "Radie för förberedelse (m, 0 = av)"
         },
         "data_description": {
           "weather_entities": "Välj: Väder och varningar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2332,7 +2353,10 @@
           "window_close_cooldown_minutes": "När ett fönster öppnas efter ett vädringsförslag från HEM väntar HEM så här många minuter innan det föreslår att fönstret stängs, även om förhållandena utomhus är olämpliga. Väntetiden räknas separat för varje rum. 0–60 minuter, standard 5; 0 stänger av väntetiden. Reglerna för att pausa och skydda enheter gäller fortfarande.",
           "quiet_hours_enabled": "Använd detta dagliga intervall för enheter där ”Tyst under tysta tider” är aktiverat. Tiderna följer Home Assistants lokala tidszon; intervallet kan gå över midnatt. Avstängt som standard.",
           "quiet_hours_start": "Daglig starttid, som ingår i de tysta tiderna. Välj en annan tid än sluttiden.",
-          "quiet_hours_end": "Daglig sluttid, som inte längre ingår i de tysta tiderna. Om den ligger före starttiden slutar intervallet nästa dag."
+          "quiet_hours_end": "Daglig sluttid, som inte längre ingår i de tysta tiderna. Om den ligger före starttiden slutar intervallet nästa dag.",
+          "general_proximity_trackers": "Välj en person i Home Assistant eller en GPS-spårare per boende.",
+          "general_occupied_radius_m": "Hemmet räknas som bebott så länge någon befinner sig inom detta avstånd.",
+          "general_arrival_radius_m": "Förberedelsen startar när den första boende kommer in i området efter att alla har varit utanför."
         }
       },
       "room_occupancy": {

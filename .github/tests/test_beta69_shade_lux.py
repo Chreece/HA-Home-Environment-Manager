@@ -115,7 +115,9 @@ WEATHER=ModuleType('lux_69.shade_weather');WEATHER.weather_evidence=lambda hass,
 WINDOW=ModuleType('lux_69.logic');WINDOW.Window=lambda eid,name,opened:NS(entity_id=eid,name=name,opened=opened)
 sys.modules.update({m.__name__:m for m in (PKG,DIS,ROOMMOD,WEATHER,WINDOW)})
 
-lux_globals={'__name__':'lux_69.shade_cooling','__package__':'lux_69','Any':Any,
+import runpy
+contact_opened=runpy.run_path(str(ROOT/'custom_components/environment_manager/window_contact.py'))['opened']
+lux_globals={'contact_opened':contact_opened,'__name__':'lux_69.shade_cooling','__package__':'lux_69','Any':Any,
              'selected':selected,'native':native,'category':ROOMMOD.category,'math':__import__('math'),
              'LUX_BOUNDS':(100.,100000.,100.,'lx',1000.),
              'LUX_ROOM_MEAN':'room_selected_mean',

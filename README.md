@@ -106,6 +106,10 @@ HEM temporarily applies the configured **Home targets** to eligible Automatic/PI
 
 Preparation is not a command to turn everything on. Devices still need genuine demand, valid sensors and authorization, and must respect windows, minimum ON/OFF times and their own protections. The action ends when someone arrives, you cancel it, or the configured timer expires. A Home Assistant restart does not start the full timer over.
 
+For automatic arrival, open **Home settings → Presence, sleep and arrival**. Under **Residents to track**, select one Home Assistant person or GPS tracker per resident. For a person with multiple devices, assign those trackers to the person in Home Assistant. Use a source that reports latitude and longitude when away.
+
+Set either radius in metres from the centre of the Home zone. Zero turns that rule off. For example, a **5,000 m preparation radius** starts the existing timer when the first resident crosses back inside after everyone was confirmed outside. A **500 m occupied radius** counts the household as Home while anyone is nearby. Individual room sensors still determine which rooms are occupied. If a single update crosses both radii, Home takes effect immediately. Starting HEM with someone already inside establishes a baseline. GPS uncertainty at the boundary does not rearm preparation.
+
 ### Ventilation advice, windows, doors and shading
 
 HEM compares **what a room needs** with **whether outdoor air can help**.

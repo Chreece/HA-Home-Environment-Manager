@@ -234,7 +234,10 @@
           "window_close_cooldown_minutes": "Czas oczekiwania przed sugestią zamknięcia okna (min)",
           "quiet_hours_enabled": "Godziny ciszy",
           "quiet_hours_start": "Początek godzin ciszy",
-          "quiet_hours_end": "Koniec godzin ciszy"
+          "quiet_hours_end": "Koniec godzin ciszy",
+          "general_proximity_trackers": "Śledzeni domownicy",
+          "general_occupied_radius_m": "Promień obecności (m, 0 = wył.)",
+          "general_arrival_radius_m": "Promień przygotowania (m, 0 = wył.)"
         },
         "data_description": {
           "weather_entities": "Wybierz: Pogoda i ostrzeżenia · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -291,7 +294,10 @@
           "window_close_cooldown_minutes": "Po otwarciu okna zgodnie z sugestią HEM odczekuje tyle minut, zanim zasugeruje jego zamknięcie, nawet jeśli warunki na zewnątrz są nieodpowiednie. Czas oczekiwania jest liczony niezależnie dla każdego pomieszczenia. 0–60 minut, domyślnie 5; 0 wyłącza opóźnienie. Zasady wstrzymywania pracy i ochrony urządzeń pozostają aktywne.",
           "quiet_hours_enabled": "Używaj tego codziennego przedziału dla urządzeń z włączoną opcją „Cicho w godzinach ciszy”. Czas jest zgodny z lokalną strefą czasową Home Assistant; przedział może przechodzić przez północ. Domyślnie wyłączone.",
           "quiet_hours_start": "Codzienna godzina rozpoczęcia, należąca do godzin ciszy. Wybierz godzinę inną niż godzina zakończenia.",
-          "quiet_hours_end": "Codzienna godzina zakończenia, nienależąca już do godzin ciszy. Jeśli jest wcześniejsza niż początek, przedział kończy się następnego dnia."
+          "quiet_hours_end": "Codzienna godzina zakończenia, nienależąca już do godzin ciszy. Jeśli jest wcześniejsza niż początek, przedział kończy się następnego dnia.",
+          "general_proximity_trackers": "Wybierz osobę w Home Assistant lub lokalizator GPS dla każdego domownika.",
+          "general_occupied_radius_m": "Dom jest uznawany za zajęty, dopóki ktoś przebywa w tej odległości.",
+          "general_arrival_radius_m": "Przygotowanie zaczyna się, gdy pierwszy domownik wróci do strefy po tym, jak wszyscy byli poza nią."
         }
       },
       "reconfigure": {
@@ -947,7 +953,10 @@
           "general_wake_lead_minutes_entity": "Sen · Minuty przed budzikiem",
           "quiet_hours_enabled": "Godziny ciszy",
           "quiet_hours_start": "Początek godzin ciszy",
-          "quiet_hours_end": "Koniec godzin ciszy"
+          "quiet_hours_end": "Koniec godzin ciszy",
+          "general_proximity_trackers": "Śledzeni domownicy",
+          "general_occupied_radius_m": "Promień obecności (m, 0 = wył.)",
+          "general_arrival_radius_m": "Promień przygotowania (m, 0 = wył.)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności.",
@@ -962,7 +971,10 @@
           "general_wake_lead_minutes_entity": "Wybierz encję liczbową z nieujemną liczbą minut, z jednostką min lub bez jednostki. Budzik o 07:00 i wartość 30 kończą automatyczny sen o 06:30; 0 oznacza moment dzwonienia. Aby wyłączyć, usuń oba źródła.",
           "quiet_hours_enabled": "Używaj tego codziennego przedziału dla urządzeń z włączoną opcją „Cicho w godzinach ciszy”. Czas jest zgodny z lokalną strefą czasową Home Assistant; przedział może przechodzić przez północ. Domyślnie wyłączone.",
           "quiet_hours_start": "Codzienna godzina rozpoczęcia, należąca do godzin ciszy. Wybierz godzinę inną niż godzina zakończenia.",
-          "quiet_hours_end": "Codzienna godzina zakończenia, nienależąca już do godzin ciszy. Jeśli jest wcześniejsza niż początek, przedział kończy się następnego dnia."
+          "quiet_hours_end": "Codzienna godzina zakończenia, nienależąca już do godzin ciszy. Jeśli jest wcześniejsza niż początek, przedział kończy się następnego dnia.",
+          "general_proximity_trackers": "Wybierz osobę w Home Assistant lub lokalizator GPS dla każdego domownika.",
+          "general_occupied_radius_m": "Dom jest uznawany za zajęty, dopóki ktoś przebywa w tej odległości.",
+          "general_arrival_radius_m": "Przygotowanie zaczyna się, gdy pierwszy domownik wróci do strefy po tym, jak wszyscy byli poza nią."
         }
       },
       "pollen": {
@@ -2041,7 +2053,10 @@
           "general_wake_lead_minutes_entity": "Sen · Minuty przed budzikiem",
           "quiet_hours_enabled": "Godziny ciszy",
           "quiet_hours_start": "Początek godzin ciszy",
-          "quiet_hours_end": "Koniec godzin ciszy"
+          "quiet_hours_end": "Koniec godzin ciszy",
+          "general_proximity_trackers": "Śledzeni domownicy",
+          "general_occupied_radius_m": "Promień obecności (m, 0 = wył.)",
+          "general_arrival_radius_m": "Promień przygotowania (m, 0 = wył.)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Prawidłowa lista zajętych pokoi w wybranym stanie lub atrybucie ma pierwszeństwo: wymienione pokoje są zajęte, pominięte puste. Bez listy dowolny aktywny czujnik obecności oznacza zajętość; wszystkie wyłączone lub brak wybranych czujników oznacza pusty pokój. Niedostępne lub błędne wybrane źródło pozostaje nieznane. Niezmienione listy i stany binarne nie tracą ważności.",
@@ -2056,7 +2071,10 @@
           "general_wake_lead_minutes_entity": "Wybierz encję liczbową z nieujemną liczbą minut, z jednostką min lub bez jednostki. Budzik o 07:00 i wartość 30 kończą automatyczny sen o 06:30; 0 oznacza moment dzwonienia. Aby wyłączyć, usuń oba źródła.",
           "quiet_hours_enabled": "Używaj tego codziennego przedziału dla urządzeń z włączoną opcją „Cicho w godzinach ciszy”. Czas jest zgodny z lokalną strefą czasową Home Assistant; przedział może przechodzić przez północ. Domyślnie wyłączone.",
           "quiet_hours_start": "Codzienna godzina rozpoczęcia, należąca do godzin ciszy. Wybierz godzinę inną niż godzina zakończenia.",
-          "quiet_hours_end": "Codzienna godzina zakończenia, nienależąca już do godzin ciszy. Jeśli jest wcześniejsza niż początek, przedział kończy się następnego dnia."
+          "quiet_hours_end": "Codzienna godzina zakończenia, nienależąca już do godzin ciszy. Jeśli jest wcześniejsza niż początek, przedział kończy się następnego dnia.",
+          "general_proximity_trackers": "Wybierz osobę w Home Assistant lub lokalizator GPS dla każdego domownika.",
+          "general_occupied_radius_m": "Dom jest uznawany za zajęty, dopóki ktoś przebywa w tej odległości.",
+          "general_arrival_radius_m": "Przygotowanie zaczyna się, gdy pierwszy domownik wróci do strefy po tym, jak wszyscy byli poza nią."
         }
       },
       "pollen": {
@@ -2273,7 +2291,10 @@
           "window_close_cooldown_minutes": "Czas oczekiwania przed sugestią zamknięcia okna (min)",
           "quiet_hours_enabled": "Godziny ciszy",
           "quiet_hours_start": "Początek godzin ciszy",
-          "quiet_hours_end": "Koniec godzin ciszy"
+          "quiet_hours_end": "Koniec godzin ciszy",
+          "general_proximity_trackers": "Śledzeni domownicy",
+          "general_occupied_radius_m": "Promień obecności (m, 0 = wył.)",
+          "general_arrival_radius_m": "Promień przygotowania (m, 0 = wył.)"
         },
         "data_description": {
           "weather_entities": "Wybierz: Pogoda i ostrzeżenia · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2332,7 +2353,10 @@
           "window_close_cooldown_minutes": "Po otwarciu okna zgodnie z sugestią HEM odczekuje tyle minut, zanim zasugeruje jego zamknięcie, nawet jeśli warunki na zewnątrz są nieodpowiednie. Czas oczekiwania jest liczony niezależnie dla każdego pomieszczenia. 0–60 minut, domyślnie 5; 0 wyłącza opóźnienie. Zasady wstrzymywania pracy i ochrony urządzeń pozostają aktywne.",
           "quiet_hours_enabled": "Używaj tego codziennego przedziału dla urządzeń z włączoną opcją „Cicho w godzinach ciszy”. Czas jest zgodny z lokalną strefą czasową Home Assistant; przedział może przechodzić przez północ. Domyślnie wyłączone.",
           "quiet_hours_start": "Codzienna godzina rozpoczęcia, należąca do godzin ciszy. Wybierz godzinę inną niż godzina zakończenia.",
-          "quiet_hours_end": "Codzienna godzina zakończenia, nienależąca już do godzin ciszy. Jeśli jest wcześniejsza niż początek, przedział kończy się następnego dnia."
+          "quiet_hours_end": "Codzienna godzina zakończenia, nienależąca już do godzin ciszy. Jeśli jest wcześniejsza niż początek, przedział kończy się następnego dnia.",
+          "general_proximity_trackers": "Wybierz osobę w Home Assistant lub lokalizator GPS dla każdego domownika.",
+          "general_occupied_radius_m": "Dom jest uznawany za zajęty, dopóki ktoś przebywa w tej odległości.",
+          "general_arrival_radius_m": "Przygotowanie zaczyna się, gdy pierwszy domownik wróci do strefy po tym, jak wszyscy byli poza nią."
         }
       },
       "room_occupancy": {

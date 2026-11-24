@@ -298,42 +298,39 @@ HELP = {
         "Δώσε την ονομαστική παροχή καθαρού αέρα για σωματίδια στη σχετική ταχύτητα, σε m³/h. Συνδυάζεται με τον όγκο δωματίου για εκτιμήσεις φίλτρανσης. Το μηδέν σημαίνει μη ρυθμισμένο· το CADR δεν μετρά αερισμό ή απομάκρυνση CO₂.",
         "Tragen Sie die angegebene Partikel-Reinluftleistung bei der betreffenden Lüfterstufe in m³/h ein. HEM nutzt sie mit dem Raumvolumen für Filterungsabschätzungen. Null bedeutet unkonfiguriert; CADR beschreibt weder Frischluft noch CO₂-Abfuhr.",
     ),
-    'pause_on_window_open': ("On (default): when a selected window in this device's own room is confirmed open, HEM requests a guarded "
-     "stop and prevents an automatic restart. It respects the device's minimum ON time and requires native OFF "
-     'feedback. Missing or unknown window evidence holds new starts; it is not treated as a confirmed '
-     'opening.\n'
-     '\n'
-     "After the room's windows close, automatic evaluation resumes once they have remained verified closed for "
-     'one minute and the other operating conditions permit it. Windows in another room do not trigger this '
-     "device's window policy.\n"
-     '\n'
-     "Off: remove this device's window-open pause and closure delay. Its normal demand, presence, sleep and "
-     'physical protections still apply. The separate opening-request option controls whether to ask for airing '
-     'before a start.',
-     'Ενεργό (προεπιλογή): όταν επιβεβαιωθεί ότι άνοιξε επιλεγμένο παράθυρο του ίδιου δωματίου, το HEM ζητά '
-     'ασφαλή διακοπή και αποτρέπει την αυτόματη επανεκκίνηση. Τηρεί τον ελάχιστο χρόνο ON της συσκευής και '
-     'απαιτεί πραγματική ένδειξη OFF. Ελλιπή ή άγνωστα δεδομένα παραθύρων κρατούν σε αναμονή νέες εκκινήσεις· '
-     'δεν θεωρούνται επιβεβαιωμένο άνοιγμα.\n'
-     '\n'
-     'Μετά το κλείσιμο των παραθύρων, η αυτόματη αξιολόγηση συνεχίζεται όταν παραμείνουν επιβεβαιωμένα κλειστά '
-     'για ένα λεπτό και το επιτρέψουν οι υπόλοιπες συνθήκες. Παράθυρα άλλου δωματίου δεν ενεργοποιούν αυτή την '
-     'προστασία.\n'
-     '\n'
-     'Ανενεργό: αφαιρεί την παύση λόγω παραθύρου και την αναμονή μετά το κλείσιμο για αυτή τη συσκευή. Η '
-     'ζήτηση, η παρουσία, ο ύπνος και οι φυσικές προστασίες εξακολουθούν να ισχύουν. Η ξεχωριστή επιλογή '
-     'αιτήματος ανοίγματος ελέγχει αν θα ζητηθεί αερισμός πριν από εκκίνηση.',
-     'Eingeschaltet (Standard): Wird ein ausgewähltes Fenster im eigenen Raum als offen bestätigt, fordert HEM '
-     'ein geschütztes Abschalten an und verhindert einen automatischen Neustart. Mindestlaufzeit und native '
-     'Aus-Rückmeldung bleiben erforderlich. Fehlende oder unbekannte Fensterdaten halten neue Starts zurück '
-     'und gelten nicht als bestätigte Öffnung.\n'
-     '\n'
-     'Nach dem Schließen wird automatisch neu bewertet, sobald alle betreffenden Fenster eine Minute '
-     'durchgehend als geschlossen bestätigt sind und die übrigen Betriebsbedingungen erfüllt sind. Fenster '
-     'anderer Räume lösen diese Gerätefunktion nicht aus.\n'
-     '\n'
-     'Ausgeschaltet: Fensterpause und Wiederanlaufverzögerung für dieses Gerät entfallen. Bedarf, Anwesenheit, '
-     'Schlafregeln und Geräteschutz bleiben wirksam. Die separate Lüftungsaufforderung bestimmt, ob vor einem '
-     'Start zum Öffnen aufgefordert wird.'),
+    'pause_on_window_open': (
+        "On (default): when a selected window in this device's own room is confirmed open, HEM requests a "
+        "guarded stop and prevents an automatic restart. It respects the device's minimum ON time and requires "
+        'native OFF feedback. If a window contact stops reporting, the room shows a warning. Equipment control '
+        'continues using the contacts that still report.\n\n'
+        "After the room's windows close, automatic evaluation resumes once they have remained verified closed "
+        'for one minute and the other operating conditions permit it. Windows in another room do not trigger '
+        "this device's window policy.\n\n"
+        "Off: remove this device's window-open pause and closure delay. Its normal demand, presence, sleep and "
+        'physical protections still apply. The separate opening-request option controls whether to ask for '
+        'airing before a start.',
+        'Ενεργό (προεπιλογή): όταν επιβεβαιωθεί ότι άνοιξε επιλεγμένο παράθυρο του ίδιου δωματίου, το HEM ζητά '
+        'ασφαλή διακοπή και αποτρέπει την αυτόματη επανεκκίνηση. Τηρεί τον ελάχιστο χρόνο ON της συσκευής και '
+        'απαιτεί πραγματική ένδειξη OFF. Αν ένας αισθητήρας παραθύρου πάψει να στέλνει δεδομένα, εμφανίζεται '
+        'προειδοποίηση στο δωμάτιο. Ο έλεγχος της συσκευής συνεχίζεται με βάση τους αισθητήρες που δίνουν '
+        'ένδειξη.\n\n'
+        'Μετά το κλείσιμο των παραθύρων, η αυτόματη αξιολόγηση συνεχίζεται όταν παραμείνουν επιβεβαιωμένα '
+        'κλειστά για ένα λεπτό και το επιτρέψουν οι υπόλοιπες συνθήκες. Παράθυρα άλλου δωματίου δεν '
+        'ενεργοποιούν αυτή την προστασία.\n\n'
+        'Ανενεργό: αφαιρεί την παύση λόγω παραθύρου και την αναμονή μετά το κλείσιμο για αυτή τη συσκευή. Η '
+        'ζήτηση, η παρουσία, ο ύπνος και οι φυσικές προστασίες εξακολουθούν να ισχύουν. Η ξεχωριστή επιλογή '
+        'αιτήματος ανοίγματος ελέγχει αν θα ζητηθεί αερισμός πριν από εκκίνηση.',
+        'Eingeschaltet (Standard): Wird ein ausgewähltes Fenster im eigenen Raum als offen bestätigt, fordert '
+        'HEM ein geschütztes Abschalten an und verhindert einen automatischen Neustart. Mindestlaufzeit und '
+        'native Aus-Rückmeldung bleiben erforderlich. Wenn ein Fensterkontakt keine Werte mehr liefert, '
+        'erscheint im Raum eine Warnung. Die Gerätesteuerung berücksichtigt weiterhin die meldenden Kontakte.\n\n'
+        'Nach dem Schließen wird automatisch neu bewertet, sobald alle betreffenden Fenster eine Minute '
+        'durchgehend als geschlossen bestätigt sind und die übrigen Betriebsbedingungen erfüllt sind. Fenster '
+        'anderer Räume lösen diese Gerätefunktion nicht aus.\n\n'
+        'Ausgeschaltet: Fensterpause und Wiederanlaufverzögerung für dieses Gerät entfallen. Bedarf, '
+        'Anwesenheit, Schlafregeln und Geräteschutz bleiben wirksam. Die separate Lüftungsaufforderung '
+        'bestimmt, ob vor einem Start zum Öffnen aufgefordert wird.',
+    ),
     'announce_before_start': ('On: before this device starts automatically, HEM may ask for useful airing when verified room and '
      'outdoor conditions show that it can reduce the current need. The announcement names the room, reason, '
      "device and this device's waiting time. Its countdown starts only after accepted delivery.\n"

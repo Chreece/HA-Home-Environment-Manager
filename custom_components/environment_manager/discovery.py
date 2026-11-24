@@ -11,6 +11,7 @@ from homeassistant.core import HomeAssistant, State
 from homeassistant.helpers import area_registry as ar, device_registry as dr, entity_registry as er
 from homeassistant.util import dt as dt_util
 
+from .window_contact import opened as _window_opened
 from .const import INDOOR_METRICS, SUPPORTED_AIR_METRICS
 from .logic import Reading, Room, Warning, Weather, Window
 
@@ -428,10 +429,6 @@ def is_window_contact(
         and state.domain == "binary_sensor"
         and _device_class(hass, state) in OPTIONAL_WINDOW_CONTACT_CLASSES
     )
-
-
-def _window_opened(state: State) -> bool | None:
-    return True if state.state == "on" else False if state.state == "off" else None
 
 
 def rooms(

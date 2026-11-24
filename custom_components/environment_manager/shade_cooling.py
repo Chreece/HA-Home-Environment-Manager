@@ -19,6 +19,7 @@ import math
 import time
 from typing import Any, Callable
 
+from .window_contact import opened as contact_opened
 from .const import DOMAIN, CONF_SHADE_ANNOUNCE
 from .room_sources import (
     selected, native, category, room_temperature_evidence,
@@ -217,7 +218,7 @@ def evaluate_conditions(
         return "room_below_cooling_threshold", evidence
     if not windows:
         return "window_contacts_missing", evidence
-    if any(getattr(w, "opened", None) is not False for w in windows):
+    if any(w.opened is True for w in windows):
         return "window_open_or_unknown", evidence
     if sun_state is None or getattr(sun_state, "state", None) != "above_horizon":
         return "sun_not_verified", evidence
@@ -414,19 +415,20 @@ class ShadeCoolingController:
         windows = room.windows if room else ()
         linked = cfg.get("window_entity")
         linked_valid = None
+        from .logic import Window
         if entity and not cfg["legacy"]:
             linked_valid = linked in selectable_windows(self.hass, settings, area)
-            physical = self.hass.states.get(linked) if linked_valid else None
-            from .logic import Window
-            windows = ((Window(linked, getattr(physical, "name", linked),
-                               physical.state == "on" if physical.state in ("on", "off")
-                               else None),) if physical is not None else ())
-        safe_contacts = bool(windows)
-        for window in windows:
-            physical = self.hass.states.get(window.entity_id)
-            if (getattr(window, "opened", None) is not False or
-                    physical is None or physical.state != "off"):
-                safe_contacts = False
+            physical = self.hass.states.get(linked) if linked else None
+            if linked and physical is None:
+                # Keep a previously enrolled, missing contact identifiable.
+                from .discovery import entity_area
+                linked_valid = (linked in (selected(settings, area, "windows") or ())
+                                and entity_area(self.hass, linked) in (None, area))
+            windows = (Window(linked, getattr(physical, "name", linked), contact_opened(physical)),) if linked_valid else ()
+        else:
+            windows = tuple(Window(w.entity_id, w.name, contact_opened(self.hass.states.get(w.entity_id)))
+                            for w in windows)
+        safe_contacts = bool(windows) and not any(w.opened is True for w in windows)
         sun = self.hass.states.get("sun.sun")
         close_reason, details = evaluate_conditions(
             active=cfg["enabled"], selected_shades=sources,

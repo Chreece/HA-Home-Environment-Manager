@@ -234,7 +234,10 @@
           "window_close_cooldown_minutes": "Așteptare înainte de a sugera închiderea ferestrei (min)",
           "quiet_hours_enabled": "Ore de liniște",
           "quiet_hours_start": "Începutul orelor de liniște",
-          "quiet_hours_end": "Sfârșitul orelor de liniște"
+          "quiet_hours_end": "Sfârșitul orelor de liniște",
+          "general_proximity_trackers": "Locatari urmăriți",
+          "general_occupied_radius_m": "Rază de prezență (m, 0 = oprit)",
+          "general_arrival_radius_m": "Rază de pregătire (m, 0 = oprit)"
         },
         "data_description": {
           "weather_entities": "Alegeți: Vreme și avertizări · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -291,7 +294,10 @@
           "window_close_cooldown_minutes": "După deschiderea unei ferestre în urma unei sugestii HEM, așteaptă acest număr de minute înainte de a sugera închiderea ei, chiar dacă condițiile de afară sunt nepotrivite. Timpul de așteptare se aplică independent fiecărei camere. 0–60 de minute, implicit 5; 0 dezactivează așteptarea. Regulile de pauză și protecție ale dispozitivelor rămân active.",
           "quiet_hours_enabled": "Folosește acest interval zilnic pentru dispozitivele cu „Silențios în orele de liniște” activat. Orele respectă fusul orar local din Home Assistant; intervalul poate trece peste miezul nopții. Dezactivat implicit.",
           "quiet_hours_start": "Ora zilnică de început, inclusă în orele de liniște. Alegeți o oră diferită de cea de sfârșit.",
-          "quiet_hours_end": "Ora zilnică de sfârșit, exclusă din orele de liniște. Dacă precedă începutul, intervalul se încheie a doua zi."
+          "quiet_hours_end": "Ora zilnică de sfârșit, exclusă din orele de liniște. Dacă precedă începutul, intervalul se încheie a doua zi.",
+          "general_proximity_trackers": "Alegeți o persoană din Home Assistant sau un dispozitiv GPS pentru fiecare locatar.",
+          "general_occupied_radius_m": "Locuința este considerată ocupată cât timp cineva se află în această rază.",
+          "general_arrival_radius_m": "Pregătirea începe când primul locatar intră în rază după ce toți au fost în afara ei."
         }
       },
       "reconfigure": {
@@ -947,7 +953,10 @@
           "general_wake_lead_minutes_entity": "Somn · Minute înainte de alarmă",
           "quiet_hours_enabled": "Ore de liniște",
           "quiet_hours_start": "Începutul orelor de liniște",
-          "quiet_hours_end": "Sfârșitul orelor de liniște"
+          "quiet_hours_end": "Sfârșitul orelor de liniște",
+          "general_proximity_trackers": "Locatari urmăriți",
+          "general_occupied_radius_m": "Rază de prezență (m, 0 = oprit)",
+          "general_arrival_radius_m": "Rază de pregătire (m, 0 = oprit)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră.",
@@ -962,7 +971,10 @@
           "general_wake_lead_minutes_entity": "Selectați o entitate numerică cu minute nenegative, cu unitatea min sau fără unitate. O alarmă la 07:00 și valoarea 30 încheie somnul automat la 06:30; 0 înseamnă la sonerie. Pentru dezactivare, ștergeți ambele surse.",
           "quiet_hours_enabled": "Folosește acest interval zilnic pentru dispozitivele cu „Silențios în orele de liniște” activat. Orele respectă fusul orar local din Home Assistant; intervalul poate trece peste miezul nopții. Dezactivat implicit.",
           "quiet_hours_start": "Ora zilnică de început, inclusă în orele de liniște. Alegeți o oră diferită de cea de sfârșit.",
-          "quiet_hours_end": "Ora zilnică de sfârșit, exclusă din orele de liniște. Dacă precedă începutul, intervalul se încheie a doua zi."
+          "quiet_hours_end": "Ora zilnică de sfârșit, exclusă din orele de liniște. Dacă precedă începutul, intervalul se încheie a doua zi.",
+          "general_proximity_trackers": "Alegeți o persoană din Home Assistant sau un dispozitiv GPS pentru fiecare locatar.",
+          "general_occupied_radius_m": "Locuința este considerată ocupată cât timp cineva se află în această rază.",
+          "general_arrival_radius_m": "Pregătirea începe când primul locatar intră în rază după ce toți au fost în afara ei."
         }
       },
       "pollen": {
@@ -2041,7 +2053,10 @@
           "general_wake_lead_minutes_entity": "Somn · Minute înainte de alarmă",
           "quiet_hours_enabled": "Ore de liniște",
           "quiet_hours_start": "Începutul orelor de liniște",
-          "quiet_hours_end": "Sfârșitul orelor de liniște"
+          "quiet_hours_end": "Sfârșitul orelor de liniște",
+          "general_proximity_trackers": "Locatari urmăriți",
+          "general_occupied_radius_m": "Rază de prezență (m, 0 = oprit)",
+          "general_arrival_radius_m": "Rază de pregătire (m, 0 = oprit)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "O listă validă a camerelor ocupate în starea sau atributul ales are prioritate: camerele incluse sunt ocupate, cele omise sunt goale. Fără listă, orice senzor de prezență activ înseamnă ocupat; toți inactivi sau niciunul selectat înseamnă gol. O sursă selectată indisponibilă sau invalidă rămâne necunoscută. Listele și stările binare neschimbate nu expiră.",
@@ -2056,7 +2071,10 @@
           "general_wake_lead_minutes_entity": "Selectați o entitate numerică cu minute nenegative, cu unitatea min sau fără unitate. O alarmă la 07:00 și valoarea 30 încheie somnul automat la 06:30; 0 înseamnă la sonerie. Pentru dezactivare, ștergeți ambele surse.",
           "quiet_hours_enabled": "Folosește acest interval zilnic pentru dispozitivele cu „Silențios în orele de liniște” activat. Orele respectă fusul orar local din Home Assistant; intervalul poate trece peste miezul nopții. Dezactivat implicit.",
           "quiet_hours_start": "Ora zilnică de început, inclusă în orele de liniște. Alegeți o oră diferită de cea de sfârșit.",
-          "quiet_hours_end": "Ora zilnică de sfârșit, exclusă din orele de liniște. Dacă precedă începutul, intervalul se încheie a doua zi."
+          "quiet_hours_end": "Ora zilnică de sfârșit, exclusă din orele de liniște. Dacă precedă începutul, intervalul se încheie a doua zi.",
+          "general_proximity_trackers": "Alegeți o persoană din Home Assistant sau un dispozitiv GPS pentru fiecare locatar.",
+          "general_occupied_radius_m": "Locuința este considerată ocupată cât timp cineva se află în această rază.",
+          "general_arrival_radius_m": "Pregătirea începe când primul locatar intră în rază după ce toți au fost în afara ei."
         }
       },
       "pollen": {
@@ -2273,7 +2291,10 @@
           "window_close_cooldown_minutes": "Așteptare înainte de a sugera închiderea ferestrei (min)",
           "quiet_hours_enabled": "Ore de liniște",
           "quiet_hours_start": "Începutul orelor de liniște",
-          "quiet_hours_end": "Sfârșitul orelor de liniște"
+          "quiet_hours_end": "Sfârșitul orelor de liniște",
+          "general_proximity_trackers": "Locatari urmăriți",
+          "general_occupied_radius_m": "Rază de prezență (m, 0 = oprit)",
+          "general_arrival_radius_m": "Rază de pregătire (m, 0 = oprit)"
         },
         "data_description": {
           "weather_entities": "Alegeți: Vreme și avertizări · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2332,7 +2353,10 @@
           "window_close_cooldown_minutes": "După deschiderea unei ferestre în urma unei sugestii HEM, așteaptă acest număr de minute înainte de a sugera închiderea ei, chiar dacă condițiile de afară sunt nepotrivite. Timpul de așteptare se aplică independent fiecărei camere. 0–60 de minute, implicit 5; 0 dezactivează așteptarea. Regulile de pauză și protecție ale dispozitivelor rămân active.",
           "quiet_hours_enabled": "Folosește acest interval zilnic pentru dispozitivele cu „Silențios în orele de liniște” activat. Orele respectă fusul orar local din Home Assistant; intervalul poate trece peste miezul nopții. Dezactivat implicit.",
           "quiet_hours_start": "Ora zilnică de început, inclusă în orele de liniște. Alegeți o oră diferită de cea de sfârșit.",
-          "quiet_hours_end": "Ora zilnică de sfârșit, exclusă din orele de liniște. Dacă precedă începutul, intervalul se încheie a doua zi."
+          "quiet_hours_end": "Ora zilnică de sfârșit, exclusă din orele de liniște. Dacă precedă începutul, intervalul se încheie a doua zi.",
+          "general_proximity_trackers": "Alegeți o persoană din Home Assistant sau un dispozitiv GPS pentru fiecare locatar.",
+          "general_occupied_radius_m": "Locuința este considerată ocupată cât timp cineva se află în această rază.",
+          "general_arrival_radius_m": "Pregătirea începe când primul locatar intră în rază după ce toți au fost în afara ei."
         }
       },
       "room_occupancy": {

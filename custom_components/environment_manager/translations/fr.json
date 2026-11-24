@@ -234,7 +234,10 @@
           "window_close_cooldown_minutes": "Délai avant de suggérer de fermer une fenêtre (min)",
           "quiet_hours_enabled": "Heures de silence",
           "quiet_hours_start": "Début des heures de silence",
-          "quiet_hours_end": "Fin des heures de silence"
+          "quiet_hours_end": "Fin des heures de silence",
+          "general_proximity_trackers": "Résidents à localiser",
+          "general_occupied_radius_m": "Rayon de présence (m, 0 = désactivé)",
+          "general_arrival_radius_m": "Rayon de préparation (m, 0 = désactivé)"
         },
         "data_description": {
           "weather_entities": "Au moins une entité météo est nécessaire. Pluie, orages, vent fort et températures extrêmes empêchent d'ouvrir les fenêtres. L'indicateur de moisissure utilise l'attribut temperature (°C/°F) d'une entité météo sélectionnée comme température extérieure. Sélectionnez une source qui fournit une température.",
@@ -291,7 +294,10 @@
           "window_close_cooldown_minutes": "Lorsqu’une fenêtre est ouverte après un conseil d’aération de HEM, attendre ce nombre de minutes avant de suggérer de la fermer, même si les conditions extérieures sont défavorables. Le délai s’applique indépendamment à chaque pièce. 0–60 minutes, 5 par défaut ; 0 désactive le délai. Les règles de mise en pause et de protection des appareils restent actives.",
           "quiet_hours_enabled": "Utilise cette plage quotidienne pour les appareils dont l’option « Silencieux pendant les heures de silence » est activée. Les heures suivent le fuseau horaire local de Home Assistant ; la plage peut passer minuit. Désactivé par défaut.",
           "quiet_hours_start": "Heure de début quotidienne, incluse dans les heures de silence. Choisir une heure différente de celle de fin.",
-          "quiet_hours_end": "Heure de fin quotidienne, exclue des heures de silence. Une heure antérieure au début termine la plage le lendemain."
+          "quiet_hours_end": "Heure de fin quotidienne, exclue des heures de silence. Une heure antérieure au début termine la plage le lendemain.",
+          "general_proximity_trackers": "Choisissez une personne de Home Assistant ou un traceur GPS par résident.",
+          "general_occupied_radius_m": "Le logement est considéré comme occupé tant que quelqu’un se trouve dans ce rayon.",
+          "general_arrival_radius_m": "La préparation commence au retour du premier résident dans ce rayon après la sortie de tous."
         }
       },
       "reconfigure": {
@@ -947,7 +953,10 @@
           "general_wake_lead_minutes_entity": "Sommeil · Minutes avant le réveil",
           "quiet_hours_enabled": "Heures de silence",
           "quiet_hours_start": "Début des heures de silence",
-          "quiet_hours_end": "Fin des heures de silence"
+          "quiet_hours_end": "Fin des heures de silence",
+          "general_proximity_trackers": "Résidents à localiser",
+          "general_occupied_radius_m": "Rayon de présence (m, 0 = désactivé)",
+          "general_arrival_radius_m": "Rayon de préparation (m, 0 = désactivé)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas.",
@@ -962,7 +971,10 @@
           "general_wake_lead_minutes_entity": "Sélectionnez une entité numérique indiquant un nombre de minutes positif ou nul, avec l’unité min ou sans unité. Un réveil à 07:00 avec 30 minutes termine le sommeil automatique à 06:30 ; 0 signifie à la sonnerie. Pour désactiver, effacez les deux sources.",
           "quiet_hours_enabled": "Utilise cette plage quotidienne pour les appareils dont l’option « Silencieux pendant les heures de silence » est activée. Les heures suivent le fuseau horaire local de Home Assistant ; la plage peut passer minuit. Désactivé par défaut.",
           "quiet_hours_start": "Heure de début quotidienne, incluse dans les heures de silence. Choisir une heure différente de celle de fin.",
-          "quiet_hours_end": "Heure de fin quotidienne, exclue des heures de silence. Une heure antérieure au début termine la plage le lendemain."
+          "quiet_hours_end": "Heure de fin quotidienne, exclue des heures de silence. Une heure antérieure au début termine la plage le lendemain.",
+          "general_proximity_trackers": "Choisissez une personne de Home Assistant ou un traceur GPS par résident.",
+          "general_occupied_radius_m": "Le logement est considéré comme occupé tant que quelqu’un se trouve dans ce rayon.",
+          "general_arrival_radius_m": "La préparation commence au retour du premier résident dans ce rayon après la sortie de tous."
         }
       },
       "pollen": {
@@ -2041,7 +2053,10 @@
           "general_wake_lead_minutes_entity": "Sommeil · Minutes avant le réveil",
           "quiet_hours_enabled": "Heures de silence",
           "quiet_hours_start": "Début des heures de silence",
-          "quiet_hours_end": "Fin des heures de silence"
+          "quiet_hours_end": "Fin des heures de silence",
+          "general_proximity_trackers": "Résidents à localiser",
+          "general_occupied_radius_m": "Rayon de présence (m, 0 = désactivé)",
+          "general_arrival_radius_m": "Rayon de préparation (m, 0 = désactivé)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Une liste valide des pièces occupées dans l’état ou l’attribut choisi fait autorité : les pièces incluses sont occupées, les autres vides. Sans liste, un capteur de présence actif suffit ; tous inactifs ou aucun capteur sélectionné signifie vide. Une source sélectionnée indisponible ou invalide reste inconnue. Les listes et états binaires inchangés n’expirent pas.",
@@ -2056,7 +2071,10 @@
           "general_wake_lead_minutes_entity": "Sélectionnez une entité numérique indiquant un nombre de minutes positif ou nul, avec l’unité min ou sans unité. Un réveil à 07:00 avec 30 minutes termine le sommeil automatique à 06:30 ; 0 signifie à la sonnerie. Pour désactiver, effacez les deux sources.",
           "quiet_hours_enabled": "Utilise cette plage quotidienne pour les appareils dont l’option « Silencieux pendant les heures de silence » est activée. Les heures suivent le fuseau horaire local de Home Assistant ; la plage peut passer minuit. Désactivé par défaut.",
           "quiet_hours_start": "Heure de début quotidienne, incluse dans les heures de silence. Choisir une heure différente de celle de fin.",
-          "quiet_hours_end": "Heure de fin quotidienne, exclue des heures de silence. Une heure antérieure au début termine la plage le lendemain."
+          "quiet_hours_end": "Heure de fin quotidienne, exclue des heures de silence. Une heure antérieure au début termine la plage le lendemain.",
+          "general_proximity_trackers": "Choisissez une personne de Home Assistant ou un traceur GPS par résident.",
+          "general_occupied_radius_m": "Le logement est considéré comme occupé tant que quelqu’un se trouve dans ce rayon.",
+          "general_arrival_radius_m": "La préparation commence au retour du premier résident dans ce rayon après la sortie de tous."
         }
       },
       "pollen": {
@@ -2273,7 +2291,10 @@
           "window_close_cooldown_minutes": "Délai avant de suggérer de fermer une fenêtre (min)",
           "quiet_hours_enabled": "Heures de silence",
           "quiet_hours_start": "Début des heures de silence",
-          "quiet_hours_end": "Fin des heures de silence"
+          "quiet_hours_end": "Fin des heures de silence",
+          "general_proximity_trackers": "Résidents à localiser",
+          "general_occupied_radius_m": "Rayon de présence (m, 0 = désactivé)",
+          "general_arrival_radius_m": "Rayon de préparation (m, 0 = désactivé)"
         },
         "data_description": {
           "weather_entities": "Au moins une entité météo est nécessaire. Pluie, orages, vent fort et températures extrêmes empêchent d'ouvrir les fenêtres. L'indicateur de moisissure utilise l'attribut temperature (°C/°F) d'une entité météo sélectionnée comme température extérieure. Sélectionnez une source qui fournit une température.",
@@ -2332,7 +2353,10 @@
           "window_close_cooldown_minutes": "Lorsqu’une fenêtre est ouverte après un conseil d’aération de HEM, attendre ce nombre de minutes avant de suggérer de la fermer, même si les conditions extérieures sont défavorables. Le délai s’applique indépendamment à chaque pièce. 0–60 minutes, 5 par défaut ; 0 désactive le délai. Les règles de mise en pause et de protection des appareils restent actives.",
           "quiet_hours_enabled": "Utilise cette plage quotidienne pour les appareils dont l’option « Silencieux pendant les heures de silence » est activée. Les heures suivent le fuseau horaire local de Home Assistant ; la plage peut passer minuit. Désactivé par défaut.",
           "quiet_hours_start": "Heure de début quotidienne, incluse dans les heures de silence. Choisir une heure différente de celle de fin.",
-          "quiet_hours_end": "Heure de fin quotidienne, exclue des heures de silence. Une heure antérieure au début termine la plage le lendemain."
+          "quiet_hours_end": "Heure de fin quotidienne, exclue des heures de silence. Une heure antérieure au début termine la plage le lendemain.",
+          "general_proximity_trackers": "Choisissez une personne de Home Assistant ou un traceur GPS par résident.",
+          "general_occupied_radius_m": "Le logement est considéré comme occupé tant que quelqu’un se trouve dans ce rayon.",
+          "general_arrival_radius_m": "La préparation commence au retour du premier résident dans ce rayon après la sortie de tous."
         }
       },
       "room_occupancy": {

@@ -184,7 +184,8 @@ class RoomDataTests(unittest.TestCase):
                                                   optional=optional, windows=windows)
                     room = self.room()
                     self.assertEqual(room["data_availability"]["status"], expected)
-                    self.assertEqual(room["status"], "unknown" if expected == "missing" else "safe")
+                    self.assertEqual(room["status"], "unknown" if expected == "missing" else
+                                     "attention" if windows else "safe")
                     self.assertEqual(room["data_availability"]["controllers"], [])
 
     def test_optional_real_reading_does_not_replace_both_missing_basics(self):

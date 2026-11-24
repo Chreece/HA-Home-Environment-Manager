@@ -115,6 +115,8 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
         status = "attention"
     elif availability["status"] == "missing":
         status = "unknown"
+    elif any(window.opened is None for window in room.windows):
+        status = "attention"
     else:
         status = "safe"
 

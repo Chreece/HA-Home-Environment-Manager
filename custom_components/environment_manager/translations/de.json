@@ -234,7 +234,10 @@
           "window_close_cooldown_minutes": "Wartezeit vor dem Hinweis zum Fensterschließen (min)",
           "quiet_hours_enabled": "Ruhezeiten",
           "quiet_hours_start": "Beginn der Ruhezeiten",
-          "quiet_hours_end": "Ende der Ruhezeiten"
+          "quiet_hours_end": "Ende der Ruhezeiten",
+          "general_proximity_trackers": "Personen für die Standorterfassung",
+          "general_occupied_radius_m": "Anwesenheitsradius (m, 0 = aus)",
+          "general_arrival_radius_m": "Vorbereitungsradius (m, 0 = aus)"
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
@@ -291,7 +294,10 @@
           "window_close_cooldown_minutes": "Wird ein Fenster nach einem Lüftungshinweis von HEM geöffnet, wartet HEM so viele Minuten, bevor es zum Schließen auffordert, auch bei ungeeigneten Außenbedingungen. Die Wartezeit gilt für jeden Raum unabhängig. 0–60 Minuten, Standard 5; 0 deaktiviert die Wartezeit. Die Regeln zum Pausieren und Schützen der Geräte bleiben aktiv.",
           "quiet_hours_enabled": "Dieses tägliche Zeitfenster gilt für Geräte mit aktivierter Option „Leise während der Ruhezeiten“. Die Zeiten folgen der lokalen Zeitzone von Home Assistant; das Zeitfenster darf über Mitternacht reichen. Standardmäßig ausgeschaltet.",
           "quiet_hours_start": "Tägliche Startzeit, die zur Ruhezeit gehört. Eine andere Zeit als die Endzeit wählen.",
-          "quiet_hours_end": "Tägliche Endzeit, die nicht mehr zur Ruhezeit gehört. Liegt sie vor der Startzeit, endet das Zeitfenster am nächsten Tag."
+          "quiet_hours_end": "Tägliche Endzeit, die nicht mehr zur Ruhezeit gehört. Liegt sie vor der Startzeit, endet das Zeitfenster am nächsten Tag.",
+          "general_proximity_trackers": "Je Bewohner eine Home-Assistant-Person oder einen GPS-Tracker auswählen.",
+          "general_occupied_radius_m": "Das Zuhause gilt als bewohnt, solange sich jemand innerhalb dieser Entfernung befindet.",
+          "general_arrival_radius_m": "Die Ankunftsvorbereitung startet, sobald die erste Person in den Radius zurückkehrt, nachdem alle außerhalb waren."
         }
       },
       "reconfigure": {
@@ -947,7 +953,10 @@
           "general_wake_lead_minutes_entity": "Schlaf · Minuten vor dem Wecker",
           "quiet_hours_enabled": "Ruhezeiten",
           "quiet_hours_start": "Beginn der Ruhezeiten",
-          "quiet_hours_end": "Ende der Ruhezeiten"
+          "quiet_hours_end": "Ende der Ruhezeiten",
+          "general_proximity_trackers": "Personen für die Standorterfassung",
+          "general_occupied_radius_m": "Anwesenheitsradius (m, 0 = aus)",
+          "general_arrival_radius_m": "Vorbereitungsradius (m, 0 = aus)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab.",
@@ -962,7 +971,10 @@
           "general_wake_lead_minutes_entity": "Quelle mit der Anzahl Minuten vor dem nächsten Alarm wählen, zu denen HEM den automatischen Schlaf beenden soll. Erfordert die Weckalarmquelle oder beide bleiben leer. Ein unbekannter Wert löst kein Aufwachen aus.",
           "quiet_hours_enabled": "Dieses tägliche Zeitfenster gilt für Geräte mit aktivierter Option „Leise während der Ruhezeiten“. Die Zeiten folgen der lokalen Zeitzone von Home Assistant; das Zeitfenster darf über Mitternacht reichen. Standardmäßig ausgeschaltet.",
           "quiet_hours_start": "Tägliche Startzeit, die zur Ruhezeit gehört. Eine andere Zeit als die Endzeit wählen.",
-          "quiet_hours_end": "Tägliche Endzeit, die nicht mehr zur Ruhezeit gehört. Liegt sie vor der Startzeit, endet das Zeitfenster am nächsten Tag."
+          "quiet_hours_end": "Tägliche Endzeit, die nicht mehr zur Ruhezeit gehört. Liegt sie vor der Startzeit, endet das Zeitfenster am nächsten Tag.",
+          "general_proximity_trackers": "Je Bewohner eine Home-Assistant-Person oder einen GPS-Tracker auswählen.",
+          "general_occupied_radius_m": "Das Zuhause gilt als bewohnt, solange sich jemand innerhalb dieser Entfernung befindet.",
+          "general_arrival_radius_m": "Die Ankunftsvorbereitung startet, sobald die erste Person in den Radius zurückkehrt, nachdem alle außerhalb waren."
         }
       },
       "pollen": {
@@ -2041,7 +2053,10 @@
           "general_wake_lead_minutes_entity": "Schlaf · Minuten vor dem Wecker",
           "quiet_hours_enabled": "Ruhezeiten",
           "quiet_hours_start": "Beginn der Ruhezeiten",
-          "quiet_hours_end": "Ende der Ruhezeiten"
+          "quiet_hours_end": "Ende der Ruhezeiten",
+          "general_proximity_trackers": "Personen für die Standorterfassung",
+          "general_occupied_radius_m": "Anwesenheitsradius (m, 0 = aus)",
+          "general_arrival_radius_m": "Vorbereitungsradius (m, 0 = aus)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Eine gültige Liste belegter Räume im gewählten Zustand oder Attribut hat Vorrang: aufgeführte Räume sind belegt, fehlende Räume leer. Ist keine Liste konfiguriert oder ihre Quelle nicht verfügbar, liefern ausgewählte Raumsensoren Ersatznachweise. Ein EIN bedeutet belegt; alle AUS oder keine ausgewählten Sensoren ohne konfigurierte Liste bedeutet leer. Numerische Zählwerte verwenden 0 für leer und positive Werte für belegt. Fehlerhafte Listen, unbekannte Raumnamen sowie nicht verfügbare oder wiederhergestellte ausgewählte Quellen können unbekannt bleiben. Unveränderte Listen und binäre Raumzustände laufen nachts nicht ab.",
@@ -2056,7 +2071,10 @@
           "general_wake_lead_minutes_entity": "Quelle mit der Anzahl Minuten vor dem nächsten Alarm wählen, zu denen HEM den automatischen Schlaf beenden soll. Erfordert die Weckalarmquelle oder beide bleiben leer. Ein unbekannter Wert löst kein Aufwachen aus.",
           "quiet_hours_enabled": "Dieses tägliche Zeitfenster gilt für Geräte mit aktivierter Option „Leise während der Ruhezeiten“. Die Zeiten folgen der lokalen Zeitzone von Home Assistant; das Zeitfenster darf über Mitternacht reichen. Standardmäßig ausgeschaltet.",
           "quiet_hours_start": "Tägliche Startzeit, die zur Ruhezeit gehört. Eine andere Zeit als die Endzeit wählen.",
-          "quiet_hours_end": "Tägliche Endzeit, die nicht mehr zur Ruhezeit gehört. Liegt sie vor der Startzeit, endet das Zeitfenster am nächsten Tag."
+          "quiet_hours_end": "Tägliche Endzeit, die nicht mehr zur Ruhezeit gehört. Liegt sie vor der Startzeit, endet das Zeitfenster am nächsten Tag.",
+          "general_proximity_trackers": "Je Bewohner eine Home-Assistant-Person oder einen GPS-Tracker auswählen.",
+          "general_occupied_radius_m": "Das Zuhause gilt als bewohnt, solange sich jemand innerhalb dieser Entfernung befindet.",
+          "general_arrival_radius_m": "Die Ankunftsvorbereitung startet, sobald die erste Person in den Radius zurückkehrt, nachdem alle außerhalb waren."
         }
       },
       "pollen": {
@@ -2273,7 +2291,10 @@
           "window_close_cooldown_minutes": "Wartezeit vor dem Hinweis zum Fensterschließen (min)",
           "quiet_hours_enabled": "Ruhezeiten",
           "quiet_hours_start": "Beginn der Ruhezeiten",
-          "quiet_hours_end": "Ende der Ruhezeiten"
+          "quiet_hours_end": "Ende der Ruhezeiten",
+          "general_proximity_trackers": "Personen für die Standorterfassung",
+          "general_occupied_radius_m": "Anwesenheitsradius (m, 0 = aus)",
+          "general_arrival_radius_m": "Vorbereitungsradius (m, 0 = aus)"
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
@@ -2332,7 +2353,10 @@
           "window_close_cooldown_minutes": "Wird ein Fenster nach einem Lüftungshinweis von HEM geöffnet, wartet HEM so viele Minuten, bevor es zum Schließen auffordert, auch bei ungeeigneten Außenbedingungen. Die Wartezeit gilt für jeden Raum unabhängig. 0–60 Minuten, Standard 5; 0 deaktiviert die Wartezeit. Die Regeln zum Pausieren und Schützen der Geräte bleiben aktiv.",
           "quiet_hours_enabled": "Dieses tägliche Zeitfenster gilt für Geräte mit aktivierter Option „Leise während der Ruhezeiten“. Die Zeiten folgen der lokalen Zeitzone von Home Assistant; das Zeitfenster darf über Mitternacht reichen. Standardmäßig ausgeschaltet.",
           "quiet_hours_start": "Tägliche Startzeit, die zur Ruhezeit gehört. Eine andere Zeit als die Endzeit wählen.",
-          "quiet_hours_end": "Tägliche Endzeit, die nicht mehr zur Ruhezeit gehört. Liegt sie vor der Startzeit, endet das Zeitfenster am nächsten Tag."
+          "quiet_hours_end": "Tägliche Endzeit, die nicht mehr zur Ruhezeit gehört. Liegt sie vor der Startzeit, endet das Zeitfenster am nächsten Tag.",
+          "general_proximity_trackers": "Je Bewohner eine Home-Assistant-Person oder einen GPS-Tracker auswählen.",
+          "general_occupied_radius_m": "Das Zuhause gilt als bewohnt, solange sich jemand innerhalb dieser Entfernung befindet.",
+          "general_arrival_radius_m": "Die Ankunftsvorbereitung startet, sobald die erste Person in den Radius zurückkehrt, nachdem alle außerhalb waren."
         }
       },
       "room_occupancy": {

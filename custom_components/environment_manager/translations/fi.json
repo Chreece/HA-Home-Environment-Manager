@@ -234,7 +234,10 @@
           "window_close_cooldown_minutes": "Odotusaika ennen ikkunan sulkemisehdotusta (min)",
           "quiet_hours_enabled": "Hiljaiset tunnit",
           "quiet_hours_start": "Hiljaisten tuntien alku",
-          "quiet_hours_end": "Hiljaisten tuntien loppu"
+          "quiet_hours_end": "Hiljaisten tuntien loppu",
+          "general_proximity_trackers": "Seurattavat asukkaat",
+          "general_occupied_radius_m": "Läsnäolosäde (m, 0 = pois)",
+          "general_arrival_radius_m": "Valmistelusäde (m, 0 = pois)"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -291,7 +294,10 @@
           "window_close_cooldown_minutes": "Kun ikkuna avataan HEMin tuuletusehdotuksen jälkeen, HEM odottaa näin monta minuuttia ennen kuin ehdottaa sen sulkemista, vaikka ulko-olosuhteet olisivat epäsuotuisat. Odotusaika lasketaan erikseen kullekin huoneelle. 0–60 minuuttia, oletus 5; 0 poistaa odotusajan käytöstä. Laitteiden tauko- ja suojaussäännöt pysyvät voimassa.",
           "quiet_hours_enabled": "Käytä tätä päivittäistä aikaväliä laitteille, joilla ”Hiljainen toiminta hiljaisina tunteina” on käytössä. Ajat noudattavat Home Assistantin paikallista aikavyöhykettä; aikaväli voi ylittää keskiyön. Oletuksena pois käytöstä.",
           "quiet_hours_start": "Päivittäinen alkamisaika, joka sisältyy hiljaisiin tunteihin. Valitse eri aika kuin päättymisaika.",
-          "quiet_hours_end": "Päivittäinen päättymisaika, joka ei enää sisälly hiljaisiin tunteihin. Jos se on ennen alkamisaikaa, aikaväli päättyy seuraavana päivänä."
+          "quiet_hours_end": "Päivittäinen päättymisaika, joka ei enää sisälly hiljaisiin tunteihin. Jos se on ennen alkamisaikaa, aikaväli päättyy seuraavana päivänä.",
+          "general_proximity_trackers": "Valitse kullekin asukkaalle Home Assistantin henkilö tai GPS-paikannin.",
+          "general_occupied_radius_m": "Koti katsotaan asutuksi niin kauan kuin joku on tällä etäisyydellä.",
+          "general_arrival_radius_m": "Valmistelu alkaa, kun ensimmäinen asukas palaa alueelle kaikkien oltua sen ulkopuolella."
         }
       },
       "reconfigure": {
@@ -947,7 +953,10 @@
           "general_wake_lead_minutes_entity": "Uni · Minuutteja ennen herätystä",
           "quiet_hours_enabled": "Hiljaiset tunnit",
           "quiet_hours_start": "Hiljaisten tuntien alku",
-          "quiet_hours_end": "Hiljaisten tuntien loppu"
+          "quiet_hours_end": "Hiljaisten tuntien loppu",
+          "general_proximity_trackers": "Seurattavat asukkaat",
+          "general_occupied_radius_m": "Läsnäolosäde (m, 0 = pois)",
+          "general_arrival_radius_m": "Valmistelusäde (m, 0 = pois)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene.",
@@ -962,7 +971,10 @@
           "general_wake_lead_minutes_entity": "Valitse numeerinen entiteetti, jonka ei-negatiivinen arvo ilmaisee minuutit. Yksikkö on min tai puuttuu. Herätys 07:00 ja arvo 30 lopettavat automaattisen unitilan 06:30; 0 tarkoittaa herätyshetkeä. Poista molemmat lähteet käytöstä poistamista varten.",
           "quiet_hours_enabled": "Käytä tätä päivittäistä aikaväliä laitteille, joilla ”Hiljainen toiminta hiljaisina tunteina” on käytössä. Ajat noudattavat Home Assistantin paikallista aikavyöhykettä; aikaväli voi ylittää keskiyön. Oletuksena pois käytöstä.",
           "quiet_hours_start": "Päivittäinen alkamisaika, joka sisältyy hiljaisiin tunteihin. Valitse eri aika kuin päättymisaika.",
-          "quiet_hours_end": "Päivittäinen päättymisaika, joka ei enää sisälly hiljaisiin tunteihin. Jos se on ennen alkamisaikaa, aikaväli päättyy seuraavana päivänä."
+          "quiet_hours_end": "Päivittäinen päättymisaika, joka ei enää sisälly hiljaisiin tunteihin. Jos se on ennen alkamisaikaa, aikaväli päättyy seuraavana päivänä.",
+          "general_proximity_trackers": "Valitse kullekin asukkaalle Home Assistantin henkilö tai GPS-paikannin.",
+          "general_occupied_radius_m": "Koti katsotaan asutuksi niin kauan kuin joku on tällä etäisyydellä.",
+          "general_arrival_radius_m": "Valmistelu alkaa, kun ensimmäinen asukas palaa alueelle kaikkien oltua sen ulkopuolella."
         }
       },
       "pollen": {
@@ -2041,7 +2053,10 @@
           "general_wake_lead_minutes_entity": "Uni · Minuutteja ennen herätystä",
           "quiet_hours_enabled": "Hiljaiset tunnit",
           "quiet_hours_start": "Hiljaisten tuntien alku",
-          "quiet_hours_end": "Hiljaisten tuntien loppu"
+          "quiet_hours_end": "Hiljaisten tuntien loppu",
+          "general_proximity_trackers": "Seurattavat asukkaat",
+          "general_occupied_radius_m": "Läsnäolosäde (m, 0 = pois)",
+          "general_arrival_radius_m": "Valmistelusäde (m, 0 = pois)"
         },
         "data_description": {
           "general_room_occupancy_sensors": "Valitun tilan tai attribuutin kelvollinen varattujen huoneiden lista on ensisijainen: listatut huoneet ovat varattuja, puuttuvat tyhjiä. Ilman listaa yksikin aktiivinen läsnäoloanturi tarkoittaa varattua; kaikki pois tai ei valittuja antureita tarkoittaa tyhjää. Valittu mutta puuttuva tai virheellinen lähde jää tuntemattomaksi. Muuttumattomat listat ja binääritilat eivät vanhene.",
@@ -2056,7 +2071,10 @@
           "general_wake_lead_minutes_entity": "Valitse numeerinen entiteetti, jonka ei-negatiivinen arvo ilmaisee minuutit. Yksikkö on min tai puuttuu. Herätys 07:00 ja arvo 30 lopettavat automaattisen unitilan 06:30; 0 tarkoittaa herätyshetkeä. Poista molemmat lähteet käytöstä poistamista varten.",
           "quiet_hours_enabled": "Käytä tätä päivittäistä aikaväliä laitteille, joilla ”Hiljainen toiminta hiljaisina tunteina” on käytössä. Ajat noudattavat Home Assistantin paikallista aikavyöhykettä; aikaväli voi ylittää keskiyön. Oletuksena pois käytöstä.",
           "quiet_hours_start": "Päivittäinen alkamisaika, joka sisältyy hiljaisiin tunteihin. Valitse eri aika kuin päättymisaika.",
-          "quiet_hours_end": "Päivittäinen päättymisaika, joka ei enää sisälly hiljaisiin tunteihin. Jos se on ennen alkamisaikaa, aikaväli päättyy seuraavana päivänä."
+          "quiet_hours_end": "Päivittäinen päättymisaika, joka ei enää sisälly hiljaisiin tunteihin. Jos se on ennen alkamisaikaa, aikaväli päättyy seuraavana päivänä.",
+          "general_proximity_trackers": "Valitse kullekin asukkaalle Home Assistantin henkilö tai GPS-paikannin.",
+          "general_occupied_radius_m": "Koti katsotaan asutuksi niin kauan kuin joku on tällä etäisyydellä.",
+          "general_arrival_radius_m": "Valmistelu alkaa, kun ensimmäinen asukas palaa alueelle kaikkien oltua sen ulkopuolella."
         }
       },
       "pollen": {
@@ -2273,7 +2291,10 @@
           "window_close_cooldown_minutes": "Odotusaika ennen ikkunan sulkemisehdotusta (min)",
           "quiet_hours_enabled": "Hiljaiset tunnit",
           "quiet_hours_start": "Hiljaisten tuntien alku",
-          "quiet_hours_end": "Hiljaisten tuntien loppu"
+          "quiet_hours_end": "Hiljaisten tuntien loppu",
+          "general_proximity_trackers": "Seurattavat asukkaat",
+          "general_occupied_radius_m": "Läsnäolosäde (m, 0 = pois)",
+          "general_arrival_radius_m": "Valmistelusäde (m, 0 = pois)"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2332,7 +2353,10 @@
           "window_close_cooldown_minutes": "Kun ikkuna avataan HEMin tuuletusehdotuksen jälkeen, HEM odottaa näin monta minuuttia ennen kuin ehdottaa sen sulkemista, vaikka ulko-olosuhteet olisivat epäsuotuisat. Odotusaika lasketaan erikseen kullekin huoneelle. 0–60 minuuttia, oletus 5; 0 poistaa odotusajan käytöstä. Laitteiden tauko- ja suojaussäännöt pysyvät voimassa.",
           "quiet_hours_enabled": "Käytä tätä päivittäistä aikaväliä laitteille, joilla ”Hiljainen toiminta hiljaisina tunteina” on käytössä. Ajat noudattavat Home Assistantin paikallista aikavyöhykettä; aikaväli voi ylittää keskiyön. Oletuksena pois käytöstä.",
           "quiet_hours_start": "Päivittäinen alkamisaika, joka sisältyy hiljaisiin tunteihin. Valitse eri aika kuin päättymisaika.",
-          "quiet_hours_end": "Päivittäinen päättymisaika, joka ei enää sisälly hiljaisiin tunteihin. Jos se on ennen alkamisaikaa, aikaväli päättyy seuraavana päivänä."
+          "quiet_hours_end": "Päivittäinen päättymisaika, joka ei enää sisälly hiljaisiin tunteihin. Jos se on ennen alkamisaikaa, aikaväli päättyy seuraavana päivänä.",
+          "general_proximity_trackers": "Valitse kullekin asukkaalle Home Assistantin henkilö tai GPS-paikannin.",
+          "general_occupied_radius_m": "Koti katsotaan asutuksi niin kauan kuin joku on tällä etäisyydellä.",
+          "general_arrival_radius_m": "Valmistelu alkaa, kun ensimmäinen asukas palaa alueelle kaikkien oltua sen ulkopuolella."
         }
       },
       "room_occupancy": {

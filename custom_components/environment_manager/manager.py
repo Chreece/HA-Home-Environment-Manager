@@ -342,6 +342,11 @@ class AirQualityManager:
         # These sources decide whole-home presence even when their legacy
         # room controller is disabled. Arrival must be observed immediately.
         self._tracked.update(environment_trackers)
+        from .arrival_distance import active_trackers
+        proximity_sources = active_trackers(shared_presence)
+        if proximity_sources:
+            self._tracked.update(proximity_sources)
+            self._tracked.add("zone.home")
         shared_presence["_room_occupancy_selections"] = {
             area: list(cfg["occupancy_sensors"]) for area, cfg in room_climate_configs.items()
             if isinstance(cfg, dict) and isinstance(cfg.get("occupancy_sensors"), list)
@@ -409,7 +414,7 @@ class AirQualityManager:
                 home=home_status, temperature_c=measured_temp,
                 humidity_rh=sum(rh_values) / len(rh_values) if rh_values else None,
                 co2_ppm=max(co2_values) if co2_values else None,
-                window_safe=all(contact.opened is False for contact in monitored.windows),
+                window_safe=not any(contact.opened is True for contact in monitored.windows),
                 sleeping=None,
             )
             # This read-only overview never authorizes an Eco transition.

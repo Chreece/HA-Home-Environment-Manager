@@ -148,6 +148,12 @@ const noWindows=structuredClone(get(c,'living'));
 noWindows.readings=noWindows.readings.filter(r=>r.available);
 assert.ok(!c._room(noWindows).split('</summary>')[0].includes('data-room-issue114="missing"'),
   'Unconfigured window contacts alone must not create a missing-measurement alert');
+const offlineWindow=structuredClone(noWindows);
+offlineWindow.windows=[{name:'Patio contact',entity_id:'binary_sensor.patio',opened:null}];
+const windowWarning=c._room(offlineWindow).split('</summary>')[0];
+assert.match(windowWarning,/data-room-issue114="windows"[^>]+Patio contact[^>]*>[\s\S]*?mdi:alert-circle-outline/);
+offlineWindow.windows[0].opened=false;
+assert.ok(!c._room(offlineWindow).split('</summary>')[0].includes('data-room-issue114="windows"'));
 const evidenceOnly=structuredClone(get(c,'living'));
 evidenceOnly.readings=[{metric:'mold',value:null,available:false,name:'Uncalibrated mold indication'}];
 c._roomIssues114.set('living','missing');

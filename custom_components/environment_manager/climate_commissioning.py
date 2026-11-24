@@ -100,8 +100,8 @@ def room_commissioning(hass: Any, area: str, config: dict,
                 state.attributes.get("device_class")=="window"):
             windows.append({
                 "entity_id":state.entity_id,
-                "state":str(state.state),
-                "closed_verified":state.state=="off",
+                "state":"unknown" if state.attributes.get("restored") else str(state.state),
+                "closed_verified":state.state=="off" and not state.attributes.get("restored"),
             })
     windows.sort(key=lambda item:item["entity_id"])
     by_role={item["role"]:item for item in devices}
@@ -126,7 +126,7 @@ def room_commissioning(hass: Any, area: str, config: dict,
             blockers.append("configuration_or_device_not_verified")
         if not windows and config.get("dry_fan_windowless_confirmed") is not True:
             blockers.append("no_verified_window_contact")
-        if any(not window["closed_verified"] for window in windows):
+        if any(window["state"] == "on" for window in windows):
             blockers.append("window_open_or_unknown")
         if any(sensor["role"]=="humidity_entity" and sensor["status"]!="ready"
                for sensor in sensors):

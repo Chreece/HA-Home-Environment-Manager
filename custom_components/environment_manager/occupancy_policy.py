@@ -259,6 +259,20 @@ def home_presence(hass: Any, global_settings: Mapping,
         and entity.startswith(("person.", "device_tracker.", "binary_sensor.",
                                "number.", "input_number.", "sensor."))
     ))
+    from .arrival_distance import active_trackers, boundary, home_center, radius
+    nearby = active_trackers(global_settings)
+    if nearby:
+        meters = radius(global_settings, "occupied_radius_m")
+        if meters and boundary(hass, global_settings, nearby, home_center(hass), meters) == "inside":
+            return "home", "within_home_radius", list(nearby)
+        # A resident already home also ends an approach when only preparation is enabled.
+        for entity in nearby:
+            state = hass.states.get(entity)
+            if state is not None and state.state == "home" and _fresh(state, None):
+                return "home", "any_home_policy", [entity]
+        if not (allowed or global_settings.get("occupied_rooms_entity")
+                or global_settings.get("room_occupancy_sensors")):
+            allowed = list(nearby)
     if allowed:
         tracker_values = [_bool_presence(hass.states.get(e), fresh_limit)
                           for e in allowed]
