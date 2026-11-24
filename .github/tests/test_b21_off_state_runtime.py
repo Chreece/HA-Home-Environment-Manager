@@ -4,6 +4,7 @@ No real device or Zigbee model. All I/O routes through test-only stubs;
 the production watchdog module is executed without monkeypatching its body.
 """
 import asyncio
+import json
 from datetime import datetime, timezone
 import importlib.util
 from pathlib import Path
@@ -266,21 +267,72 @@ async def main():
             assert len(commands) == count and len(messages) == alerts, reason
             assert record["thermal_off_unattributed"]["heat_sources"]["reason"] == reason
             assert record["thermal_off_watch"]["attempts"] == 0
-    # A brief sunny interval breaks attribution even if it ends before the
-    # room reaches the threshold. Restart the full trend on clean evidence.
-    env.update(weather="clear-night", outdoor=2., peer=18.)
+    # Heat can continue reaching the thermostat after sunshine fades or
+    # an adjacent room cools. A continuous rise alone cannot identify a valve.
+    base += len(episodes)*10000
+    for index, source in enumerate(("sunshine", "neighbor")):
+        start = base + index*20000
+        env.update(weather="clear-night", outdoor=2., peer=18.)
+        record.pop("thermal_off_watch", None)
+        runtime._thermal_off_sessions.clear()
+        state.attributes = {"position": 98, "hvac_action": "off"}
+        count, alerts = len(commands), len(messages)
+        sensor = NS(last_reported=None, attributes={})
+        states.get = lambda entity: (state if entity == cap.primary else
+                                     sensor if entity == "sensor.room_temperature" else None)
+        async def sample(elapsed, temperature, *, report=True):
+            if report:
+                sensor.last_reported = datetime.fromtimestamp(start+elapsed, timezone.utc)
+            await tick(start+elapsed, temperature)
+        await sample(0, 20.)
+        await sample(1800, 21.)
+        env["weather"] = "sunny" if source == "sunshine" else "clear-night"
+        env["peer"] = 27. if source == "neighbor" else 18.
+        await sample(2100, 21.4)
+        env.update(weather="clear-night", peer=18.)
+        for elapsed in range(2400, 4801, 300):
+            await sample(elapsed, 21.8 + (elapsed-2400)/1200)
+        assert len(commands) == count and len(messages) == alerts, source
+        assert record["thermal_off_unattributed"]["heat_sources"]["reason"] == "residual_external_heat_possible"
+        assert record["thermal_off_watch"]["attempts"] == 0
+        # Recreate the persisted journal exactly as a HA restart would.
+        await sample(5100, 23.7)
+        await sample(5400, 23.7)
+        record["thermal_off_watch"] = json.loads(json.dumps(record["thermal_off_watch"]))
+        runtime._thermal_off_sessions.clear()
+        for elapsed in (5700, 6000, 6300, 6600):
+            await sample(elapsed, 23.7, report=False)
+        assert record["thermal_off_watch"].get("external_heat_pending") is True
+        # Fresh cooling/level reports must end the earlier rise. A new rise
+        # then needs its own complete qualifying observation interval.
+        for elapsed, temp in ((6900,23.2), (7200,23.0), (7500,22.9), (7800,22.9)):
+            await sample(elapsed, temp)
+        assert not record["thermal_off_watch"].get("external_heat_pending")
+        await sample(8100, 23.2)
+        await sample(8400, 23.6)
+        assert len(commands) == count
+        await sample(8700, 24.0)
+        assert len(commands) == count+1 and len(messages) == alerts+1
+        assert record["thermal_off_watch"]["attempts"] == 1
+    # A source already present on the first OFF observation is remembered.
+    # A genuinely open valve can qualify without waiting for external heat to decay.
+    first = start+11000
     record.pop("thermal_off_watch", None)
-    state.attributes = {"position": 98, "hvac_action": "off"}
-    start = base + len(episodes)*10000
+    runtime._thermal_off_sessions.clear()
+    env.update(weather="sunny", peer=18.)
+    state.attributes = {}
+    await tick(first, 21.)
+    assert record["thermal_off_watch"]["external_heat_pending"]
+    env["weather"] = "clear-night"
     count = len(commands)
-    for elapsed, temp, condition in [(0,20.,"clear-night"), (1800,21.,"clear-night"),
-                                    (2100,21.4,"sunny"), (2400,21.8,"clear-night"),
-                                    (2700,22.4,"clear-night"), (3000,22.7,"clear-night")]:
-        env["weather"] = condition
-        await tick(start+elapsed,temp)
-    assert len(commands) == count
-    await tick(start+3300,23.1)
+    for elapsed, temp in ((1800,21.),(2100,21.3),(2400,21.8),(2700,22.4)):
+        state.attributes["actual_position"] = 35.
+        state.last_reported = datetime.fromtimestamp(first+elapsed, timezone.utc)
+        await tick(first+elapsed, temp)
     assert len(commands) == count+1
+    assert record["thermal_off_warning"]["heat_sources"]["status"] == "valve_open_while_off"
+    state.attributes = {}
+    assert not runtime_module._guard(runtime,spec,cap,state,record["thermal_off_watch"])
     # Without mapped connections the other monitored rooms are still checked.
     from test_hem_b21.off_state_heat_sources import assess
     manager.settings["climate_rooms"] = {}

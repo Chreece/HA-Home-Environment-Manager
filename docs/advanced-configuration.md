@@ -348,6 +348,15 @@ Sunny daytime conditions, missing
 weather, or missing readings from a relevant neighbor can also explain or
 obscure the warming. The controller exposes unattributed warming in its watchdog
 diagnostics and withholds heater-specific warnings and OFF retries in those cases.
+After a competing source clears, one continuous temperature rise can still
+include stored heat. HEM keeps that rise unattributed until the independent
+room thermometers show at least 15 minutes of stable or falling temperature.
+Readings must finish at or below the start of that interval. A rebound of more
+than 0.1°C from the observed minimum restarts the interval. Only a subsequent
+fresh rise can qualify for a temperature-based heater warning. Restarting Home
+Assistant preserves the unresolved heat and retry count, and starts fresh
+observations. PID calibration excludes the affected OFF baseline.
+
 A fresh positive actual valve-position report while disabled is separate evidence
 for an OFF retry even when other heat sources are present. It establishes valve
 travel, while the cause of the room temperature rise can still be mixed.

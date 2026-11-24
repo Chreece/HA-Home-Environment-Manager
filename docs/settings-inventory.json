@@ -2706,7 +2706,7 @@
         "custom_components/environment_manager/const.py:17",
         "custom_components/environment_manager/control_trend.py:263",
         "custom_components/environment_manager/mold_control_demand.py:112",
-        "custom_components/environment_manager/off_state_heat_sources.py:65",
+        "custom_components/environment_manager/off_state_heat_sources.py:68",
         "custom_components/environment_manager/sensor.py:135",
         "custom_components/environment_manager/shade_weather.py:23"
       ],
@@ -3347,7 +3347,7 @@
         "custom_components/environment_manager/const.py:17",
         "custom_components/environment_manager/control_trend.py:263",
         "custom_components/environment_manager/mold_control_demand.py:112",
-        "custom_components/environment_manager/off_state_heat_sources.py:65",
+        "custom_components/environment_manager/off_state_heat_sources.py:68",
         "custom_components/environment_manager/sensor.py:135",
         "custom_components/environment_manager/shade_weather.py:23"
       ],
@@ -7900,7 +7900,7 @@
         "custom_components/environment_manager/const.py:17",
         "custom_components/environment_manager/control_trend.py:263",
         "custom_components/environment_manager/mold_control_demand.py:112",
-        "custom_components/environment_manager/off_state_heat_sources.py:65",
+        "custom_components/environment_manager/off_state_heat_sources.py:68",
         "custom_components/environment_manager/sensor.py:135",
         "custom_components/environment_manager/shade_weather.py:23"
       ],
@@ -11786,7 +11786,7 @@
         "custom_components/environment_manager/const.py:17",
         "custom_components/environment_manager/control_trend.py:263",
         "custom_components/environment_manager/mold_control_demand.py:112",
-        "custom_components/environment_manager/off_state_heat_sources.py:65",
+        "custom_components/environment_manager/off_state_heat_sources.py:68",
         "custom_components/environment_manager/sensor.py:135",
         "custom_components/environment_manager/shade_weather.py:23"
       ],

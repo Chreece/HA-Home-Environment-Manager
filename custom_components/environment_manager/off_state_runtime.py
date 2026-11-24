@@ -247,6 +247,8 @@ def _guard(runtime: Any, spec: Any, cap: Any, state: Any, watch: dict, *,
             return False
         evidence = assess(runtime, spec, state, value)
         previous = warning.get("heat_sources")
+        if watch.get("external_heat_pending") and evidence["status"] != "valve_open_while_off":
+            return False
         if (not isinstance(previous, dict) or evidence["status"] == "unattributed"
                 or signature(evidence) != signature(previous)):
             return False
@@ -364,7 +366,8 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
             "direction": "heat", "attempts": 0, "last_attempt_at": None, "notified": False,
         }
         await runtime._save()
-        return False
+        if record.get("thermal_off_watch") is not ledger:
+            return False
     off_since = ledger.get("off_since")
     direction = ledger.get("direction", "heat")  # migrate previous heating episodes
     profile = EFFECTS.get(direction)
@@ -441,8 +444,27 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
     cleared = _competing_effect_clear(runtime, spec, cap.primary, direction)
     attribution = None
     if direction == "heat":
-        from .off_state_heat_sources import assess, signature
+        from .off_state_heat_sources import assess, external_heat_pending, signature
         attribution = assess(runtime, spec, state, measured)
+        pending = ledger.get("external_heat_pending") is True
+        # Replacing the input inventory or a policy hold cannot carry a partial
+        # settling interval forward. Reuse only the durable unresolved flag.
+        configuration = (signature(attribution), target)
+        if sensor_watch.settling_context != configuration:
+            sensor_watch.reset_settling()
+            sensor_watch.settling_context = configuration
+        still_pending = external_heat_pending(
+            runtime.hass, sensor_watch, attribution, pending=pending,
+            other_sources_clear=cleared, now=now, room_c=measured,
+        )
+        if still_pending != pending:
+            if still_pending:
+                ledger["external_heat_pending"] = True
+            else:
+                ledger.pop("external_heat_pending", None)
+            await runtime._save()
+            if record.get("thermal_off_watch") is not ledger:
+                return False
         key = signature(attribution)
         if sensor_watch.heat_source_signature != key:
             sensor_watch.samples.clear()

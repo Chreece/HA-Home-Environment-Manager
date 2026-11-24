@@ -1375,7 +1375,7 @@ class EquipmentRuntime:
         output = constrained = None
         output_state = state
         kind = "binary"
-        from .pid_diagnostics import calibration_activity
+        from .pid_diagnostics import calibration_activity, calibration_output_uncertain
         output_kind, native_strategy = "reported_state", None
         minimum, maximum_percent, step, stages = 0., 100., 1., []
         max_change, step_origin, quantization = 100., 0., "nearest"
@@ -1506,7 +1506,7 @@ class EquipmentRuntime:
             constrained = demand
         domain = getattr(output_state, "domain", None) or cap.domain
         physical_activity = calibration_activity(domain, output_state, mode)
-        if physical_activity is None or record.get("thermal_off_warning") or record.get("thermal_off_unattributed"):
+        if physical_activity is None or calibration_output_uncertain(record, cfg):
             output = None
         elif physical_activity == "off":
             output = 0.
@@ -2675,8 +2675,11 @@ class EquipmentRuntime:
                 # ephemeral samples and stale warning presentation.
                 getattr(self, "_thermal_off_sessions", {}).pop(spec.identifier, None)
                 record = getattr(self, "records", {}).get(spec.identifier, {})
-                if isinstance(record, dict) and record.pop("thermal_off_warning", None) is not None:
-                    await self._save()
+                if isinstance(record, dict):
+                    warning = record.pop("thermal_off_warning", None)
+                    unattributed = record.pop("thermal_off_unattributed", None)
+                    if warning is not None or unattributed is not None:
+                        await self._save()
                 observed = getattr(self, "statuses", {}).get(spec.identifier, {})
                 if isinstance(observed, dict) and observed.get("status") in (
                         "suspected_heating_after_off", "suspected_output_after_off"):
@@ -3575,10 +3578,10 @@ class EquipmentRuntime:
             blocked_reason is None and cfg.get("requested_mode") == mode
             and self._active and self._ready
         )
-        from .pid_diagnostics import calibration_activity
+        from .pid_diagnostics import calibration_activity, calibration_output_uncertain
         activity = calibration_activity(cap.domain, state, mode)
         is_on = activity == "on"
-        valid = valid and activity is not None and not record.get("thermal_off_warning") and not record.get("thermal_off_unattributed")
+        valid = valid and activity is not None and not calibration_output_uncertain(record, cfg)
         if cap.domain == "humidifier" and mode != "dry":
             valid = False
         if not valid:
