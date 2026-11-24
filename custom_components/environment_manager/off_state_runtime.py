@@ -65,15 +65,15 @@ def _competing_heat_clear(runtime: Any, spec: Any, primary: str) -> bool:
 
 def _independent_room_temperature(runtime: Any, spec: Any, primary: str) -> tuple[float | None, tuple[str, ...]]:
     """Read the room's selected thermometers or its configured legacy reference."""
-    from .room_sources import selected
-    settings = runtime.manager.settings
-    pinned = None
-    if selected(settings, spec.area_id, "temperature") is None:
-        room = model.room_config(runtime.manager, spec)
-        device = model.device_config(runtime.manager, spec, primary)
-        legacy = settings.get("pid_rooms", {}).get(spec.area_id, {})
-        pinned = device.get("temperature_entity") or room.get("temperature_entity") or legacy.get("temperature_entity")
     try:
+        from .room_sources import selected
+        settings = runtime.manager.settings
+        pinned = None
+        if selected(settings, spec.area_id, "temperature") is None:
+            room = model.room_config(runtime.manager, spec)
+            device = model.device_config(runtime.manager, spec, primary)
+            legacy = settings.get("pid_rooms", {}).get(spec.area_id, {})
+            pinned = device.get("temperature_entity") or room.get("temperature_entity") or legacy.get("temperature_entity")
         temp, evidence = room_temperature_evidence(
             runtime.hass, settings, spec.area_id,
             pinned=pinned if isinstance(pinned, str) else None,
