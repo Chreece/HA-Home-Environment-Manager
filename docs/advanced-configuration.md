@@ -230,7 +230,7 @@ Readings underneath open their usual details and trends.
 
 The faces show simultaneous measured conditions. Temperature uses the current
 PMV estimate (neutral from −0.5 to +0.5), then the adaptive comfort band when
-applicable, then a simple 20–26 °C display range. Indoor relative humidity
+applicable, then a simple 20 to 26 °C display range. Indoor relative humidity
 below 30% is dry. The configured indoor humidity warning threshold marks humid
 conditions (default 65%). A measured indoor pollutant exceedance can show poor
 air even when temperature and humidity are missing. A smile requires both

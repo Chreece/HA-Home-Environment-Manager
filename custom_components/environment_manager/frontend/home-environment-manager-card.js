@@ -14916,7 +14916,7 @@ HomeEnvironmentManagerCard.prototype._styles=function(){
     .hem-room-condition-detail {padding:5px 3px;color:var(--aqa-muted);font-size:13px}
     .hem-room-indicators {
       display:flex;align-self:center;align-items:center;justify-content:flex-end;
-      flex-wrap:wrap;gap:2px;max-width:50%;min-width:0;margin-inline-start:auto;
+      flex:none;flex-wrap:wrap;gap:2px;max-width:50%;min-width:0;margin-inline-start:auto;
     }
     .hem-room-indicators .hem-room-active87,.hem-room-indicators .hem-room-alerts87 {
       display:contents;
