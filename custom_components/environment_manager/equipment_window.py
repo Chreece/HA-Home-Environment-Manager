@@ -118,6 +118,7 @@ def evaluate(runtime: Any, spec: Any, cfg: dict | None = None, *,
             "not_window_contact" if not is_window_contact(
                 runtime.hass, state, explicitly_selected=from_selection,
             ) else
+            "restored" if getattr(state, "attributes", {}).get("restored") is True else
             "unknown" if state.state not in ("on", "off") else None
         )
         result["contact_states"][entity] = (reason or state.state)
@@ -138,8 +139,7 @@ def evaluate(runtime: Any, spec: Any, cfg: dict | None = None, *,
     if result["open_contacts"]:
         result.update(blocked=True, stop_requested=True, status="window_open_pause")
     elif result["unknown_contacts"]:
-        result.update(blocked=True, status="window_state_unknown",
-                      stop_requested=same and previous.get("stop_requested") is True)
+        result.update(blocked=True, stop_requested=True, status="window_state_unknown")
     else:
         latest = max(closed_times)
         previous_since = previous.get("closed_since") if same else None
@@ -193,8 +193,7 @@ def evaluate(runtime: Any, spec: Any, cfg: dict | None = None, *,
         result.update(
             closed_since=latest, remaining_seconds=remaining,
             blocked=remaining > 0,
-            # Shutdown may finish during the post-close hold, but never from
-            # a merely unknown contact that has not actually reported OPEN.
+            # A stop delayed by native dwell can finish during the recovery hold.
             stop_requested=remaining > 0 and same and bool(
                 previous.get("stop_requested") or previous.get("open_contacts")),
             status="window_close_warmup" if remaining > 0 else "window_closed_ready",

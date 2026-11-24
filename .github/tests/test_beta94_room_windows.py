@@ -102,6 +102,69 @@ async def scenarios():
     p=unknown._window_policy(spec)
     assert p['blocked'] and p['status']=='window_state_unknown',p
     assert p['unknown_contacts']==['binary_sensor.window_unavailable'],p
+
+    tick = b['b']['tick']
+    # Lose a local contact while DRY is already running. A second, closed
+    # contact cannot authorize continued operation or an early restart.
+    for lost_state in ('unavailable', 'unknown', 'missing', 'restored'):
+        running = make(opened=False)
+        room = running.manager.settings['room_sources'][spec.area_id]
+        room['windows'].append('binary_sensor.window2')
+        contact(running, 'off', entity='binary_sensor.window2')
+        assert not running._window_policy(spec)['blocked']
+        entity = 'binary_sensor.window'
+        if lost_state == 'missing':
+            del running.states[entity]
+        elif lost_state == 'restored':
+            running.states[entity].attributes['restored'] = True
+        else:
+            contact(running, lost_state)
+        await tick(running, spec)
+        assert running.issued == [
+            ('climate', 'set_hvac_mode', 'climate.comfee', {'hvac_mode': 'off'})
+        ], (lost_state, running.issued, running.statuses)
+        assert await running._reconcile(spec)
+        await tick(running, spec)
+        assert running.statuses[spec.identifier]['status'] == 'window_state_unknown'
+        assert running._window_policy(spec)['open_contacts'] == []
+        contact(running, 'off')
+        assert running._window_policy(spec)['remaining_seconds'] == 60
+        running.now += 59
+        await tick(running, spec)
+        assert len(running.issued) == 1
+        running.now += 1
+        assert not running._window_policy(spec)['blocked']
+
+    for protection in ('no_power_permission', 'defrosting', 'device_opt_out'):
+        running = make(opened=False, enabled=protection != 'device_opt_out')
+        contact(running, 'unavailable')
+        if protection == 'no_power_permission':
+            running.manager.authorized = False
+        elif protection == 'defrosting':
+            running.states['climate.comfee'].attributes['hvac_action'] = 'defrosting'
+        if protection == 'device_opt_out':
+            assert not running._window_policy(spec)['blocked']
+            assert not running._stop_policy_verified(spec, running.manager.cap, 'window')
+        else:
+            await tick(running, spec)
+            assert not running.issued, (protection, running.issued)
+
+    # A contact can disappear while a native ON intent is being persisted.
+    starting = make(opened=False, native='off')
+    starting.record['capabilities'] = b['b']['asdict'](starting.manager.cap)
+    starting.on_save = lambda: contact(starting, 'unavailable')
+    assert not await starting._power(spec, starting.manager.cap, 'dry', automatic=True)
+    assert not starting.issued and starting.record.get('pending') is None
+
+    dwelling = make(opened=False)
+    dwelling.states['climate.comfee'] = b['state']('dry', when=dwelling.now)
+    contact(dwelling, 'unavailable')
+    await tick(dwelling, spec)
+    assert not dwelling.issued
+    assert dwelling.statuses[spec.identifier]['status'] == 'minimum_on_hold'
+    dwelling.now += 600
+    await tick(dwelling, spec)
+    assert dwelling.issued == [('climate', 'set_hvac_mode', 'climate.comfee', {'hvac_mode': 'off'})]
     print('BETA94_ROOM_SCOPED_WINDOW_OPEN_CLOSE_60S_NO_CROSS_ROOM_PAUSE=PASS')
 
 asyncio.run(scenarios())
