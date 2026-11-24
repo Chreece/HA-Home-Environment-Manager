@@ -237,7 +237,8 @@
           "quiet_hours_end": "Koniec godzin ciszy",
           "general_proximity_trackers": "Śledzeni domownicy",
           "general_occupied_radius_m": "Promień obecności (m, 0 = wył.)",
-          "general_arrival_radius_m": "Promień przygotowania (m, 0 = wył.)"
+          "general_arrival_radius_m": "Promień przygotowania (m, 0 = wył.)",
+          "show_room_smileys": "Pokazuj emotikony pomieszczeń"
         },
         "data_description": {
           "weather_entities": "Wybierz: Pogoda i ostrzeżenia · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "Codzienna godzina zakończenia, nienależąca już do godzin ciszy. Jeśli jest wcześniejsza niż początek, przedział kończy się następnego dnia.",
           "general_proximity_trackers": "Wybierz osobę w Home Assistant lub lokalizator GPS dla każdego domownika.",
           "general_occupied_radius_m": "Dom jest uznawany za zajęty, dopóki ktoś przebywa w tej odległości.",
-          "general_arrival_radius_m": "Przygotowanie zaczyna się, gdy pierwszy domownik wróci do strefy po tym, jak wszyscy byli poza nią."
+          "general_arrival_radius_m": "Przygotowanie zaczyna się, gdy pierwszy domownik wróci do strefy po tym, jak wszyscy byli poza nią.",
+          "show_room_smileys": "Obok nazwy każdego pomieszczenia pokazuje emotikony opisujące panujące w nim warunki."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "Koniec godzin ciszy",
           "general_proximity_trackers": "Śledzeni domownicy",
           "general_occupied_radius_m": "Promień obecności (m, 0 = wył.)",
-          "general_arrival_radius_m": "Promień przygotowania (m, 0 = wył.)"
+          "general_arrival_radius_m": "Promień przygotowania (m, 0 = wył.)",
+          "show_room_smileys": "Pokazuj emotikony pomieszczeń"
         },
         "data_description": {
           "weather_entities": "Wybierz: Pogoda i ostrzeżenia · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "Codzienna godzina zakończenia, nienależąca już do godzin ciszy. Jeśli jest wcześniejsza niż początek, przedział kończy się następnego dnia.",
           "general_proximity_trackers": "Wybierz osobę w Home Assistant lub lokalizator GPS dla każdego domownika.",
           "general_occupied_radius_m": "Dom jest uznawany za zajęty, dopóki ktoś przebywa w tej odległości.",
-          "general_arrival_radius_m": "Przygotowanie zaczyna się, gdy pierwszy domownik wróci do strefy po tym, jak wszyscy byli poza nią."
+          "general_arrival_radius_m": "Przygotowanie zaczyna się, gdy pierwszy domownik wróci do strefy po tym, jak wszyscy byli poza nią.",
+          "show_room_smileys": "Obok nazwy każdego pomieszczenia pokazuje emotikony opisujące panujące w nim warunki."
         }
       },
       "room_occupancy": {

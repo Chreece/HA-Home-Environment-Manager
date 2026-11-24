@@ -237,7 +237,8 @@
           "quiet_hours_end": "Sfârșitul orelor de liniște",
           "general_proximity_trackers": "Locatari urmăriți",
           "general_occupied_radius_m": "Rază de prezență (m, 0 = oprit)",
-          "general_arrival_radius_m": "Rază de pregătire (m, 0 = oprit)"
+          "general_arrival_radius_m": "Rază de pregătire (m, 0 = oprit)",
+          "show_room_smileys": "Afișează emoticoanele camerelor"
         },
         "data_description": {
           "weather_entities": "Alegeți: Vreme și avertizări · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "Ora zilnică de sfârșit, exclusă din orele de liniște. Dacă precedă începutul, intervalul se încheie a doua zi.",
           "general_proximity_trackers": "Alegeți o persoană din Home Assistant sau un dispozitiv GPS pentru fiecare locatar.",
           "general_occupied_radius_m": "Locuința este considerată ocupată cât timp cineva se află în această rază.",
-          "general_arrival_radius_m": "Pregătirea începe când primul locatar intră în rază după ce toți au fost în afara ei."
+          "general_arrival_radius_m": "Pregătirea începe când primul locatar intră în rază după ce toți au fost în afara ei.",
+          "show_room_smileys": "Afișează lângă numele fiecărei camere emoticoane care descriu condițiile din cameră."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "Sfârșitul orelor de liniște",
           "general_proximity_trackers": "Locatari urmăriți",
           "general_occupied_radius_m": "Rază de prezență (m, 0 = oprit)",
-          "general_arrival_radius_m": "Rază de pregătire (m, 0 = oprit)"
+          "general_arrival_radius_m": "Rază de pregătire (m, 0 = oprit)",
+          "show_room_smileys": "Afișează emoticoanele camerelor"
         },
         "data_description": {
           "weather_entities": "Alegeți: Vreme și avertizări · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "Ora zilnică de sfârșit, exclusă din orele de liniște. Dacă precedă începutul, intervalul se încheie a doua zi.",
           "general_proximity_trackers": "Alegeți o persoană din Home Assistant sau un dispozitiv GPS pentru fiecare locatar.",
           "general_occupied_radius_m": "Locuința este considerată ocupată cât timp cineva se află în această rază.",
-          "general_arrival_radius_m": "Pregătirea începe când primul locatar intră în rază după ce toți au fost în afara ei."
+          "general_arrival_radius_m": "Pregătirea începe când primul locatar intră în rază după ce toți au fost în afara ei.",
+          "show_room_smileys": "Afișează lângă numele fiecărei camere emoticoane care descriu condițiile din cameră."
         }
       },
       "room_occupancy": {

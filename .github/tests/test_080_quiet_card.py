@@ -154,6 +154,8 @@ def browser_checks():
               card._hass.localize=key=>key.startsWith('component.environment_manager.')?
                 key.slice('component.environment_manager.'.length).split('.')
                   .reduce((value,part)=>value?.[part],catalog):undefined;
+              homeForm.data_schema.push({name:'show_room_smileys',default:true,selector:{boolean:{}}});
+              homeData.show_room_smileys=true;
               for(const field of schema){
                 homeForm.data_schema.push(field);homeData[field.name]=field.default;
                 const domain=field.selector.time?'time':'switch',id=domain+'.renamed_'+field.name;
@@ -168,6 +170,13 @@ def browser_checks():
             dialog = page.locator('dialog.hem-home-options128')
             expect(dialog.locator('[data-settings-level-b8]')).to_have_value('basic')
             page.evaluate("card._homeSettingsDialog128.node.querySelectorAll('details').forEach(node=>node.open=true)")
+            smileys = dialog.locator('[data-hem-unified141="overview"] [data-hem-home-field128="show_room_smileys"]')
+            expect(smileys).to_be_visible()
+            expect(smileys).to_contain_text(catalog['options']['step']['setup_general']['data']['show_room_smileys'])
+            toggle = smileys.get_by_role('checkbox')
+            expect(toggle).to_be_checked()
+            toggle.uncheck()
+            page.wait_for_function('homeData.show_room_smileys===false')
             for field in SCHEMA:
                 key = field['name']
                 row = dialog.locator(f'[data-hem-home-field128="{key}"]')
@@ -189,6 +198,7 @@ def browser_checks():
             dialog.locator('[data-hem-home-input128="quiet_hours_enabled"]').check()
             page.wait_for_function('homeData.quiet_hours_enabled===true')
             assert page.evaluate('homeData.general_away_cooldown_minutes') == 10
+            assert page.evaluate('homeData.show_room_smileys') is False
             assert page.evaluate('writes.length') == 0
             previous = page.evaluate('optionWrites.length')
             start.fill('')

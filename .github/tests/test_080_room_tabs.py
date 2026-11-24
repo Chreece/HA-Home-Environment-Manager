@@ -71,8 +71,8 @@ REPORT = r"""()=>{
       },
       name:box(summary.querySelector('.hem-room-name87')),
       settings:box(summary.querySelector('[data-room-settings114]')),
-      faces:box(summary.querySelector('.hem-room-faces')),
-      faceLabel:summary.querySelector('.hem-room-faces').getAttribute('aria-label'),
+      faces:summary.querySelector('.hem-room-faces') && box(summary.querySelector('.hem-room-faces')),
+      faceLabel:summary.querySelector('.hem-room-faces')?.getAttribute('aria-label'),
       alerts:[...summary.querySelectorAll('.hem-room-alerts87 button')].map(button=>({
         ...box(button),icon:button.querySelector('ha-icon').getAttribute('icon')})),
       nameText:summary.querySelector('.hem-room-name87').textContent,
@@ -107,12 +107,15 @@ def assert_geometry(report, label):
         assert row['scrollWidth'] <= row['clientWidth'] + 1, context
         assert 60 <= row['header']['height'] <= 100, ('two compact rows', *context)
         assert row['settings']['right'] <= row['name']['left'] + 1, context
-        assert row['name']['right'] <= row['faces']['left'] <= row['name']['right'] + 8, context
-        assert row['faceLabel'] and row['name']['width'] > 12, context
+        assert row['name']['width'] > 12, context
+        if row['faces']:
+            assert row['faceLabel'], context
+            assert row['name']['right'] <= row['faces']['left'] <= row['name']['right'] + 8, context
         assert row['alerts'], context
-        assert abs(max(alert['right'] for alert in row['alerts']) - row['header']['right']) <= 2, context
+        previous = row['faces'] or row['name']
+        assert previous['right'] <= row['alerts'][0]['left'] <= previous['right'] + 8, context
         for alert in row['alerts']:
-            assert alert['width'] >= 22 and alert['left'] >= row['tab']['right'] - 1, context
+            assert alert['width'] >= 22 and alert['right'] <= row['tab']['right'], context
             assert row['tabRow']['top'] <= alert['top'] < alert['bottom'] <= row['tabRow']['bottom'], context
         assert row['settings']['top'] < row['name']['bottom'], context
         assert row['nameText'] in row['nameTitle'], context
@@ -243,6 +246,16 @@ def run():
                     render(22,45,{pmv:{status:'estimate',pmv:0.7},adaptive:{status:'below_band'}})];
                 }""", data['room'])
                 assert faces == ['😊','😊','🥶😮‍💨','😷🥵😓','😶','😶','😷','😶','😶','😓','🥶','🥵'], faces
+                for enabled in (False, True):
+                    page.evaluate("""enabled=>{
+                      card._hass.states['sensor.hem'].attributes.dashboard.show_room_smileys=enabled;
+                      card._renderContent(true);
+                    }""", enabled)
+                    report = page.evaluate(REPORT)
+                    assert_geometry(report, f'{language} smileys {enabled}')
+                    assert all(bool(row['faces']) == enabled for row in report['rows'])
+                    expect(page.locator('.hem-room-condition-detail [aria-hidden]')).to_have_count(2 if enabled else 0)
+                    assert all(page.locator('.hem-room-condition-detail').all_text_contents())
                 room = page.locator('[data-room-fold87="living"]')
                 summary = room.locator(':scope > summary')
                 summary.locator('.hem-room-name87').click()

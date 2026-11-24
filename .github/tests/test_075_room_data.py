@@ -586,6 +586,8 @@ class RoomDataTests(unittest.TestCase):
                        send_result=lambda request_id, result: results.append(result),
                        send_error=lambda *args: errors.append(args))
         api.websocket_dashboard(self.hass, connection, {"id": 1, "entity_id": "sensor.hem"})
+        self.assertIs(results[-1]['show_room_smileys'], True)
+        self.manager.settings['show_room_smileys'] = False
         self.assertEqual(errors, [])
         self.assertEqual(len(results), 1)
         row = areas.room_snapshot(self.manager, "room")
@@ -595,6 +597,7 @@ class RoomDataTests(unittest.TestCase):
         self.sensor("temperature", 21.)
         self.selection(temperature=("sensor.temperature",))
         api.websocket_dashboard(self.hass, connection, {"id": 2, "entity_id": "sensor.hem"})
+        self.assertIs(results[-1]['show_room_smileys'], False)
         self.assertEqual(results[-1]["rooms"][0], areas.room_snapshot(self.manager, "room"))
         self.assertEqual(results[-1]["summary"]["safe"], 1)
 

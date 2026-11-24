@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from .const import UNIT_LABEL
+from .const import CONF_SHOW_ROOM_SMILEYS, UNIT_LABEL
 from .logic import Plan, Reading, Reason, Room, Weather, Warning
 from .room_data import classify as classify_room_data
 
@@ -255,5 +255,7 @@ def dashboard_snapshot(plan: Plan, limits: dict[str, float], *,
 def manager_dashboard_snapshot(manager: Any, *, area_id: str | None = None) -> dict[str, Any]:
     """Use the same read-only live input projection for WS and room entities."""
     from .room_data import controller_inputs
-    return dashboard_snapshot(manager.plan, manager.thresholds,
-                              control_inputs=controller_inputs(manager, area_id=area_id))
+    snapshot = dashboard_snapshot(manager.plan, manager.thresholds,
+                                  control_inputs=controller_inputs(manager, area_id=area_id))
+    snapshot[CONF_SHOW_ROOM_SMILEYS] = manager.settings.get(CONF_SHOW_ROOM_SMILEYS) is not False
+    return snapshot

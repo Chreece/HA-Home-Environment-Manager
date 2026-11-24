@@ -237,7 +237,8 @@
           "quiet_hours_end": "Slutet av tysta tider",
           "general_proximity_trackers": "Boende att spåra",
           "general_occupied_radius_m": "Radie för närvaro (m, 0 = av)",
-          "general_arrival_radius_m": "Radie för förberedelse (m, 0 = av)"
+          "general_arrival_radius_m": "Radie för förberedelse (m, 0 = av)",
+          "show_room_smileys": "Visa smileys för rum"
         },
         "data_description": {
           "weather_entities": "Välj: Väder och varningar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "Daglig sluttid, som inte längre ingår i de tysta tiderna. Om den ligger före starttiden slutar intervallet nästa dag.",
           "general_proximity_trackers": "Välj en person i Home Assistant eller en GPS-spårare per boende.",
           "general_occupied_radius_m": "Hemmet räknas som bebott så länge någon befinner sig inom detta avstånd.",
-          "general_arrival_radius_m": "Förberedelsen startar när den första boende kommer in i området efter att alla har varit utanför."
+          "general_arrival_radius_m": "Förberedelsen startar när den första boende kommer in i området efter att alla har varit utanför.",
+          "show_room_smileys": "Visa smileys som beskriver förhållandena i rummet bredvid varje rumsnamn."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "Slutet av tysta tider",
           "general_proximity_trackers": "Boende att spåra",
           "general_occupied_radius_m": "Radie för närvaro (m, 0 = av)",
-          "general_arrival_radius_m": "Radie för förberedelse (m, 0 = av)"
+          "general_arrival_radius_m": "Radie för förberedelse (m, 0 = av)",
+          "show_room_smileys": "Visa smileys för rum"
         },
         "data_description": {
           "weather_entities": "Välj: Väder och varningar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "Daglig sluttid, som inte längre ingår i de tysta tiderna. Om den ligger före starttiden slutar intervallet nästa dag.",
           "general_proximity_trackers": "Välj en person i Home Assistant eller en GPS-spårare per boende.",
           "general_occupied_radius_m": "Hemmet räknas som bebott så länge någon befinner sig inom detta avstånd.",
-          "general_arrival_radius_m": "Förberedelsen startar när den första boende kommer in i området efter att alla har varit utanför."
+          "general_arrival_radius_m": "Förberedelsen startar när den första boende kommer in i området efter att alla har varit utanför.",
+          "show_room_smileys": "Visa smileys som beskriver förhållandena i rummet bredvid varje rumsnamn."
         }
       },
       "room_occupancy": {

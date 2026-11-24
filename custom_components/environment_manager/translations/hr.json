@@ -237,7 +237,8 @@
           "quiet_hours_end": "Kraj vremena tišine",
           "general_proximity_trackers": "Stanari za praćenje",
           "general_occupied_radius_m": "Polumjer prisutnosti (m, 0 = isključeno)",
-          "general_arrival_radius_m": "Polumjer pripreme (m, 0 = isključeno)"
+          "general_arrival_radius_m": "Polumjer pripreme (m, 0 = isključeno)",
+          "show_room_smileys": "Prikaži smajliće za prostorije"
         },
         "data_description": {
           "weather_entities": "Odaberite: Vrijeme i upozorenja · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "Dnevno vrijeme završetka, koje više nije dio vremena tišine. Ako je prije početka, interval završava sljedeći dan.",
           "general_proximity_trackers": "Za svakog stanara odaberite osobu u Home Assistantu ili GPS uređaj za praćenje.",
           "general_occupied_radius_m": "Dom se smatra zauzetim dok je netko unutar ove udaljenosti.",
-          "general_arrival_radius_m": "Priprema počinje kada prvi stanar uđe u krug nakon što su svi bili izvan njega."
+          "general_arrival_radius_m": "Priprema počinje kada prvi stanar uđe u krug nakon što su svi bili izvan njega.",
+          "show_room_smileys": "Uz naziv svake prostorije prikazuje smajliće koji opisuju uvjete u njoj."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "Kraj vremena tišine",
           "general_proximity_trackers": "Stanari za praćenje",
           "general_occupied_radius_m": "Polumjer prisutnosti (m, 0 = isključeno)",
-          "general_arrival_radius_m": "Polumjer pripreme (m, 0 = isključeno)"
+          "general_arrival_radius_m": "Polumjer pripreme (m, 0 = isključeno)",
+          "show_room_smileys": "Prikaži smajliće za prostorije"
         },
         "data_description": {
           "weather_entities": "Odaberite: Vrijeme i upozorenja · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "Dnevno vrijeme završetka, koje više nije dio vremena tišine. Ako je prije početka, interval završava sljedeći dan.",
           "general_proximity_trackers": "Za svakog stanara odaberite osobu u Home Assistantu ili GPS uređaj za praćenje.",
           "general_occupied_radius_m": "Dom se smatra zauzetim dok je netko unutar ove udaljenosti.",
-          "general_arrival_radius_m": "Priprema počinje kada prvi stanar uđe u krug nakon što su svi bili izvan njega."
+          "general_arrival_radius_m": "Priprema počinje kada prvi stanar uđe u krug nakon što su svi bili izvan njega.",
+          "show_room_smileys": "Uz naziv svake prostorije prikazuje smajliće koji opisuju uvjete u njoj."
         }
       },
       "room_occupancy": {

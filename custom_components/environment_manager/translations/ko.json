@@ -237,7 +237,8 @@
           "quiet_hours_end": "조용한 시간 종료",
           "general_proximity_trackers": "위치를 확인할 거주자",
           "general_occupied_radius_m": "재실 반경(m, 0 = 끄기)",
-          "general_arrival_radius_m": "도착 준비 반경(m, 0 = 끄기)"
+          "general_arrival_radius_m": "도착 준비 반경(m, 0 = 끄기)",
+          "show_room_smileys": "방 상태 이모지 표시"
         },
         "data_description": {
           "weather_entities": "선택하세요: 날씨 및 경보 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "매일 종료 시각으로, 조용한 시간에 포함되지 않습니다. 시작 시각보다 이르면 다음 날에 끝납니다.",
           "general_proximity_trackers": "거주자마다 Home Assistant의 사람 또는 GPS 추적기를 하나 선택하세요.",
           "general_occupied_radius_m": "누군가 이 거리 안에 있으면 집에 사람이 있는 것으로 간주합니다.",
-          "general_arrival_radius_m": "모두 반경 밖에 있다가 첫 거주자가 안으로 들어오면 도착 준비를 시작합니다."
+          "general_arrival_radius_m": "모두 반경 밖에 있다가 첫 거주자가 안으로 들어오면 도착 준비를 시작합니다.",
+          "show_room_smileys": "각 방 이름 옆에 실내 상태를 나타내는 얼굴 이모지를 표시합니다."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "조용한 시간 종료",
           "general_proximity_trackers": "위치를 확인할 거주자",
           "general_occupied_radius_m": "재실 반경(m, 0 = 끄기)",
-          "general_arrival_radius_m": "도착 준비 반경(m, 0 = 끄기)"
+          "general_arrival_radius_m": "도착 준비 반경(m, 0 = 끄기)",
+          "show_room_smileys": "방 상태 이모지 표시"
         },
         "data_description": {
           "weather_entities": "선택하세요: 날씨 및 경보 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "매일 종료 시각으로, 조용한 시간에 포함되지 않습니다. 시작 시각보다 이르면 다음 날에 끝납니다.",
           "general_proximity_trackers": "거주자마다 Home Assistant의 사람 또는 GPS 추적기를 하나 선택하세요.",
           "general_occupied_radius_m": "누군가 이 거리 안에 있으면 집에 사람이 있는 것으로 간주합니다.",
-          "general_arrival_radius_m": "모두 반경 밖에 있다가 첫 거주자가 안으로 들어오면 도착 준비를 시작합니다."
+          "general_arrival_radius_m": "모두 반경 밖에 있다가 첫 거주자가 안으로 들어오면 도착 준비를 시작합니다.",
+          "show_room_smileys": "각 방 이름 옆에 실내 상태를 나타내는 얼굴 이모지를 표시합니다."
         }
       },
       "room_occupancy": {

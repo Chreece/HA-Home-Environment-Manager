@@ -237,7 +237,8 @@
           "quiet_hours_end": "Einde van stille uren",
           "general_proximity_trackers": "Te volgen bewoners",
           "general_occupied_radius_m": "Aanwezigheidsstraal (m, 0 = uit)",
-          "general_arrival_radius_m": "Voorbereidingsstraal (m, 0 = uit)"
+          "general_arrival_radius_m": "Voorbereidingsstraal (m, 0 = uit)",
+          "show_room_smileys": "Smileys voor kamers tonen"
         },
         "data_description": {
           "weather_entities": "Kies: Weer en waarschuwingen · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "Dagelijkse eindtijd, die niet meer bij de stille uren hoort. Ligt deze vóór de begintijd, dan eindigt het tijdvak de volgende dag.",
           "general_proximity_trackers": "Kies per bewoner één persoon in Home Assistant of één GPS-tracker.",
           "general_occupied_radius_m": "De woning geldt als bezet zolang iemand binnen deze afstand is.",
-          "general_arrival_radius_m": "De voorbereiding start zodra de eerste bewoner binnen de straal komt nadat iedereen erbuiten was."
+          "general_arrival_radius_m": "De voorbereiding start zodra de eerste bewoner binnen de straal komt nadat iedereen erbuiten was.",
+          "show_room_smileys": "Toon naast elke kamernaam smileys die de omstandigheden in die kamer aangeven."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "Einde van stille uren",
           "general_proximity_trackers": "Te volgen bewoners",
           "general_occupied_radius_m": "Aanwezigheidsstraal (m, 0 = uit)",
-          "general_arrival_radius_m": "Voorbereidingsstraal (m, 0 = uit)"
+          "general_arrival_radius_m": "Voorbereidingsstraal (m, 0 = uit)",
+          "show_room_smileys": "Smileys voor kamers tonen"
         },
         "data_description": {
           "weather_entities": "Kies: Weer en waarschuwingen · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "Dagelijkse eindtijd, die niet meer bij de stille uren hoort. Ligt deze vóór de begintijd, dan eindigt het tijdvak de volgende dag.",
           "general_proximity_trackers": "Kies per bewoner één persoon in Home Assistant of één GPS-tracker.",
           "general_occupied_radius_m": "De woning geldt als bezet zolang iemand binnen deze afstand is.",
-          "general_arrival_radius_m": "De voorbereiding start zodra de eerste bewoner binnen de straal komt nadat iedereen erbuiten was."
+          "general_arrival_radius_m": "De voorbereiding start zodra de eerste bewoner binnen de straal komt nadat iedereen erbuiten was.",
+          "show_room_smileys": "Toon naast elke kamernaam smileys die de omstandigheden in die kamer aangeven."
         }
       },
       "room_occupancy": {

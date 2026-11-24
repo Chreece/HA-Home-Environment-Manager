@@ -22,7 +22,7 @@ from .const import (
     CONF_WINDOW_CLOSE_COOLDOWN_MINUTES, DEFAULT_WINDOW_CLOSE_COOLDOWN_MINUTES,
     MAX_WINDOW_CLOSE_COOLDOWN_MINUTES,
     MAX_WINDOW_OPEN_TIMEOUT_MINUTES,
-    CONF_QUIET_HOURS_ENABLED, CONF_QUIET_HOURS_START, CONF_QUIET_HOURS_END,
+    CONF_SHOW_ROOM_SMILEYS, CONF_QUIET_HOURS_ENABLED, CONF_QUIET_HOURS_START, CONF_QUIET_HOURS_END,
     DEFAULT_QUIET_HOURS_START, DEFAULT_QUIET_HOURS_END,
 )
 from . import room_sources as sources
@@ -498,6 +498,7 @@ class RoomSetupMixin:
                 CONF_WINDOW_OPEN_TIMEOUT_MINUTES, DEFAULT_WINDOW_OPEN_TIMEOUT_MINUTES),
             CONF_WINDOW_CLOSE_COOLDOWN_MINUTES: self._values.get(
                 CONF_WINDOW_CLOSE_COOLDOWN_MINUTES, DEFAULT_WINDOW_CLOSE_COOLDOWN_MINUTES),
+            CONF_SHOW_ROOM_SMILEYS: self._values.get(CONF_SHOW_ROOM_SMILEYS, True),
             CONF_QUIET_HOURS_ENABLED: self._values.get(CONF_QUIET_HOURS_ENABLED, False),
             CONF_QUIET_HOURS_START: self._values.get(CONF_QUIET_HOURS_START, DEFAULT_QUIET_HOURS_START),
             CONF_QUIET_HOURS_END: self._values.get(CONF_QUIET_HOURS_END, DEFAULT_QUIET_HOURS_END),
@@ -601,6 +602,8 @@ class RoomSetupMixin:
             if ((value["general_wake_alarm_entity"] == "none") !=
                     (value["general_wake_lead_minutes_entity"] == "none")):
                 errors["general_wake_lead_minutes_entity"] = "wake_sources_pair"
+            if type(value[CONF_SHOW_ROOM_SMILEYS]) is not bool:
+                errors[CONF_SHOW_ROOM_SMILEYS] = "invalid_room_source"
             if type(value[CONF_USE_MOLD]) is not bool:
                 errors[CONF_USE_MOLD] = "invalid_room_source"
             if type(value[CONF_AWAY_WINDOWS_ALERT]) is not bool:
@@ -731,6 +734,7 @@ class RoomSetupMixin:
                 self._values[CONF_QUIET_HOURS_ENABLED] = value[CONF_QUIET_HOURS_ENABLED]
                 self._values[CONF_QUIET_HOURS_START] = quiet_start.isoformat()
                 self._values[CONF_QUIET_HOURS_END] = quiet_end.isoformat()
+                self._values[CONF_SHOW_ROOM_SMILEYS] = value[CONF_SHOW_ROOM_SMILEYS]
                 self._values[CONF_USE_MOLD] = value[CONF_USE_MOLD]
                 self._values[CONF_AWAY_WINDOWS_ALERT] = value[CONF_AWAY_WINDOWS_ALERT]
                 from .hub_delivery import hub_installed
@@ -860,6 +864,7 @@ class RoomSetupMixin:
         from .hub_delivery import hub_installed
         if hub_installed(self.hass):
             fields[field(CONF_HUB, value.get(CONF_HUB, False))] = selector.BooleanSelector()
+        fields[field(CONF_SHOW_ROOM_SMILEYS, value[CONF_SHOW_ROOM_SMILEYS])] = selector.BooleanSelector()
         fields[field(CONF_USE_MOLD, value[CONF_USE_MOLD])] = selector.BooleanSelector()
         fields[field(CONF_AWAY_WINDOWS_ALERT, value[CONF_AWAY_WINDOWS_ALERT])] = selector.BooleanSelector()
         if hub_installed(self.hass):

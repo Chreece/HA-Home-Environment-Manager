@@ -198,6 +198,11 @@ def build(check=False, memory_output=None):
                        for value in variants.values()), (source_file, key, 'empty translation')
             assert key not in keyed or keyed[key] == variants, (source_file, key, 'conflicting translations')
             keyed[key] = variants
+    room_text = read(ROOT / '.github/localization/room_overview.json')
+    for flow in ('config', 'options'):
+        prefix = f'{flow}.step.setup_general'
+        keyed[f'{prefix}.data.show_room_smileys'] = room_text['Show room smileys']
+        keyed[f'{prefix}.data_description.show_room_smileys'] = room_text['Show condition faces beside every room name.']
     english = read(SRC / 'translations/en.json')
     synchronize_setting_metadata(english, 'en', names, help_catalog)
     for key, variants in keyed.items():

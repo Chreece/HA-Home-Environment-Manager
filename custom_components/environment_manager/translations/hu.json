@@ -237,7 +237,8 @@
           "quiet_hours_end": "Csendes időszak vége",
           "general_proximity_trackers": "Követett lakók",
           "general_occupied_radius_m": "Jelenléti sugár (m, 0 = ki)",
-          "general_arrival_radius_m": "Előkészítési sugár (m, 0 = ki)"
+          "general_arrival_radius_m": "Előkészítési sugár (m, 0 = ki)",
+          "show_room_smileys": "Helyiségek hangulatjeleinek megjelenítése"
         },
         "data_description": {
           "weather_entities": "Válassz: Időjárás és riasztások · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "Napi befejezési időpont, amely már nem tartozik a csendes időszakhoz. Ha korábbi a kezdésnél, az időszak másnap ér véget.",
           "general_proximity_trackers": "Lakónként egy Home Assistant-személyt vagy GPS-nyomkövetőt válasszon.",
           "general_occupied_radius_m": "Az otthon foglaltnak számít, amíg valaki ezen a távolságon belül van.",
-          "general_arrival_radius_m": "Az előkészítés akkor indul, amikor az első lakó belép a körbe, miután mindenki azon kívül volt."
+          "general_arrival_radius_m": "Az előkészítés akkor indul, amikor az első lakó belép a körbe, miután mindenki azon kívül volt.",
+          "show_room_smileys": "Minden helyiség neve mellett megjeleníti a helyiség állapotát jelző arcokat."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "Csendes időszak vége",
           "general_proximity_trackers": "Követett lakók",
           "general_occupied_radius_m": "Jelenléti sugár (m, 0 = ki)",
-          "general_arrival_radius_m": "Előkészítési sugár (m, 0 = ki)"
+          "general_arrival_radius_m": "Előkészítési sugár (m, 0 = ki)",
+          "show_room_smileys": "Helyiségek hangulatjeleinek megjelenítése"
         },
         "data_description": {
           "weather_entities": "Válassz: Időjárás és riasztások · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "Napi befejezési időpont, amely már nem tartozik a csendes időszakhoz. Ha korábbi a kezdésnél, az időszak másnap ér véget.",
           "general_proximity_trackers": "Lakónként egy Home Assistant-személyt vagy GPS-nyomkövetőt válasszon.",
           "general_occupied_radius_m": "Az otthon foglaltnak számít, amíg valaki ezen a távolságon belül van.",
-          "general_arrival_radius_m": "Az előkészítés akkor indul, amikor az első lakó belép a körbe, miután mindenki azon kívül volt."
+          "general_arrival_radius_m": "Az előkészítés akkor indul, amikor az első lakó belép a körbe, miután mindenki azon kívül volt.",
+          "show_room_smileys": "Minden helyiség neve mellett megjeleníti a helyiség állapotát jelző arcokat."
         }
       },
       "room_occupancy": {

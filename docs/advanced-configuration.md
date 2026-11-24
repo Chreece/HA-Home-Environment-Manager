@@ -225,8 +225,8 @@ Entity IDs can differ with your language, naming and renames. The older
 
 Each room tab starts with the settings cog, the room name and its condition faces.
 Hover the faces, or expand the room on a phone, to read their localized meanings.
-Activity and alert icons on the right retain their own tooltips or actions.
-Readings underneath open their usual details and trends.
+Room alerts follow the faces inside the tab. Device activity appears on the right. In Home settings, open **Room overview** and turn off **Show room smileys** to hide the faces throughout the dashboard. The expanded room still describes its conditions.
+Readings underneath show the value, unit and metric name, for example **62 % Mold** or **3 µg/m³ PM2.5**. Illuminance shows the value and **lx**. Select a reading for its details and trends.
 
 The faces show simultaneous measured conditions. Temperature uses the current
 PMV estimate (neutral from −0.5 to +0.5), then the adaptive comfort band when

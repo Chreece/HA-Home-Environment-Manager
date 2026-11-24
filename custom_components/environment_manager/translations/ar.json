@@ -237,7 +237,8 @@
           "quiet_hours_end": "نهاية ساعات الهدوء",
           "general_proximity_trackers": "السكان المراد تتبّعهم",
           "general_occupied_radius_m": "نطاق الإشغال (م، 0 = معطّل)",
-          "general_arrival_radius_m": "نطاق التجهيز (م، 0 = معطّل)"
+          "general_arrival_radius_m": "نطاق التجهيز (م، 0 = معطّل)",
+          "show_room_smileys": "إظهار الوجوه التعبيرية للغرف"
         },
         "data_description": {
           "weather_entities": "اختر: الطقس والتحذيرات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "وقت النهاية اليومي، ولا يُحتسب ضمن ساعات الهدوء. إذا كان أسبق من وقت البداية، تنتهي الفترة في اليوم التالي.",
           "general_proximity_trackers": "اختر شخصًا من Home Assistant أو جهاز تتبّع GPS لكل ساكن.",
           "general_occupied_radius_m": "يُعتبر المنزل مشغولًا ما دام أحد السكان ضمن هذه المسافة.",
-          "general_arrival_radius_m": "يبدأ التجهيز عند دخول أول ساكن بعد أن كان الجميع خارج النطاق."
+          "general_arrival_radius_m": "يبدأ التجهيز عند دخول أول ساكن بعد أن كان الجميع خارج النطاق.",
+          "show_room_smileys": "عرض وجوه تعبّر عن ظروف الغرفة بجانب اسم كل غرفة."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "نهاية ساعات الهدوء",
           "general_proximity_trackers": "السكان المراد تتبّعهم",
           "general_occupied_radius_m": "نطاق الإشغال (م، 0 = معطّل)",
-          "general_arrival_radius_m": "نطاق التجهيز (م، 0 = معطّل)"
+          "general_arrival_radius_m": "نطاق التجهيز (م، 0 = معطّل)",
+          "show_room_smileys": "إظهار الوجوه التعبيرية للغرف"
         },
         "data_description": {
           "weather_entities": "اختر: الطقس والتحذيرات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "وقت النهاية اليومي، ولا يُحتسب ضمن ساعات الهدوء. إذا كان أسبق من وقت البداية، تنتهي الفترة في اليوم التالي.",
           "general_proximity_trackers": "اختر شخصًا من Home Assistant أو جهاز تتبّع GPS لكل ساكن.",
           "general_occupied_radius_m": "يُعتبر المنزل مشغولًا ما دام أحد السكان ضمن هذه المسافة.",
-          "general_arrival_radius_m": "يبدأ التجهيز عند دخول أول ساكن بعد أن كان الجميع خارج النطاق."
+          "general_arrival_radius_m": "يبدأ التجهيز عند دخول أول ساكن بعد أن كان الجميع خارج النطاق.",
+          "show_room_smileys": "عرض وجوه تعبّر عن ظروف الغرفة بجانب اسم كل غرفة."
         }
       },
       "room_occupancy": {

@@ -237,7 +237,8 @@
           "quiet_hours_end": "Slutt på stille timer",
           "general_proximity_trackers": "Beboere som skal spores",
           "general_occupied_radius_m": "Radius for tilstedeværelse (m, 0 = av)",
-          "general_arrival_radius_m": "Radius for klargjøring (m, 0 = av)"
+          "general_arrival_radius_m": "Radius for klargjøring (m, 0 = av)",
+          "show_room_smileys": "Vis smilefjes for rom"
         },
         "data_description": {
           "weather_entities": "Velg: Vær og varsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "Daglig sluttid, som ikke lenger er med i de stille timene. Er den før starttiden, slutter intervallet neste dag.",
           "general_proximity_trackers": "Velg én person i Home Assistant eller én GPS-sporer per beboer.",
           "general_occupied_radius_m": "Boligen regnes som bebodd så lenge noen er innenfor denne avstanden.",
-          "general_arrival_radius_m": "Klargjøringen starter når den første beboeren kommer innenfor radiusen etter at alle har vært utenfor."
+          "general_arrival_radius_m": "Klargjøringen starter når den første beboeren kommer innenfor radiusen etter at alle har vært utenfor.",
+          "show_room_smileys": "Vis smilefjes som beskriver forholdene i rommet ved siden av hvert romnavn."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "Slutt på stille timer",
           "general_proximity_trackers": "Beboere som skal spores",
           "general_occupied_radius_m": "Radius for tilstedeværelse (m, 0 = av)",
-          "general_arrival_radius_m": "Radius for klargjøring (m, 0 = av)"
+          "general_arrival_radius_m": "Radius for klargjøring (m, 0 = av)",
+          "show_room_smileys": "Vis smilefjes for rom"
         },
         "data_description": {
           "weather_entities": "Velg: Vær og varsler · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "Daglig sluttid, som ikke lenger er med i de stille timene. Er den før starttiden, slutter intervallet neste dag.",
           "general_proximity_trackers": "Velg én person i Home Assistant eller én GPS-sporer per beboer.",
           "general_occupied_radius_m": "Boligen regnes som bebodd så lenge noen er innenfor denne avstanden.",
-          "general_arrival_radius_m": "Klargjøringen starter når den første beboeren kommer innenfor radiusen etter at alle har vært utenfor."
+          "general_arrival_radius_m": "Klargjøringen starter når den første beboeren kommer innenfor radiusen etter at alle har vært utenfor.",
+          "show_room_smileys": "Vis smilefjes som beskriver forholdene i rommet ved siden av hvert romnavn."
         }
       },
       "room_occupancy": {

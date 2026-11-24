@@ -111,7 +111,14 @@ for(const [area,metric,short,friendly,ids] of input.expected){
     .map(match=>match[0]).find(html=>html.includes(ids.length>1?
       `data-hem-average105="${metric}"`:`data-hem-source105="${ids[0]}"`));
   assert.ok(badge,`${area}/${metric}: no source button`);
-  assert.ok(badge.includes(`class="hem-room-metric-label107">${short}</span>`),`${metric}: wrong label`);
+  if(metric==='illuminance'){
+    assert(!badge.includes('hem-room-metric-label107') && badge.includes('>lx</span>'));
+  }else{
+    const suffix=` <span class="hem-room-metric-label107">${short}</span>`;
+    assert(badge.includes(suffix),`${metric}: missing spaced label`);
+    assert(badge.indexOf(suffix)>badge.indexOf('hem-room-metric-value107'));
+    assert(badge.indexOf(suffix)>badge.indexOf('hem-room-metric-unit107'));
+  }
   assert.ok(badge.includes(friendly),`${metric}: full sensor name lost`);
   assert.ok(!badge.replace(/<[^>]*>/g,'').includes(input.long_name),`${metric}: friendly name in compact text`);
   if(metric==='voc')assert.ok(badge.includes('µg/m³'), 'VOC mass unit lost');
@@ -182,12 +189,15 @@ with sync_playwright() as playwright:
     for area, metric, short, friendly, ids in expected:
         badge = trigger(area, metric, ids)
         assert badge.count() == 1, (area, metric)
-        assert badge.locator('.hem-room-metric-label107').text_content() == short, (area, metric)
+        label = badge.locator('.hem-room-metric-label107')
+        if metric == 'illuminance':
+            assert label.count() == 0 and badge.locator('.hem-room-metric-unit107').inner_text() == 'lx'
+        else:
+            assert label.text_content() == short, (area, metric)
         assert long_name not in badge.text_content(), (area, metric)
         assert friendly in badge.get_attribute('title'), (area, metric)
         assert friendly in badge.get_attribute('aria-label'), (area, metric)
-        if metric != unknown_metric:
-            label = badge.locator('.hem-room-metric-label107')
+        if metric not in (unknown_metric, 'illuminance'):
             assert label.evaluate('el=>el.scrollWidth<=el.clientWidth+1'), (metric, "known label clipped")
     assert trigger('room1', 'voc_parts', ['sensor.room1_voc_parts']).locator(
         '.hem-room-metric-unit107').text_content() == 'ppb'
@@ -202,6 +212,14 @@ with sync_playwright() as playwright:
         if screenshot_dir:
             page.locator('#card-frame').screenshot(path=str(screenshot_dir / f"beta116-metrics-{width}.png"))
         helpers["assert_layout"](page.evaluate(helpers["LAYOUT_REPORT"]), f"long names / {width}px")
+        for badge in page.locator('.hem-room-overview080 .hem-room-air-chip89:visible').all():
+            assert badge.evaluate("""el=>{
+              const parts=[...el.querySelectorAll('.hem-room-metric-value107,.hem-room-metric-unit107,.hem-room-metric-label107')];
+              const boxes=parts.map(node=>node.getBoundingClientRect());
+              const center=r=>r.top+r.height/2;
+              return boxes.every((r,i)=>r.width>0 && Math.abs(center(r)-center(boxes[0]))<=1 &&
+                (!i || r.left>boxes[i-1].right));
+            }"""), (width, badge.inner_text())
     page.set_viewport_size({"width": 1280, "height": 990})
     for width in (320, 390, 590):
         page.evaluate("width=>document.getElementById('card-frame').style.width=width+'px'", width)

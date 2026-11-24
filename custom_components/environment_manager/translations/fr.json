@@ -237,7 +237,8 @@
           "quiet_hours_end": "Fin des heures de silence",
           "general_proximity_trackers": "Résidents à localiser",
           "general_occupied_radius_m": "Rayon de présence (m, 0 = désactivé)",
-          "general_arrival_radius_m": "Rayon de préparation (m, 0 = désactivé)"
+          "general_arrival_radius_m": "Rayon de préparation (m, 0 = désactivé)",
+          "show_room_smileys": "Afficher les émojis des pièces"
         },
         "data_description": {
           "weather_entities": "Au moins une entité météo est nécessaire. Pluie, orages, vent fort et températures extrêmes empêchent d'ouvrir les fenêtres. L'indicateur de moisissure utilise l'attribut temperature (°C/°F) d'une entité météo sélectionnée comme température extérieure. Sélectionnez une source qui fournit une température.",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "Heure de fin quotidienne, exclue des heures de silence. Une heure antérieure au début termine la plage le lendemain.",
           "general_proximity_trackers": "Choisissez une personne de Home Assistant ou un traceur GPS par résident.",
           "general_occupied_radius_m": "Le logement est considéré comme occupé tant que quelqu’un se trouve dans ce rayon.",
-          "general_arrival_radius_m": "La préparation commence au retour du premier résident dans ce rayon après la sortie de tous."
+          "general_arrival_radius_m": "La préparation commence au retour du premier résident dans ce rayon après la sortie de tous.",
+          "show_room_smileys": "Affiche à côté du nom de chaque pièce des émojis qui décrivent les conditions ambiantes."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "Fin des heures de silence",
           "general_proximity_trackers": "Résidents à localiser",
           "general_occupied_radius_m": "Rayon de présence (m, 0 = désactivé)",
-          "general_arrival_radius_m": "Rayon de préparation (m, 0 = désactivé)"
+          "general_arrival_radius_m": "Rayon de préparation (m, 0 = désactivé)",
+          "show_room_smileys": "Afficher les émojis des pièces"
         },
         "data_description": {
           "weather_entities": "Au moins une entité météo est nécessaire. Pluie, orages, vent fort et températures extrêmes empêchent d'ouvrir les fenêtres. L'indicateur de moisissure utilise l'attribut temperature (°C/°F) d'une entité météo sélectionnée comme température extérieure. Sélectionnez une source qui fournit une température.",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "Heure de fin quotidienne, exclue des heures de silence. Une heure antérieure au début termine la plage le lendemain.",
           "general_proximity_trackers": "Choisissez une personne de Home Assistant ou un traceur GPS par résident.",
           "general_occupied_radius_m": "Le logement est considéré comme occupé tant que quelqu’un se trouve dans ce rayon.",
-          "general_arrival_radius_m": "La préparation commence au retour du premier résident dans ce rayon après la sortie de tous."
+          "general_arrival_radius_m": "La préparation commence au retour du premier résident dans ce rayon après la sortie de tous.",
+          "show_room_smileys": "Affiche à côté du nom de chaque pièce des émojis qui décrivent les conditions ambiantes."
         }
       },
       "room_occupancy": {
