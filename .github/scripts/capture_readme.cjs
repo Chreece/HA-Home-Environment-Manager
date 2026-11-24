@@ -155,6 +155,7 @@ async function main() {
       const measures=bathroom.locator('[data-device-fold87="climate.hem_'+id+'"] > summary .hem-device-reading87');
       assert.deepEqual(await measures.allTextContents(),[expected]);
     }
+    assert.equal(await bathroom.getByRole('button',{name:/Bathroom door/}).count(),1);
     await bathroom.screenshot({path:path.join(output,'hem-room-expanded.png')});
     const detail=await bathroom.innerText();
     for(const label of ['Below the comfort band','Bathroom dehumidifier','Bathroom heater','Bathroom door']) assert.ok(detail.includes(label),label+' missing: '+detail);

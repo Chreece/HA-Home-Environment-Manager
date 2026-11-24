@@ -41,6 +41,9 @@ room["environment"]["door_context"] = {
     "contacts":[{
         "entity_id":"binary_sensor.door", "kind":"interior",
         "health":"ok", "state":"closed",
+    }, {
+        "entity_id":"binary_sensor.secondary_door", "kind":"interior",
+        "health":"unavailable", "state":"unknown",
     }],
     "connections":[], "advisories":[],
 }
@@ -49,6 +52,9 @@ states["binary_sensor.window"] = {
 }
 states["binary_sensor.door"] = {
     "state":"off", "attributes":{"device_class":"door","friendly_name":"Living room door"}
+}
+states["binary_sensor.secondary_door"] = {
+    "state":"unavailable", "attributes":{"device_class":"door","friendly_name":"Hall door"}
 }
 CHROME = os.getenv("CHROME_BIN") or shutil.which("chromium") or shutil.which("google-chrome")
 assert CHROME
@@ -66,6 +72,9 @@ with sync_playwright() as pw:
                          '--primary-color:#03a9f4;--divider-color:#444}</style>')
         page.add_script_tag(path=str(CARD))
         page.evaluate(r"""({language,states})=>{
+          const env=states['sensor.hem'].attributes.dashboard.rooms.find(r=>r.area_id==='living').environment;
+          if(language==='el'){env.climate_plan={...env.climate_plan,door:env.door_context};delete env.door_context;}
+          if(language==='de'){env.door=env.door_context;delete env.door_context;if(env.climate_plan)delete env.climate_plan.door;}
           window.calls=[];window.info=[];
           window.card=document.createElement('home-environment-manager-card');
           document.body.appendChild(card);
@@ -109,6 +118,12 @@ with sync_playwright() as pw:
         assert doors.locator('[data-hem-source105="binary_sensor.door"]').count()==1
         doors.locator('[data-hem-source105="binary_sensor.door"]').click()
         assert page.evaluate("info")[-1] == "binary_sensor.door"
+        second = doors.get_by_role("button", name="Hall door", exact=False)
+        second.focus()
+        for key in ("Enter", "Space"):
+            before = len(page.evaluate("info"))
+            second.press(key)
+            assert page.evaluate("info")[before:] == ["binary_sensor.secondary_door"]
         assert row.get_attribute("open") is not None
         detailed = row.locator('.metric-number[data-hem-average105="mold"]')
         assert detailed.count()==1, "Calibrated mold detail has no historical click"

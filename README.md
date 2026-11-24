@@ -145,7 +145,7 @@ HEM compares **what a room needs** with **whether outdoor air can help**.
 
 HEM can give ventilation advice without any controllable windows. It does not open a window by itself merely because airing would help.
 
-A confirmed open window can pause a room's eligible devices. Closing it starts the configured cooldown before resumption. An unavailable contact raises a needs-attention indication and drops out of the control decision. Other working contacts still participate. The separate window-opening response timer gives someone time to act on a ventilation recommendation.
+A confirmed open window can pause a room's eligible devices. Closing it starts the configured cooldown before resumption. An unavailable contact raises a needs-attention indication and drops out of the control decision. Other working contacts still participate. Select a door in **Windows & doors** to open its Home Assistant entity, including when the contact reports unavailable. The separate window-opening response timer gives someone time to act on a ventilation recommendation.
 
 ### Humidity, mold indication and air quality
 

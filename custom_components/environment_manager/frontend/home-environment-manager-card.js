@@ -2299,6 +2299,10 @@
       </div>`;
     }
 
+    _doorReport(room) {
+      return room?.environment?.door_context || room?.environment?.climate_plan?.door || room?.environment?.door;
+    }
+
     _window(win) {
       const opened = win.opened;
       const klass = opened === true ? 'opened' : opened === false ? 'closed' : 'unknown';
@@ -6821,7 +6825,7 @@
       safeArray(room.readings).some(v=>v?.entity_id===id &&
         !v?.details?.fallback_for_mold && v?.metric!=='mold') ||
       safeArray(room.windows).some(v=>v?.entity_id===id) ||
-       safeArray(room.environment?.door_context?.contacts).some(v=>v?.entity_id===id) ||
+       safeArray(this._doorReport(room)?.contacts).some(v=>v?.entity_id===id) ||
       Object.values(room.environment?.measurement_evidence||{}).some(v=>
         safeArray(v?.source_ids).includes(id)));
   };
@@ -12440,6 +12444,7 @@
     ".hem-door-head062 .hem-context76{margin-inline-start:auto}",
     ".hem-door-context062{font-size:11px;line-height:1.5;color:var(--aqa-muted);margin:6px 0 0}",
     ".hem-door-contact062{max-width:100%;overflow-wrap:anywhere}",
+    "button.hem-door-contact062{font-family:inherit;color:inherit;border:0;cursor:pointer;text-align:start}",
     ".hem-room-door062 .window-list{min-width:0}",
     ".hem-room-door062 .window ha-icon{--mdc-icon-size:16px;flex:0 0 16px}",
     "</style>"
@@ -12468,7 +12473,7 @@
       contact_unverified:'Ein Kontakt ist nicht bestätigt. Nicht alle Türen als geschlossen annehmen.',fire_door_open:'Eine Brand-/Sicherheitstür meldet offen. Brandschutzregeln des Gebäudes beachten; nicht zum Lüften offenhalten.',invalid_connection:'Eine konfigurierte Raumverbindung fehlt oder ist ungültig.',fresh_air_needed:'CO₂ liegt über dem eingestellten Grenzwert. Außenluftzufuhr prüfen; gewöhnliche Partikelfilter entfernen kein CO₂.',remove_moisture_locally:'Erhöhte Feuchte. Lokale Abluft oder Entfeuchtung prüfen, statt Feuchtigkeit in andere Räume zu verteilen.',moisture_transfer_risk:'Feuchte Luft kann die Feuchte im kühleren verbundenen Raum erhöhen. Nicht mit der Luft eines wärmeren Raums heizen.',door_activity_while_away:'Eine Tür änderte sich bei gemeldeter Abwesenheit. Ereignis prüfen; kein Nachweis eines Einbruchs.',contact_chattering:'Mehrere schnelle Kontaktwechsel beobachtet. Ausrichtung, Funkverbindung und Kontakt prüfen.',advice:'Beratende Informationen'}
   },"HEM_DOOR_WORDS063:11562");
   HomeEnvironmentManagerCard.prototype._doorContext063=function(room){
-    const report=room?.environment?.door_context||room?.environment?.climate_plan?.door||room?.environment?.door;
+    const report=this._doorReport(room);
     if(!report)return '';
     const contacts=Array.isArray(report.contacts)?report.contacts:[];
     const links=Array.isArray(report.connections)?report.connections:[];
@@ -12542,12 +12547,13 @@
       const icon=current==='open'?'mdi:door-open':current==='closed'?'mdi:door-closed':'mdi:door';
       const id=contact.entity_id,name=sourceName(id);
       const label=name+' · '+tr(current)+(verified?'':' · '+tr(contact.health));
-      const native=verified&&this._nativeAllowed105?.(id);
-      return '<span class="window hem-door-contact062 '+klass+(native?' hem-source-click105':'')+'" '+
+      const native=typeof id==='string' && id.startsWith('binary_sensor.') && this._nativeAllowed105?.(id);
+      const tag=native?'button':'span';
+      return '<'+tag+(native?' type="button"':'')+' class="window hem-door-contact062 '+klass+(native?' hem-source-click105':'')+'" '+
         'title="'+escape(label)+'" aria-label="'+escape(label)+'" '+
-        (native?'data-hem-source105="'+escape(id)+'" role="button" tabindex="0"':'')+'>'+
+        (native?'data-hem-source105="'+escape(id)+'"':'')+'>'+
         this._icon(icon)+'<span>'+escape(name)+'</span><small>· '+escape(tr(current))+
-        (verified?'':' · '+escape(tr(contact.health)))+'</small></span>';
+        (verified?'':' · '+escape(tr(contact.health)))+'</small></'+tag+'>';
     }).join('');
     return '<div class="window-section hem-room-door062" data-room-doors062="'+escape(room.area_id)+'">'+
       '<div class="hem-door-head062"><span class="field-label">'+this._icon('mdi:door-closed')+
