@@ -237,7 +237,8 @@
           "quiet_hours_end": "শান্ত সময়ের শেষ",
           "general_proximity_trackers": "যেসব বাসিন্দার অবস্থান দেখা হবে",
           "general_occupied_radius_m": "উপস্থিতির ব্যাসার্ধ (মি, ০ = বন্ধ)",
-          "general_arrival_radius_m": "প্রস্তুতির ব্যাসার্ধ (মি, ০ = বন্ধ)"
+          "general_arrival_radius_m": "প্রস্তুতির ব্যাসার্ধ (মি, ০ = বন্ধ)",
+          "show_room_smileys": "ঘরের ইমোজি দেখান"
         },
         "data_description": {
           "weather_entities": "নির্বাচন করুন: আবহাওয়া ও সতর্কতা · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "প্রতিদিনের শেষের সময়, যা আর শান্ত সময়ের অন্তর্ভুক্ত নয়। শুরুর চেয়ে আগে হলে সময়সীমা পরের দিন শেষ হয়।",
           "general_proximity_trackers": "প্রতি বাসিন্দার জন্য Home Assistant থেকে একজন ব্যক্তি বা একটি GPS ট্র্যাকার বেছে নিন।",
           "general_occupied_radius_m": "কেউ এই দূরত্বের মধ্যে থাকলে বাড়িতে লোক আছে বলে ধরা হবে।",
-          "general_arrival_radius_m": "সবাই বাইরে থাকার পর প্রথম বাসিন্দা এই সীমার মধ্যে এলে প্রস্তুতি শুরু হবে।"
+          "general_arrival_radius_m": "সবাই বাইরে থাকার পর প্রথম বাসিন্দা এই সীমার মধ্যে এলে প্রস্তুতি শুরু হবে।",
+          "show_room_smileys": "প্রতিটি ঘরের নামের পাশে সেখানকার অবস্থা বোঝাতে ইমোজি দেখায়।"
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "শান্ত সময়ের শেষ",
           "general_proximity_trackers": "যেসব বাসিন্দার অবস্থান দেখা হবে",
           "general_occupied_radius_m": "উপস্থিতির ব্যাসার্ধ (মি, ০ = বন্ধ)",
-          "general_arrival_radius_m": "প্রস্তুতির ব্যাসার্ধ (মি, ০ = বন্ধ)"
+          "general_arrival_radius_m": "প্রস্তুতির ব্যাসার্ধ (মি, ০ = বন্ধ)",
+          "show_room_smileys": "ঘরের ইমোজি দেখান"
         },
         "data_description": {
           "weather_entities": "নির্বাচন করুন: আবহাওয়া ও সতর্কতা · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "প্রতিদিনের শেষের সময়, যা আর শান্ত সময়ের অন্তর্ভুক্ত নয়। শুরুর চেয়ে আগে হলে সময়সীমা পরের দিন শেষ হয়।",
           "general_proximity_trackers": "প্রতি বাসিন্দার জন্য Home Assistant থেকে একজন ব্যক্তি বা একটি GPS ট্র্যাকার বেছে নিন।",
           "general_occupied_radius_m": "কেউ এই দূরত্বের মধ্যে থাকলে বাড়িতে লোক আছে বলে ধরা হবে।",
-          "general_arrival_radius_m": "সবাই বাইরে থাকার পর প্রথম বাসিন্দা এই সীমার মধ্যে এলে প্রস্তুতি শুরু হবে।"
+          "general_arrival_radius_m": "সবাই বাইরে থাকার পর প্রথম বাসিন্দা এই সীমার মধ্যে এলে প্রস্তুতি শুরু হবে।",
+          "show_room_smileys": "প্রতিটি ঘরের নামের পাশে সেখানকার অবস্থা বোঝাতে ইমোজি দেখায়।"
         }
       },
       "room_occupancy": {

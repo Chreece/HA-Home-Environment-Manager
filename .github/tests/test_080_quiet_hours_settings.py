@@ -37,6 +37,18 @@ END = "quiet_hours_end"
 
 
 class QuietHoursSettingsTests(unittest.IsolatedAsyncioTestCase):
+    async def test_home_smileys_default_on_and_survive_other_settings_saves(self):
+        key = 'show_room_smileys'
+        flow = fixture.GeneralFlow(language='el', existing=17)
+        schema = (await flow.async_step_setup_general())['data_schema']
+        self.assertTrue(next(field.default for field in schema if str(field) == key))
+        result = await flow.async_step_setup_general({key: False})
+        self.assertIs(result['saved'][key], False)
+        reopened = fixture.GeneralFlow(**result['saved'])
+        result = await reopened.async_step_setup_general({})
+        self.assertIs(result['saved'][key], False)
+        self.assertEqual(result['saved']['existing'], 17)
+
     async def test_defaults_are_disabled_and_reading_form_does_not_save(self):
         flow = fixture.GeneralFlow(language="el", keep={"existing": 17})
         before = deepcopy(flow._values)

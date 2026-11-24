@@ -237,7 +237,8 @@
           "quiet_hours_end": "Koniec času pokoja",
           "general_proximity_trackers": "Sledovaní obyvatelia",
           "general_occupied_radius_m": "Polomer prítomnosti (m, 0 = vypnuté)",
-          "general_arrival_radius_m": "Polomer prípravy (m, 0 = vypnuté)"
+          "general_arrival_radius_m": "Polomer prípravy (m, 0 = vypnuté)",
+          "show_room_smileys": "Zobraziť smajlíky miestností"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasie a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "Denný čas konca, ktorý už nepatrí do času pokoja. Ak je skorší než začiatok, interval sa skončí nasledujúci deň.",
           "general_proximity_trackers": "Pre každého obyvateľa vyberte osobu v Home Assistante alebo GPS sledovač.",
           "general_occupied_radius_m": "Domácnosť sa považuje za obsadenú, kým je niekto v tejto vzdialenosti.",
-          "general_arrival_radius_m": "Príprava sa začne, keď prvý obyvateľ vstúpi do okruhu po tom, čo boli všetci mimo neho."
+          "general_arrival_radius_m": "Príprava sa začne, keď prvý obyvateľ vstúpi do okruhu po tom, čo boli všetci mimo neho.",
+          "show_room_smileys": "Vedľa názvu každej miestnosti zobrazí smajlíky vyjadrujúce podmienky v miestnosti."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "Koniec času pokoja",
           "general_proximity_trackers": "Sledovaní obyvatelia",
           "general_occupied_radius_m": "Polomer prítomnosti (m, 0 = vypnuté)",
-          "general_arrival_radius_m": "Polomer prípravy (m, 0 = vypnuté)"
+          "general_arrival_radius_m": "Polomer prípravy (m, 0 = vypnuté)",
+          "show_room_smileys": "Zobraziť smajlíky miestností"
         },
         "data_description": {
           "weather_entities": "Vyberte: Počasie a výstrahy · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "Denný čas konca, ktorý už nepatrí do času pokoja. Ak je skorší než začiatok, interval sa skončí nasledujúci deň.",
           "general_proximity_trackers": "Pre každého obyvateľa vyberte osobu v Home Assistante alebo GPS sledovač.",
           "general_occupied_radius_m": "Domácnosť sa považuje za obsadenú, kým je niekto v tejto vzdialenosti.",
-          "general_arrival_radius_m": "Príprava sa začne, keď prvý obyvateľ vstúpi do okruhu po tom, čo boli všetci mimo neho."
+          "general_arrival_radius_m": "Príprava sa začne, keď prvý obyvateľ vstúpi do okruhu po tom, čo boli všetci mimo neho.",
+          "show_room_smileys": "Vedľa názvu každej miestnosti zobrazí smajlíky vyjadrujúce podmienky v miestnosti."
         }
       },
       "room_occupancy": {

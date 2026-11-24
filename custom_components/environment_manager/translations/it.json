@@ -237,7 +237,8 @@
           "quiet_hours_end": "Fine delle ore di silenzio",
           "general_proximity_trackers": "Residenti da localizzare",
           "general_occupied_radius_m": "Raggio di presenza (m, 0 = disattivato)",
-          "general_arrival_radius_m": "Raggio di preparazione (m, 0 = disattivato)"
+          "general_arrival_radius_m": "Raggio di preparazione (m, 0 = disattivato)",
+          "show_room_smileys": "Mostra le faccine delle stanze"
         },
         "data_description": {
           "weather_entities": "Seleziona: Meteo e allerte · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "Ora di fine giornaliera, esclusa dalle ore di silenzio. Se precede l’inizio, la fascia termina il giorno successivo.",
           "general_proximity_trackers": "Scegli una persona di Home Assistant o un localizzatore GPS per ogni residente.",
           "general_occupied_radius_m": "La casa è considerata occupata finché qualcuno si trova entro questa distanza.",
-          "general_arrival_radius_m": "La preparazione inizia quando rientra il primo residente dopo che tutti erano fuori dal raggio."
+          "general_arrival_radius_m": "La preparazione inizia quando rientra il primo residente dopo che tutti erano fuori dal raggio.",
+          "show_room_smileys": "Mostra accanto al nome di ogni stanza le faccine che ne descrivono le condizioni."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "Fine delle ore di silenzio",
           "general_proximity_trackers": "Residenti da localizzare",
           "general_occupied_radius_m": "Raggio di presenza (m, 0 = disattivato)",
-          "general_arrival_radius_m": "Raggio di preparazione (m, 0 = disattivato)"
+          "general_arrival_radius_m": "Raggio di preparazione (m, 0 = disattivato)",
+          "show_room_smileys": "Mostra le faccine delle stanze"
         },
         "data_description": {
           "weather_entities": "Seleziona: Meteo e allerte · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "Ora di fine giornaliera, esclusa dalle ore di silenzio. Se precede l’inizio, la fascia termina il giorno successivo.",
           "general_proximity_trackers": "Scegli una persona di Home Assistant o un localizzatore GPS per ogni residente.",
           "general_occupied_radius_m": "La casa è considerata occupata finché qualcuno si trova entro questa distanza.",
-          "general_arrival_radius_m": "La preparazione inizia quando rientra il primo residente dopo che tutti erano fuori dal raggio."
+          "general_arrival_radius_m": "La preparazione inizia quando rientra il primo residente dopo che tutti erano fuori dal raggio.",
+          "show_room_smileys": "Mostra accanto al nome di ogni stanza le faccine che ne descrivono le condizioni."
         }
       },
       "room_occupancy": {

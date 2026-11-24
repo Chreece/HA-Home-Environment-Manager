@@ -237,7 +237,8 @@
           "quiet_hours_end": "शांत समय का अंत",
           "general_proximity_trackers": "जिन निवासियों का स्थान देखना है",
           "general_occupied_radius_m": "उपस्थिति की त्रिज्या (मी, 0 = बंद)",
-          "general_arrival_radius_m": "तैयारी की त्रिज्या (मी, 0 = बंद)"
+          "general_arrival_radius_m": "तैयारी की त्रिज्या (मी, 0 = बंद)",
+          "show_room_smileys": "कमरों के इमोजी दिखाएँ"
         },
         "data_description": {
           "weather_entities": "चुनें: मौसम और चेतावनियाँ · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "रोज़ का समाप्ति समय, जो शांत समय में शामिल नहीं है। शुरुआत से पहले का समय चुनने पर अंतराल अगले दिन समाप्त होता है।",
           "general_proximity_trackers": "हर निवासी के लिए Home Assistant में एक व्यक्ति या एक GPS ट्रैकर चुनें।",
           "general_occupied_radius_m": "जब तक कोई इस दूरी के भीतर है, घर को आबाद माना जाएगा।",
-          "general_arrival_radius_m": "सभी के दायरे से बाहर होने के बाद पहला निवासी दायरे में आते ही तैयारी शुरू होगी।"
+          "general_arrival_radius_m": "सभी के दायरे से बाहर होने के बाद पहला निवासी दायरे में आते ही तैयारी शुरू होगी।",
+          "show_room_smileys": "हर कमरे के नाम के पास वहाँ की स्थिति बताने वाले इमोजी दिखाएँ।"
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "शांत समय का अंत",
           "general_proximity_trackers": "जिन निवासियों का स्थान देखना है",
           "general_occupied_radius_m": "उपस्थिति की त्रिज्या (मी, 0 = बंद)",
-          "general_arrival_radius_m": "तैयारी की त्रिज्या (मी, 0 = बंद)"
+          "general_arrival_radius_m": "तैयारी की त्रिज्या (मी, 0 = बंद)",
+          "show_room_smileys": "कमरों के इमोजी दिखाएँ"
         },
         "data_description": {
           "weather_entities": "चुनें: मौसम और चेतावनियाँ · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "रोज़ का समाप्ति समय, जो शांत समय में शामिल नहीं है। शुरुआत से पहले का समय चुनने पर अंतराल अगले दिन समाप्त होता है।",
           "general_proximity_trackers": "हर निवासी के लिए Home Assistant में एक व्यक्ति या एक GPS ट्रैकर चुनें।",
           "general_occupied_radius_m": "जब तक कोई इस दूरी के भीतर है, घर को आबाद माना जाएगा।",
-          "general_arrival_radius_m": "सभी के दायरे से बाहर होने के बाद पहला निवासी दायरे में आते ही तैयारी शुरू होगी।"
+          "general_arrival_radius_m": "सभी के दायरे से बाहर होने के बाद पहला निवासी दायरे में आते ही तैयारी शुरू होगी।",
+          "show_room_smileys": "हर कमरे के नाम के पास वहाँ की स्थिति बताने वाले इमोजी दिखाएँ।"
         }
       },
       "room_occupancy": {

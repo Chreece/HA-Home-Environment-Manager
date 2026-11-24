@@ -237,7 +237,8 @@
           "quiet_hours_end": "סיום שעות השקט",
           "general_proximity_trackers": "דיירים למעקב",
           "general_occupied_radius_m": "רדיוס נוכחות (מ׳, 0 = כבוי)",
-          "general_arrival_radius_m": "רדיוס הכנה (מ׳, 0 = כבוי)"
+          "general_arrival_radius_m": "רדיוס הכנה (מ׳, 0 = כבוי)",
+          "show_room_smileys": "הצגת סמיילים לחדרים"
         },
         "data_description": {
           "weather_entities": "בחרו: מזג אוויר ואזהרות · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "שעת סיום יומית, שאינה נכללת עוד בשעות השקט. אם היא מוקדמת משעת ההתחלה, החלון מסתיים ביום הבא.",
           "general_proximity_trackers": "יש לבחור ישות אדם ב־Home Assistant או מכשיר GPS אחד לכל דייר.",
           "general_occupied_radius_m": "הבית נחשב מאוכלס כל עוד מישהו נמצא בטווח הזה.",
-          "general_arrival_radius_m": "ההכנה מתחילה כשהדייר הראשון נכנס לטווח לאחר שכולם היו מחוצה לו."
+          "general_arrival_radius_m": "ההכנה מתחילה כשהדייר הראשון נכנס לטווח לאחר שכולם היו מחוצה לו.",
+          "show_room_smileys": "הצגת סמיילים המתארים את התנאים בחדר ליד השם של כל חדר."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "סיום שעות השקט",
           "general_proximity_trackers": "דיירים למעקב",
           "general_occupied_radius_m": "רדיוס נוכחות (מ׳, 0 = כבוי)",
-          "general_arrival_radius_m": "רדיוס הכנה (מ׳, 0 = כבוי)"
+          "general_arrival_radius_m": "רדיוס הכנה (מ׳, 0 = כבוי)",
+          "show_room_smileys": "הצגת סמיילים לחדרים"
         },
         "data_description": {
           "weather_entities": "בחרו: מזג אוויר ואזהרות · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "שעת סיום יומית, שאינה נכללת עוד בשעות השקט. אם היא מוקדמת משעת ההתחלה, החלון מסתיים ביום הבא.",
           "general_proximity_trackers": "יש לבחור ישות אדם ב־Home Assistant או מכשיר GPS אחד לכל דייר.",
           "general_occupied_radius_m": "הבית נחשב מאוכלס כל עוד מישהו נמצא בטווח הזה.",
-          "general_arrival_radius_m": "ההכנה מתחילה כשהדייר הראשון נכנס לטווח לאחר שכולם היו מחוצה לו."
+          "general_arrival_radius_m": "ההכנה מתחילה כשהדייר הראשון נכנס לטווח לאחר שכולם היו מחוצה לו.",
+          "show_room_smileys": "הצגת סמיילים המתארים את התנאים בחדר ליד השם של כל חדר."
         }
       },
       "room_occupancy": {

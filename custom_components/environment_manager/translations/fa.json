@@ -237,7 +237,8 @@
           "quiet_hours_end": "پایان ساعت‌های سکوت",
           "general_proximity_trackers": "ساکنان برای ردیابی",
           "general_occupied_radius_m": "شعاع حضور (متر، ۰ = خاموش)",
-          "general_arrival_radius_m": "شعاع آماده‌سازی (متر، ۰ = خاموش)"
+          "general_arrival_radius_m": "شعاع آماده‌سازی (متر، ۰ = خاموش)",
+          "show_room_smileys": "نمایش شکلک‌های اتاق‌ها"
         },
         "data_description": {
           "weather_entities": "انتخاب کنید: آب‌وهوا و هشدارها · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "زمان پایان روزانه که دیگر جزو ساعت‌های سکوت نیست. اگر زودتر از آغاز باشد، بازه روز بعد پایان می‌یابد.",
           "general_proximity_trackers": "برای هر ساکن یک شخص در Home Assistant یا یک ردیاب GPS انتخاب کنید.",
           "general_occupied_radius_m": "تا وقتی کسی در این فاصله باشد خانه دارای سکنه در نظر گرفته می‌شود.",
-          "general_arrival_radius_m": "وقتی همه بیرون از شعاع بوده‌اند، با ورود نخستین ساکن آماده‌سازی آغاز می‌شود."
+          "general_arrival_radius_m": "وقتی همه بیرون از شعاع بوده‌اند، با ورود نخستین ساکن آماده‌سازی آغاز می‌شود.",
+          "show_room_smileys": "کنار نام هر اتاق شکلک‌هایی نشان می‌دهد که وضعیت آن اتاق را بیان می‌کنند."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "پایان ساعت‌های سکوت",
           "general_proximity_trackers": "ساکنان برای ردیابی",
           "general_occupied_radius_m": "شعاع حضور (متر، ۰ = خاموش)",
-          "general_arrival_radius_m": "شعاع آماده‌سازی (متر، ۰ = خاموش)"
+          "general_arrival_radius_m": "شعاع آماده‌سازی (متر، ۰ = خاموش)",
+          "show_room_smileys": "نمایش شکلک‌های اتاق‌ها"
         },
         "data_description": {
           "weather_entities": "انتخاب کنید: آب‌وهوا و هشدارها · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "زمان پایان روزانه که دیگر جزو ساعت‌های سکوت نیست. اگر زودتر از آغاز باشد، بازه روز بعد پایان می‌یابد.",
           "general_proximity_trackers": "برای هر ساکن یک شخص در Home Assistant یا یک ردیاب GPS انتخاب کنید.",
           "general_occupied_radius_m": "تا وقتی کسی در این فاصله باشد خانه دارای سکنه در نظر گرفته می‌شود.",
-          "general_arrival_radius_m": "وقتی همه بیرون از شعاع بوده‌اند، با ورود نخستین ساکن آماده‌سازی آغاز می‌شود."
+          "general_arrival_radius_m": "وقتی همه بیرون از شعاع بوده‌اند، با ورود نخستین ساکن آماده‌سازی آغاز می‌شود.",
+          "show_room_smileys": "کنار نام هر اتاق شکلک‌هایی نشان می‌دهد که وضعیت آن اتاق را بیان می‌کنند."
         }
       },
       "room_occupancy": {

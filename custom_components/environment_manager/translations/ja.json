@@ -237,7 +237,8 @@
           "quiet_hours_end": "静音時間帯の終了",
           "general_proximity_trackers": "位置を確認する居住者",
           "general_occupied_radius_m": "在宅とみなす半径（m、0 で無効）",
-          "general_arrival_radius_m": "到着準備の半径（m、0 で無効）"
+          "general_arrival_radius_m": "到着準備の半径（m、0 で無効）",
+          "show_room_smileys": "部屋の顔文字を表示"
         },
         "data_description": {
           "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "毎日の終了時刻。この時刻は静音時間帯に含まれません。開始より早い時刻の場合、翌日に終了します。",
           "general_proximity_trackers": "居住者ごとに Home Assistant の人物または GPS トラッカーを1つ選びます。",
           "general_occupied_radius_m": "誰かがこの距離内にいる間は在宅とみなします。",
-          "general_arrival_radius_m": "全員が範囲外に出た後、最初の居住者が範囲内に入ると到着準備を開始します。"
+          "general_arrival_radius_m": "全員が範囲外に出た後、最初の居住者が範囲内に入ると到着準備を開始します。",
+          "show_room_smileys": "各部屋の名前の横に、室内の状態を表す顔の絵文字を表示します。"
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "静音時間帯の終了",
           "general_proximity_trackers": "位置を確認する居住者",
           "general_occupied_radius_m": "在宅とみなす半径（m、0 で無効）",
-          "general_arrival_radius_m": "到着準備の半径（m、0 で無効）"
+          "general_arrival_radius_m": "到着準備の半径（m、0 で無効）",
+          "show_room_smileys": "部屋の顔文字を表示"
         },
         "data_description": {
           "weather_entities": "選択してください: 天気と警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "毎日の終了時刻。この時刻は静音時間帯に含まれません。開始より早い時刻の場合、翌日に終了します。",
           "general_proximity_trackers": "居住者ごとに Home Assistant の人物または GPS トラッカーを1つ選びます。",
           "general_occupied_radius_m": "誰かがこの距離内にいる間は在宅とみなします。",
-          "general_arrival_radius_m": "全員が範囲外に出た後、最初の居住者が範囲内に入ると到着準備を開始します。"
+          "general_arrival_radius_m": "全員が範囲外に出た後、最初の居住者が範囲内に入ると到着準備を開始します。",
+          "show_room_smileys": "各部屋の名前の横に、室内の状態を表す顔の絵文字を表示します。"
         }
       },
       "room_occupancy": {

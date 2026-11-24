@@ -237,7 +237,8 @@
           "quiet_hours_end": "Fim do horário de silêncio",
           "general_proximity_trackers": "Moradores a localizar",
           "general_occupied_radius_m": "Raio de presença (m, 0 = desativado)",
-          "general_arrival_radius_m": "Raio de preparação (m, 0 = desativado)"
+          "general_arrival_radius_m": "Raio de preparação (m, 0 = desativado)",
+          "show_room_smileys": "Mostrar emojis dos cômodos"
         },
         "data_description": {
           "weather_entities": "Selecione: Clima e alertas · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "Hora de término diária, excluída do horário de silêncio. Se for anterior ao início, o intervalo termina no dia seguinte.",
           "general_proximity_trackers": "Escolha uma pessoa do Home Assistant ou um rastreador GPS por morador.",
           "general_occupied_radius_m": "A casa é considerada ocupada enquanto alguém estiver dentro dessa distância.",
-          "general_arrival_radius_m": "A preparação começa quando o primeiro morador entra no raio depois de todos terem ficado fora."
+          "general_arrival_radius_m": "A preparação começa quando o primeiro morador entra no raio depois de todos terem ficado fora.",
+          "show_room_smileys": "Mostra ao lado do nome de cada cômodo emojis que indicam as condições do ambiente."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "Fim do horário de silêncio",
           "general_proximity_trackers": "Moradores a localizar",
           "general_occupied_radius_m": "Raio de presença (m, 0 = desativado)",
-          "general_arrival_radius_m": "Raio de preparação (m, 0 = desativado)"
+          "general_arrival_radius_m": "Raio de preparação (m, 0 = desativado)",
+          "show_room_smileys": "Mostrar emojis dos cômodos"
         },
         "data_description": {
           "weather_entities": "Selecione: Clima e alertas · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "Hora de término diária, excluída do horário de silêncio. Se for anterior ao início, o intervalo termina no dia seguinte.",
           "general_proximity_trackers": "Escolha uma pessoa do Home Assistant ou um rastreador GPS por morador.",
           "general_occupied_radius_m": "A casa é considerada ocupada enquanto alguém estiver dentro dessa distância.",
-          "general_arrival_radius_m": "A preparação começa quando o primeiro morador entra no raio depois de todos terem ficado fora."
+          "general_arrival_radius_m": "A preparação começa quando o primeiro morador entra no raio depois de todos terem ficado fora.",
+          "show_room_smileys": "Mostra ao lado do nome de cada cômodo emojis que indicam as condições do ambiente."
         }
       },
       "room_occupancy": {

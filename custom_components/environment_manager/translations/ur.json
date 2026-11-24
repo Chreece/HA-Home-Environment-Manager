@@ -237,7 +237,8 @@
           "quiet_hours_end": "خاموش اوقات کا اختتام",
           "general_proximity_trackers": "جن رہائشیوں کا مقام معلوم کرنا ہے",
           "general_occupied_radius_m": "موجودگی کا رداس (میٹر، 0 = بند)",
-          "general_arrival_radius_m": "تیاری کا رداس (میٹر، 0 = بند)"
+          "general_arrival_radius_m": "تیاری کا رداس (میٹر، 0 = بند)",
+          "show_room_smileys": "کمروں کے ایموجی دکھائیں"
         },
         "data_description": {
           "weather_entities": "منتخب کریں: موسم اور انتباہات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "روزانہ اختتام کا وقت، جو خاموش اوقات میں شامل نہیں ہے۔ اگر یہ آغاز سے پہلے ہو تو وقفہ اگلے دن ختم ہوتا ہے۔",
           "general_proximity_trackers": "ہر رہائشی کے لیے Home Assistant میں ایک شخص یا ایک GPS ٹریکر منتخب کریں۔",
           "general_occupied_radius_m": "جب تک کوئی اس فاصلے کے اندر ہو گھر کو آباد سمجھا جائے گا۔",
-          "general_arrival_radius_m": "سب کے دائرے سے باہر ہونے کے بعد پہلا رہائشی اندر آئے تو تیاری شروع ہو گی۔"
+          "general_arrival_radius_m": "سب کے دائرے سے باہر ہونے کے بعد پہلا رہائشی اندر آئے تو تیاری شروع ہو گی۔",
+          "show_room_smileys": "ہر کمرے کے نام کے ساتھ اس کے حالات ظاہر کرنے والے چہرے دکھائیں۔"
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "خاموش اوقات کا اختتام",
           "general_proximity_trackers": "جن رہائشیوں کا مقام معلوم کرنا ہے",
           "general_occupied_radius_m": "موجودگی کا رداس (میٹر، 0 = بند)",
-          "general_arrival_radius_m": "تیاری کا رداس (میٹر، 0 = بند)"
+          "general_arrival_radius_m": "تیاری کا رداس (میٹر، 0 = بند)",
+          "show_room_smileys": "کمروں کے ایموجی دکھائیں"
         },
         "data_description": {
           "weather_entities": "منتخب کریں: موسم اور انتباہات · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "روزانہ اختتام کا وقت، جو خاموش اوقات میں شامل نہیں ہے۔ اگر یہ آغاز سے پہلے ہو تو وقفہ اگلے دن ختم ہوتا ہے۔",
           "general_proximity_trackers": "ہر رہائشی کے لیے Home Assistant میں ایک شخص یا ایک GPS ٹریکر منتخب کریں۔",
           "general_occupied_radius_m": "جب تک کوئی اس فاصلے کے اندر ہو گھر کو آباد سمجھا جائے گا۔",
-          "general_arrival_radius_m": "سب کے دائرے سے باہر ہونے کے بعد پہلا رہائشی اندر آئے تو تیاری شروع ہو گی۔"
+          "general_arrival_radius_m": "سب کے دائرے سے باہر ہونے کے بعد پہلا رہائشی اندر آئے تو تیاری شروع ہو گی۔",
+          "show_room_smileys": "ہر کمرے کے نام کے ساتھ اس کے حالات ظاہر کرنے والے چہرے دکھائیں۔"
         }
       },
       "room_occupancy": {

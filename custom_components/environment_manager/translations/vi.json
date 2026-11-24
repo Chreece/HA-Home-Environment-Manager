@@ -237,7 +237,8 @@
           "quiet_hours_end": "Kết thúc giờ yên tĩnh",
           "general_proximity_trackers": "Thành viên cần theo dõi",
           "general_occupied_radius_m": "Bán kính tính là có người (m, 0 = tắt)",
-          "general_arrival_radius_m": "Bán kính chuẩn bị (m, 0 = tắt)"
+          "general_arrival_radius_m": "Bán kính chuẩn bị (m, 0 = tắt)",
+          "show_room_smileys": "Hiển thị biểu tượng cảm xúc của phòng"
         },
         "data_description": {
           "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "Giờ kết thúc hằng ngày, không còn tính vào giờ yên tĩnh. Nếu sớm hơn giờ bắt đầu, khoảng thời gian kết thúc vào ngày hôm sau.",
           "general_proximity_trackers": "Chọn một người trong Home Assistant hoặc một thiết bị định vị GPS cho mỗi thành viên.",
           "general_occupied_radius_m": "Nhà được xem là có người khi còn ai đó trong khoảng cách này.",
-          "general_arrival_radius_m": "Bắt đầu chuẩn bị khi người đầu tiên vào trong bán kính sau khi tất cả đã ở ngoài."
+          "general_arrival_radius_m": "Bắt đầu chuẩn bị khi người đầu tiên vào trong bán kính sau khi tất cả đã ở ngoài.",
+          "show_room_smileys": "Hiển thị biểu tượng khuôn mặt mô tả điều kiện trong phòng bên cạnh tên mỗi phòng."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "Kết thúc giờ yên tĩnh",
           "general_proximity_trackers": "Thành viên cần theo dõi",
           "general_occupied_radius_m": "Bán kính tính là có người (m, 0 = tắt)",
-          "general_arrival_radius_m": "Bán kính chuẩn bị (m, 0 = tắt)"
+          "general_arrival_radius_m": "Bán kính chuẩn bị (m, 0 = tắt)",
+          "show_room_smileys": "Hiển thị biểu tượng cảm xúc của phòng"
         },
         "data_description": {
           "weather_entities": "Chọn: Thời tiết và cảnh báo · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "Giờ kết thúc hằng ngày, không còn tính vào giờ yên tĩnh. Nếu sớm hơn giờ bắt đầu, khoảng thời gian kết thúc vào ngày hôm sau.",
           "general_proximity_trackers": "Chọn một người trong Home Assistant hoặc một thiết bị định vị GPS cho mỗi thành viên.",
           "general_occupied_radius_m": "Nhà được xem là có người khi còn ai đó trong khoảng cách này.",
-          "general_arrival_radius_m": "Bắt đầu chuẩn bị khi người đầu tiên vào trong bán kính sau khi tất cả đã ở ngoài."
+          "general_arrival_radius_m": "Bắt đầu chuẩn bị khi người đầu tiên vào trong bán kính sau khi tất cả đã ở ngoài.",
+          "show_room_smileys": "Hiển thị biểu tượng khuôn mặt mô tả điều kiện trong phòng bên cạnh tên mỗi phòng."
         }
       },
       "room_occupancy": {

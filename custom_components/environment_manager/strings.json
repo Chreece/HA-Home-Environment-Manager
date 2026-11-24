@@ -237,7 +237,8 @@
           "quiet_hours_end": "Quiet hours end",
           "general_proximity_trackers": "Residents to track",
           "general_occupied_radius_m": "Occupied radius (m, 0 = off)",
-          "general_arrival_radius_m": "Preparation radius (m, 0 = off)"
+          "general_arrival_radius_m": "Preparation radius (m, 0 = off)",
+          "show_room_smileys": "Show room smileys"
         },
         "data_description": {
           "weather_entities": "At least one weather provider. Rain, storms and extreme wind/temperature block opening. Mold indication uses the current temperature attribute (°C/°F) of a selected weather entity for outdoor temperature. Choose a source that reports temperature.",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "Daily end time, excluded from quiet hours. A time earlier than the start ends the interval the next day.",
           "general_proximity_trackers": "Choose one Home Assistant person or GPS tracker per resident.",
           "general_occupied_radius_m": "Count the home as occupied while anyone is within this distance.",
-          "general_arrival_radius_m": "Start Prepare for arrival when the first resident enters after everyone was outside."
+          "general_arrival_radius_m": "Start Prepare for arrival when the first resident enters after everyone was outside.",
+          "show_room_smileys": "Show condition faces beside every room name."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "Quiet hours end",
           "general_proximity_trackers": "Residents to track",
           "general_occupied_radius_m": "Occupied radius (m, 0 = off)",
-          "general_arrival_radius_m": "Preparation radius (m, 0 = off)"
+          "general_arrival_radius_m": "Preparation radius (m, 0 = off)",
+          "show_room_smileys": "Show room smileys"
         },
         "data_description": {
           "weather_entities": "At least one weather provider. Rain, storms and extreme wind/temperature block opening. Mold indication uses the current temperature attribute (°C/°F) of a selected weather entity for outdoor temperature. Choose a source that reports temperature.",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "Daily end time, excluded from quiet hours. A time earlier than the start ends the interval the next day.",
           "general_proximity_trackers": "Choose one Home Assistant person or GPS tracker per resident.",
           "general_occupied_radius_m": "Count the home as occupied while anyone is within this distance.",
-          "general_arrival_radius_m": "Start Prepare for arrival when the first resident enters after everyone was outside."
+          "general_arrival_radius_m": "Start Prepare for arrival when the first resident enters after everyone was outside.",
+          "show_room_smileys": "Show condition faces beside every room name."
         }
       },
       "room_occupancy": {

@@ -237,7 +237,8 @@
           "quiet_hours_end": "Akhir jam tenang",
           "general_proximity_trackers": "Penghuni yang dilacak",
           "general_occupied_radius_m": "Radius kehadiran (m, 0 = nonaktif)",
-          "general_arrival_radius_m": "Radius persiapan (m, 0 = nonaktif)"
+          "general_arrival_radius_m": "Radius persiapan (m, 0 = nonaktif)",
+          "show_room_smileys": "Tampilkan emoji ruangan"
         },
         "data_description": {
           "weather_entities": "Pilih: Cuaca dan peringatan · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "Waktu berakhir harian, tidak termasuk dalam jam tenang. Jika lebih awal dari waktu mulai, rentang berakhir pada hari berikutnya.",
           "general_proximity_trackers": "Pilih satu orang di Home Assistant atau satu pelacak GPS untuk setiap penghuni.",
           "general_occupied_radius_m": "Rumah dianggap berpenghuni selama ada seseorang dalam jarak ini.",
-          "general_arrival_radius_m": "Persiapan dimulai saat penghuni pertama masuk ke radius ini setelah semuanya berada di luar."
+          "general_arrival_radius_m": "Persiapan dimulai saat penghuni pertama masuk ke radius ini setelah semuanya berada di luar.",
+          "show_room_smileys": "Tampilkan emoji yang menggambarkan kondisi ruangan di samping nama setiap ruangan."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "Akhir jam tenang",
           "general_proximity_trackers": "Penghuni yang dilacak",
           "general_occupied_radius_m": "Radius kehadiran (m, 0 = nonaktif)",
-          "general_arrival_radius_m": "Radius persiapan (m, 0 = nonaktif)"
+          "general_arrival_radius_m": "Radius persiapan (m, 0 = nonaktif)",
+          "show_room_smileys": "Tampilkan emoji ruangan"
         },
         "data_description": {
           "weather_entities": "Pilih: Cuaca dan peringatan · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "Waktu berakhir harian, tidak termasuk dalam jam tenang. Jika lebih awal dari waktu mulai, rentang berakhir pada hari berikutnya.",
           "general_proximity_trackers": "Pilih satu orang di Home Assistant atau satu pelacak GPS untuk setiap penghuni.",
           "general_occupied_radius_m": "Rumah dianggap berpenghuni selama ada seseorang dalam jarak ini.",
-          "general_arrival_radius_m": "Persiapan dimulai saat penghuni pertama masuk ke radius ini setelah semuanya berada di luar."
+          "general_arrival_radius_m": "Persiapan dimulai saat penghuni pertama masuk ke radius ini setelah semuanya berada di luar.",
+          "show_room_smileys": "Tampilkan emoji yang menggambarkan kondisi ruangan di samping nama setiap ruangan."
         }
       },
       "room_occupancy": {

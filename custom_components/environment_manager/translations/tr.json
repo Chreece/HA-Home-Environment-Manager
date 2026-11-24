@@ -237,7 +237,8 @@
           "quiet_hours_end": "Sessiz saatlerin bitişi",
           "general_proximity_trackers": "İzlenecek hane üyeleri",
           "general_occupied_radius_m": "Evde sayılma yarıçapı (m, 0 = kapalı)",
-          "general_arrival_radius_m": "Hazırlık yarıçapı (m, 0 = kapalı)"
+          "general_arrival_radius_m": "Hazırlık yarıçapı (m, 0 = kapalı)",
+          "show_room_smileys": "Oda emojilerini göster"
         },
         "data_description": {
           "weather_entities": "Seçin: Hava durumu ve uyarılar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "Sessiz saatlere dahil olmayan günlük bitiş saati. Başlangıçtan erkense aralık ertesi gün sona erer.",
           "general_proximity_trackers": "Her hane üyesi için bir Home Assistant kişisi veya GPS izleyicisi seçin.",
           "general_occupied_radius_m": "Bu mesafe içinde biri bulunduğu sürece ev dolu sayılır.",
-          "general_arrival_radius_m": "Herkes yarıçapın dışındayken ilk kişi içeri girdiğinde varış hazırlığı başlar."
+          "general_arrival_radius_m": "Herkes yarıçapın dışındayken ilk kişi içeri girdiğinde varış hazırlığı başlar.",
+          "show_room_smileys": "Her odanın adının yanında odadaki koşulları gösteren yüz emojileri görüntüler."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "Sessiz saatlerin bitişi",
           "general_proximity_trackers": "İzlenecek hane üyeleri",
           "general_occupied_radius_m": "Evde sayılma yarıçapı (m, 0 = kapalı)",
-          "general_arrival_radius_m": "Hazırlık yarıçapı (m, 0 = kapalı)"
+          "general_arrival_radius_m": "Hazırlık yarıçapı (m, 0 = kapalı)",
+          "show_room_smileys": "Oda emojilerini göster"
         },
         "data_description": {
           "weather_entities": "Seçin: Hava durumu ve uyarılar · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "Sessiz saatlere dahil olmayan günlük bitiş saati. Başlangıçtan erkense aralık ertesi gün sona erer.",
           "general_proximity_trackers": "Her hane üyesi için bir Home Assistant kişisi veya GPS izleyicisi seçin.",
           "general_occupied_radius_m": "Bu mesafe içinde biri bulunduğu sürece ev dolu sayılır.",
-          "general_arrival_radius_m": "Herkes yarıçapın dışındayken ilk kişi içeri girdiğinde varış hazırlığı başlar."
+          "general_arrival_radius_m": "Herkes yarıçapın dışındayken ilk kişi içeri girdiğinde varış hazırlığı başlar.",
+          "show_room_smileys": "Her odanın adının yanında odadaki koşulları gösteren yüz emojileri görüntüler."
         }
       },
       "room_occupancy": {

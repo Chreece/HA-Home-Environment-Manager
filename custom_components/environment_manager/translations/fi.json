@@ -237,7 +237,8 @@
           "quiet_hours_end": "Hiljaisten tuntien loppu",
           "general_proximity_trackers": "Seurattavat asukkaat",
           "general_occupied_radius_m": "Läsnäolosäde (m, 0 = pois)",
-          "general_arrival_radius_m": "Valmistelusäde (m, 0 = pois)"
+          "general_arrival_radius_m": "Valmistelusäde (m, 0 = pois)",
+          "show_room_smileys": "Näytä huoneiden hymiöt"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "Päivittäinen päättymisaika, joka ei enää sisälly hiljaisiin tunteihin. Jos se on ennen alkamisaikaa, aikaväli päättyy seuraavana päivänä.",
           "general_proximity_trackers": "Valitse kullekin asukkaalle Home Assistantin henkilö tai GPS-paikannin.",
           "general_occupied_radius_m": "Koti katsotaan asutuksi niin kauan kuin joku on tällä etäisyydellä.",
-          "general_arrival_radius_m": "Valmistelu alkaa, kun ensimmäinen asukas palaa alueelle kaikkien oltua sen ulkopuolella."
+          "general_arrival_radius_m": "Valmistelu alkaa, kun ensimmäinen asukas palaa alueelle kaikkien oltua sen ulkopuolella.",
+          "show_room_smileys": "Näyttää huoneen olosuhteita kuvaavat hymiöt kunkin huoneen nimen vieressä."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "Hiljaisten tuntien loppu",
           "general_proximity_trackers": "Seurattavat asukkaat",
           "general_occupied_radius_m": "Läsnäolosäde (m, 0 = pois)",
-          "general_arrival_radius_m": "Valmistelusäde (m, 0 = pois)"
+          "general_arrival_radius_m": "Valmistelusäde (m, 0 = pois)",
+          "show_room_smileys": "Näytä huoneiden hymiöt"
         },
         "data_description": {
           "weather_entities": "Valitse: Sää ja varoitukset · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "Päivittäinen päättymisaika, joka ei enää sisälly hiljaisiin tunteihin. Jos se on ennen alkamisaikaa, aikaväli päättyy seuraavana päivänä.",
           "general_proximity_trackers": "Valitse kullekin asukkaalle Home Assistantin henkilö tai GPS-paikannin.",
           "general_occupied_radius_m": "Koti katsotaan asutuksi niin kauan kuin joku on tällä etäisyydellä.",
-          "general_arrival_radius_m": "Valmistelu alkaa, kun ensimmäinen asukas palaa alueelle kaikkien oltua sen ulkopuolella."
+          "general_arrival_radius_m": "Valmistelu alkaa, kun ensimmäinen asukas palaa alueelle kaikkien oltua sen ulkopuolella.",
+          "show_room_smileys": "Näyttää huoneen olosuhteita kuvaavat hymiöt kunkin huoneen nimen vieressä."
         }
       },
       "room_occupancy": {

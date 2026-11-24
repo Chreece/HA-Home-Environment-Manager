@@ -237,7 +237,8 @@
           "quiet_hours_end": "Fin del horario de silencio",
           "general_proximity_trackers": "Residentes que se localizarán",
           "general_occupied_radius_m": "Radio de ocupación (m, 0 = desactivado)",
-          "general_arrival_radius_m": "Radio de preparación (m, 0 = desactivado)"
+          "general_arrival_radius_m": "Radio de preparación (m, 0 = desactivado)",
+          "show_room_smileys": "Mostrar emoticonos de las habitaciones"
         },
         "data_description": {
           "weather_entities": "Se requiere al menos una entidad meteorológica. La lluvia, las tormentas, el viento fuerte y las temperaturas extremas impiden abrir. El indicador de moho obtiene la temperatura exterior del atributo temperature (°C/°F) de una entidad meteorológica seleccionada. Elige una fuente que proporcione la temperatura.",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "Hora de fin diaria, excluida del horario de silencio. Si es anterior al inicio, el intervalo termina al día siguiente.",
           "general_proximity_trackers": "Elige una persona de Home Assistant o un localizador GPS por residente.",
           "general_occupied_radius_m": "La casa se considera ocupada mientras alguien esté dentro de esta distancia.",
-          "general_arrival_radius_m": "La preparación comienza cuando entra el primer residente después de que todos hayan estado fuera del radio."
+          "general_arrival_radius_m": "La preparación comienza cuando entra el primer residente después de que todos hayan estado fuera del radio.",
+          "show_room_smileys": "Muestra junto al nombre de cada habitación emoticonos que indican sus condiciones."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "Fin del horario de silencio",
           "general_proximity_trackers": "Residentes que se localizarán",
           "general_occupied_radius_m": "Radio de ocupación (m, 0 = desactivado)",
-          "general_arrival_radius_m": "Radio de preparación (m, 0 = desactivado)"
+          "general_arrival_radius_m": "Radio de preparación (m, 0 = desactivado)",
+          "show_room_smileys": "Mostrar emoticonos de las habitaciones"
         },
         "data_description": {
           "weather_entities": "Se requiere al menos una entidad meteorológica. La lluvia, las tormentas, el viento fuerte y las temperaturas extremas impiden abrir. El indicador de moho obtiene la temperatura exterior del atributo temperature (°C/°F) de una entidad meteorológica seleccionada. Elige una fuente que proporcione la temperatura.",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "Hora de fin diaria, excluida del horario de silencio. Si es anterior al inicio, el intervalo termina al día siguiente.",
           "general_proximity_trackers": "Elige una persona de Home Assistant o un localizador GPS por residente.",
           "general_occupied_radius_m": "La casa se considera ocupada mientras alguien esté dentro de esta distancia.",
-          "general_arrival_radius_m": "La preparación comienza cuando entra el primer residente después de que todos hayan estado fuera del radio."
+          "general_arrival_radius_m": "La preparación comienza cuando entra el primer residente después de que todos hayan estado fuera del radio.",
+          "show_room_smileys": "Muestra junto al nombre de cada habitación emoticonos que indican sus condiciones."
         }
       },
       "room_occupancy": {

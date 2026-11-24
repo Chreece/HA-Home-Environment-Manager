@@ -279,7 +279,8 @@
     "weather_entities": "basic",
     "weather_warnings": "basic",
     "window_close_cooldown_minutes": "basic",
-    "window_open_timeout_minutes": "basic"
+    "window_open_timeout_minutes": "basic",
+    "show_room_smileys": "basic"
   },
   "room_option_levels": {
     "windows": "basic",

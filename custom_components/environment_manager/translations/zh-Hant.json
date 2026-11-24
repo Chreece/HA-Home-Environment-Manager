@@ -237,7 +237,8 @@
           "quiet_hours_end": "靜音結束時間",
           "general_proximity_trackers": "要定位的住戶",
           "general_occupied_radius_m": "判定有人在家的半徑（公尺，0 表示關閉）",
-          "general_arrival_radius_m": "到家準備半徑（公尺，0 表示關閉）"
+          "general_arrival_radius_m": "到家準備半徑（公尺，0 表示關閉）",
+          "show_room_smileys": "顯示房間表情"
         },
         "data_description": {
           "weather_entities": "請選擇: 天氣與警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "每日結束時間，不再計入靜音時段。如果早於開始時間，時段將在次日結束。",
           "general_proximity_trackers": "為每位住戶選擇一個 Home Assistant 人員實體或 GPS 追蹤器。",
           "general_occupied_radius_m": "只要有人在此距離內，就視為家中有人。",
-          "general_arrival_radius_m": "所有人都在半徑外後，第一位住戶進入範圍時便開始到家準備。"
+          "general_arrival_radius_m": "所有人都在半徑外後，第一位住戶進入範圍時便開始到家準備。",
+          "show_room_smileys": "在每個房間名稱旁顯示代表室內狀況的表情。"
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "靜音結束時間",
           "general_proximity_trackers": "要定位的住戶",
           "general_occupied_radius_m": "判定有人在家的半徑（公尺，0 表示關閉）",
-          "general_arrival_radius_m": "到家準備半徑（公尺，0 表示關閉）"
+          "general_arrival_radius_m": "到家準備半徑（公尺，0 表示關閉）",
+          "show_room_smileys": "顯示房間表情"
         },
         "data_description": {
           "weather_entities": "請選擇: 天氣與警報 · weather.* · 🌧️/⛈️/💨 → 🪟🔒 🌡️ weather.* · temperature (°C/°F) → 🧊",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "每日結束時間，不再計入靜音時段。如果早於開始時間，時段將在次日結束。",
           "general_proximity_trackers": "為每位住戶選擇一個 Home Assistant 人員實體或 GPS 追蹤器。",
           "general_occupied_radius_m": "只要有人在此距離內，就視為家中有人。",
-          "general_arrival_radius_m": "所有人都在半徑外後，第一位住戶進入範圍時便開始到家準備。"
+          "general_arrival_radius_m": "所有人都在半徑外後，第一位住戶進入範圍時便開始到家準備。",
+          "show_room_smileys": "在每個房間名稱旁顯示代表室內狀況的表情。"
         }
       },
       "room_occupancy": {

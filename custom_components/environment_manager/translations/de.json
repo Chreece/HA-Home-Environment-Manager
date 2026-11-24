@@ -237,7 +237,8 @@
           "quiet_hours_end": "Ende der Ruhezeiten",
           "general_proximity_trackers": "Personen für die Standorterfassung",
           "general_occupied_radius_m": "Anwesenheitsradius (m, 0 = aus)",
-          "general_arrival_radius_m": "Vorbereitungsradius (m, 0 = aus)"
+          "general_arrival_radius_m": "Vorbereitungsradius (m, 0 = aus)",
+          "show_room_smileys": "Raum-Smileys anzeigen"
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
@@ -297,7 +298,8 @@
           "quiet_hours_end": "Tägliche Endzeit, die nicht mehr zur Ruhezeit gehört. Liegt sie vor der Startzeit, endet das Zeitfenster am nächsten Tag.",
           "general_proximity_trackers": "Je Bewohner eine Home-Assistant-Person oder einen GPS-Tracker auswählen.",
           "general_occupied_radius_m": "Das Zuhause gilt als bewohnt, solange sich jemand innerhalb dieser Entfernung befindet.",
-          "general_arrival_radius_m": "Die Ankunftsvorbereitung startet, sobald die erste Person in den Radius zurückkehrt, nachdem alle außerhalb waren."
+          "general_arrival_radius_m": "Die Ankunftsvorbereitung startet, sobald die erste Person in den Radius zurückkehrt, nachdem alle außerhalb waren.",
+          "show_room_smileys": "Zeigt neben jedem Raumnamen Smileys für das Raumklima an."
         }
       },
       "reconfigure": {
@@ -2294,7 +2296,8 @@
           "quiet_hours_end": "Ende der Ruhezeiten",
           "general_proximity_trackers": "Personen für die Standorterfassung",
           "general_occupied_radius_m": "Anwesenheitsradius (m, 0 = aus)",
-          "general_arrival_radius_m": "Vorbereitungsradius (m, 0 = aus)"
+          "general_arrival_radius_m": "Vorbereitungsradius (m, 0 = aus)",
+          "show_room_smileys": "Raum-Smileys anzeigen"
         },
         "data_description": {
           "weather_entities": "Mindestens eine Wetterentität ist erforderlich. Regen, Gewitter, starker Wind und extreme Temperaturen verhindern das Öffnen. Der Schimmelindikator nutzt das aktuelle Attribut temperature (°C/°F) einer ausgewählten Wetterentität als Außentemperatur. Wähle einen Anbieter mit Temperaturwerten.",
@@ -2356,7 +2359,8 @@
           "quiet_hours_end": "Tägliche Endzeit, die nicht mehr zur Ruhezeit gehört. Liegt sie vor der Startzeit, endet das Zeitfenster am nächsten Tag.",
           "general_proximity_trackers": "Je Bewohner eine Home-Assistant-Person oder einen GPS-Tracker auswählen.",
           "general_occupied_radius_m": "Das Zuhause gilt als bewohnt, solange sich jemand innerhalb dieser Entfernung befindet.",
-          "general_arrival_radius_m": "Die Ankunftsvorbereitung startet, sobald die erste Person in den Radius zurückkehrt, nachdem alle außerhalb waren."
+          "general_arrival_radius_m": "Die Ankunftsvorbereitung startet, sobald die erste Person in den Radius zurückkehrt, nachdem alle außerhalb waren.",
+          "show_room_smileys": "Zeigt neben jedem Raumnamen Smileys für das Raumklima an."
         }
       },
       "room_occupancy": {

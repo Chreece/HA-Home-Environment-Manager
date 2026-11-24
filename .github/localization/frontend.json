@@ -50697,6 +50697,7 @@
     "backend_composed_help.json",
     "metric_science_help.json",
     "pid_reasons.json",
-    "door_frontend.json"
+    "door_frontend.json",
+    "room_overview.json"
   ]
 }
