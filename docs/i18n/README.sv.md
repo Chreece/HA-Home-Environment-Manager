@@ -153,7 +153,7 @@ HEM Inkluderar även enhetsspecifika skydd och diagnostik:
 - Minimal på- och avstängningsperiod, maximala driftstider och stödjande extern effektbrytarehantering.
 - Fönster- och upptagningsbegränsningar, manuell överreddhantering och native kommandokontroller.
 - Rapportering av fel och otillgängliga enheter, med ett val av meddelandebeteende för varje enhet.
-- En valfri vakthund efter stängning för misstänkt fortsatt uppvärmning efter ett OFF-kommando, med vaktad övervakning och begränsade återhämtningsförsök.
+- För varje enhet kan du övervaka om uppvärmning, kylning, avfuktning eller befuktning verkar fortsätta efter avstängning. Välj enbart övervakning eller tillåt upp till två extra avstängningskommandon.
 - Klara väntetillstånd, aktuell driftsstatus och tillgång till källor, så att du kan undersöka innan du aktiverar mer kontroll.
 
 **Säkerhetsgränserna gäller även när en varning är inaktiverad.** HEM behandlar aldrig ett framgångsrikt befallningssändande som bevis på att en apparat fysiskt svarade.

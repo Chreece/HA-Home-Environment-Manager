@@ -153,7 +153,7 @@ HEM obejmuje również ochronę i diagnostykę specyficzną dla urządzenia:
 - Minimalne czasy włączenia i wyłączenia, maksymalne ustawienia czasu pracy oraz obsługa zewnętrznego przełącznika zasilania.
 - Ograniczenia okna i obsługi, ręczne obsługiwanie przeniesienia i kontrolę potwierdzenia lokalnego polecenia.
 - Sprawozdanie z błędów i niezawodnych urządzeń, z wyborem zachowania powiadomienia dla każdego urządzenia.
-- Opcjonalny pies obserwacyjny po zamknięciu w przypadku podejrzanego kontynuacji ogrzewania po wykonaniu polecenia OFF, z obserwacją i ograniczonymi próbami odzyskania.
+- Dla każdego urządzenia można monitorować oznaki dalszego grzania, chłodzenia, osuszania lub nawilżania po wyłączeniu. Wybierz sam monitoring lub zezwól na maksymalnie dwa dodatkowe polecenia wyłączenia.
 - Jasne powody oczekiwania, aktualny status operacyjny i dostępność źródeł, więc możesz zbadać, zanim włączysz więcej kontroli.
 
 **Granice bezpieczeństwa pozostają obowiązujące nawet wtedy, gdy alarm jest wyłączony.** HEM nigdy nie traktuje pomyślnego rozwozu dowodu, że urządzenie fizycznie odpowiedziało.

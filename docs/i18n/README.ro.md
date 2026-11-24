@@ -153,7 +153,7 @@ HEM include, de asemenea, protecții și diagnostice specifice dispozitivului:
 - Durata minimă de ON și OFF, setările maxime de timp de funcționare și manipularea suportată a comutatorului extern de alimentare.
 - Restricții de fereastră și ocupare, manipulare manuală și verificări de confirmare a comandelor locale.
 - Raportarea erorilor și a dispozitivelor nedisponibile, cu o alegere a comportamentului de notificare pentru fiecare dispozitiv.
-- Un câine de supraveghere opțional după închidere pentru încălzirea continuă suspectată după o comandă de oprire, cu monitorizare păzită și încercări limitate de recuperare.
+- Pentru fiecare dispozitiv puteți urmări dacă încălzirea, răcirea, dezumidificarea sau umidificarea continuă după oprire. Alegeți doar monitorizarea sau permiteți cel mult două comenzi suplimentare de oprire.
 - Motive clare de așteptare, starea actuală de funcționare și disponibilitatea surselor, astfel încât să puteți investiga înainte de a permite mai mult control.
 
 **Limitele de siguranță rămân în vigoare chiar și atunci când se dezactivă alarma.** HEM nu tratează niciodată o expediere de comandă reușită ca dovadă că un dispozitiv a răspuns fizic.

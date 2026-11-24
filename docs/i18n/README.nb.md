@@ -153,7 +153,7 @@ HEM omfatter også enhetsspecifikke beskyttelser og diagnostikk:
 - Minimum på- og avaktiveringstid, maksimalt driftstidsinnstillinger og støttet ekstern håndtering av strømforbryter.
 - Vindu- og besetningsbegrensninger, manuell override håndtering og native kommandokontroller.
 - Fejl- og ikke-tilgjengelig-enhetsrapportering, med valg av meldingsadferd for hver enhet.
-- En valgfri overvåkingshund etter nedlukning for mistenkt fortsatt oppvarming etter en OFF-kommando, med overvåket overvåking og begrenset gjenopprettingsforsøk.
+- For hver enhet kan du overvåke om oppvarming, kjøling, avfukting eller befukting fortsetter etter at den er slått av. Velg bare overvåking eller tillat inntil to nye avkommandoer.
 - Klare ventetidsmål, nåværende driftsstatus og kildetilgjengelighet, slik at du kan undersøke før du aktiverer mer kontroll.
 
 **Sikkerhetsgrensene er fortsatt i kraft selv når en varsling er inaktivert.** HEM aldri behandler en vellykket kommandodissendelse som bevis på at en enhet fysisk reagerte.

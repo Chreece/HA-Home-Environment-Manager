@@ -153,7 +153,7 @@ HEM uključujući i zaštitu i dijagnostiku specifičnu za uređaj:
 - U skladu s člankom 4. stavkom 1. stavkom 1. (a) i (b) stavkom 2. (c) stavku 2. (c) stavku 1.
 - Ograničenja prozora i zatvaranja, ručno upravljanje prekidavanjem i provjere potvrde lokalnih zapovjednica.
 - Izjava o grešci i nedostupnim uređajima, s izborom ponašanja obavijesti za svaki uređaj.
-- Opcionalni nadzorni pas nakon zatvaranja za sumnjivo nastavak grijanja nakon zapovjedanja OFF-a, s čuvenim nadzorom i ograničenim pokušajima oporavka.
+- Za svaki uređaj možete pratiti nastavlja li se grijanje, hlađenje, odvlaživanje ili ovlaživanje nakon isključivanja. Odaberite samo nadzor ili dopustite do dvije dodatne naredbe za isključivanje.
 - Jasni razlozi čekanja, trenutni operativni status i dostupnost izvora, tako da možete istražiti prije omogućavanja više kontrole.
 
 **Bezbednosne granice ostaju na snazi čak i kada je upozorenje isključeno.** HEM nikada ne tretira uspješnu komandnu posunu kao dokaz da je uređaj fizički odgovorio.

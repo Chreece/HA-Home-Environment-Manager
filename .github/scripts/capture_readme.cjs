@@ -73,10 +73,11 @@ function sampleHome() {
     const running = action !== 'idle';
     const nativeMode = running ? mode : 'off';
     state(physical,nativeMode,{friendly_name:name, hvac_action:action});
+    const temperature = rooms.find(row => row[0] === area)[2];
     const attrs={area_id:area, source_entity_ids:[physical], source_device_id:slug,
       friendly_name:name+' controller', physical_primary_entity_id:physical, physical_source_state:nativeMode,
       control_mode:'automatic', hvac_modes:['off',mode], requested_hvac_mode:nativeMode,
-      current_temperature:rooms.find(row => row[0] === area)[2], measurements:{humidity:rh},
+      current_temperature:temperature, measurements:{temperature,humidity:rh},
       controller_status:{status:running ? 'controlling' : 'within_target_band'}};
     state(managed,nativeMode,attrs);
     entities[managed]={device_id:'hem_'+slug};

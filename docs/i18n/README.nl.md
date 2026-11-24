@@ -153,7 +153,7 @@ HEM omvat ook beschermings- en diagnostiekprogramma's die specifiek voor het app
 - Minimaal aan- en uit-tijd, maximale werktijdinstellingen en ondersteunde bediening van externe stroomschakelaars.
 - Venster- en bezettingsbeperkingen, handmatige overschrijving en controle van het inheemse commando.
 - Fouten en niet beschikbare apparaatrapporten, met een keuze van meldingsgedrag voor elk apparaat.
-- Een optionele bewakingshond na de sluiting voor vermoedelijke verdere verwarming na een OFF-commando, met bewakend toezicht en beperkte herstelpogingen.
+- Per apparaat kun je controleren of het na uitschakeling blijft verwarmen, koelen, ontvochtigen of bevochtigen. Kies alleen bewaking of sta maximaal twee extra uitschakelcommando’s toe.
 - Klare redenen om te wachten, de huidige exploitatiestatus en de beschikbaarheid van de bron, zodat je kunt onderzoeken voordat je meer controle mogelijk maakt.
 
 **De veiligheidsgrenzen blijven van kracht ook wanneer een waarschuwing uitgeschakeld is.** HEM een succesvolle commando-uitzending nooit als bewijs beschouwt dat een apparaat fysiek heeft gereageerd.

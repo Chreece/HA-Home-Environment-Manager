@@ -149,7 +149,7 @@ HEM comporte également des protections et diagnostics propres à chaque apparei
 - Durées minimales de marche et d'arrêt, durée maximale de fonctionnement et prise en charge des interrupteurs d'alimentation externes compatibles.
 - Restrictions liées aux fenêtres et à la présence, respect des interventions manuelles et vérification des accusés de réception des commandes natives.
 - Signalement des erreurs et de l'indisponibilité d'un appareil, avec des options de notification individuelles.
-- Surveillance facultative après un ordre OFF lorsqu'il existe des signes que le chauffage continue, avec des contrôles prudents et un nombre limité de tentatives de correction.
+- Pour chaque appareil, HEM peut surveiller si le chauffage, le refroidissement, la déshumidification ou l’humidification semble continuer après l’arrêt. Choisissez la surveillance seule ou autorisez jusqu’à deux nouveaux ordres d’arrêt.
 - Motifs d'attente, état de fonctionnement et disponibilité des sources clairement affichés pour faciliter le diagnostic avant d'autoriser de nouvelles commandes.
 
 **Les limites de sécurité restent en vigueur même si une alerte est désactivée.** Le fait qu'un ordre ait été envoyé ne prouve pas que l'appareil l'a réellement exécuté.

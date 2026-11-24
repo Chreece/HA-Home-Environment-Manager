@@ -153,7 +153,7 @@ HEM bao gồm cả các biện pháp bảo vệ và chẩn đoán cụ thể cho
 - Thời gian ON và OFF tối thiểu, cài đặt thời gian hoạt động tối đa và xử lý chuyển động điện bên ngoài được hỗ trợ.
 - Hạn chế cửa sổ và chiếm đóng, xử lý bằng tay và kiểm tra xác nhận lệnh bản địa.
 - Hình báo lỗi và không có thiết bị, với sự lựa chọn hành vi thông báo cho mỗi thiết bị.
-- Một chú chó giám sát tùy chọn sau khi đóng cửa cho việc tiếp tục sưởi ấm nghi ngờ sau lệnh OFF, với giám sát được bảo vệ và hạn chế các nỗ lực phục hồi.
+- Với từng thiết bị, bạn có thể theo dõi dấu hiệu sưởi, làm mát, hút ẩm hoặc tạo ẩm tiếp diễn sau khi tắt. Chọn chỉ theo dõi hoặc cho phép gửi thêm tối đa hai lệnh tắt.
 - Lý do chờ đợi rõ ràng, tình trạng hoạt động hiện tại và nguồn sẵn có, để bạn có thể điều tra trước khi cho phép kiểm soát nhiều hơn.
 
 **Các giới hạn an toàn vẫn có hiệu lực ngay cả khi cảnh báo bị tắt.** HEM không bao giờ xem xét một chuyến phát hành chỉ huy thành công như là bằng chứng cho thấy một thiết bị đã trả lời vật lý.

@@ -153,7 +153,7 @@ HEM sisältää myös laitteen erityisiä suojauksia ja diagnoosia:
 - Vähimmäislähtö- ja pääsykausi, enimmäislähtöaikaasetukset ja tukitut ulkoiset toimitusvaihteiden käsittely.
 - Ikkunan ja käytön rajoitukset, manuaalinen ohjaus ja alkuperäisen käskyn vahvistus.
 - Virheiden ja käytettävissä olevien laitteiden raportointi, jossa on valinta ilmoituksen käyttäytymisestä kunkin laitteen osalta.
-- Valinnainen valvontatoiminta sulkemisen jälkeen epäiltyjen jatkuvien lämmitysten vuoksi, jossa on vartioitu seuranta ja rajoitetut palautusyrityt.
+- Jokaiselle laitteelle voi määrittää valvonnan, joka havaitsee merkkejä lämmityksen, jäähdytyksen, kuivauksen tai kostutuksen jatkumisesta sammutuksen jälkeen. Valitse pelkkä valvonta tai salli enintään kaksi uutta sammutuskäskyä.
 - Selkeät odottamisperusteet, nykyinen käyttötilanne ja lähteen saatavuus, jotta voit tutkia ennen kuin voit antaa lisää valvontaa.
 
 **Turvallisuusrajat pysyvät voimassa myös silloin, kun varoitus on pois käytöstä.** HEM ei koskaan käsittele onnistuneesta komennon lähetyksestä todisteena siitä, että laite on fyysisesti vastannut.

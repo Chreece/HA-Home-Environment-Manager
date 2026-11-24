@@ -153,7 +153,7 @@ HEM comprende anche le protezioni e la diagnostica specifiche per il dispositivo
 - Durate minima di accensione e di spegnimento, impostazioni massime di tempo di funzionamento e manovra di commutatore di alimentazione esterno supportato.
 - Restrizioni alle finestre e all'occupazione, manuale manovra e controlli di riconoscimento nativi.
 - Segnalazione di errori e di dispositivi non disponibili, con una scelta di comportamento di notifica per ciascun dispositivo.
-- Una sorveglianza facoltativa post-shutdown per il sospetto di riscaldamento continuo dopo un comando OFF, con monitoraggio protetto e tentativi di recupero limitati.
+- Per ogni dispositivo puoi verificare se il riscaldamento, il raffrescamento, la deumidificazione o l’umidificazione sembrano proseguire dopo lo spegnimento. Scegli il solo monitoraggio o consenti fino a due ulteriori comandi di spegnimento.
 - Clari motivi di attesa, stato operativo attuale e disponibilità delle fonti, in modo da poter indagare prima di consentire un maggiore controllo.
 
 **I limiti di sicurezza restano in vigore anche quando l'allarme è disattivato.** HEM non tratta mai una spedizione di comando di successo come prova che un apparecchio abbia reagito fisicamente.

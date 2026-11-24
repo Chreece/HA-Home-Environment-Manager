@@ -153,7 +153,7 @@ HEM Ayrıca cihazlara özgü koruma ve teşhisler de içerir:
 - En az ON ve OFF süreleri, maksimum çalışma süresi ayarları ve desteklenen dış güç anahtarı yönetimi.
 - Pencere ve işleme kısıtlamaları, manuel geçiş işlemleri ve yerel komut onay kontrolleri.
 - Her cihaz için bildirim davranışı seçeneği ile hata ve kullanılamaz cihaz raporlama.
-- Bir OFF komutundan sonra şüpheli bir ısıtmanın devam etmesi için kapatma sonrası bir gözleme köpeği, korunan izleme ve sınırlı kurtarma girişimleri ile.
+- Her cihazda kapatıldıktan sonra ısıtma, soğutma, nem alma veya nemlendirmenin sürdüğüne dair belirtileri izleyebilirsiniz. Yalnızca izlemeyi seçin veya en fazla iki ek kapatma komutuna izin verin.
 - Bekleme nedenleri, mevcut işletim durumu ve kaynak kullanılabilirliği, böylece daha fazla kontrol sağlamadan önce araştırma yapabilirsiniz.
 
 **Güvenlik sınırları uyarı devre dışı bırakıldığında bile geçerli kalır.** HEM Başarılı bir komut gönderisini bir cihazın fiziksel olarak yanıtladığına dair kanıt olarak asla değerlendirmemiştir.

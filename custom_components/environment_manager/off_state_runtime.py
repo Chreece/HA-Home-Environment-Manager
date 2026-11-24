@@ -213,8 +213,9 @@ def _competing_effect_clear(runtime: Any, spec: Any, primary: str,
     def competing_capability(cap: Any) -> bool:
         if supported(cap, effect):
             return True
-        # Cooling can also remove room moisture.
-        return effect == "dry" and supported(cap, "cool")
+        # A climate compressor in dry mode can cool the room as well.
+        return (effect == "dry" and supported(cap, "cool")
+                or effect == "cool" and cap.domain == "climate" and supported(cap, "dry"))
 
     for other in model.specs(runtime.manager):
         if other.area_id != spec.area_id or other.identifier == spec.identifier:
@@ -238,6 +239,7 @@ def _competing_effect_clear(runtime: Any, spec: Any, primary: str,
                     effect in modes
                     or effect in ("heat", "cool") and bool(
                         set(modes) & {"auto", "heat_cool"})
+                    or effect == "cool" and "dry" in modes
                     or effect == "dry" and bool(
                         set(modes) & {"cool", "auto", "heat_cool"})
                 )

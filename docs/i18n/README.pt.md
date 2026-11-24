@@ -153,7 +153,7 @@ HEM Inclui também proteções e diagnósticos específicos do dispositivo:
 - Durações mínimas de ligação e desligação, configurações máximas de tempo de operação e manuseio suportado de interruptores de alimentação externos.
 - Restrições de janela e ocupação, manuseio manual de reviravoltas e verificações de reconhecimento de comando nativo.
 - Relatório de erro e dispositivo indisponível, com uma escolha de comportamento de notificação para cada dispositivo.
-- Uma vigilância opcional após o fechamento para o suspeito de aquecimento continuado após um comando OFF, com monitorização vigilante e tentativas limitadas de recuperação.
+- Em cada dispositivo, pode monitorizar indícios de aquecimento, arrefecimento, desumidificação ou humidificação após o desligar. Escolha apenas monitorização ou permita até dois comandos adicionais para o desligar.
 - Razões claras de espera, estado operacional atual e disponibilidade de fontes, para que possa investigar antes de permitir mais controle.
 
 **Os limites de segurança permanecem em vigor mesmo quando um alerta é desativado.** HEM nunca trata uma expedição de comando bem-sucedida como prova de que um aparelho respondeu fisicamente.

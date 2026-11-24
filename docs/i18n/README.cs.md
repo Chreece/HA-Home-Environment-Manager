@@ -153,7 +153,7 @@ HEM zahrnuje také ochranné prostředky a diagnostiku specifické pro zařízen
 - Minimální doba ON a OFF, maximální nastavení provozního času a podporované ovládání vnějšího přepínače výkonu.
 - Omezení oken a obsazení, manuální ovládání a ověření potvrzení vnitřního příkazu.
 - Zprávy o chybách a nedostupných zařízeních, s výběrem chování oznámení pro každé zařízení.
-- Po ukončení provozu je možný sledovací pes pro podezření na pokračující vytápění po příkazu OFF, s stráženým monitorováním a omezenými pokusy o obnovení.
+- U každého zařízení můžete sledovat, zda po vypnutí pokračuje topení, chlazení, odvlhčování nebo zvlhčování. Zvolte pouze sledování nebo povolte nejvýše dva další příkazy k vypnutí.
 - Jasné důvody čekání, současný provozní stav a dostupnost zdroje, takže můžete vyšetřit, než umožníte větší kontrolu.
 
 **Bezpečnostní hranice zůstávají v platnosti i v případě, že je výstraha vypnuta.** HEM nikdy nejedná o úspěšnou vysílání jako o důkaz, že zařízení fyzicky reagovalo.

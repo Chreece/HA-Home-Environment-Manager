@@ -153,7 +153,7 @@ HEM a készülék-specifikus védelmet és diagnosztikát is magában foglalja:
 - Minimális bekapcsolási és kikapcsolási időtartam, maximális működési idő beállítása és támogatott külső áramkapcsoló kezelése.
 - Az ablakok és az elhelyezkedés korlátozásai, a kézi átállás kezelése és a helyi parancsellenőrzés.
 - Hibák és nem rendelkezésre álló eszközök bejelentése, a bejelentési magatartás kiválasztásával az egyes eszközök esetében.
-- A kikapcsolás utáni felügyeleti kutya, amely a kikapcsolási parancsot követően továbbra is fűtésre gyanúsított, a megfigyeléssel és korlátozott helyreállítási kísérletekkel rendelkezik.
+- Készülékenként figyelhető, hogy kikapcsolás után folytatódik-e a fűtés, hűtés, páramentesítés vagy párásítás. Válassza a csak megfigyelést, vagy engedélyezzen legfeljebb két újabb kikapcsolási parancsot.
 - Nyilvánvaló várakozási okok, a jelenlegi működési állapot és a forrás rendelkezésre állása, így meg tud vizsgálni, mielőtt lehetővé tenné a további ellenőrzést.
 
 **A biztonsági határok még akkor is érvényben maradnak, ha a figyelmeztető jelzés kikapcsolva van.** HEM soha nem tekintik a sikeres parancs küldést bizonyítéknak arra, hogy egy készülék fizikai reagált.

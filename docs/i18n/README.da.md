@@ -153,7 +153,7 @@ HEM omfatter også udstyrsspecifikke beskyttelsesforanstaltninger og diagnostik:
 - Minimum på- og udstødningstider, maksimal driftstidsinstilling og støttet håndtering af eksterne strømslutter.
 - Vindu- og besættelsesbegrænsninger, manuel override håndtering og native kommandokontrol.
 - Fejl- og ikke-tilgængelig-anordning rapportering, med valg af anmeldelsesadfærd for hver enhed.
-- En valgfri overvågningshund efter nedbrydning for mistænkt fortsat opvarmning efter en OFF-kommando, med bevaret overvågning og begrænsede genoprettelsesforsøg.
+- For hver enhed kan du overvåge, om den fortsat varmer, køler, affugter eller befugter efter slukning. Vælg kun overvågning, eller tillad op til to ekstra slukkommandoer.
 - Klare årsager til at vente, den aktuelle driftsstatus og kildetilgængelighed, så du kan undersøge, før du aktiverer mere kontrol.
 
 **Sikkerhedsgrænser er gældende, selv når alarmen er udeladt.** HEM aldrig behandler en vellykket kommandodistribution som bevis for, at en apparat har reageret fysisk.

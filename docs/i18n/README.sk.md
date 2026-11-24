@@ -153,7 +153,7 @@ HEM zahŕňa aj ochranu a diagnostiky špecifické pre zariadenie:
 - Minimálne doby zapnutia a vypnutia, maximálne nastavenia prevádzkových hodín a podporované ovládanie exteriérnych prepínačov napájania.
 - Obmedzenia okna a obývania, ručné ovládanie a kontroly potvrdenia príkazov.
 - Správa o chybe a nedostupnosti zariadenia s výberom správania oznamovania pre každé zariadenie.
-- Voliteľný sledovací pes po vypnutí pre podozrenie na pokračovanie vykurovania po príkazu OFF, s stráženým monitorovaním a obmedzenými pokusmi o obnovu.
+- Pri každom zariadení môžete sledovať, či po vypnutí pokračuje kúrenie, chladenie, odvlhčovanie alebo zvlhčovanie. Vyberte iba sledovanie alebo povoľte najviac dva ďalšie príkazy na vypnutie.
 - Jasné dôvody čakania, aktuálny prevádzkový stav a dostupnosť zdroje, takže môžete prešetriť pred umožnením väčšej kontroly.
 
 **Bezpečnostné hranice zostávajú v platnosti aj vtedy, keď je výstraha vypnutá.** HEM nikdy neberie úspešnú príkazovú vyslanie ako dôkaz, že zariadenie fyzicky reagovalo.

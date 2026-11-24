@@ -149,7 +149,7 @@ Zusätzliche Gerätefunktionen umfassen:
 - Mindest-Ein- und -Ausschaltzeiten, maximale Betriebsdauer und die unterstützte Ansteuerung externer Netzschalter.
 - Sperren aufgrund von Fenstern oder Anwesenheit, Behandlung manueller Eingriffe sowie Prüfung der Rückmeldung nach Gerätebefehlen.
 - Meldung von Gerätefehlern und Nichtverfügbarkeit mit einzeln einstellbarem Benachrichtigungsverhalten.
-- Optionale Überwachung nach einem OFF-Befehl, wenn Anzeichen dafür bestehen, dass die Heizung dennoch weiterläuft; mit abgesicherten Prüfungen und begrenzten Wiederholungsversuchen.
+- HEM kann für jedes Gerät prüfen, ob Heizen, Kühlen, Entfeuchten oder Befeuchten nach dem Abschalten möglicherweise weiterläuft. Wähle reine Überwachung oder erlaube bis zu zwei weitere Ausschaltbefehle.
 - Verständliche Wartegründe, Betriebszustände und Informationen zur Verfügbarkeit der Datenquellen, um Probleme vor dem Aktivieren weiterer Automatiken untersuchen zu können.
 
 **Schutzgrenzen gelten auch bei abgeschalteten Benachrichtigungen.** Eine erfolgreich gesendete Anweisung ist noch kein Beweis dafür, dass das Gerät sie tatsächlich ausgeführt hat.

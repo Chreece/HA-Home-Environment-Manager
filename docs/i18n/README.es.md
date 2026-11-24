@@ -149,7 +149,7 @@ HEM también ofrece protecciones y diagnóstico por dispositivo:
 - Tiempos mínimos encendido/apagado, duración máxima de funcionamiento y control de interruptores externos de alimentación compatibles.
 - Restricciones por ventanas y presencia, respeto de intervenciones manuales y comprobación de la respuesta a las órdenes nativas.
 - Avisos por fallos o indisponibilidad con ajustes individuales para cada equipo.
-- Vigilancia opcional tras una orden OFF cuando existen indicios de que la calefacción sigue funcionando, con verificaciones prudentes e intentos de recuperación limitados.
+- Para cada dispositivo puedes vigilar si sigue calentando, enfriando, deshumidificando o humidificando después de apagarlo. Elige solo supervisión o permite hasta dos órdenes de apagado adicionales.
 - Motivos de espera, estado de funcionamiento y disponibilidad de fuentes claramente indicados para que puedas investigar antes de permitir más automatizaciones.
 
 **Las protecciones siguen activas aunque deshabilites los avisos.** Que una orden se haya enviado correctamente no demuestra que el aparato la haya ejecutado físicamente.
