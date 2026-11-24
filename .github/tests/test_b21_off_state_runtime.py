@@ -4,6 +4,7 @@ No real device or Zigbee model. All I/O routes through test-only stubs;
 the production watchdog module is executed without monkeypatching its body.
 """
 import asyncio
+from datetime import datetime, timezone
 import importlib.util
 from pathlib import Path
 import sys
@@ -55,7 +56,13 @@ model.room_config=lambda *_args:{}
 model.device_config=lambda *_args:{}
 model.permission=lambda *_args:(env["permission"],env["permission"])
 model.sources_available=lambda *_args:env["source_available"]
+discovery.weather = lambda _h, _e, _age: SimpleNamespace(
+    condition=env.get("weather", "clear-night"), temperature_c=env.get("outdoor", 4.))
 def reference_sensor(*_args, **kwargs):
+    if _args[2] != spec.area_id:
+        value = env.get("peer", 18.)
+        return value, {"status": "ready" if value is not None else "unavailable",
+                       "entity_ids": ["sensor.adjacent_temperature"]}
     env["reference_pin"] = kwargs.get("pinned")
     if kwargs["excluded_device_id"] == env["sensor_device"]:
         return None, {"status": "no_selected_room_temperature"}
@@ -74,7 +81,8 @@ states=SimpleNamespace(get=lambda entity:state if entity==cap.primary else None,
           attributes={"hvac_modes":["off","heat"]})]
         if env["other_heater"] else []))
 hass=SimpleNamespace(states=states)
-manager=SimpleNamespace(hass=hass,settings={"temperature_entity":"sensor.room_temperature"},
+manager=SimpleNamespace(hass=hass,settings={"temperature_entity":"sensor.room_temperature",
+                                         "weather_entities":["weather.home"]},
     entry=SimpleNamespace(entry_id="fake"))
 ledger={"entity":cap.primary,"area":spec.area_id,"source_device_id":spec.source_device_id,
         "off_since":100.0,"attempts":0,"last_attempt_at":None,"notified":False}
@@ -216,6 +224,82 @@ async def main():
                         (3600,23.2), (4500,24.)]:
         await tick(later+delta,temp)
     assert len(commands) == count+1 and record["thermal_off_watch"]["attempts"] == 2
+    # Identical room trajectories with different physical explanations. Every
+    # scenario has a heater reporting OFF and fresh independent room readings.
+    transfer = {"door_sensors": ["binary_sensor.hall"],
+                "door_settings": {"binary_sensor.hall": {"kind": "interior", "target_area": "living"}}}
+    manager.settings.update(areas=["living", "hall"], climate_rooms={"hall": transfer})
+    episodes = (
+        ("warm_outdoors", "clear-night", 30., 18., None),
+        ("solar_gain_possible", "sunny", 2., 18., None),
+        ("heat_transfer_from_room_possible", "clear-night", 2., 27., None),
+        ("adjacent_room_unknown", "clear-night", 2., None, None),
+        ("outdoor_conditions_unknown", None, None, 18., None),
+        ("consistent_with_heater", "clear-night", 2., 18., 0.),
+        ("consistent_with_heater", "clear-night", 2., 18., None),
+        ("valve_open_while_off", "sunny", 30., 27., 40.),
+    )
+    cfg["control_mode"] = "off"
+    base = later + 10000
+    for index, (reason, weather, outside, peer, position) in enumerate(episodes):
+        env.update(weather=weather, outdoor=outside, peer=peer)
+        state.attributes = {}
+        if position is not None:
+            state.attributes["actual_position"] = position
+        start = base + index*10000
+        record.pop("thermal_off_watch", None)
+        runtime._thermal_off_sessions.clear()
+        count, alerts = len(commands), len(messages)
+        for elapsed, temp in [(0,20.), (1800,21.), (2100,21.3), (2400,21.8), (2700,22.4)]:
+            state.last_reported = datetime.fromtimestamp(start+elapsed, timezone.utc)
+            await tick(start+elapsed,temp)
+        if reason in ("consistent_with_heater", "valve_open_while_off"):
+            assert len(commands) == count+1, reason
+            assert record["thermal_off_warning"]["heat_sources"]["status"] == reason
+            if reason == "consistent_with_heater":
+                env["peer"] = 29.
+                assert not runtime_module._guard(runtime,spec,cap,state,record["thermal_off_watch"])
+                env["peer"] = 18.
+                env["weather"] = "sunny"
+                assert not runtime_module._guard(runtime,spec,cap,state,record["thermal_off_watch"])
+        else:
+            assert len(commands) == count and len(messages) == alerts, reason
+            assert record["thermal_off_unattributed"]["heat_sources"]["reason"] == reason
+            assert record["thermal_off_watch"]["attempts"] == 0
+    # A brief sunny interval breaks attribution even if it ends before the
+    # room reaches the threshold. Restart the full trend on clean evidence.
+    env.update(weather="clear-night", outdoor=2., peer=18.)
+    record.pop("thermal_off_watch", None)
+    state.attributes = {"position": 98, "hvac_action": "off"}
+    start = base + len(episodes)*10000
+    count = len(commands)
+    for elapsed, temp, condition in [(0,20.,"clear-night"), (1800,21.,"clear-night"),
+                                    (2100,21.4,"sunny"), (2400,21.8,"clear-night"),
+                                    (2700,22.4,"clear-night"), (3000,22.7,"clear-night")]:
+        env["weather"] = condition
+        await tick(start+elapsed,temp)
+    assert len(commands) == count
+    await tick(start+3300,23.1)
+    assert len(commands) == count+1
+    # Without mapped connections the other monitored rooms are still checked.
+    from test_hem_b21.off_state_heat_sources import assess
+    manager.settings["climate_rooms"] = {}
+    env.update(peer=29., weather="clear-night")
+    assert assess(runtime,spec,state,23.)["reason"] == "heat_transfer_from_room_possible"
+    env["peer"] = 18.
+    manager.settings["shade_rooms"] = {"living":{"covers":{"cover.room":{"lux_enabled":True}}}}
+    shade = module("shade_cooling")
+    shade.cover_config = lambda *_: {"lux_enabled": True}
+    shade.lux_evidence = lambda *_: {
+        "status":"lux_threshold_met", "sources":["sensor.window_lux"], "value_lx":18000.,
+        "threshold_lx":1000., "valid_count":1}
+    env["weather"] = "cloudy"
+    assert assess(runtime,spec,state,23.)["reason"] == "local_solar_gain_possible"
+    manager.settings.pop("shade_rooms")
+    manager.settings["weather_entities"] = []
+    state.attributes["actual_position"] = 80.
+    state.last_reported = datetime.fromtimestamp(env["time"]-610, timezone.utc)
+    assert assess(runtime,spec,state,23.)["status"] == "unattributed"
     print("B21_GENERIC_HEM_OFF_MONITOR_GUARDED_REPEAT_NOTICES_AND_PERSISTED_BUDGET=PASS")
 
 

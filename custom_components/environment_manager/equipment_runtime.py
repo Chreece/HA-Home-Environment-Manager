@@ -303,7 +303,10 @@ class EquipmentRuntime:
                                and 0 <= now - since < NATIVE_RECONNECT_SETTLE_SECONDS]
                 data["readiness_source_entity_ids"] = list(sources if sources is not None else unavailable)
         value = {"status": status, **data}
-        anomaly = self.records.get(key, {}).get("thermal_off_warning")
+        record = self.records.get(key, {})
+        if isinstance(record.get("thermal_off_unattributed"), dict):
+            value["thermal_off_watchdog"] = dict(record["thermal_off_unattributed"])
+        anomaly = record.get("thermal_off_warning")
         if isinstance(anomaly, dict):
             value["thermal_off_watchdog"] = dict(anomaly)
             if status in ("off", "within_target_band", "pid_output_inactive",
@@ -917,6 +920,7 @@ class EquipmentRuntime:
         if current == "on" and record.get("thermal_off_watch"):
             record.pop("thermal_off_watch", None)
             record.pop("thermal_off_warning", None)
+            record.pop("thermal_off_unattributed", None)
             getattr(self, '_thermal_off_sessions', {}).pop(spec.identifier, None)
             await self._save()
         wake = record.get("upstream", {}).get("native_wake")
@@ -1502,7 +1506,7 @@ class EquipmentRuntime:
             constrained = demand
         domain = getattr(output_state, "domain", None) or cap.domain
         physical_activity = calibration_activity(domain, output_state, mode)
-        if physical_activity is None or record.get("thermal_off_warning"):
+        if physical_activity is None or record.get("thermal_off_warning") or record.get("thermal_off_unattributed"):
             output = None
         elif physical_activity == "off":
             output = 0.
@@ -3574,7 +3578,7 @@ class EquipmentRuntime:
         from .pid_diagnostics import calibration_activity
         activity = calibration_activity(cap.domain, state, mode)
         is_on = activity == "on"
-        valid = valid and activity is not None and not record.get("thermal_off_warning")
+        valid = valid and activity is not None and not record.get("thermal_off_warning") and not record.get("thermal_off_unattributed")
         if cap.domain == "humidifier" and mode != "dry":
             valid = False
         if not valid:

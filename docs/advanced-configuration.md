@@ -337,6 +337,21 @@ the room continues warming for at least 15 minutes (≥0.7°C increase and
 The device can still report OFF while physically heating; room temperature
 alone never proves that a valve/relay is active.
 
+Before attributing a rise to a heater, HEM compares fresh outdoor temperatures
+and sky conditions with independent readings from neighboring rooms. It uses
+configured room connections in either direction. Without mapped connections it
+checks the other monitored rooms. A warm neighboring room can transfer heat
+even with its door closed. Outdoor or neighboring readings within 0.5°C of the
+watched room are treated conservatively. If configured, room illuminance from
+the shade settings can identify possible local solar gain even on an overcast day.
+Sunny daytime conditions, missing
+weather, or missing readings from a relevant neighbor can also explain or
+obscure the warming. The controller exposes unattributed warming in its watchdog
+diagnostics and withholds heater-specific warnings and OFF retries in those cases.
+A fresh positive actual valve-position report while disabled is separate evidence
+for an OFF retry even when other heat sources are present. It establishes valve
+travel, while the cause of the room temperature rise can still be mixed.
+
 For HEM-commissioned heating endpoints with unchanged identity, available
 native sources, no conflicting heater and authorization to control the device,
 HEM may send **at most two** additional OFF commands, 10 minutes apart. HEM

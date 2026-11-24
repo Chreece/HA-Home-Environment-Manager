@@ -44,7 +44,8 @@ hass.states.get=lambda e:state if e==spec.source_entities[0] else None
 hass.states.async_all=lambda domain:(
     [NS(entity_id="climate.other",state="cool",attributes={"hvac_modes":["off","cool","dry"]})]
     if env.external and domain=="climate" else [])
-manager=NS(hass=hass,settings={},entry=NS(entry_id="test"))
+manager=NS(hass=hass,settings={"weather_entities":["weather.home"]},entry=NS(entry_id="test"))
+discovery.weather=lambda *_: NS(condition="clear-night",temperature_c=3.)
 cap=NS(primary="climate.output",domain="climate",modes=("off","cool"))
 model.specs=lambda _: (spec,)
 model.capabilities=lambda *_:cap

@@ -242,8 +242,16 @@ def _guard(runtime: Any, spec: Any, cap: Any, state: Any, watch: dict, *,
         value, sources = _independent_room_temperature(runtime, spec, cap.primary)
         target = model.targets(runtime.manager, spec, cap, cfg,
                                model.plan_for(runtime.manager, spec)).get("heat")
+        from .off_state_heat_sources import assess, signature
+        if value is None:
+            return False
+        evidence = assess(runtime, spec, state, value)
+        previous = warning.get("heat_sources")
+        if (not isinstance(previous, dict) or evidence["status"] == "unattributed"
+                or signature(evidence) != signature(previous)):
+            return False
         if (not isinstance(target, (int, float)) or not isfinite(target)
-                or value is None or warning.get("off_since") != watch["off_since"]
+                or warning.get("off_since") != watch["off_since"]
                 or warning.get("source_ids") != list(sources)
                 or abs(target - warning.get("target", target+1)) > .05
                 or value - target < EFFECTS["heat"].excess
@@ -320,9 +328,12 @@ async def _notify(runtime: Any, spec: Any, kind: str, evidence: dict) -> None:
     )
 
 
-async def _clear_warning(runtime: Any, record: dict) -> None:
+async def _clear_warning(runtime: Any, record: dict, *, retain_unattributed: bool = False) -> None:
     """Stale/unqualified room evidence must not leave a permanent red status."""
-    if record.pop("thermal_off_warning", None) is not None:
+    changed = record.pop("thermal_off_warning", None) is not None
+    if not retain_unattributed and record.pop("thermal_off_unattributed", None) is not None:
+        changed = True
+    if changed:
         await runtime._save()
 
 
@@ -428,6 +439,14 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
             watch_ids, since, effect=direction,
         )
     cleared = _competing_effect_clear(runtime, spec, cap.primary, direction)
+    attribution = None
+    if direction == "heat":
+        from .off_state_heat_sources import assess, signature
+        attribution = assess(runtime, spec, state, measured)
+        key = signature(attribution)
+        if sensor_watch.heat_source_signature != key:
+            sensor_watch.samples.clear()
+            sensor_watch.heat_source_signature = key
     risk = sensor_watch.observe(
         now=now, temperature_c=measured, target_c=target, source_ids=watch_ids,
         off_since=since, other_heat_sources_clear=cleared,
@@ -461,6 +480,21 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
         "last_attempt_at": ledger.get("last_attempt_at"),
         "native_state": state.state,
     }
+    if attribution is not None:
+        observation["heat_sources"] = attribution
+        if attribution["status"] == "unattributed":
+            # Expose overheating even when there is insufficient evidence to
+            # accuse this heater. Never spend the native OFF retry budget here.
+            previous = record.get("thermal_off_unattributed") or {}
+            record["thermal_off_unattributed"] = {
+                "state": "unattributed_room_warming", "heat_sources": attribution,
+                "current_c": measured, "target_c": target, "off_since": off_since,
+            }
+            if (previous.get("heat_sources") or {}).get("reasons") != attribution["reasons"]:
+                await runtime._save()
+            await _clear_warning(runtime, record, retain_unattributed=True)
+            return False
+        record.pop("thermal_off_unattributed", None)
     # Reject warnings if policy changed while evidence was being collected.
     if model.settings(runtime.manager, spec).get(
             "off_state_watchdog_mode", "monitor_recover") not in (

@@ -178,6 +178,9 @@ class AdaptiveEventTests(unittest.IsolatedAsyncioTestCase):
         runtime = EventRuntime(method="adaptive_suggest")
         runtime.state.attributes["hvac_modes"] = ["heat", "off"]
         runtime.native_report(mode="off", action="off")
+        runtime.state.attributes["actual_position"] = 32
+        runtime.manager.entry.options[model.SETTINGS][SPEC.identifier]["mode_settings"]["heat"]["control_mode"] = "off"
+        self.assertEqual(runtime.cfg["control_mode"], "off")
         watchdog = importlib.import_module(fixture["PACKAGE"] + ".off_state_runtime")
         start = runtime.now
         temp = 21.

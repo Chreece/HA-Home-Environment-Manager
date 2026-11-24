@@ -111,6 +111,7 @@ class ThermalWatch:
     off_since: float
     samples: list[tuple[float, float]] = field(default_factory=list)
     effect: str = "heat"
+    heat_source_signature: tuple | None = None
     sampled_target: float | None = None
     moisture_samples: list[tuple[float, float]] = field(default_factory=list)
 
