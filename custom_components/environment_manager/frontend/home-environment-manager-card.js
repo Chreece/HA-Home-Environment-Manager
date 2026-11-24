@@ -8358,6 +8358,11 @@
     .hem-room-glance87 .hem-room-metric-label107{
       flex:0 1 auto;max-width:10ch;overflow:hidden;text-overflow:ellipsis;
     }
+    /* Home Assistant nests an inline ha-svg-icon inside ha-icon. Center the
+       painted glyph within its sized host instead of laying it on a text baseline. */
+    .hem-room-glance87 .hem-room-metric107 ha-icon{
+      display:inline-flex;align-items:center;justify-content:center;
+    }
     .hem-room-glance87 .hem-room-metric107>ha-icon{
       --mdc-icon-size:12px;width:12px;height:12px;flex:0 0 12px;
     }

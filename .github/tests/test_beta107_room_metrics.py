@@ -135,9 +135,10 @@ ICON_FIXTURE = """() => {
     connectedCallback() { this.draw(); }
     attributeChangedCallback() { this.draw(); }
     draw() {
-      this.shadowRoot.innerHTML = '<style>:host{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;width:var(--mdc-icon-size,24px);height:var(--mdc-icon-size,24px)}svg{width:100%;height:100%;display:block}</style>' +
+      // HA applies the size and vertical-align to ha-svg-icon inside the ha-icon host.
+      this.shadowRoot.innerHTML = '<style>ha-svg-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;width:var(--mdc-icon-size,24px);height:var(--mdc-icon-size,24px)}svg{width:100%;height:100%;display:block}</style><ha-svg-icon>' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' +
-        (glyphs[this.getAttribute('icon')] || '<circle cx="12" cy="12" r="8"/><path d="M12 7v6m0 3v.5"/>') + '</svg>';
+        (glyphs[this.getAttribute('icon')] || '<circle cx="12" cy="12" r="8"/><path d="M12 7v6m0 3v.5"/>') + '</svg></ha-svg-icon>';
     }
   });
 }"""

@@ -73,13 +73,16 @@ REPORT = r"""()=>{
       settings:box(summary.querySelector('[data-room-settings114]')),
       faces:box(summary.querySelector('.hem-room-faces')),
       faceLabel:summary.querySelector('.hem-room-faces').getAttribute('aria-label'),
-      alerts:[...summary.querySelectorAll('.hem-room-alerts87 button')].map(box),
+      alerts:[...summary.querySelectorAll('.hem-room-alerts87 button')].map(button=>({
+        ...box(button),icon:button.querySelector('ha-icon').getAttribute('icon')})),
       nameText:summary.querySelector('.hem-room-name87').textContent,
       nameTitle:summary.querySelector('.hem-room-name87').title,
       settingsLabel:summary.querySelector('[data-room-settings114]').getAttribute('aria-label'),
       metrics:[...summary.querySelectorAll('.hem-room-metric107')].filter(visible).map(node=>({
         box:box(node),scrollWidth:node.scrollWidth,clientWidth:node.clientWidth,
         value:node.querySelector('.hem-room-metric-value107')?.textContent,
+        glyphs:[...node.querySelectorAll('ha-icon')].map(icon=>({
+          ...box(icon.shadowRoot.querySelector('svg')),icon:icon.getAttribute('icon')})),
         valueBox:box(node.querySelector('.hem-room-metric-value107'))})),
       leaves:[...summary.querySelectorAll('.hem-room-metric107,'+
         ':scope > ha-icon:last-child')].filter(visible).map(box),
@@ -124,6 +127,10 @@ def assert_geometry(report, label):
             assert metric['scrollWidth'] <= metric['clientWidth'] + 1, context
             assert metric['value'], context
             assert rect['left'] <= metric['valueBox']['left'] <= metric['valueBox']['right'] <= rect['right'], context
+            value_center = (metric['valueBox']['top'] + metric['valueBox']['bottom']) / 2
+            for glyph in metric['glyphs']:
+                assert glyph['height'] > 0 and abs((glyph['top'] + glyph['bottom']) / 2 - value_center) <= 1, (
+                    'visible glyph and value must share a center', glyph['icon'], *context)
             centers.append((rect['top'] + rect['bottom']) / 2)
         assert max(centers) - min(centers) <= 1, ('overview must remain one row', *context)
         leaves = sorted(row['leaves'], key=lambda rect: rect['left'])
@@ -141,7 +148,10 @@ def run():
     base['room']['environment']['measurement_evidence'] = {
         'temperature': {'value': temperature['value'], 'source_count': 1,
                         'source_ids': [temperature['entity_id']]},
+        'humidity': {'value': 50, 'source_count': 2,
+                     'source_ids': ['sensor.humidity', 'sensor.humidity_second']},
     }
+    base['states']['sensor.humidity_second'] = deepcopy(base['states']['sensor.humidity'])
     icons = runpy.run_path(str(ROOT / '.github/tests/test_061b1_room_fold.py'))['icon_fixture']()
     chrome = os.environ.get('CHROME_BIN') or shutil.which('chromium') or shutil.which('google-chrome')
     assert chrome, 'Chromium is required for room-tab layout validation'
@@ -200,7 +210,12 @@ def run():
                         if shots and language == 'el' and (viewport, column) in ((1024, 760), (320, 320)):
                             page.screenshot(path=str(shots / f'room-tabs-{label}.png'), full_page=True)
                         assert_geometry(report, label)
-                        assert len(report['rows'][1]['alerts']) >= 5
+                        kitchen = next(row for row in report['rows'] if row['area'] == 'kitchen')
+                        assert {'mdi:weather-windy', 'mdi:window-open-variant', 'mdi:window-closed-variant'} <= {
+                            alert['icon'] for alert in kitchen['alerts']}, label
+                        assert len(kitchen['alerts']) >= 5, (label, kitchen['alerts'])
+                        assert any(glyph['icon'] == 'mdi:approximately-equal'
+                                   for metric in kitchen['metrics'] for glyph in metric['glyphs']), label
                 # Render through the real card, including its measurement selection.
                 faces = page.evaluate("""base=>{
                   function render(t,r,options={}){
