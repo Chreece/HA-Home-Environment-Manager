@@ -171,6 +171,11 @@ class RoomDataTests(unittest.TestCase):
     def room(self):
         return self.snapshot()["rooms"][0]
 
+    def test_custom_humidity_limit_is_available_to_the_room_face(self):
+        self.manager.thresholds = {**self.manager.thresholds, "indoor_humidity": 55}
+        self.manager.plan = self.plan()
+        self.assertEqual(self.snapshot()["room_humidity_limit"], 55)
+
     def test_monitoring_basics_ignore_optional_sensors_and_windows(self):
         optional = tuple(logic.Reading("sensor."+metric, metric, metric, None)
                          for metric in ("aqi", "mold", "illuminance", "co2"))

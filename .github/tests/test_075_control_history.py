@@ -118,6 +118,9 @@ class ControlHistoryTests(unittest.TestCase):
         values = points(restored.control)
         self.assertEqual(values[1]["until"], BASE + 150)
         self.assertTrue(values[2]["break_before"])
+        self.assertTrue(all(point["target_break_before"] for point in values[1:]))
+        reloaded = environment.EnvironmentHistory.restore(stored(restored), now=BASE + 185)
+        self.assertEqual(points(reloaded.control), values)
         self.assertEqual(stored(restored)["version"], 1)
         legacy = environment.EnvironmentHistory.restore(
             {"version": 1, "areas": {}, "averages": {}, "daily": {}}, now=BASE)
@@ -167,6 +170,7 @@ class ControlHistoryTests(unittest.TestCase):
         self.assertEqual([p["measured"] for p in values], [20., 20.5, 20.6])
         self.assertEqual([p["until"] for p in values], [BASE + 300, BASE + 300, BASE + 1501])
         self.assertTrue(values[-1]["break_before"])
+        self.assertFalse(values[-1].get("target_break_before"))
 
     def test_recently_confirmed_interval_survives_delayed_next_heartbeat(self):
         history = History()

@@ -3083,10 +3083,10 @@
       "literal_references": [
         "custom_components/environment_manager/config_flow.py:1855",
         "custom_components/environment_manager/const.py:83",
+        "custom_components/environment_manager/dashboard.py:230",
         "custom_components/environment_manager/device_controls.py:103",
         "custom_components/environment_manager/device_controls.py:107",
-        "custom_components/environment_manager/equipment_model.py:1319",
-        "custom_components/environment_manager/equipment_model.py:1332"
+        "custom_components/environment_manager/equipment_model.py:1319"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -8290,10 +8290,10 @@
       "literal_references": [
         "custom_components/environment_manager/config_flow.py:1855",
         "custom_components/environment_manager/const.py:83",
+        "custom_components/environment_manager/dashboard.py:230",
         "custom_components/environment_manager/device_controls.py:103",
         "custom_components/environment_manager/device_controls.py:107",
-        "custom_components/environment_manager/equipment_model.py:1319",
-        "custom_components/environment_manager/equipment_model.py:1332"
+        "custom_components/environment_manager/equipment_model.py:1319"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },

@@ -227,6 +227,7 @@ def dashboard_snapshot(plan: Plan, limits: dict[str, float], *,
     return {
         "version": 1,
         "summary": summary,
+        "room_humidity_limit": limits.get("indoor_humidity"),
         "rooms": all_rooms,
         "climate_only_count":len(extra),
         "outdoor": {

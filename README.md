@@ -56,13 +56,13 @@ The HEM card gives you a useful overview without opening several integrations.
 - View histories and trends, see which sensors contributed to an average and distinguish missing readings from measured values.
 - Group rooms by actual Home Assistant floors, or use a simple room list when you have no floors.
 
-The gear beside a room name opens its settings. A single face combines the readings: its expression shows warm, cold or comfortable conditions, a droplet or a cracked mark shows humid or dry air, and a mask indicates a measured air-quality problem. Expand the room to read those conditions in words. Missing evidence gets a neutral expression. **Home settings → Room overview → Show room smileys** applies to the whole house and starts enabled.
+The gear beside a room name opens its settings. A single face combines the room readings. A snowflake or heat waves on the left show cold or warm conditions. A filled droplet or a cracked mark on the right shows humid or dry air. A mask shows a measured air-quality problem. These marks can appear together. A question mark indicates missing readings. Expand the room to read the conditions in words. **Home settings → Room overview → Show room smileys** applies to the whole house and starts enabled.
 
 Reported activity appears at the far right inside each room tab. Its icons distinguish heating, cooling, drying, humidifying, ventilation, filtration and fan operation.
 
 A room can have usable climate data while an optional measurement is unavailable. Expand the missing-measurements explanation to see which inputs are affected. Select a measurement to see its sources and history. A device row shows the feedback that applies to its role. Heaters and coolers show temperature. Drying and humidifying use humidity or the calibrated mold indication. A filtration fan can show PM2.5, room AQI and reported fan speed, while an extraction fan can show CO₂, PM2.5 and speed. The target icon beside a reading shows the current profile goal in the same unit. Automatic heat/cool can show a range. When mold control is active, both the measurement and goal refer to surface humidity. A multi-mode appliance follows its current mode. PID demand appears on PID controllers.
 
-Controller trends put the historical target, measured value, requested output and available reported output on the same timeline. Every trace has a solid line and its own color in the legend. Gaps identify periods without evidence.
+Controller trends put the historical target, measured value, requested output and reported output on the same timeline. The HEM target stays level between recorded setpoints and steps vertically when the target changes. Each trace has its own color. Missing sensor or output samples leave gaps in their respective traces.
 
 ### Different settings for the home, each room and each device
 

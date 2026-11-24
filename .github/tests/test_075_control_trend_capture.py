@@ -293,10 +293,28 @@ class CollectorTests(unittest.TestCase):
         self.assertEqual(len(series), 2)
         self.assertNotEqual(series[-1]["context_id"], first_context)
         self.states["sensor.temp"].state = self.states["sensor.second"].state = "unavailable"
-        previous = series[-1]["points"][-1]["until"]
         CLOCK.now += 30
         self.capture(spec=self.spec)
-        self.assertEqual(self.views(sources=sources)[0]["series"][-1]["points"][-1]["until"], previous)
+        current = self.views(sources=sources)[0]["series"][-1]["points"][-1]
+        self.assertEqual((current["t"], current["target"]), (CLOCK.now, 20.))
+        self.assertIsNone(current["measured"])
+        self.assertIsNone(current["demand_percent"])
+        self.assertIsNone(current["output_percent"])
+
+    def test_target_change_while_sensor_is_stale_is_recorded_at_the_edit(self):
+        self.capture()
+        CLOCK.now += 1800
+        self.cfg["preset"] = "eco"
+        self.capture(spec=self.spec)
+        previous, current = self.points()
+        self.assertEqual((previous["target"], current["target"], current["t"]), (20., 19., CLOCK.now))
+        self.assertTrue(current["break_before"])
+        self.assertFalse(current.get("target_break_before"))
+        self.assertIsNone(current["measured"])
+        self.sensor("sensor.temp", 19.5, "temperature", "°C")
+        CLOCK.now += 30
+        self.capture()
+        self.assertEqual(self.points()[-1]["measured"], 19.5)
 
     def test_physical_mode_is_not_output_and_missing_restored_or_old_reports_stay_null(self):
         self.states["climate.native"].attributes.pop("hvac_action")

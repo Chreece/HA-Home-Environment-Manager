@@ -968,12 +968,15 @@ it is not recalculated retrospectively using a new calibration factor.
 Controller target and output history starts with v0.7.5b2. It shares the local
 environment-history journal and retains up to seven days within fixed point
 and controller limits; frequent changes or many controllers can shorten that
-window. Target, profile and output changes are recorded from observed control
-decisions and device reports. It does not reconstruct earlier settings or use
-the current target to fill older history. Restart, source and availability
-boundaries stay visible, and values are never extended beyond their observed
-interval merely because a chart was opened. Loading control history does not
-change the device, its targets or its PID settings.
+window. The HEM target holds its last recorded setting until the next setpoint
+in the same controller context. The step occurs at the timestamp of the new
+setting. Heat/cool bands follow the same rule for both limits. An explicit
+loss of the target ends its trace. From v0.8.4, the journal also distinguishes
+controller or source interruptions and restarts from ordinary sampling gaps.
+Older journals can show the last recorded setting between compatible target
+records, including periods whose exact interruption cause was never stored.
+Measurements, calculated PID requests and device reports retain their own
+observation intervals. The cursor shows the readings available at its position.
 
 To remove a configured HEM integration, use **Settings → Devices & services →
 Home Environment Manager → Delete**. Permanent removal stops its writers and
