@@ -223,6 +223,20 @@ Entity IDs can differ with your language, naming and renames. The older
 
 ### Using the card
 
+Each room tab starts with the settings cog, the room name and its condition faces.
+Hover the faces, or expand the room on a phone, to read their localized meanings.
+Activity and alert icons on the right retain their own tooltips or actions.
+Readings underneath open their usual details and trends.
+
+The faces show simultaneous measured conditions. Temperature uses the current
+PMV estimate (neutral from −0.5 to +0.5), then the adaptive comfort band when
+applicable, then a simple 20–26 °C display range. Indoor relative humidity
+below 30% is dry. The configured indoor humidity warning threshold marks humid
+conditions (default 65%). A measured indoor pollutant exceedance can show poor
+air even when temperature and humidity are missing. A smile requires both
+thermal and humidity data and no outstanding issue in the monitored air readings.
+Missing evidence has a neutral face. These descriptions do not operate equipment.
+
 When Home Assistant has configured floors, HEM groups each monitored room under
 its real HA floor. Floor groups can be expanded or collapsed independently and
 show room counts and whether any of their rooms need attention. Rooms not
