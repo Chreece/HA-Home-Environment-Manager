@@ -7,6 +7,9 @@ from typing import Any
 
 from .shade_weather import ALL_KNOWN, NON_SOLAR
 
+EXTERNAL_HEAT_REASONS = frozenset(("solar_gain_possible", "local_solar_gain_possible",
+                                   "warm_outdoors", "heat_transfer_from_room_possible"))
+
 
 def _areas(settings: dict, area: str) -> set[str]:
     """Without a floor plan, every other monitored room is a possible heat source."""
@@ -131,3 +134,38 @@ def signature(evidence: dict) -> tuple:
             tuple((key, tuple(item["source_ids"]), item["threshold_lx"])
                   for key, item in sorted(evidence.get("room_light", {}).items())),
             tuple((key, tuple(item["source_ids"])) for key, item in sorted(evidence["peers"].items())))
+
+
+def _oldest_room_report(hass: Any, source_ids: tuple[str, ...], now: float) -> float | None:
+    """Every member of the independent room mean must have reported."""
+    stamps = []
+    for entity in source_ids:
+        state = hass.states.get(entity)
+        stamp = getattr(state, "last_reported", None) or getattr(state, "last_updated", None)
+        if getattr(stamp, "tzinfo", None) is None or state.attributes.get("restored"):
+            return None
+        at = stamp.timestamp()
+        if not isfinite(at) or at > now:
+            return None
+        stamps.append(at)
+    return min(stamps, default=None)
+
+
+def external_heat_pending(hass: Any, watch: Any, evidence: dict, *, pending: bool,
+                          other_sources_clear: bool, now: float, room_c: float) -> bool:
+    """Keep external heating separate from a later independent warming episode."""
+    if not other_sources_clear or EXTERNAL_HEAT_REASONS.intersection(evidence.get("reasons", ())):
+        watch.reset_settling()
+        return True
+    if not pending:
+        return False
+    if evidence["status"] != "consistent_with_heater":
+        watch.reset_settling()
+        return True
+    reported_at = _oldest_room_report(hass, watch.source_ids, now)
+    if watch.room_settled(now, reported_at, room_c):
+        watch.reset_settling()
+        return False
+    evidence.update(status="unattributed", reason="residual_external_heat_possible",
+                    reasons=["residual_external_heat_possible"])
+    return True

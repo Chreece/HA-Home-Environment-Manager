@@ -237,6 +237,16 @@ class IntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(runtime.sample()["safe"])
         self.assertIn("pending_command", runtime.sample()["constraints"])
 
+    async def test_external_heat_blocks_off_baseline_before_any_heater_warning(self):
+        runtime = Runtime()
+        runtime.native_report(mode="off")
+        self.assertTrue(runtime.sample()["output_verified"])
+        runtime.record["thermal_off_watch"] = {"external_heat_pending": True, "attempts": 0}
+        self.assertFalse(runtime.sample()["output_verified"])
+        runtime.record["thermal_off_watch"].pop("external_heat_pending")
+        self.assertTrue(runtime.sample()["output_verified"])
+        self.assertEqual(runtime.hardware_calls, [])
+
     def test_activity_requires_consistent_feedback_for_each_actuator(self):
         activity = importlib.import_module(PACKAGE + ".pid_diagnostics").calibration_activity
         for domain, state, mode, attrs, expected in (

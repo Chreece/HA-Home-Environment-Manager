@@ -115,6 +115,40 @@ class ThermalWatch:
     sampled_target: float | None = None
     moisture_samples: list[tuple[float, float]] = field(default_factory=list)
 
+    # Volatile evidence for the break between external heating and a new rise.
+    settling_samples: list[tuple[float, float]] = field(default_factory=list)
+    settling_started_at: float | None = None
+    settling_context: tuple | None = None
+
+    def reset_settling(self) -> None:
+        self.settling_samples.clear()
+        self.settling_started_at = None
+
+    def room_settled(self, now: float, reported_at: float | None, value: float) -> bool:
+        """Require a fresh, level or cooling segment after the alternative source clears."""
+        if (reported_at is None or not 0 <= now - reported_at <= MAX_SAMPLE_AGE_SECONDS
+                or not isfinite(value)):
+            self.reset_settling()
+            return False
+        points = self.settling_samples
+        if points:
+            elapsed = reported_at - points[-1][0]
+            if elapsed < 0 or elapsed > MAX_SAMPLE_AGE_SECONDS or now < self.settling_started_at:
+                self.reset_settling()
+            elif elapsed == 0:
+                return False
+        # Even a short rebound above sensor precision starts a fresh segment.
+        if points and value > min(temp for _, temp in points) + 0.1 + 1e-9:
+            self.reset_settling()
+        if not points:
+            self.settling_started_at = now
+        if not points or reported_at - points[-1][0] >= MIN_SAMPLE_STEP_SECONDS:
+            points.append((reported_at, value))
+            del points[:-MAX_SAMPLES]
+        return (reported_at - self.settling_started_at >= MIN_SAMPLE_SPAN_SECONDS
+                and reported_at - points[0][0] >= MIN_SAMPLE_SPAN_SECONDS
+                and value <= points[0][1])
+
     def observe(self, *, now: float, temperature_c: float | None,
                 target_c: float | None, source_ids: tuple[str, ...],
                 off_since: float, other_heat_sources_clear: bool,

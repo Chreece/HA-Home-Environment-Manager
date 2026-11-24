@@ -44,6 +44,14 @@ def observed_output(domain: str, state: Any, mode: str) -> str | None:
 
 
 
+def calibration_output_uncertain(record: dict, cfg: dict) -> bool:
+    """Exclude an OFF baseline while residual or unexplained output is under watch."""
+    watch = record.get("thermal_off_watch")
+    return bool(record.get("thermal_off_warning") or record.get("thermal_off_unattributed")
+                or (cfg.get("off_state_watchdog_mode") != "disabled"
+                    and isinstance(watch, dict) and watch.get("external_heat_pending") is True))
+
+
 def calibration_activity(domain: str, state: Any, mode: str) -> str | None:
     """Qualify useful output separately from a selected mode or commanded level."""
     status = getattr(state, "state", None)
