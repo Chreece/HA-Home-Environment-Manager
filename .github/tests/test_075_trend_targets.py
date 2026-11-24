@@ -521,11 +521,15 @@ def browser_checks(data):
         target = main.locator('[data-control-field075="target"]')
         demand = main.locator(".hem-control-demand075").first
         output = main.locator(".hem-control-reported075").first
-        assert target.evaluate("e=>getComputedStyle(e).strokeDasharray") != demand.evaluate(
-            "e=>getComputedStyle(e).strokeDasharray"), "Target and requested output need distinct line styles"
-        assert output.evaluate("e=>getComputedStyle(e).strokeDasharray") == "none"
-        assert target.evaluate("e=>getComputedStyle(e).stroke") == output.evaluate(
-            "e=>getComputedStyle(e).stroke"), "Target and output lost their controller identity"
+        paths = main.locator('[data-control-field075]')
+        assert all(dash == "none" for dash in paths.evaluate_all(
+            "els=>els.map(e=>getComputedStyle(e).strokeDasharray)"))
+        colors = paths.evaluate_all("els=>els.map(e=>getComputedStyle(e).stroke)")
+        measured = main.locator(".hem-avg-line105").evaluate("e=>getComputedStyle(e).stroke")
+        assert len(set([*colors, measured])) == len(colors) + 1, "Each visible trace needs its own color"
+        swatches = popup.locator(".hem-control-output-legend075 i").evaluate_all(
+            "els=>els.map(e=>getComputedStyle(e).borderTopColor)")
+        assert set(swatches) == set(colors), "Each legend swatch must match its trace"
         expect(main.locator(".hem-control-output-axis075")).to_contain_text("100%")
         expect(main.locator(".hem-control-output-axis075")).to_contain_text("0%")
         main.focus()

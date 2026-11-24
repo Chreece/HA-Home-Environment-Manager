@@ -8054,7 +8054,18 @@
    */
   const controlTrend075=HomeEnvironmentManagerCard.prototype;
   const controlMetrics075=new Set(['temperature','humidity','mold','co2','pm25']);
-  const controlColors075=['#f2b84b','#ba92ef','#ee8c99','#5ac3dc','#a1c766','#d7a47d'];
+  const controlFields075=['target','demand_percent','output_percent','target_low','target_high'];
+  const controlPalette075=['#47b7ed','#bd83ef','#88c749','#e8bd47','#f284ac',
+    '#4eb6a1','#df7b72','#9694e8','#b0ba59','#de92db',
+    '#75a4d2','#c6a072','#5cba87','#c58bd9','#ea9885'];
+  function controlSeriesColors075(groupIndex){
+    return Object.fromEntries(controlFields075.map((field,offset)=>{
+      const index=groupIndex*controlFields075.length+offset;
+      const color=controlPalette075[index] ||
+        'hsl('+((index*137.508)%360).toFixed(2)+' 62% '+(55+(index%3)*6)+'%)';
+      return [field,color];
+    }));
+  }
   const controlText075=(card,text)=>hemTextB8(text,card._language());
   const sourceKey075=ids=>[...ids].sort().join('|');
   const controlNumber075=value=>value===null||typeof value==='number'&&Number.isFinite(value)&&Math.abs(value)<=1e12;
@@ -8167,8 +8178,9 @@
         if(!convert)continue;
         let group=kinds.get(series.target_kind);
         if(!group){
+          const colors=controlSeriesColors075(groups.length);
           group={id:controller.controller_id+'|'+series.target_kind,name:controller.name,
-            kind:series.target_kind,unit,points:[],color:controlColors075[groups.length%controlColors075.length]};
+            kind:series.target_kind,unit,points:[],colors,color:colors.target};
           kinds.set(series.target_kind,group);groups.push(group);
         }
         for(const point of series.points)group.points.push({...point,
@@ -8177,7 +8189,10 @@
           target_low:point.target_low===null?null:convert(point.target_low),
           target_high:point.target_high===null?null:convert(point.target_high)});
       }
-      for(const group of kinds.values())group.points.sort((a,b)=>a.t-b.t);
+      for(const group of kinds.values()){
+        group.points.sort((a,b)=>a.t-b.t);
+        group.firstField=controlFields075.find(field=>group.points.some(point=>Number.isFinite(point[field])))||'target';
+      }
     }
     return groups.filter(group=>group.points.length);
   };
@@ -8207,9 +8222,10 @@
     const text=value=>controlText075(this,value);
     const targetLabel=group=>group.kind==='physical_device'
       ?text('Physical device')+' · '+text('Target'):text('HEM target');
-    const marker=(group,kind='target')=>'<i aria-hidden="true" style="--hem-control-color075:'+group.color+
-      '" class="hem-control-key075'+(kind==='target'?' hem-control-target-key075':
-        kind==='demand'?' hem-control-demand-key075':'')+'"></i>';
+    const seriesStyle=(group,field)=>'style="--hem-control-color075:'+group.colors[field]+'"';
+    const marker=(group,field='target')=>'<i aria-hidden="true" '+seriesStyle(group,field)+
+      ' data-control-key075="'+field+'" class="hem-control-key075'+
+      (field.startsWith('target')?' hem-control-target-key075':'')+'"></i>';
     const outputSeries=groups.map((group,index)=>{
       const points=group.points.filter(point=>point.t<=model.end&&point.until>=model.start);
       return {group,index,points,
@@ -8227,9 +8243,12 @@
         const hasTarget=points.some(point=>[point.target,point.target_low,point.target_high].some(Number.isFinite));
         if(!hasTarget&&!demand&&!output)return '';
         return '<div class="hem-control-output-legend075"><strong>'+escape(group.name)+'</strong>'+
-          (hasTarget?'<span>'+marker(group)+escape(targetLabel(group)+' · '+group.unit)+'</span>':'')+
-          (demand?'<span>'+marker(group,'demand')+escape(text('PID demand')+' · %')+'</span>':'')+
-          (output?'<span>'+marker(group,'output')+escape(binaryOnly?
+          ['target','target_low','target_high'].filter(field=>points.some(point=>Number.isFinite(point[field])))
+            .map(field=>'<span>'+marker(group,field)+escape(targetLabel(group)+
+              (field==='target'?'':' · '+tw114(this,field==='target_low'?'low':'high'))+
+              ' · '+group.unit)+'</span>').join('')+
+          (demand?'<span>'+marker(group,'demand_percent')+escape(text('PID demand')+' · %')+'</span>':'')+
+          (output?'<span>'+marker(group,'output_percent')+escape(binaryOnly?
             text('Physical device')+' · '+(model.outputBinary075?
               word105(this,'off')+' / '+word105(this,'on'):
               '0% '+word105(this,'off')+' / 100% '+word105(this,'on')):
@@ -8249,21 +8268,21 @@
           const path=this._controlTrendPath075(group,model,field);
           const isolated=group.points.filter(point=>point.t===point.until&&point.t>=model.start&&
             point.t<=model.end&&Number.isFinite(point[field])).map(point=>
-            '<circle class="hem-control-sample075" cx="'+trendX114(model,point.t).toFixed(2)+
+            '<circle class="hem-control-sample075" '+seriesStyle(group,field)+' cx="'+trendX114(model,point.t).toFixed(2)+
             '" cy="'+trendY114(model,point[field]).toFixed(2)+'" r="2.5"/>').join('');
-          return (path?'<path data-control-field075="'+field+'" d="'+path+'"/>':'')+isolated;
+          return (path?'<path data-control-field075="'+field+'" '+seriesStyle(group,field)+' d="'+path+'"/>':'')+isolated;
         }).join('')+'</g>';
     }).join('');
     const outputPaths=outputSeries.map(({group,index,demand,output})=>{
       if(!demand&&!output)return '';
       const isolated=['demand_percent','output_percent'].map(field=>group.points.filter(point=>
         point.t===point.until&&point.t>=model.start&&point.t<=model.end&&Number.isFinite(point[field])).map(point=>
-        '<circle class="hem-control-sample075" cx="'+trendX114(model,point.t).toFixed(2)+
+        '<circle class="hem-control-sample075" '+seriesStyle(group,field)+' cx="'+trendX114(model,point.t).toFixed(2)+
         '" cy="'+(model.bottom-(model.bottom-model.top)*point[field]/100).toFixed(2)+'" r="2.5"/>').join('')).join('');
       return '<g class="hem-control-output-series075" data-control-output-series075="'+index+
         '" style="--hem-control-color075:'+group.color+'" aria-label="'+escape(text('Output evidence')+' · '+group.name)+'">'+
-        (demand?'<path class="hem-control-demand075" data-control-field075="demand_percent" d="'+demand+'"/>':'')+
-        (output?'<path class="hem-control-reported075" data-control-field075="output_percent" d="'+output+'"/>':'')+
+        (demand?'<path class="hem-control-demand075" data-control-field075="demand_percent" '+seriesStyle(group,'demand_percent')+' d="'+demand+'"/>':'')+
+        (output?'<path class="hem-control-reported075" data-control-field075="output_percent" '+seriesStyle(group,'output_percent')+' d="'+output+'"/>':'')+
         isolated+'</g>';
     }).join('');
     const outputAxis=model.output075?(model.physicalValues075?
@@ -8284,13 +8303,13 @@
     html=html.replace('<path class="hem-avg-line105"',outputPaths+'<path class="hem-avg-line105"');
     html=html.replace('<g class="hem-trend-cursor114"',targetPaths+outputAxis+'<g class="hem-trend-cursor114"');
     const rows=groups.map((group,index)=>'<div class="hem-control-readout075" data-control-row075="'+index+'">'+
-      '<div class="hem-control-name075">'+marker(group)+'<strong>'+escape(group.name)+'</strong>'+
+      '<div class="hem-control-name075">'+marker(group,group.firstField)+'<strong>'+escape(group.name)+'</strong>'+
       '<span data-control-context075="'+index+'"></span></div>'+
       '<dl><div><dt>'+escape(targetLabel(group))+'</dt><dd data-control-target075="'+index+'">—</dd></div>'+
       (group.points.some(point=>point.demand_percent!==null)?'<div><dt>'+escape(text('PID demand'))+
-        '</dt><dd data-control-demand075="'+index+'">—</dd></div>':'')+
+        '</dt><dd '+seriesStyle(group,'demand_percent')+' data-control-demand075="'+index+'">—</dd></div>':'')+
       (group.points.some(point=>point.output_percent!==null)?'<div><dt data-control-output-label075="'+index+'">'+
-        escape(text('Reported output setting'))+'</dt><dd data-control-output075="'+index+'">—</dd></div>':'')+
+        escape(text('Reported output setting'))+'</dt><dd '+seriesStyle(group,'output_percent')+' data-control-output075="'+index+'">—</dd></div>':'')+
       '</dl></div>').join('');
     const status=saved.statusControl075;
     const statusHtml=status&&status!=='ready'?'<div class="hem-control-status075" role="status" data-control-status075="'+
@@ -8393,8 +8412,8 @@
     '.hem-control-legend075{display:flex;flex-wrap:wrap;gap:5px 14px;font-size:11px;line-height:1.5;color:var(--hem-trend-muted114)}',
     '.hem-control-legend075>span{display:inline-flex;align-items:center;gap:6px;min-width:0;overflow-wrap:anywhere}',
     '.hem-control-key075,.hem-control-measured-key075{display:inline-block;flex:0 0 22px;width:22px;border-top:2px solid var(--hem-control-color075);height:0}',
-    '.hem-control-target-key075{border-top-style:dashed}.hem-control-demand-key075{border-top-style:dotted}.hem-control-measured-key075{border-color:var(--hem-trend-accent114)}',
-    '.hem-control-target075 path{stroke:var(--hem-control-color075);stroke-width:2;stroke-dasharray:7 4;fill:none;vector-effect:non-scaling-stroke}',
+    '.hem-control-measured-key075{border-color:var(--hem-trend-accent114)}',
+    '.hem-control-target075 path{stroke:var(--hem-control-color075);stroke-width:2.3;fill:none;vector-effect:non-scaling-stroke}',
     '.hem-control-sample075{fill:var(--hem-control-color075);stroke:var(--card-background-color,#202830);stroke-width:1}',
     '.hem-control-band075{fill:var(--hem-control-color075);fill-opacity:.08}',
     '.hem-control-readout075{border-top:1px solid var(--divider-color,#3b4654);padding:8px 0;font-size:11px}',
@@ -8402,14 +8421,14 @@
     '.hem-control-name075 strong{font-weight:500;overflow-wrap:anywhere}.hem-control-name075>span{margin-inline-start:auto;color:var(--hem-trend-muted114)}',
     '.hem-control-readout075 dl{display:flex;flex-wrap:wrap;gap:6px 18px;margin:5px 0 0 28px;font-variant-numeric:tabular-nums}',
     '.hem-control-readout075 dt{font-size:10px;color:var(--hem-trend-muted114)}.hem-control-readout075 dd{margin:2px 0 0;font-size:14px;font-weight:500}',
+    '.hem-control-readout075 dd[style]{color:var(--hem-control-color075)}',
     '.hem-control-status075{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:9px 0;font-size:11px;color:var(--hem-trend-muted114)}',
     '.hem-control-status075 small{flex-basis:100%;font-size:11px}.hem-control-status075 button{color:inherit;border:1px solid var(--divider-color,#556070);background:transparent;border-radius:7px;padding:6px 10px;min-height:32px}',
     '.hem-control-output-scale075{margin-inline-start:auto}',
     '.hem-control-output-legend075{display:flex;flex-basis:100%;min-width:0;flex-wrap:wrap;gap:4px 12px}',
     '.hem-control-output-legend075 strong{flex-basis:100%;font-weight:500;overflow-wrap:anywhere}',
     '.hem-control-output-legend075>span{display:inline-flex;min-width:0;gap:6px;align-items:center;overflow-wrap:anywhere}',
-    '.hem-control-output-series075 path{fill:none;stroke:var(--hem-control-color075);stroke-width:1.6;stroke-opacity:.85;vector-effect:non-scaling-stroke}',
-    '.hem-control-demand075{stroke-dasharray:1 4;stroke-linecap:round}',
+    '.hem-control-output-series075 path{fill:none;stroke:var(--hem-control-color075);stroke-width:2.2;vector-effect:non-scaling-stroke}',
     '.hem-control-output-axis075 line{stroke:var(--hem-trend-muted114);stroke-opacity:.5;stroke-width:1;vector-effect:non-scaling-stroke}',
     '.hem-control-recorded075{font-size:10px;color:var(--hem-trend-muted114);line-height:1.5;margin:6px 0}',
     '@media(max-width:380px){.hem-control-name075>span{margin-inline-start:28px;flex-basis:100%}.hem-control-readout075 dl{gap:6px 12px}.hem-control-legend075{font-size:10px}}',
