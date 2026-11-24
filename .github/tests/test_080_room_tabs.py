@@ -240,12 +240,33 @@ def run():
                       wrapper.querySelector('.hem-room-condition-detail svg')?.outerHTML!==art.outerHTML)
                       throw Error('Conditions did not render as one consistent face');
                     const states=art.dataset.conditions.split(' ');
-                    for(const [state,part] of [['poor-air','.hem-face-mask'],['humid','.hem-face-drop'],['dry','.hem-face-dry']])
+                    for(const [state,part] of [['cold','.hem-face-cold'],['hot','.hem-face-hot'],
+                      ['poor-air','.hem-face-mask'],['humid','.hem-face-drop'],['dry','.hem-face-dry'],['partial','.hem-face-partial']])
                       if(states.includes(state)!==!!art.querySelector(part))throw Error('Missing or unexpected feature '+state);
+                    if(options.checkArt)return art.innerHTML;
                     return art.dataset.conditions;
                   }
                   const poor={metric:'co2',value:1400,available:true,exceeded:true};
                   const missing={...poor,available:false,value:null};
+                  const drawings=new Set();
+                  for(const temp of [17,22,29])for(const rh of [25,45,75])for(const bad of [false,true]){
+                    const air=[{...poor,exceeded:bad,value:bad?1400:550}];
+                    drawings.add(render(temp,rh,{air,checkArt:true}));
+                  }
+                  if(drawings.size!==18)throw Error('Two measured combinations draw the same face');
+                  // Calibrated mold can replace the raw RH tile. The room
+                  // still has a measured humidity mean and its configured RH limit.
+                  const dashboard=card._dashboard105();
+                  const before=dashboard.room_humidity_limit;
+                  dashboard.room_humidity_limit=55;
+                  const moldRoom=structuredClone(base);
+                  moldRoom.readings=[{metric:'mold',available:true,value:80,threshold:70}];
+                  moldRoom.environment={measurement_evidence:{temperature:{value:18},humidity:{value:55}}};
+                  const wrapper=document.createElement('div');
+                  wrapper.innerHTML=card._room(moldRoom);
+                  if(wrapper.querySelector('.hem-condition-art')?.dataset.conditions!=='cold humid')
+                    throw Error('Cold + humid lost when the raw humidity tile is replaced');
+                  dashboard.room_humidity_limit=before;
                   return [render(20,30),render(26,64),render(19,29),render(27,65,{air:[poor]}),
                     render(null,null),render(null,45),render(null,null,{air:[poor]}),
                     render(22,45,{air:[missing]}),render(22,45,{air:[{...poor,metric:'aqi',
@@ -254,7 +275,7 @@ def run():
                     render(22,45,{pmv:{status:'estimate',pmv:0.7},adaptive:{status:'below_band'}})];
                 }""", data['room'])
                 assert faces == ['comfortable','comfortable','cold dry','poor-air hot humid','unknown','unknown',
-                                 'poor-air','unknown','unknown','humid','cold','hot'], faces
+                                 'poor-air partial','unknown','unknown','humid','cold','hot'], faces
                 for enabled in (False, True):
                     page.evaluate("""enabled=>{
                       card._hass.states['sensor.hem'].attributes.dashboard.show_room_smileys=enabled;

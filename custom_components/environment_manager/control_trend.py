@@ -264,7 +264,13 @@ def _observations(manager: Any, spec: Any, *, configuration: dict | None = None,
             if metric == "mold":
                 value = (_number(humidity.get("control_measurement"), 0, 100)
                          if humidity.get("target_ready") is True else None)
-        if value is None or metric != "mold" and not source_ids:
+        # A configured setpoint can still be read between room sensor reports.
+        # Use the selected chart's identity only for a target-only observation.
+        # Derived targets continue to require the inputs that calculate them.
+        target_only = value is None and metric != "mold" and target_kind == "control" and bool(selected_ids)
+        if target_only:
+            source_ids = selected_ids
+        elif value is None or metric != "mold" and not source_ids:
             getattr(manager, "_control_trend_requests", {}).get(spec.identifier, {}).pop(metric, None)
             continue
         # Selected source IDs belong to the exact feedback mean. A PID sample
@@ -285,7 +291,9 @@ def _observations(manager: Any, spec: Any, *, configuration: dict | None = None,
             manager, spec, metric, cfg, request_context,
             candidate=point_demand, fresh=(evaluation is not None or bool(reason)),
             now=now,
-        ) if method == "pid" and not reason else (None, None)
+        ) if method == "pid" and not reason and not target_only else (None, None)
+        if target_only:
+            getattr(manager, "_control_trend_requests", {}).get(spec.identifier, {}).pop(metric, None)
         if fresh_status and point_demand is not None and (
                 demand != point_demand or status.get("pid_control_metric") != feedback_metric
                 or _number(status.get("pid_control_target")) != (
@@ -309,6 +317,8 @@ def _observations(manager: Any, spec: Any, *, configuration: dict | None = None,
                 (humidity or {}).get("target_unavailable_reason")
                 if metric in ("humidity", "mold") else None),
         }
+        if target_only:
+            point.update(output_percent=None, output_reported_at=None)
         result.append({
             "controller_id": spec.identifier, "area_id": spec.area_id, "name": spec.name,
             "source_entity_ids": list(spec.source_entities), "metric": metric,

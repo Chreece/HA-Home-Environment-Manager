@@ -139,7 +139,7 @@ def _key(metadata: dict) -> tuple:
 def _values(point: dict) -> dict:
     """Measured feedback is sampled; only actual control changes are events."""
     return {**{key: value for key, value in point.items()
-               if key not in ("t", "until", "break_before", "measured", "output_reported_at",
+               if key not in ("t", "until", "break_before", "target_break_before", "measured", "output_reported_at",
                               "demand_reported_at")},
             "measurement_available": point.get("measured") is not None}
 
@@ -279,10 +279,16 @@ class ControlHistory:
         fresh = {"t": stamp, "until": stamp, **point}
         if interrupted:
             fresh["break_before"] = True
+        if series.get("gap"):
+            # A restart, removed controller or changed source ends the setpoint
+            # history too. Elapsed time alone only interrupts sampled outputs.
+            fresh["target_break_before"] = True
         series["gap"] = False
         if previous is not None and previous["t"] == stamp:
             if previous.get("break_before") is True:
                 fresh["break_before"] = True
+            if previous.get("target_break_before") is True:
+                fresh["target_break_before"] = True
             points[-1] = fresh
         else:
             points.append(fresh)
@@ -412,6 +418,8 @@ class ControlHistory:
                 point = {"t": at, "until": end, **clean}
                 if raw_point.get("break_before") is True:
                     point["break_before"] = True
+                if raw_point.get("target_break_before") is True:
+                    point["target_break_before"] = True
                 sequence += 1
                 row = (at, sequence, index, point)
                 if len(retained) < CONTROL_MAX_TOTAL_POINTS:

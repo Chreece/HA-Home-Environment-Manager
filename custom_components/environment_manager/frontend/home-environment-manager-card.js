@@ -5141,7 +5141,7 @@
         '<small>'+escape(this._t(key))+'</small></span>').join('')+'</div>';
   };
   // Each condition has its own part of the face so simultaneous readings stay legible.
-  function roomFaceArt(states) {
+  function roomFaceArt({states,thermal,moisture,airQuality}) {
     const has=key=>states.includes(key);
     const eyes=has('cold')?'M6.5 9l2.5 1.5L6.5 12m9-3L13 10.5l2.5 1.5':
       has('hot')?'M6.5 10q1.4-3 3 0m3 0q1.4-3 3 0':
@@ -5152,19 +5152,25 @@
       '<path d="M8.8 15.1q2.2.6 4.4 0"/></g>':
       has('cold')?'<path d="m7.5 15 1.8-1 1.7 2 1.7-2 1.8 1"/>':
       has('hot')?'<ellipse cx="11" cy="15.5" rx="1.7" ry="2"/>':
-      has('comfortable')?'<path d="M7.5 14.5q3.5 4.5 7 0"/>':
+      thermal==='comfortable'?'<path d="M7.5 14.5q3.5 4.5 7 0"/>':
       '<path d="M8.5 15.5h5"/>';
-    const texture=has('humid')?'<path class="hem-face-drop" d="M19 3q-3 3.7-3 5.2a3 3 0 0 0 6 0Q22 6.7 19 3z"/>':
-      has('dry')?'<path class="hem-face-dry" d="m17.5 2-.9 3.1 1.7 1.7-2.2 2.6m2.2-2.6 2.2-.6"/>':'';
+    const temperatureMark=thermal==='cold'?
+      '<path class="hem-face-cold" d="M5.5 1v9m-4-6.8 8 4.6m0-4.6-8 4.6"/>':
+      thermal==='hot'?'<path class="hem-face-hot" d="M2.6 10c-3-3.2 3-4.3 0-7.4m4.4 6c-3-3.1 3-4.3 0-7.4"/>':'';
+    const texture=moisture==='humid'?'<path class="hem-face-drop" d="M27 1.2c-.8 2.6-3.7 5-3.7 7.1a3.7 3.7 0 0 0 7.4 0c0-2.1-2.9-4.5-3.7-7.1z"/>':
+      moisture==='dry'?'<path class="hem-face-dry" d="m26 1.5-2 4.6 3 1.1-2.6 4.6m2.6-4.6L30 5"/>':'';
     const expression=has('unknown')?'<path d="M9 9a2.3 2.3 0 1 1 3.4 2c-1.2.6-1.4 1.2-1.4 2.2M11 16v.2"/>':
-      '<path d="'+eyes+'"/>'+mouth+texture;
+      '<path d="'+eyes+'"/>'+mouth;
+    const partial=has('partial')?'<path class="hem-face-partial" d="M25 17.5a2 2 0 1 1 3 1.7q-1 .6-1 1.7m0 2v.1"/>':'';
     return '<svg class="hem-condition-art" data-conditions="'+states.join(' ')+
-      '" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+
-      '<circle class="hem-face-shell" cx="11" cy="12" r="9"/>'+expression+'</svg>';
+      '" data-thermal="'+thermal+'" data-moisture="'+moisture+'" data-air="'+airQuality+
+      '" viewBox="0 0 32 26" aria-hidden="true" focusable="false">'+
+      '<g transform="translate(4 2)"><circle class="hem-face-shell" cx="11" cy="12" r="9"/>'+
+      expression+'</g>'+temperatureMark+texture+partial+'</svg>';
   }
   // Room faces describe measured conditions only. Advice and device faults have
   // independent controls in the same header. All temperature inputs here are °C.
-  function roomConditionFaces(room, overview, language) {
+  function roomConditionFaces(room, overview, language, homeHumidityLimit) {
     const {temperature,humidity}=overview;
     const readings=safeArray(room.readings);
     const environment=room.environment||{};
@@ -5180,31 +5186,36 @@
       faces.push(face);
       labels.push(hemTextB8(text,language));
     }
-    if(air.some(item=>measured(item)&&item.exceeded===true)||
-        (models.formaldehyde_30min?.status==='ready'&&models.formaldehyde_30min.above_who_100ug_m3))
+    const incompleteAir=air.some(item=>!measured(item));
+    const poorAir=air.some(item=>measured(item)&&item.exceeded===true)||
+      (models.formaldehyde_30min?.status==='ready'&&models.formaldehyde_30min.above_who_100ug_m3);
+    const airQuality=poorAir?'poor':incompleteAir?'unknown':air.length?'normal':'unmonitored';
+    if(poorAir)
       add('poor-air','Poor indoor air quality');
+    let thermal='unknown';
     if(Number.isFinite(temperature)){
       let band;
       if(pmv?.status==='estimate'&&Number.isFinite(pmv.pmv))
         band=pmv.pmv < -0.5?'below_band':pmv.pmv > 0.5?'above_band':'within_band';
       else if(['within_band','above_band','below_band'].includes(adaptive))band=adaptive;
       else band=temperature<20?'below_band':temperature>26?'above_band':'within_band';
-      if(band==='below_band')add('cold','Below the comfort band');
-      if(band==='above_band')add('hot','Above the comfort band');
+      thermal=band==='below_band'?'cold':band==='above_band'?'hot':'comfortable';
+      if(thermal==='cold')add('cold','Below the comfort band');
+      if(thermal==='hot')add('hot','Above the comfort band');
     }
     const hasHumidity=Number.isFinite(humidity)&&humidity>=0&&humidity<=100;
-    const rhLimit=readings.find(item=>item?.metric==='humidity'&&
-      Number.isFinite(item.threshold)&&item.threshold>0&&item.threshold<=100)?.threshold??65;
-    if(hasHumidity){
-      if(humidity>=rhLimit)add('humid','High room humidity');
-      else if(humidity<30)add('dry','Dry room air');
-    }
+    const validLimit=value=>Number.isFinite(value)&&value>0&&value<=100;
+    const rhLimit=readings.find(item=>item?.metric==='humidity'&&validLimit(item.threshold))?.threshold??
+      (validLimit(homeHumidityLimit)?homeHumidityLimit:65);
+    const moisture=!hasHumidity?'unknown':humidity>=rhLimit?'humid':humidity<30?'dry':'normal';
+    if(moisture==='humid')add('humid','High room humidity');
+    if(moisture==='dry')add('dry','Dry room air');
+    const incomplete=!hasHumidity||thermal==='unknown'||incompleteAir;
     if(!faces.length){
-      if(hasHumidity&&Number.isFinite(temperature)&&!air.some(item=>!measured(item)))
-        add('comfortable','Within the comfort band');
-      else add('unknown','Missing data');
-    }
-    return {states:faces,label:labels.join(' · ')};
+      if(incomplete)add('unknown','Missing data');
+      else add('comfortable','Within the comfort band');
+    }else if(incomplete)add('partial','Missing data');
+    return {states:faces,thermal,moisture,airQuality,label:labels.join(' · ')};
   }
 
   proto87._room = function(room) {
@@ -5255,9 +5266,10 @@
     const active=devices.map(entry=>({entry,state:_deviceState87(entry,this._hass)}))
       .filter(item=>item.state.active);
     const temp=overview122.temperature,humidity=overview122.humidity;
-    const conditions=roomConditionFaces(room,overview122,this._language());
-    const showFaces=this._dashboard105()?.show_room_smileys!==false;
-    const faceArt=showFaces?roomFaceArt(conditions.states):'';
+    const dashboard=this._dashboard105();
+    const conditions=roomConditionFaces(room,overview122,this._language(),dashboard?.room_humidity_limit);
+    const showFaces=dashboard?.show_room_smileys!==false;
+    const faceArt=showFaces?roomFaceArt(conditions):'';
     const roomStatus=this._roomStatus075(room);
     const alerts=[];
     // Display-only: room ventilation opportunity uses NO virtual CO2/AQI
@@ -7544,7 +7556,7 @@
     const width=Math.max(240,Math.min(800,saved.width114||
       Math.min(560,window.innerWidth-24)-32));
     const visibleControls075=controlPoints075.filter(point=>point.t<=viewEnd&&point.until>=viewStart);
-    const targetValues075=visibleControls075.flatMap(point=>
+    const targetValues075=controlPoints075.filter(point=>point.t<=viewEnd&&point.targetUntil>=viewStart).flatMap(point=>
       [point.target,point.target_low,point.target_high]).filter(Number.isFinite);
     const output075=visibleControls075.some(point=>
       Number.isFinite(point.demand_percent)||Number.isFinite(point.output_percent));
@@ -8191,23 +8203,43 @@
       }
       for(const group of kinds.values()){
         group.points.sort((a,b)=>a.t-b.t);
+        // Configured setpoints are state changes. A short output observation
+        // must not shorten the target. Legacy journals only marked sample gaps,
+        // so connect the last recorded setting between compatible target records.
+        let previous=null;
+        for(const point of group.points){
+          point.targetUntil=point.until;
+          const compatible=previous&&previous.context===point.context&&!point.target_break_before;
+          const bothHaveSetpoints=previous&&(
+            Number.isFinite(previous.target)&&Number.isFinite(point.target)||
+            Number.isFinite(previous.target_low)&&Number.isFinite(point.target_low));
+          point.targetConnected=Boolean(compatible&&(
+            previous.until===point.t&&!point.break_before||
+            group.kind==='control'&&bothHaveSetpoints));
+          if(point.targetConnected)previous.targetUntil=point.t;
+          previous=point;
+        }
         group.firstField=controlFields075.find(field=>group.points.some(point=>Number.isFinite(point[field])))||'target';
       }
     }
     return groups.filter(group=>group.points.length);
   };
   controlTrend075._controlTrendPoint075=function(group,time){
-    return group.points.filter(point=>point.t<=time&&point.until>=time).at(-1)||null;
+    const point=group.points.findLast(point=>point.t<=time&&point.targetUntil>=time);
+    if(!point||time<=point.until)return point||null;
+    return {...point,measured:null,demand_percent:null,output_percent:null};
   };
   controlTrend075._controlTrendPath075=function(group,model,field,output=false){
     const y=value=>output?model.bottom-(model.bottom-model.top)*value/100:trendY114(model,value);
     let path='',previous=null;
     for(const point of group.points){
-      if(point.t>model.end||point.until<model.start||!Number.isFinite(point[field])){previous=null;continue;}
-      const start=Math.max(model.start,point.t),end=Math.min(model.end,point.until);
+      const until=output?point.until:point.targetUntil;
+      if(point.t>model.end||until<model.start||!Number.isFinite(point[field])){previous=null;continue;}
+      const start=Math.max(model.start,point.t),end=Math.min(model.end,until);
       const x=trendX114(model,start).toFixed(2),valueY=y(point[field]).toFixed(2);
-      const connected=previous&&previous.until===point.t&&!point.break_before&&
-        previous.context===point.context&&(!output||field!=='output_percent'||previous.output_kind===point.output_kind);
+      const connected=previous&&(output?
+        previous.until===point.t&&!point.break_before&&previous.context===point.context&&
+          (field!=='output_percent'||previous.output_kind===point.output_kind):point.targetConnected);
       path+=(connected?' L':' M')+x+' '+valueY;
       path+=' L'+trendX114(model,end).toFixed(2)+' '+valueY;
       previous=point;
@@ -8228,7 +8260,8 @@
       (field.startsWith('target')?' hem-control-target-key075':'')+'"></i>';
     const outputSeries=groups.map((group,index)=>{
       const points=group.points.filter(point=>point.t<=model.end&&point.until>=model.start);
-      return {group,index,points,
+      const targets=group.points.filter(point=>point.t<=model.end&&point.targetUntil>=model.start);
+      return {group,index,targets,
         demand:this._controlTrendPath075(group,model,'demand_percent',true),
         output:this._controlTrendPath075(group,model,'output_percent',true),
         binaryOnly:points.every(point=>point.output_percent===null||
@@ -8239,11 +8272,11 @@
     const legend='<div class="hem-control-legend075"><span><i class="hem-control-measured-key075" aria-hidden="true"></i>'+
       escape(tw114(this,'sample')+' · '+model.unit)+'</span>'+
       (model.output075?'<span class="hem-control-output-scale075">'+escape(scaleLabel)+'</span>':'')+
-      outputSeries.map(({group,points,demand,output,binaryOnly})=>{
-        const hasTarget=points.some(point=>[point.target,point.target_low,point.target_high].some(Number.isFinite));
+      outputSeries.map(({group,targets,demand,output,binaryOnly})=>{
+        const hasTarget=targets.some(point=>[point.target,point.target_low,point.target_high].some(Number.isFinite));
         if(!hasTarget&&!demand&&!output)return '';
         return '<div class="hem-control-output-legend075"><strong>'+escape(group.name)+'</strong>'+
-          ['target','target_low','target_high'].filter(field=>points.some(point=>Number.isFinite(point[field])))
+          ['target','target_low','target_high'].filter(field=>targets.some(point=>Number.isFinite(point[field])))
             .map(field=>'<span>'+marker(group,field)+escape(targetLabel(group)+
               (field==='target'?'':' · '+tw114(this,field==='target_low'?'low':'high'))+
               ' · '+group.unit)+'</span>').join('')+
@@ -8256,8 +8289,8 @@
       }).join('')+'</div>';
     const targetPaths=groups.map(group=>{
       const range=group.points.filter(point=>Number.isFinite(point.target_low)&&Number.isFinite(point.target_high)&&
-        point.t<=model.end&&point.until>=model.start).map(point=>{
-        const start=trendX114(model,Math.max(model.start,point.t)),end=trendX114(model,Math.min(model.end,point.until));
+        point.t<=model.end&&point.targetUntil>=model.start).map(point=>{
+        const start=trendX114(model,Math.max(model.start,point.t)),end=trendX114(model,Math.min(model.end,point.targetUntil));
         return '<rect class="hem-control-band075" x="'+start.toFixed(2)+'" y="'+trendY114(model,point.target_high).toFixed(2)+
           '" width="'+Math.max(0,end-start).toFixed(2)+'" height="'+
           Math.max(0,trendY114(model,point.target_low)-trendY114(model,point.target_high)).toFixed(2)+'"/>';
@@ -8266,8 +8299,9 @@
         escape(targetLabel(group)+' · '+group.name)+'">'+range+
         ['target','target_low','target_high'].map(field=>{
           const path=this._controlTrendPath075(group,model,field);
-          const isolated=group.points.filter(point=>point.t===point.until&&point.t>=model.start&&
-            point.t<=model.end&&Number.isFinite(point[field])).map(point=>
+          const isolated=group.points.filter((point,index)=>point.t===point.targetUntil&&point.t>=model.start&&
+            point.t<=model.end&&Number.isFinite(point[field])&&
+            !(point.targetConnected&&Number.isFinite(group.points[index-1]?.[field]))).map(point=>
             '<circle class="hem-control-sample075" '+seriesStyle(group,field)+' cx="'+trendX114(model,point.t).toFixed(2)+
             '" cy="'+trendY114(model,point[field]).toFixed(2)+'" r="2.5"/>').join('');
           return (path?'<path data-control-field075="'+field+'" '+seriesStyle(group,field)+' d="'+path+'"/>':'')+isolated;
@@ -15032,7 +15066,7 @@ HomeEnvironmentManagerCard.prototype._styles=function(){
       display:inline-flex;flex:none;align-items:center;line-height:1;
     }
     .hem-condition-art {
-      display:inline-block;width:22px;height:22px;vertical-align:middle;
+      display:inline-block;width:32px;height:26px;vertical-align:middle;
       color:var(--aqa-blue);fill:none;stroke:currentColor;stroke-width:1.65;
       stroke-linecap:round;stroke-linejoin:round;
     }
@@ -15043,8 +15077,10 @@ HomeEnvironmentManagerCard.prototype._styles=function(){
     .hem-condition-art[data-conditions~="unknown"] {color:var(--aqa-muted)}
     .hem-face-shell {fill:color-mix(in srgb,currentColor 13%,var(--aqa-surface))}
     .hem-face-mask {stroke:var(--aqa-text);stroke-width:1.25;fill:var(--aqa-surface)}
-    .hem-face-drop,.hem-face-dry {stroke:var(--aqa-blue);fill:var(--aqa-surface)}
-    .hem-face-dry {stroke:var(--aqa-amber,var(--warning-color,#eab567));fill:none}
+    .hem-face-cold {stroke:var(--aqa-blue)}
+    .hem-face-hot,.hem-face-dry {stroke:var(--aqa-amber,var(--warning-color,#eab567))}
+    .hem-face-drop {stroke:var(--aqa-blue);fill:var(--aqa-blue);stroke-width:1}
+    .hem-face-partial {stroke:var(--aqa-muted)}
     .hem-controller-target {display:inline-flex;align-items:center;gap:2px;white-space:nowrap;color:var(--aqa-text);font-size:11px}
     .hem-controller-target ha-icon {--mdc-icon-size:13px;color:var(--aqa-blue)}
     @container hem-rooms107 (max-width:440px) {

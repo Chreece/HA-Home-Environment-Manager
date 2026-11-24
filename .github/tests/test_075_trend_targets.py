@@ -6,7 +6,9 @@ keyboard, retry and 320px geometry. All transport and HA states are fixtures.
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from pathlib import Path
+import re
 import runpy
 import shutil
 import subprocess
@@ -94,7 +96,20 @@ def fixture():
                                       demand_percent=None, output_percent=0, mode="auto")])]},
         ],
     }
-    data.update(response=response, now=START + 6000, samples=samples,
+    sparse = deepcopy(response)
+    for controller in sparse["controllers"]:
+        row = controller["series"][0]
+        base = row["points"][0]
+        row["points"] = []
+        for index, hour in enumerate((0, 6, 12, 18, 24)):
+            stamp = START - 86400 + hour * 3600
+            goal = 19 if index < 2 else 21
+            scalar = controller["controller_id"] == "radiator"
+            row["points"].append({**base, "t": stamp, "until": stamp + (0 if index % 2 else 60),
+                                  "break_before": index > 0, "target_break_before": index == 4,
+                                  "target": goal if scalar else None,
+                                  "target_low": None if scalar else goal, "target_high": None if scalar else goal + 4})
+    data.update(response=response, sparse=sparse, now=START + 6000, samples=samples,
                 backend=backend_payloads(),
                 languages=[path.stem for path in
                            (ROOT / "custom_components/environment_manager/translations").glob("*.json")])
@@ -251,6 +266,22 @@ const original=JSON.stringify(data.response);
   // Output remains inspectable without any target or measured sample. The
   // physical-value axis must not silently become a percentage scale.
   const retainedControls=saved.controlData075;
+  saved.controlData075=card._validateControlTrend075(data.sparse,card._controlTrendContext075(saved));
+  saved.view114={range:86400,end:t,cursor:null};render();model=saved.model114;
+  for(const [index,field] of [[0,'target'],[1,'target_low'],[1,'target_high']]){
+    const path=card._controlTrendPath075(model.controls075[index],model,field);
+    assert.equal(path.split('M').length-1,2,'Only the explicit restart should split the target');
+    const pts=vertices(path.split('M').slice(0,2).join('M'));
+    const stepX=model.left+(model.right-model.left)*(t-43200-model.start)/(model.end-model.start);
+    assert.ok(pts.some((p,i)=>i&&p.x===pts[i-1].x&&p.y!==pts[i-1].y&&Math.abs(p.x-stepX)<.011));
+    assert.ok(pts.every((p,i)=>!i||p.x===pts[i-1].x||p.y===pts[i-1].y));
+  }
+  card._inspectTrend114(t-15*3600);
+  assert.equal(node('[data-control-target075="0"]').textContent,'19 °C');
+  assert.equal(node('[data-control-demand075="0"]').textContent,'—');
+  assert.equal(node('[data-control-output075="0"]').textContent,'—');
+  card._inspectTrend114(t-3*3600);
+  assert.equal(node('[data-control-target075="0"]').textContent,'—');
   saved.controlData075=structuredClone(retainedControls);
   for(const controller of saved.controlData075.controllers)for(const series of controller.series)
     for(const point of series.points)point.target=point.target_low=point.target_high=null;
@@ -625,6 +656,35 @@ def browser_checks(data):
         popup.locator('[data-retry-control075]').click()
         page.evaluate("controlRequests.at(-1).resolve(data.response)")
         expect(popup.locator('[data-retry-control075]')).to_have_count(0)
+
+        # Reproduce a day of brief controller reports. Both the scalar and
+        # heat/cool limits must form staircases across the hours between them.
+        page.evaluate("""()=>{
+          const saved=card._averageDialog105;
+          saved.controlData075=card._validateControlTrend075(data.sparse,card._controlTrendContext075(saved));
+          saved.view114={range:86400,end:data.start,cursor:null};
+          card._refreshAverage105(true);
+        }""")
+        for field in ("target", "target_low", "target_high"):
+            path = main.locator(f'[data-control-field075="{field}"]').get_attribute("d")
+            segments = path.split("M")[1:]
+            assert len(segments) == 2, (field, path)  # One explicit restart.
+            vertices = [(float(x), float(y)) for x, y in re.findall(
+                r"[L ]*([\d.]+) ([\d.]+)", segments[0])]
+            step_x = page.evaluate("""()=>{
+              const m=card._averageDialog105.model114;
+              return m.left+(m.right-m.left)*(data.start-43200-m.start)/(m.end-m.start);
+            }""")
+            assert any(abs(x-step_x)<.02 and x==old_x and y!=old_y
+                       for (old_x,old_y),(x,y) in zip(vertices, vertices[1:])), (field, path)
+            assert all(x==old_x or y==old_y for (old_x,old_y),(x,y) in zip(vertices, vertices[1:]))
+        assert main.locator('.hem-control-target075 circle').count() == 0
+        page.evaluate("card._inspectTrend114(data.start-15*3600)")
+        expect(popup.locator('[data-control-target075="0"]')).to_have_text("19 °C")
+        expect(popup.locator('[data-control-demand075="0"]')).to_have_text("—")
+        expect(popup.locator('[data-control-output075="0"]')).to_have_text("—")
+        page.evaluate("card._inspectTrend114(data.start-3*3600)")
+        expect(popup.locator('[data-control-target075="0"]')).to_have_text("—")
         popup.locator("[data-close-avg105]").click()
         expect(popup).to_have_count(0)
         assert page.evaluate("deviceCalls") == []
