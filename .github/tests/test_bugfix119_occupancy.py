@@ -145,7 +145,7 @@ class RoomWindowTests(unittest.TestCase):
         self.assertEqual(result["status"], "window_state_unknown")
         self.assertEqual(result["unknown_contacts"], [LOCAL])
         self.assertTrue(result["blocked"])
-        self.assertFalse(result["stop_requested"])
+        self.assertTrue(result["stop_requested"])
 
         fixture.put(LOCAL, "off", changed=BASE - 120)
         self.assertEqual(fixture.evaluate()["remaining_seconds"], 60)
@@ -162,7 +162,9 @@ class RoomWindowTests(unittest.TestCase):
         self.assertEqual(result["status"], "window_state_unknown")
         self.assertEqual(result["unknown_contacts"], [FOREIGN])
         self.assertTrue(result["blocked"])
-        self.assertFalse(result["stop_requested"])
+        # The user selected this contact for the room. With no registry
+        # record there is no evidence to exclude it as belonging elsewhere.
+        self.assertTrue(result["stop_requested"])
 
 
 if __name__ == "__main__":
