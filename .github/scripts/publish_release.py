@@ -7,6 +7,7 @@ throughout publication; an interrupted draft requires explicit review.
 """
 from __future__ import annotations
 
+import gzip
 import hashlib
 from io import BytesIO
 import json
@@ -27,6 +28,7 @@ WORKFLOW = "Validate Home Environment Manager"
 SOURCE = "custom_components/environment_manager/"
 PREFIX = ""  # Marketplace ZIP is extracted directly into the integration folder.
 VERSION = re.compile(r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:b(0|[1-9]\d*))?")
+CARD_JS = "frontend/home-environment-manager-card.js"
 REQUIRED = (
     "__init__.py", "entry_cleanup.py", "device_faults.py", "equipment_resume.py", "pid_review.py",
     "equipment_power_switch.py", "pid_passive.py", "pid_calibration.py",
@@ -44,7 +46,7 @@ REQUIRED = (
     "equipment_mode_settings.py", "equipment_mode_entities.py", "operating_mode_catalog.py",
     "mold_control_demand.py",
     "environment_history.py", "control_history.py", "control_trend.py",
-    "frontend/home-environment-manager-card.js",
+    CARD_JS, "frontend/home-environment-manager-loader.js",
 )
 
 
@@ -112,6 +114,8 @@ def inspect_zip(data, version):
         require(manifest.get("domain") == "environment_manager"
                 and manifest.get("version") == version, "ZIP manifest mismatch")
         require(all(PREFIX + name in names for name in REQUIRED), "Required integration files missing")
+        require(gzip.decompress(archive.read(CARD_JS + ".gz")) == archive.read(CARD_JS),
+                "Compressed card differs from its source")
     return names
 
 
@@ -134,8 +138,14 @@ def package(repo, sha, version):
             info = ZipInfo(PREFIX + name, date_time=(1980, 1, 1, 0, 0, 0))
             info.create_system = 3
             info.external_attr = int(mode, 8) << 16
-            archive.writestr(info, git(repo, "cat-file", "blob", oid),
-                             compress_type=ZIP_DEFLATED, compresslevel=8)
+            contents = git(repo, "cat-file", "blob", oid)
+            archive.writestr(info, contents, compress_type=ZIP_DEFLATED, compresslevel=8)
+            if name == CARD_JS:
+                # aiohttp FileResponse negotiates a sibling .gz for gzip clients.
+                compressed = ZipInfo(info.filename + ".gz", date_time=info.date_time)
+                compressed.create_system = info.create_system
+                compressed.external_attr = info.external_attr
+                archive.writestr(compressed, gzip.compress(contents, compresslevel=9, mtime=0))
     data = output.getvalue()
     inspect_zip(data, version)
     return data

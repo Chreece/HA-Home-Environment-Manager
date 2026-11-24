@@ -15,6 +15,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  card-webkit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+      - run: python -m pip install 'playwright==1.57.0'
+      - run: python -m playwright install --with-deps webkit
+      - run: python -I .github/tests/test_card_module_loading.py webkit
+
   validate:
     runs-on: ubuntu-latest
     timeout-minutes: 18
@@ -455,6 +467,7 @@ jobs:
           HEM_TEST_SCREENSHOT_DIR: /tmp/hem-061b4-ui
         run: |
           hem_ui_status=0
+          python -I .github/tests/test_card_module_loading.py chromium || hem_ui_status=1
           python -I .github/tests/test_080_room_tabs.py || hem_ui_status=1
           python -I .github/tests/test_080_quiet_card.py --with-browser || hem_ui_status=1
           exit "$hem_ui_status"

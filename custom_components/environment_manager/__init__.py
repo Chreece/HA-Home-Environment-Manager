@@ -24,31 +24,23 @@ CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
     """Serve the canonical integration."""
     hass.data.setdefault(DOMAIN, {})
-    frontend_paths = (
-        ("home-environment-manager-card.js", Path(__file__).parent / "frontend" / "home-environment-manager-card.js"),
-        # Connected room styling is now bundled in the main card.
-    )
+    frontend = Path(__file__).parent / "frontend"
+    loader = "home-environment-manager-loader.js"
     await hass.http.async_register_static_paths([
-        StaticPathConfig(f"/{DOMAIN}/{name}", str(path), True)
-        for name, path in frontend_paths
+        StaticPathConfig(f"/{DOMAIN}/{name}", str(frontend / name), True)
+        for name in (loader, "home-environment-manager-card.js")
     ])
-    # This is a native HA frontend registration, not a Lovelace storage mutation.
-    # Pin the cache key to the integration version so HACS updates refresh the JS.
-    # File reads are blocking operations, even for a tiny manifest. Load
-    # this once in HA's executor instead of opening it on the event loop.
+    # The loader passes this release's cache key to the card on every attempt.
     manifest = await hass.async_add_executor_job(
         lambda: json.loads(
             (Path(__file__).parent / "manifest.json").read_text(encoding="utf-8")
         )
     )
-    # Bundled asset and HACS release version share ONE authoritative source.
-    # Rebranding must not change the original integration domain/path.
     from .entry_cleanup import remember_frontend_resource
 
-    for name, _ in frontend_paths:
-        url = f"/{DOMAIN}/{name}?v={manifest['version']}"
-        add_extra_js_url(hass, url)
-        remember_frontend_resource(hass, url)
+    url = f"/{DOMAIN}/{loader}?v={manifest['version']}"
+    add_extra_js_url(hass, url)
+    remember_frontend_resource(hass, url)
     # A full multi-room dashboard cannot safely fit in Recorder attributes.
     # Its authenticated WebSocket API is read-only and registered just once
     # per canonical integration setup, not once per config entry.

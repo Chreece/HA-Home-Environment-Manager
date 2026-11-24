@@ -234,7 +234,15 @@ def run():
                     if(!face.title||face.title!==face.getAttribute('aria-label')||
                         !wrapper.querySelector('.hem-room-condition-detail').textContent.includes(face.title))
                       throw Error('Missing readable condition label');
-                    return face.textContent;
+                    const art=face.querySelector('svg');
+                    if(face.querySelectorAll('svg').length!==1||art.getAttribute('aria-hidden')!=='true'||
+                      !art.querySelector('.hem-face-shell')||
+                      wrapper.querySelector('.hem-room-condition-detail svg')?.outerHTML!==art.outerHTML)
+                      throw Error('Conditions did not render as one consistent face');
+                    const states=art.dataset.conditions.split(' ');
+                    for(const [state,part] of [['poor-air','.hem-face-mask'],['humid','.hem-face-drop'],['dry','.hem-face-dry']])
+                      if(states.includes(state)!==!!art.querySelector(part))throw Error('Missing or unexpected feature '+state);
+                    return art.dataset.conditions;
                   }
                   const poor={metric:'co2',value:1400,available:true,exceeded:true};
                   const missing={...poor,available:false,value:null};
@@ -245,7 +253,8 @@ def run():
                     render(22,45,{adaptive:{status:'below_band'}}),
                     render(22,45,{pmv:{status:'estimate',pmv:0.7},adaptive:{status:'below_band'}})];
                 }""", data['room'])
-                assert faces == ['😊','😊','🥶😮‍💨','😷🥵😓','😶','😶','😷','😶','😶','😓','🥶','🥵'], faces
+                assert faces == ['comfortable','comfortable','cold dry','poor-air hot humid','unknown','unknown',
+                                 'poor-air','unknown','unknown','humid','cold','hot'], faces
                 for enabled in (False, True):
                     page.evaluate("""enabled=>{
                       card._hass.states['sensor.hem'].attributes.dashboard.show_room_smileys=enabled;

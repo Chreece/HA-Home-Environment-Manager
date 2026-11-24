@@ -2566,9 +2566,9 @@
       "presentation": "native_flow_unchanged",
       "catalog_path": "strings.json/config/step/areas/data/areas",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:196",
-        "custom_components/environment_manager/__init__.py:223",
-        "custom_components/environment_manager/__init__.py:79",
+        "custom_components/environment_manager/__init__.py:188",
+        "custom_components/environment_manager/__init__.py:215",
+        "custom_components/environment_manager/__init__.py:71",
         "custom_components/environment_manager/compact_options.py:202",
         "custom_components/environment_manager/compact_options.py:214",
         "custom_components/environment_manager/compact_options.py:228"
@@ -2736,8 +2736,8 @@
       "presentation": "native_flow_unchanged",
       "catalog_path": "strings.json/config/step/delivery/data/language",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:235",
-        "custom_components/environment_manager/__init__.py:77",
+        "custom_components/environment_manager/__init__.py:227",
+        "custom_components/environment_manager/__init__.py:69",
         "custom_components/environment_manager/ai_rewrite.py:101",
         "custom_components/environment_manager/ai_rewrite.py:263",
         "custom_components/environment_manager/aqi_sources.py:90",
@@ -3220,9 +3220,9 @@
       "presentation": "native_flow_unchanged",
       "catalog_path": "strings.json/config/step/setup_rooms/data/areas",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:196",
-        "custom_components/environment_manager/__init__.py:223",
-        "custom_components/environment_manager/__init__.py:79",
+        "custom_components/environment_manager/__init__.py:188",
+        "custom_components/environment_manager/__init__.py:215",
+        "custom_components/environment_manager/__init__.py:71",
         "custom_components/environment_manager/compact_options.py:202",
         "custom_components/environment_manager/compact_options.py:214",
         "custom_components/environment_manager/compact_options.py:228"
@@ -3543,8 +3543,8 @@
       "presentation": "native_flow_unchanged",
       "catalog_path": "strings.json/config/step/setup_general/data/language",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:235",
-        "custom_components/environment_manager/__init__.py:77",
+        "custom_components/environment_manager/__init__.py:227",
+        "custom_components/environment_manager/__init__.py:69",
         "custom_components/environment_manager/ai_rewrite.py:101",
         "custom_components/environment_manager/ai_rewrite.py:263",
         "custom_components/environment_manager/aqi_sources.py:90",
@@ -7473,9 +7473,9 @@
       "presentation": "native_flow_unchanged",
       "catalog_path": "strings.json/config/step/choose_rooms/data/areas",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:196",
-        "custom_components/environment_manager/__init__.py:223",
-        "custom_components/environment_manager/__init__.py:79",
+        "custom_components/environment_manager/__init__.py:188",
+        "custom_components/environment_manager/__init__.py:215",
+        "custom_components/environment_manager/__init__.py:71",
         "custom_components/environment_manager/compact_options.py:202",
         "custom_components/environment_manager/compact_options.py:214",
         "custom_components/environment_manager/compact_options.py:228"
@@ -7790,9 +7790,9 @@
       "presentation": "native_flow_unchanged",
       "catalog_path": "strings.json/options/step/areas/data/areas",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:196",
-        "custom_components/environment_manager/__init__.py:223",
-        "custom_components/environment_manager/__init__.py:79",
+        "custom_components/environment_manager/__init__.py:188",
+        "custom_components/environment_manager/__init__.py:215",
+        "custom_components/environment_manager/__init__.py:71",
         "custom_components/environment_manager/compact_options.py:202",
         "custom_components/environment_manager/compact_options.py:214",
         "custom_components/environment_manager/compact_options.py:228"
@@ -7943,8 +7943,8 @@
       "presentation": "native_flow_unchanged",
       "catalog_path": "strings.json/options/step/delivery/data/language",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:235",
-        "custom_components/environment_manager/__init__.py:77",
+        "custom_components/environment_manager/__init__.py:227",
+        "custom_components/environment_manager/__init__.py:69",
         "custom_components/environment_manager/ai_rewrite.py:101",
         "custom_components/environment_manager/ai_rewrite.py:263",
         "custom_components/environment_manager/aqi_sources.py:90",
@@ -11672,9 +11672,9 @@
       "presentation": "native_flow_unchanged",
       "catalog_path": "strings.json/options/step/setup_rooms/data/areas",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:196",
-        "custom_components/environment_manager/__init__.py:223",
-        "custom_components/environment_manager/__init__.py:79",
+        "custom_components/environment_manager/__init__.py:188",
+        "custom_components/environment_manager/__init__.py:215",
+        "custom_components/environment_manager/__init__.py:71",
         "custom_components/environment_manager/compact_options.py:202",
         "custom_components/environment_manager/compact_options.py:214",
         "custom_components/environment_manager/compact_options.py:228"
@@ -11995,8 +11995,8 @@
       "presentation": "basic",
       "catalog_path": "strings.json/options/step/setup_general/data/language",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:235",
-        "custom_components/environment_manager/__init__.py:77",
+        "custom_components/environment_manager/__init__.py:227",
+        "custom_components/environment_manager/__init__.py:69",
         "custom_components/environment_manager/ai_rewrite.py:101",
         "custom_components/environment_manager/ai_rewrite.py:263",
         "custom_components/environment_manager/aqi_sources.py:90",
@@ -12682,9 +12682,9 @@
       "presentation": "native_flow_unchanged",
       "catalog_path": "strings.json/options/step/choose_rooms/data/areas",
       "literal_references": [
-        "custom_components/environment_manager/__init__.py:196",
-        "custom_components/environment_manager/__init__.py:223",
-        "custom_components/environment_manager/__init__.py:79",
+        "custom_components/environment_manager/__init__.py:188",
+        "custom_components/environment_manager/__init__.py:215",
+        "custom_components/environment_manager/__init__.py:71",
         "custom_components/environment_manager/compact_options.py:202",
         "custom_components/environment_manager/compact_options.py:214",
         "custom_components/environment_manager/compact_options.py:228"
