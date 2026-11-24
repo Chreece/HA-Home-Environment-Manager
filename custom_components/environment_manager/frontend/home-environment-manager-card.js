@@ -5361,7 +5361,7 @@
       '</span>'+
       this._icon(open?'mdi:chevron-up':'mdi:chevron-down')+
       '</summary><div class="hem-room-body87"><div class="hem-room-condition-detail">'+
-      (showFaces?'<span aria-hidden="true">'+faceArt+'</span> ':'')+escape(conditions.label)+'</div>'+ventHeader95+
+      (showFaces?faceArt+' ':'')+escape(conditions.label)+'</div>'+ventHeader95+
       this._roomIssueDetail114(room)+original+'</div></details>';
   };
 
