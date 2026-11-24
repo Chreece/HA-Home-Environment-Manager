@@ -1,0 +1,28 @@
+name: Capture English README screenshots
+on:
+  workflow_dispatch:
+  push:
+    branches: [dev]
+    paths:
+      - .github/scripts/capture_readme.cjs
+      - .github/workflows/readme-images.yml
+permissions:
+  contents: read
+jobs:
+  capture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install screenshot renderer
+        run: npm install --prefix "$RUNNER_TEMP/hem-images" --no-audit --ignore-scripts playwright-core@1.57.0 @mdi/js@7.4.47
+      - name: Render the documented card
+        run: NODE_PATH="$RUNNER_TEMP/hem-images/node_modules" node .github/scripts/capture_readme.cjs "$RUNNER_TEMP/hem-docs"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hem-english-readme-images
+          path: ${{ runner.temp }}/hem-docs/*.png
+          if-no-files-found: error

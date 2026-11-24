@@ -33,7 +33,7 @@ Por exemplo, HEM Pode reduzir o aquecimento enquanto todos estão fora, preparar
 
 **Fica no comando.** Cada sala tem as suas próprias configurações. Cada aparelho suportado tem o seu próprio controlador, modos de operação, alvos e limites de segurança. HEM nunca assume que a selecção de um dispositivo lhe dá permissão para operar esse dispositivo.
 
-[Explore as características](#what-can-hem-do) · [Veja a interface](#see-hem-in-action) · [Instalar HEM](#installation) · [Arranja a tua casa](#getting-started) · [Guia detalhada](../../docs/advanced-configuration.md)
+[Explore as características](#what-can-hem-do) · [Veja a interface](#see-hem-in-action) · [Instalar HEM](#installation) · [Arranja a tua casa](#getting-started) · [Guia detalhada](../../docs/advanced-configuration.md) · [Todas as configurações (em inglês)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## O que pode HEM - Não?
@@ -153,7 +153,7 @@ HEM Inclui também proteções e diagnósticos específicos do dispositivo:
 - Durações mínimas de ligação e desligação, configurações máximas de tempo de operação e manuseio suportado de interruptores de alimentação externos.
 - Restrições de janela e ocupação, manuseio manual de reviravoltas e verificações de reconhecimento de comando nativo.
 - Relatório de erro e dispositivo indisponível, com uma escolha de comportamento de notificação para cada dispositivo.
-- Um vigilante opcional após o fechamento para o aquecimento suspeito de continuar após um comando de desligamento, com monitorização vigilante e tentativas limitadas de recuperação.
+- Para cada aparelho, você pode monitorar sinais de que o aquecimento, o resfriamento, a desumidificação ou a umidificação continuam após o desligamento. Escolha apenas o monitoramento ou permita até dois comandos adicionais para desligar.
 - Razões claras de espera, estado operacional atual e disponibilidade de fontes, para que possa investigar antes de permitir mais controle.
 
 **Os limites de segurança permanecem em vigor mesmo quando um alerta é desativado.** HEM nunca trata uma expedição de comando bem-sucedida como prova de que um aparelho respondeu fisicamente.
@@ -169,7 +169,7 @@ Estas ilustrações em inglês usam salas de amostras e medições, mostrando a 
 Obter aconselhamento sobre ventilação, condições climáticas e status de cada sala monitorada num único cartão.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM painel de controle doméstico com aconselhamento de ventilação e leituras ambientais em cinco salas" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM painel de controle doméstico com aconselhamento de ventilação e leituras ambientais em cinco salas" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Obter aconselhamento sobre ventilação, condições climáticas e status de cad
 Verificar a qualidade do ar, a indicação do molde, a presença, o estado das janelas, os controladores climáticos e as explicações para cada decisão.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Planejamento ampliado de banho com leituras e controladores independentes de dispositivos" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Planejamento ampliado de banho com leituras e controladores independentes de dispositivos" width="760">
 </p>
 
 <a id="home-settings"></a>

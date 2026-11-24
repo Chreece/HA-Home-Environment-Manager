@@ -33,7 +33,7 @@ Per esempio, HEM può ridurre il riscaldamento mentre tutti sono lontani, prepar
 
 **Resta tu al comando.** Ogni stanza ha le sue impostazioni, ogni apparecchio supportato ha il proprio controller, modalità di funzionamento, obiettivi e limiti di sicurezza. HEM non presuppone mai che la selezione di un dispositivo gli conceda il permesso di utilizzare quel dispositivo.
 
-[Esplora le caratteristiche](#what-can-hem-do) · [Vedi l'interfaccia](#see-hem-in-action) · [Installare HEM](#installation) · [Preparate la vostra casa](#getting-started) · [Guida dettagliata](../../docs/advanced-configuration.md)
+[Esplora le caratteristiche](#what-can-hem-do) · [Vedi l'interfaccia](#see-hem-in-action) · [Installare HEM](#installation) · [Preparate la vostra casa](#getting-started) · [Guida dettagliata](../../docs/advanced-configuration.md) · [Tutte le impostazioni (in inglese)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Che cosa può HEM - Non è vero?
@@ -153,7 +153,7 @@ HEM comprende anche le protezioni e la diagnostica specifiche per il dispositivo
 - Durate minima di accensione e di spegnimento, impostazioni massime di tempo di funzionamento e manovra di commutatore di alimentazione esterno supportato.
 - Restrizioni alle finestre e all'occupazione, manuale manovra e controlli di riconoscimento nativi.
 - Segnalazione di errori e di dispositivi non disponibili, con una scelta di comportamento di notifica per ciascun dispositivo.
-- Una sorveglianza facoltativa post-shutdown per il sospetto di riscaldamento continuo dopo un comando OFF, con monitoraggio protetto e tentativi di recupero limitati.
+- Per ogni dispositivo puoi verificare se il riscaldamento, il raffrescamento, la deumidificazione o l’umidificazione sembrano proseguire dopo lo spegnimento. Scegli il solo monitoraggio o consenti fino a due ulteriori comandi di spegnimento.
 - Clari motivi di attesa, stato operativo attuale e disponibilità delle fonti, in modo da poter indagare prima di consentire un maggiore controllo.
 
 **I limiti di sicurezza restano in vigore anche quando l'allarme è disattivato.** HEM non tratta mai una spedizione di comando di successo come prova che un apparecchio abbia reagito fisicamente.
@@ -169,7 +169,7 @@ Queste illustrazioni in lingua inglese utilizzano campioni di camere e misure, c
 Ottenere consigli di ventilazione, condizioni meteorologiche e lo stato di ogni stanza monitorata in una singola scheda.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM tabella di controllo domestica con consigli di ventilazione e letture ambientali in cinque stanze" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM tabella di controllo domestica con consigli di ventilazione e letture ambientali in cinque stanze" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Ottenere consigli di ventilazione, condizioni meteorologiche e lo stato di ogni 
 Controllare la qualità dell'aria, l'indicazione della muffa, la presenza, lo stato delle finestre, i controlli climatici e le spiegazioni di ciascuna decisione.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Dispositivo ampliato per il bagno con letture e controllori indipendenti del dispositivo" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Dispositivo ampliato per il bagno con letture e controllori indipendenti del dispositivo" width="760">
 </p>
 
 <a id="home-settings"></a>

@@ -33,7 +33,7 @@
 
 **Sen sorumlu kal.** Her odanın kendi ayarları vardır. Her desteklenen cihazın kendi kontrolörü, çalışma modları, hedefleri ve güvenlik sınırları vardır. HEM bir cihaz seçmenin, bu cihazı kullanma izni verdiğini asla varsaymaz.
 
-[Özellikleri keşfedin](#what-can-hem-do) · [Bağlantıyı görün](#see-hem-in-action) · [HEM kur](#installation) · [Evinizi hazırlayın .](#getting-started) · [Detaylı rehber](../../docs/advanced-configuration.md)
+[Özellikleri keşfedin](#what-can-hem-do) · [Bağlantıyı görün](#see-hem-in-action) · [HEM kur](#installation) · [Evinizi hazırlayın .](#getting-started) · [Detaylı rehber](../../docs/advanced-configuration.md) · [Tüm ayarlar (İngilizce)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Ne yapabilir? HEM - Evet.
@@ -153,7 +153,7 @@ HEM Ayrıca cihazlara özgü koruma ve teşhisler de içerir:
 - En az ON ve OFF süreleri, maksimum çalışma süresi ayarları ve desteklenen dış güç anahtarı yönetimi.
 - Pencere ve işleme kısıtlamaları, manuel geçiş işlemleri ve yerel komut onay kontrolleri.
 - Her cihaz için bildirim davranışı seçeneği ile hata ve kullanılamaz cihaz raporlama.
-- Bir OFF komutundan sonra şüpheli bir ısıtmanın devam etmesi için kapatma sonrası bir gözleme köpeği, korunan izleme ve sınırlı kurtarma girişimleri ile.
+- Her cihazda kapatıldıktan sonra ısıtma, soğutma, nem alma veya nemlendirmenin sürdüğüne dair belirtileri izleyebilirsiniz. Yalnızca izlemeyi seçin veya en fazla iki ek kapatma komutuna izin verin.
 - Bekleme nedenleri, mevcut işletim durumu ve kaynak kullanılabilirliği, böylece daha fazla kontrol sağlamadan önce araştırma yapabilirsiniz.
 
 **Güvenlik sınırları uyarı devre dışı bırakıldığında bile geçerli kalır.** HEM Başarılı bir komut gönderisini bir cihazın fiziksel olarak yanıtladığına dair kanıt olarak asla değerlendirmemiştir.
@@ -169,7 +169,7 @@ Bu İngilizce resimlerde örnek odalar ve ölçümler kullanılarak, belirli bir
 Havalandırma tavsiyesi, hava koşulları ve her izlenen odanın durumunu tek bir kartla alın.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM 5 odada havalandırma tavsiyesi ve çevresel değerlendirmeler ile birlikte ev ekran tablosu" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM 5 odada havalandırma tavsiyesi ve çevresel değerlendirmeler ile birlikte ev ekran tablosu" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Havalandırma tavsiyesi, hava koşulları ve her izlenen odanın durumunu tek bi
 Her karar için hava kalitesini, kalıp göstergesini, varlığını, pencere durumunu, iklim kontrollerini ve açıklamalarını kontrol edin.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Okuyucular ve bağımsız cihaz denetleyicileri olan genişletilmiş banyo tablosu" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Okuyucular ve bağımsız cihaz denetleyicileri olan genişletilmiş banyo tablosu" width="760">
 </p>
 
 <a id="home-settings"></a>

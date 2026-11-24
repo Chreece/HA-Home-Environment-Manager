@@ -33,7 +33,7 @@ Sebagai contoh, HEM dapat mengurangi pemanasan saat semua orang pergi, mempersia
 
 **Kau tetap bertanggung jawab.** Setiap kamar memiliki pengaturan sendiri. Setiap perangkat yang didukung memiliki pengontrol, mode operasi, target dan batas keamanan sendiri. HEM tidak pernah menganggap bahwa memilih perangkat memberikan izin untuk mengoperasikan perangkat itu.
 
-[Menjelajahi fiturnya](#what-can-hem-do) · [Lihat antarmuka](#see-hem-in-action) · [Instal HEM](#installation) · [Buatlah rumahmu](#getting-started) · [Panduan terperinci](../../docs/advanced-configuration.md)
+[Menjelajahi fiturnya](#what-can-hem-do) · [Lihat antarmuka](#see-hem-in-action) · [Instal HEM](#installation) · [Buatlah rumahmu](#getting-started) · [Panduan terperinci](../../docs/advanced-configuration.md) · [Semua pengaturan (bahasa Inggris)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Apa yang bisa HEM - Apa?
@@ -153,7 +153,7 @@ HEM juga mencakup perlindungan dan diagnostik khusus perangkat:
 - Minimal ON dan OFF durasi, pengaturan waktu operasi maksimum dan dukungan pengendalian switch listrik eksternal.
 - Pembatasan jendela dan tempat tinggal, penanganan manual dan pemeriksaan konfirmasi perintah asli.
 - Pelaporan kesalahan dan perangkat tidak tersedia, dengan pilihan perilaku pemberitahuan untuk setiap perangkat.
-- Opt-on penjaga pasca penutupan untuk dugaan pemanasan berkelanjutan setelah perintah OFF, dengan pemantauan yang terjaga dan upaya pemulihan terbatas.
+- Untuk setiap perangkat, HEM dapat memantau apakah pemanasan, pendinginan, pengurangan atau penambahan kelembapan masih berlangsung setelah perangkat dimatikan. Pilih pemantauan saja atau izinkan hingga dua perintah mati tambahan.
 - Alasan menunggu yang jelas, status operasi saat ini dan ketersediaan sumber, sehingga Anda dapat menyelidiki sebelum memungkinkan lebih banyak kontrol.
 
 **Batas keamanan tetap berlaku bahkan ketika peringatan tidak aktif.** HEM tidak pernah memperlakukan pengiriman perintah yang berhasil sebagai bukti bahwa perangkat secara fisik menanggapi.
@@ -169,7 +169,7 @@ Ilustrasi berbahasa Inggris ini menggunakan sampel kamar dan pengukuran. Mereka 
 Dapatkan saran ventilasi, kondisi cuaca dan status setiap ruangan yang dipantau dalam satu kartu.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM home dashboard dengan nasihat ventilasi dan pembacaan lingkungan di lima kamar" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM home dashboard dengan nasihat ventilasi dan pembacaan lingkungan di lima kamar" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Dapatkan saran ventilasi, kondisi cuaca dan status setiap ruangan yang dipantau 
 Periksa kualitas udara, indikasi jamur, keberadaan, keadaan jendela, pengendali iklim dan penjelasan untuk setiap keputusan.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Dashboard kamar mandi yang diperluas dengan pembacaan dan pengontrol perangkat independen" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Dashboard kamar mandi yang diperluas dengan pembacaan dan pengontrol perangkat independen" width="760">
 </p>
 
 <a id="home-settings"></a>

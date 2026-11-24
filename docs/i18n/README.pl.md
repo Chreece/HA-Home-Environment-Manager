@@ -33,7 +33,7 @@ Na przykład: HEM może zmniejszyć ogrzewanie podczas gdy wszyscy są poza dome
 
 **Zostań władcą.** Każdy pokój ma swoje ustawienia, każdy urządzenie posiada własny kontroler, tryby działania, cele i ograniczenia bezpieczeństwa. HEM nigdy nie zakłada, że wybór urządzenia pozwala na obsługę tego urządzenia.
 
-[Sprawdź cechy](#what-can-hem-do) · [Zobacz interfejs](#see-hem-in-action) · [Zainstalowanie HEM](#installation) · [Zrób sobie dom.](#getting-started) · [Szczegółowy przewodnik](../../docs/advanced-configuration.md)
+[Sprawdź cechy](#what-can-hem-do) · [Zobacz interfejs](#see-hem-in-action) · [Zainstalowanie HEM](#installation) · [Zrób sobie dom.](#getting-started) · [Szczegółowy przewodnik](../../docs/advanced-configuration.md) · [Wszystkie ustawienia (po angielsku)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Co może HEM - Czy to prawda?
@@ -153,7 +153,7 @@ HEM obejmuje również ochronę i diagnostykę specyficzną dla urządzenia:
 - Minimalne czasy włączenia i wyłączenia, maksymalne ustawienia czasu pracy oraz obsługa zewnętrznego przełącznika zasilania.
 - Ograniczenia okna i obsługi, ręczne obsługiwanie przeniesienia i kontrolę potwierdzenia lokalnego polecenia.
 - Sprawozdanie z błędów i niezawodnych urządzeń, z wyborem zachowania powiadomienia dla każdego urządzenia.
-- Opcjonalny pies obserwacyjny po zamknięciu w przypadku podejrzanego kontynuacji ogrzewania po wykonaniu polecenia OFF, z obserwacją i ograniczonymi próbami odzyskania.
+- Dla każdego urządzenia można monitorować oznaki dalszego grzania, chłodzenia, osuszania lub nawilżania po wyłączeniu. Wybierz sam monitoring lub zezwól na maksymalnie dwa dodatkowe polecenia wyłączenia.
 - Jasne powody oczekiwania, aktualny status operacyjny i dostępność źródeł, więc możesz zbadać, zanim włączysz więcej kontroli.
 
 **Granice bezpieczeństwa pozostają obowiązujące nawet wtedy, gdy alarm jest wyłączony.** HEM nigdy nie traktuje pomyślnego rozwozu dowodu, że urządzenie fizycznie odpowiedziało.
@@ -169,7 +169,7 @@ Te ilustracje w języku angielskim wykorzystują próbki pomieszczeń i pomiaró
 Uzyskaj poradę w zakresie wentylacji, warunków pogodowych i stanu każdego pomieszczenia w jednej karcie.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM w domu z poradami w zakresie wentylacji i odczytami środowiskowymi w pięciu pomieszczeniach" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM w domu z poradami w zakresie wentylacji i odczytami środowiskowymi w pięciu pomieszczeniach" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Uzyskaj poradę w zakresie wentylacji, warunków pogodowych i stanu każdego pom
 Sprawdź jakość powietrza, oznakowanie pleśni, obecność, stan okna, kontroler klimatyczny oraz wyjaśnienia dla każdej decyzji.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Rozbudowana deska kontrolna w łazience z odczytami i niezależnymi kontrolerami urządzeń" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Rozbudowana deska kontrolna w łazience z odczytami i niezależnymi kontrolerami urządzeń" width="760">
 </p>
 
 <a id="home-settings"></a>

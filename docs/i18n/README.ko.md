@@ -33,7 +33,7 @@
 
 **넌 책임자야.** 각 방은 각자의 설정을 가지고 있습니다. 지원되는 기기마다 자신의 컨트롤러, 운영 모드, 목표 및 안전 제한이 있습니다. HEM 기기를 선택하면 그 기기를 조작할 수 있는 권한을 부여한다고 가정하지 않습니다.
 
-[그 특징을 알아보세요](#what-can-hem-do) · [인터페이스 참조](#see-hem-in-action) · [HEM 설치](#installation) · [집을 꾸려라](#getting-started) · [상세한 안내서](../../docs/advanced-configuration.md)
+[그 특징을 알아보세요](#what-can-hem-do) · [인터페이스 참조](#see-hem-in-action) · [HEM 설치](#installation) · [집을 꾸려라](#getting-started) · [상세한 안내서](../../docs/advanced-configuration.md) · [전체 설정 목록(영어)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## 어떻게 할 수 있을까요? HEM - 그래요?
@@ -153,7 +153,7 @@ HEM 또한 장치별 보호 및 진단도 포함합니다.
 - 최소 ON 및 OFF 기간, 최대 작동 시간 설정 및 지원되는 외부 전력 스위치 조작
 - 창과 점유율 제한, 수동 오버라이드 처리 및 네이티브 명령 확인
 - 각 장치에 대한 알림 행동 선택과 함께 오류 및 사용할 수 없는 장치 보고.
-- 잠정 후 선택적 감시견은 잠정 명령 후 계속되는 가열을 의심하며, 감시된 모니터링과 제한된 복구 시도를 할 수 있습니다.
+- 기기별로 전원을 끈 뒤에도 난방, 냉방, 제습 또는 가습이 계속되는 징후를 감시할 수 있습니다. 감시만 하거나 끄기 명령을 최대 두 번 더 보내도록 설정하세요.
 - 대기 이유, 현재 운영 상태와 출처 가용성 등이 명확하기 때문에 더 많은 통제를 가능하게 하기 전에 조사할 수 있습니다.
 
 **경보가 비활성화 된 경우에도 안전 경계가 계속 유효합니다.** HEM 성공한 지휘 파견을 물리적으로 장치가 응답했다는 증거로 취급하지 않습니다.
@@ -169,7 +169,7 @@ HEM 또한 장치별 보호 및 진단도 포함합니다.
 환기, 기상 조건 및 감시된 모든 방의 상태를 한 카드로 확인하세요.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM 5개의 방에 걸쳐 환기 및 환경적 지표가 있는 홈 다시보드" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM 5개의 방에 걸쳐 환기 및 환경적 지표가 있는 홈 다시보드" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ HEM 또한 장치별 보호 및 진단도 포함합니다.
 공기 품질, 곰팡이 표시, 존재, 창 상태, 기후 조절기 및 각 결정에 대한 설명 등을 검사합니다.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="독서와 독립적인 장치 컨트롤러를 갖춘 확장된 욕실 대시보드" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="독서와 독립적인 장치 컨트롤러를 갖춘 확장된 욕실 대시보드" width="760">
 </p>
 
 <a id="home-settings"></a>

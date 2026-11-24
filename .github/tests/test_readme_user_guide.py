@@ -4,6 +4,8 @@ This is a documentation check only. It must not import or operate Home Assistant
 """
 from pathlib import Path
 import re
+import runpy
+import struct
 
 root = Path(__file__).resolve().parents[2]
 readme = (root / "README.md").read_text(encoding="utf-8")
@@ -46,8 +48,8 @@ text_assets = [
     root / ".github/assets/hem-logo.svg",
 ]
 image_paths = [
-    "docs/images/hem-dashboard-overview.svg",
-    "docs/images/hem-room-expanded.svg",
+    "docs/images/hem-dashboard-overview.png",
+    "docs/images/hem-room-expanded.png",
     "docs/images/hem-home-settings.svg",
     "docs/images/hem-room-settings.svg",
     "docs/images/hem-device-settings.svg",
@@ -56,7 +58,14 @@ assert readme.count('src="docs/images/') == len(image_paths)
 for path in image_paths:
     assert f'src="{path}"' in readme, path
     assert (root / path).is_file(), path
-    text_assets.append(root / path)
+    if path.endswith(".png"):
+        png = (root / path).read_bytes()
+        assert png[:8] == b"\x89PNG\r\n\x1a\n" and png[12:16] == b"IHDR"
+        assert min(struct.unpack(">II", png[16:24])) >= 600
+    else:
+        text_assets.append(root / path)
+reference = runpy.run_path(str(root / ".github/scripts/build_settings_reference.py"))
+assert reference["DEST"].read_text() == reference["render"]()
 assert (root / "docs/advanced-configuration.md").is_file()
 assert (root / "CONTRIBUTING.md").is_file()
 for file in text_assets:

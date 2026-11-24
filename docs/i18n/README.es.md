@@ -29,7 +29,7 @@ Por ejemplo, HEM puede reducir la calefacción cuando no hay nadie en casa, prep
 
 **Tú decides.** Cada habitación tiene sus propios ajustes. Cada aparato compatible cuenta con métodos de control, modos de funcionamiento, consignas y límites de seguridad independientes. Seleccionar un dispositivo no le da permiso automáticamente a HEM para manejarlo.
 
-[Descubrir las funciones](#what-can-hem-do) · [Ver la interfaz](#see-hem-in-action) · [Instalar HEM](#installation) · [Primeros pasos](#getting-started) · [Guía detallada](../../docs/advanced-configuration.md)
+[Descubrir las funciones](#what-can-hem-do) · [Ver la interfaz](#see-hem-in-action) · [Instalar HEM](#installation) · [Primeros pasos](#getting-started) · [Guía detallada](../../docs/advanced-configuration.md) · [Todos los ajustes (en inglés)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## ¿Qué puede hacer HEM?
@@ -149,7 +149,7 @@ HEM también ofrece protecciones y diagnóstico por dispositivo:
 - Tiempos mínimos encendido/apagado, duración máxima de funcionamiento y control de interruptores externos de alimentación compatibles.
 - Restricciones por ventanas y presencia, respeto de intervenciones manuales y comprobación de la respuesta a las órdenes nativas.
 - Avisos por fallos o indisponibilidad con ajustes individuales para cada equipo.
-- Vigilancia opcional tras una orden OFF cuando existen indicios de que la calefacción sigue funcionando, con verificaciones prudentes e intentos de recuperación limitados.
+- Para cada dispositivo puedes vigilar si sigue calentando, enfriando, deshumidificando o humidificando después de apagarlo. Elige solo supervisión o permite hasta dos órdenes de apagado adicionales.
 - Motivos de espera, estado de funcionamiento y disponibilidad de fuentes claramente indicados para que puedas investigar antes de permitir más automatizaciones.
 
 **Las protecciones siguen activas aunque deshabilites los avisos.** Que una orden se haya enviado correctamente no demuestra que el aparato la haya ejecutado físicamente.
@@ -165,7 +165,7 @@ Las siguientes ilustraciones están en inglés y muestran habitaciones y datos d
 Consulta las recomendaciones de ventilación, el tiempo y el estado de todas las habitaciones supervisadas en una única tarjeta.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="Panel HEM con consejos de ventilación y mediciones ambientales de cinco habitaciones" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="Panel HEM con consejos de ventilación y mediciones ambientales de cinco habitaciones" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -174,7 +174,7 @@ Consulta las recomendaciones de ventilación, el tiempo y el estado de todas las
 Examina la calidad del aire, el indicador de moho, la presencia, las ventanas, los controladores y los motivos de cada decisión.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Vista ampliada de un baño con mediciones y controladores independientes" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Vista ampliada de un baño con mediciones y controladores independientes" width="760">
 </p>
 
 <a id="home-settings"></a>

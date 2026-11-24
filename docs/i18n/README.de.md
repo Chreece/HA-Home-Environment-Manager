@@ -29,7 +29,7 @@ So kann HEM beispielsweise die Heizung absenken, wenn niemand zu Hause ist, best
 
 **Die Entscheidung liegt bei Ihnen.** Jeder Raum hat eigene Einstellungen. Jedes unterstützte Gerät verfügt über getrennte Betriebsarten, Regelverfahren, Sollwerte und Schutzgrenzen. Dass Sie ein Gerät auswählen, bedeutet nicht automatisch, dass HEM es steuern darf.
 
-[Funktionen entdecken](#what-can-hem-do) · [Oberfläche ansehen](#see-hem-in-action) · [HEM installieren](#installation) · [Erste Schritte](#getting-started) · [Ausführliche Anleitung](../../docs/advanced-configuration.md)
+[Funktionen entdecken](#what-can-hem-do) · [Oberfläche ansehen](#see-hem-in-action) · [HEM installieren](#installation) · [Erste Schritte](#getting-started) · [Ausführliche Anleitung](../../docs/advanced-configuration.md) · [Alle Einstellungen (Englisch)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Was kann HEM?
@@ -149,7 +149,7 @@ Zusätzliche Gerätefunktionen umfassen:
 - Mindest-Ein- und -Ausschaltzeiten, maximale Betriebsdauer und die unterstützte Ansteuerung externer Netzschalter.
 - Sperren aufgrund von Fenstern oder Anwesenheit, Behandlung manueller Eingriffe sowie Prüfung der Rückmeldung nach Gerätebefehlen.
 - Meldung von Gerätefehlern und Nichtverfügbarkeit mit einzeln einstellbarem Benachrichtigungsverhalten.
-- Optionale Überwachung nach einem OFF-Befehl, wenn Anzeichen dafür bestehen, dass die Heizung dennoch weiterläuft; mit abgesicherten Prüfungen und begrenzten Wiederholungsversuchen.
+- HEM kann für jedes Gerät prüfen, ob Heizen, Kühlen, Entfeuchten oder Befeuchten nach dem Abschalten möglicherweise weiterläuft. Wähle reine Überwachung oder erlaube bis zu zwei weitere Ausschaltbefehle.
 - Verständliche Wartegründe, Betriebszustände und Informationen zur Verfügbarkeit der Datenquellen, um Probleme vor dem Aktivieren weiterer Automatiken untersuchen zu können.
 
 **Schutzgrenzen gelten auch bei abgeschalteten Benachrichtigungen.** Eine erfolgreich gesendete Anweisung ist noch kein Beweis dafür, dass das Gerät sie tatsächlich ausgeführt hat.
@@ -165,7 +165,7 @@ Die folgenden englischsprachigen Abbildungen verwenden Beispieldaten und fiktive
 Lüftungsempfehlungen, Wetterbedingungen und alle überwachten Räume erscheinen auf einer Karte.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM-Übersicht mit Lüftungsempfehlungen und Umgebungswerten aus fünf Räumen" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM-Übersicht mit Lüftungsempfehlungen und Umgebungswerten aus fünf Räumen" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -174,7 +174,7 @@ Lüftungsempfehlungen, Wetterbedingungen und alle überwachten Räume erscheinen
 Sehen Sie Luftqualität, Schimmelrisiko-Indikator, Anwesenheit, Fensterstatus, Klimaregler und die Gründe für deren Entscheidungen.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Aufgeklappte Badansicht mit Messwerten und unabhängigen Gerätesteuerungen" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Aufgeklappte Badansicht mit Messwerten und unabhängigen Gerätesteuerungen" width="760">
 </p>
 
 <a id="home-settings"></a>

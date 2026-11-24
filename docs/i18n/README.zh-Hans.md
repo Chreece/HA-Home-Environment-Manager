@@ -33,7 +33,7 @@
 
 **你继续负责.** 每个房间都有自己的设置. 每个支持的设备都有自己的控制器,操作模式,目标和安全限制. HEM 从来不认为选择设备允许操作该设备.
 
-[探索这些特征](#what-can-hem-do) · [查看接口](#see-hem-in-action) · [安装 HEM](#installation) · [设置你的家](#getting-started) · [详细的指南](../../docs/advanced-configuration.md)
+[探索这些特征](#what-can-hem-do) · [查看接口](#see-hem-in-action) · [安装 HEM](#installation) · [设置你的家](#getting-started) · [详细的指南](../../docs/advanced-configuration.md) · [全部设置（英文）](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## 什么可以 HEM 是不是?
@@ -153,7 +153,7 @@ HEM 也包括设备特定的保护和诊断:
 - 最低的 ON和 OFF 时间,最大的操作时间设置和支持的外部电源开关操作.
 - 窗口和占用限制,手动转换操作和本地命令确认检查.
 - 错误和不可用设备报告,每个设备可选择通知行为.
-- 关闭后可选的监视犬,可在关闭命令后继续加热,监控和恢复尝试有限.
+- 可按设备监测关机后是否仍有制热、制冷、除湿或加湿的迹象。可以只监测，也可以允许最多重发两次关机命令。
 - 需要明确的等待原因,目前的运营状态和源源可用性,
 
 **警报被禁时,安全界限仍然有效.** HEM 一个成功的指令发射,从来没有被视为证明设备的物理响应.
@@ -169,7 +169,7 @@ HEM 也包括设备特定的保护和诊断:
 在一个卡片中获取通风建议,天气条件和每个监控室的状态.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM 在五间房间内提供通风咨询和环境检测仪表板" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM 在五间房间内提供通风咨询和环境检测仪表板" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ HEM 也包括设备特定的保护和诊断:
 检查空气质量,模具标志,存在,窗户状态,气候控制器以及每个决定的解释.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="扩展式浴室仪表板,具有读数和独立设备控制器" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="扩展式浴室仪表板,具有读数和独立设备控制器" width="760">
 </p>
 
 <a id="home-settings"></a>

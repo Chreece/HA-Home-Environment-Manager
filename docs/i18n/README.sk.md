@@ -33,7 +33,7 @@ Napríklad: HEM môže znížiť vykurovanie, kým sú všetci preč, pripraviť
 
 **Zostaň na čele.** Každá izba má svoje nastavenia, každý podporovaný prístroj má svoj vlastný ovládač, prevádzkové režimy, ciele a bezpečnostné limity. HEM nikdy nepredpokladá, že výber zariadenia mu dáva povolenie na prevádzku tohto zariadenia.
 
-[Prečítajte si jeho charakteristiky](#what-can-hem-do) · [Pozrite rozhranie](#see-hem-in-action) · [Vložte HEM](#installation) · [Ustanovte si domov](#getting-started) · [Podrobné vedenie](../../docs/advanced-configuration.md)
+[Prečítajte si jeho charakteristiky](#what-can-hem-do) · [Pozrite rozhranie](#see-hem-in-action) · [Vložte HEM](#installation) · [Ustanovte si domov](#getting-started) · [Podrobné vedenie](../../docs/advanced-configuration.md) · [Všetky nastavenia (v angličtine)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Čo môže HEM - Áno?
@@ -153,7 +153,7 @@ HEM zahŕňa aj ochranu a diagnostiky špecifické pre zariadenie:
 - Minimálne doby zapnutia a vypnutia, maximálne nastavenia prevádzkových hodín a podporované ovládanie exteriérnych prepínačov napájania.
 - Obmedzenia okna a obývania, ručné ovládanie a kontroly potvrdenia príkazov.
 - Správa o chybe a nedostupnosti zariadenia s výberom správania oznamovania pre každé zariadenie.
-- Voliteľný sledovací pes po vypnutí pre podozrenie na pokračovanie vykurovania po príkazu OFF, s stráženým monitorovaním a obmedzenými pokusmi o obnovu.
+- Pri každom zariadení môžete sledovať, či po vypnutí pokračuje kúrenie, chladenie, odvlhčovanie alebo zvlhčovanie. Vyberte iba sledovanie alebo povoľte najviac dva ďalšie príkazy na vypnutie.
 - Jasné dôvody čakania, aktuálny prevádzkový stav a dostupnosť zdroje, takže môžete prešetriť pred umožnením väčšej kontroly.
 
 **Bezpečnostné hranice zostávajú v platnosti aj vtedy, keď je výstraha vypnutá.** HEM nikdy neberie úspešnú príkazovú vyslanie ako dôkaz, že zariadenie fyzicky reagovalo.
@@ -169,7 +169,7 @@ Tieto anglicky vysvetlené obrázky používajú vzorové miestnosti a merania, 
 Získajte poradenstvo o ventilácii, počasie a stav každej monitorovanej miestnosti v jednej karte.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM domáca prístrojová doska s poradenstvom o vetrane a environmentálnych odčítaniach v piatich miestnostiach" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM domáca prístrojová doska s poradenstvom o vetrane a environmentálnych odčítaniach v piatich miestnostiach" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Získajte poradenstvo o ventilácii, počasie a stav každej monitorovanej miest
 Kontrolovať kvalitu ovzdušia, indikáciu pleti, prítomnosť, stav okna, klimatické regulátory a vysvetlenie každého rozhodnutia.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Rozšírená prístrojová doska v kúpeľni s čitateľmi a nezávislými riadiacimi zariadeniami" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Rozšírená prístrojová doska v kúpeľni s čitateľmi a nezávislými riadiacimi zariadeniami" width="760">
 </p>
 
 <a id="home-settings"></a>

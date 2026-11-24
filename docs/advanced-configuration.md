@@ -218,14 +218,14 @@ show_metrics: true
 show_science: true
 ```
 
-Entity IDs can differ with your language, naming and renames. The older
-`custom:home-environment-manager-card` type remains supported.
+Entity IDs can differ with your language, naming and renames. Use the canonical
+`custom:home-environment-manager-card` dashboard type.
 
 ### Using the card
 
-Each room tab starts with the settings cog, the room name and its condition faces.
-Hover the faces, or expand the room on a phone, to read their localized meanings.
-Room alerts follow the faces inside the tab. Device activity appears on the right. In Home settings, open **Room overview** and turn off **Show room smileys** to hide the faces throughout the dashboard. The expanded room still describes its conditions.
+Each room tab starts with the settings cog, the room name and one combined condition face. Its expression, moisture mark and air-quality mask can appear together.
+Hover the face, or expand the room on a phone, to read their localized meanings.
+Room alerts follow the face inside the tab. Active equipment icons follow the alerts at the right edge of the same tab. In Home settings, open **Room overview** and turn off **Show room smileys** to hide the faces throughout the dashboard. The expanded room still describes its conditions.
 Readings underneath show the value, unit and metric name, for example **62 % Mold** or **3 µg/m³ PM2.5**. Illuminance shows the value and **lx**. Select a reading for its details and trends.
 
 The faces show simultaneous measured conditions. Temperature uses the current
@@ -390,6 +390,14 @@ competing heaters prevent attribution. Long OFF periods renew the temperature
 observation window while retaining the original retry count.
 Solar gain, residual radiator heat and unknown heat sources are still possible.
 A native reported OFF is **not proof of physical shutdown**.
+
+### Cooling, dehumidification and humidification while Off
+
+A dedicated cooler or humidity appliance can start a fresh observation while already OFF. For a reversible or multi-mode unit, HEM uses the last known operating direction at its own acknowledged shutdown. It renews long-idle observations without renewing the two-command recovery budget.
+
+Cooling uses the heating time and temperature thresholds in the opposite direction. Humidity control waits 45 minutes, then requires at least 20 minutes of change, a 6 percentage point movement and an 8 point excursion past the effective room RH target. The room temperature and RH sensors must be independent of the appliance. Calculated absolute humidity must change by at least 0.45 g/m³ in the same direction. For mold-aware dehumidification the comparison uses the effective room RH target.
+
+For these three modes HEM compares the room with selected weather sources and connected rooms. Cold incoming air can explain continued cooling. Drier or wetter incoming air can explain humidity trends. Missing evidence, known open windows and competing outputs also interrupt the trend. Before a repeat OFF, HEM checks the current source identities, measurements, target, control permissions and native device state again. Fan-only and air-cleaning modes do not qualify from a temperature, humidity or PM reading.
 
 ## Enable device control
 

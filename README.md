@@ -28,14 +28,14 @@ For example, HEM can reduce heating while everybody is away, prepare selected ro
 
 **You stay in charge.** Every room has its own settings. Each supported appliance has its own controller, operating modes, targets and safety limits. HEM never assumes that selecting a device gives it permission to operate that device.
 
-[Explore the features](#what-can-hem-do) · [See the interface](#see-hem-in-action) · [Install HEM](#installation) · [Set up your home](#getting-started) · [Detailed guide](docs/advanced-configuration.md)
+[Explore the features](#what-can-hem-do) · [See the interface](#see-hem-in-action) · [Install HEM](#installation) · [Set up your home](#getting-started) · [Detailed guide](docs/advanced-configuration.md) · [Complete settings reference](docs/settings-reference.md)
 
 ## What can HEM do?
 
 | Your situation | How HEM can help |
 | --- | --- |
 | **The house is empty** | Switch to Away targets, respect each room's presence rules and avoid running selected equipment unnecessarily. |
-| **You're on your way home** | Press **Prepare for arrival** to temporarily use Home comfort targets for eligible automatic controllers, even though everyone is still away. |
+| **You're on your way home** | Press **Prepare for arrival**, or use a confirmed inward GPS crossing, to temporarily use Home targets for eligible automatic controllers, even though everyone is still away. |
 | **Someone is sleeping** | Use Sleep targets, reduce fan noise, or keep chosen devices off while every occupied room is sleeping. |
 | **One room is humid** | Compare its humidity and mold indication with targets, suggest useful airing, or operate an authorized dehumidifier using Automatic or PID control. |
 | **It's hot and sunny** | Evaluate room temperature, sunlight, weather and connected window contacts before moving opted-in shades. |
@@ -56,6 +56,14 @@ The HEM card gives you a useful overview without opening several integrations.
 - View histories and trends, see which sensors contributed to an average and distinguish missing readings from measured values.
 - Group rooms by actual Home Assistant floors, or use a simple room list when you have no floors.
 
+The gear beside a room name opens its settings. A single face combines the readings: its expression shows warm, cold or comfortable conditions, a droplet or a cracked mark shows humid or dry air, and a mask indicates a measured air-quality problem. Expand the room to read those conditions in words. Missing evidence gets a neutral expression. **Home settings → Room overview → Show room smileys** applies to the whole house and starts enabled.
+
+Reported activity appears at the far right inside each room tab. Its icons distinguish heating, cooling, drying, humidifying, ventilation, filtration and fan operation.
+
+A room can have usable climate data while an optional measurement is unavailable. Expand the missing-measurements explanation to see which inputs are affected. Select a measurement to see its sources and history. A device row shows the feedback that applies to its role. Heaters and coolers show temperature. Drying and humidifying use humidity or the calibrated mold indication. A filtration fan can show PM2.5, room AQI and reported fan speed, while an extraction fan can show CO₂, PM2.5 and speed. The target icon beside a reading shows the current profile goal in the same unit. Automatic heat/cool can show a range. When mold control is active, both the measurement and goal refer to surface humidity. A multi-mode appliance follows its current mode. PID demand appears on PID controllers.
+
+Controller trends put the historical target, measured value, requested output and available reported output on the same timeline. Gaps identify periods without evidence.
+
 ### Different settings for the home, each room and each device
 
 HEM keeps shared policies separate from local decisions.
@@ -67,6 +75,15 @@ HEM keeps shared policies separate from local decisions.
 | **Individual device** | Its available control modes, Automatic/Manual/PID method, per-profile targets, sensors, quiet fan settings, minimum operating times, power protections, window behavior and device-error notifications. |
 
 All three scopes are accessible through grouped, searchable settings in the card. Choose **Basic**, **Advanced** or **Expert** to control how many settings are shown. Basic includes everyday controls and required setup; Advanced adds manual PID gains and detailed adjustments; Expert adds specialist models and capacity tuning. Each level includes the previous levels. You can refresh source choices as your Home Assistant setup changes. <!-- HEM-I18N:levels -->
+
+| Open this group | Settings you can change there |
+| --- | --- |
+| Home presence and sleep | Household presence rule, trackers, occupied and sleeping room lists or attributes, source freshness, Away delay, next alarm and wake lead time. Nearby occupancy and automatic arrival have independent distance settings. |
+| Home environment and messages | Weather providers and warnings, outdoor pollutant and pollen sources, indoor and outdoor thresholds, wind and temperature limits, data age, window response timers, message language, repeat interval and delivery destinations. |
+| Floors and rooms | Floor name, level, icon and assigned Areas. In each room choose thermometers, humidity and air-quality sensors, presence sensors, window and door contacts, covers and managed equipment. |
+| Room comfort and exposure | Room volume, ventilation and filtration inputs, comfort-model parameters, pollutant limits and calibrated mold indication. The information shown depends on the available evidence. |
+| Doors and covers | Door purpose, adjoining room, optional energy metering and start coordination. Each opted-in cover has its own shade position and sun, weather or light conditions. |
+| Equipment | Control method and targets per physical mode and profile, operating permissions, fan modes, presets, swing, window behavior, timing, optional supply switch, manual overrides, fault notices and OFF watchdog. |
 
 ### Climate control and PID, device by device
 
@@ -86,6 +103,8 @@ For example, one air conditioner may use **PID for Heating** and **Automatic for
 
 PID is **not** a universal override: HEM only offers the methods a particular device, operating mode and feedback source can support. Advanced options include per-mode tuning and calibration, suggested/adaptive adjustments, quiet operation and supported staged fan settings. You approve suggested changes unless you explicitly opt into bounded automatic adaptation.
 
+PID calibration offers manual gains, IMC/λ, Cohen-Coon and adaptive suggestions where supported. Review the suggested gains on the controller. With automatic adaptation enabled, changes are bounded. Controller diagnostics distinguish demand, the native command, its acknowledgment and the available feedback.
+
 ### Comfortable when you're home, economical when you're away
 
 HEM can choose among **Comfort, Home, Away, Sleep and Eco** targets based on the household situation, room evidence and your explicit selections.
@@ -97,6 +116,8 @@ HEM can choose among **Comfort, Home, Away, Sleep and Eco** targets based on the
 - **Wake-up preparation:** Use a configured next-alarm source to leave automatic Sleep before the alarm and give eligible devices time to respond.
 
 If occupancy, device availability or other required evidence is uncertain, HEM does not simply assume it is safe to start an automatic device.
+
+For a house-wide quiet period, enter the start and end under **Home settings → Quiet hours**. Opt each noisy device into that schedule. This can limit supported fan settings even while someone is awake. Room occupancy and sleep policies still determine when each controller may run.
 
 ### Prepare your environment before you arrive
 
@@ -124,6 +145,8 @@ HEM compares **what a room needs** with **whether outdoor air can help**.
 
 HEM can give ventilation advice without any controllable windows. It does not open a window by itself merely because airing would help.
 
+A confirmed open window can pause a room's eligible devices. Closing it starts the configured cooldown before resumption. An unavailable contact raises a needs-attention indication and drops out of the control decision. Other working contacts still participate. Select a door in **Windows & doors** to open its Home Assistant entity, including when the contact reports unavailable. The separate window-opening response timer gives someone time to act on a ventilation recommendation.
+
 ### Humidity, mold indication and air quality
 
 HEM combines supported readings such as **temperature, humidity, CO₂, particulate matter, VOC, AQI and illuminance** to help you understand each room. Available measurements depend on what your Home Assistant setup provides.
@@ -131,6 +154,8 @@ HEM combines supported readings such as **temperature, humidity, CO₂, particul
 Its **mold indication** estimates moisture conditions at a cold surface from room and outdoor temperatures and a calibration measurement. When enabled for a monitored room, an Automatic/PID dehumidifier uses the **active profile's saved target** for this indication. With mold indication disabled, that target applies to room-air relative humidity. The separate mold warning threshold does not replace the profile target.
 
 **Mold indication is an estimate, not a mold or spore detector.** Missing or stale sensor data cannot justify a new mold-based device command.
+
+With the relevant sources, HEM estimates dew point, cold-surface moisture, thermal comfort and overheating over time. CO₂ decay can estimate ventilation, while room volume and clean-air delivery rate inform filtration estimates. Other optional views cover particle exposure, pollen, long-term radon, time-averaged noise, formaldehyde and daylight. Each estimate depends on the required readings, units and observation period.
 
 ### Announcements, diagnostics and protection
 
@@ -141,21 +166,30 @@ HEM also includes device-specific protections and diagnostics:
 - Minimum ON and OFF durations, maximum operating-time settings and supported external power-switch handling.
 - Window and occupancy restrictions, manual-override handling and native command acknowledgment checks.
 - Error and unavailable-device reporting, with a choice of notification behavior for each device.
-- An optional post-shutdown watchdog for suspected continued heating after an OFF command, with guarded monitoring and limited recovery attempts.
+- A per-device post-shutdown watchdog for heating, cooling, dehumidifying and humidifying. Choose monitoring with recovery, monitoring only, or disabled.
 - Clear waiting reasons, current operating status and source availability, so you can investigate before enabling more control.
 
 **Safety boundaries remain in effect even when an alert is disabled.** HEM never treats a successful command dispatch as proof that an appliance physically responded.
 
+| Watched output | Evidence after OFF |
+| --- | --- |
+| Heating or cooling | After 30 minutes of settling, room temperature must move at least 0.7 °C farther in that direction over at least 15 minutes and finish at least 1.5 °C past the active target. |
+| Dehumidifying or humidifying | After 45 minutes of settling, relative humidity must move at least 6 percentage points over at least 20 minutes and finish at least 8 points past target. Independent temperature readings must also show that absolute humidity moved in the same direction. |
+
+HEM can start observing a dedicated device it first finds OFF. For a multi-mode appliance it uses the known direction from a shutdown it recorded. Competing equipment and environmental evidence can rule out an appliance-specific warning. With recovery enabled, a qualified episode permits at most two repeat OFF commands, at least ten minutes apart. The retry count survives a restart. Fan-only and air-cleaning modes have no temperature or humidity signature in this watchdog.
+
+Home Assistant automations can call `environment_manager.announce` for configured announcement delivery, `environment_manager.pid_control` to pause, resume or reset a configured room PID, `environment_manager.climate_control` to pause or resume an enabled room controller, and `environment_manager.climate_diagnostics` to read its diagnostics. Away-window notices can target selected people and delivery channels.
+
 ## See HEM in action
 
-These English-language illustrations use sample rooms and measurements. They demonstrate the interface rather than showing live data from a particular house.
+The first two images show the HEM card rendered in English with sample readings matching the supplied five-room overview and expanded bathroom. The remaining three illustrations show where to find home, room and device settings.
 
 ### Home at a glance
 
 Get ventilation advice, weather conditions and the status of every monitored room in a single card.
 
 <p align="center">
-  <img src="docs/images/hem-dashboard-overview.svg" alt="HEM home dashboard with ventilation advice and environmental readings across five rooms" width="900">
+  <img src="docs/images/hem-dashboard-overview.png" alt="HEM home dashboard with ventilation advice and environmental readings across five rooms" width="900">
 </p>
 
 ### Expand a room for full details
@@ -163,7 +197,7 @@ Get ventilation advice, weather conditions and the status of every monitored roo
 Inspect air quality, mold indication, presence, window state, climate controllers and explanations for each decision.
 
 <p align="center">
-  <img src="docs/images/hem-room-expanded.svg" alt="Expanded bathroom dashboard with readings and independent device controllers" width="760">
+  <img src="docs/images/hem-room-expanded.png" alt="Expanded bathroom dashboard with readings and independent device controllers" width="760">
 </p>
 
 ### Home settings
@@ -199,6 +233,8 @@ Fine-tune one device without changing the others, including supported control me
 5. **Enable control only where useful.** Open a room, choose a supported appliance, review its controller and explicitly select Automatic or PID for the modes you want HEM to operate.
 
 You do **not** need a smart appliance in every room. Start with the sensors you have, and introduce automatic control one device at a time.
+
+On first opening the dashboard, the card loader can retry an interrupted download and retry again when the Companion App returns to the foreground or the network reconnects. The packaged card includes a compressed resource for clients that accept it.
 
 ### Add the card manually
 

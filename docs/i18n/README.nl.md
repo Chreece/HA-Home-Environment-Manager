@@ -33,7 +33,7 @@ Bijvoorbeeld: HEM Het kan de verwarming verminderen terwijl iedereen weg is, ges
 
 **Jij blijft de baas.** Elke kamer heeft zijn eigen instellingen, elk ondersteunde apparaat heeft zijn eigen controller, werkwijze, doelen en veiligheidsgrenzen. HEM neemt nooit aan dat het selecteren van een apparaat hem toestemming geeft om dat apparaat te bedienen.
 
-[Ontdek de kenmerken](#what-can-hem-do) · [Zie de interface](#see-hem-in-action) · [Installeer HEM](#installation) · [Maak je huis klaar.](#getting-started) · [Gedetailleerde gids](../../docs/advanced-configuration.md)
+[Ontdek de kenmerken](#what-can-hem-do) · [Zie de interface](#see-hem-in-action) · [Installeer HEM](#installation) · [Maak je huis klaar.](#getting-started) · [Gedetailleerde gids](../../docs/advanced-configuration.md) · [Alle instellingen (Engels)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Wat kan HEM - Ja, dat doen we.
@@ -153,7 +153,7 @@ HEM omvat ook beschermings- en diagnostiekprogramma's die specifiek voor het app
 - Minimaal aan- en uit-tijd, maximale werktijdinstellingen en ondersteunde bediening van externe stroomschakelaars.
 - Venster- en bezettingsbeperkingen, handmatige overschrijving en controle van het inheemse commando.
 - Fouten en niet beschikbare apparaatrapporten, met een keuze van meldingsgedrag voor elk apparaat.
-- Een optionele bewakingshond na de sluiting voor vermoedelijke verdere verwarming na een OFF-commando, met bewakend toezicht en beperkte herstelpogingen.
+- Per apparaat kun je controleren of het na uitschakeling blijft verwarmen, koelen, ontvochtigen of bevochtigen. Kies alleen bewaking of sta maximaal twee extra uitschakelcommando’s toe.
 - Klare redenen om te wachten, de huidige exploitatiestatus en de beschikbaarheid van de bron, zodat je kunt onderzoeken voordat je meer controle mogelijk maakt.
 
 **De veiligheidsgrenzen blijven van kracht ook wanneer een waarschuwing uitgeschakeld is.** HEM een succesvolle commando-uitzending nooit als bewijs beschouwt dat een apparaat fysiek heeft gereageerd.
@@ -169,7 +169,7 @@ Deze illustraties in het Engels maken gebruik van steekproefkamers en metingen. 
 Ontdek ventilatieadvies, weersomstandigheden en de status van elke gecontroleerde kamer in één kaart.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM Home dashboard met ventilatieadvies en milieulezen in vijf kamers" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM Home dashboard met ventilatieadvies en milieulezen in vijf kamers" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Ontdek ventilatieadvies, weersomstandigheden en de status van elke gecontroleerd
 Controleer de luchtkwaliteit, de schimmelindicatie, de aanwezigheid, de toestand van het raam, de klimaatbeheerders en de uitleg voor elke beslissing.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Uitgebreid badkamer dashboard met aflezen en onafhankelijke apparaatcontrollers" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Uitgebreid badkamer dashboard met aflezen en onafhankelijke apparaatcontrollers" width="760">
 </p>
 
 <a id="home-settings"></a>

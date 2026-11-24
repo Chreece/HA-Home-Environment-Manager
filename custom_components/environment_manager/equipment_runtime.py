@@ -7666,9 +7666,9 @@ class EquipmentRuntime:
                 return
             record["baseline"].setdefault(cap.primary, snapshot(state))
             await self._observe_native_running(spec, cap, state)
-            # Also observe a dedicated heater first discovered already OFF.
-            # Never infer a previous shutdown or backdate a measured interval.
-            if record.get("thermal_off_watch") or (state.state == "off" and "heat" in cap.modes):
+            # A dedicated output can also be discovered already off. The watcher
+            # resolves its capabilities before opening a new observation.
+            if record.get("thermal_off_watch") or output_off(state):
                 try:
                     from .off_state_runtime import watchdog_tick
                     if await watchdog_tick(self, spec, cap, state):

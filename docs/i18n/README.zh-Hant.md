@@ -33,7 +33,7 @@
 
 **請您繼續閱讀更多內容** 每個房間都有自己的設定. 每個支持的儀器都有自己的控制器,操作模式,目標和安全限制. HEM 沒有假設選擇裝置會允許使用該裝置.
 
-[探索這些特點](#what-can-hem-do) · 其他國家 [查看接口](#see-hem-in-action) · 其他國家 [設置 HEM](#installation) · 其他國家 [建立自己的家](#getting-started) · 其他國家 [詳細的指南](../../docs/advanced-configuration.md)
+[探索這些特點](#what-can-hem-do) · 其他國家 [查看接口](#see-hem-in-action) · 其他國家 [設置 HEM](#installation) · 其他國家 [建立自己的家](#getting-started) · 其他國家 [詳細的指南](../../docs/advanced-configuration.md) · [所有設定（英文）](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## 什麼可能會 HEM 沒有?
@@ -153,7 +153,7 @@ HEM 也包括特定裝置的保護和診斷:
 - 最低的開關和關閉時間,最大的運作時間設定和支持的外部電源開關處理.
 - 窗口和佔用限制,手動轉移操作和本地命令确认檢查.
 - 檢測錯誤和無法使用的裝置報告,並選擇每個裝置的通知行為.
-- 在停電命令後,可選擇停電後的監控犬,
+- 可依裝置監測關機後是否仍有暖氣、冷氣、除濕或加濕持續運作的跡象。可選擇僅監測，或允許最多再傳送兩次關機指令。
 - 這樣你就可以在更大的控制之前進行調查.
 
 **警報被禁用時,安全界限仍然有效.** HEM 沒有成功的指令發送,
@@ -169,7 +169,7 @@ HEM 也包括特定裝置的保護和診斷:
 請在一張卡上獲得通風,天氣狀況及每間監控室的狀況.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM 在五個房間內提供通風輔導和環境檢測的家庭儀表板" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM 在五個房間內提供通風輔導和環境檢測的家庭儀表板" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ HEM 也包括特定裝置的保護和診斷:
 檢查空氣質量,模具表示,存在,窗口狀態,氣候控制器以及每個決定的說明.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="浴室的擴展式儀表板,有讀量和獨立的儀器控制器" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="浴室的擴展式儀表板,有讀量和獨立的儀器控制器" width="760">
 </p>
 
 <a id="home-settings"></a>

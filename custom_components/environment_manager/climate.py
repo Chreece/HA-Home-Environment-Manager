@@ -265,6 +265,34 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
         )
         return values[kind]
 
+    def _overview_targets(self, cap, cfg, plan, humidity, fan_role):
+        """Active profile goals, in the same units as the summary measurements."""
+        mode = cfg["control_mode"]
+        if cap is None or mode == "off":
+            return {}
+        goals = {}
+        if cap.temperature or cap.temperature_range:
+            thermal = ("heat", "cool") if {"auto", "heat_cool"}.intersection(cap.modes) else (
+                key for key in ("heat", "cool") if key in cap.modes)
+            if mode in ("existing", "manual"):
+                goals.update((key, self._target(key)) for key in thermal)
+            else:
+                targets = model.targets(self._manager, self._spec, cap, cfg, plan, mold_protection=False)
+                goals.update((key, targets.get(key)) for key in thermal)
+        if cap.humidity:
+            if humidity.get("target_basis") == "mold_surface_rh":
+                goals["mold"] = humidity.get("control_target")
+            else:
+                goals["humidity"] = (self._target("humidity") if mode in ("manual", "existing")
+                                     else humidity.get("effective_humidity_target"))
+        if mode in ("automatic", "pid") and fan_role in ("extraction", "filtration"):
+            thresholds = plan.get("air_actions", {}).get("thresholds", {})
+            if fan_role == "extraction":
+                goals["co2"] = thresholds.get("co2_operational_ppm")
+            else:
+                goals["pm25"] = thresholds.get("pm25_short_term_action_ug_m3")
+        return {key: value for key, value in goals.items() if value is not None}
+
     @property
     def native_target_temperature(self):
         cap = self._caps
@@ -362,6 +390,7 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
             selected_mode = None
         humidity_demand = (model.humidity_demand(self._manager, self._spec, cap, cfg, plan)
                            if cap is not None and cap.humidity else {})
+        fan_role = resolved_fan_purpose(self._manager, self._spec, cap.primary if cap else None)
         return {**super().extra_state_attributes, "control_mode": cfg["control_mode"],
                 "supported_operating_modes": list(model.operating_modes(self._manager, self._spec)),
                 "selected_operating_mode": selected_mode,
@@ -389,8 +418,8 @@ class ManagedClimate(EquipmentEntity, ClimateEntity):
                 # The exact native endpoint is exposed for the Lovelace link;
                 # do not infer the target from a Manager climate entity name.
                 "physical_primary_entity_id": cap.primary if cap else None,
-                "resolved_fan_purpose": resolved_fan_purpose(
-                    self._manager, self._spec, cap.primary if cap else None),
+                "resolved_fan_purpose": fan_role,
+                "overview_targets": self._overview_targets(cap, cfg, plan, humidity_demand, fan_role),
                 "controller_mode_selected": cfg["control_mode"] in ("automatic", "pid", "manual"),
                 "upstream_power_switch": cfg.get("power_switch_entity"),
                 "upstream_power_state": (self._manager.hass.states.get(cfg["power_switch_entity"]).state

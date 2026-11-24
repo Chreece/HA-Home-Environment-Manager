@@ -2299,6 +2299,10 @@
       </div>`;
     }
 
+    _doorReport(room) {
+      return room?.environment?.door_context || room?.environment?.climate_plan?.door || room?.environment?.door;
+    }
+
     _window(win) {
       const opened = win.opened;
       const klass = opened === true ? 'opened' : opened === false ? 'closed' : 'unknown';
@@ -4817,6 +4821,35 @@
     }
     return found;
   };
+  // Choose feedback for the physical appliance even while its native state is OFF.
+  proto87._overviewMode=function(a,native){
+    const n=native?.attributes||{};
+    const selected=[native?.state,a.selected_operating_mode,a.requested_hvac_mode]
+      .find(value=>['heat','cool','heat_cool','dry','humidify','fan_only','auto'].includes(value));
+    const action={heating:'heat',cooling:'cool',drying:'dry',humidifying:'humidify',fan:'fan_only'};
+    return (selected==='auto'||selected==='heat_cool') && native?.state!=='off'
+      ? action[n.hvac_action]||selected : selected;
+  };
+  proto87._controllerMetrics=function(entry,nativeId,native) {
+    const a=entry.climate?.attributes||{}, n=native?.attributes||{};
+    const domain=nativeId?.split('.')[0];
+    const modes=safeArray(a.supported_operating_modes).length ? a.supported_operating_modes :
+      [...safeArray(n.hvac_modes),...safeArray(a.hvac_modes)];
+    const mode=this._overviewMode(a,native);
+    const relevant=new Set(mode?[mode]:modes);
+    if(domain==='humidifier')return ['humidity'];
+    if(domain==='fan'||mode==='fan_only'||(!mode && modes.includes('fan_only') &&
+        modes.every(value=>['fan_only','off'].includes(value)))) {
+      const role=Object.hasOwn(a,'resolved_fan_purpose')?a.resolved_fan_purpose:entry.fanPurpose?.state;
+      if(role==='filtration')return ['pm25','aqi','speed'];
+      if(role==='extraction')return ['co2','pm25','speed'];
+      return ['speed'];
+    }
+    const feedback=[];
+    if(['heat','cool','heat_cool','auto'].some(value=>relevant.has(value)))feedback.push('temperature');
+    if(relevant.has('dry')||relevant.has('humidify'))feedback.push('humidity');
+    return feedback;
+  };
   const _deviceState87 = (entry,hass) => {
     const found=_nativeActivities112(entry,hass).filter(item=>item.active);
     return found.find(item=>!['fan','neutral'].includes(item.tone)) || found[0] ||
@@ -5210,7 +5243,7 @@
       const {tone,text:actionText}=this._measurementActivityB6(metric,room.area_id,activity);
       const label=String(item.name||short)+' · '+formatted+
         (nativeUnit?' '+nativeUnit:'')+(actionText?' · '+actionText:'');
-      const showLabel=metric!=='illuminance';
+      const showLabel=metric!=='illuminance' && !(metric==='aqi' && /\bAQI\b/i.test(nativeUnit));
       const body=this._icon(icon)+
         '<span class="hem-room-metric-value107">'+escape(formatted)+'</span>'+
         (nativeUnit?' <span class="hem-room-metric-unit107">'+escape(nativeUnit)+'</span>':'')+
@@ -5345,9 +5378,9 @@
       (showFaces?'<span class="hem-room-faces" role="img" aria-label="'+escape(conditions.label)+
         '" title="'+escape(conditions.label)+'">'+faceArt+'</span>':'')+
       '<span class="hem-room-alerts87" aria-label="'+escape(labels.attention)+'">'+
-      alerts.join('')+'</span></span>'+
+      alerts.join('')+'</span>'+
       '<span class="hem-room-active87" aria-label="'+escape(active.length+' '+labels.active)+'">'+
-      activeIcons+extra+'</span></span>'+
+      activeIcons+extra+'</span></span></span>'+
       '<span class="hem-room-overview080">'+
       this._measurementBadge105(room,'temperature',
         'hem-room-reading87 hem-room-metric107 hem-activity-'+activity.temp,
@@ -5760,6 +5793,37 @@
         ?observedNative.state:null;
       // Native DRY is a reported mode; without hvac_action it is not proof of
       // compressor activity. Keep the physical mode visible, not "Unknown".
+      const feedback=this._controllerMetrics(entry,nativeId,observedNative);
+      const room=safeArray(this._dashboard105()?.rooms).find(r=>r.area_id===area);
+      const goals=attrs.overview_targets||{};
+      const mode=this._overviewMode(attrs,observedNative);
+      const targetLabel=hemTextB8('HEM target',this._language());
+      const target=(key,unit)=>{
+        let value='';
+        if(key==='temperature'){
+          const low=goals.heat, high=goals.cool;
+          if(mode!=='cool' && mode!=='heat' && Number.isFinite(low) && Number.isFinite(high)){
+            value=this._format(low,1)+'–'+fmt(high,unit);
+          }else{
+            const chosen=mode==='cool'?high:mode==='heat'?low:low??high;
+            if(Number.isFinite(chosen))value=fmt(chosen,unit);
+          }
+        }else if(Number.isFinite(goals[key]))value=fmt(goals[key],unit);
+        return value?'<span class="hem-controller-target" title="'+escape(targetLabel)+'" aria-label="'+
+          escape(targetLabel+' '+value)+'">'+this._icon('mdi:target')+escape(value)+'</span>':'';
+      };
+      const airReadings=feedback.filter(key=>['pm25','aqi','co2'].includes(key)).map(key=>{
+        const [short,icon,unit]=_airMetric89[key];
+        const air=safeArray(room?.readings).find(r=>r.metric===key && r.available===true && Number.isFinite(r.value));
+        const value=Number.isFinite(measurements[key])?measurements[key]:air?.value;
+        const suffix=air?.unit||unit||short;
+        if(!Number.isFinite(value) && !Number.isFinite(goals[key]))return '';
+        return metric(icon,Number.isFinite(value)?fmt(value,' '+suffix):'—',short,'neutral')+
+          target(key,' '+suffix);
+      }).join('');
+      const percentage=observedNative?.attributes?.percentage;
+      const showSpeed=feedback.includes('speed') && Number.isFinite(percentage) && percentage>=0 &&
+        percentage<=100 && !observedNative?.attributes?.restored && actualMode!==null;
       const stateName=physical.active?this._controllerStatusLabel(physical.action):
         actualMode?this._controllerStatusLabel(actualMode):
         missing?this._controllerStatusLabel('unavailable'):
@@ -5779,13 +5843,15 @@
         this._icon(physical.active?'mdi:power':'mdi:power-standby')+
         escape(stateName)+'</span>'+
         '<span class="hem-device-measures87">'+
-        (temperature!==null?metric('mdi:thermometer',fmt(temperature,'°C'),labels.temperature+
-          (physicalTone.thermal.length?' · '+_activityText112(this,physicalTone.thermal):''),physicalTone.temp):'')+
-        (humidity!==null||surfaceTarget?metric(surfaceTarget?'mdi:water-alert-outline':'mdi:water-percent',
+        (feedback.includes('temperature')?metric('mdi:thermometer',temperature===null?'—':fmt(temperature,'°C'),labels.temperature+
+          (physicalTone.thermal.length?' · '+_activityText112(this,physicalTone.thermal):''),physicalTone.temp)+target('temperature','°C'):'')+
+        (feedback.includes('humidity')?metric(surfaceTarget?'mdi:water-alert-outline':'mdi:water-percent',
           humidity===null?'—':fmt(humidity,'%'),humidityLabel+
           (humidity===null?' · '+this._t('missing'):'')+
-          (humidityActivity.text?' · '+humidityActivity.text:''),humidityActivity.tone):'')+
-        (demand!==null?metric('mdi:gauge',fmt(demand,'%'),'PID','neutral'): '')+
+          (humidityActivity.text?' · '+humidityActivity.text:''),humidityActivity.tone)+target(humidityMetric,'%'):'')+
+        airReadings+
+        (showSpeed?metric('mdi:fan',fmt(percentage,'%'),this._controllerStatusLabel('fan_only'),'neutral'):'')+
+        (demand!==null && method==='pid'?metric('mdi:gauge',fmt(demand,'%'),'PID','neutral'): '')+
         '</span><span class="hem-device-attention87">'+
         (activeFault?_iconHint87('mdi:alert-octagon-outline',issueText,'error'):'')+
         (issue&&!activeFault?_iconHint87('mdi:alert-circle-outline',issueText,'warn'):'')+
@@ -6781,7 +6847,7 @@
       safeArray(room.readings).some(v=>v?.entity_id===id &&
         !v?.details?.fallback_for_mold && v?.metric!=='mold') ||
       safeArray(room.windows).some(v=>v?.entity_id===id) ||
-       safeArray(room.environment?.door_context?.contacts).some(v=>v?.entity_id===id) ||
+       safeArray(this._doorReport(room)?.contacts).some(v=>v?.entity_id===id) ||
       Object.values(room.environment?.measurement_evidence||{}).some(v=>
         safeArray(v?.source_ids).includes(id)));
   };
@@ -12400,6 +12466,7 @@
     ".hem-door-head062 .hem-context76{margin-inline-start:auto}",
     ".hem-door-context062{font-size:11px;line-height:1.5;color:var(--aqa-muted);margin:6px 0 0}",
     ".hem-door-contact062{max-width:100%;overflow-wrap:anywhere}",
+    "button.hem-door-contact062{font-family:inherit;color:inherit;border:0;cursor:pointer;text-align:start}",
     ".hem-room-door062 .window-list{min-width:0}",
     ".hem-room-door062 .window ha-icon{--mdc-icon-size:16px;flex:0 0 16px}",
     "</style>"
@@ -12428,7 +12495,7 @@
       contact_unverified:'Ein Kontakt ist nicht bestätigt. Nicht alle Türen als geschlossen annehmen.',fire_door_open:'Eine Brand-/Sicherheitstür meldet offen. Brandschutzregeln des Gebäudes beachten; nicht zum Lüften offenhalten.',invalid_connection:'Eine konfigurierte Raumverbindung fehlt oder ist ungültig.',fresh_air_needed:'CO₂ liegt über dem eingestellten Grenzwert. Außenluftzufuhr prüfen; gewöhnliche Partikelfilter entfernen kein CO₂.',remove_moisture_locally:'Erhöhte Feuchte. Lokale Abluft oder Entfeuchtung prüfen, statt Feuchtigkeit in andere Räume zu verteilen.',moisture_transfer_risk:'Feuchte Luft kann die Feuchte im kühleren verbundenen Raum erhöhen. Nicht mit der Luft eines wärmeren Raums heizen.',door_activity_while_away:'Eine Tür änderte sich bei gemeldeter Abwesenheit. Ereignis prüfen; kein Nachweis eines Einbruchs.',contact_chattering:'Mehrere schnelle Kontaktwechsel beobachtet. Ausrichtung, Funkverbindung und Kontakt prüfen.',advice:'Beratende Informationen'}
   },"HEM_DOOR_WORDS063:11562");
   HomeEnvironmentManagerCard.prototype._doorContext063=function(room){
-    const report=room?.environment?.door_context||room?.environment?.climate_plan?.door||room?.environment?.door;
+    const report=this._doorReport(room);
     if(!report)return '';
     const contacts=Array.isArray(report.contacts)?report.contacts:[];
     const links=Array.isArray(report.connections)?report.connections:[];
@@ -12502,12 +12569,13 @@
       const icon=current==='open'?'mdi:door-open':current==='closed'?'mdi:door-closed':'mdi:door';
       const id=contact.entity_id,name=sourceName(id);
       const label=name+' · '+tr(current)+(verified?'':' · '+tr(contact.health));
-      const native=verified&&this._nativeAllowed105?.(id);
-      return '<span class="window hem-door-contact062 '+klass+(native?' hem-source-click105':'')+'" '+
+      const native=typeof id==='string' && id.startsWith('binary_sensor.') && this._nativeAllowed105?.(id);
+      const tag=native?'button':'span';
+      return '<'+tag+(native?' type="button"':'')+' class="window hem-door-contact062 '+klass+(native?' hem-source-click105':'')+'" '+
         'title="'+escape(label)+'" aria-label="'+escape(label)+'" '+
-        (native?'data-hem-source105="'+escape(id)+'" role="button" tabindex="0"':'')+'>'+
+        (native?'data-hem-source105="'+escape(id)+'"':'')+'>'+
         this._icon(icon)+'<span>'+escape(name)+'</span><small>· '+escape(tr(current))+
-        (verified?'':' · '+escape(tr(contact.health)))+'</small></span>';
+        (verified?'':' · '+escape(tr(contact.health)))+'</small></'+tag+'>';
     }).join('');
     return '<div class="window-section hem-room-door062" data-room-doors062="'+escape(room.area_id)+'">'+
       '<div class="hem-door-head062"><span class="field-label">'+this._icon('mdi:door-closed')+
@@ -14958,15 +15026,22 @@ HomeEnvironmentManagerCard.prototype._styles=function(){
     .hem-face-mask {stroke:var(--aqa-text);stroke-width:1.25;fill:var(--aqa-surface)}
     .hem-face-drop,.hem-face-dry {stroke:var(--aqa-blue);fill:var(--aqa-surface)}
     .hem-face-dry {stroke:var(--aqa-amber,var(--warning-color,#eab567));fill:none}
+    .hem-controller-target {display:inline-flex;align-items:center;gap:2px;white-space:nowrap;color:var(--aqa-text);font-size:11px}
+    .hem-controller-target ha-icon {--mdc-icon-size:13px;color:var(--aqa-blue)}
+    @container hem-rooms107 (max-width:440px) {
+      .hem-device-glance87:has(.hem-controller-target) {display:grid;grid-template-columns:minmax(0,1fr) auto auto auto}
+      .hem-device-glance87:has(.hem-controller-target) .hem-device-measures87 {grid-row:2;grid-column:1/-1;flex-wrap:wrap}
+      .hem-device-glance87:has(.hem-controller-target)>ha-icon:last-child {grid-column:4;grid-row:1}
+    }
     .hem-room-condition-detail {padding:5px 3px;color:var(--aqa-muted);font-size:13px}
     .hem-room-tab080>.hem-room-alerts87 {
       display:flex;align-items:center;justify-content:flex-start;
       flex:none;flex-wrap:wrap;gap:2px;width:max-content;max-width:50%;min-width:0;
     }
-    .hem-room-tabline080>.hem-room-active87 {
-      align-self:center;justify-content:flex-end;flex-wrap:wrap;max-width:25%;margin-inline-start:auto;
+    .hem-room-tab080>.hem-room-active87 {
+      align-self:center;justify-content:flex-end;flex-wrap:wrap;max-width:32%;
     }
-    .hem-room-tab080>.hem-room-alerts87:empty {display:none}
+    .hem-room-tab080>.hem-room-alerts87:empty,.hem-room-tab080>.hem-room-active87:empty {display:none}
     .hem-room-glance87 .hem-room-tabline080 .hem-hint87:nth-child(n) {
       display:inline-flex;flex:0 0 24px;width:24px;height:28px;
     }

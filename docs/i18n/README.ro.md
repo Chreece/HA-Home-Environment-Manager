@@ -33,7 +33,7 @@ De exemplu, HEM poate reduce încălzirea în timp ce toată lumea este plecată
 
 **Rămâi la conducere.** Fiecare cameră are propriile setări. Fiecare dispozitiv suportat are propriul controler, moduri de funcționare, ținte și limite de siguranță. HEM nu presupune niciodată că alegerea unui dispozitiv îi dă permisiunea de a opera dispozitivul.
 
-[Explorează caracteristicile](#what-can-hem-do) · [Vezi interfaţa](#see-hem-in-action) · [Instalarea HEM](#installation) · [Pune-ţi casa.](#getting-started) · [Ghid detaliat](../../docs/advanced-configuration.md)
+[Explorează caracteristicile](#what-can-hem-do) · [Vezi interfaţa](#see-hem-in-action) · [Instalarea HEM](#installation) · [Pune-ţi casa.](#getting-started) · [Ghid detaliat](../../docs/advanced-configuration.md) · [Toate setările (în engleză)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Ce poate HEM - Da, nu.
@@ -153,7 +153,7 @@ HEM include, de asemenea, protecții și diagnostice specifice dispozitivului:
 - Durata minimă de ON și OFF, setările maxime de timp de funcționare și manipularea suportată a comutatorului extern de alimentare.
 - Restricții de fereastră și ocupare, manipulare manuală și verificări de confirmare a comandelor locale.
 - Raportarea erorilor și a dispozitivelor nedisponibile, cu o alegere a comportamentului de notificare pentru fiecare dispozitiv.
-- Un câine de supraveghere opțional după închidere pentru încălzirea continuă suspectată după o comandă de oprire, cu monitorizare păzită și încercări limitate de recuperare.
+- Pentru fiecare dispozitiv puteți urmări dacă încălzirea, răcirea, dezumidificarea sau umidificarea continuă după oprire. Alegeți doar monitorizarea sau permiteți cel mult două comenzi suplimentare de oprire.
 - Motive clare de așteptare, starea actuală de funcționare și disponibilitatea surselor, astfel încât să puteți investiga înainte de a permite mai mult control.
 
 **Limitele de siguranță rămân în vigoare chiar și atunci când se dezactivă alarma.** HEM nu tratează niciodată o expediere de comandă reușită ca dovadă că un dispozitiv a răspuns fizic.
@@ -169,7 +169,7 @@ Aceste ilustrații în limba engleză folosesc camere de probă și măsurători
 Obțineți sfaturi de ventilație, condiții meteorologice și starea fiecărei camere monitorizate într-o singură carte.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM tabla de bord de la domiciliu cu sfaturi de ventilație și citiri de mediu în cinci camere" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM tabla de bord de la domiciliu cu sfaturi de ventilație și citiri de mediu în cinci camere" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Obțineți sfaturi de ventilație, condiții meteorologice și starea fiecărei 
 Inspectă calitatea aerului, indicația mucegaiului, prezența, starea ferestrei, controlatorii climatici și explicațiile pentru fiecare decizie.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Tabla de bord extinsă pentru baie cu citiri și controale independente ale dispozitivelor" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Tabla de bord extinsă pentru baie cu citiri și controale independente ale dispozitivelor" width="760">
 </p>
 
 <a id="home-settings"></a>

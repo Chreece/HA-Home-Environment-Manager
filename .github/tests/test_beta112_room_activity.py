@@ -115,6 +115,15 @@ const make=()=>{
   card._areaDeviceIds=new Map();card._config={entity:'sensor.hem'};
   return card;
 };
+const controllerMetrics=(domain,attrs,nativeState='off',nativeAttrs={})=>make()._controllerMetrics(
+  {climate:{attributes:attrs}},domain+'.device',{state:nativeState,attributes:nativeAttrs});
+assert.deepEqual(controllerMetrics('climate',{hvac_modes:['off','heat']}),['temperature']);
+assert.deepEqual(controllerMetrics('humidifier',{hvac_modes:['off','auto']}),['humidity']);
+assert.deepEqual(controllerMetrics('climate',{hvac_modes:['off','cool','dry'],selected_operating_mode:'dry'}),['humidity']);
+assert.deepEqual(controllerMetrics('climate',{selected_operating_mode:'dry'},'cool'),['temperature']);
+assert.deepEqual(controllerMetrics('fan',{resolved_fan_purpose:'filtration'}),['pm25','aqi','speed']);
+assert.deepEqual(controllerMetrics('fan',{resolved_fan_purpose:'extraction'}),['co2','pm25','speed']);
+assert.deepEqual(controllerMetrics('fan',{resolved_fan_purpose:null}),['speed']);
 const glance=(card,area)=>{
   const room=card._hass.states['sensor.hem'].attributes.dashboard.rooms.find(r=>r.area_id===area);
   const html=card._room(room);
@@ -234,7 +243,7 @@ REPORT = """area=>{
      colour:colour(el.querySelector(':scope > ha-icon')),valueColour:colour(el.querySelector('.hem-room-metric-value107')),
      average:el.querySelector('.hem-avg-marker105 ha-icon')?colour(el.querySelector('.hem-avg-marker105 ha-icon')):null,
      title:el.title})),
-   active:[...root.querySelectorAll('.hem-room-active87 .hem-hint87')].map(el=>({
+   active:[...root.querySelectorAll('.hem-room-tab080 > .hem-room-active87:last-child .hem-hint87')].map(el=>({
      colour:colour(el.querySelector('ha-icon')),title:el.title,icon:el.querySelector('ha-icon').getAttribute('icon')}))};
 }"""
 

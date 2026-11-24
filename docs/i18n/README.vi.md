@@ -33,7 +33,7 @@ Ví dụ: HEM có thể làm giảm nhiệt trong khi mọi người đi xa, chu
 
 **Cứ giữ trách nhiệm.** Mỗi phòng có cài đặt riêng của mình. Mỗi thiết bị được hỗ trợ có bộ điều khiển riêng, chế độ hoạt động, mục tiêu và giới hạn an toàn của riêng mình. HEM không bao giờ cho rằng việc chọn một thiết bị cho phép nó vận hành thiết bị đó.
 
-[Khám phá các tính năng](#what-can-hem-do) · [Xem giao diện](#see-hem-in-action) · [Lắp đặt HEM](#installation) · [Đặt nhà của bạn](#getting-started) · [Hướng dẫn chi tiết](../../docs/advanced-configuration.md)
+[Khám phá các tính năng](#what-can-hem-do) · [Xem giao diện](#see-hem-in-action) · [Lắp đặt HEM](#installation) · [Đặt nhà của bạn](#getting-started) · [Hướng dẫn chi tiết](../../docs/advanced-configuration.md) · [Tất cả cài đặt (tiếng Anh)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Điều gì có thể HEM làm được không?
@@ -153,7 +153,7 @@ HEM bao gồm cả các biện pháp bảo vệ và chẩn đoán cụ thể cho
 - Thời gian ON và OFF tối thiểu, cài đặt thời gian hoạt động tối đa và xử lý chuyển động điện bên ngoài được hỗ trợ.
 - Hạn chế cửa sổ và chiếm đóng, xử lý bằng tay và kiểm tra xác nhận lệnh bản địa.
 - Hình báo lỗi và không có thiết bị, với sự lựa chọn hành vi thông báo cho mỗi thiết bị.
-- Một chú chó giám sát tùy chọn sau khi đóng cửa cho việc tiếp tục sưởi ấm nghi ngờ sau lệnh OFF, với giám sát được bảo vệ và hạn chế các nỗ lực phục hồi.
+- Với từng thiết bị, bạn có thể theo dõi dấu hiệu sưởi, làm mát, hút ẩm hoặc tạo ẩm tiếp diễn sau khi tắt. Chọn chỉ theo dõi hoặc cho phép gửi thêm tối đa hai lệnh tắt.
 - Lý do chờ đợi rõ ràng, tình trạng hoạt động hiện tại và nguồn sẵn có, để bạn có thể điều tra trước khi cho phép kiểm soát nhiều hơn.
 
 **Các giới hạn an toàn vẫn có hiệu lực ngay cả khi cảnh báo bị tắt.** HEM không bao giờ xem xét một chuyến phát hành chỉ huy thành công như là bằng chứng cho thấy một thiết bị đã trả lời vật lý.
@@ -169,7 +169,7 @@ Những hình minh họa bằng tiếng Anh này sử dụng các phòng mẫu v
 Nhận lời khuyên về thông gió, điều kiện thời tiết và tình trạng của mỗi phòng được giám sát trong một thẻ.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM bảng điều khiển nhà với tư vấn thông gió và đọc môi trường trong năm phòng" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM bảng điều khiển nhà với tư vấn thông gió và đọc môi trường trong năm phòng" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Nhận lời khuyên về thông gió, điều kiện thời tiết và tình tr
 Kiểm tra chất lượng không khí, chỉ định nấm, hiện diện, trạng thái cửa sổ, điều khiển khí hậu và giải thích cho mỗi quyết định.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Bảng điều khiển phòng tắm mở rộng với phép đọc và bộ điều khiển thiết bị độc lập" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Bảng điều khiển phòng tắm mở rộng với phép đọc và bộ điều khiển thiết bị độc lập" width="760">
 </p>
 
 <a id="home-settings"></a>

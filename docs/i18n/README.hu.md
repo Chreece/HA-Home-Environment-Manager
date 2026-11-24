@@ -33,7 +33,7 @@ Például: HEM a többiek távolságában csökkentheti a fűtést, előkészít
 
 **Te maradj a főnök.** Minden szobának saját beállításai vannak, minden támogatott készüléknek saját vezérlője, működési módja, célpontja és biztonsági korlátai vannak. HEM soha nem feltételezi, hogy a készülék kiválasztása engedélyt ad annak a készüléknek a használatára.
 
-[Fedezze fel a jellemzőket](#what-can-hem-do) · [Lásd a felületet](#see-hem-in-action) · [HEM telepítés](#installation) · [Szépítsd ki a házad](#getting-started) · [Fontos útmutató](../../docs/advanced-configuration.md)
+[Fedezze fel a jellemzőket](#what-can-hem-do) · [Lásd a felületet](#see-hem-in-action) · [HEM telepítés](#installation) · [Szépítsd ki a házad](#getting-started) · [Fontos útmutató](../../docs/advanced-configuration.md) · [Az összes beállítás (angolul)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Mi lehet? HEM - Nem?
@@ -153,7 +153,7 @@ HEM a készülék-specifikus védelmet és diagnosztikát is magában foglalja:
 - Minimális bekapcsolási és kikapcsolási időtartam, maximális működési idő beállítása és támogatott külső áramkapcsoló kezelése.
 - Az ablakok és az elhelyezkedés korlátozásai, a kézi átállás kezelése és a helyi parancsellenőrzés.
 - Hibák és nem rendelkezésre álló eszközök bejelentése, a bejelentési magatartás kiválasztásával az egyes eszközök esetében.
-- A kikapcsolás utáni felügyeleti kutya, amely a kikapcsolási parancsot követően továbbra is fűtésre gyanúsított, a megfigyeléssel és korlátozott helyreállítási kísérletekkel rendelkezik.
+- Készülékenként figyelhető, hogy kikapcsolás után folytatódik-e a fűtés, hűtés, páramentesítés vagy párásítás. Válassza a csak megfigyelést, vagy engedélyezzen legfeljebb két újabb kikapcsolási parancsot.
 - Nyilvánvaló várakozási okok, a jelenlegi működési állapot és a forrás rendelkezésre állása, így meg tud vizsgálni, mielőtt lehetővé tenné a további ellenőrzést.
 
 **A biztonsági határok még akkor is érvényben maradnak, ha a figyelmeztető jelzés kikapcsolva van.** HEM soha nem tekintik a sikeres parancs küldést bizonyítéknak arra, hogy egy készülék fizikai reagált.
@@ -169,7 +169,7 @@ Ezek az angol nyelvű illusztrációk minták szobákat és méréseket használ
 Szerezd meg a szellőztetést, az időjárási feltételeket és a megfigyelett szobák állapotát egyetlen kártyával.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM háztartási képernyő, ahol öt szobában van szellőztetés és környezetértékelés" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM háztartási képernyő, ahol öt szobában van szellőztetés és környezetértékelés" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Szerezd meg a szellőztetést, az időjárási feltételeket és a megfigyelett 
 Ellenőrizze a levegőminőséget, a formanyomtatványt, a jelenlétet, az ablak állapotát, az éghajlat-ellenőrzőket és minden döntés magyarázatait.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="A fürdőszobában kiterjesztett, olvasatokkal és független készülék vezérlőkkel ellátott mérőpult" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="A fürdőszobában kiterjesztett, olvasatokkal és független készülék vezérlőkkel ellátott mérőpult" width="760">
 </p>
 
 <a id="home-settings"></a>

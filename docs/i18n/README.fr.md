@@ -29,7 +29,7 @@ HEM peut, par exemple, réduire le chauffage quand le logement est vide, prépar
 
 **Vous gardez la main.** Chaque pièce dispose de ses propres paramètres. Chaque appareil compatible possède ses modes, ses méthodes de régulation, ses consignes et ses limites de sécurité. Sélectionner un appareil n'autorise jamais, à lui seul, HEM à le commander.
 
-[Découvrir les fonctionnalités](#what-can-hem-do) · [Voir l'interface](#see-hem-in-action) · [Installer HEM](#installation) · [Premiers pas](#getting-started) · [Guide détaillé](../../docs/advanced-configuration.md)
+[Découvrir les fonctionnalités](#what-can-hem-do) · [Voir l'interface](#see-hem-in-action) · [Installer HEM](#installation) · [Premiers pas](#getting-started) · [Guide détaillé](../../docs/advanced-configuration.md) · [Tous les réglages (en anglais)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Que peut faire HEM ?
@@ -149,7 +149,7 @@ HEM comporte également des protections et diagnostics propres à chaque apparei
 - Durées minimales de marche et d'arrêt, durée maximale de fonctionnement et prise en charge des interrupteurs d'alimentation externes compatibles.
 - Restrictions liées aux fenêtres et à la présence, respect des interventions manuelles et vérification des accusés de réception des commandes natives.
 - Signalement des erreurs et de l'indisponibilité d'un appareil, avec des options de notification individuelles.
-- Surveillance facultative après un ordre OFF lorsqu'il existe des signes que le chauffage continue, avec des contrôles prudents et un nombre limité de tentatives de correction.
+- Pour chaque appareil, HEM peut surveiller si le chauffage, le refroidissement, la déshumidification ou l’humidification semble continuer après l’arrêt. Choisissez la surveillance seule ou autorisez jusqu’à deux nouveaux ordres d’arrêt.
 - Motifs d'attente, état de fonctionnement et disponibilité des sources clairement affichés pour faciliter le diagnostic avant d'autoriser de nouvelles commandes.
 
 **Les limites de sécurité restent en vigueur même si une alerte est désactivée.** Le fait qu'un ordre ait été envoyé ne prouve pas que l'appareil l'a réellement exécuté.
@@ -165,7 +165,7 @@ Ces illustrations, en anglais, utilisent des pièces et des mesures fictives. El
 Consultez les recommandations d'aération, les conditions météo et l'état de chaque pièce suivie depuis une seule carte.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="Tableau de bord HEM : conseils d'aération et relevés de cinq pièces" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="Tableau de bord HEM : conseils d'aération et relevés de cinq pièces" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -174,7 +174,7 @@ Consultez les recommandations d'aération, les conditions météo et l'état de 
 Examinez la qualité de l'air, le risque de moisissure, la présence, les fenêtres, les appareils climatiques et les raisons de chaque décision.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Vue détaillée d'une salle de bain avec mesures et régulateurs indépendants" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Vue détaillée d'une salle de bain avec mesures et régulateurs indépendants" width="760">
 </p>
 
 <a id="home-settings"></a>

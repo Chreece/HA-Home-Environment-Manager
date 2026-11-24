@@ -13,6 +13,7 @@ from pathlib import Path
 import sys
 from types import ModuleType, SimpleNamespace as N
 import unittest
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -70,10 +71,10 @@ class AttributeBase:
 climate_tree = ast.parse((SOURCE / "climate.py").read_text())
 climate_class = next(node for node in climate_tree.body
                      if isinstance(node, ast.ClassDef) and node.name == "ManagedClimate")
-getter = next(node for node in climate_class.body
-              if isinstance(node, ast.FunctionDef) and node.name == "extra_state_attributes")
+getters = [node for node in climate_class.body if isinstance(node, ast.FunctionDef)
+           and node.name in ("extra_state_attributes", "_overview_targets")]
 attribute_class = ast.ClassDef(name="ManagedClimate", bases=[ast.Name(id="AttributeBase", ctx=ast.Load())],
-                              keywords=[], body=[getter], decorator_list=[])
+                              keywords=[], body=getters, decorator_list=[])
 scope = {"__name__": PACKAGE + ".climate", "__package__": PACKAGE,
          "AttributeBase": AttributeBase, "model": model}
 exec(compile(ast.fix_missing_locations(ast.Module(body=[attribute_class], type_ignores=[])),
@@ -98,7 +99,8 @@ class ActivityMetadataTests(unittest.TestCase):
         self.manager = N(
             spec=self.spec, cfg={"fan_purpose": "auto", "control_mode": "existing",
                                  "preset": "none", "requested_mode": "fan_only"},
-            room={}, device={}, cap=N(primary="fan.native", modes=("off", "fan_only"), humidity=False),
+            room={}, device={}, cap=N(primary="fan.native", modes=("off", "fan_only"), humidity=False,
+                                      temperature=False, temperature_range=False),
             entry=N(entry_id="entry"),
             settings={"allowed": {"room": ["fan.native"]}, "air": {"room": []}},
             hass=N(states=self.states, registry=registry, services=ReadOnlyTransport(),
@@ -124,6 +126,25 @@ class ActivityMetadataTests(unittest.TestCase):
         view._physical_hvac_mode = "fan_only"
         view._state = self.states.get("fan.native")
         return view.extra_state_attributes
+
+    def test_active_targets_use_controller_mode_and_measurement_basis(self):
+        view = scope["ManagedClimate"]()
+        view._manager, view._spec = self.manager, self.spec
+        cfg = {"control_mode": "automatic"}
+        plan = {"air_actions": {"thresholds": {"co2_operational_ppm": 900, "pm25_short_term_action_ug_m3": 20}}}
+        fan = self.manager.cap
+        self.assertEqual(view._overview_targets(fan, cfg, plan, {}, "filtration"), {"pm25": 20})
+        self.assertEqual(view._overview_targets(fan, cfg, plan, {}, "extraction"), {"co2": 900})
+        self.assertEqual(view._overview_targets(fan, cfg, {}, {}, "filtration"), {})
+        self.assertEqual(view._overview_targets(fan, {"control_mode": "off"}, plan, {}, "extraction"), {})
+        reversible = N(temperature=True, temperature_range=True, modes=("off", "heat_cool"), humidity=False)
+        with patch.object(model, "targets", return_value={"heat": 20, "cool": 24}, create=True):
+            self.assertEqual(view._overview_targets(reversible, cfg, {}, {}, None), {"heat": 20, "cool": 24})
+        dryer = N(temperature=False, temperature_range=False, humidity=True)
+        basis = {"target_basis": "mold_surface_rh", "control_target": 60, "effective_humidity_target": 45}
+        self.assertEqual(view._overview_targets(dryer, cfg, {}, basis, None), {"mold": 60})
+        basis["target_basis"] = "room_relative_humidity"
+        self.assertEqual(view._overview_targets(dryer, cfg, {}, basis, None), {"humidity": 45})
 
     def test_resolved_auto_roles_match_physical_planning(self):
         cases = (
