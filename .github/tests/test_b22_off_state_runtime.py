@@ -44,7 +44,8 @@ hass.states.get=lambda e:state if e==spec.source_entities[0] else None
 hass.states.async_all=lambda domain:(
     [NS(entity_id="climate.other",state="cool",attributes={"hvac_modes":["off","cool","dry"]})]
     if env.external and domain=="climate" else [])
-manager=NS(hass=hass,settings={},entry=NS(entry_id="test"))
+manager=NS(hass=hass,settings={"weather_entities":["weather.home"]},entry=NS(entry_id="test"))
+discovery.weather=lambda *_: NS(condition="clear-night",temperature_c=3.)
 cap=NS(primary="climate.output",domain="climate",modes=("off","cool"))
 model.specs=lambda _: (spec,)
 model.capabilities=lambda *_:cap
@@ -55,9 +56,12 @@ model.room_config=lambda *_:{}
 model.device_config=lambda *_:{}
 model.permission=lambda *_:(env.permission,env.permission)
 model.sources_available=lambda *_:env.available
-room.room_temperature_evidence=lambda *_args,**_kwargs:(
-    env.temp,{"status":"ready","partial":False,"valid_count":1,
-              "entity_ids":["sensor.room_temp"]})
+def reference_sensor(*_args, **kwargs):
+    if kwargs["excluded_device_id"] == env.sensor_device:
+        return None, {"status": "no_selected_room_temperature"}
+    return env.temp, {"status": "ready", "partial": False, "valid_count": 1,
+                      "entity_ids": ["sensor.room_temperature"]}
+room.room_temperature_evidence=reference_sensor
 watchdog.room_temperature_evidence=room.room_temperature_evidence
 room.selected=lambda *_args:env.windows if _args[-1]=="windows" else (
     ("sensor.room_rh",) if _args[-1]=="humidity" else None)

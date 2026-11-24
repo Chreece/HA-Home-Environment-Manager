@@ -43,6 +43,40 @@ def observed_output(domain: str, state: Any, mode: str) -> str | None:
     return None
 
 
+
+def calibration_activity(domain: str, state: Any, mode: str) -> str | None:
+    """Qualify useful output separately from a selected mode or commanded level."""
+    status = getattr(state, "state", None)
+    attrs = getattr(state, "attributes", {}) or {}
+    if status in (None, "unavailable", "unknown") or attrs.get("restored"):
+        return None
+    action = attrs.get("hvac_action" if domain == "climate" else "action")
+    expected = {"heat": "heating", "cool": "cooling", "dry": "drying",
+                "humidify": "humidifying", "fan_only": "fan"}.get(mode)
+    # Shaft speed and valve travel can qualify devices without action feedback.
+    # Writable speed/percentage settings cannot establish physical work.
+    attr = {"heat": "actual_position", "cool": "actual_position", "fan_only": "rpm"}.get(mode)
+    value = attrs.get(attr) if attr else None
+    measured = None
+    if value is not None:
+        if not _number(value) or value < 0 or (attr == "actual_position" and value > 100):
+            return None
+        measured = "on" if value > 0 else "off"
+    if action is not None:
+        if action in ("idle", "off"):
+            reported = "off"
+        elif expected and action == expected:
+            reported = "on"
+        else:
+            return None
+        if measured is not None and measured != reported:
+            return None
+        measured = reported
+    if status == "off":
+        return None if measured == "on" else "off"
+    return measured
+
+
 @dataclass(frozen=True, slots=True)
 class Observation:
     at: float

@@ -324,14 +324,33 @@ modes, such as **(Heating, Cooling)** or **(Dehumidifying)**, using translated
 mode names. **Keep device off when all asleep** explicitly pauses an opted-in
 automatic device while the household sleep condition is confirmed.
 
-### Detect possible heating after an OFF command
+### Detect possible heating while a heater reports Off
 
-HEM monitors independent, fresh room temperature sensors after an HEM-owned
-heater has been commanded OFF. If, after a 30-minute thermal settling period,
+HEM monitors independent, fresh room temperature sensors after a supervised heater
+acknowledges an OFF command. It also starts a fresh observation when a supervised
+heating-only valve already reports OFF, including at startup. HEM excludes the
+heater’s own temperature probe before averaging the room thermometers. Older
+setups can use their assigned device or PID-room thermometer. After a 30-minute
+thermal settling period, if
 the room continues warming for at least 15 minutes (≥0.7°C increase and
 ≥1.5°C above the heating target), HEM records a **suspected** thermal fault.
 The device can still report OFF while physically heating; room temperature
 alone never proves that a valve/relay is active.
+
+Before attributing a rise to a heater, HEM compares fresh outdoor temperatures
+and sky conditions with independent readings from neighboring rooms. It uses
+configured room connections in either direction. Without mapped connections it
+checks the other monitored rooms. A warm neighboring room can transfer heat
+even with its door closed. Outdoor or neighboring readings within 0.5°C of the
+watched room are treated conservatively. If configured, room illuminance from
+the shade settings can identify possible local solar gain even on an overcast day.
+Sunny daytime conditions, missing
+weather, or missing readings from a relevant neighbor can also explain or
+obscure the warming. The controller exposes unattributed warming in its watchdog
+diagnostics and withholds heater-specific warnings and OFF retries in those cases.
+A fresh positive actual valve-position report while disabled is separate evidence
+for an OFF retry even when other heat sources are present. It establishes valve
+travel, while the cause of the room temperature rise can still be mixed.
 
 For HEM-commissioned heating endpoints with unchanged identity, available
 native sources, no conflicting heater and authorization to control the device,
@@ -342,8 +361,10 @@ same device-error notification channels, including Announcement Hub. The
 controller diagnostics show the room temperature evidence and recovery count.
 
 This uses Home Assistant's generic heating capabilities; there are no
-brand-specific Zigbee profiles or entity-ID lists. The watchdog is inactive
-without a verified HEM OFF episode and independent room temperature evidence.
+brand-specific Zigbee profiles or entity-ID lists. HEM excludes its own virtual controllers from the competing-heater check.
+A native thermostat reporting idle can coexist with the watch. Active or uncertain
+competing heaters prevent attribution. Long OFF periods renew the temperature
+observation window while retaining the original retry count.
 Solar gain, residual radiator heat and unknown heat sources are still possible.
 A native reported OFF is **not proof of physical shutdown**.
 
@@ -414,7 +435,10 @@ qualified feedback for its configured extraction or filtration purpose.
 
 Resume, a change to the active control settings, a real policy pause or loss
 of valid feedback invalidates the old PID integral and cycle checkpoint. When
-operation becomes eligible again, HEM calculates a fresh cycle. Normal PWM
+operation becomes eligible again, HEM calculates a fresh cycle. HEM remembers a
+disconnect and reconnect even if both occur between evaluations. A change to a
+fixed target starts a fresh cycle even below 0.25 degrees. Small fluctuations in
+calculated comfort or mold targets keep the existing phase. Normal PWM
 OFF periods and minimum-OFF waits keep their current phase. These resets never
 erase physical run/rest history, an unconfirmed native command or a genuine
 manual override.
@@ -564,9 +588,10 @@ applies validated, bounded adjustments automatically.
 
 Adaptive calibration uses the **same supplied measurement that drives PID**:
 temperature, humidity, CO₂ or PM2.5, including the exact room average and its
-contributing sensors. An additional feedback sensor is not required. Device
-state and acknowledged output establish what the actuator actually did; they
-do not replace the controlled measurement.
+contributing sensors. Actuator feedback serves a different purpose. HEM requires a
+fresh report of physical activity, such as heating, drying, actual valve position
+or measured fan RPM, before crediting an active interval. Unknown activity breaks
+the observation segment. Reported idle or OFF periods supply a baseline.
 
 The observer assesses normal measurements from short cycles and continuously
 modulating outputs. There is no fixed 75-minute ON requirement or daily tuning
@@ -584,10 +609,11 @@ response model, independent validation observations and HEM's actual PID and
 actuator constraints. The observer distinguishes tuning problems from stale
 measurements, limited capacity, dwell limits and unconfirmed actuation. Normal
 calibration does not force an experimental cycle or shorten device protections.
-For supported native thermostats without running-activity reports, confirmed
-HEM commands and their acknowledged full-output targets provide an explicitly
-labelled command-response input. This does not represent measured physical
-power. Unconfirmed commands remain a hold.
+On a native thermostat HEM checks both its command or target acknowledgement
+and the reported activity. An enabled relay, fan speed setting or confirmed
+setpoint alone supplies insufficient evidence for automatic gain changes.
+Previously applied gains remain in place. New observations use a separate
+evidence history from versions that accepted commands alone.
 
 Only one gain trial is evaluated at a time. Switching outputs apply at a safe,
 confirmed OFF boundary; continuous outputs preserve the current PID demand

@@ -496,6 +496,7 @@ def aggregate_with_provenance(
 def room_temperature_evidence(
     hass: Any, settings: dict, area: str, *,
     pinned: str | None = None, age_minutes: float = 10,
+    excluded_entities: tuple[str, ...] = (), excluded_device_id: str | None = None,
 ) -> tuple[float | None, dict]:
     """Mean of valid selected room temperatures, with discarded inputs visible.
 
@@ -517,6 +518,14 @@ def room_temperature_evidence(
     else:
         ids = selected_ids or ()
         source = "room_selected_mean" if selected_ids is not None else "not_configured"
+    if excluded_entities or excluded_device_id:
+        # A watchdog must measure the room independently of the appliance.
+        # Filter before averaging so its local probe cannot skew the trend.
+        from homeassistant.helpers import entity_registry as er
+        registry = er.async_get(hass)
+        ids = tuple(entity for entity in ids if entity not in excluded_entities
+                    and (not excluded_device_id or
+                         getattr(registry.async_get(entity), "device_id", None) != excluded_device_id))
     if not ids:
         return None, {"status": "no_selected_room_temperature",
                       "entity_ids": [], "selected_count": 0}

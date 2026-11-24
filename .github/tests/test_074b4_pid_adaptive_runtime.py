@@ -221,10 +221,14 @@ class IntegrationTests(unittest.IsolatedAsyncioTestCase):
         runtime.native_report(mode="heat", target=runtime.state.attributes["max_temp"])
         self.assertFalse(runtime.sample()["output_verified"], "Foreign ON cannot be learnt as HEM output")
         runtime.record["power"][PRIMARY] = {"since": runtime.now-900, "min_on": 600., "max_on": 7200.}
+        self.assertFalse(runtime.sample()["output_verified"], "An acknowledged mode and target do not prove activity")
+        runtime.native_report(action="idle")
+        self.assertEqual(runtime.sample()["observed_output"], 0.)
+        runtime.native_report(action="heating")
         running = runtime.sample()
         self.assertTrue(running["output_verified"])
         self.assertEqual(running["observed_output"], 100.)
-        self.assertIsNone(running["physical_activity"], "HVAC mode does not prove physical power")
+        self.assertEqual(running["physical_activity"], "on")
         self.assertEqual(before["context"], running["context"], "OFF/ON does not redefine the plant")
         runtime.state.attributes["temperature"] = 20.
         self.assertFalse(runtime.sample()["output_verified"])
@@ -232,6 +236,40 @@ class IntegrationTests(unittest.IsolatedAsyncioTestCase):
         runtime.record["pending"] = {"phase": "commanded"}
         self.assertFalse(runtime.sample()["safe"])
         self.assertIn("pending_command", runtime.sample()["constraints"])
+
+    def test_activity_requires_consistent_feedback_for_each_actuator(self):
+        activity = importlib.import_module(PACKAGE + ".pid_diagnostics").calibration_activity
+        for domain, state, mode, attrs, expected in (
+                ("switch", "on", "heat", {}, None),
+                ("humidifier", "on", "dry", {"action": "drying"}, "on"),
+                ("humidifier", "on", "humidify", {"action": "drying"}, None),
+                ("fan", "on", "fan_only", {"percentage": 100}, None),
+                ("fan", "on", "fan_only", {"rpm": 705}, "on"),
+                ("climate", "heat", "heat", {"actual_position": 30}, "on"),
+                ("climate", "heat", "heat", {"actual_position": 0}, "off"),
+                ("climate", "off", "heat", {"actual_position": 30, "hvac_action": "idle"}, None),
+                ("climate", "heat", "heat", {"hvac_action": "heating", "restored": True}, None)):
+            with self.subTest(domain=domain, mode=mode, attrs=attrs):
+                self.assertEqual(activity(domain, N(state=state, attributes=attrs), mode), expected)
+
+    async def test_completed_results_survive_pause_and_mode_round_trip_in_store(self):
+        runtime = Runtime(method="adaptive_suggest")
+        heat = runtime.sample()
+        await runtime._pid_adaptive_observe_sample(SPEC, runtime.cfg, heat)
+        observer = runtime._pid_adaptive_observers[SPEC.identifier]
+        completed = {"at": runtime.now, "status": "tracking_well"}
+        observer.windows.append(completed)
+        runtime._interrupt_pid_learning(SPEC, "controller_paused")
+        self.assertEqual(list(observer.points), [])
+        for mode in ("cool", "heat"):
+            runtime.manager.entry.options[model.SETTINGS][SPEC.identifier]["requested_mode"] = mode
+            runtime.now += 5
+            sample = runtime.sample()
+            self.assertEqual(json.loads(sample["context"])["operating_mode"], mode)
+            await runtime._pid_adaptive_observe_sample(SPEC, runtime.cfg, sample)
+        persisted = runtime._store.payload["records"][SPEC.identifier]
+        self.assertEqual(persisted["pid_adaptive"]["context"], heat["context"])
+        self.assertEqual(persisted["pid_adaptive"]["ledger"]["windows"], [completed])
 
     async def test_reported_stale_restored_output_explains_live_hold(self):
         runtime = Runtime()
@@ -370,6 +408,11 @@ class IntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(restored.windows, [window])
         self.assertLessEqual(len(restored.points), 1, "Upgrade must not invent raw observations")
 
+        # A completed assessment recorded after the last periodic save must
+        # survive a trip through a different context and an automatic pause.
+        newer = {**window, "at": runtime.now}
+        restored.windows.append(newer)
+        runtime._interrupt_pid_learning(SPEC, "window_open_pause")
         await runtime.async_update(SPEC, {"quiet_hours": True})
         opted_in = runtime.sample()
         self.assertNotEqual(opted_in["context"], old_context)
@@ -379,7 +422,7 @@ class IntegrationTests(unittest.IsolatedAsyncioTestCase):
         opted_out = runtime.sample()
         self.assertEqual(opted_out["context"], old_context)
         await runtime._pid_adaptive_observe_sample(SPEC, runtime.cfg, opted_out)
-        self.assertEqual(runtime._pid_adaptive_observers[SPEC.identifier].windows, [window])
+        self.assertEqual(runtime._pid_adaptive_observers[SPEC.identifier].windows, [window, newer])
         self.assertEqual(runtime.hardware_calls, [])
 
     async def test_native_trim_uses_reported_target_without_clipping_foreign_targets(self):

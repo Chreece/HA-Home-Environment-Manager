@@ -491,6 +491,8 @@ class AdaptiveObserver:
             self.interrupt("other_controller_active" if output is not None and ambiguous
                            else "output_unverified" if ambiguous else "insufficient_evidence")
             self._causal_hold = ambiguous
+        if ambiguous:
+            return False
         event_at = _number(sample.get("output_at"), at)
         event_at = min(at, max(self._last_observed if self._last_observed is not None else at, event_at))
         if not self.events or self.events[-1][1] != output:
