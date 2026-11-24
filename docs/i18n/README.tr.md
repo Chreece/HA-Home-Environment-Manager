@@ -33,7 +33,7 @@
 
 **Sen sorumlu kal.** Her odanın kendi ayarları vardır. Her desteklenen cihazın kendi kontrolörü, çalışma modları, hedefleri ve güvenlik sınırları vardır. HEM bir cihaz seçmenin, bu cihazı kullanma izni verdiğini asla varsaymaz.
 
-[Özellikleri keşfedin](#what-can-hem-do) · [Bağlantıyı görün](#see-hem-in-action) · [HEM kur](#installation) · [Evinizi hazırlayın .](#getting-started) · [Detaylı rehber](../../docs/advanced-configuration.md)
+[Özellikleri keşfedin](#what-can-hem-do) · [Bağlantıyı görün](#see-hem-in-action) · [HEM kur](#installation) · [Evinizi hazırlayın .](#getting-started) · [Detaylı rehber](../../docs/advanced-configuration.md) · [Tüm ayarlar (İngilizce)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Ne yapabilir? HEM - Evet.
@@ -169,7 +169,7 @@ Bu İngilizce resimlerde örnek odalar ve ölçümler kullanılarak, belirli bir
 Havalandırma tavsiyesi, hava koşulları ve her izlenen odanın durumunu tek bir kartla alın.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM 5 odada havalandırma tavsiyesi ve çevresel değerlendirmeler ile birlikte ev ekran tablosu" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM 5 odada havalandırma tavsiyesi ve çevresel değerlendirmeler ile birlikte ev ekran tablosu" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Havalandırma tavsiyesi, hava koşulları ve her izlenen odanın durumunu tek bi
 Her karar için hava kalitesini, kalıp göstergesini, varlığını, pencere durumunu, iklim kontrollerini ve açıklamalarını kontrol edin.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Okuyucular ve bağımsız cihaz denetleyicileri olan genişletilmiş banyo tablosu" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Okuyucular ve bağımsız cihaz denetleyicileri olan genişletilmiş banyo tablosu" width="760">
 </p>
 
 <a id="home-settings"></a>

@@ -33,7 +33,7 @@ De exemplu, HEM poate reduce încălzirea în timp ce toată lumea este plecată
 
 **Rămâi la conducere.** Fiecare cameră are propriile setări. Fiecare dispozitiv suportat are propriul controler, moduri de funcționare, ținte și limite de siguranță. HEM nu presupune niciodată că alegerea unui dispozitiv îi dă permisiunea de a opera dispozitivul.
 
-[Explorează caracteristicile](#what-can-hem-do) · [Vezi interfaţa](#see-hem-in-action) · [Instalarea HEM](#installation) · [Pune-ţi casa.](#getting-started) · [Ghid detaliat](../../docs/advanced-configuration.md)
+[Explorează caracteristicile](#what-can-hem-do) · [Vezi interfaţa](#see-hem-in-action) · [Instalarea HEM](#installation) · [Pune-ţi casa.](#getting-started) · [Ghid detaliat](../../docs/advanced-configuration.md) · [Toate setările (în engleză)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Ce poate HEM - Da, nu.
@@ -169,7 +169,7 @@ Aceste ilustrații în limba engleză folosesc camere de probă și măsurători
 Obțineți sfaturi de ventilație, condiții meteorologice și starea fiecărei camere monitorizate într-o singură carte.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM tabla de bord de la domiciliu cu sfaturi de ventilație și citiri de mediu în cinci camere" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM tabla de bord de la domiciliu cu sfaturi de ventilație și citiri de mediu în cinci camere" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Obțineți sfaturi de ventilație, condiții meteorologice și starea fiecărei 
 Inspectă calitatea aerului, indicația mucegaiului, prezența, starea ferestrei, controlatorii climatici și explicațiile pentru fiecare decizie.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Tabla de bord extinsă pentru baie cu citiri și controale independente ale dispozitivelor" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Tabla de bord extinsă pentru baie cu citiri și controale independente ale dispozitivelor" width="760">
 </p>
 
 <a id="home-settings"></a>

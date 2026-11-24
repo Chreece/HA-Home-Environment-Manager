@@ -5345,9 +5345,9 @@
       (showFaces?'<span class="hem-room-faces" role="img" aria-label="'+escape(conditions.label)+
         '" title="'+escape(conditions.label)+'">'+faceArt+'</span>':'')+
       '<span class="hem-room-alerts87" aria-label="'+escape(labels.attention)+'">'+
-      alerts.join('')+'</span></span>'+
+      alerts.join('')+'</span>'+
       '<span class="hem-room-active87" aria-label="'+escape(active.length+' '+labels.active)+'">'+
-      activeIcons+extra+'</span></span>'+
+      activeIcons+extra+'</span></span></span>'+
       '<span class="hem-room-overview080">'+
       this._measurementBadge105(room,'temperature',
         'hem-room-reading87 hem-room-metric107 hem-activity-'+activity.temp,
@@ -14963,10 +14963,10 @@ HomeEnvironmentManagerCard.prototype._styles=function(){
       display:flex;align-items:center;justify-content:flex-start;
       flex:none;flex-wrap:wrap;gap:2px;width:max-content;max-width:50%;min-width:0;
     }
-    .hem-room-tabline080>.hem-room-active87 {
-      align-self:center;justify-content:flex-end;flex-wrap:wrap;max-width:25%;margin-inline-start:auto;
+    .hem-room-tab080>.hem-room-active87 {
+      align-self:center;justify-content:flex-end;flex-wrap:wrap;max-width:32%;
     }
-    .hem-room-tab080>.hem-room-alerts87:empty {display:none}
+    .hem-room-tab080>.hem-room-alerts87:empty,.hem-room-tab080>.hem-room-active87:empty {display:none}
     .hem-room-glance87 .hem-room-tabline080 .hem-hint87:nth-child(n) {
       display:inline-flex;flex:0 0 24px;width:24px;height:28px;
     }

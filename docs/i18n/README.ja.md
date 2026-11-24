@@ -33,7 +33,7 @@
 
 **お前が指揮を続ける** 各部屋には独自の設定があり,各サポートされた機器には独自のコントローラー,操作モード,ターゲット,安全制限があります. HEM デバイスを選択することで,そのデバイスを操作する許可を与えると仮定しない.
 
-[特徴を探求する](#what-can-hem-do) · [インターフェースを見る](#see-hem-in-action) · [HEMを設置する](#installation) · [家を作れ](#getting-started) · [詳細なガイド](../../docs/advanced-configuration.md)
+[特徴を探求する](#what-can-hem-do) · [インターフェースを見る](#see-hem-in-action) · [HEMを設置する](#installation) · [家を作れ](#getting-started) · [詳細なガイド](../../docs/advanced-configuration.md) · [全設定一覧（英語）](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## 何ができるのか HEM やってる?
@@ -169,7 +169,7 @@ HEM また,デバイス特有の保護と診断を含む.
 換気,天気条件,そして監視された部屋の状態を 一枚のカードで確認してください.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM 5つの部屋で通風のアドバイスと環境の測定を備えたホームダッシュボード" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM 5つの部屋で通風のアドバイスと環境の測定を備えたホームダッシュボード" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ HEM また,デバイス特有の保護と診断を含む.
 空気の質,模具の表示,存在,窓の状態,気候制御器と各決定の説明をチェックする.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="読み出しと独立した装置制御器を持つ拡張式トイレのダッシュボード" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="読み出しと独立した装置制御器を持つ拡張式トイレのダッシュボード" width="760">
 </p>
 
 <a id="home-settings"></a>

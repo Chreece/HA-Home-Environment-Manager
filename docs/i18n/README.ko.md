@@ -33,7 +33,7 @@
 
 **넌 책임자야.** 각 방은 각자의 설정을 가지고 있습니다. 지원되는 기기마다 자신의 컨트롤러, 운영 모드, 목표 및 안전 제한이 있습니다. HEM 기기를 선택하면 그 기기를 조작할 수 있는 권한을 부여한다고 가정하지 않습니다.
 
-[그 특징을 알아보세요](#what-can-hem-do) · [인터페이스 참조](#see-hem-in-action) · [HEM 설치](#installation) · [집을 꾸려라](#getting-started) · [상세한 안내서](../../docs/advanced-configuration.md)
+[그 특징을 알아보세요](#what-can-hem-do) · [인터페이스 참조](#see-hem-in-action) · [HEM 설치](#installation) · [집을 꾸려라](#getting-started) · [상세한 안내서](../../docs/advanced-configuration.md) · [전체 설정 목록(영어)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## 어떻게 할 수 있을까요? HEM - 그래요?
@@ -169,7 +169,7 @@ HEM 또한 장치별 보호 및 진단도 포함합니다.
 환기, 기상 조건 및 감시된 모든 방의 상태를 한 카드로 확인하세요.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM 5개의 방에 걸쳐 환기 및 환경적 지표가 있는 홈 다시보드" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM 5개의 방에 걸쳐 환기 및 환경적 지표가 있는 홈 다시보드" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ HEM 또한 장치별 보호 및 진단도 포함합니다.
 공기 품질, 곰팡이 표시, 존재, 창 상태, 기후 조절기 및 각 결정에 대한 설명 등을 검사합니다.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="독서와 독립적인 장치 컨트롤러를 갖춘 확장된 욕실 대시보드" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="독서와 독립적인 장치 컨트롤러를 갖춘 확장된 욕실 대시보드" width="760">
 </p>
 
 <a id="home-settings"></a>

@@ -33,7 +33,7 @@
 
 **-بقي في السلطة** كل غرفة لديها إعداداتها الخاصة. كل جهاز معتمد لديه جهاز تحكم خاص به، وأساليب التشغيل، والأهداف، والحدود الأمنية. HEM لا يفترض أبداً أن اختيار جهاز يمنحه الإذن بتشغيل هذا الجهاز.
 
-[استكشاف الميزات](#what-can-hem-do) · [انظر واجهة](#see-hem-in-action) · [قم بتثبيتها](#installation) · [إعداد منزلك](#getting-started) · [دليل مفصل](../../docs/advanced-configuration.md)
+[استكشاف الميزات](#what-can-hem-do) · [انظر واجهة](#see-hem-in-action) · [قم بتثبيتها](#installation) · [إعداد منزلك](#getting-started) · [دليل مفصل](../../docs/advanced-configuration.md) · [جميع الإعدادات (بالإنجليزية)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## ما الذي يمكن HEM هل فعلت؟
@@ -169,7 +169,7 @@ HEM كما يتضمن الحماية والتشخيصات الخاصة بالج�
 احصل على نصيحة التهوية والظروف الجوية وحالة كل غرفة مراقبة في بطاقة واحدة.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM لوحة التحكم المنزلية مع نصائح التهوية وقراءات البيئة في خمس غرف" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM لوحة التحكم المنزلية مع نصائح التهوية وقراءات البيئة في خمس غرف" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ HEM كما يتضمن الحماية والتشخيصات الخاصة بالج�
 فحص نوعية الهواء، وإشارة العفن، الوجود، وحالة النافذة، ومراقبة المناخ وتفسيرات لكل قرار.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="لوحة التحكم الموسعة في الحمام مع قراءات ومراقبين مستقلين للأجهزة" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="لوحة التحكم الموسعة في الحمام مع قراءات ومراقبين مستقلين للأجهزة" width="760">
 </p>
 
 <a id="home-settings"></a>

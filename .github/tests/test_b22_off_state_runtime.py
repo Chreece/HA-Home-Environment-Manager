@@ -45,7 +45,7 @@ hass.states.async_all=lambda domain:(
     [NS(entity_id="climate.other",state="cool",attributes={"hvac_modes":["off","cool","dry"]})]
     if env.external and domain=="climate" else [])
 manager=NS(hass=hass,settings={"weather_entities":["weather.home"]},entry=NS(entry_id="test"))
-discovery.weather=lambda *_: NS(condition="clear-night",temperature_c=3.)
+discovery.weather=lambda *_: NS(condition="clear-night", temperature_c=env.outside_temp, humidity=env.outside_rh)
 cap=NS(primary="climate.output",domain="climate",modes=("off","cool"))
 model.specs=lambda _: (spec,)
 model.capabilities=lambda *_:cap
@@ -113,10 +113,13 @@ async def observe(at,value,effect):
     return await watchdog.watchdog_tick(runtime,spec,cap,state)
 
 async def scenario(effect,domain,points, *,external=False, available=True,
-                   permission=True,sensor_device="another-device"):
+                   permission=True,sensor_device="another-device", observed=False):
     env.time=100.;env.external=external;env.available=available
     env.permission=permission;env.sensor_device=sensor_device
     env.windows=None
+    env.temp = 21.
+    env.outside_temp = 3. if effect == "heat" else 30.
+    env.outside_rh = 10. if effect == "humidify" else 85.
     cap.domain=domain
     cap.modes=("off",effect if effect!="humidify" else "auto")
     cap.humidifying=effect=="humidify"
@@ -134,6 +137,10 @@ async def scenario(effect,domain,points, *,external=False, available=True,
                         "baseline":{},"off_at":{},"sources":list(spec.source_entities)}
     runtime._thermal_off_sessions={}
     commands.clear();alerts.clear();saved.clear()
+    if observed:
+        del records["generic"]["thermal_off_watch"]
+        await observe(100., points[0][1], effect)
+        ledger = records["generic"].get("thermal_off_watch")
     for at,value in points:
         await observe(at,value,effect)
     return ledger
@@ -173,6 +180,33 @@ async def main():
         await observe(at,value,"dry")
     assert len(commands)==2 and [a[0] for a in alerts]==["suspected","exhausted"]
     assert saved and max(a for a,_ in saved)<=2
+    for effect, domain, points in [("cool", "climate", cool), ("dry", "humidifier", rh_down),
+                                   ("humidify", "humidifier", rh_up), ("cool", "number", cool)]:
+        ledger = await scenario(effect, domain, points, observed=True)
+        assert ledger["origin"] == "observed_off" and len(commands) == 1
+        assert watchdog._guard(runtime, spec, cap, state, ledger)
+        if effect == "cool":
+            env.temp = 23.
+        else:
+            env.rh = 50.
+        assert not watchdog._guard(runtime, spec, cap, state, ledger), "Recheck fresh measurements at dispatch"
+        for offset, value in [(0, points[0][1]), *points]:
+            await observe(86600. + offset, value, effect)
+        assert ledger["attempts"] == 2 and len(commands) == 2, "Long-idle budget is shared"
+
+    for effect, domain, points in [("cool", "climate", cool), ("dry", "humidifier", rh_down),
+                                   ("humidify", "humidifier", rh_up)]:
+        await scenario(effect, domain, points[:1], observed=True)
+        env.outside_temp = 5. if effect != "humidify" else 32.
+        env.outside_rh = 30. if effect == "dry" else 80.
+        for at, value in points:
+            await observe(at, value, effect)
+        assert not commands and not alerts, "Outdoor air can explain this change"
+    await scenario("cool", "climate", cool[:1], observed=True)
+    records["generic"].clear()
+    cap.modes = ("off", "heat", "cool", "dry", "auto")
+    await observe(6000., 19., "cool")
+    assert not records["generic"].get("thermal_off_watch"), "Never guess an idle heat pump's direction"
     print("B22_REAL_RUNTIME_COOL_DRY_HUMIDIFY_OFF_ONLY_CONFIDENCE_AND_BUDGET=PASS")
 
 asyncio.run(main())

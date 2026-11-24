@@ -33,7 +33,7 @@ Ví dụ: HEM có thể làm giảm nhiệt trong khi mọi người đi xa, chu
 
 **Cứ giữ trách nhiệm.** Mỗi phòng có cài đặt riêng của mình. Mỗi thiết bị được hỗ trợ có bộ điều khiển riêng, chế độ hoạt động, mục tiêu và giới hạn an toàn của riêng mình. HEM không bao giờ cho rằng việc chọn một thiết bị cho phép nó vận hành thiết bị đó.
 
-[Khám phá các tính năng](#what-can-hem-do) · [Xem giao diện](#see-hem-in-action) · [Lắp đặt HEM](#installation) · [Đặt nhà của bạn](#getting-started) · [Hướng dẫn chi tiết](../../docs/advanced-configuration.md)
+[Khám phá các tính năng](#what-can-hem-do) · [Xem giao diện](#see-hem-in-action) · [Lắp đặt HEM](#installation) · [Đặt nhà của bạn](#getting-started) · [Hướng dẫn chi tiết](../../docs/advanced-configuration.md) · [Tất cả cài đặt (tiếng Anh)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Điều gì có thể HEM làm được không?
@@ -169,7 +169,7 @@ Những hình minh họa bằng tiếng Anh này sử dụng các phòng mẫu v
 Nhận lời khuyên về thông gió, điều kiện thời tiết và tình trạng của mỗi phòng được giám sát trong một thẻ.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM bảng điều khiển nhà với tư vấn thông gió và đọc môi trường trong năm phòng" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM bảng điều khiển nhà với tư vấn thông gió và đọc môi trường trong năm phòng" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Nhận lời khuyên về thông gió, điều kiện thời tiết và tình tr
 Kiểm tra chất lượng không khí, chỉ định nấm, hiện diện, trạng thái cửa sổ, điều khiển khí hậu và giải thích cho mỗi quyết định.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Bảng điều khiển phòng tắm mở rộng với phép đọc và bộ điều khiển thiết bị độc lập" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Bảng điều khiển phòng tắm mở rộng với phép đọc và bộ điều khiển thiết bị độc lập" width="760">
 </p>
 
 <a id="home-settings"></a>

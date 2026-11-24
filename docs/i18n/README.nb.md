@@ -33,7 +33,7 @@ For eksempel: HEM kan redusere oppvarming mens alle er borte, forberede utvalgte
 
 **Du holder ansvaret.** Hvert rom har sine egne innstillinger. Hver støttet apparat har sin egen kontroller, driftsmodus, mål og sikkerhetsgrenser. HEM aldri antager at valg av en enhet gir den tillatelse til å bruke den enheten.
 
-[Utforsk funksjonene](#what-can-hem-do) · [Se grensesnittet](#see-hem-in-action) · [Install HEM](#installation) · [Sett opp ditt hjem](#getting-started) · [Detaljerte veiledning](../../docs/advanced-configuration.md)
+[Utforsk funksjonene](#what-can-hem-do) · [Se grensesnittet](#see-hem-in-action) · [Install HEM](#installation) · [Sett opp ditt hjem](#getting-started) · [Detaljerte veiledning](../../docs/advanced-configuration.md) · [Alle innstillinger (på engelsk)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Hva kan HEM gjør du?
@@ -169,7 +169,7 @@ Disse engelskspråklige illustrasjonene bruker prøverommer og målinger. De vis
 Få råd om ventilasjon, værforhold og status for hvert overvåket rom i et enkelt kort.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM Home dashboard med ventilasjonsrådgivning og miljølesninger i fem rom" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM Home dashboard med ventilasjonsrådgivning og miljølesninger i fem rom" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Få råd om ventilasjon, værforhold og status for hvert overvåket rom i et enk
 Kontroller luftkvaliteten, støpeindikasjonen, tilstedeværelsen, vinduets tilstand, klimakontroller og forklaringer for hver beslutning.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Utvidret badehandler dashboard med lesninger og uavhengige enhetskontroller" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Utvidret badehandler dashboard med lesninger og uavhengige enhetskontroller" width="760">
 </p>
 
 <a id="home-settings"></a>

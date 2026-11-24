@@ -33,7 +33,7 @@ Till exempel: HEM kan minska uppvärmningen medan alla är borta, förbereda utv
 
 **Du ska fortsätta att styra.** Varje rum har sina egna inställningar. Varje stödjande apparat har sin egen kontrollör, driftläge, mål och säkerhetsgränser. HEM aldrig antar att det när man väljer en enhet får tillstånd att använda den.
 
-[Utforska egenskaperna](#what-can-hem-do) • Förberedelser [Se gränssnittet](#see-hem-in-action) • Förberedelser [Installa HEM](#installation) • Förberedelser [Gör ditt hem](#getting-started) • Förberedelser [Detaljerad vägledning](../../docs/advanced-configuration.md)
+[Utforska egenskaperna](#what-can-hem-do) • Förberedelser [Se gränssnittet](#see-hem-in-action) • Förberedelser [Installa HEM](#installation) • Förberedelser [Gör ditt hem](#getting-started) • Förberedelser [Detaljerad vägledning](../../docs/advanced-configuration.md) · [Alla inställningar (på engelska)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Vad kan HEM - Är det?
@@ -169,7 +169,7 @@ I dessa engelska illustrationer används provrum och mätningar som visar gräns
 Få råd om ventilation, väderförhållanden och status för varje övervakad rum i ett enda kort.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM Hemsidan med ventilationsrådgivning och miljöläsningar i fem rum" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM Hemsidan med ventilationsrådgivning och miljöläsningar i fem rum" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Få råd om ventilation, väderförhållanden och status för varje övervakad r
 Kontrollera luftkvaliteten, mögelindikator, närvaro, fönstertillstånd, klimatkontroll och förklaringar för varje beslut.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Utökad badrumskontroller med mätningar och oberoende enhetskontroll" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Utökad badrumskontroller med mätningar och oberoende enhetskontroll" width="760">
 </p>
 
 <a id="home-settings"></a>

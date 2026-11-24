@@ -33,7 +33,7 @@ For eksempel: HEM kan reducere opvarmningen, mens alle er væk, forberede udvalg
 
 **Du holder styret.** Hvert værelse har sine egne indstillinger, og hvert støttet apparat har sin egen kontroller, driftstilstande, mål og sikkerhedsgrænser. HEM aldrig antager, at det ved at vælge en enhed giver den tilladelse til at betjene den enhed.
 
-[Udforsk de særlige træk](#what-can-hem-do) · [Se grænsefladen](#see-hem-in-action) · [Installer HEM](#installation) · [Få et hjem til dig.](#getting-started) · [Detaljeret vejledning](../../docs/advanced-configuration.md)
+[Udforsk de særlige træk](#what-can-hem-do) · [Se grænsefladen](#see-hem-in-action) · [Installer HEM](#installation) · [Få et hjem til dig.](#getting-started) · [Detaljeret vejledning](../../docs/advanced-configuration.md) · [Alle indstillinger (på engelsk)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Hvad kan HEM - Det gør du?
@@ -169,7 +169,7 @@ Disse engelsksprogede illustrationer bruger prøveværelser og målinger. De vis
 Få vejrledningsrådgivning, vejrforhold og status for hvert overvåget rum på et enkelt kort.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM Home dashboard med ventilationsrådgivning og miljølæsninger i fem værelser" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM Home dashboard med ventilationsrådgivning og miljølæsninger i fem værelser" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Få vejrledningsrådgivning, vejrforhold og status for hvert overvåget rum på 
 Kontroller luftkvaliteten, støbens indikation, tilstedeværelse, vinduestilstand, klimakontroller og forklaringer for hver beslutning.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Udvidet badeværelset dashboard med aflæsninger og uafhængige enhedskontrollere" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Udvidet badeværelset dashboard med aflæsninger og uafhængige enhedskontrollere" width="760">
 </p>
 
 <a id="home-settings"></a>

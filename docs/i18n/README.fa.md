@@ -33,7 +33,7 @@
 
 **تو مسئول بموني** هر اتاق تنظیمات خودش را دارد. هر دستگاه پشتیبانی شده کنترل کننده، حالت کار، اهداف و محدودیت های ایمنی خودش را دارد. HEM هرگز تصور نمی کند که انتخاب یک دستگاه به آن اجازه استفاده از آن دستگاه را می دهد.
 
-[ویژگی ها را کشف کنید](#what-can-hem-do) · [رابط رو ببين](#see-hem-in-action) · [نصب HEM](#installation) · [خونه ات رو درست کن](#getting-started) · [راهنمای مفصل](../../docs/advanced-configuration.md)
+[ویژگی ها را کشف کنید](#what-can-hem-do) · [رابط رو ببين](#see-hem-in-action) · [نصب HEM](#installation) · [خونه ات رو درست کن](#getting-started) · [راهنمای مفصل](../../docs/advanced-configuration.md) · [همه تنظیمات (به انگلیسی)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## چه چيزي ميتونه HEM میخوای؟
@@ -169,7 +169,7 @@ HEM همچنین شامل محافظت و تشخیص خاص دستگاه می ش
 به عنوان یک کارت، توصیه های تهویه، شرایط آب و هوایی و وضعیت هر اتاق تحت نظارت را دریافت کنید.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM داشبورد خانگی با مشاوره تهویه و خواندن محیط زیست در پنج اتاق" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM داشبورد خانگی با مشاوره تهویه و خواندن محیط زیست در پنج اتاق" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ HEM همچنین شامل محافظت و تشخیص خاص دستگاه می ش
 کیفیت هوا، نشان دادن قالب، حضور، وضعیت پنجره، کنترل کننده های آب و هوا و توضیحات برای هر تصمیم را بررسی کنید.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="داشبورد گسترده حمام با قراءات و کنترل کننده های مستقل دستگاه" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="داشبورد گسترده حمام با قراءات و کنترل کننده های مستقل دستگاه" width="760">
 </p>
 
 <a id="home-settings"></a>

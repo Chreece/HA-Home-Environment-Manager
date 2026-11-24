@@ -33,7 +33,7 @@
 
 **תישארי אחראי.** לכל חדר יש הגדרות משלה. לכל מכשיר תומך יש שליטה משלו, דרכים הפעלה, מטרות ומגבלות בטיחות. HEM אף פעם לא מניחה כי בחירת מכשיר נותן לו אישור לפעול במכשיר.
 
-[חקר את המאפיינים](#what-can-hem-do) · [תראו את האינטרס](#see-hem-in-action) · [תקין HEM](#installation) · [תארגן את הבית שלך](#getting-started) · [מדריך מפורט](../../docs/advanced-configuration.md)
+[חקר את המאפיינים](#what-can-hem-do) · [תראו את האינטרס](#see-hem-in-action) · [תקין HEM](#installation) · [תארגן את הבית שלך](#getting-started) · [מדריך מפורט](../../docs/advanced-configuration.md) · [כל ההגדרות (באנגלית)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## מה יכול HEM מה?
@@ -169,7 +169,7 @@ HEM כולל גם הגנות ודיאגנסטיות ספציפיות למכשי�
 קבל עצות אווירה, תנאי מזג אוויר ותיקום כל חדר מעקב בגיליון אחד.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM לוח המקרה של בית עם ייעוץ אווירה וקריאות סביבתיות בכל חמשת החדרים" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM לוח המקרה של בית עם ייעוץ אווירה וקריאות סביבתיות בכל חמשת החדרים" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ HEM כולל גם הגנות ודיאגנסטיות ספציפיות למכשי�
 בדוק את איכות האוויר, סימן עפר, נוכחות, מצב החלונות, בקרני אקלים והסברים לכל החלטה.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="לוח המקרה המורחב של חדר האמבטיה עם קריאות ומוגדים של מכשיר עצמאי" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="לוח המקרה המורחב של חדר האמבטיה עם קריאות ומוגדים של מכשיר עצמאי" width="760">
 </p>
 
 <a id="home-settings"></a>

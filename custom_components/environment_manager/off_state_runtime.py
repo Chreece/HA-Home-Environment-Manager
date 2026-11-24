@@ -17,7 +17,7 @@ from .off_state_watchdog import (
     MIN_RECOVERY_INTERVAL_SECONDS, MESSAGES, ThermalWatch, recovery_due,
 )
 from .room_sources import room_temperature_evidence
-from .off_state_profiles import EFFECTS, notice, supported
+from .off_state_profiles import EFFECTS, absolute_humidity_gm3, dedicated_effect, notice, supported
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -124,6 +124,68 @@ def _independent_room_measurement(runtime: Any, spec: Any, primary: str, metric:
     return sum(samples) / len(samples), ids
 
 
+def _effect_feedback(runtime: Any, spec: Any, primary: str, metric: str):
+    value, sources = _independent_room_measurement(runtime, spec, primary, metric)
+    if metric == "temperature" or value is None:
+        return value, sources, None
+    temperature, thermometers = _independent_room_temperature(runtime, spec, primary)
+    if temperature is None or not thermometers:
+        return None, (), None
+    identities = (tuple("humidity:" + entity for entity in sources)
+                  + tuple("temperature:" + entity for entity in thermometers))
+    return value, identities, temperature
+
+
+def _surroundings_clear(runtime: Any, spec: Any, direction: str, value: float,
+                        room_temp: float | None) -> bool:
+    """Check whether outdoor or neighboring air could produce the same trend."""
+    from .discovery import weather
+    from .off_state_heat_sources import _peer_areas
+    from .room_sources import selected, numeric
+
+    settings = runtime.manager.settings
+    moisture = direction in ("dry", "humidify")
+    room = absolute_humidity_gm3(room_temp, value) if moisture else value
+    if room is None:
+        return False
+    def distinct(temperature, rh):
+        other = absolute_humidity_gm3(temperature, rh) if moisture else temperature
+        if type(other) not in (float, int) or not isfinite(other):
+            return False
+        # Permit attribution only when mixing with this source opposes the trend.
+        margin = 0.45 if moisture else 0.5
+        return room - other > margin if direction == "humidify" else other - room > margin
+
+    weather_ids = settings.get("weather_entities") or ()
+    if not weather_ids:
+        return False
+    for entity in weather_ids:
+        outside = weather(runtime.hass, entity, 180)
+        if not distinct(outside.temperature_c, getattr(outside, "humidity", None)):
+            return False
+    neighbors, incomplete = _peer_areas(settings, spec.area_id)
+    if incomplete:
+        return False
+    for area in neighbors:
+        room_cfg = (settings.get("climate_rooms") or {}).get(area, {})
+        pinned = room_cfg.get("temperature_entity") if selected(settings, area, "temperature") is None else None
+        temperature, evidence = room_temperature_evidence(runtime.hass, settings, area, pinned=pinned)
+        if temperature is None or evidence.get("status") != "ready" or evidence.get("partial"):
+            return False
+        rh = None
+        if moisture:
+            ids = selected(settings, area, "humidity")
+            if ids is None and room_cfg.get("humidity_entity"):
+                ids = (room_cfg["humidity_entity"],)
+            readings = [numeric(runtime.hass, entity, area, "humidity", 10) for entity in ids or ()]
+            if not readings or any(type(v) not in (int, float) or not 0 <= v <= 100 for v in readings):
+                return False
+            rh = sum(readings) / len(readings)
+        if not distinct(temperature, rh):
+            return False
+    return True
+
+
 def _competing_effect_clear(runtime: Any, spec: Any, primary: str,
                              effect: str) -> bool:
     """No known competing physical outputs and no known open room windows.
@@ -226,6 +288,7 @@ def _guard(runtime: Any, spec: Any, cap: Any, state: Any, watch: dict, *,
             or state.attributes.get("hvac_action") == "defrosting"
             or not model.sources_available(runtime.manager, spec)
             or not supported(cap, watch.get("direction", "heat"))
+            or watch.get("origin") == "observed_off" and dedicated_effect(cap) != watch.get("direction", "heat")
             or (cfg.get("requested_mode") not in (
                 None, "off", "auto", "heat_cool", watch.get("direction", "heat"))
                 and not (watch.get("direction") == "humidify"
@@ -258,6 +321,25 @@ def _guard(runtime: Any, spec: Any, cap: Any, state: Any, watch: dict, *,
                 or abs(target - warning.get("target", target+1)) > .05
                 or value - target < EFFECTS["heat"].excess
                 or value - warning.get("first", value) < EFFECTS["heat"].change):
+            return False
+    else:
+        direction = watch["direction"]
+        profile = EFFECTS[direction]
+        warning = record.get("thermal_off_warning") or {}
+        live, ids, temp = _effect_feedback(runtime, spec, cap.primary, profile.metric)
+        target = model.targets(runtime.manager, spec, cap, cfg, model.plan_for(runtime.manager, spec)).get(
+            direction if profile.metric == "temperature" else "humidity")
+        session = getattr(runtime, "_thermal_off_sessions", {}).get(spec.identifier)
+        if (live is None or type(target) not in (int, float) or not isfinite(target)
+                or warning.get("off_since") != watch["off_since"] or warning.get("direction") != direction
+                or not isinstance(session, ThermalWatch) or session.source_ids != ids
+                or session.sampled_target is None or abs(target - session.sampled_target) > .05
+                or not _surroundings_clear(runtime, spec, direction, live, temp)):
+            return False
+        if session.observe(now=now, temperature_c=live, target_c=target, source_ids=ids,
+                           off_since=watch.get("monitor_since", watch["off_since"]),
+                           other_heat_sources_clear=True, direction=direction,
+                           room_temperature_c=temp) != "suspected":
             return False
     if (getattr(runtime, "_native_settle_remaining", lambda _spec: None)(spec) != 0
             or runtime._gate(spec, cap, cfg, model.plan_for(runtime.manager, spec),
@@ -304,13 +386,15 @@ async def _notify(runtime: Any, spec: Any, kind: str, evidence: dict) -> None:
         runtime.hass, runtime.manager.settings.get("language", "auto"),
     )
     direction = evidence.get("direction", "heat")
-    if direction == "heat" and kind == "suspected" and evidence.get("origin") == "observed_off":
+    if kind == "suspected" and evidence.get("origin") == "observed_off":
         # A fresh baseline after startup is an observation, never a journaled
         # HEM shutdown. Use the localized fault title and the actual readings.
-        title = MESSAGES.get(language, MESSAGES["en"])["title"]
+        title, _ = notice(direction, language, kind, name=device_name, room=room_name,
+                          first=evidence["first"], current=evidence["current"], target=evidence["target"])
+        unit = evidence["unit"]
         message = (f"{device_name} · {room_name} · OFF\n"
-                   f"🌡 {evidence['first_c']:.1f} → {evidence['current_c']:.1f} °C\n"
-                   f"🎯 {evidence['target_c']:.1f} °C")
+                   f"{evidence['first']:.1f}{unit} → {evidence['current']:.1f}{unit}\n"
+                   f"🎯 {evidence['target']:.1f}{unit}")
     elif direction == "heat":
         words = MESSAGES.get(language, MESSAGES["en"])
         title, message = words["title"], words[kind].format(
@@ -351,10 +435,8 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
         sessions.pop(spec.identifier, None)
         await _clear_warning(runtime, record)
         cfg = model.settings(runtime.manager, spec)
-        # An already-OFF valve has no shutdown ACK in HEM's journal. Start
-        # a new observation only for a supervised, single-direction heater.
-        if (not _reported_off(cap, state) or not supported(cap, "heat")
-                or "heat" not in cap.modes or {"cool", "heat_cool", "dry", "humidify"}.intersection(cap.modes)
+        direction = dedicated_effect(cap)
+        if (direction is None or not _reported_off(cap, state)
                 or cfg.get("control_mode") not in ("automatic", "pid", "off")
                 or cfg.get("off_state_watchdog_mode", "monitor_recover") not in ("monitor_recover", "monitor_only")
                 or record.get("power", {}).get(cap.primary) or record.get("pending") or record.get("paused")
@@ -363,7 +445,7 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
         ledger = record["thermal_off_watch"] = {
             "origin": "observed_off", "entity": cap.primary, "off_since": now,
             "area": spec.area_id, "source_device_id": spec.source_device_id,
-            "direction": "heat", "attempts": 0, "last_attempt_at": None, "notified": False,
+            "direction": direction, "attempts": 0, "last_attempt_at": None, "notified": False,
         }
         await runtime._save()
         if record.get("thermal_off_watch") is not ledger:
@@ -374,6 +456,7 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
     if (type(off_since) not in (float, int) or not isfinite(off_since)
             or now < off_since
             or profile is None or not supported(cap, direction)
+            or ledger.get("origin") == "observed_off" and dedicated_effect(cap) != direction
             or not _reported_off(cap, state)
             or cap.primary != ledger.get("entity")
             or record.get("power", {}).get(cap.primary)
@@ -400,32 +483,15 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
     if now - since > MAX_WATCH_SECONDS:
         sessions.pop(spec.identifier, None)
         await _clear_warning(runtime, record)
-        if direction != "heat":
-            return False
-        # A long-idle heater can develop a fault days later. Start fresh
-        # temperature observations without renewing its native OFF budget.
+        # Long-idle equipment can develop a fault days later. Renew the
+        # observations without renewing its native OFF budget.
         since = ledger["monitor_since"] = now
         await runtime._save()
-    measured, ids = _independent_room_measurement(runtime, spec, cap.primary, profile.metric)
+    measured, watch_ids, room_temp = _effect_feedback(runtime, spec, cap.primary, profile.metric)
     if measured is None:
         sessions.pop(spec.identifier, None)
         await _clear_warning(runtime, record)
         return False
-    # Relative humidity changes with air temperature even when no moisture
-    # is added or removed. Require a separate, fresh, same-room temperature
-    # measurement to cross-check absolute humidity before blaming an output.
-    room_temp = None
-    watch_ids = ids
-    if profile.metric == "humidity":
-        room_temp, temp_ids = _independent_room_temperature(runtime, spec, cap.primary)
-        if room_temp is None or not temp_ids:
-            sessions.pop(spec.identifier, None)
-            await _clear_warning(runtime, record)
-            return False
-        # Bind the entire trend to BOTH source inventories. Switching any
-        # humidity or temperature sensor cannot manufacture a fault signature.
-        watch_ids = (tuple("humidity:" + name for name in ids)
-                     + tuple("temperature:" + name for name in temp_ids))
     target = model.targets(
         runtime.manager, spec, cap, cfg, model.plan_for(runtime.manager, spec)
     ).get(direction if profile.metric == "temperature" else "humidity")
@@ -442,6 +508,8 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
             watch_ids, since, effect=direction,
         )
     cleared = _competing_effect_clear(runtime, spec, cap.primary, direction)
+    if direction != "heat":
+        cleared = cleared and _surroundings_clear(runtime, spec, direction, measured, room_temp)
     attribution = None
     if direction == "heat":
         from .off_state_heat_sources import assess, external_heat_pending, signature

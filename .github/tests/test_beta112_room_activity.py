@@ -234,7 +234,7 @@ REPORT = """area=>{
      colour:colour(el.querySelector(':scope > ha-icon')),valueColour:colour(el.querySelector('.hem-room-metric-value107')),
      average:el.querySelector('.hem-avg-marker105 ha-icon')?colour(el.querySelector('.hem-avg-marker105 ha-icon')):null,
      title:el.title})),
-   active:[...root.querySelectorAll('.hem-room-active87 .hem-hint87')].map(el=>({
+   active:[...root.querySelectorAll('.hem-room-tab080 > .hem-room-active87:last-child .hem-hint87')].map(el=>({
      colour:colour(el.querySelector('ha-icon')),title:el.title,icon:el.querySelector('ha-icon').getAttribute('icon')}))};
 }"""
 

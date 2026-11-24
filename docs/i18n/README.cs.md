@@ -33,7 +33,7 @@ Například: HEM může snížit vytápění, zatímco všichni jsou pryč, při
 
 **Zůstaň na čele.** Každá místnost má své nastavení, každý podporovaný přístroj má svůj vlastní ovladač, provozní režimy, cíle a bezpečnostní limity. HEM nikdy nepředpokládá, že výběr zařízení mu dává povolení k provozu tohoto zařízení.
 
-[Prozkoumejte charakteristiky](#what-can-hem-do) · [Podívejte se na rozhraní](#see-hem-in-action) · [Nainstalovat HEM](#installation) · [Vytvořte si domov.](#getting-started) · [Detailní průvodce](../../docs/advanced-configuration.md)
+[Prozkoumejte charakteristiky](#what-can-hem-do) · [Podívejte se na rozhraní](#see-hem-in-action) · [Nainstalovat HEM](#installation) · [Vytvořte si domov.](#getting-started) · [Detailní průvodce](../../docs/advanced-configuration.md) · [Všechna nastavení (anglicky)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Co může HEM - Ano? - Ano.
@@ -169,7 +169,7 @@ V těchto anglicky řečených ilustracích se používají vzorové místnosti 
 Získejte poradenství o větrání, počasí a stavu každé monitorované místnosti v jedné karte.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM domácí palubní deska s poradenstvím ventilace a environmentálními hodnotami v pěti místnostech" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM domácí palubní deska s poradenstvím ventilace a environmentálními hodnotami v pěti místnostech" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Získejte poradenství o větrání, počasí a stavu každé monitorované mís
 Kontrolovat kvalitu ovzduší, označení formy, přítomnost, stav oken, klimatické regulátory a vysvětlení pro každé rozhodnutí.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Rozšířená palubní deska v koupelně se čtením a nezávislými ovládači zařízení" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Rozšířená palubní deska v koupelně se čtením a nezávislými ovládači zařízení" width="760">
 </p>
 
 <a id="home-settings"></a>

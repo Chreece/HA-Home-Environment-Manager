@@ -74,6 +74,12 @@ def supported(cap, effect: str) -> bool:
     return False
 
 
+def dedicated_effect(cap) -> str | None:
+    """An already-OFF appliance has no recorded mode. Only bind an unambiguous output."""
+    effects = [effect for effect in EFFECTS if supported(cap, effect)]
+    return effects[0] if len(effects) == 1 else None
+
+
 def shutdown_effect(cap, previous_state: str | None, hvac_action: str | None) -> str | None:
     """Qualify only an observed HEM-commanded ON→OFF in a known direction."""
     domain = getattr(cap, "domain", None)

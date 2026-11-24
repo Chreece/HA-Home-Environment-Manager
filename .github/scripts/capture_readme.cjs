@@ -65,17 +65,20 @@ function sampleHome() {
       data_availability:{status:area === 'living' ? 'ready' : 'partial'},
       readings, environment, windows, high_count:0};
   });
-  for (const [slug, name, mode, rh] of [
+  for (const [slug, name, mode, rh, area = 'bathroom', action = 'idle'] of [
     ['dehumidifier','Bathroom dehumidifier','dry',58.9], ['heater','Bathroom heater','heat',44.8],
+    ['guest_heater','Guest room heater','heat',47.9,'guest','heating'],
   ]) {
     const physical='climate.'+slug, managed='climate.hem_'+slug;
-    state(physical,'off',{friendly_name:name, hvac_action:'idle'});
-    const attrs={area_id:'bathroom', source_entity_ids:[physical], source_device_id:slug,
-      friendly_name:name+' controller', physical_primary_entity_id:physical, physical_source_state:'off',
-      control_mode:'automatic', hvac_modes:['off',mode], requested_hvac_mode:'off',
-      current_temperature:19.2, measurements:{temperature:19.2,humidity:rh},
-      controller_status:{status:'within_target_band'}};
-    state(managed,'off',attrs);
+    const running = action !== 'idle';
+    const nativeMode = running ? mode : 'off';
+    state(physical,nativeMode,{friendly_name:name, hvac_action:action});
+    const attrs={area_id:area, source_entity_ids:[physical], source_device_id:slug,
+      friendly_name:name+' controller', physical_primary_entity_id:physical, physical_source_state:nativeMode,
+      control_mode:'automatic', hvac_modes:['off',mode], requested_hvac_mode:nativeMode,
+      current_temperature:rooms.find(row => row[0] === area)[2], measurements:{humidity:rh},
+      controller_status:{status:running ? 'controlling' : 'within_target_band'}};
+    state(managed,nativeMode,attrs);
     entities[managed]={device_id:'hem_'+slug};
     entities[physical]={device_id:slug};
   }
@@ -140,6 +143,7 @@ async function main() {
     await headers.nth(4).waitFor();
     const frame=page.locator('main');
     assert.deepEqual(await headers.locator('.hem-room-name87').allTextContents(),rooms.map(r=>r[1]).sort());
+    await page.locator('[data-room-fold87="guest"] .hem-room-tab080 > .hem-room-active87:last-child .hem-activity-heat').waitFor();
     await frame.screenshot({path:path.join(output,'hem-dashboard-overview.png')});
     const bathroom=page.locator('[data-room-fold87="bathroom"]');
     await bathroom.locator('summary .hem-room-name87').first().click();

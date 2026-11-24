@@ -33,7 +33,7 @@ Na primjer, HEM može smanjiti grijanje dok svi su odsutni, pripremiti odabrane 
 
 **Ostani na čelu.** Svaka soba ima svoje postavke, svaki podržani uređaj ima svoj upravljač, način rada, ciljeve i sigurnosne granice. HEM ne pretpostavlja da odabir uređaja daje dozvolu za korištenje tog uređaja.
 
-[Iskoristite karakteristike](#what-can-hem-do) · [Pogledajte interfejs](#see-hem-in-action) · [Instalirajte HEM](#installation) · [Postavi svoj dom](#getting-started) · [Podrobni vodič](../../docs/advanced-configuration.md)
+[Iskoristite karakteristike](#what-can-hem-do) · [Pogledajte interfejs](#see-hem-in-action) · [Instalirajte HEM](#installation) · [Postavi svoj dom](#getting-started) · [Podrobni vodič](../../docs/advanced-configuration.md) · [Sve postavke (na engleskom)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Što može? HEM -Da, jesam.
@@ -169,7 +169,7 @@ U ovoj engleskoj ilustraciji koriste se uzorci prostorija i mjerenja, pokazuju i
 Dobijte savjete o ventilaciji, vremenskim uvjetima i stanju svake monitorirane sobe u jednoj kartici.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM kućna ploča s savjetima za ventilaciju i mjerama okoliša u pet soba" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM kućna ploča s savjetima za ventilaciju i mjerama okoliša u pet soba" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Dobijte savjete o ventilaciji, vremenskim uvjetima i stanju svake monitorirane s
 Provjerite kvalitetu zraka, oznaku pljuva, prisutnost, stanje prozora, klimatske kontrole i objašnjenja za svaku odluku.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Izgrađena upravljačka ploča za kupaonicu s čitanjima i samostalnim upravljačima uređaja" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Izgrađena upravljačka ploča za kupaonicu s čitanjima i samostalnim upravljačima uređaja" width="760">
 </p>
 
 <a id="home-settings"></a>

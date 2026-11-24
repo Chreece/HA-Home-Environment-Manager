@@ -33,7 +33,7 @@ Napríklad: HEM môže znížiť vykurovanie, kým sú všetci preč, pripraviť
 
 **Zostaň na čele.** Každá izba má svoje nastavenia, každý podporovaný prístroj má svoj vlastný ovládač, prevádzkové režimy, ciele a bezpečnostné limity. HEM nikdy nepredpokladá, že výber zariadenia mu dáva povolenie na prevádzku tohto zariadenia.
 
-[Prečítajte si jeho charakteristiky](#what-can-hem-do) · [Pozrite rozhranie](#see-hem-in-action) · [Vložte HEM](#installation) · [Ustanovte si domov](#getting-started) · [Podrobné vedenie](../../docs/advanced-configuration.md)
+[Prečítajte si jeho charakteristiky](#what-can-hem-do) · [Pozrite rozhranie](#see-hem-in-action) · [Vložte HEM](#installation) · [Ustanovte si domov](#getting-started) · [Podrobné vedenie](../../docs/advanced-configuration.md) · [Všetky nastavenia (v angličtine)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Čo môže HEM - Áno?
@@ -169,7 +169,7 @@ Tieto anglicky vysvetlené obrázky používajú vzorové miestnosti a merania, 
 Získajte poradenstvo o ventilácii, počasie a stav každej monitorovanej miestnosti v jednej karte.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM domáca prístrojová doska s poradenstvom o vetrane a environmentálnych odčítaniach v piatich miestnostiach" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM domáca prístrojová doska s poradenstvom o vetrane a environmentálnych odčítaniach v piatich miestnostiach" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Získajte poradenstvo o ventilácii, počasie a stav každej monitorovanej miest
 Kontrolovať kvalitu ovzdušia, indikáciu pleti, prítomnosť, stav okna, klimatické regulátory a vysvetlenie každého rozhodnutia.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Rozšírená prístrojová doska v kúpeľni s čitateľmi a nezávislými riadiacimi zariadeniami" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Rozšírená prístrojová doska v kúpeľni s čitateľmi a nezávislými riadiacimi zariadeniami" width="760">
 </p>
 
 <a id="home-settings"></a>

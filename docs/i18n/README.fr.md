@@ -29,7 +29,7 @@ HEM peut, par exemple, réduire le chauffage quand le logement est vide, prépar
 
 **Vous gardez la main.** Chaque pièce dispose de ses propres paramètres. Chaque appareil compatible possède ses modes, ses méthodes de régulation, ses consignes et ses limites de sécurité. Sélectionner un appareil n'autorise jamais, à lui seul, HEM à le commander.
 
-[Découvrir les fonctionnalités](#what-can-hem-do) · [Voir l'interface](#see-hem-in-action) · [Installer HEM](#installation) · [Premiers pas](#getting-started) · [Guide détaillé](../../docs/advanced-configuration.md)
+[Découvrir les fonctionnalités](#what-can-hem-do) · [Voir l'interface](#see-hem-in-action) · [Installer HEM](#installation) · [Premiers pas](#getting-started) · [Guide détaillé](../../docs/advanced-configuration.md) · [Tous les réglages (en anglais)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Que peut faire HEM ?
@@ -165,7 +165,7 @@ Ces illustrations, en anglais, utilisent des pièces et des mesures fictives. El
 Consultez les recommandations d'aération, les conditions météo et l'état de chaque pièce suivie depuis une seule carte.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="Tableau de bord HEM : conseils d'aération et relevés de cinq pièces" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="Tableau de bord HEM : conseils d'aération et relevés de cinq pièces" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -174,7 +174,7 @@ Consultez les recommandations d'aération, les conditions météo et l'état de 
 Examinez la qualité de l'air, le risque de moisissure, la présence, les fenêtres, les appareils climatiques et les raisons de chaque décision.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Vue détaillée d'une salle de bain avec mesures et régulateurs indépendants" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Vue détaillée d'une salle de bain avec mesures et régulateurs indépendants" width="760">
 </p>
 
 <a id="home-settings"></a>

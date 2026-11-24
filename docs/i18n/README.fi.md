@@ -33,7 +33,7 @@ Esimerkiksi: HEM voi vähentää lämmitystä, kun kaikki ovat poissa, valmistaa
 
 **Pysy johdossa.** Jokaisella huoneella on omat asetukset, jokaisella laitteella on omat ohjaimet, toimintatapa, tavoitteet ja turvallisuusrajoitukset. HEM ei koskaan oletta, että laitteen valinta antaa sille luvan käyttää sitä laitteen.
 
-[Tutki ominaisuudet](#what-can-hem-do) • [Näytä käyttöliittymä](#see-hem-in-action) • [Asennetaan HEM](#installation) • [Aseta kotisi](#getting-started) • [Yksityiskohtainen opas](../../docs/advanced-configuration.md)
+[Tutki ominaisuudet](#what-can-hem-do) • [Näytä käyttöliittymä](#see-hem-in-action) • [Asennetaan HEM](#installation) • [Aseta kotisi](#getting-started) • [Yksityiskohtainen opas](../../docs/advanced-configuration.md) · [Kaikki asetukset (englanniksi)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Mikä voi HEM - Onko se totta?
@@ -169,7 +169,7 @@ Nämä englanninkieliset kuvat käyttävät näytteitä ja mittauksia, jotka oso
 Ota ilmanvaihtoohjeet, sääolosuhteet ja jokaisen seurannatun huoneen tila yhdellä korttilla.
 
 <p align="center">
-  <img src="../../docs/images/hem-dashboard-overview.svg" alt="HEM kotimainen ohjauslauta, jossa on tuuletusohjeita ja ympäristöluokituksia viidessä huoneessa" width="900">
+  <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM kotimainen ohjauslauta, jossa on tuuletusohjeita ja ympäristöluokituksia viidessä huoneessa" width="900">
 </p>
 
 <a id="expand-a-room-for-full-details"></a>
@@ -178,7 +178,7 @@ Ota ilmanvaihtoohjeet, sääolosuhteet ja jokaisen seurannatun huoneen tila yhde
 Tarkista ilmanlaatu, muurahaisindikaatio, läsnäolo, ikkunan tila, ilmasto- ja ilmastovalvontat sekä jokaisen päätöksen selitys.
 
 <p align="center">
-  <img src="../../docs/images/hem-room-expanded.svg" alt="Laajennettu kylpyhuoneen ohjauslauta, jossa on lukemat ja riippumattomat laitteiden ohjaimet" width="760">
+  <img src="../../docs/images/hem-room-expanded.png" alt="Laajennettu kylpyhuoneen ohjauslauta, jossa on lukemat ja riippumattomat laitteiden ohjaimet" width="760">
 </p>
 
 <a id="home-settings"></a>
