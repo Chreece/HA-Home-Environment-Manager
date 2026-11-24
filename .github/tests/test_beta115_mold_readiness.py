@@ -69,6 +69,19 @@ class MoldMeasurementReadiness(unittest.TestCase):
         entities[entity] = N(area_id=area, device_id=None, platform=platform,
                              device_class=None, original_device_class=None)
 
+    def test_watchdog_excludes_the_radiator_probe_before_averaging(self):
+        self.sensor("sensor.radiator_temperature", 34.)
+        entities["sensor.radiator_temperature"].device_id = "valve"
+        chosen = self.settings["room_sources"]["room"]["temperature"]
+        chosen.append("sensor.radiator_temperature")
+        read = lambda: sources.room_temperature_evidence(
+            self.hass, self.settings, "room", excluded_device_id="valve")
+        value, evidence = read()
+        self.assertEqual(value, 21.)
+        self.assertEqual(evidence["entity_ids"], ["sensor.room_temperature"])
+        chosen.remove("sensor.room_temperature")
+        self.assertIsNone(read()[0])
+
     def weather(self, entity, temperature, *, age=0, unit="°C"):
         self.states[entity] = N(entity_id=entity, state="cloudy",
             attributes={"temperature": temperature, "temperature_unit": unit},

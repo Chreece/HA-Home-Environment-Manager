@@ -328,7 +328,10 @@ automatic device while the household sleep condition is confirmed.
 
 HEM monitors independent, fresh room temperature sensors after a supervised heater
 acknowledges an OFF command. It also starts a fresh observation when a supervised
-heating-only valve already reports OFF, including at startup. If, after a 30-minute thermal settling period,
+heating-only valve already reports OFF, including at startup. HEM excludes the
+heater’s own temperature probe before averaging the room thermometers. Older
+setups can use their assigned device or PID-room thermometer. After a 30-minute
+thermal settling period, if
 the room continues warming for at least 15 minutes (≥0.7°C increase and
 ≥1.5°C above the heating target), HEM records a **suspected** thermal fault.
 The device can still report OFF while physically heating; room temperature

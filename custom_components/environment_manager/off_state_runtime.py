@@ -63,43 +63,37 @@ def _competing_heat_clear(runtime: Any, spec: Any, primary: str) -> bool:
     return True
 
 
-def _independent_room_temperature(runtime: Any, spec: Any) -> tuple[float | None, tuple[str, ...]]:
-    """Only verified, fresh, same-room temperature sensors, not heater telemetry."""
-    room = model.room_config(runtime.manager, spec)
-    pinned = room.get("temperature_entity")
+def _independent_room_temperature(runtime: Any, spec: Any, primary: str) -> tuple[float | None, tuple[str, ...]]:
+    """Read the room's selected thermometers or its configured legacy reference."""
+    from .room_sources import selected
+    settings = runtime.manager.settings
+    pinned = None
+    if selected(settings, spec.area_id, "temperature") is None:
+        room = model.room_config(runtime.manager, spec)
+        device = model.device_config(runtime.manager, spec, primary)
+        legacy = settings.get("pid_rooms", {}).get(spec.area_id, {})
+        pinned = device.get("temperature_entity") or room.get("temperature_entity") or legacy.get("temperature_entity")
     try:
         temp, evidence = room_temperature_evidence(
-            runtime.hass, runtime.manager.settings, spec.area_id,
+            runtime.hass, settings, spec.area_id,
             pinned=pinned if isinstance(pinned, str) else None,
+            excluded_entities=tuple(spec.source_entities), excluded_device_id=spec.source_device_id,
         )
     except (ImportError, AttributeError):
-        # Incomplete source-registry setup is not an authorization to act.
         return None, ()
     ids = tuple(evidence.get("entity_ids") or ())
     if (evidence.get("status") != "ready" or evidence.get("partial") is True
             or not ids or evidence.get("valid_count") != len(ids)):
         return None, ()
-    try:
-        from homeassistant.helpers import entity_registry as er
-        registry = er.async_get(runtime.hass)
-        for entity in ids:
-            if entity in spec.source_entities:
-                return None, ()
-            record = registry.async_get(entity)
-            if (record is not None and getattr(record, "device_id", None)
-                    == spec.source_device_id and spec.source_device_id):
-                return None, ()
-    except (ImportError, AttributeError):
-        return None, ()
     return temp, ids
 
 
 
-def _independent_room_measurement(runtime: Any, spec: Any, metric: str
+def _independent_room_measurement(runtime: Any, spec: Any, primary: str, metric: str
                                   ) -> tuple[float | None, tuple[str, ...]]:
     """Use independently assigned, fully fresh sensor evidence only."""
     if metric == "temperature":
-        return _independent_room_temperature(runtime, spec)
+        return _independent_room_temperature(runtime, spec, primary)
     if metric != "humidity":
         return None, ()
     from .room_sources import selected, numeric, native
@@ -108,7 +102,7 @@ def _independent_room_measurement(runtime: Any, spec: Any, metric: str
         room = model.room_config(runtime.manager, spec)
         pin = room.get("humidity_entity")
         if not pin:
-            pin = model.device_config(runtime.manager, spec).get("humidity_entity")
+            pin = model.device_config(runtime.manager, spec, primary).get("humidity_entity")
         ids = (pin,) if isinstance(pin, str) and pin else ()
     ids = tuple(dict.fromkeys(ids))
     if not ids:
@@ -245,7 +239,7 @@ def _guard(runtime: Any, spec: Any, cap: Any, state: Any, watch: dict, *,
         # Store and notification delivery can yield before the native write.
         # Recheck temperature, source identity and target at that boundary.
         warning = record.get("thermal_off_warning") or {}
-        value, sources = _independent_room_temperature(runtime, spec)
+        value, sources = _independent_room_temperature(runtime, spec, cap.primary)
         target = model.targets(runtime.manager, spec, cap, cfg,
                                model.plan_for(runtime.manager, spec)).get("heat")
         if (not isinstance(target, (int, float)) or not isfinite(target)
@@ -398,7 +392,7 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
         # temperature observations without renewing its native OFF budget.
         since = ledger["monitor_since"] = now
         await runtime._save()
-    measured, ids = _independent_room_measurement(runtime, spec, profile.metric)
+    measured, ids = _independent_room_measurement(runtime, spec, cap.primary, profile.metric)
     if measured is None:
         sessions.pop(spec.identifier, None)
         await _clear_warning(runtime, record)
@@ -409,7 +403,7 @@ async def watchdog_tick(runtime: Any, spec: Any, cap: Any, state: Any) -> bool:
     room_temp = None
     watch_ids = ids
     if profile.metric == "humidity":
-        room_temp, temp_ids = _independent_room_temperature(runtime, spec)
+        room_temp, temp_ids = _independent_room_temperature(runtime, spec, cap.primary)
         if room_temp is None or not temp_ids:
             sessions.pop(spec.identifier, None)
             await _clear_warning(runtime, record)

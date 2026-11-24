@@ -52,11 +52,16 @@ model.settings=lambda _manager,_spec:cfg
 model.targets=lambda *_args:{"heat":20.0}
 model.plan_for=lambda *_args:{}
 model.room_config=lambda *_args:{}
+model.device_config=lambda *_args:{}
 model.permission=lambda *_args:(env["permission"],env["permission"])
 model.sources_available=lambda *_args:env["source_available"]
-room_sources.room_temperature_evidence=lambda *_args,**_kw:(
-    env["temp"],{"status":"ready","partial":False,"valid_count":1,
-                  "entity_ids":["sensor.room_temperature"]})
+def reference_sensor(*_args, **kwargs):
+    env["reference_pin"] = kwargs.get("pinned")
+    if kwargs["excluded_device_id"] == env["sensor_device"]:
+        return None, {"status": "no_selected_room_temperature"}
+    return env["temp"], {"status": "ready", "partial": False, "valid_count": 1,
+                         "entity_ids": ["sensor.room_temperature"]}
+room_sources.room_temperature_evidence=reference_sensor
 runtime_module.room_temperature_evidence=room_sources.room_temperature_evidence
 discovery.entity_area=lambda _hass,_entity:"living"
 state=SimpleNamespace(state="off",entity_id=cap.primary,attributes={},name="Generic heater",
@@ -173,6 +178,16 @@ async def main():
             await tick(now,temp)
         assert len(commands)==start,f"unsafe OFF repeat with {reason}"
         runtime._current_spec=lambda _spec:True
+    # An old installation may have assigned its thermometer on the physical
+    # device or in PID room settings before room input lists were introduced.
+    env["sensor_device"] = "independent_device"
+    manager.settings["pid_rooms"] = {"living": {"temperature_entity": "sensor.pid_temperature"}}
+    runtime_module._independent_room_temperature(runtime, spec, cap.primary)
+    assert env["reference_pin"] == "sensor.pid_temperature"
+    model.device_config = lambda _manager, _spec, entity: (
+        {"temperature_entity": "sensor.device_thermometer"} if entity == cap.primary else {})
+    runtime_module._independent_room_temperature(runtime, spec, cap.primary)
+    assert env["reference_pin"] == "sensor.device_thermometer"
     # Already OFF when HA starts: the real room scan includes HEM's climate
     # facade and another thermostat armed for heat but reporting idle.
     env.update(permission=True, source_available=True, other_heater=False,
