@@ -130,6 +130,7 @@ class PublishReleaseTests(unittest.TestCase):
         self.assertEqual(first, second)
         with ZipFile(BytesIO(first)) as archive:
             expected = {publisher.PREFIX + name for name in (*publisher.REQUIRED, "manifest.json")}
+            expected.add(publisher.CARD_JS + ".gz")
             self.assertEqual(set(archive.namelist()), expected)
             self.assertEqual(archive.read("manifest.json"), self.files[publisher.SOURCE + "manifest.json"])
             self.assertNotIn("README.md", archive.namelist())

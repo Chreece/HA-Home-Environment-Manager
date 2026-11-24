@@ -5107,6 +5107,26 @@
         this._icon(icons[i])+'<b>'+counts[i]+'</b>'+
         '<small>'+escape(this._t(key))+'</small></span>').join('')+'</div>';
   };
+  // Each condition has its own part of the face so simultaneous readings stay legible.
+  function roomFaceArt(states) {
+    const has=key=>states.includes(key);
+    const eyes=has('cold')?'M6.5 9l2.5 1.5L6.5 12m9-3L13 10.5l2.5 1.5':
+      has('hot')?'M6.5 10q1.4-3 3 0m3 0q1.4-3 3 0':
+      'M8 10v1m6-1v1';
+    const mouth=has('poor-air')?
+      '<path class="hem-face-mask" d="m4 13 4 2m6 0 4-2M7 13.5q4-1.8 8 0V16q-4 4-8 0z"/>':
+      has('cold')?'<path d="m7.5 15 1.8-1 1.7 2 1.7-2 1.8 1"/>':
+      has('hot')?'<ellipse cx="11" cy="15.5" rx="1.7" ry="2"/>':
+      has('comfortable')?'<path d="M7.5 14.5q3.5 4.5 7 0"/>':
+      '<path d="M8.5 15.5h5"/>';
+    const texture=has('humid')?'<path class="hem-face-drop" d="M19 3q-3 3.7-3 5.2a3 3 0 0 0 6 0Q22 6.7 19 3z"/>':
+      has('dry')?'<path class="hem-face-dry" d="m18.5 3-1.8 3.4 3 .2-2 3.6"/>':'';
+    const expression=has('unknown')?'<path d="M9 9a2.3 2.3 0 1 1 3.4 2c-1.2.6-1.4 1.2-1.4 2.2M11 16v.2"/>':
+      '<path d="'+eyes+'"/>'+mouth+texture;
+    return '<svg class="hem-condition-art" data-conditions="'+states.join(' ')+
+      '" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+
+      '<circle class="hem-face-shell" cx="11" cy="12" r="9"/>'+expression+'</svg>';
+  }
   // Room faces describe measured conditions only. Advice and device faults have
   // independent controls in the same header. All temperature inputs here are °C.
   function roomConditionFaces(room, overview, language) {
@@ -5127,29 +5147,29 @@
     }
     if(air.some(item=>measured(item)&&item.exceeded===true)||
         (models.formaldehyde_30min?.status==='ready'&&models.formaldehyde_30min.above_who_100ug_m3))
-      add('😷','Poor indoor air quality');
+      add('poor-air','Poor indoor air quality');
     if(Number.isFinite(temperature)){
       let band;
       if(pmv?.status==='estimate'&&Number.isFinite(pmv.pmv))
         band=pmv.pmv < -0.5?'below_band':pmv.pmv > 0.5?'above_band':'within_band';
       else if(['within_band','above_band','below_band'].includes(adaptive))band=adaptive;
       else band=temperature<20?'below_band':temperature>26?'above_band':'within_band';
-      if(band==='below_band')add('🥶','Below the comfort band');
-      if(band==='above_band')add('🥵','Above the comfort band');
+      if(band==='below_band')add('cold','Below the comfort band');
+      if(band==='above_band')add('hot','Above the comfort band');
     }
     const hasHumidity=Number.isFinite(humidity)&&humidity>=0&&humidity<=100;
     const rhLimit=readings.find(item=>item?.metric==='humidity'&&
       Number.isFinite(item.threshold)&&item.threshold>0&&item.threshold<=100)?.threshold??65;
     if(hasHumidity){
-      if(humidity>=rhLimit)add('😓','High room humidity');
-      else if(humidity<30)add('😮‍💨','Dry room air');
+      if(humidity>=rhLimit)add('humid','High room humidity');
+      else if(humidity<30)add('dry','Dry room air');
     }
     if(!faces.length){
       if(hasHumidity&&Number.isFinite(temperature)&&!air.some(item=>!measured(item)))
-        add('😊','Within the comfort band');
-      else add('😶','Missing data');
+        add('comfortable','Within the comfort band');
+      else add('unknown','Missing data');
     }
-    return {glyphs:faces.join(''),label:labels.join(' · ')};
+    return {states:faces,label:labels.join(' · ')};
   }
 
   proto87._room = function(room) {
@@ -5202,6 +5222,7 @@
     const temp=overview122.temperature,humidity=overview122.humidity;
     const conditions=roomConditionFaces(room,overview122,this._language());
     const showFaces=this._dashboard105()?.show_room_smileys!==false;
+    const faceArt=showFaces?roomFaceArt(conditions.states):'';
     const roomStatus=this._roomStatus075(room);
     const alerts=[];
     // Display-only: room ventilation opportunity uses NO virtual CO2/AQI
@@ -5320,7 +5341,7 @@
       escape((room.name||room.area_id)+' · '+presence.label)+'">'+
       escape(room.name||room.area_id)+'</strong>'+
       (showFaces?'<span class="hem-room-faces" role="img" aria-label="'+escape(conditions.label)+
-        '" title="'+escape(conditions.label)+'">'+conditions.glyphs+'</span>':'')+
+        '" title="'+escape(conditions.label)+'">'+faceArt+'</span>':'')+
       '<span class="hem-room-alerts87" aria-label="'+escape(labels.attention)+'">'+
       alerts.join('')+'</span></span>'+
       '<span class="hem-room-active87" aria-label="'+escape(active.length+' '+labels.active)+'">'+
@@ -5338,7 +5359,7 @@
       '</span>'+
       this._icon(open?'mdi:chevron-up':'mdi:chevron-down')+
       '</summary><div class="hem-room-body87"><div class="hem-room-condition-detail">'+
-      (showFaces?'<span aria-hidden="true">'+conditions.glyphs+'</span> ':'')+escape(conditions.label)+'</div>'+ventHeader95+
+      (showFaces?'<span aria-hidden="true">'+faceArt+'</span> ':'')+escape(conditions.label)+'</div>'+ventHeader95+
       this._roomIssueDetail114(room)+original+'</div></details>';
   };
 
@@ -14919,8 +14940,22 @@ HomeEnvironmentManagerCard.prototype._styles=function(){
       min-width:0;max-width:none;
     }
     .hem-room-faces {
-      flex:none;white-space:nowrap;font-size:16px;line-height:1.2;
+      display:inline-flex;flex:none;align-items:center;line-height:1;
     }
+    .hem-condition-art {
+      display:inline-block;width:22px;height:22px;vertical-align:middle;
+      color:var(--aqa-blue);fill:none;stroke:currentColor;stroke-width:1.65;
+      stroke-linecap:round;stroke-linejoin:round;
+    }
+    .hem-condition-art[data-conditions~="comfortable"] {color:var(--aqa-green)}
+    .hem-condition-art[data-conditions~="hot"],
+    .hem-condition-art[data-conditions~="dry"]:not([data-conditions~="cold"]),
+    .hem-condition-art[data-conditions="poor-air"] {color:var(--aqa-amber,var(--warning-color,#eab567))}
+    .hem-condition-art[data-conditions~="unknown"] {color:var(--aqa-muted)}
+    .hem-face-shell {fill:color-mix(in srgb,currentColor 13%,var(--aqa-surface))}
+    .hem-face-mask {stroke:var(--aqa-text);fill:var(--aqa-surface)}
+    .hem-face-drop,.hem-face-dry {stroke:var(--aqa-blue);fill:var(--aqa-surface)}
+    .hem-face-dry {stroke:var(--aqa-amber,var(--warning-color,#eab567));fill:none}
     .hem-room-condition-detail {padding:5px 3px;color:var(--aqa-muted);font-size:13px}
     .hem-room-tab080>.hem-room-alerts87 {
       display:flex;align-items:center;justify-content:flex-start;
