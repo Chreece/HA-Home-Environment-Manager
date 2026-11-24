@@ -68,7 +68,7 @@ def exercise(browser, resource, failures, *, resume=False):
             with message:
                 expect(page.locator("main")).to_have_text("Custom element doesn't exist")
             assert len(urls) == 4
-            page.evaluate("window.dispatchEvent(new Event('pageshow'))")
+            page.evaluate("window.dispatchEvent(new PageTransitionEvent('pageshow', {persisted:true}))")
         deadline = monotonic() + 8
         while not held and monotonic() < deadline:
             page.wait_for_timeout(30)
@@ -76,7 +76,7 @@ def exercise(browser, resource, failures, *, resume=False):
         expect(page.locator("main")).to_have_text("Custom element doesn't exist")
         page.evaluate("""() => {
           window.dispatchEvent(new Event('online'));
-          window.dispatchEvent(new Event('pageshow'));
+          window.dispatchEvent(new PageTransitionEvent('pageshow', {persisted:true}));
           document.dispatchEvent(new Event('visibilitychange'));
         }""")
         held[0].fulfill(content_type="text/javascript", path=FRONTEND / CARD)

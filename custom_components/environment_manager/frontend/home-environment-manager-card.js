@@ -5114,13 +5114,15 @@
       has('hot')?'M6.5 10q1.4-3 3 0m3 0q1.4-3 3 0':
       'M8 10v1m6-1v1';
     const mouth=has('poor-air')?
-      '<path class="hem-face-mask" d="m4 13 4 2m6 0 4-2M7 13.5q4-1.8 8 0V16q-4 4-8 0z"/>':
+      '<g class="hem-face-mask"><path d="m2.6 12 3.5 2.8m9.8 0 3.5-2.8"/>'+
+      '<path d="M6 13.1q5-1.4 10 0v3.2q0 1.2-1.3 1.8L11 19.6l-3.7-1.5Q6 17.5 6 16.3z"/>'+
+      '<path d="M8.8 15.1q2.2.6 4.4 0"/></g>':
       has('cold')?'<path d="m7.5 15 1.8-1 1.7 2 1.7-2 1.8 1"/>':
       has('hot')?'<ellipse cx="11" cy="15.5" rx="1.7" ry="2"/>':
       has('comfortable')?'<path d="M7.5 14.5q3.5 4.5 7 0"/>':
       '<path d="M8.5 15.5h5"/>';
     const texture=has('humid')?'<path class="hem-face-drop" d="M19 3q-3 3.7-3 5.2a3 3 0 0 0 6 0Q22 6.7 19 3z"/>':
-      has('dry')?'<path class="hem-face-dry" d="m18.5 3-1.8 3.4 3 .2-2 3.6"/>':'';
+      has('dry')?'<path class="hem-face-dry" d="m17.5 2-.9 3.1 1.7 1.7-2.2 2.6m2.2-2.6 2.2-.6"/>':'';
     const expression=has('unknown')?'<path d="M9 9a2.3 2.3 0 1 1 3.4 2c-1.2.6-1.4 1.2-1.4 2.2M11 16v.2"/>':
       '<path d="'+eyes+'"/>'+mouth+texture;
     return '<svg class="hem-condition-art" data-conditions="'+states.join(' ')+
@@ -14953,7 +14955,7 @@ HomeEnvironmentManagerCard.prototype._styles=function(){
     .hem-condition-art[data-conditions="poor-air"] {color:var(--aqa-amber,var(--warning-color,#eab567))}
     .hem-condition-art[data-conditions~="unknown"] {color:var(--aqa-muted)}
     .hem-face-shell {fill:color-mix(in srgb,currentColor 13%,var(--aqa-surface))}
-    .hem-face-mask {stroke:var(--aqa-text);fill:var(--aqa-surface)}
+    .hem-face-mask {stroke:var(--aqa-text);stroke-width:1.25;fill:var(--aqa-surface)}
     .hem-face-drop,.hem-face-dry {stroke:var(--aqa-blue);fill:var(--aqa-surface)}
     .hem-face-dry {stroke:var(--aqa-amber,var(--warning-color,#eab567));fill:none}
     .hem-room-condition-detail {padding:5px 3px;color:var(--aqa-muted);font-size:13px}

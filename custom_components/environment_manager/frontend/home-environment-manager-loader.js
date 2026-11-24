@@ -24,7 +24,9 @@ if (!customElements.get(cardTag)) {
     document.removeEventListener('visibilitychange', resume);
   }
 
-  function resume() {
+  function resume(event) {
+    // The initial pageshow is part of this load, not a return from the page cache.
+    if (event.type === 'pageshow' && !event.persisted) return;
     if (document.visibilityState === 'hidden' || pending) return;
     clearRetry();
     delayIndex = 0;
