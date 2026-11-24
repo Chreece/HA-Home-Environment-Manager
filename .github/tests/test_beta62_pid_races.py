@@ -142,6 +142,7 @@ def env_for(controller):
         "asyncio": asyncio, "math": math, "finite": finite,
         "RoomControl": Control, "TARGET_TEMPERATURE_FEATURE": 1,
         "MANUAL_GRACE_SECONDS": 120, "SENSOR_MAX_AGE_MINUTES": 10,
+        "permits_operation": lambda hass, area, entity, enrolled: hass.states.get(entity).state != "on",
         "entity_area": lambda hass, entity: "living",
         "is_window": lambda hass, state: state.domain == "binary_sensor"
                      and state.attributes.get("device_class") == "window",
@@ -215,10 +216,10 @@ async def run():
     assert ctrl._paused == {} and ctrl._expected == {}
 
     # Legacy PID should not be stuck forever simply because this room has
-    # no configured windows. Unknown or open SELECTED contacts still hold.
+    # no configured windows. Only confirmed open contacts hold.
     for windows, expected in (
         ((), "temperature_unavailable_or_stale"),
-        ((NS(opened=None),), "window_open_or_unknown"),
+        ((NS(opened=None),), "temperature_unavailable_or_stale"),
         ((NS(opened=True),), "window_open_or_unknown"),
         ((NS(opened=False),), "temperature_unavailable_or_stale"),
     ):

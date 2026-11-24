@@ -414,7 +414,7 @@ class AirQualityManager:
                 home=home_status, temperature_c=measured_temp,
                 humidity_rh=sum(rh_values) / len(rh_values) if rh_values else None,
                 co2_ppm=max(co2_values) if co2_values else None,
-                window_safe=all(contact.opened is False for contact in monitored.windows),
+                window_safe=not any(contact.opened is True for contact in monitored.windows),
                 sleeping=None,
             )
             # This read-only overview never authorizes an Eco transition.

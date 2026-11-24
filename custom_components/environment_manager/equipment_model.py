@@ -8,6 +8,7 @@ explicitly chooses a new per-device owner.
 """
 from __future__ import annotations
 
+from .window_contact import permits_operation
 from .config_data import mutable_copy as deepcopy
 from dataclasses import dataclass
 import math
@@ -1115,10 +1116,7 @@ def plan_for(manager: Any, spec: ManagedDevice) -> dict:
         else:
             contact_ids = list(windows)
         window_safe = all(
-            (item := manager.hass.states.get(eid)) is not None
-            and item.state == "off"
-            and entity_area(manager.hass, eid) == spec.area_id
-            and item.attributes.get("device_class") == "window"
+            permits_operation(manager.hass, spec.area_id, eid, windows or ())
             for eid in contact_ids
         )
         door = observe_room_door(
@@ -1142,18 +1140,15 @@ def plan_for(manager: Any, spec: ManagedDevice) -> dict:
     from .room_sources import selected
     chosen_contacts = selected(manager.settings, spec.area_id, "windows")
     if chosen_contacts is None:
-        contacts = [state for state in manager.hass.states.async_all("binary_sensor")
-                    if entity_area(manager.hass, state.entity_id) == spec.area_id
-                    and state.attributes.get("device_class") == "window"]
+        ids = [state.entity_id for state in manager.hass.states.async_all("binary_sensor")
+               if entity_area(manager.hass, state.entity_id) == spec.area_id
+               and state.attributes.get("device_class") == "window"]
     else:
-        contacts = [state for entity in chosen_contacts
-                    if (state := manager.hass.states.get(entity)) is not None
-                    and entity_area(manager.hass, entity) == spec.area_id
-                    and state.attributes.get("device_class") == "window"]
+        ids = list(chosen_contacts)
     return {**facts,
-            "window_safe": (chosen_contacts is None or len(contacts) == len(chosen_contacts))
-                           and all(state.state == "off" for state in contacts),
-            "window_contacts": [state.entity_id for state in contacts]}
+            "window_safe": all(permits_operation(manager.hass, spec.area_id, eid, chosen_contacts or ())
+                               for eid in ids),
+            "window_contacts": ids, "selected_window_contacts": chosen_contacts or ()}
 
 
 def automatic_profile_reason(config: dict, plan: dict) -> str | None:

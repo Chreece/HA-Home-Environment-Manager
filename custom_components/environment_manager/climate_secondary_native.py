@@ -12,6 +12,7 @@ import logging
 import time
 from typing import Any, Callable
 
+from .window_contact import permits_operation
 from .climate_coordination import assigned_entities, duplicate_owners, device_inventory
 from .climate_arbitration import new_command_gate
 from .discovery import entity_area, temperature_sensor_c
@@ -287,10 +288,7 @@ class SecondaryClimateSetpoint:
             self._status(area,"unknown_window_contacts")
             return
         for window in windows:
-            current=self.hass.states.get(window)
-            if (current is None or current.domain!="binary_sensor" or
-                    current.attributes.get("device_class")!="window" or
-                    current.state!="off"):
+            if not permits_operation(self.hass, area, window, plan.get("selected_window_contacts", ())):
                 self._status(area,"window_open_or_unavailable")
                 return
         inventory=device_inventory(self.hass,area,cfg)

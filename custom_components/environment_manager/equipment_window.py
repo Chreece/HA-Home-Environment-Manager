@@ -28,9 +28,8 @@ def evaluate(runtime: Any, spec: Any, cfg: dict | None = None, *,
              read_only: bool = False) -> dict:
     """Return fresh hold/stop evidence; disabled/no contacts never invent OPEN.
 
-    An unknown contact is not CLOSED. A real open -> closed transition needs
-    60 continuous seconds closed. Reopening, losing evidence or changing the
-    selected contacts resets this delay. This does not replace hardware dwell.
+    Unavailable contacts remain visible in diagnostics. Only a reporting contact
+    can start or sustain a hold. Hardware dwell is enforced separately.
     """
     cfg = model.settings(runtime.manager, spec) if cfg is None else cfg
     cache = getattr(runtime, "_window_policy_cache", None)
@@ -106,97 +105,55 @@ def evaluate(runtime: Any, spec: Any, cfg: dict | None = None, *,
         return result
     now = runtime.clock()
     same = previous.get("identity") == result["identity"]
-    closed_times: list[float] = []
+    same_room = previous.get("identity", (None,))[0] == spec.area_id
+    previous_states = previous.get("contact_states", {}) if same_room else {}
+    previous_stamps = previous.get("closed_source_timestamps", {}) if same_room else {}
+    previous_holds = previous.get("close_holds", {}) if same_room else {}
+    holds = {}
     for entity in contact_ids:
         state = runtime.hass.states.get(entity)
-        # Explain precisely why the selected contact cannot prove CLOSED.
-        # No other area/device is silently used as its replacement.
         reason = (
             "missing" if state is None else
+            "restored" if getattr(state, "attributes", {}).get("restored") is True else
+            "unknown" if state.state not in ("on", "off") else
             "invalid_domain" if not entity.startswith("binary_sensor.") else
             "other_area" if entity_area(runtime.hass, entity) != spec.area_id else
             "not_window_contact" if not is_window_contact(
                 runtime.hass, state, explicitly_selected=from_selection,
-            ) else
-            "restored" if getattr(state, "attributes", {}).get("restored") is True else
-            "unknown" if state.state not in ("on", "off") else None
+            ) else None
         )
-        result["contact_states"][entity] = (reason or state.state)
+        result["contact_states"][entity] = reason or state.state
         if reason:
             result["unknown_contacts"].append(entity)
-        elif state.state == "on":
+            continue
+        if state.state == "on":
             result["open_contacts"].append(entity)
-        else:
-            changed = _stamp(state, now)
-            if changed is None:
-                # State is closed but timestamp is not usable. Start a fresh
-                # observation period rather than reusing an old safe baseline.
-                old_since = previous.get("closed_since") if same else None
-                changed = old_since if isinstance(old_since, (int, float)) and 0 <= old_since <= now else now
-            closed_times.append(changed)
-            result["closed_source_timestamps"][entity] = changed
-    same = previous.get("identity") == result["identity"]
+            continue
+        stamp = _stamp(state, now)
+        result["closed_source_timestamps"][entity] = stamp
+        last = previous_states.get(entity)
+        since = previous_holds.get(entity)
+        if last == "on" or (last == "off" and stamp != previous_stamps.get(entity)):
+            since = stamp if stamp is not None else now
+        elif previous and not same and entity not in previous_states:
+            since = now
+        if since is not None and now - since < RESUME_SECONDS:
+            holds[entity] = since
+    result["close_holds"] = holds
     if result["open_contacts"]:
         result.update(blocked=True, stop_requested=True, status="window_open_pause")
-    elif result["unknown_contacts"]:
-        result.update(blocked=True, stop_requested=True, status="window_state_unknown")
+    elif any(result["contact_states"][eid] in ("invalid_domain", "other_area", "not_window_contact")
+             for eid in result["unknown_contacts"]):
+        result.update(blocked=True, status="window_state_unknown")
+    elif holds:
+        since = max(holds.values())
+        result.update(blocked=True, status="window_close_warmup", closed_since=since,
+                      remaining_seconds=RESUME_SECONDS - (now - since),
+                      stop_requested=previous.get("stop_requested") is True and any(
+                          eid in previous_holds or previous_states.get(eid) == "on" for eid in holds))
+    elif len(result["unknown_contacts"]) == len(contact_ids):
+        result["status"] = "window_state_unknown"
     else:
-        latest = max(closed_times)
-        previous_since = previous.get("closed_since") if same else None
-        if not previous:
-            # First valid observation of an already-CLOSED contact is a
-            # baseline, not proof of an OPEN -> CLOSED transition. HA often
-            # recreates all State objects on startup with last_changed=now,
-            # even though the physical contact never opened. Applying a 60s
-            # window-closure hold here mislabels every restart as a closure.
-            # The separate 300s startup hardware protection still applies.
-            latest = now - RESUME_SECONDS
-        elif not same:
-            # Adding/reassigning a selected contact cannot reuse evidence
-            # from the old selection, even when both currently report OFF.
-            latest = now
-        elif previous.get("status") == "window_open_pause":
-            # A real OPEN was observed. The physical entity's verified OFF
-            # last_changed timestamp identifies the actual closure even if
-            # this control tick runs 59 seconds after that event; avoid a
-            # second, spurious sixty-second extension at the first read.
-            latest = max(closed_times)
-        elif previous.get("status") == "window_state_unknown":
-            # With missing evidence there is no trustworthy continuity of
-            # the CLOSED reading, so require 60 seconds from first recovery.
-            latest = now
-        elif previous.get("status") == "window_closed_ready":
-            # A previously verified CLOSED observation remains ready if its
-            # *physical last_changed identity* is unchanged. A new OFF stamp
-            # could mean a real OPEN->OFF transition occurred between ticks;
-            # don't miss that transition merely because ON was never sampled.
-            before_stamps = previous.get("closed_source_timestamps", {})
-            before_stamps = before_stamps if isinstance(before_stamps, dict) else {}
-            actual_change = any(
-                before_stamps.get(entity) != stamp
-                for entity, stamp in result["closed_source_timestamps"].items()
-            )
-            if actual_change:
-                latest = max(closed_times)
-            else:
-                latest = (previous_since
-                          if isinstance(previous_since, (int, float))
-                          and 0 <= previous_since <= now
-                          else now - RESUME_SECONDS)
-        elif (isinstance(previous_since, (float, int))
-              and 0 <= previous_since <= now):
-            # Ongoing real post-close warmup cannot be shortened by an
-            # unrelated state update. A newer genuine OFF timestamp may
-            # extend it, but can never bypass this safety hold.
-            latest = max(latest, previous_since)
-        remaining = max(0.0, RESUME_SECONDS - (now - latest))
-        result.update(
-            closed_since=latest, remaining_seconds=remaining,
-            blocked=remaining > 0,
-            # A stop delayed by native dwell can finish during the recovery hold.
-            stop_requested=remaining > 0 and same and bool(
-                previous.get("stop_requested") or previous.get("open_contacts")),
-            status="window_close_warmup" if remaining > 0 else "window_closed_ready",
-        )
+        result["status"] = "window_closed_ready"
     cache[spec.identifier] = result
     return result

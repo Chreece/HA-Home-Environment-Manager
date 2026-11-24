@@ -50,7 +50,7 @@ def contact(s,value,when=None,entity='binary_sensor.window'):
  w=state(value,when=s.now if when is None else when)
  w.entity_id=entity; w.domain='binary_sensor';w.attributes={'device_class':'window'}
  s.states[entity]=w
- s.manager.plan['window_safe']=value=='off'
+ s.manager.plan['window_safe']=value!='on'
  return w
 
 async def main():
@@ -78,14 +78,17 @@ async def main():
   restored.now+=1
   assert restored._window_policy(spec)['status']=='window_closed_ready'
 
- # Real open->closed and unknown->closed transitions must still wait 60s.
+ # Only a real open-to-closed transition starts the delay.
  for first in ('on','unknown'):
   cold=make(opened=True,native='off')
   contact(cold,first,when=BASE)
   first_result=cold._window_policy(spec)
-  assert first_result['blocked'] is True
+  assert first_result['blocked'] == (first == 'on')
   contact(cold,'off',when=BASE)
   closing=cold._window_policy(spec)
+  if first == 'unknown':
+   assert not closing['blocked'] and closing['remaining_seconds']==0
+   continue
   assert closing['status']=='window_close_warmup' and closing['remaining_seconds']==60
   cold.now=BASE+59
   assert cold._window_policy(spec)['blocked'] is True
@@ -103,10 +106,10 @@ async def main():
  door=contact(patio,'unavailable',entity='binary_sensor.window_patio')
  door.attributes['device_class']='door'
  p=patio._window_policy(spec)
- assert p['status']=='window_state_unknown' and p['blocked'],p
+ assert p['status']=='window_state_unknown' and not p['blocked'],p
  door=contact(patio,'off',entity='binary_sensor.window_patio')
  door.attributes['device_class']='door'
- assert patio._window_policy(spec)['status']=='window_close_warmup'
+ assert patio._window_policy(spec)['status']=='window_closed_ready'
  patio.now+=60
  assert patio._window_policy(spec)['status']=='window_closed_ready'
  # Same physical contact without an explicit window enrollment is inert.
@@ -171,13 +174,11 @@ async def main():
                    'now':s.now}
  assert s.issued[-1][:3]==('switch','turn_on','switch.strip')
 
- # Unknown contact is not closed; recovery restarts 60 seconds.
+ # Restoring a reading does not simulate an open-to-closed transition.
  s=make(native='off');contact(s,'unavailable')
  assert s._window_policy(spec)['status']=='window_state_unknown'
  contact(s,'off',when=BASE-3000)
- p=s._window_policy(spec);assert p['remaining_seconds']==60,p
- s.now+=59;assert s._window_policy(spec)['blocked']
- s.now+=1;assert not s._window_policy(spec)['blocked']
+ p=s._window_policy(spec);assert not p['blocked'] and p['remaining_seconds']==0,p
  contact(s,'on');assert s._window_policy(spec)['stop_requested']
  contact(s,'off');s.now+=40;assert s._window_policy(spec)['blocked']
  contact(s,'on');assert s._window_policy(spec)['status']=='window_open_pause'

@@ -108,8 +108,11 @@ d.__dict__.update(
         area_id=area, name=name, windows=windows, readings=readings,
     ),
 )
+contact_policy = install("window_contact")
+extract("window_contact.py", ("opened", "permits_operation"), contact_policy)
+d._window_opened = contact_policy.opened
 extract("discovery.py", ("_device_class", "is_window", "is_window_contact",
-                         "_window_opened", "rooms"), d)
+                         "rooms"), d)
 source_text = (ROOT / "custom_components/environment_manager/discovery.py").read_text()
 assert 'OPTIONAL_WINDOW_CONTACT_CLASSES = frozenset(("door", "opening"))' in source_text
 
@@ -205,6 +208,7 @@ assert away.open_windows(hass, {}) == (), "Legacy window-only discovery must ign
 by_id["binary_sensor.patio"].state = "off"
 
 arb = install("climate_arbitration")
+arb.permits_operation = contact_policy.permits_operation
 arb.__dict__.update(
     entity_area=entity_area, is_window=d.is_window,
     is_window_contact=d.is_window_contact, Any=object,
@@ -217,7 +221,7 @@ assert arb._contact_interlock(hass, living, plan), "Explicitly selected CLOSED d
 by_id["binary_sensor.patio"].state = "on"
 assert not arb._contact_interlock(hass, living, plan)
 by_id["binary_sensor.patio"].state = "unknown"
-assert not arb._contact_interlock(hass, living, plan)
+assert arb._contact_interlock(hass, living, plan)
 by_id["binary_sensor.patio"].state = "off"
 by_id["binary_sensor.patio"].attributes["device_class"] = "motion"
 assert not arb._contact_interlock(hass, living, plan), "Retyped selected door is not valid"

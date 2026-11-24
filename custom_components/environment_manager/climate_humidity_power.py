@@ -16,6 +16,7 @@ import time
 from datetime import datetime
 from typing import Any, Callable
 
+from .window_contact import permits_operation
 from .climate_coordination import device_inventory, duplicate_owners, live_room_humidity
 from .const import DOMAIN
 from .climate_equipment import humidity_advice
@@ -244,12 +245,7 @@ class HumidityPowerControl:
         if not contacts and cfg.get("humidity_power_windowless_confirmed") is not True:
             return "window_contact_or_explicit_exception_required", None
         for contact in contacts:
-            if (not isinstance(contact, str) or entity_area(self.hass, contact) != area):
-                return "wrong_room_window_contact", None
-            current = self.hass.states.get(contact)
-            if (current is None or current.domain != "binary_sensor" or
-                    current.attributes.get("device_class") != "window" or
-                    current.state != "off"):
+            if not permits_operation(self.hass, area, contact, plan.get("selected_window_contacts", ())):
                 return "window_open_or_unavailable", None
         value, reason = live_room_humidity(self.hass, area, cfg, plan)
         if value is None:

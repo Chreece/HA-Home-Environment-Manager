@@ -5201,7 +5201,13 @@
       '<div class="hem-room-ventilation95" role="status">'+
       this._icon('mdi:air-filter')+
       '<span>'+ventNotes95.map(value=>escape(value)).join(' · ')+'</span></div>':'';
-    if(roomStatus==='attention') alerts.push(this._roomAlert114(room,'attention',
+    const unavailableWindows=safeArray(room.windows).filter(win=>win.opened==null);
+    if(unavailableWindows.length){
+      const names=unavailableWindows.map(win=>win.name||win.entity_id).join(', ');
+      alerts.push(this._roomAlert114(room,'windows','mdi:alert-circle-outline',
+        [labels.attention,this._t('windows'),this._t('missing'),names].join(' · '),'warn'));
+    }
+    if(roomStatus==='attention'&&(!unavailableWindows.length||room.high_count>0)) alerts.push(this._roomAlert114(room,'attention',
       'mdi:alert-circle-outline',labels.attention,'warn'));
     // Required control inputs and optional diagnostics have distinct icons.
     // Neither an optional sensor nor an unconfigured window means No data.

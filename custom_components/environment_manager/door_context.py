@@ -251,7 +251,7 @@ class DoorContextMonitor:
             rh = _fresh_values(room, "humidity", 0, 100)
             co2 = _fresh_values(room, "co2", 0, 50000)
             windows = list(getattr(room, "windows", ()))
-            window_safe = all(win.opened is False for win in windows)
+            window_safe = not any(win.opened is True for win in windows)
             observed = observe(hass, area, cfg, occupancy=occupancy,
                                occupancy_evidence=evidence,
                                occupancy_sources=[source for source in sources if source !=

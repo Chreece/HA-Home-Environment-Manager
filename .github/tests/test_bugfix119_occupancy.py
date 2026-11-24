@@ -135,7 +135,7 @@ class RoomWindowTests(unittest.TestCase):
         self.assertFalse(result["blocked"])
         self.assertFalse(result["stop_requested"])
 
-    def test_missing_local_contact_still_holds_and_requires_recovery_delay(self):
+    def test_missing_local_contact_is_reported_without_pausing_or_delaying_recovery(self):
         fixture = Fixture([LOCAL])
         # Entity-area override is authoritative even when its device has
         # been assigned elsewhere. Missing local evidence must not be ignored.
@@ -144,13 +144,13 @@ class RoomWindowTests(unittest.TestCase):
         result = fixture.evaluate()
         self.assertEqual(result["status"], "window_state_unknown")
         self.assertEqual(result["unknown_contacts"], [LOCAL])
-        self.assertTrue(result["blocked"])
-        self.assertTrue(result["stop_requested"])
+        self.assertFalse(result["blocked"])
+        self.assertFalse(result["stop_requested"])
 
         fixture.put(LOCAL, "off", changed=BASE - 120)
-        self.assertEqual(fixture.evaluate()["remaining_seconds"], 60)
+        self.assertEqual(fixture.evaluate()["remaining_seconds"], 0)
         fixture.now += 59
-        self.assertTrue(fixture.evaluate()["blocked"])
+        self.assertFalse(fixture.evaluate()["blocked"])
         fixture.now += 1
         self.assertFalse(fixture.evaluate()["blocked"])
 
@@ -161,10 +161,10 @@ class RoomWindowTests(unittest.TestCase):
         self.assertEqual(result["contacts"], [FOREIGN])
         self.assertEqual(result["status"], "window_state_unknown")
         self.assertEqual(result["unknown_contacts"], [FOREIGN])
-        self.assertTrue(result["blocked"])
+        self.assertFalse(result["blocked"])
         # The user selected this contact for the room. With no registry
         # record there is no evidence to exclude it as belonging elsewhere.
-        self.assertTrue(result["stop_requested"])
+        self.assertFalse(result["stop_requested"])
 
 
 if __name__ == "__main__":

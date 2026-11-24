@@ -89,8 +89,11 @@ may be classified as `door`, `window` or `opening`. HEM does not infer
 this from its name. Door/Opening contacts are suggested for manual selection
 only; they are never automatically included in the Windows group. A chosen
 contact can also remain in the separate Door settings for room-boundary or
-Eco policies. Only confirmed open/closed states are trusted; unavailable or
-unknown selected contacts remain unknown and can hold automatic control.
+Eco policies. The room shows **Needs attention** and names any contact with
+a missing, unavailable, unknown or restored reading. Equipment uses the remaining
+live contacts. A confirmed open window still pauses opted-in equipment, and its
+confirmed closure starts the normal 60-second delay. A sensor returning from
+an outage with a closed reading can participate immediately.
 Do not use garage-door, motion or powered-cover entities for window evidence.
 
 ### 3. Complete General settings
@@ -637,6 +640,21 @@ room's configured **Home** targets for eligible automatic controllers so heating
 cooling and humidity control can begin before you get home. Devices still run
 according to measured demand; the action does not turn every appliance on.
 
+To start preparation automatically, select **Residents to track** in Home
+settings. Choose one person or GPS tracker per resident. The two radii are
+measured in metres from the centre of Home Assistant’s Home zone. Zero
+disables each rule independently.
+
+| Setting | When it takes effect |
+| --- | --- |
+| **Occupied radius** | The home counts as occupied while at least one resident is confidently inside. |
+| **Preparation radius** | After all selected residents were confirmed outside, the first entry starts the Prepare for arrival timer if the home is still Away. |
+
+For example, set preparation to 5,000 m and occupancy to 500 m to start
+conditioning on the approach and switch to normal Home control nearer home.
+GPS uncertainty at the boundary, startup inside it and repeated updates during
+one approach do not start additional timers.
+
 Set **Home - Prepare - Max Time** on the Home Environment device, or
 open that setting from the duration control in the card. The default is
 **60 minutes**; the allowed range is **1-1440 minutes**. Changing the setting
@@ -777,8 +795,10 @@ sleep and presence rules still apply, and Manual control retains its authority.
 4. If wanted, enable movement announcements or add a lux sensor and minimum lux.
 5. Enable **Shading · Automatic solar shade cooling** for the intended cover.
 
-Closing also needs current room temperature, a known closed linked window,
-sunlight/elevation, suitable selected weather and available cover feedback.
+Closing also needs current room temperature, sunlight/elevation, suitable
+selected weather and available cover feedback. An open linked window holds
+movement. A missing reading on the assigned contact raises a room warning and
+allows the other shading conditions to determine whether the cover moves.
 Selecting a cover alone does not enable movement. When movement announcements
 are enabled, failure to submit the announcement holds the movement.
 

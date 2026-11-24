@@ -5,12 +5,14 @@ A native thermostat retains compressor protection. No power-off command is sent
 just because the room enters the heating/cooling comfort deadband.
 """
 from __future__ import annotations
+
 import asyncio
 import logging
 import time
 from datetime import datetime
 from typing import Any
 
+from .window_contact import permits_operation
 from .pid_math import bounded_command, target_from_unit, finite
 from .climate_arbitration import new_command_gate
 from .discovery import entity_area, temperature_sensor_c
@@ -388,11 +390,7 @@ class NativeClimateControl:
                 self.statuses[area]={"status":"window_contacts_invalid"}
                 return
             for contact in contacts:
-                current=self.hass.states.get(contact)
-                if (not isinstance(contact,str) or current is None or
-                        current.domain!="binary_sensor" or
-                        current.attributes.get("device_class")!="window" or
-                        current.state!="off" or entity_area(self.hass,contact)!=area):
+                if not permits_operation(self.hass, area, contact, report.get("selected_window_contacts", ())):
                     self.statuses[area]={"status":"window_changed_since_plan"}
                     return
         # Explicit extra native equipment must not silently oppose this

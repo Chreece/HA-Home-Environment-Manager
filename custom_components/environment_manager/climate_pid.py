@@ -14,7 +14,8 @@ import math
 import time
 from typing import Any, Callable
 
-from .discovery import entity_area, is_window, temperature_sensor_c
+from .window_contact import permits_operation
+from .discovery import entity_area, temperature_sensor_c
 from .const import DOMAIN
 from .climate_entry_ownership import foreign_owner_hold
 from .pid_math import (
@@ -314,11 +315,7 @@ class ClimatePidCoordinator:
             return
         if settings.get("pause_on_window_open", True):
             # No registered/selected window contact is not an OPEN window.
-            # The shared room planner permits those rooms, while its discovery
-            # adds an explicit UNKNOWN Window for any selected missing
-            # contact. Preserve that fail-closed case without blocking every
-            # windowless room's PID forever.
-            if any(w.opened is not False for w in room.windows):
+            if any(w.opened is True for w in room.windows):
                 self._set_status(area, "window_open_or_unknown")
                 return
         # 10 minutes maximum regardless of the much larger monitoring max_age.
@@ -456,10 +453,7 @@ class ClimatePidCoordinator:
             # have opened while a previous device awaited service ACK.
             if settings.get("pause_on_window_open", True):
                 if any(
-                    entity_area(self.hass, window.entity_id) != area
-                    or (observed_window := self.hass.states.get(window.entity_id)) is None
-                    or not is_window(self.hass, observed_window)
-                    or observed_window.state != "off"
+                    not permits_operation(self.hass, area, window.entity_id, (window.entity_id,))
                     for window in room.windows
                 ):
                     self._set_status(area, "window_open_or_unknown")
