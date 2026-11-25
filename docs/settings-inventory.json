@@ -4108,9 +4108,8 @@
         "custom_components/environment_manager/room_setup.py:466",
         "custom_components/environment_manager/room_setup.py:522",
         "custom_components/environment_manager/room_setup.py:544",
-        "custom_components/environment_manager/room_setup.py:631",
-        "custom_components/environment_manager/room_setup.py:632",
-        "custom_components/environment_manager/room_setup.py:766"
+        "custom_components/environment_manager/room_setup.py:766",
+        "custom_components/environment_manager/room_setup.py:786"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -6890,9 +6889,8 @@
         "custom_components/environment_manager/room_setup.py:466",
         "custom_components/environment_manager/room_setup.py:522",
         "custom_components/environment_manager/room_setup.py:544",
-        "custom_components/environment_manager/room_setup.py:631",
-        "custom_components/environment_manager/room_setup.py:632",
-        "custom_components/environment_manager/room_setup.py:766"
+        "custom_components/environment_manager/room_setup.py:766",
+        "custom_components/environment_manager/room_setup.py:786"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -11121,9 +11119,8 @@
         "custom_components/environment_manager/room_setup.py:466",
         "custom_components/environment_manager/room_setup.py:522",
         "custom_components/environment_manager/room_setup.py:544",
-        "custom_components/environment_manager/room_setup.py:631",
-        "custom_components/environment_manager/room_setup.py:632",
-        "custom_components/environment_manager/room_setup.py:766"
+        "custom_components/environment_manager/room_setup.py:766",
+        "custom_components/environment_manager/room_setup.py:786"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -12594,9 +12591,8 @@
         "custom_components/environment_manager/room_setup.py:466",
         "custom_components/environment_manager/room_setup.py:522",
         "custom_components/environment_manager/room_setup.py:544",
-        "custom_components/environment_manager/room_setup.py:631",
-        "custom_components/environment_manager/room_setup.py:632",
-        "custom_components/environment_manager/room_setup.py:766"
+        "custom_components/environment_manager/room_setup.py:766",
+        "custom_components/environment_manager/room_setup.py:786"
       ],
       "consumer_status": "card_adapts_options_form"
     },
