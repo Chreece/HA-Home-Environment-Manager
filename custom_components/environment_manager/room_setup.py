@@ -628,8 +628,8 @@ class RoomSetupMixin:
                     errors["general_" + key] = "invalid_room_source"
                 else:
                     radii[key] = int(raw)
-            if any(radii.values()) and not value["general_proximity_trackers"]:
-                errors["general_proximity_trackers"] = "invalid_room_source"
+            # An empty tracker selection suspends proximity while retaining
+            # the configured radii for a future selection.
             if value["general_home_policy"] not in ("any_home", "all_home"):
                 errors["general_home_policy"] = "invalid_room_source"
             try:

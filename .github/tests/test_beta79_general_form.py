@@ -186,8 +186,13 @@ async def run():
     geo = UI()
     out = (await real(geo, proposed))['saved']['occupancy_global']
     assert (out['occupied_radius_m'], out['arrival_radius_m'], out['proximity_trackers']) == (500, 5000, ['person.anna'])
+    geo._values['occupancy_global']['proximity_trackers'].append('device_tracker.old')
+    partial = (await real(geo, {'general_proximity_trackers': ['person.anna']}))['saved']['occupancy_global']
+    assert partial['proximity_trackers'] == ['person.anna']
+    cleared = (await real(geo, {'general_proximity_trackers': []}))['saved']['occupancy_global']
+    assert (cleared['proximity_trackers'], cleared['occupied_radius_m'], cleared['arrival_radius_m']) == ([], 500, 5000)
     for name, val in [('general_occupied_radius_m', -1), ('general_arrival_radius_m', True),
-                      ('general_proximity_trackers', []), ('general_proximity_trackers', ['sensor.count'])]:
+                      ('general_proximity_trackers', ['sensor.count'])]:
         broken = UI()
         result = await real(broken, {**proposed, name: val})
         assert name in result['errors'] and broken.saved == 0
