@@ -1688,7 +1688,7 @@
       "same_property_options_alias": null,
       "catalog_path": "strings.json/entity/number/shade_close_above_c",
       "literal_references": [
-        "custom_components/environment_manager/number.py:1039"
+        "custom_components/environment_manager/number.py:1037"
       ],
       "consumer_status": "capability_and_registry_dependent_native_control"
     },
@@ -1723,7 +1723,7 @@
       "same_property_options_alias": null,
       "catalog_path": "strings.json/entity/number/shade_min_lux",
       "literal_references": [
-        "custom_components/environment_manager/number.py:997"
+        "custom_components/environment_manager/number.py:995"
       ],
       "consumer_status": "capability_and_registry_dependent_native_control"
     },
@@ -2586,7 +2586,7 @@
       "literal_references": [
         "custom_components/environment_manager/const.py:11",
         "custom_components/environment_manager/door_coordination.py:177",
-        "custom_components/environment_manager/equipment_model.py:1211",
+        "custom_components/environment_manager/equipment_model.py:1225",
         "custom_components/environment_manager/equipment_power_switch.py:657"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -3086,7 +3086,7 @@
         "custom_components/environment_manager/dashboard.py:230",
         "custom_components/environment_manager/device_controls.py:103",
         "custom_components/environment_manager/device_controls.py:107",
-        "custom_components/environment_manager/equipment_model.py:1319"
+        "custom_components/environment_manager/equipment_model.py:1333"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -3331,8 +3331,8 @@
         "custom_components/environment_manager/device_controls.py:355",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1306",
-        "custom_components/environment_manager/manager.py:699"
+        "custom_components/environment_manager/manager.py:1318",
+        "custom_components/environment_manager/manager.py:711"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -3563,7 +3563,7 @@
       "literal_references": [
         "custom_components/environment_manager/const.py:11",
         "custom_components/environment_manager/door_coordination.py:177",
-        "custom_components/environment_manager/equipment_model.py:1211",
+        "custom_components/environment_manager/equipment_model.py:1225",
         "custom_components/environment_manager/equipment_power_switch.py:657"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -4034,10 +4034,10 @@
       "literal_references": [
         "custom_components/environment_manager/const.py:25",
         "custom_components/environment_manager/equipment_feature_registration.py:32",
-        "custom_components/environment_manager/equipment_model.py:187",
-        "custom_components/environment_manager/equipment_model.py:188",
-        "custom_components/environment_manager/equipment_model.py:191",
-        "custom_components/environment_manager/equipment_model.py:192"
+        "custom_components/environment_manager/equipment_model.py:197",
+        "custom_components/environment_manager/equipment_model.py:198",
+        "custom_components/environment_manager/equipment_model.py:201",
+        "custom_components/environment_manager/equipment_model.py:202"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -5247,7 +5247,7 @@
         "custom_components/environment_manager/config_flow.py:838",
         "custom_components/environment_manager/device_controls.py:180",
         "custom_components/environment_manager/environment_extended.py:187",
-        "custom_components/environment_manager/equipment_model.py:1276",
+        "custom_components/environment_manager/equipment_model.py:1290",
         "custom_components/environment_manager/switch.py:117"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -7582,8 +7582,8 @@
         "custom_components/environment_manager/device_controls.py:355",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1306",
-        "custom_components/environment_manager/manager.py:699"
+        "custom_components/environment_manager/manager.py:1318",
+        "custom_components/environment_manager/manager.py:711"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7721,8 +7721,8 @@
         "custom_components/environment_manager/device_controls.py:355",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1306",
-        "custom_components/environment_manager/manager.py:699"
+        "custom_components/environment_manager/manager.py:1318",
+        "custom_components/environment_manager/manager.py:711"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -7755,9 +7755,9 @@
       "literal_references": [
         "custom_components/environment_manager/door_settings.py:21",
         "custom_components/environment_manager/equipment_door_policy.py:70",
-        "custom_components/environment_manager/equipment_model.py:1093",
-        "custom_components/environment_manager/manager.py:392",
-        "custom_components/environment_manager/manager.py:713",
+        "custom_components/environment_manager/equipment_model.py:1107",
+        "custom_components/environment_manager/manager.py:404",
+        "custom_components/environment_manager/manager.py:725",
         "custom_components/environment_manager/number.py:332"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -7808,7 +7808,7 @@
       "literal_references": [
         "custom_components/environment_manager/const.py:11",
         "custom_components/environment_manager/door_coordination.py:177",
-        "custom_components/environment_manager/equipment_model.py:1211",
+        "custom_components/environment_manager/equipment_model.py:1225",
         "custom_components/environment_manager/equipment_power_switch.py:657"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -8291,7 +8291,7 @@
         "custom_components/environment_manager/dashboard.py:230",
         "custom_components/environment_manager/device_controls.py:103",
         "custom_components/environment_manager/device_controls.py:107",
-        "custom_components/environment_manager/equipment_model.py:1319"
+        "custom_components/environment_manager/equipment_model.py:1333"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -9491,7 +9491,7 @@
         "custom_components/environment_manager/config_flow.py:838",
         "custom_components/environment_manager/device_controls.py:180",
         "custom_components/environment_manager/environment_extended.py:187",
-        "custom_components/environment_manager/equipment_model.py:1276",
+        "custom_components/environment_manager/equipment_model.py:1290",
         "custom_components/environment_manager/switch.py:117"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
@@ -11780,8 +11780,8 @@
         "custom_components/environment_manager/device_controls.py:355",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1306",
-        "custom_components/environment_manager/manager.py:699"
+        "custom_components/environment_manager/manager.py:1318",
+        "custom_components/environment_manager/manager.py:711"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -12012,7 +12012,7 @@
       "literal_references": [
         "custom_components/environment_manager/const.py:11",
         "custom_components/environment_manager/door_coordination.py:177",
-        "custom_components/environment_manager/equipment_model.py:1211",
+        "custom_components/environment_manager/equipment_model.py:1225",
         "custom_components/environment_manager/equipment_power_switch.py:657"
       ],
       "consumer_status": "card_adapts_options_form"
@@ -12483,10 +12483,10 @@
       "literal_references": [
         "custom_components/environment_manager/const.py:25",
         "custom_components/environment_manager/equipment_feature_registration.py:32",
-        "custom_components/environment_manager/equipment_model.py:187",
-        "custom_components/environment_manager/equipment_model.py:188",
-        "custom_components/environment_manager/equipment_model.py:191",
-        "custom_components/environment_manager/equipment_model.py:192"
+        "custom_components/environment_manager/equipment_model.py:197",
+        "custom_components/environment_manager/equipment_model.py:198",
+        "custom_components/environment_manager/equipment_model.py:201",
+        "custom_components/environment_manager/equipment_model.py:202"
       ],
       "consumer_status": "card_adapts_options_form"
     },
@@ -12789,8 +12789,8 @@
         "custom_components/environment_manager/device_controls.py:355",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1306",
-        "custom_components/environment_manager/manager.py:699"
+        "custom_components/environment_manager/manager.py:1318",
+        "custom_components/environment_manager/manager.py:711"
       ],
       "consumer_status": "catalog_only_step_reachability_not_proven"
     },
@@ -12928,8 +12928,8 @@
         "custom_components/environment_manager/device_controls.py:355",
         "custom_components/environment_manager/device_hierarchy.py:179",
         "custom_components/environment_manager/device_hierarchy.py:195",
-        "custom_components/environment_manager/manager.py:1306",
-        "custom_components/environment_manager/manager.py:699"
+        "custom_components/environment_manager/manager.py:1318",
+        "custom_components/environment_manager/manager.py:711"
       ],
       "consumer_status": "card_adapts_options_form"
     },
@@ -12962,9 +12962,9 @@
       "literal_references": [
         "custom_components/environment_manager/door_settings.py:21",
         "custom_components/environment_manager/equipment_door_policy.py:70",
-        "custom_components/environment_manager/equipment_model.py:1093",
-        "custom_components/environment_manager/manager.py:392",
-        "custom_components/environment_manager/manager.py:713",
+        "custom_components/environment_manager/equipment_model.py:1107",
+        "custom_components/environment_manager/manager.py:404",
+        "custom_components/environment_manager/manager.py:725",
         "custom_components/environment_manager/number.py:332"
       ],
       "consumer_status": "card_adapts_options_form"

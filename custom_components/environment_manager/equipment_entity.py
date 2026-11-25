@@ -81,12 +81,22 @@ class EquipmentEntity:
 
     @property
     def controller_settings(self):
+        # HA reads availability, value and many attributes synchronously in a
+        # single write. Reuse the profile for just that serialization.
+        snapshot = getattr(self, "_render_settings", None)
+        if snapshot is not None:
+            return snapshot
         if getattr(self, "_operating_mode", None):
             if model.mode_descriptor(self._manager, self._spec, self._operating_mode) is None:
                 from .equipment_mode_entities import saved_display_settings
-                return saved_display_settings(self._manager, self._spec, self._operating_mode)
-            return model.settings_for_mode(self._manager, self._spec, self._operating_mode)
-        return model.settings(self._manager, self._spec)
+                snapshot = saved_display_settings(self._manager, self._spec, self._operating_mode)
+            else:
+                snapshot = model.settings_for_mode(self._manager, self._spec, self._operating_mode)
+        else:
+            snapshot = model.settings(self._manager, self._spec)
+        if getattr(self, "_rendering", False):
+            self._render_settings = snapshot
+        return snapshot
 
     async def _async_update_controller_settings(self, changes):
         mode = getattr(self, "_operating_mode", None)
@@ -159,8 +169,10 @@ class EquipmentEntity:
 
     async def async_added_to_hass(self):
         await super().async_added_to_hass()
-        from .equipment_updates import controller_signal
-        self._equipment_write_handle = None
+        from .equipment_updates import EquipmentStateWrites, controller_signal
+        if getattr(self._manager, "_equipment_state_writes", None) is None:
+            self._manager._equipment_state_writes = EquipmentStateWrites(self.hass.loop)
+        self._state_writes = self._manager._equipment_state_writes
         self._native_update_unsub = None
         self._native_watch_enabled = False
         self._native_watched_ids = frozenset()
@@ -173,9 +185,8 @@ class EquipmentEntity:
 
     @callback
     def _equipment_cleanup(self):
-        if self._equipment_write_handle is not None:
-            self._equipment_write_handle.cancel()
-            self._equipment_write_handle = None
+        self._state_writes.discard(self)
+        self._state_writes = None
         if self._native_update_unsub is not None:
             self._native_update_unsub()
             self._native_update_unsub = None
@@ -191,7 +202,7 @@ class EquipmentEntity:
     @callback
     def _bind_native_updates(self):
         from homeassistant.helpers.event import async_track_state_change_event
-        upstream = model.settings(self._manager, self._spec).get("power_switch_entity")
+        upstream = model.power_switch_entity(self._manager, self._spec)
         sources = set(self._spec.source_entities)
         if isinstance(upstream, str) and upstream.startswith("switch."):
             sources.add(upstream)
@@ -218,14 +229,20 @@ class EquipmentEntity:
 
     @callback
     def _equipment_write(self):
-        self._equipment_write_handle = None
-        self.async_write_ha_state()
+        self._rendering = True
+        try:
+            if self._native_watch_enabled:
+                self._bind_native_updates()
+            self._prepare_equipment_state()
+            self.async_write_ha_state()
+        finally:
+            self._render_settings = None
+            self._rendering = False
+
+    def _prepare_equipment_state(self):
+        """Refresh dynamic metadata immediately before publishing the state."""
 
     @callback
     def _equipment_update(self):
-        if self._native_watch_enabled:
-            self._bind_native_updates()
-        # One serialization for this entity per loop turn even when a native
-        # source, a config change and its controller status arrive together.
-        if self._equipment_write_handle is None:
-            self._equipment_write_handle = self.hass.loop.call_soon(self._equipment_write)
+        if self._state_writes is not None:
+            self._state_writes.request(self)

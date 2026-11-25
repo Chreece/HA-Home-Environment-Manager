@@ -7,6 +7,7 @@ import logging
 from dataclasses import replace
 from datetime import timedelta
 from time import monotonic, time
+from types import MappingProxyType
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
@@ -83,6 +84,7 @@ class AirQualityManager:
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
         self.hass = hass
         self.entry = entry
+        self._settings_cache: tuple[MappingProxyType, MappingProxyType, dict[str, Any]] | None = None
         self.plan = Plan("blocked", False, (), (), ())
         self._tracked: set[str] = set()
         self._unsubs: list[Any] = []
@@ -153,7 +155,17 @@ class AirQualityManager:
 
     @property
     def settings(self) -> dict[str, Any]:
-        return {**self.entry.data, **self.entry.options}
+        """Merge once per HA config entry revision and give each caller its own dict."""
+        data, options = self.entry.data, self.entry.options
+        cached = self._settings_cache
+        if cached is not None and cached[0] is data and cached[1] is options:
+            return cached[2].copy()
+        merged = {**data, **options}
+        if isinstance(data, MappingProxyType) and isinstance(options, MappingProxyType):
+            self._settings_cache = (data, options, merged)
+            return merged.copy()
+        self._settings_cache = None
+        return merged
 
     @property
     def thresholds(self) -> dict[str, float]:

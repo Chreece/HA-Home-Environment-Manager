@@ -937,14 +937,12 @@ class EquipmentNumber(EquipmentEntity, NumberEntity):
             self._attr_native_max_value = limits[prefix + "_max_limit"]
         self._attr_native_step = 1.0 if prefix == "humidity" else cap.temp_step
 
-    @callback
-    def _equipment_update(self):
+    def _prepare_equipment_state(self):
         self._sync_mode_target_bounds()
         if self._key in equipment.FAN_LIMIT_FIELDS:
             bounds = equipment.fan_limit_edit_bounds(self._manager, self._spec)
             self._attr_native_min_value, self._attr_native_max_value = bounds[:2]
             self._attr_native_step, self._attr_native_unit_of_measurement = bounds[2:]
-        super()._equipment_update()
 
 
 class ShadeCoolingNumber(SettingsMetadata, NumberEntity):

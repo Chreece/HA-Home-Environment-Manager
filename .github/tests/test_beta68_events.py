@@ -15,6 +15,7 @@ pkg=ModuleType('hem68test');pkg.__path__=[str(ROOT)];sys.modules[pkg.__name__]=p
 # serialization scheduling and cancellation use the exact shipped source.
 model=ModuleType('hem68test.equipment_model')
 model.settings=lambda manager,spec:manager.settings.get(spec.identifier,{})
+model.power_switch_entity=lambda manager,spec:model.settings(manager,spec).get('power_switch_entity')
 sys.modules[model.__name__]=model
 
 if REAL:
@@ -109,6 +110,19 @@ async def main():
  await asyncio.sleep(.03)
  assert sum(p.writes for p in probes)-before==960
  assert not runtime._presentation_updates.pending and runtime._presentation_updates.handle is None
+ # A dashboard-sized burst must yield to work already queued on the same loop.
+ # Each of the 901 entities gets its latest state once, even after overlapping signals.
+ selected = probes[:901]
+ previous_writes = sum(p.writes for p in selected)
+ for p in selected:
+  p._equipment_update()
+  p._equipment_update()
+ await asyncio.sleep(0)
+ first_turn = sum(p.writes for p in selected) - previous_writes
+ assert 0 < first_turn <= 24, first_turn
+ while manager._equipment_state_writes.pending:
+  await asyncio.sleep(0)
+ assert sum(p.writes for p in selected) - previous_writes == len(selected)
  # Physical sources use indexed subscriptions, ignore unrelated traffic,
  # replace a changed upstream ID and clean up on unload.
  physical=probes[0];physical._watch_native_updates()
@@ -130,6 +144,7 @@ async def main():
  # Scheduled presentation must be cancelled before detached entities write.
  status(runtime,specs[0],'window_open_pause')
  runtime._active=False;runtime._presentation_updates.close()
+ physical._equipment_update()
  for p in probes:await p.remove()
  count=sum(p.writes for p in probes)
  hass.states.async_set('climate.native_0','dry')
@@ -143,6 +158,7 @@ async def main():
   'logical_entities':960,'status_changes':12000,'presentation_writes':960,
   'unrelated_events':10000,'writes_for_unrelated_events':0,
   'source_burst_events':1000,'source_burst_writes':1,
+  'dashboard_burst_entities':len(selected),'writes_before_yield':first_turn,
   'unload_leaks':0,'seconds':round(time.monotonic()-started,3)}))
 
 asyncio.run(main())

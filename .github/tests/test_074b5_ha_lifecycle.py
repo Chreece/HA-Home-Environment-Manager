@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import ast
 import asyncio
-from collections import defaultdict
+from collections import UserDict, defaultdict
 from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 from enum import Enum
@@ -19,7 +19,7 @@ from pathlib import Path
 import sys
 import tempfile
 from time import monotonic, time
-from types import ModuleType, SimpleNamespace as NS
+from types import MappingProxyType, ModuleType, SimpleNamespace as NS
 import unittest
 from unittest.mock import patch
 
@@ -323,6 +323,7 @@ def production_namespace(path, wanted_class=None, wanted_functions=()):
     namespace = {
         "__name__": PACKAGE + "." + path.stem, "__package__": PACKAGE,
         "asyncio": asyncio, "logging": logging, "callback": callback,
+        "MappingProxyType": MappingProxyType,
         "replace": replace, "timedelta": timedelta, "time": time, "monotonic": monotonic,
         "Plan": logic.Plan, "EnvironmentHistory": history.EnvironmentHistory,
         "EVENT_STATE_CHANGED": EVENT_STATE_CHANGED,
@@ -417,6 +418,31 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
 
     async def setup_entry(self):
         self.assertTrue(await ENTRY_NS["async_setup_entry"](self.hass, self.entry))
+
+    def test_entity_settings_reads_reuse_merge_and_observe_edits(self):
+        class CountedSettings(UserDict):
+            iterations = 0
+
+            def __iter__(self):
+                self.iterations += 1
+                return super().__iter__()
+
+        data = CountedSettings({"mode": "eco", "area": "kitchen"})
+        entry = NS(data=MappingProxyType(data), options=MappingProxyType({"mode": "home"}))
+        self.manager.entry = entry
+        for _ in range(1000):
+            result = self.manager.settings
+            self.assertEqual(result, {"mode": "home", "area": "kitchen"})
+            result.clear()
+        self.assertEqual(data.iterations, 1)
+        entry.options = MappingProxyType({})
+        self.assertEqual(self.manager.settings["mode"], "eco")
+        entry.data = MappingProxyType({"area": "office"})
+        self.assertEqual(self.manager.settings, {"area": "office"})
+        entry.options = {"mode": "away"}
+        self.assertEqual(self.manager.settings["mode"], "away")
+        entry.options.clear()
+        self.assertEqual(self.manager.settings, {"area": "office"})
 
     async def started(self):
         await self.hass.async_start()
