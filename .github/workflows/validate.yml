@@ -17,6 +17,8 @@ concurrency:
 jobs:
   card-webkit:
     runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright/python:v1.57.0-noble@sha256:3de745b23fc4b33fccbcb3f592ee52dd5c80ce79f19f839c825ce23364e403c1
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
@@ -24,7 +26,6 @@ jobs:
         with:
           python-version: '3.14'
       - run: python -m pip install 'playwright==1.57.0'
-      - run: python -m playwright install --with-deps webkit
       - run: python -I .github/tests/test_card_module_loading.py webkit
 
   validate:
