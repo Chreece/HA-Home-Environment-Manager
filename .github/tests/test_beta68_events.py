@@ -71,6 +71,13 @@ class Probe(entities.EquipmentEntity,ProbeBase):
   self.hass=manager.hass;self._manager=manager;self._spec=spec
   self.cleanups=[];self.writes=0
 
+async def drain_presentation_updates(runtime):
+ """Wait for scheduled controller signals and all budgeted entity-write batches."""
+ async with asyncio.timeout(5):
+  await asyncio.sleep(0)
+  while runtime._presentation_updates.pending or runtime.manager._equipment_state_writes.pending:
+   await asyncio.sleep(0)
+
 async def main():
  if REAL:
   tmp=tempfile.TemporaryDirectory();hass=HomeAssistant(tmp.name)
@@ -98,7 +105,7 @@ async def main():
  undo=async_dispatcher_connect(hass,f'{const.SIGNAL_UPDATED}_entry',lambda:global_calls.append(True))
  for i in range(1000):status(runtime,specs[0],'window_close_warmup',remaining=60-i/1000)
  assert runtime.statuses[specs[0].identifier]['remaining']<60
- await asyncio.sleep(.03)
+ await drain_presentation_updates(runtime)
  assert sum(p.writes for p in probes)==40, sum(p.writes for p in probes)
  assert not global_calls
  # 24 simultaneous devices, multiple changes per turn: one presentation per
@@ -107,7 +114,7 @@ async def main():
  started=time.monotonic()
  for i in range(500):
   for sp in specs:status(runtime,sp,'window_close_warmup',remaining=i)
- await asyncio.sleep(.03)
+ await drain_presentation_updates(runtime)
  assert sum(p.writes for p in probes)-before==960
  assert not runtime._presentation_updates.pending and runtime._presentation_updates.handle is None
  # A dashboard-sized burst must yield to work already queued on the same loop.
@@ -120,8 +127,7 @@ async def main():
  await asyncio.sleep(0)
  first_turn = sum(p.writes for p in selected) - previous_writes
  assert 0 < first_turn <= 24, first_turn
- while manager._equipment_state_writes.pending:
-  await asyncio.sleep(0)
+ await drain_presentation_updates(runtime)
  assert sum(p.writes for p in selected) - previous_writes == len(selected)
  # Physical sources use indexed subscriptions, ignore unrelated traffic,
  # replace a changed upstream ID and clean up on unload.
