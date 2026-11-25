@@ -32,7 +32,7 @@ namespace = {
     },
 }
 exec(compile(function_module("equipment_model.py", {
-    "_watchdog_option", "watchdog_option",
+    "_stored_settings", "power_switch_entity", "_watchdog_option", "watchdog_option",
 }), str(ROOT / "equipment_model.py"), "exec"), namespace)
 
 select_tree = ast.parse((ROOT / "select.py").read_text(encoding="utf-8"))
@@ -75,6 +75,7 @@ spec = NS(identifier=device_id)
 records = {
     device_id: {
         "off_state_watchdog_mode": "monitor_only",
+        "power_switch_entity": "switch.supply",
         "mode_settings_version": 1,
         "mode_settings": {"dry": {
             "pid_calibration": NoDeepCopy(),
@@ -88,6 +89,8 @@ manager = NS(settings={namespace["SETTINGS"]: records})
 probe = WatchdogProbe(manager, spec)
 before = records[device_id]["mode_settings"]["dry"]["profile_targets"]
 assert probe.current_option == "monitor_only"
+assert namespace["power_switch_entity"](manager, spec) == "switch.supply"
+assert namespace["power_switch_entity"](manager, NS(identifier=other_id)) is None
 assert probe.current_option == namespace["watchdog_option"](manager, spec)
 assert probe.current_option != namespace["watchdog_option"](
     manager, NS(identifier=other_id)), "Selected another physical controller"
