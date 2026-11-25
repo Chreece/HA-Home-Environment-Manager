@@ -3360,7 +3360,8 @@
           ${this._outside(data.outdoor || {})}
           ${this._pollenIndicator(data.outdoor || {})}
           ${this._summary(data.summary || {},rooms)}
-          <div class="rooms-list">${rooms.length || this._floorRegistry140?.floors?.length ? this._floorRooms140(rooms)
+          <div class="rooms-list">${rooms.length ? `<hem-room-name-measure aria-hidden="true">${rooms.map(room =>
+            `<strong>${escape(room.name || room.area_id)}</strong>`).join('')}</hem-room-name-measure>` : ''}${rooms.length || this._floorRegistry140?.floors?.length ? this._floorRooms140(rooms)
             : `<div class="empty-rooms">${this._icon('mdi:home-outline')}${escape(this._t('noRooms'))}</div>`}</div>
           <footer>${this._icon('mdi:shield-check-outline')} ${escape(this._t('sourceData'))}</footer>
         </div>
@@ -12888,6 +12889,21 @@
   /* HEM_SCIENCE_PERSISTENCE072_END */
 
   // Only the canonical Lovelace custom element and editor are registered.
+// Measure the names together so every floor uses the same column, including
+// after a room rename or a theme font change. This element is outside the tabs.
+if (!customElements.get('hem-room-name-measure')) {
+  customElements.define('hem-room-name-measure',class extends HTMLElement {
+    connectedCallback() {
+      const card=this.getRootNode().host;
+      if (!card || typeof ResizeObserver!=='function') return;
+      this.observer=new ResizeObserver(([entry])=>{
+        if (this.isConnected) card.style.setProperty('--hem-room-name-width',entry.contentRect.width+'px');
+      });
+      this.observer.observe(this);
+    }
+    disconnectedCallback() { this.observer?.disconnect(); }
+  });
+}
 if (!customElements.get('home-environment-manager-card')) {
   customElements.define('home-environment-manager-card',HomeEnvironmentManagerCard);
 }
@@ -15060,8 +15076,7 @@ HomeEnvironmentManagerCard.prototype._styles=function(){
       position:relative;z-index:1;
     }
     .hem-room-tab080 {
-      display:grid;grid-template-columns:34px minmax(0,1fr) 32px 50px 24px 48px;
-      align-items:center;gap:4px;width:min(100%,390px);min-width:0;
+      display:inline-flex;align-items:center;gap:2px;min-width:0;
       max-width:100%;min-height:36px;box-sizing:border-box;
       padding:0 8px 0 2px;position:relative;z-index:2;
       border:1px solid var(--hem-room-outline081);
@@ -15070,8 +15085,18 @@ HomeEnvironmentManagerCard.prototype._styles=function(){
       border-radius:10px 10px 0 0;
       background:var(--aqa-surface);
     }
+    .rooms-list {position:relative}
+    hem-room-name-measure {
+      position:absolute;visibility:hidden;pointer-events:none;
+      inline-size:max-content;max-inline-size:100%;block-size:0;overflow:hidden;
+    }
+    hem-room-name-measure strong {display:block;white-space:nowrap}
+    hem-room-name-measure strong,.hem-room-tab080 .hem-room-name87 {
+      font-size:13px;line-height:1.35;font-weight:700;
+    }
     .hem-room-tab080 .hem-room-name87 {
-      min-width:0;font-size:13px;line-height:1.35;
+      flex:none;inline-size:min(var(--hem-room-name-width,12ch),max(40cqi,100cqi - 180px));
+      min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
     .hem-room-tab080 .hem-room-settings114 {
       flex:0 0 34px;width:34px;height:34px;border-radius:6px;
@@ -15111,17 +15136,15 @@ HomeEnvironmentManagerCard.prototype._styles=function(){
       .hem-device-glance87:has(.hem-controller-target)>ha-icon:last-child {grid-column:4;grid-row:1}
     }
     .hem-room-condition-detail {padding:5px 3px;color:var(--aqa-muted);font-size:13px}
-    .hem-room-tab080:not(:has(.hem-room-faces)) {grid-template-columns:34px minmax(0,1fr) 0 50px 24px 48px}
     .hem-room-tab080>.hem-room-alerts87 {
-      grid-column:4;display:flex;align-items:center;justify-content:flex-start;gap:2px;
-      flex-wrap:nowrap;overflow-x:auto;min-width:0;max-width:100%;scroll-snap-type:x proximity;
+      flex:0 1 auto;flex-wrap:nowrap;gap:2px;min-width:0;max-width:none;
+      overflow-x:auto;scroll-snap-type:x proximity;
     }
     .hem-room-tab080>.hem-room-alerts87 button {scroll-snap-align:start}
-    .hem-room-tab080>.hem-room-info-column {grid-column:5;display:flex;align-items:center}
-    .hem-room-tab080>.hem-room-active87 {
-      grid-column:6;display:flex;align-items:center;justify-content:flex-end;flex-wrap:nowrap;gap:1px;max-width:100%;
+    .hem-room-tab080>.hem-room-info-column,.hem-room-tab080>.hem-room-active87 {
+      display:inline-flex;align-items:center;flex:none;flex-wrap:nowrap;gap:1px;max-width:none;
     }
-    .hem-room-tab080 .hem-room-name87 {overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+    .hem-room-tab080>:is(.hem-room-alerts87,.hem-room-info-column,.hem-room-active87):empty {display:none}
     .hem-room-glance87 .hem-room-tabline080 .hem-hint87:nth-child(n) {
       display:inline-flex;flex:0 0 24px;width:24px;height:28px;
     }

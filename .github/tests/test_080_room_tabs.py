@@ -53,6 +53,10 @@ REPORT = r"""()=>{
   const box=node=>{const r=node.getBoundingClientRect();
     return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height}};
   const visible=node=>node.getClientRects().length&&getComputedStyle(node).display!=='none';
+  const textWidth=node=>{
+    const range=document.createRange();range.selectNodeContents(node);
+    return range.getBoundingClientRect().width;
+  };
   const frame=document.querySelector('main');
   return {viewport:innerWidth,pageScroll:document.documentElement.scrollWidth,
     frameWidth:frame.clientWidth,frameScroll:frame.scrollWidth,
@@ -60,7 +64,8 @@ REPORT = r"""()=>{
       area:summary.parentElement.getAttribute('data-room-fold87'),
       header:box(summary),scrollWidth:summary.scrollWidth,clientWidth:summary.clientWidth,
       tab:box(summary.querySelector('.hem-room-tab080')),
-      columns:['.hem-room-name87','.hem-room-alerts87','.hem-room-info-column','.hem-room-active87'].map(s=>box(summary.querySelector(s)).left),
+      textWidth:textWidth(summary.querySelector('.hem-room-name87')),
+      indicators:[...summary.querySelectorAll('.hem-room-tab080 > span')].filter(visible).map(box),
       tabRow:box(summary.querySelector('.hem-room-tabline080')),
       tabVisual:{
         outerBorder:getComputedStyle(summary.parentElement).borderTopWidth,
@@ -98,8 +103,11 @@ def assert_geometry(report, label):
     assert report['pageScroll'] <= report['viewport'] + 1, (label, report)
     assert report['frameScroll'] <= report['frameWidth'] + 1, (label, report)
     assert len(report['rows']) == 2, (label, report)
-    for a,b in zip(report['rows'][0]['columns'],report['rows'][1]['columns']):
-        assert abs(a-b)<=1, ('column alignment',label,report)
+    first, second = report['rows']
+    for edge in ('left', 'right'):
+        assert abs(first['name'][edge] - second['name'][edge]) <= 1, ('name alignment', label, report)
+    widest = max(row['textWidth'] for row in report['rows'])
+    assert first['name']['width'] <= widest + 1, ('extra space after widest name', label, report)
     for row in report['rows']:
         context = (label, row)
         assert row['tabVisual']['outerBorder'] == '0px', ('no outer frame above tab', *context)
@@ -115,8 +123,12 @@ def assert_geometry(report, label):
         if row['faces']:
             assert row['faceLabel'], context
             assert row['name']['right'] <= row['faces']['left'] <= row['name']['right'] + 8, context
-        if row['alerts']:
-            assert abs(row['alerts'][0]['left'] - row['columns'][1]) <= 1, context
+        previous = row['name']
+        for indicator in row['indicators']:
+            assert indicator['width'] > 0, ('empty indicator slot', *context)
+            assert -0.5 <= indicator['left'] - previous['right'] <= 3, ('indicator gap', *context)
+            previous = indicator
+        assert row['tab']['right'] - previous['right'] <= 10, ('unused tab space', *context)
         for alert in row['alerts']:
             assert alert['width'] >= 22, context
             assert row['tabRow']['top'] <= alert['top'] < alert['bottom'] <= row['tabRow']['bottom'], context
@@ -222,6 +234,22 @@ def run():
                         assert len(kitchen['alerts']) + kitchen['infoCount'] >= 5, (label, kitchen['alerts'])
                         assert any(glyph['icon'] == 'mdi:approximately-equal'
                                    for metric in kitchen['metrics'] for glyph in metric['glyphs']), label
+                # Equal character counts can have very different rendered widths.
+                # Renaming the widest room must move both groups without reloading.
+                for names in (['WWWWW', 'iiiiiiii'], ['Küche', 'Schlafzimmer']):
+                    page.evaluate("""names=>{
+                      card._dashboard105().rooms.forEach((room,i)=>{room.name=names[i]});
+                      card._renderContent(true);
+                    }""", names)
+                    page.wait_for_function("""() => {
+                      const cells=[...card.shadowRoot.querySelectorAll('.hem-room-name87')];
+                      const widest=Math.max(...cells.map(cell=>{
+                        const r=document.createRange();r.selectNodeContents(cell);
+                        return r.getBoundingClientRect().width;
+                      }));
+                      return cells.every(cell=>Math.abs(cell.getBoundingClientRect().width-widest)<=1);
+                    }""")
+                    assert_geometry(page.evaluate(REPORT), f'{language} renamed {names}')
                 # Render through the real card, including its measurement selection.
                 faces = page.evaluate("""base=>{
                   function render(t,r,options={}){
