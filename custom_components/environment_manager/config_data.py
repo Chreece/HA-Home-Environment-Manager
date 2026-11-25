@@ -13,6 +13,8 @@ def mutable_copy(value: Any) -> Any:
     entry data/options, including snapshots passed through other integrations.
     Lists/tuples retain their structure; nested mappings become independent dicts.
     """
+    if type(value) in (str, int, float, bool) or value is None:
+        return value
     if isinstance(value, Mapping):
         return {key: mutable_copy(item) for key, item in value.items()}
     if isinstance(value, list):

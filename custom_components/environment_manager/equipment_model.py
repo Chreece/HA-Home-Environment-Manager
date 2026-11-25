@@ -140,11 +140,20 @@ def device_config(manager: Any, spec: ManagedDevice, entity: str | None = None) 
     return profile if isinstance(profile, dict) else {}
 
 
-def raw_settings(manager: Any, spec: ManagedDevice) -> dict:
-    """Copy of persisted physical settings, including every operating profile."""
+def _stored_settings(manager: Any, spec: ManagedDevice) -> dict:
     profiles = manager.settings.get(SETTINGS, {})
     raw = profiles.get(spec.identifier, {}) if isinstance(profiles, dict) else {}
-    return deepcopy(raw) if isinstance(raw, dict) else {}
+    return raw if isinstance(raw, dict) else {}
+
+
+def raw_settings(manager: Any, spec: ManagedDevice) -> dict:
+    """Copy of persisted physical settings, including every operating profile."""
+    return deepcopy(_stored_settings(manager, spec))
+
+
+def power_switch_entity(manager: Any, spec: ManagedDevice):
+    """The supply is a shared physical setting across every operating mode."""
+    return _stored_settings(manager, spec).get("power_switch_entity")
 
 
 def _watchdog_option(raw: dict) -> str:
@@ -161,14 +170,15 @@ def watchdog_option(manager: Any, spec: ManagedDevice) -> str:
     The watchdog is never a per-mode setting; missing/legacy uses the old default
     while malformed saved values fail closed, exactly like base_settings().
     """
-    profiles = manager.settings.get(SETTINGS, {})
-    raw = profiles.get(spec.identifier, {}) if isinstance(profiles, dict) else {}
-    return _watchdog_option(raw if isinstance(raw, dict) else {})
+    return _watchdog_option(_stored_settings(manager, spec))
 
 
 def base_settings(manager: Any, spec: ManagedDevice) -> dict:
     """Legacy effective defaults, without transient or inactive mode metadata."""
-    raw = raw_settings(manager, spec)
+    return _base_settings(manager, spec, raw_settings(manager, spec))
+
+
+def _base_settings(manager: Any, spec: ManagedDevice, raw: dict) -> dict:
     result = {**deepcopy(DEFAULTS), **{
         key: value for key, value in raw.items()
         if key not in MODE_METADATA_KEYS and key not in (
@@ -221,7 +231,11 @@ def settings_for_mode(manager: Any, spec: ManagedDevice, mode: str) -> dict:
     descriptor = mode_descriptor(manager, spec, mode)
     if descriptor is None:
         raise ValueError("unsupported_operating_mode")
-    result = resolve_settings(base_settings(manager, spec), raw_settings(manager, spec), mode,
+    return _settings_for_mode(manager, spec, mode, descriptor, raw_settings(manager, spec))
+
+
+def _settings_for_mode(manager, spec, mode, descriptor, raw):
+    result = resolve_settings(_base_settings(manager, spec, raw), raw, mode,
                               native_mode=descriptor["native_mode"],
                               target_keys=descriptor["target_keys"])
     if result.get("control_mode") not in descriptor["control_modes"]:
@@ -233,7 +247,6 @@ def settings_for_mode(manager: Any, spec: ManagedDevice, mode: str) -> dict:
         result["control_mode_reason"] = "unsupported_for_operating_mode"
     # Preserve the single calibration authority when a mode overrides only the
     # current selector; never revive an obsolete passive-selector preference.
-    raw = raw_settings(manager, spec)
     scoped = raw.get("mode_settings", {}).get(mode, {}) if has_mode_settings(raw) else {}
     explicit_method = scoped.get("pid_calibration_method") if isinstance(scoped, dict) else None
     result["pid_calibration_method"] = (explicit_method if explicit_method in PID_CALIBRATION_METHODS
@@ -254,12 +267,13 @@ def settings(manager: Any, spec: ManagedDevice) -> dict:
     if has_mode_settings(raw):
         choose = getattr(getattr(manager, "equipment", None), "active_control_mode", None)
         mode = choose(spec) if callable(choose) else None
-        if mode in operating_modes(manager, spec):
-            result = settings_for_mode(manager, spec, mode)
+        descriptor = mode_descriptor(manager, spec, mode) if mode else None
+        if descriptor is not None:
+            result = _settings_for_mode(manager, spec, mode, descriptor, raw)
             if raw.get("requested_mode") == "off":
                 result["requested_mode"] = "off"
             return result
-    return base_settings(manager, spec)
+    return _base_settings(manager, spec, raw)
 
 
 def window_alternative_supported(manager: Any, spec: ManagedDevice,
@@ -366,8 +380,8 @@ def capabilities(manager: Any, spec: ManagedDevice) -> Capabilities | None:
     is stable and the complete source list remains visible in attributes. A
     dedicated fan endpoint may augment native HVAC fan control.
     """
-    candidates = tuple(e for e in spec.source_entities if e in configured_sources(
-        manager.settings, spec.area_id))
+    configured = configured_sources(manager.settings, spec.area_id)
+    candidates = tuple(e for e in spec.source_entities if e in configured)
     if not candidates:
         return None
     primary = min(candidates, key=lambda e: (

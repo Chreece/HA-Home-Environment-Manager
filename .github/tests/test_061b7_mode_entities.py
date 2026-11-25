@@ -304,9 +304,12 @@ class ModeEntities(unittest.IsolatedAsyncioTestCase):
         self.f.states['climate.a'].attributes.update(min_temp=12, max_temp=29, target_temp_step=1)
         target.hass = self.m.hass
         target._native_watch_enabled = False
-        target._equipment_write_handle = None
-        self.m.hass.loop = N(call_soon=lambda callback: N(cancel=lambda: None))
+        writes = []
+        target._state_writes = N(request=writes.append)
+        target.async_write_ha_state = lambda: None
         target._equipment_update()
+        self.assertEqual(writes, [target])
+        writes[0]._equipment_write()
         self.assertEqual((target._attr_native_min_value, target._attr_native_max_value,
                           target._attr_native_step), (12, 29, 1))
 
