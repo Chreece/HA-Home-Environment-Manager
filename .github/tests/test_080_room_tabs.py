@@ -60,6 +60,7 @@ REPORT = r"""()=>{
       area:summary.parentElement.getAttribute('data-room-fold87'),
       header:box(summary),scrollWidth:summary.scrollWidth,clientWidth:summary.clientWidth,
       tab:box(summary.querySelector('.hem-room-tab080')),
+      columns:['.hem-room-name87','.hem-room-alerts87','.hem-room-info-column','.hem-room-active87'].map(s=>box(summary.querySelector(s)).left),
       tabRow:box(summary.querySelector('.hem-room-tabline080')),
       tabVisual:{
         outerBorder:getComputedStyle(summary.parentElement).borderTopWidth,
@@ -75,6 +76,7 @@ REPORT = r"""()=>{
       faceLabel:summary.querySelector('.hem-room-faces')?.getAttribute('aria-label'),
       alerts:[...summary.querySelectorAll('.hem-room-alerts87 button')].map(button=>({
         ...box(button),icon:button.querySelector('ha-icon').getAttribute('icon')})),
+      infoCount:summary.querySelectorAll('.hem-room-info-column button').length,
       nameText:summary.querySelector('.hem-room-name87').textContent,
       nameTitle:summary.querySelector('.hem-room-name87').title,
       settingsLabel:summary.querySelector('[data-room-settings114]').getAttribute('aria-label'),
@@ -96,6 +98,8 @@ def assert_geometry(report, label):
     assert report['pageScroll'] <= report['viewport'] + 1, (label, report)
     assert report['frameScroll'] <= report['frameWidth'] + 1, (label, report)
     assert len(report['rows']) == 2, (label, report)
+    for a,b in zip(report['rows'][0]['columns'],report['rows'][1]['columns']):
+        assert abs(a-b)<=1, ('column alignment',label,report)
     for row in report['rows']:
         context = (label, row)
         assert row['tabVisual']['outerBorder'] == '0px', ('no outer frame above tab', *context)
@@ -111,11 +115,10 @@ def assert_geometry(report, label):
         if row['faces']:
             assert row['faceLabel'], context
             assert row['name']['right'] <= row['faces']['left'] <= row['name']['right'] + 8, context
-        assert row['alerts'], context
-        previous = row['faces'] or row['name']
-        assert previous['right'] <= row['alerts'][0]['left'] <= previous['right'] + 8, context
+        if row['alerts']:
+            assert abs(row['alerts'][0]['left'] - row['columns'][1]) <= 1, context
         for alert in row['alerts']:
-            assert alert['width'] >= 22 and alert['right'] <= row['tab']['right'], context
+            assert alert['width'] >= 22, context
             assert row['tabRow']['top'] <= alert['top'] < alert['bottom'] <= row['tabRow']['bottom'], context
         assert row['settings']['top'] < row['name']['bottom'], context
         assert row['nameText'] in row['nameTitle'], context
@@ -216,7 +219,7 @@ def run():
                         kitchen = next(row for row in report['rows'] if row['area'] == 'kitchen')
                         assert {'mdi:weather-windy', 'mdi:window-open-variant', 'mdi:window-closed-variant'} <= {
                             alert['icon'] for alert in kitchen['alerts']}, label
-                        assert len(kitchen['alerts']) >= 5, (label, kitchen['alerts'])
+                        assert len(kitchen['alerts']) + kitchen['infoCount'] >= 5, (label, kitchen['alerts'])
                         assert any(glyph['icon'] == 'mdi:approximately-equal'
                                    for metric in kitchen['metrics'] for glyph in metric['glyphs']), label
                 # Render through the real card, including its measurement selection.

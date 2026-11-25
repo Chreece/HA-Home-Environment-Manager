@@ -160,7 +160,7 @@ LAYOUT_REPORT = """() => {
       return {
         name:row.querySelector('.hem-room-name87').textContent, box:rect(row),
         clientWidth:row.clientWidth, scrollWidth:row.scrollWidth, total:all.length,
-        leaves:[...row.querySelectorAll(':scope > ha-icon,.hem-room-name87,.hem-room-metric107,.hem-room-active87 .hem-hint87,.hem-room-alerts87 .hem-hint87,.hem-compact-extra87')]
+        leaves:[...row.querySelectorAll(':scope > ha-icon,.hem-room-name87,.hem-room-metric107,.hem-room-active87 .hem-hint87,.hem-room-alerts87,.hem-room-info-column,.hem-compact-extra87')]
           .filter(visible).map(el=>({name:el.className || el.getAttribute('icon'),box:rect(el)})),
         metrics:all.filter(visible).map(el=>{
           const style=getComputedStyle(el);
