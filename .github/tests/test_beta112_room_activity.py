@@ -293,7 +293,9 @@ def browser_checks(states):
         mixed = page.evaluate(REPORT, "mixed")
         assert mixed["homeCount"] == 0
         assert mixed["metric"][0]["colour"] == mixed["metric"][1]["colour"] == COLOURS["mixed"]
-        assert {a["colour"] for a in mixed["active"]} >= {COLOURS["heat"], COLOURS["cool"]}
+        assert len(mixed["active"]) == 1
+        assert mixed["active"][0]["colour"] in (COLOURS["heat"], COLOURS["cool"])
+        assert page.locator('[data-room-fold87="mixed"] .hem-room-active87 .hem-compact-extra87').inner_text().startswith("+")
         assert page.evaluate(REPORT, "air")["metric"][2]["colour"] == neutral, "Purifier implied CO2 removal"
         assert page.evaluate(REPORT, "heat")["metric"][0]["average"] not in COLOURS.values()
 

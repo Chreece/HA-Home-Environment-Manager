@@ -5271,7 +5271,7 @@
     const showFaces=dashboard?.show_room_smileys!==false;
     const faceArt=showFaces?roomFaceArt(conditions):'';
     const roomStatus=this._roomStatus075(room);
-    const alerts=[];
+    const alerts=[],information=[];
     // Display-only: room ventilation opportunity uses NO virtual CO2/AQI
     // readings. Native window-temperature guidance uses measured °C and
     // the corresponding physical thermostat's actual configured setpoint.
@@ -5331,7 +5331,7 @@
     const hasMissingSensor=safeArray(room.readings).some(item=>item?.available!==true);
     const missingRequired=room.data_availability?.status==='missing'||roomStatus==='unknown';
     const missingBasic=this._roomBasicMissing075(room);
-    if(missingRequired||hasMissingSensor||missingBasic.length) alerts.push(this._roomAlert114(room,'missing',
+    if(missingRequired||hasMissingSensor||missingBasic.length) information.push(this._roomAlert114(room,'missing',
       missingRequired?'mdi:help-circle-outline':'mdi:information-outline',
       missingRequired?this._t('unknown'):this._hemText071('missing'),'muted'));
     if(safeArray(room.windows).some(win=>win.opened===true))
@@ -5359,7 +5359,7 @@
     }).length;
     if(blocked) alerts.splice(faultCount?1:0,0,this._roomAlert114(room,'controllers','mdi:alert-outline',
       blocked+' '+labels.devices+' · '+labels.attention,'warn'));
-    const activeIcons=active.slice(0,3).map(item=>{
+    const activeIcons=active.slice(0,1).map(item=>{
       const domain=item.state.entity.split('.')[0];
       const name=this._hass?.states?.[item.state.entity]?.attributes?.friendly_name ||
         item.entry.climate?.attributes?.friendly_name || item.state.entity;
@@ -5370,8 +5370,8 @@
       return _iconHint87(icon,name+' · '+_activityText112(this,[item.state]),
         'normal','hem-activity-'+item.state.tone);
     }).join('');
-    const extra=active.length>3?'<span class="hem-compact-extra87" title="'+
-      escape(active.length+' '+labels.active)+'">+'+(active.length-3)+'</span>':'';
+    const extra=active.length>1?'<span class="hem-compact-extra87" title="'+
+      escape(active.length+' '+labels.active)+'">+'+(active.length-1)+'</span>':'';
     const formatted=(value,unit)=>
       '<span class="hem-room-metric-value107">'+
       escape(value===null?'—':this._format(value,1))+'</span>'+
@@ -5391,6 +5391,7 @@
         '" title="'+escape(conditions.label)+'">'+faceArt+'</span>':'')+
       '<span class="hem-room-alerts87" aria-label="'+escape(labels.attention)+'">'+
       alerts.join('')+'</span>'+
+      '<span class="hem-room-info-column">'+information.join('')+'</span>'+
       '<span class="hem-room-active87" aria-label="'+escape(active.length+' '+labels.active)+'">'+
       activeIcons+extra+'</span></span></span>'+
       '<span class="hem-room-overview080">'+
@@ -5406,7 +5407,7 @@
       '</span>'+
       this._icon(open?'mdi:chevron-up':'mdi:chevron-down')+
       '</summary><div class="hem-room-body87"><div class="hem-room-condition-detail">'+
-      (showFaces?faceArt+' ':'')+escape(conditions.label)+'</div>'+ventHeader95+
+      escape(room.name||room.area_id)+' · '+(showFaces?faceArt+' ':'')+escape(conditions.label)+'</div>'+ventHeader95+
       this._roomIssueDetail114(room)+original+'</div></details>';
   };
 
@@ -15059,7 +15060,8 @@ HomeEnvironmentManagerCard.prototype._styles=function(){
       position:relative;z-index:1;
     }
     .hem-room-tab080 {
-      display:inline-flex;align-items:center;gap:6px;min-width:0;
+      display:grid;grid-template-columns:34px minmax(0,1fr) 32px 50px 24px 48px;
+      align-items:center;gap:4px;width:min(100%,390px);min-width:0;
       max-width:100%;min-height:36px;box-sizing:border-box;
       padding:0 8px 0 2px;position:relative;z-index:2;
       border:1px solid var(--hem-room-outline081);
@@ -15109,14 +15111,17 @@ HomeEnvironmentManagerCard.prototype._styles=function(){
       .hem-device-glance87:has(.hem-controller-target)>ha-icon:last-child {grid-column:4;grid-row:1}
     }
     .hem-room-condition-detail {padding:5px 3px;color:var(--aqa-muted);font-size:13px}
+    .hem-room-tab080:not(:has(.hem-room-faces)) {grid-template-columns:34px minmax(0,1fr) 0 50px 24px 48px}
     .hem-room-tab080>.hem-room-alerts87 {
-      display:flex;align-items:center;justify-content:flex-start;
-      flex:none;flex-wrap:wrap;gap:2px;width:max-content;max-width:50%;min-width:0;
+      grid-column:4;display:flex;align-items:center;justify-content:flex-start;gap:2px;
+      flex-wrap:nowrap;overflow-x:auto;min-width:0;max-width:100%;scroll-snap-type:x proximity;
     }
+    .hem-room-tab080>.hem-room-alerts87 button {scroll-snap-align:start}
+    .hem-room-tab080>.hem-room-info-column {grid-column:5;display:flex;align-items:center}
     .hem-room-tab080>.hem-room-active87 {
-      align-self:center;justify-content:flex-end;flex-wrap:wrap;max-width:32%;
+      grid-column:6;display:flex;align-items:center;justify-content:flex-end;flex-wrap:nowrap;gap:1px;max-width:100%;
     }
-    .hem-room-tab080>.hem-room-alerts87:empty,.hem-room-tab080>.hem-room-active87:empty {display:none}
+    .hem-room-tab080 .hem-room-name87 {overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
     .hem-room-glance87 .hem-room-tabline080 .hem-hint87:nth-child(n) {
       display:inline-flex;flex:0 0 24px;width:24px;height:28px;
     }
