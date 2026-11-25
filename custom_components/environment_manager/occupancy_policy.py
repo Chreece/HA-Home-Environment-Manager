@@ -270,7 +270,7 @@ def home_presence(hass: Any, global_settings: Mapping,
             state = hass.states.get(entity)
             if state is not None and state.state == "home" and _fresh(state, None):
                 return "home", "any_home_policy", [entity]
-        if not (allowed or global_settings.get("occupied_rooms_entity")
+        if (meters or radius(global_settings, "arrival_radius_m")) and not (allowed or global_settings.get("occupied_rooms_entity")
                 or global_settings.get("room_occupancy_sensors")):
             allowed = list(nearby)
     if allowed:

@@ -46,7 +46,7 @@ def fixture():
                        "device_class": "temperature", "state_class": "measurement"},
     }
     room["readings"].append({"metric": "temperature", "value": 70.123,
-                             "unit": "°F", "available": True,
+                             "unit": "°F", "available": True, "threshold": 86,
                              "name": "Fahrenheit probe", "entity_id": "sensor.temp_f"})
     states["binary_sensor.window"] = {
         "entity_id": "binary_sensor.window", "state": "off",
@@ -205,6 +205,10 @@ const holding=card._averageDialog105={entity122:id,history122:[{t,v:70.123}],
 const evidenceHeld=card._entityTrendEvidence122(holding);
 assert.equal(evidenceHeld.value.held_until,t+36*3600);
 const heldHtml=card._averageBody105('living','temperature',evidenceHeld);
+if(evidenceHeld.entity_id==='sensor.temp_f'){
+  assert.ok(heldHtml.includes('class="hem-sensor-limit"'));
+  assert.ok(heldHtml.includes('86 °F'));
+}
 assert.equal(holding.model114.points.length,1,'A held value became synthetic samples');
 assert.deepEqual(holding.model114.gaps,[]);
 assert.equal(holding.model114.last,t+36*3600);

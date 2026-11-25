@@ -80,6 +80,5 @@ def boundary(hass, settings, selected, center, meters):
 def active_trackers(settings):
     if not isinstance(settings, Mapping) or not settings.get("proximity_trackers"):
         return ()
-    if radius(settings, "occupied_radius_m") or radius(settings, "arrival_radius_m"):
-        return trackers(settings)
-    return ()
+    # Native Home reports are household evidence even with both GPS radii off.
+    return trackers(settings)
