@@ -7386,7 +7386,16 @@
       Number.isFinite(saved.historyEnd122)&&saved.historyEnd122-latest.t>900
         ?saved.historyEnd122:null;
     room=room||{name:this._t('outside'),readings:[]};
+    const normalizeUnit=u=>String(u||'').replaceAll('μ','µ').replaceAll('³','3').trim();
+    const sameUnit=normalizeUnit(reading?.unit)===normalizeUnit(unit)||
+      metric==='aqi'&&(!unit||unit==='AQI')&&reading?.evaluation_status==='ready';
+    let threshold=sameUnit?reading?.threshold:null;
+    if(Number.isFinite(reading?.threshold)&&metric==='temperature'&&reading.unit==='°C'){
+      if(unit==='°F')threshold=reading.threshold*9/5+32;
+      if(unit==='K')threshold=reading.threshold+273.15;
+    }
     return {entity_id:id,title:state.attributes?.friendly_name||id,unit,metric,
+      threshold,
       room:{...room,readings:[{metric,unit}]},
       value:{value:currentValue,source_ids:[id],source_count:1,
         trend:saved.history122||[],...(heldUntil!==null?{held_until:heldUntil}:{}),
@@ -7566,10 +7575,16 @@
     const inspect075=controls075.length?[...new Set([...visible.map(point=>point.t),
       ...controlPoints075.flatMap(point=>[point.t,point.until])])]
       .filter(stamp=>stamp>=viewStart&&stamp<=viewEnd).sort((a,b)=>a-b).map(t=>({t})):null;
-    const values=[...visible.map(p=>p.v),...targetValues075],low=values.length?Math.min(...values):0;
+    const matching=safeArray(evidence.room.readings).filter(r=>r.metric===saved.metric);
+    const limits=matching.map(r=>r.threshold);
+    const threshold=evidence.entity_id?evidence.threshold:
+      limits.length&&limits.every(limit=>limit===limits[0])?limits[0]:null;
+    const showLimit=visible.length>0&&!visibleControls075.some(p=>
+      [p.target,p.target_low,p.target_high,p.output_percent,p.demand_percent].some(Number.isFinite))&&Number.isFinite(threshold);
+    const values=[...visible.map(p=>p.v),...targetValues075,...(showLimit?[threshold]:[])],low=values.length?Math.min(...values):0;
     const high=values.length?Math.max(...values):1;
     const padding=Math.max((high-low)*.15,Math.abs(low)*.005,.1);
-    return { ...data,visible,first,last,eventHistory,heldUntil,measuredLast075,controls075,timeline075,inspect075,
+    return { ...data,threshold:showLimit?threshold:null,visible,first,last,eventHistory,heldUntil,measuredLast075,controls075,timeline075,inspect075,
       output075,outputBinary075,physicalValues075:values.length>0,start:viewStart,end:viewEnd,
       width,left:48,right:width-(output075?(outputBinary075?64:48):14),top:18,bottom:164,min:low-padding,max:high+padding,
       older:!!state.range&&start>first,newer:!!state.range&&end<last,
@@ -7665,6 +7680,11 @@
     const uid=saved.uid114 ||= ++trendSequence114;
     const accent=({temperature:'#f28a4b',humidity:'#36bcb1',pm25:'#8da4ef',
       pm10:'#8da4ef',co2:'#72b85e',illuminance:'#d9ac44'})[metric]||'var(--primary-color,#03a9f4)';
+    const limitLabel=Number.isFinite(model.threshold)?this._t('limits')+' '+this._format(model.threshold,3)+' '+model.unit:'';
+    const limitY=limitLabel?trendY114(model,model.threshold):0;
+    const limitLine=limitLabel?'<line class="hem-sensor-limit" x1="'+model.left+'" x2="'+model.right+
+      '" y1="'+limitY+'" y2="'+limitY+'" stroke="var(--warning-color,#ffa600)" stroke-width="2" stroke-dasharray="6 3"><title>'+
+      escape(limitLabel)+'</title></line>':'';
     const ranges=[[21600,'6 '+tw114(this,'hours')],[86400,'24 '+tw114(this,'hours')],
       [604800,'7 '+tw114(this,'days')],[0,tw114(this,'all')]];
     const rangeButtons=ranges.map(([seconds,label])=>
@@ -7743,7 +7763,7 @@
       '<stop offset="1" stop-color="currentColor" stop-opacity=".015"/></linearGradient>'+
       '<pattern id="hem-trend-gap114-'+uid+'" width="7" height="7" patternUnits="userSpaceOnUse">'+
       '<path d="M0 7L7 0" stroke="currentColor" stroke-opacity=".10"/></pattern></defs>'+
-      ticks+timeTicks+gaps+'<path d="'+fill+'" fill="url(#hem-trend-fill114-'+uid+')"/>'+
+      ticks+timeTicks+gaps+limitLine+'<path d="'+fill+'" fill="url(#hem-trend-fill114-'+uid+')"/>'+
       '<path class="hem-avg-line105" d="'+paths.join(' ')+'"/>'+dots+
       '<g class="hem-trend-cursor114" pointer-events="none"><line y1="'+model.top+'" y2="'+
       model.bottom+'"/><circle cx="0" cy="0" r="5"/></g></svg>':'';
@@ -7752,7 +7772,7 @@
       ' <b>'+escape(this._format(Math.min(...values),3))+'</b></span><span>'+escape(tw114(this,'high'))+
       ' <b>'+escape(this._format(Math.max(...values),3))+'</b></span><span>'+
       model.visible.filter(point=>!point.carried&&!point.carried_view).length+' '+
-      escape(tw114(this,'samples'))+'</span></div>':'';
+      escape(tw114(this,'samples'))+'</span>'+(limitLabel?'<span>'+escape(limitLabel)+'</span>':'')+'</div>':'';
     const sources=value.source_ids.map(id=>{
       const label=this._hass?.states?.[id]?.attributes?.friendly_name||id;
       return '<button type="button" class="hem-average-source105" data-hem-source105="'+escape(id)+

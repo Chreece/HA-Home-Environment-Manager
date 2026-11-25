@@ -358,7 +358,10 @@ class DistanceTests(ArrivalCase):
         self.assertEqual(c.helper.home_status(), "away")
         c.manager.settings["occupancy_global"]["occupied_radius_m"] = 0
         self.fix(c, self.phone, 0, state="home")
-        self.assertEqual(c.helper.home_status(), "away")
+        c.manager.settings["occupancy_global"]["home_trackers"] = ["binary_sensor.home"]
+        c.hass.put("binary_sensor.home", "off")
+        self.assertEqual(c.helper.home_status(), "home")
+        self.assertEqual(c.plan()["away"], "home")
         c.helper.observe_current()
         await c.settle()
         self.assertFalse(c.helper.armed)
