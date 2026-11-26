@@ -743,6 +743,19 @@ def browser_checks(data):
         previous = requests()
         page.evaluate("card._openEntityTrend122('sensor.unselected')")
         assert requests() == previous and popup.count() == 0
+        fahrenheit = open_entity("sensor.temp_f")
+        resolve(fahrenheit, "sensor.temp_f", [
+            {"s": "70.123", "lu": END, "a": {"unit_of_measurement": "°F"}},
+        ])
+        limit = popup.locator('[data-trend-pick="limit"]')
+        limit.click()
+        assert limit.get_attribute("aria-pressed") == "true"
+        assert popup.locator(".hem-trend-tag text").text_content() == "86 °F"
+        assert limit.locator("b").inner_text() == "86 °F"
+        popup.locator('[data-trend-pick="measured"]').click()
+        assert popup.locator(".hem-trend-tag text").text_content() == page.evaluate("card._format(70.123,3)")+ " °F"
+        assert popup.evaluate("""p=>getComputedStyle(p.querySelector('.hem-sensor-limit')).stroke
+          !==getComputedStyle(p.querySelector('.hem-avg-line105')).stroke""")
         assert page.evaluate("serviceCalls") == []
         assert not errors, errors
         browser.close()

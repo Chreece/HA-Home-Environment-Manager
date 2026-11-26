@@ -7676,6 +7676,7 @@
     const chart=root.querySelector('[data-trend-chart114]');
     chart?.setAttribute('aria-valuenow',String(Math.max(0,selected.index)));
     chart?.setAttribute('aria-valuetext',(point?display+' '+model.unit:tw114(this,'gap'))+' · '+date);
+    return selected;
   };
   trend114._averageBody105=function(area,metric,evidence){
     const saved=this._averageDialog105,model=this._trendView114(evidence);
@@ -7684,12 +7685,11 @@
     const title=evidence.entity_id?evidence.title:metric==='temperature'?_roomLabels87(this._language()).temperature:
       metric==='humidity'?this._t('humidity'):this._metricName(metric);
     const uid=saved.uid114 ||= ++trendSequence114;
-    const accent=({temperature:'#f28a4b',humidity:'#36bcb1',pm25:'#8da4ef',
-      pm10:'#8da4ef',co2:'#72b85e',illuminance:'#d9ac44'})[metric]||'var(--primary-color,#03a9f4)';
+    const readouts=trendReadouts(this,model,title);
     const limitLabel=Number.isFinite(model.threshold)?this._t('limits')+' '+this._format(model.threshold,3)+' '+model.unit:'';
     const limitY=limitLabel?trendY114(model,model.threshold):0;
     const limitLine=limitLabel?'<line class="hem-sensor-limit" x1="'+model.left+'" x2="'+model.right+
-      '" y1="'+limitY+'" y2="'+limitY+'" stroke="var(--warning-color,#ffa600)" stroke-width="2" stroke-dasharray="6 3"><title>'+
+      '" y1="'+limitY+'" y2="'+limitY+'" data-trend-line="limit" stroke="var(--hem-trend-limit)" stroke-width="2" stroke-dasharray="6 3"><title>'+
       escape(limitLabel)+'</title></line>':'';
     const ranges=[[21600,'6 '+tw114(this,'hours')],[86400,'24 '+tw114(this,'hours')],
       [604800,'7 '+tw114(this,'days')],[0,tw114(this,'all')]];
@@ -7770,15 +7770,21 @@
       '<pattern id="hem-trend-gap114-'+uid+'" width="7" height="7" patternUnits="userSpaceOnUse">'+
       '<path d="M0 7L7 0" stroke="currentColor" stroke-opacity=".10"/></pattern></defs>'+
       ticks+timeTicks+gaps+limitLine+'<path d="'+fill+'" fill="url(#hem-trend-fill114-'+uid+')"/>'+
-      '<path class="hem-avg-line105" d="'+paths.join(' ')+'"/>'+dots+
+      '<path class="hem-avg-line105" d="'+paths.join(' ')+'" data-trend-line="measured"/>'+dots+
       '<g class="hem-trend-cursor114" pointer-events="none"><line y1="'+model.top+'" y2="'+
-      model.bottom+'"/><circle cx="0" cy="0" r="5"/></g></svg>':'';
+      model.bottom+'"/><circle cx="0" cy="0" r="4"/></g>'+
+      model.traces.filter(trace=>trace.field!=='measured').map(trace=>
+        '<path data-trend-dot="'+trace.slot+'" style="color:'+trace.color+'" class="hem-trend-dot" d="'+
+        (trace.field==='demand_percent'?'M0 -4L4 0 0 4 -4 0Z':trace.field==='output_percent'?
+          'M-4 3L0 -4 4 3Z':'M-3 -3H3V3H-3Z')+'" visibility="hidden"/>').join('')+
+      '<g class="hem-trend-tag" visibility="hidden" pointer-events="none"><rect rx="4" height="19"/>'+
+      '<text text-anchor="middle" y="13.5"></text></g></svg>':'';
     const values=model.visible.map(p=>p.v);
     const stats=values.length?'<div class="hem-trend-stats114"><span>'+escape(tw114(this,'low'))+
       ' <b>'+escape(this._format(Math.min(...values),3))+'</b></span><span>'+escape(tw114(this,'high'))+
       ' <b>'+escape(this._format(Math.max(...values),3))+'</b></span><span>'+
       model.visible.filter(point=>!point.carried&&!point.carried_view).length+' '+
-      escape(tw114(this,'samples'))+'</span>'+(limitLabel?'<span>'+escape(limitLabel)+'</span>':'')+'</div>':'';
+      escape(tw114(this,'samples'))+'</span></div>':'';
     const sources=value.source_ids.map(id=>{
       const label=this._hass?.states?.[id]?.attributes?.friendly_name||id;
       return '<button type="button" class="hem-average-source105" data-hem-source105="'+escape(id)+
@@ -7797,7 +7803,8 @@
         ?'<div class="hem-average-caption105">'+escape(word105(this,'moldNote'))+'</div>'
         :'<div class="hem-average-caption105">'+escape(word105(this,'average')+' '+value.source_count+' '+
         word105(this,'sensors'))+'</div><div class="hem-average-sources105">'+sources+'</div>');
-    return '<div class="hem-trend114" style="--hem-trend-accent114:'+accent+'">'+
+    const dark=this._hass?.themes?.darkMode;
+    return '<div class="hem-trend114"'+(typeof dark==='boolean'?' style="color-scheme:'+(dark?'dark':'light')+'"':'')+'>'+
       '<div class="hem-average-summary105"><div><strong>'+escape(title)+'</strong><small>'+escape(evidence.room.name||area)+
       '</small></div><span class="hem-trend-current114">'+escape(evidence.entity_id?ew122(this,'current'):tw114(this,'current'))+'<b>'+
       escape(currentValue)+'</b></span></div>'+historyStatus+
@@ -7806,9 +7813,8 @@
       nav('older','mdi:chevron-left',tw114(this,'older'),!model.older)+
       '<button type="button" data-trend-move114="latest">'+escape(tw114(this,'latest'))+'</button>'+
       nav('newer','mdi:chevron-right',tw114(this,'newer'),!model.newer)+'</div></div>'+
-      '<div class="hem-trend-readout114" aria-live="polite" aria-atomic="true">'+
-      '<div><span data-trend-label114>'+escape(tw114(this,'sample'))+'</span><strong><b data-trend-value114>—</b>'+
-      '<small>'+escape(model.unit)+'</small></strong></div><time data-trend-time114></time></div>'+
+      '<div class="hem-trend-readout114"><span data-trend-label114>'+escape(tw114(this,'sample'))+
+      '</span><time data-trend-time114></time></div>'+readouts+
       '<div class="hem-trend-plot114">'+chart+
       (!model.visible.length&&!model.controls075.length&&!historyMessage?'<div class="hem-avg-collect105">'+this._icon('mdi:chart-line')+
       '<span>'+escape(historyMessage||tw114(this,model.points.length?'empty':'collecting'))+'</span></div>':'')+'</div>'+stats+
@@ -8018,13 +8024,21 @@
     .hem-trend114 button:disabled{opacity:.3;cursor:default}
     .hem-trend114 button:focus-visible,.hem-trend-chart114:focus-visible{outline:2px solid var(--primary-color,#03a9f4);outline-offset:2px}
     .hem-trend114 button:hover:not(:disabled){color:var(--primary-text-color,#e8edf4)}
-    .hem-trend-readout114{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
-      min-height:62px;margin:14px 0 1px;font-variant-numeric:tabular-nums}
-    .hem-trend-readout114>div>span{display:block;font-size:10px;color:var(--hem-trend-muted114)}
-    .hem-trend-readout114 strong{display:flex;align-items:baseline;gap:5px;line-height:1.3}
-    .hem-trend-readout114 b{font-size:27px;font-weight:600;letter-spacing:-.5px}
-    .hem-trend-readout114 small{font-size:13px;font-weight:400;color:var(--hem-trend-muted114)}
-    .hem-trend-readout114 time{max-width:55%;color:var(--hem-trend-muted114);font-size:11px;text-align:end;line-height:1.5;padding-bottom:5px}
+    .hem-trend114{--hem-trend-accent114:light-dark(#006e99,#70cafa);--hem-trend-limit:light-dark(#a72b46,#ff929a)}
+    .hem-trend-readout114{display:flex;align-items:baseline;justify-content:space-between;gap:8px;
+      flex-wrap:wrap;margin:12px 0 5px;color:var(--hem-trend-muted114);font-size:11px;font-variant-numeric:tabular-nums}
+    .hem-trend-values{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px 6px;margin:3px 0 9px}
+    .hem-trend114 .hem-trend-values button{display:grid;align-content:center;gap:2px;text-align:start;
+      min-width:0;min-height:44px;padding:5px 7px;border:1px solid transparent;border-radius:6px;white-space:normal;
+      background:transparent;color:var(--hem-series-color);overflow-wrap:anywhere;font:inherit}
+    .hem-trend114 .hem-trend-values button[aria-pressed=true]{background:var(--secondary-background-color,#292a2b);
+      border-color:var(--divider-color,#4a4a4a)}
+    .hem-trend-values button span{font-size:12px}.hem-trend-values button b{font-size:16px;font-variant-numeric:tabular-nums}
+    .hem-trend-values .hem-control-name075{grid-column:1/-1;margin-top:5px}
+    .hem-trend-dot{fill:currentColor;stroke:var(--card-background-color,#202830);stroke-width:1.5;pointer-events:none}
+    .hem-trend-tag rect{fill:var(--card-background-color,#202830);stroke:currentColor;stroke-width:1}
+    .hem-trend-chart114 .hem-trend-tag text{fill:currentColor;font-size:11px;font-weight:600}
+    .hem-trend-chart114 [data-trend-line][data-focused]{stroke-width:3.1}
     .hem-trend-plot114{position:relative;margin:4px -2px 0}
     .hem-trend-chart114{display:block;width:100%;height:auto;max-height:none;overflow:visible;
       color:var(--hem-trend-accent114);touch-action:pan-y;cursor:crosshair;user-select:none;border-radius:7px}
@@ -8093,16 +8107,55 @@
   const controlTrend075=HomeEnvironmentManagerCard.prototype;
   const controlMetrics075=new Set(['temperature','humidity','mold','co2','pm25']);
   const controlFields075=['target','demand_percent','output_percent','target_low','target_high'];
-  const controlPalette075=['#47b7ed','#bd83ef','#88c749','#e8bd47','#f284ac',
-    '#4eb6a1','#df7b72','#9694e8','#b0ba59','#de92db',
-    '#75a4d2','#c6a072','#5cba87','#c58bd9','#ea9885'];
+  const controlPalette075=[
+    ['#855400','#ffc46e'],['#8541ac','#cd9aff'],['#406d22','#9cd77b'],
+    ['#aa4964','#f79bb7'],['#007674','#6ad6cd'],['#985321','#eaa16f'],
+    ['#565aa7','#a7afff'],['#577500','#c6d274'],['#9f458a','#ed9bd9'],['#246776','#79b9c1'],
+  ];
   function controlSeriesColors075(groupIndex){
     return Object.fromEntries(controlFields075.map((field,offset)=>{
-      const index=groupIndex*controlFields075.length+offset;
-      const color=controlPalette075[index] ||
-        'hsl('+((index*137.508)%360).toFixed(2)+' 62% '+(55+(index%3)*6)+'%)';
+      const index=groupIndex*controlFields075.length+offset,pair=controlPalette075[index];
+      const hue=(index*137.508)%360;
+      const color=pair?'light-dark('+pair.join(',')+')':
+        'light-dark(hsl('+hue.toFixed(2)+' 57% 35%),hsl('+hue.toFixed(2)+' 65% 71%))';
       return [field,color];
     }));
+  }
+  function trendReadouts(card,model,title){
+    const saved=card._averageDialog105;
+    const measured={slot:'measured',key:'measured',field:'measured',color:'var(--hem-trend-accent114)',label:title};
+    model.traces=[measured];
+    if(Number.isFinite(model.threshold))model.traces.push({slot:'limit',key:'limit',field:'limit',
+      color:'var(--hem-trend-limit)',label:card._t('limits')});
+    const headers=new Map();
+    model.controls075.forEach((group,index)=>{
+      const target=group.kind==='physical_device'?controlText075(card,'Physical device')+' · '+
+        controlText075(card,'Target'):controlText075(card,'HEM target');
+      const visible=group.points.filter(p=>p.t<=model.end&&p.targetUntil>=model.start);
+      const fields=['target','target_low','target_high','demand_percent','output_percent'].filter(field=>visible.some(p=>Number.isFinite(p[field])&&
+        (field.startsWith('target')||p.until>=model.start)));
+      const binary=visible.every(p=>p.until<model.start||!Number.isFinite(p.output_percent)||
+        ['activity','binary'].includes(p.output_kind));
+      const labels={target,target_low:target+' · '+tw114(card,'low'),target_high:target+' · '+tw114(card,'high'),
+        demand_percent:controlText075(card,'PID demand'),output_percent:controlText075(card,binary?'Physical device':'Reported output setting')};
+      for(const field of fields){
+        const slot=index+'-'+field;
+        if(field===fields[0])headers.set(model.controls075.length===1?'measured':slot,
+          '<div class="hem-control-name075"><strong>'+escape(group.name)+'</strong><span data-control-context075="'+index+'"></span></div>');
+        model.traces.push({field,slot,key:group.id+'|'+field,index,label:labels[field],color:group.colors[field]});
+      }
+    });
+    if(!model.traces.some(trace=>trace.key===saved.activeTrace)){
+      saved.activeTrace=(!model.visible.length&&model.traces.find(t=>t.index!==undefined)?.key)||'measured';
+    }
+    return '<div class="hem-trend-values">'+model.traces.map(trace=>{
+      const attr=trace.field==='measured'?'data-trend-value114':trace.field==='limit'?'data-trend-limit-value':
+        'data-control-'+({demand_percent:'demand',output_percent:'output'}[trace.field]||trace.field)+'075="'+trace.index+'"';
+      return (headers.get(trace.slot)||'')+'<button type="button" data-trend-pick="'+trace.slot+'" aria-pressed="'+
+        (trace.key===saved.activeTrace)+'" style="--hem-series-color:'+trace.color+'"><span>'+escape(trace.label)+
+        '</span><strong><b '+attr+'>—</b>'+(trace.field==='measured'?' <small>'+escape(model.unit)+'</small>':'')+
+        '</strong></button>';
+    }).join('')+'</div>';
   }
   const controlText075=(card,text)=>hemTextB8(text,card._language());
   const sourceKey075=ids=>[...ids].sort().join('|');
@@ -8216,8 +8269,11 @@
         if(!convert)continue;
         let group=kinds.get(series.target_kind);
         if(!group){
-          const colors=controlSeriesColors075(groups.length);
-          group={id:controller.controller_id+'|'+series.target_kind,name:controller.name,
+          const id=controller.controller_id+'|'+series.target_kind;
+          const slots=saved.colorSlots ||= new Map();
+          if(!slots.has(id))slots.set(id,slots.size);
+          const colors=controlSeriesColors075(slots.get(id));
+          group={id,name:controller.name,
             kind:series.target_kind,unit,points:[],colors,color:colors.target};
           kinds.set(series.target_kind,group);groups.push(group);
         }
@@ -8245,7 +8301,6 @@
           if(point.targetConnected)previous.targetUntil=point.t;
           previous=point;
         }
-        group.firstField=controlFields075.find(field=>group.points.some(point=>Number.isFinite(point[field])))||'target';
       }
     }
     return groups.filter(group=>group.points.length);
@@ -8281,39 +8336,13 @@
     const targetLabel=group=>group.kind==='physical_device'
       ?text('Physical device')+' · '+text('Target'):text('HEM target');
     const seriesStyle=(group,field)=>'style="--hem-control-color075:'+group.colors[field]+'"';
-    const marker=(group,field='target')=>'<i aria-hidden="true" '+seriesStyle(group,field)+
-      ' data-control-key075="'+field+'" class="hem-control-key075'+
-      (field.startsWith('target')?' hem-control-target-key075':'')+'"></i>';
     const outputSeries=groups.map((group,index)=>{
-      const points=group.points.filter(point=>point.t<=model.end&&point.until>=model.start);
-      const targets=group.points.filter(point=>point.t<=model.end&&point.targetUntil>=model.start);
-      return {group,index,targets,
-        demand:this._controlTrendPath075(group,model,'demand_percent',true),
-        output:this._controlTrendPath075(group,model,'output_percent',true),
-        binaryOnly:points.every(point=>point.output_percent===null||
-          ['activity','binary'].includes(point.output_kind))};
+      return {group,index,demand:this._controlTrendPath075(group,model,'demand_percent',true),
+        output:this._controlTrendPath075(group,model,'output_percent',true)};
     });
     const scaleLabel=text('Output evidence')+' · '+(model.outputBinary075?
       word105(this,'off')+' / '+word105(this,'on'):'%');
-    const legend='<div class="hem-control-legend075"><span><i class="hem-control-measured-key075" aria-hidden="true"></i>'+
-      escape(tw114(this,'sample')+' · '+model.unit)+'</span>'+
-      (model.output075?'<span class="hem-control-output-scale075">'+escape(scaleLabel)+'</span>':'')+
-      outputSeries.map(({group,targets,demand,output,binaryOnly})=>{
-        const hasTarget=targets.some(point=>[point.target,point.target_low,point.target_high].some(Number.isFinite));
-        if(!hasTarget&&!demand&&!output)return '';
-        return '<div class="hem-control-output-legend075"><strong>'+escape(group.name)+'</strong>'+
-          ['target','target_low','target_high'].filter(field=>targets.some(point=>Number.isFinite(point[field])))
-            .map(field=>'<span>'+marker(group,field)+escape(targetLabel(group)+
-              (field==='target'?'':' · '+tw114(this,field==='target_low'?'low':'high'))+
-              ' · '+group.unit)+'</span>').join('')+
-          (demand?'<span>'+marker(group,'demand_percent')+escape(text('PID demand')+' · %')+'</span>':'')+
-          (output?'<span>'+marker(group,'output_percent')+escape(binaryOnly?
-            text('Physical device')+' · '+(model.outputBinary075?
-              word105(this,'off')+' / '+word105(this,'on'):
-              '0% '+word105(this,'off')+' / 100% '+word105(this,'on')):
-            text('Reported output setting')+' · %')+'</span>':'')+'</div>';
-      }).join('')+'</div>';
-    const targetPaths=groups.map(group=>{
+    const targetPaths=groups.map((group,index)=>{
       const range=group.points.filter(point=>Number.isFinite(point.target_low)&&Number.isFinite(point.target_high)&&
         point.t<=model.end&&point.targetUntil>=model.start).map(point=>{
         const start=trendX114(model,Math.max(model.start,point.t)),end=trendX114(model,Math.min(model.end,point.targetUntil));
@@ -8330,7 +8359,7 @@
             !(point.targetConnected&&Number.isFinite(group.points[index-1]?.[field]))).map(point=>
             '<circle class="hem-control-sample075" '+seriesStyle(group,field)+' cx="'+trendX114(model,point.t).toFixed(2)+
             '" cy="'+trendY114(model,point[field]).toFixed(2)+'" r="2.5"/>').join('');
-          return (path?'<path data-control-field075="'+field+'" '+seriesStyle(group,field)+' d="'+path+'"/>':'')+isolated;
+          return (path?'<path data-control-field075="'+field+'" data-trend-line="'+index+'-'+field+'" '+seriesStyle(group,field)+' d="'+path+'"/>':'')+isolated;
         }).join('')+'</g>';
     }).join('');
     const outputPaths=outputSeries.map(({group,index,demand,output})=>{
@@ -8341,8 +8370,8 @@
         '" cy="'+(model.bottom-(model.bottom-model.top)*point[field]/100).toFixed(2)+'" r="2.5"/>').join('')).join('');
       return '<g class="hem-control-output-series075" data-control-output-series075="'+index+
         '" style="--hem-control-color075:'+group.color+'" aria-label="'+escape(text('Output evidence')+' · '+group.name)+'">'+
-        (demand?'<path class="hem-control-demand075" data-control-field075="demand_percent" '+seriesStyle(group,'demand_percent')+' d="'+demand+'"/>':'')+
-        (output?'<path class="hem-control-reported075" data-control-field075="output_percent" '+seriesStyle(group,'output_percent')+' d="'+output+'"/>':'')+
+        (demand?'<path class="hem-control-demand075" data-control-field075="demand_percent" data-trend-line="'+index+'-demand_percent" '+seriesStyle(group,'demand_percent')+' d="'+demand+'"/>':'')+
+        (output?'<path class="hem-control-reported075" data-control-field075="output_percent" data-trend-line="'+index+'-output_percent" '+seriesStyle(group,'output_percent')+' d="'+output+'"/>':'')+
         isolated+'</g>';
     }).join('');
     const outputAxis=model.output075?(model.physicalValues075?
@@ -8360,26 +8389,15 @@
       }).join('')+'</g>':'';
     // Output uses the same plot and timeline, below the measured curve and
     // targets so an equal screen position cannot hide those physical values.
-    html=html.replace('<path class="hem-avg-line105"',outputPaths+'<path class="hem-avg-line105"');
-    html=html.replace('<g class="hem-trend-cursor114"',targetPaths+outputAxis+'<g class="hem-trend-cursor114"');
-    const rows=groups.map((group,index)=>'<div class="hem-control-readout075" data-control-row075="'+index+'">'+
-      '<div class="hem-control-name075">'+marker(group,group.firstField)+'<strong>'+escape(group.name)+'</strong>'+
-      '<span data-control-context075="'+index+'"></span></div>'+
-      '<dl><div><dt>'+escape(targetLabel(group))+'</dt><dd data-control-target075="'+index+'">—</dd></div>'+
-      (group.points.some(point=>point.demand_percent!==null)?'<div><dt>'+escape(text('PID demand'))+
-        '</dt><dd '+seriesStyle(group,'demand_percent')+' data-control-demand075="'+index+'">—</dd></div>':'')+
-      (group.points.some(point=>point.output_percent!==null)?'<div><dt data-control-output-label075="'+index+'">'+
-        escape(text('Reported output setting'))+'</dt><dd '+seriesStyle(group,'output_percent')+' data-control-output075="'+index+'">—</dd></div>':'')+
-      '</dl></div>').join('');
+    html=html.replace('<path class="hem-avg-line105"',()=>outputPaths+'<path class="hem-avg-line105"');
+    html=html.replace('<g class="hem-trend-cursor114"',()=>targetPaths+outputAxis+'<g class="hem-trend-cursor114"');
     const status=saved.statusControl075;
     const statusHtml=status&&status!=='ready'?'<div class="hem-control-status075" role="status" data-control-status075="'+
       escape(status)+'"><span>'+escape(text('HEM target')+' · '+
       (status==='empty'?tw114(this,'gap'):ew122(this,status)))+'</span>'+
       (status==='error'?'<button type="button" data-retry-control075>'+escape(ew122(this,'retry'))+'</button>':'')+
       (status==='empty'?'<small>'+escape(tw114(this,'collecting'))+'</small>':'')+'</div>':'';
-    const readout='<section class="hem-control-details075" aria-live="polite" aria-label="'+escape(text('Control evidence'))+'">'+
-      legend+statusHtml+rows+'</section>';
-    html=html.replace('<div class="hem-trend-plot114">',readout+'<div class="hem-trend-plot114">');
+    html=html.replace('<div class="hem-trend-plot114">',statusHtml+'<div class="hem-trend-plot114">');
     const first=groups.length?Math.min(...groups.flatMap(group=>group.points.map(point=>point.t))):null;
     const recorded=first===null?'':'<p class="hem-control-recorded075">'+escape(text('Target')+' · '+
       ew122(this,'recent')+' · '+this._trendDate114(first,'period'))+'</p>';
@@ -8389,48 +8407,107 @@
   const selectControl075=controlTrend075._trendSelection114;
   controlTrend075._trendSelection114=function(model){
     const selected=selectControl075.call(this,model);
-    if(model.inspect075?.length)selected.index=model.inspect075.reduce((best,point,index)=>
-      Math.abs(point.t-selected.time)<Math.abs(model.inspect075[best].t-selected.time)?index:best,0);
+    if(model.inspect075?.length){
+      const timeline=model.inspect075;
+      let lo=0,hi=timeline.length-1;
+      while(lo<hi){
+        const mid=(lo+hi)>>1;
+        if(timeline[mid].t<selected.time)lo=mid+1;
+        else hi=mid;
+      }
+      selected.index=lo&&selected.time-timeline[lo-1].t<=timeline[lo].t-selected.time?lo-1:lo;
+    }
     return selected;
   };
+  function trendCallout(root,model,trace,x,y,value){
+    const tag=root.querySelector('.hem-trend-tag');
+    if(!tag)return;
+    const visible=trace&&Number.isFinite(y)&&Number.isFinite(x);
+    tag.setAttribute('visibility',visible?'visible':'hidden');
+    if(!visible)return;
+    const label=tag.querySelector('text'),box=tag.querySelector('rect');
+    if(label.textContent!==value||!model.tagWidth){
+      label.textContent=value;
+      label.removeAttribute('textLength');
+      const width=label.getComputedTextLength();
+      model.tagWidth=Math.min(width+12,model.right-model.left);
+      if(width+12>model.tagWidth){
+        label.setAttribute('textLength',String(model.tagWidth-12));
+        label.setAttribute('lengthAdjust','spacingAndGlyphs');
+      }
+      label.setAttribute('x',String(model.tagWidth/2));
+      box.setAttribute('width',String(model.tagWidth));
+    }
+    const left=x+8+model.tagWidth<=model.right?x+8:Math.max(model.left,x-8-model.tagWidth);
+    const top=y-23>=model.top?y-23:Math.min(model.bottom-19,y+4);
+    tag.setAttribute('transform','translate('+left.toFixed(2)+' '+top.toFixed(2)+')');
+    tag.style.color=trace.color;
+  }
   controlTrend075._inspectTrend114=function(time){
-    inspectControl075.call(this,time);
+    const selected=inspectControl075.call(this,time);
     const saved=this._averageDialog105,model=saved?.model114;
-    if(!model||!saved?.node)return;
-    const selected=this._trendSelection114(model),root=saved.node,descriptions=[];
-    const text=(selector,value)=>{const node=root.querySelector(selector);if(node)node.textContent=value;};
-    if(model.controls075.length&&!model.eventHistory&&selected.point&&selected.point.t!==selected.time){
-      text('[data-trend-label114]',tw114(this,'sample')+' · '+this._trendDate114(selected.point.t,'time'));
+    if(!selected||!model)return;
+    const root=saved.node,details=[];
+    const sampledEarlier=selected.point&&!model.eventHistory&&selected.point.t!==selected.time;
+    if(sampledEarlier){
+      const label=root.querySelector('[data-trend-label114]');
+      if(label)label.textContent=tw114(this,'sample')+' · '+this._trendDate114(selected.point.t,'time');
       const dot=root.querySelector('.hem-trend-cursor114')?.querySelector('circle');
       if(dot)dot.style.display='none';
     }
-    for(let index=0;index<model.controls075.length;index++){
-      const group=model.controls075[index],point=this._controlTrendPoint075(group,selected.time);
-      const target=point&&Number.isFinite(point.target)?this._format(point.target,3)+' '+group.unit:
-        point&&Number.isFinite(point.target_low)?this._format(point.target_low,3)+'–'+
-          this._format(point.target_high,3)+' '+group.unit:'—';
-      const demand=point&&Number.isFinite(point.demand_percent)?this._format(point.demand_percent,1)+'%':'—';
-      const binary=point&&['activity','binary'].includes(point.output_kind);
-      const output=point&&Number.isFinite(point.output_percent)?binary?
-        word105(this,point.output_percent>0?'on':'off'):this._format(point.output_percent,1)+'%':'—';
-      const context=point?[point.mode,point.profile].filter(Boolean).map(value=>this._controllerStatusLabel(value)).join(' · '):'';
-      text('[data-control-target075="'+index+'"]',target);
-      text('[data-control-demand075="'+index+'"]',demand);
-      text('[data-control-output075="'+index+'"]',output);
-      text('[data-control-output-label075="'+index+'"]',controlText075(this,binary?'Output evidence':'Reported output setting'));
-      text('[data-control-context075="'+index+'"]',context);
-      const targetLabel=group.kind==='physical_device'?controlText075(this,'Physical device')+' · '+
-        controlText075(this,'Target'):controlText075(this,'HEM target');
-      descriptions.push(group.name+' · '+targetLabel+' '+target+
-        (demand!=='—'?' · '+controlText075(this,'PID demand')+' '+demand:'')+
-        (output!=='—'?' · '+controlText075(this,binary?'Output evidence':'Reported output setting')+' '+output:''));
+    const points=model.controls075.map((group,index)=>{
+      const point=this._controlTrendPoint075(group,selected.time);
+      const context=root.querySelector('[data-control-context075="'+index+'"]');
+      if(context)context.textContent=point?[point.mode,point.profile].filter(Boolean)
+        .map(v=>this._controllerStatusLabel(v)).join(' · '):'';
+      return point;
+    });
+    const focusChanged=model.focusedTrace!==saved.activeTrace;
+    model.focusedTrace=saved.activeTrace;
+    let active,x,y,tagText;
+    for(const trace of model.traces){
+      const {slot,field,index}=trace;
+      if(!trace.ui){
+        const pick=root.querySelector('[data-trend-pick="'+slot+'"]');
+        trace.ui={pick,value:pick?.querySelector('b'),label:pick?.querySelector('span'),unit:pick?.querySelector('small'),
+          mark:root.querySelector('[data-trend-dot="'+slot+'"]'),
+          line:root.querySelector('[data-trend-line="'+slot+'"]')};
+      }
+      const {pick,value,label,unit,mark,line}=trace.ui;
+      const focused=trace.key===saved.activeTrace;
+      if(focusChanged){
+        pick?.setAttribute('aria-pressed',String(focused));
+        line?.toggleAttribute('data-focused',focused);
+      }
+      const point=points[index];
+      const raw=field==='measured'?selected.point?.v:field==='limit'?model.threshold:point?.[field];
+      const valid=Number.isFinite(raw),output=field==='output_percent'||field==='demand_percent';
+      const binary=field==='output_percent'&&['activity','binary'].includes(point?.output_kind);
+      const display=!valid?'—':binary?word105(this,raw>0?'on':'off'):
+        output?this._format(raw,1)+'%':(this._format(raw,3)+' '+model.unit).trim();
+      if(field!=='measured'&&value&&value.textContent!==display)value.textContent=display;
+      if(unit&&field==='measured')unit.hidden=!valid;
+      const name=binary?controlText075(this,'Physical device'):trace.label;
+      if(field==='output_percent'&&label&&label.textContent!==name)label.textContent=name;
+      const group=model.controls075[index];
+      if(group)pick?.setAttribute('aria-label',group.name+' · '+name+' '+display);
+      const xx=trendX114(model,field==='measured'&&sampledEarlier?selected.point.t:selected.time);
+      const yy=!valid?null:output?model.bottom-(model.bottom-model.top)*raw/100:trendY114(model,raw);
+      if(mark){
+        mark.setAttribute('visibility',valid?'visible':'hidden');
+        if(valid)mark.setAttribute('transform','translate('+xx.toFixed(2)+' '+yy.toFixed(2)+')'+(focused?' scale(1.25)':''));
+      }
+      if(focused){active=trace;x=xx;y=yy;tagText=display;}
+      if(valid&&field!=='measured'){
+        details.push((group?group.name+' · ':'')+name+' '+display);
+      }
     }
-    if(descriptions.length)for(const chart of root.querySelectorAll?.('[data-trend-chart114]')||[]){
-      chart.setAttribute('aria-valuenow',String(Math.max(0,selected.index)));
-      chart.setAttribute('aria-valuetext',(selected.point?this._format(selected.point.v,3)+' '+model.unit:
-        tw114(this,'gap'))+(selected.point&&!model.eventHistory&&selected.point.t!==selected.time?
-        ' · '+tw114(this,'sample')+' '+this._trendDate114(selected.point.t):'')+
-        ' · '+descriptions.join(' · ')+' · '+this._trendDate114(selected.time));
+    trendCallout(root,model,active,x,y,tagText);
+    if(details.length){
+      const pv=selected.point?this._format(selected.point.v,3)+' '+model.unit:tw114(this,'gap');
+      root.querySelector('[data-trend-chart114]')?.setAttribute('aria-valuetext',pv+
+        (sampledEarlier?' · '+tw114(this,'sample')+' '+this._trendDate114(selected.point.t):'')+
+        ' · '+details.join(' · ')+' · '+this._trendDate114(selected.time));
     }
   };
   const openAverageControl075=controlTrend075._openAverage105,openEntityControl075=controlTrend075._openEntityTrend122;
@@ -8456,6 +8533,12 @@
     if(!saved||saved.boundControl075)return;
     saved.boundControl075=true;
     saved.node.addEventListener('click',event=>{
+      const pick=event.target?.closest?.('[data-trend-pick]');
+      if(pick){
+        const trace=saved.model114?.traces.find(t=>t.slot===pick.dataset.trendPick);
+        if(trace){event.preventDefault();event.stopPropagation();saved.activeTrace=trace.key;this._inspectTrend114();}
+        return;
+      }
       if(!event.target?.closest?.('[data-retry-control075]'))return;
       event.preventDefault();event.stopPropagation();this._loadControlTrend075(saved,true);
     });
@@ -8468,30 +8551,17 @@
   const stylesControl075=controlTrend075._styles;
   controlTrend075._styles=function(){return stylesControl075.call(this)+[
     '<style>',
-    '.hem-control-details075{margin:8px 0 3px;min-width:0}',
-    '.hem-control-legend075{display:flex;flex-wrap:wrap;gap:5px 14px;font-size:11px;line-height:1.5;color:var(--hem-trend-muted114)}',
-    '.hem-control-legend075>span{display:inline-flex;align-items:center;gap:6px;min-width:0;overflow-wrap:anywhere}',
-    '.hem-control-key075,.hem-control-measured-key075{display:inline-block;flex:0 0 22px;width:22px;border-top:2px solid var(--hem-control-color075);height:0}',
-    '.hem-control-measured-key075{border-color:var(--hem-trend-accent114)}',
     '.hem-control-target075 path{stroke:var(--hem-control-color075);stroke-width:2.3;fill:none;vector-effect:non-scaling-stroke}',
     '.hem-control-sample075{fill:var(--hem-control-color075);stroke:var(--card-background-color,#202830);stroke-width:1}',
     '.hem-control-band075{fill:var(--hem-control-color075);fill-opacity:.08}',
-    '.hem-control-readout075{border-top:1px solid var(--divider-color,#3b4654);padding:8px 0;font-size:11px}',
     '.hem-control-name075{display:flex;align-items:center;gap:6px;min-width:0;flex-wrap:wrap;line-height:1.45}',
     '.hem-control-name075 strong{font-weight:500;overflow-wrap:anywhere}.hem-control-name075>span{margin-inline-start:auto;color:var(--hem-trend-muted114)}',
-    '.hem-control-readout075 dl{display:flex;flex-wrap:wrap;gap:6px 18px;margin:5px 0 0 28px;font-variant-numeric:tabular-nums}',
-    '.hem-control-readout075 dt{font-size:10px;color:var(--hem-trend-muted114)}.hem-control-readout075 dd{margin:2px 0 0;font-size:14px;font-weight:500}',
-    '.hem-control-readout075 dd[style]{color:var(--hem-control-color075)}',
     '.hem-control-status075{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:9px 0;font-size:11px;color:var(--hem-trend-muted114)}',
     '.hem-control-status075 small{flex-basis:100%;font-size:11px}.hem-control-status075 button{color:inherit;border:1px solid var(--divider-color,#556070);background:transparent;border-radius:7px;padding:6px 10px;min-height:32px}',
-    '.hem-control-output-scale075{margin-inline-start:auto}',
-    '.hem-control-output-legend075{display:flex;flex-basis:100%;min-width:0;flex-wrap:wrap;gap:4px 12px}',
-    '.hem-control-output-legend075 strong{flex-basis:100%;font-weight:500;overflow-wrap:anywhere}',
-    '.hem-control-output-legend075>span{display:inline-flex;min-width:0;gap:6px;align-items:center;overflow-wrap:anywhere}',
     '.hem-control-output-series075 path{fill:none;stroke:var(--hem-control-color075);stroke-width:2.2;vector-effect:non-scaling-stroke}',
     '.hem-control-output-axis075 line{stroke:var(--hem-trend-muted114);stroke-opacity:.5;stroke-width:1;vector-effect:non-scaling-stroke}',
     '.hem-control-recorded075{font-size:10px;color:var(--hem-trend-muted114);line-height:1.5;margin:6px 0}',
-    '@media(max-width:380px){.hem-control-name075>span{margin-inline-start:28px;flex-basis:100%}.hem-control-readout075 dl{gap:6px 12px}.hem-control-legend075{font-size:10px}}',
+    '.hem-control-target075 path{stroke-dasharray:8 4}.hem-control-demand075{stroke-dasharray:2 4;stroke-linecap:round}',
     '</style>',
   ].join('');};
   /* HEM_RECORDED_CONTROL_TRENDS075_END */
