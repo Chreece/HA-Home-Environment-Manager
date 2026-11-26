@@ -34,6 +34,30 @@ def backend_payloads():
         now = source["CLOCK"].now
     finally:
         capture.doCleanups()
+    # Capture one slow and two fast sensors through the same collector used
+    # by HA. Change profile while the slow contributor is absent, then restart.
+    capture.setUp()
+    try:
+        group = ["sensor.temp", "sensor.second", "sensor.hourly"]
+        capture.settings["room_sources"]["room"]["temperature"] = group
+        capture.native("climate.native", "heat", hvac_action="idle")
+        clock = source["CLOCK"]
+        start = clock.now
+        for minute in range(126):
+            clock.now = start + minute * 60
+            for entity in group[:2]:
+                capture.sensor(entity, 20., "temperature", "°C")
+            if minute % 60 == 0:
+                capture.sensor(group[-1], 20., "temperature", "°C")
+            if minute == 35:
+                capture.cfg["preset"] = "sleep"
+            if minute == 114:
+                journal = capture.manager._environment_history
+                capture.manager._environment_history = journal.restore(journal.snapshot(), now=clock.now)
+            capture.capture()
+        hourly_history = capture.manager._environment_history
+    finally:
+        capture.doCleanups()
     boundary = runpy.run_path(str(ROOT / ".github/tests/test_075_control_history.py"))
     transport = boundary["ControlTrendWebSocketTests"](methodName="runTest")
     transport.setUp()
@@ -51,6 +75,16 @@ def backend_payloads():
             })
         assert not transport.errors, transport.errors
         result[metric] = transport.results[-1]
+    transport.manager._environment_history = hourly_history
+    transport.report["measurement_evidence"]["temperature"] = {"source_ids": group, "source_count": 3}
+    with patch.object(boundary["api"].time, "time", return_value=clock.now):
+        boundary["api"].websocket_control_trend(transport.hass, transport.connection, {
+            "id": 2, "type": "environment_manager/control_trend", "entity_id": "sensor.hem",
+            "area_id": "room", "metric": "temperature", "source_ids": group,
+        })
+    assert not transport.errors, transport.errors
+    result["hourly"] = transport.results[-1]
+    result["hourly_start"] = start
     return result
 
 
@@ -464,6 +498,22 @@ const original=JSON.stringify(data.response);
   assert.equal(data.backend.humidity.controllers[0].series[0].points[0].target,41);
   assert.equal(data.backend.mold.controllers[0].series[0].points[0].target,60);
   assert.ok(data.backend.mold.controllers[0].series[0].feedback_source_ids.length);
+  const hourly=data.backend.hourly,start=data.backend.hourly_start;
+  now=start+125*60;
+  card._averageDialog105={area:'room',metric:'temperature',controlData075:card._validateControlTrend075(hourly,hourly)};
+  const [thermostat]=card._controlTrendGroups075({room:{area_id:'room',readings:[]},value:{source_ids:hourly.source_ids}});
+  const daily={...model,start,end:now};
+  const targetSteps=card._controlTrendPath075(thermostat,daily,'target');
+  assert.equal(targetSteps.split('M').length-1,2,'Only the Home Assistant restart may split the target');
+  const pos=minute=>card._controlTrendPoint075(thermostat,start+minute*60);
+  for(const minute of [10.5,11,34.9])assert.equal(pos(minute).target,20);
+  for(const minute of [35,59.9,60,75,120,124])assert.equal(pos(minute).target,18);
+  assert.equal(pos(113.5),null,'Restart gap was filled');
+  for(const field of ['measured','output_percent','demand_percent'])assert.equal(pos(35)[field],null);
+  assert.equal(pos(5).output_percent,0,'A recorded idle report disappeared');
+  const xy=vertices(targetSteps.split('M')[1]);
+  const editX=daily.left+(daily.right-daily.left)*35/125;
+  assert.ok(xy.some((v,i)=>i&&v.x===xy[i-1].x&&v.y!==xy[i-1].y&&Math.abs(v.x-editX)<.011));
   now=retainedNow;card._averageDialog105=saved;
 
   // Only marked dashboards ask for optional targets; failure leaves PV intact.
@@ -563,7 +613,7 @@ def browser_checks(data):
         demand = main.locator(".hem-control-demand075").first
         output = main.locator(".hem-control-reported075").first
         paths = main.locator('[data-control-field075]')
-        assert target.evaluate("e=>getComputedStyle(e).strokeDasharray") != "none"
+        assert target.evaluate("e=>getComputedStyle(e).strokeDasharray") == "none"
         assert demand.evaluate("e=>getComputedStyle(e).strokeDasharray") != "none"
         assert output.evaluate("e=>getComputedStyle(e).strokeDasharray") == "none"
         assert popup.locator(".hem-control-key075,.hem-control-output-legend075").count() == 0

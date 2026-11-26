@@ -173,7 +173,8 @@ def websocket_control_trend(
     Physical Recorder charts, HEM contributor means and derived mold keep
     their original measurement transport. This endpoint adds no live sample,
     device command, Recorder query or storage write, and cannot substitute a
-    different room's or contributor set's controller target.
+    different room's target. Room means can share the recorded setpoint
+    across changes in contributors within the same controller configuration.
     """
     manager = _readable_manager(hass, connection, msg)
     if manager is None:

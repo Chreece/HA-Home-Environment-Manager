@@ -143,6 +143,30 @@ class ControlHistoryTests(unittest.TestCase):
         self.assertEqual(points(history, sources=["sensor.alternate"], now=BASE + 90)[0]["target"], 23.)
         self.assertEqual(points(history, sources=["sensor.unrelated"], now=BASE + 90), [])
 
+    def test_legacy_room_history_recovers_recorded_targets_without_joining_unknown_breaks(self):
+        history = History()
+        mean = ["sensor.a", "sensor.b", "sensor.c"]
+        for at, sources, goal in ((0, mean, 21), (60, mean[:2], 21), (360, mean[:2], 18),
+                                  (660, mean[:2], 18), (720, mean, 18)):
+            history.observe(observation(sources=sources, context="same-selection", target=goal,
+                                        output=100, output_kind="activity"), now=BASE + at)
+        raw = stored(history)
+        for row in raw["controllers"][0]["series"]:
+            del row["selected_feedback_source_ids"]
+            for point in row["points"]:
+                point.pop("target_link_from", None)
+        legacy = History.restore(raw, now=BASE + 730)
+        result = legacy.view("room", "temperature", mean, now=BASE + 730)
+        exact, projected = result[0]["series"]
+        self.assertTrue(exact["points"][-1]["target_break_before"])
+        self.assertTrue(projected["points"][0]["target_break_before"])
+        self.assertEqual([point["target"] for point in projected["points"]], [21, 18, 18])
+        for point in projected["points"]:
+            self.assertIsNone(point["output_percent"])
+            self.assertIsNone(point["demand_percent"])
+            self.assertIsNone(point["measured"])
+        self.assertEqual(legacy.view("room", "temperature", ["sensor.c"], now=BASE + 730), [])
+
     def test_mold_and_derived_room_humidity_use_separate_quantities(self):
         history = History()
         humidity_sources = ["sensor.rh"]

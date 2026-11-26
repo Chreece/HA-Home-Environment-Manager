@@ -284,7 +284,10 @@ class CollectorTests(unittest.TestCase):
         sources = ["sensor.temp", "sensor.second"]
         self.assertEqual(self.points(sources=sources)[-1]["measured"], 21.)
         self.assertEqual(self.views(sources=["sensor.temp"]), [])
-        self.assertEqual(self.views(sources=selected), [])
+        full_target = self.points(sources=selected)[-1]
+        self.assertEqual(full_target["target"], 20.)
+        for field in ("measured", "demand_percent", "output_percent"):
+            self.assertIsNone(full_target[field])
         first_context = self.views(sources=sources)[0]["series"][0]["context_id"]
         selected.remove("sensor.stale")
         CLOCK.now += 30
