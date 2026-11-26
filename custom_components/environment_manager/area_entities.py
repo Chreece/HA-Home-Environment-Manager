@@ -19,7 +19,7 @@ from .const import (
     CONF_AREAS, CONF_CLIMATE_ROOMS, CONF_MOLD_ROOMS, CONF_PID_ROOMS,
     CONF_USE_MOLD, DOMAIN, SIGNAL_UPDATED,
 )
-from .dashboard import dashboard_snapshot, manager_dashboard_snapshot
+from .dashboard import room_snapshot
 from .device_hierarchy import (
     async_register_hierarchy, configured_area_ids, hierarchy_attributes,
 )
@@ -37,18 +37,6 @@ _ACTUATOR_STATUS_KEYS = (
     "secondary_actuation", "fan_actuation", "fan_power_actuation",
     "native_air_mode_actuation",
 )
-
-
-
-def room_snapshot(manager: Any, area_id: str, *,
-                  include_control_inputs: bool = True) -> dict[str, Any] | None:
-    # Calculated mold getters need only the saved plan reading. Overview
-    # assessments include live feedback availability through the shared path.
-    snapshot = (manager_dashboard_snapshot(manager, area_id=area_id)
-                if include_control_inputs else
-                dashboard_snapshot(manager.plan, manager.thresholds))
-    return next((item for item in snapshot["rooms"]
-                 if item["area_id"] == area_id), None)
 
 
 def calculated_mold(room: dict[str, Any] | None) -> dict[str, Any] | None:

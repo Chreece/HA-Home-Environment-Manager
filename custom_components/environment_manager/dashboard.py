@@ -6,10 +6,11 @@ only presents the result in the Home Assistant user's interface language.
 
 from __future__ import annotations
 
+from itertools import chain
 from typing import Any
 
 from .const import CONF_SHOW_ROOM_SMILEYS, UNIT_LABEL
-from .logic import Plan, Reading, Reason, Room, Weather, Warning
+from .logic import Plan, Reading, Reason, Recommendation, Room, Weather, Warning
 from .room_data import classify as classify_room_data
 
 _MISSING_OUTSIDE = frozenset({
@@ -82,7 +83,7 @@ def _warning(item: Warning) -> dict[str, Any]:
     return {"entity_id": item.entity_id, "name": item.name, "active": item.active}
 
 
-def _room(room: Room, plan: Plan, limits: dict[str, float], *,
+def _room(room: Room, plan: Plan, limits: dict[str, float], recommended: Recommendation | None, *,
           climate_only: bool = False, control_inputs: list[dict] | None = None) -> dict[str, Any]:
     evidence = plan.environment.get(room.area_id, {}).get("measurement_evidence", {})
     readings = []
@@ -97,9 +98,6 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
         readings.append(data)
     high = [item for item in readings if item["exceeded"]]
     opened = [item for item in room.windows if item.opened is True]
-    recommended = next((rec for rec in
-                        (*plan.recommendations,*plan.climate_recommendations)
-                        if rec.area_id == room.area_id), None)
 
     # Urgent closure always needs attention, even if indoor sensors are missing.
     # Indoor values over a threshold remain important while already ventilating
@@ -181,6 +179,23 @@ def _room(room: Room, plan: Plan, limits: dict[str, float], *,
     }
 
 
+def room_snapshot(manager: Any, area_id: str, *,
+                  include_control_inputs: bool = True) -> dict[str, Any] | None:
+    """Project one native area entity using the same assessment as the dashboard."""
+    from .room_data import controller_inputs
+
+    plan = manager.plan
+    for rooms, climate_only in ((plan.rooms, False), (plan.climate_rooms, True)):
+        room = next((room for room in rooms if room.area_id == area_id), None)
+        if room is not None:
+            recommendations = chain(plan.recommendations, plan.climate_recommendations)
+            recommended = next((rec for rec in recommendations if rec.area_id == area_id), None)
+            inputs = controller_inputs(manager, area_id=area_id) if include_control_inputs else {}
+            return _room(room, plan, manager.thresholds, recommended, climate_only=climate_only,
+                         control_inputs=inputs.get(area_id))
+    return None
+
+
 def dashboard_snapshot(plan: Plan, limits: dict[str, float], *,
                        control_inputs: dict[str, list[dict]] | None = None) -> dict[str, Any]:
     """Describe *all* monitored rooms, not only actionable recommendations.
@@ -191,12 +206,18 @@ def dashboard_snapshot(plan: Plan, limits: dict[str, float], *,
     closing a window, but the UI must not imply complete verification either.
     """
     inputs = control_inputs or {}
-    room_data = [_room(room, plan, limits, control_inputs=inputs.get(room.area_id))
+    recommendations = (*plan.recommendations, *plan.climate_recommendations)
+    by_area = {}
+    for rec in recommendations:
+        by_area.setdefault(rec.area_id, rec)
+    room_data = [_room(room, plan, limits, by_area.get(room.area_id),
+                       control_inputs=inputs.get(room.area_id))
                  for room in plan.rooms]
     # Count exactly the rendered rooms. Climate-only membership does not mean
     # missing measurements and still creates no window or air-quality advice.
     already={room.area_id for room in plan.rooms}
-    extra=[_room(room,plan,limits,climate_only=True,control_inputs=inputs.get(room.area_id))
+    extra=[_room(room, plan, limits, by_area.get(room.area_id), climate_only=True,
+                 control_inputs=inputs.get(room.area_id))
            for room in plan.climate_rooms if room.area_id not in already]
     all_rooms = room_data + extra
     summary = {
@@ -233,7 +254,7 @@ def dashboard_snapshot(plan: Plan, limits: dict[str, float], *,
         "outdoor": {
             "status": outside_status,
             "conditional_open": any(rec.action == "open" and rec.cautions
-                                    for rec in (*plan.recommendations,*plan.climate_recommendations)),
+                                    for rec in recommendations),
             "pollen": plan.environment.get("__outside__", {}).get("pollen", {"status":"not_configured"}),
             "safe_to_ventilate": plan.outdoor_safe,
             "data_complete": not missing_conditions,

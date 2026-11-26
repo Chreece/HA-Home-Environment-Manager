@@ -1124,7 +1124,7 @@
         this._render(true);
       }).catch((error) => {
         if (!current()) return;
-        this._dashboardFailureCount = Math.min(6, this._dashboardFailureCount+1);
+        this._dashboardFailureCount = Math.min(7, this._dashboardFailureCount+1);
         this._dashboardNextAttemptAt = Date.now() +
           Math.min(60000, 1000 * (2 ** this._dashboardFailureCount));
         // A quiet HA connection must still recover an initially failed
@@ -1255,7 +1255,7 @@
       }).catch((error) => {
         if (!current()) return;
         this._deviceRegistryLoaded = false;
-        this._deviceRegistryFailureCount = Math.min(6, this._deviceRegistryFailureCount+1);
+        this._deviceRegistryFailureCount = Math.min(7, this._deviceRegistryFailureCount+1);
         this._deviceRegistryNextAttemptAt = Date.now()+
           Math.min(60000, 1000*(2**this._deviceRegistryFailureCount));
         if (this.isConnected && this._deviceRegistryFailureCount<=6 &&
@@ -3349,7 +3349,7 @@
         typeof room==='object' && typeof room.area_id==='string').slice().sort((a,b) =>
         String(a.name).localeCompare(String(b.name), this._hass.language) ||
         String(a.area_id).localeCompare(String(b.area_id)));
-      const nextHtml91 = `${this._styles()}<ha-card class="shell" dir="${RTL_LANGUAGES.has(lang) ? 'rtl' : 'ltr'}">
+      const nextHtml91 = `<ha-card class="shell" dir="${RTL_LANGUAGES.has(lang) ? 'rtl' : 'ltr'}">
         <header class="card-heading"><div class="hem-brand-title125"><span class="hem-brand-mark125" aria-hidden="true">${this._hemMark125()}</span><div class="hem-brand-copy125"><div class="overline">HOME ASSISTANT</div><h2 title="${escape(this._config.title || this._t("title"))}" aria-label="${escape(this._config.title || this._t("title"))}">HEM</h2><span>${escape(this._t("subtitle"))}</span></div></div>
         <div class="header-actions">${this._arrivalHeader124()}<button class="edit-device" type="button" data-edit-home
           aria-label="${escape(this._deviceEditLabel(true))}" title="${escape(this._deviceEditLabel(true))}"
@@ -3370,7 +3370,7 @@
       // preserve scroll anchors, expanded controls, keyboard focus and dialogs.
       if(typeof this._commitContent91==='function')
         this._commitContent91(nextHtml91);
-      else this.shadowRoot.innerHTML=nextHtml91;
+      else this.shadowRoot.innerHTML=this._styles()+nextHtml91;
       // Commit the cache only after the complete template was constructed
       // and applied. A failed render must be retried on the next HA update.
       this._shownControllerSignature = controllerSignature;
@@ -5928,23 +5928,15 @@
    * room/device nodes, focus and Home Assistant's scroll anchoring.
    * Only actual changed text/attributes/children are updated.
    */
+  const identityAttributes91=['data-floor-fold140','data-room-fold87','data-device-fold87',
+    'data-detail-id','data-calibration-id','data-open-controller89','data-open-native89'];
   const _key91=node=>{
     if(node?.nodeType!==1)return null;
-    for(const name of ('data-room-fold87','data-device-fold87',
-                       'data-detail-id','data-calibration-id',
-                       'data-open-controller89','data-open-native89')) {
+    for(const name of identityAttributes91){
       const value=node.getAttribute(name);
       if(value)return node.localName+':'+name+':'+value;
     }
     return null;
-  };
-  const _compatible91=(oldNode,fresh)=>{
-    if(oldNode.nodeType!==fresh.nodeType)return false;
-    if(oldNode.nodeType===1)
-      return oldNode.localName===fresh.localName &&
-        (!(_key91(oldNode)||_key91(fresh)) ||
-         _key91(oldNode)===_key91(fresh));
-    return true;
   };
   const _reconcile91=(oldNode,fresh)=>{
     if(oldNode.isEqualNode(fresh))return;
@@ -5972,26 +5964,38 @@
       if(oldNode.getAttribute(attribute.name)!==attribute.value)
         oldNode.setAttribute(attribute.name,attribute.value);
     }
-    let index=0;
+    let index=0, keyedChildren;
     while(index<fresh.childNodes.length){
       const target=fresh.childNodes[index];
       let current=oldNode.childNodes[index];
       const neededKey=_key91(target);
-      if(neededKey && (!current || _key91(current)!==neededKey)) {
-        const found=[...oldNode.childNodes].find(candidate=>
-          _key91(candidate)===neededKey);
-        if(found){
-          oldNode.insertBefore(found,current||null);
+      const currentKey=_key91(current);
+      if(neededKey!==currentKey && (neededKey || currentKey)){
+        if(!keyedChildren){
+          keyedChildren=new Map();
+          for(const child of oldNode.children){
+            const key=_key91(child);
+            if(key)keyedChildren.set(key,child);
+          }
+        }
+        const found=neededKey && keyedChildren.get(neededKey);
+        if(found && found.parentNode===oldNode){
+          if(typeof oldNode.moveBefore==='function') oldNode.moveBefore(found,current||null);
+          else {
+            const focused=found.getRootNode().activeElement;
+            oldNode.insertBefore(found,current||null);
+            if(focused && found.contains(focused))focused.focus({preventScroll:true});
+          }
           current=found;
+        }else{
+          // Leave the existing keyed sibling available for its own incoming row.
+          oldNode.insertBefore(target.cloneNode(true),current||null);
+          index++;
+          continue;
         }
       }
-      if(!current){
-        oldNode.appendChild(target.cloneNode(true));
-      } else if(!_compatible91(current,target)){
-        oldNode.replaceChild(target.cloneNode(true),current);
-      } else {
-        _reconcile91(current,target);
-      }
+      if(current)_reconcile91(current,target);
+      else oldNode.appendChild(target.cloneNode(true));
       index++;
     }
     while(oldNode.childNodes.length>fresh.childNodes.length)
@@ -6001,14 +6005,14 @@
     const oldCard=this.shadowRoot.querySelector('ha-card.shell');
     if(!oldCard || !this._hasValidRender ||
        oldCard.dataset.compact87!=='ready'){
-      this.shadowRoot.innerHTML=html;
+      this.shadowRoot.innerHTML=this._styles()+html;
       return;
     }
     const temp=document.createElement('template');
     temp.innerHTML=html;
     const candidate=temp.content.querySelector('ha-card.shell');
     if(!candidate) {
-      this.shadowRoot.innerHTML=html;
+      this.shadowRoot.innerHTML=this._styles()+html;
       return;
     }
     // Compact the detached candidate exactly once before comparison so
