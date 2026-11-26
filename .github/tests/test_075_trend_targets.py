@@ -134,7 +134,8 @@ card._hass={language:'en',config:{time_zone:'Europe/Berlin'},states:structuredCl
 const nodes=new Map();
 const node=key=>{
   if(!nodes.has(key))nodes.set(key,{textContent:'',style:{},attributes:{},
-    setAttribute(k,v){this.attributes[k]=v},removeAttribute(k){delete this.attributes[k]}});
+    setAttribute(k,v){this.attributes[k]=v},removeAttribute(k){delete this.attributes[k]},
+    toggleAttribute(k,on){if(on)this.attributes[k]='';else delete this.attributes[k]}});
   return nodes.get(key);
 };
 const chart=node('chart'),cursor=node('cursor'),dot=node('dot');
@@ -144,6 +145,15 @@ const root={scrollTop:0,setAttribute(){},addEventListener(type,handler){
   if(!handlers.has(type))handlers.set(type,[]);handlers.get(type).push(handler);
 },querySelector(selector){
   if(['.hem-avg-body105','.hem-avg-head105>strong','[data-close-avg105]'].includes(selector))return null;
+  if(selector==='.hem-trend-tag')return null; // SVG text geometry is checked in Chromium.
+  const pick=selector.match(/^\[data-trend-pick="(\d+)-(\w+)"\]$/);
+  if(pick){
+    const field={demand_percent:'demand',output_percent:'output'}[pick[2]]||pick[2];
+    const button=node(selector);
+    button.querySelector=tag=>tag==='b'?node('[data-control-'+field+'075="'+pick[1]+'"]'):null;
+    return button;
+  }
+  if(selector.startsWith('[data-trend-pick='))return null;
   if(selector==='.hem-trend-cursor114')return cursor;
   if(selector==='[data-trend-chart114]')return chart;
   return node(selector);
@@ -182,7 +192,7 @@ const original=JSON.stringify(data.response);
   assert.ok(html.includes('hem-control-target075')&&html.includes('data-control-field075="target_low"'));
   assert.ok(html.includes('hem-control-band075')&&html.includes('hem-control-demand075')&&html.includes('hem-control-reported075'));
   assert.ok(html.includes('Radiator &lt;north&gt;')&&!html.includes('Radiator <north>'));
-  assert.ok(html.includes('hem-control-target-key075')&&html.includes('hem-control-output-legend075'));
+  assert.ok(html.includes('data-trend-pick="0-target"')&&!html.includes('hem-control-key075'));
   assert.ok(!/NaN|Infinity|undefined/.test(html));
   const graph=combinedGraph(html);
   assert.equal(model.physicalValues075,true);
@@ -294,7 +304,7 @@ const original=JSON.stringify(data.response);
   assert.ok(!combinedGraph(html).includes('<text x="'+(model.left-8)+'"')&&!html.includes('hem-control-unit075'),
     'Output-only evidence displays an invented physical-value axis');
   card._inspectTrend114(t+900);
-  assert.equal(node('[data-control-target075="0"]').textContent,'—');
+  assert.ok(!html.includes('data-trend-pick="0-target"'));
   assert.equal(node('[data-control-demand075="0"]').textContent,'75%');
   assert.equal(node('[data-control-output075="0"]').textContent,'On');
 
@@ -553,14 +563,18 @@ def browser_checks(data):
         demand = main.locator(".hem-control-demand075").first
         output = main.locator(".hem-control-reported075").first
         paths = main.locator('[data-control-field075]')
-        assert all(dash == "none" for dash in paths.evaluate_all(
-            "els=>els.map(e=>getComputedStyle(e).strokeDasharray)"))
-        colors = paths.evaluate_all("els=>els.map(e=>getComputedStyle(e).stroke)")
-        measured = main.locator(".hem-avg-line105").evaluate("e=>getComputedStyle(e).stroke")
-        assert len(set([*colors, measured])) == len(colors) + 1, "Each visible trace needs its own color"
-        swatches = popup.locator(".hem-control-output-legend075 i").evaluate_all(
-            "els=>els.map(e=>getComputedStyle(e).borderTopColor)")
-        assert set(swatches) == set(colors), "Each legend swatch must match its trace"
+        assert target.evaluate("e=>getComputedStyle(e).strokeDasharray") != "none"
+        assert demand.evaluate("e=>getComputedStyle(e).strokeDasharray") != "none"
+        assert output.evaluate("e=>getComputedStyle(e).strokeDasharray") == "none"
+        assert popup.locator(".hem-control-key075,.hem-control-output-legend075").count() == 0
+        assert popup.evaluate("""el=>{
+          const lines=[...el.querySelectorAll('[data-trend-line]')];
+          const colors=lines.map(line=>getComputedStyle(line).stroke);
+          return colors.length===new Set(colors).size&&lines.every((line,i)=>{
+            const button=el.querySelector('[data-trend-pick="'+line.dataset.trendLine+'"]');
+            return button&&['span','b'].every(tag=>getComputedStyle(button.querySelector(tag)).color===colors[i]);
+          });
+        }"""), "Every visible trace needs a distinct colour matching its label and value"
         expect(main.locator(".hem-control-output-axis075")).to_contain_text("100%")
         expect(main.locator(".hem-control-output-axis075")).to_contain_text("0%")
         main.focus()
@@ -586,6 +600,19 @@ def browser_checks(data):
         assert popup.locator(".hem-trend-cursor114 circle").evaluate("e=>e.style.display") == "none"
         for detail in ("22 °C", "75%", "On", "Radiator <north>", "Heat pump"):
             assert detail in main.get_attribute("aria-valuetext"), detail
+        pid = popup.locator('[data-trend-pick="0-demand_percent"]')
+        pid.click()
+        expect(pid).to_have_attribute("aria-pressed", "true")
+        expect(demand).to_have_attribute("data-focused", "")
+        expect(main.locator(".hem-trend-tag text")).to_have_text("75%")
+        expect(main.locator('[data-trend-dot="0-demand_percent"]')).to_have_attribute("visibility", "visible")
+        main.focus()
+        main.press("Home")
+        expect(main.locator(".hem-trend-tag")).to_have_attribute("visibility", "hidden")
+        expect(main.locator('[data-trend-dot="0-demand_percent"]')).to_have_attribute("visibility", "hidden")
+        main.press("End")
+        popup.locator('[data-trend-pick="0-target"]').click()
+        expect(main.locator(".hem-trend-tag text")).to_have_text("24 °C")
         for language in ("en", "el", "de"):
             page.evaluate("language=>{card._hass.language=language;card._refreshAverage105(true)}", language)
             assert "undefined" not in popup.inner_text()
@@ -632,7 +659,7 @@ def browser_checks(data):
         expect(main.locator(".hem-control-reported075")).to_have_count(2)
         expect(main.locator('[data-control-field075="target"],[data-control-field075="target_low"]')).to_have_count(0)
         expect(popup.locator("[data-trend-value114]")).to_have_text("—")
-        expect(popup.locator('[data-control-target075="0"]')).to_have_text("—")
+        expect(popup.locator('[data-control-target075="0"]')).to_have_count(0)
         expect(popup.locator('[data-control-demand075="0"]')).to_have_text("75%")
         expect(main.locator(".hem-control-unit075")).to_have_count(0)
         assert main.evaluate("""svg=>![...svg.querySelectorAll('text')].some(label=>
