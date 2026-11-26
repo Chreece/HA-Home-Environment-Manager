@@ -27,13 +27,13 @@
 
 <p align="center"><strong>整個家的環境, Home Assistant 這是一張卡片.</strong></p>
 
-**HEM 幫助你的家了解周圍的環境,** 這會帶來你的 Home Assistant 檢測空氣質量,獲得有用的通風諮詢,管理舒適性和自動化您選擇的設備.
+[房間範例](#what-can-hem-do) · [功能](#explore-the-features) · [介面截圖](#see-hem-in-action) · [安裝](#installation) · [入門設定](#getting-started) · [常見問題](#common-questions) · [疑難排解](#help-and-troubleshooting) · [支持與授權](#support-and-license)
 
-這種情況, HEM 在所有人都不在的時候, 能減少加熱, 在你回來之前準備選定的房間, 在你睡覺時使用不同的湿度目標, **監控和推薦**沒有控制任何裝置.
+## 簡介
 
-**請您繼續閱讀更多內容** 每個房間都有自己的設定. 每個支持的儀器都有自己的控制器,操作模式,目標和安全限制. HEM 沒有假設選擇裝置會允許使用該裝置.
+HEM 利用已連接到 Home Assistant 的感測器，顯示各房間的溫度、濕度和空氣品質。它會比較室內外狀況，建議何時開窗或關窗。你可以只看建議，也可以讓 HEM 控制選定的暖氣、冷氣、風扇和除濕機，並分別設定在家、外出和睡眠時的目標值。
 
-[探索這些特點](#what-can-hem-do) · 其他國家 [查看接口](#see-hem-in-action) · 其他國家 [設置 HEM](#installation) · 其他國家 [建立自己的家](#getting-started) · 其他國家 [詳細的指南](../../docs/advanced-configuration.md) · [所有設定（英文）](../../docs/settings-reference.md)
+其他國家 [詳細的指南](../../docs/advanced-configuration.md) · [所有設定（英文）](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## 什麼可能會 HEM 沒有?

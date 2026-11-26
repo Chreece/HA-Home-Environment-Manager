@@ -27,13 +27,13 @@
 
 <p align="center"><strong>Całe środowisko w domu, w jednym Home Assistant Karta.</strong></p>
 
-**HEM pomaga domom zrozumieć otoczenie i reagować na potrzeby każdego pokoju.** Przyniosło ci Home Assistant czujniki, dane pogodowe, informacje o użytkowaniu i kompatybilne urządzenia klimatyczne razem, dzięki czemu można monitorować jakość powietrza, otrzymywać przydatne porady w zakresie wentylacji, zarządzać komfortem i automatyzować wybrane urządzenia.
+[Przykłady dla pomieszczeń](#what-can-hem-do) · [Funkcje](#explore-the-features) · [Zrzuty ekranu](#see-hem-in-action) · [Instalacja](#installation) · [Pierwsze kroki](#getting-started) · [Częste pytania](#common-questions) · [Rozwiązywanie problemów](#help-and-troubleshooting) · [Wsparcie i licencja](#support-and-license)
 
-Na przykład: HEM może zmniejszyć ogrzewanie podczas gdy wszyscy są poza domem, przygotować wybrane pomieszczenia przed powrotem, użyć innego celu wilgotności podczas snu lub poprosić o otwarcie okna przed uruchomieniem dehumidifier. **monitorować i polecać**, bez kontrolowania urządzenia.
+## W skrócie
 
-**Zostań władcą.** Każdy pokój ma swoje ustawienia, każdy urządzenie posiada własny kontroler, tryby działania, cele i ograniczenia bezpieczeństwa. HEM nigdy nie zakłada, że wybór urządzenia pozwala na obsługę tego urządzenia.
+HEM korzysta z czujników już podłączonych do Home Assistant, aby pokazywać temperaturę, wilgotność i jakość powietrza w każdym pokoju. Porównuje warunki wewnątrz i na zewnątrz i podpowiada, kiedy otworzyć lub zamknąć okna. Możesz korzystać tylko z porad albo powierzyć mu sterowanie wybranymi grzejnikami, klimatyzatorami, wentylatorami i osuszaczami, z osobnymi wartościami docelowymi na czas pobytu w domu, nieobecności i snu.
 
-[Sprawdź cechy](#what-can-hem-do) · [Zobacz interfejs](#see-hem-in-action) · [Zainstalowanie HEM](#installation) · [Zrób sobie dom.](#getting-started) · [Szczegółowy przewodnik](../../docs/advanced-configuration.md) · [Wszystkie ustawienia (po angielsku)](../../docs/settings-reference.md)
+[Szczegółowy przewodnik](../../docs/advanced-configuration.md) · [Wszystkie ustawienia (po angielsku)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Co może HEM - Czy to prawda?

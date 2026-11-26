@@ -27,13 +27,13 @@
 
 <p align="center"><strong>Toàn bộ môi trường nhà của bạn, trong một Home Assistant Thẻ.</strong></p>
 
-**HEM giúp nhà bạn hiểu được môi trường xung quanh và phản ứng với những gì mỗi phòng thực sự cần.** Nó mang đến cho bạn Home Assistant các cảm biến, dữ liệu thời tiết, thông tin cư trú và các thiết bị khí hậu tương thích cùng nhau để bạn có thể theo dõi chất lượng không khí, nhận lời khuyên thông gió hữu ích, quản lý sự thoải mái và tự động hóa thiết bị bạn chọn.
+[Ví dụ theo phòng](#what-can-hem-do) · [Tính năng](#explore-the-features) · [Ảnh chụp màn hình](#see-hem-in-action) · [Cài đặt](#installation) · [Bắt đầu](#getting-started) · [Câu hỏi thường gặp](#common-questions) · [Khắc phục sự cố](#help-and-troubleshooting) · [Ủng hộ và giấy phép](#support-and-license)
 
-Ví dụ: HEM có thể làm giảm nhiệt trong khi mọi người đi xa, chuẩn bị cho các phòng được chọn trước khi bạn trở lại, sử dụng một mục tiêu độ ẩm khác nhau trong khi bạn ngủ, hoặc yêu cầu bạn mở cửa sổ trước khi chạy một máy tháo ẩm. Nó cũng có thể chỉ **giám sát và khuyến cáo**, mà không kiểm soát bất kỳ thiết bị nào.
+## Tóm tắt
 
-**Cứ giữ trách nhiệm.** Mỗi phòng có cài đặt riêng của mình. Mỗi thiết bị được hỗ trợ có bộ điều khiển riêng, chế độ hoạt động, mục tiêu và giới hạn an toàn của riêng mình. HEM không bao giờ cho rằng việc chọn một thiết bị cho phép nó vận hành thiết bị đó.
+HEM dùng các cảm biến bạn đã có trong Home Assistant để hiển thị nhiệt độ, độ ẩm và chất lượng không khí của từng phòng. HEM so sánh điều kiện trong nhà và ngoài trời để gợi ý khi nào nên mở hoặc đóng cửa sổ. Bạn có thể chỉ nhận gợi ý hoặc cho phép HEM điều khiển các máy sưởi, máy lạnh, quạt và máy hút ẩm đã chọn, với mục tiêu khác nhau khi bạn ở nhà, đi vắng hoặc đang ngủ.
 
-[Khám phá các tính năng](#what-can-hem-do) · [Xem giao diện](#see-hem-in-action) · [Lắp đặt HEM](#installation) · [Đặt nhà của bạn](#getting-started) · [Hướng dẫn chi tiết](../../docs/advanced-configuration.md) · [Tất cả cài đặt (tiếng Anh)](../../docs/settings-reference.md)
+[Hướng dẫn chi tiết](../../docs/advanced-configuration.md) · [Tất cả cài đặt (tiếng Anh)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Điều gì có thể HEM làm được không?

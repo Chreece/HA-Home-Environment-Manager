@@ -27,13 +27,13 @@
 
 <p align="center"><strong>Koko kotiympäristösi yhdessä Home Assistant Kortti.</strong></p>
 
-**HEM auttaa talosi ymmärtämään ympäristönsä ja reagoimaan siihen, mitä jokainen huone todella tarvitsee.** Se tuo sinut Home Assistant Sensorit, säätiedot, käyttötiedot ja yhteensopivat ilmastolaitteet yhdessä, jotta voit seurata ilmanlaatua, saada hyödyllisiä ilmanvaihto-ohjeita, hallita mukavuutta ja automatisoida valitsemasi laitteet.
+[Huonekohtaisia esimerkkejä](#what-can-hem-do) · [Ominaisuudet](#explore-the-features) · [Kuvakaappaukset](#see-hem-in-action) · [Asennus](#installation) · [Käyttöönotto](#getting-started) · [Usein kysytyt kysymykset](#common-questions) · [Vianmääritys](#help-and-troubleshooting) · [Tuki ja lisenssi](#support-and-license)
 
-Esimerkiksi: HEM voi vähentää lämmitystä, kun kaikki ovat poissa, valmistaa tiettyjä huoneita ennen palaamista, käyttää erilaista kosteuden kohdentaa nukkumisen aikana tai pyytää sinua avaamaan ikkunan ennen kuin käytät nesteenpoistoa. **seurata ja suositella**, ilman laitteen hallintaa.
+## Lyhyesti
 
-**Pysy johdossa.** Jokaisella huoneella on omat asetukset, jokaisella laitteella on omat ohjaimet, toimintatapa, tavoitteet ja turvallisuusrajoitukset. HEM ei koskaan oletta, että laitteen valinta antaa sille luvan käyttää sitä laitteen.
+HEM näyttää huoneiden lämpötilan, ilmankosteuden ja ilmanlaadun Home Assistantiin jo liitettyjen anturien avulla. Se vertailee sisä- ja ulko-olosuhteita ja ehdottaa, milloin ikkunat kannattaa avata tai sulkea. Voit käyttää pelkkiä suosituksia tai antaa HEMin ohjata valitsemiasi lämmittimiä, ilmastointilaitteita, puhaltimia ja ilmankuivaimia eri tavoitearvoilla sen mukaan, oletko kotona, poissa vai nukkumassa.
 
-[Tutki ominaisuudet](#what-can-hem-do) • [Näytä käyttöliittymä](#see-hem-in-action) • [Asennetaan HEM](#installation) • [Aseta kotisi](#getting-started) • [Yksityiskohtainen opas](../../docs/advanced-configuration.md) · [Kaikki asetukset (englanniksi)](../../docs/settings-reference.md)
+[Yksityiskohtainen opas](../../docs/advanced-configuration.md) · [Kaikki asetukset (englanniksi)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Mikä voi HEM - Onko se totta?

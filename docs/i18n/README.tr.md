@@ -27,13 +27,13 @@
 
 <p align="center"><strong>Tüm evin çevresini, tek bir Home Assistant Kart.</strong></p>
 
-**HEM evinizin çevresini anlamasına ve her odanın aslında neye ihtiyacı olduğunu anlamasına yardımcı olur.** Senin için Home Assistant Havanın kalitesini izlemek, faydalı havalandırma tavsiyelerini almak, konforu yönetmek ve seçtiğiniz ekipmanları otomatikleştirmek için sensörler, hava durumu verileri, işlev bilgisi ve uyumlu iklim cihazları bir araya getirilmiştir.
+[Oda örnekleri](#what-can-hem-do) · [Özellikler](#explore-the-features) · [Ekran görüntüleri](#see-hem-in-action) · [Kurulum](#installation) · [İlk adımlar](#getting-started) · [Sık sorulan sorular](#common-questions) · [Sorun giderme](#help-and-troubleshooting) · [Destek ve lisans](#support-and-license)
 
-Örneğin, HEM Herkes yokken ısıyı azaltabilir, geri dönmeden önce seçilmiş odaları hazırlayabilir, uyurken farklı bir nem hedefi kullanabilir veya bir dehumidifier çalıştırmadan önce pencerenizi açmanızı isteyebilir. **izleme ve tavsiye**, herhangi bir cihazı kontrol etmeden.
+## Kısaca
 
-**Sen sorumlu kal.** Her odanın kendi ayarları vardır. Her desteklenen cihazın kendi kontrolörü, çalışma modları, hedefleri ve güvenlik sınırları vardır. HEM bir cihaz seçmenin, bu cihazı kullanma izni verdiğini asla varsaymaz.
+HEM, Home Assistant’a zaten bağlı olan sensörlerle her odanın sıcaklığını, nemini ve hava kalitesini gösterir. İç ve dış ortam koşullarını karşılaştırarak pencereleri ne zaman açıp kapatabileceğinizi önerir. Yalnızca önerileri alabilir veya seçtiğiniz ısıtıcıları, klimaları, vantilatörleri ve nem alıcıları HEM’in yönetmesini sağlayabilirsiniz. Evdeyken, dışarıdayken ve uyurken farklı hedefler belirleyebilirsiniz.
 
-[Özellikleri keşfedin](#what-can-hem-do) · [Bağlantıyı görün](#see-hem-in-action) · [HEM kur](#installation) · [Evinizi hazırlayın .](#getting-started) · [Detaylı rehber](../../docs/advanced-configuration.md) · [Tüm ayarlar (İngilizce)](../../docs/settings-reference.md)
+[Detaylı rehber](../../docs/advanced-configuration.md) · [Tüm ayarlar (İngilizce)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Ne yapabilir? HEM - Evet.

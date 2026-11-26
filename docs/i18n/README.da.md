@@ -27,13 +27,13 @@
 
 <p align="center"><strong>Hele dit hjems miljø, i en Home Assistant Kortet.</strong></p>
 
-**HEM hjælper dit hjem med at forstå omgivelserne og reagere på hvad hvert værelse rent faktisk har brug for.** Det bringer din Home Assistant Det er vigtigt, at der tages højde for, at det er muligt at få en bedre ventilationstilpasning, at det er muligt at kontrollere luftkvaliteten, at få nyttige ventilationsrådgivning, at styre komforten og at automatisere det udstyr, du vælger.
+[Rumeksempler](#what-can-hem-do) · [Funktioner](#explore-the-features) · [Skærmbilleder](#see-hem-in-action) · [Installation](#installation) · [Kom godt i gang](#getting-started) · [Ofte stillede spørgsmål](#common-questions) · [Fejlfinding](#help-and-troubleshooting) · [Støtte og licens](#support-and-license)
 
-For eksempel: HEM kan reducere opvarmningen, mens alle er væk, forberede udvalgte værelser, før du kommer tilbage, bruge et andet luftfugtsmål, mens du sover, eller bede dig åbne et vindue, før du kører en affukter. **overvåge og anbefale**, uden at kontrollere nogen enhed.
+## Kort fortalt
 
-**Du holder styret.** Hvert værelse har sine egne indstillinger, og hvert støttet apparat har sin egen kontroller, driftstilstande, mål og sikkerhedsgrænser. HEM aldrig antager, at det ved at vælge en enhed giver den tilladelse til at betjene den enhed.
+HEM bruger de sensorer, du allerede har i Home Assistant, til at vise temperatur, luftfugtighed og luftkvalitet i hvert rum. Det sammenligner forholdene inde og ude og foreslår, hvornår du bør åbne eller lukke vinduerne. Du kan nøjes med rådene eller lade HEM styre udvalgte varmeapparater, klimaanlæg, ventilatorer og affugtere med forskellige mål, alt efter om du er hjemme, ude eller sover.
 
-[Udforsk de særlige træk](#what-can-hem-do) · [Se grænsefladen](#see-hem-in-action) · [Installer HEM](#installation) · [Få et hjem til dig.](#getting-started) · [Detaljeret vejledning](../../docs/advanced-configuration.md) · [Alle indstillinger (på engelsk)](../../docs/settings-reference.md)
+[Detaljeret vejledning](../../docs/advanced-configuration.md) · [Alle indstillinger (på engelsk)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Hvad kan HEM - Det gør du?

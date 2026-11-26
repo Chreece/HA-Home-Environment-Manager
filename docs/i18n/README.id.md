@@ -27,13 +27,13 @@
 
 <p align="center"><strong>Seluruh lingkungan rumah Anda, dalam satu Home Assistant kartu.</strong></p>
 
-**HEM membantu rumah Anda memahami lingkungan dan bereaksi terhadap apa yang sebenarnya dibutuhkan setiap kamar.** Ini membawa Anda Home Assistant sensor, data cuaca, informasi penghuni dan perangkat iklim yang kompatibel bersama sehingga Anda dapat memantau kualitas udara, menerima saran ventilasi yang berguna, mengelola kenyamanan dan mengotomatisasi peralatan yang Anda pilih.
+[Contoh per ruangan](#what-can-hem-do) · [Fitur](#explore-the-features) · [Tangkapan layar](#see-hem-in-action) · [Instalasi](#installation) · [Langkah awal](#getting-started) · [Pertanyaan umum](#common-questions) · [Pemecahan masalah](#help-and-troubleshooting) · [Dukungan dan lisensi](#support-and-license)
 
-Sebagai contoh, HEM dapat mengurangi pemanasan saat semua orang pergi, mempersiapkan kamar yang dipilih sebelum Anda kembali, menggunakan target kelembaban yang berbeda saat Anda tidur, atau meminta Anda membuka jendela sebelum menjalankan desumidifier. **memantau dan merekomendasikan**, tanpa mengontrol perangkat apapun.
+## Ringkasnya
 
-**Kau tetap bertanggung jawab.** Setiap kamar memiliki pengaturan sendiri. Setiap perangkat yang didukung memiliki pengontrol, mode operasi, target dan batas keamanan sendiri. HEM tidak pernah menganggap bahwa memilih perangkat memberikan izin untuk mengoperasikan perangkat itu.
+HEM memakai sensor yang sudah ada di Home Assistant untuk menampilkan suhu, kelembapan, dan kualitas udara di setiap ruangan. HEM membandingkan kondisi di dalam dan di luar rumah untuk menyarankan kapan jendela sebaiknya dibuka atau ditutup. Anda bisa menggunakan sarannya saja atau membiarkannya mengendalikan pemanas, AC, kipas, dan pengering udara pilihan Anda, dengan target berbeda saat Anda di rumah, bepergian, atau tidur.
 
-[Menjelajahi fiturnya](#what-can-hem-do) · [Lihat antarmuka](#see-hem-in-action) · [Instal HEM](#installation) · [Buatlah rumahmu](#getting-started) · [Panduan terperinci](../../docs/advanced-configuration.md) · [Semua pengaturan (bahasa Inggris)](../../docs/settings-reference.md)
+[Panduan terperinci](../../docs/advanced-configuration.md) · [Semua pengaturan (bahasa Inggris)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Apa yang bisa HEM - Apa?

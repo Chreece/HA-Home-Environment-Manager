@@ -27,13 +27,13 @@
 
 <p align="center"><strong>De hele omgeving van je huis, in één Home Assistant Een kaartje.</strong></p>
 
-**HEM helpt je huis om de omgeving te begrijpen en te reageren op wat elke kamer eigenlijk nodig heeft.** Het brengt je Home Assistant de luchtkwaliteit te controleren, nuttige ventilatieadvies te ontvangen, comfort te beheren en de uitrusting van uw keuze te automatiseren.
+[Voorbeelden per kamer](#what-can-hem-do) · [Functies](#explore-the-features) · [Schermafbeeldingen](#see-hem-in-action) · [Installatie](#installation) · [Aan de slag](#getting-started) · [Veelgestelde vragen](#common-questions) · [Problemen oplossen](#help-and-troubleshooting) · [Ondersteuning en licentie](#support-and-license)
 
-Bijvoorbeeld: HEM Het kan de verwarming verminderen terwijl iedereen weg is, geselecteerde kamers voorbereiden voordat je terugkomt, een ander vochttarget gebruiken terwijl je slaapt, of vragen om een raam te openen voordat je een ontvochtmiddel gebruikt. **toezicht houden en aanbevelen**, zonder enige apparatuur te controleren.
+## In het kort
 
-**Jij blijft de baas.** Elke kamer heeft zijn eigen instellingen, elk ondersteunde apparaat heeft zijn eigen controller, werkwijze, doelen en veiligheidsgrenzen. HEM neemt nooit aan dat het selecteren van een apparaat hem toestemming geeft om dat apparaat te bedienen.
+HEM gebruikt de sensoren die je al in Home Assistant hebt om per kamer de temperatuur, luchtvochtigheid en luchtkwaliteit te tonen. Het vergelijkt de omstandigheden binnen en buiten en adviseert wanneer je de ramen kunt openen of sluiten. Je kunt het bij advies houden of HEM geselecteerde verwarmingen, airco’s, ventilatoren en ontvochtigers laten aansturen, met aparte streefwaarden voor thuis, afwezigheid en slaap.
 
-[Ontdek de kenmerken](#what-can-hem-do) · [Zie de interface](#see-hem-in-action) · [Installeer HEM](#installation) · [Maak je huis klaar.](#getting-started) · [Gedetailleerde gids](../../docs/advanced-configuration.md) · [Alle instellingen (Engels)](../../docs/settings-reference.md)
+[Gedetailleerde gids](../../docs/advanced-configuration.md) · [Alle instellingen (Engels)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Wat kan HEM - Ja, dat doen we.

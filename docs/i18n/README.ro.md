@@ -27,13 +27,13 @@
 
 <p align="center"><strong>Întregul mediu al casei, într-un singur Home Assistant Cardul.</strong></p>
 
-**HEM ajută casa ta să înţeleagă împrejurimile şi să reacţioneze la ceea ce fiecare cameră are de fapt nevoie.** Îţi aduce Home Assistant Se folosesc senzori, date meteorologice, informații privind ocuparea și dispozitive climatice compatibile, astfel încât să puteți monitoriza calitatea aerului, să primiți sfaturi utile privind ventilația, să gestionați confortul și să automatizați echipamentul ales.
+[Exemple pe camere](#what-can-hem-do) · [Funcții](#explore-the-features) · [Capturi de ecran](#see-hem-in-action) · [Instalare](#installation) · [Primii pași](#getting-started) · [Întrebări frecvente](#common-questions) · [Depanare](#help-and-troubleshooting) · [Susținere și licență](#support-and-license)
 
-De exemplu, HEM poate reduce încălzirea în timp ce toată lumea este plecată, poate pregăti camere selectate înainte de întoarcere, poate folosi un alt obiectiv de umiditate în timp ce dormi sau poate cere să deschizi o fereastră înainte de a rula un dehumidificator. **monitorizarea și recomandarea**, fără a controla niciun dispozitiv.
+## Pe scurt
 
-**Rămâi la conducere.** Fiecare cameră are propriile setări. Fiecare dispozitiv suportat are propriul controler, moduri de funcționare, ținte și limite de siguranță. HEM nu presupune niciodată că alegerea unui dispozitiv îi dă permisiunea de a opera dispozitivul.
+HEM folosește senzorii pe care îi ai deja în Home Assistant pentru a afișa temperatura, umiditatea și calitatea aerului în fiecare cameră. Compară condițiile din interior și din exterior și îți sugerează când să deschizi sau să închizi ferestrele. Poți primi doar recomandări sau poți lăsa HEM să controleze aparatele de încălzire și de aer condiționat, ventilatoarele și dezumidificatoarele alese de tine, cu valori țintă diferite când ești acasă, plecat sau dormi.
 
-[Explorează caracteristicile](#what-can-hem-do) · [Vezi interfaţa](#see-hem-in-action) · [Instalarea HEM](#installation) · [Pune-ţi casa.](#getting-started) · [Ghid detaliat](../../docs/advanced-configuration.md) · [Toate setările (în engleză)](../../docs/settings-reference.md)
+[Ghid detaliat](../../docs/advanced-configuration.md) · [Toate setările (în engleză)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Ce poate HEM - Da, nu.

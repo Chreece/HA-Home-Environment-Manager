@@ -27,13 +27,13 @@
 
 <p align="center"><strong>Cijela okolina vašeg doma, u jednom Home Assistant Karta.</strong></p>
 
-**HEM pomaže vašoj kući razumjeti okoliš i reagirati na ono što je svaka soba zapravo potrebna.** Donosi ti Home Assistant Snimci, podaci o vremenu, informacije o zaposlenju i kompatibilni klimatski uređaji zajedno tako da možete pratiti kvalitetu zraka, dobiti korisne savjete o ventilaciji, upravljati udobom i automatizirati opremu koju odaberete.
+[Primjeri po prostorijama](#what-can-hem-do) · [Mogućnosti](#explore-the-features) · [Snimke zaslona](#see-hem-in-action) · [Instalacija](#installation) · [Prvi koraci](#getting-started) · [Česta pitanja](#common-questions) · [Rješavanje problema](#help-and-troubleshooting) · [Podrška i licenca](#support-and-license)
 
-Na primjer, HEM može smanjiti grijanje dok svi su odsutni, pripremiti odabrane prostorije prije povratka, koristiti drugačiji cilj vlažnosti dok spavate ili vas zamoliti da otvorite prozor prije nego pokrenete dehumidifikator. **promatrati i preporučiti**, bez kontrole bilo kojeg uređaja.
+## Ukratko
 
-**Ostani na čelu.** Svaka soba ima svoje postavke, svaki podržani uređaj ima svoj upravljač, način rada, ciljeve i sigurnosne granice. HEM ne pretpostavlja da odabir uređaja daje dozvolu za korištenje tog uređaja.
+HEM pomoću postojećih senzora u sustavu Home Assistant prikazuje temperaturu, vlažnost i kvalitetu zraka u svakoj prostoriji. Uspoređuje unutarnje i vanjske uvjete te preporučuje kada otvoriti ili zatvoriti prozore. Možete koristiti samo savjete ili mu prepustiti upravljanje odabranim grijalicama, klima-uređajima, ventilatorima i odvlaživačima uz različite ciljne vrijednosti ovisno o tome jeste li kod kuće, odsutni ili spavate.
 
-[Iskoristite karakteristike](#what-can-hem-do) · [Pogledajte interfejs](#see-hem-in-action) · [Instalirajte HEM](#installation) · [Postavi svoj dom](#getting-started) · [Podrobni vodič](../../docs/advanced-configuration.md) · [Sve postavke (na engleskom)](../../docs/settings-reference.md)
+[Podrobni vodič](../../docs/advanced-configuration.md) · [Sve postavke (na engleskom)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Što može? HEM -Da, jesam.
