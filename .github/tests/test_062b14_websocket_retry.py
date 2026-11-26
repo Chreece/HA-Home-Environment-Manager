@@ -130,6 +130,33 @@ with sync_playwright() as pw:
     assert page.evaluate("oldDashboardCalls")==0, "Retired owner retried"
     assert page.evaluate("newDashboardCalls")==1, "New owner retried needlessly"
 
+    # A sustained outage gets six timed retries after the first failure. A later
+    # HA update can still retry both reads and recover without recreating the card.
+    page.clock.install()
+    page.evaluate("""() => {
+      window.offlineCalls={dashboard:0,registry:0};
+      window.restored=false;
+      window.offline={...newHass,connection:{},callWS:async msg=>{
+        const kind=msg.type==='environment_manager/dashboard'?'dashboard':
+          msg.type==='config/device_registry/list'?'registry':null;
+        if(kind){
+          offlineCalls[kind]++;
+          if(!restored)throw Error('connection unavailable');
+        }
+        return newHass.callWS(msg);
+      }};
+      card.hass=offline;
+    }""")
+    for delay in (2000, 4000, 8000, 16000, 32000, 60000):
+        page.clock.fast_forward(delay + 100)
+    assert page.evaluate("offlineCalls")=={"dashboard":7,"registry":7}
+    page.clock.fast_forward(120000)
+    assert page.evaluate("offlineCalls")=={"dashboard":7,"registry":7}
+    assert page.evaluate("card._dashboardRetryHandle===null && card._deviceRegistryRetryHandle===null")
+    page.evaluate("()=>{restored=true;card.hass=offline}")
+    assert page.evaluate("card._dashboardData?.version===1 && card._deviceRegistryLoaded")
+    assert page.evaluate("offlineCalls")=={"dashboard":8,"registry":8}
+
     page.evaluate("()=>card.remove()")
     assert page.evaluate("""()=>card._dashboardRetryHandle===null &&
                              card._deviceRegistryRetryHandle===null""")

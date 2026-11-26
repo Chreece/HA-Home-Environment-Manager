@@ -43,6 +43,9 @@ with sync_playwright() as p:
         card._config={entity:'sensor.hem'};
         card._roomsExpanded87=new Set(['room0']);
         card._devicesExpanded87=new Set(['climate.managed_0_0']);
+        window.styleBuilds=0;
+        const styles=card._styles;
+        card._styles=function(){styleBuilds++;return styles.call(this)};
         card._renderContent(true);
         window.originalCard=card.shadowRoot.querySelector('ha-card.shell');
         window.originalRoom=card.shadowRoot.querySelector('[data-room-fold87="room0"]');
@@ -93,6 +96,24 @@ with sync_playwright() as p:
         return {before,after,identical:originalCard===card.shadowRoot.querySelector('ha-card.shell')};
     }""")
     assert result['before']==result['after'] and result['identical'],result
+    # Inserting and reordering siblings must preserve the focused control's owner.
+    for change in ("insert", "rename", "remove"):
+        report=page.evaluate("""change=>{
+          const state=card._hass.states['sensor.hem'];
+          const dashboard=structuredClone(state.attributes.dashboard);
+          const extra={...dashboard.rooms[0],area_id:'new-area',name:'AAA new area'};
+          if(change==='insert') dashboard.rooms.push(extra);
+          if(change==='rename') dashboard.rooms.find(r=>r.area_id==='room0').name='ZZZ room';
+          if(change==='remove') dashboard.rooms=dashboard.rooms.filter(r=>r.area_id!=='new-area');
+          card._hass.states={...card._hass.states,'sensor.hem':{...state,
+            attributes:{...state.attributes,dashboard}}};
+          card._renderContent(true);
+          return {room:originalRoom===card.shadowRoot.querySelector('[data-room-fold87="room0"]'),
+            expanded:originalRoom.open,focused:card.shadowRoot.activeElement===originalLink,
+            owner:originalLink.closest('[data-room-fold87]')?.dataset.roomFold87,
+            styles:styleBuilds};
+        }""",change)
+        assert report=={'room':True,'expanded':True,'focused':True,'owner':'room0','styles':1}, (change,report)
     page.locator('[data-device-fold87="climate.managed_0_0"] details.hem-context76 > summary').first.click()
     page.wait_for_timeout(50)
     popup=page.locator('.hem-floating-info87')

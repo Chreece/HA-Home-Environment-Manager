@@ -581,6 +581,22 @@ class RoomDataTests(unittest.TestCase):
         self.runtime.records = deepcopy(self.runtime.records)
         self.assertEqual(self.room(), complete)
 
+    def test_room_sensor_projects_only_its_area_with_dashboard_precedence(self):
+        main = self.plan().rooms[0]
+        extra = logic.Room("extra", "Extra", (), main.readings)
+        duplicate = logic.Room(main.area_id, "Climate duplicate", (), ())
+        close = logic.Recommendation("close", main.area_id, main.name, (), ())
+        self.manager.plan = self.plan(recommendations=(close,), climate_rooms=(duplicate, extra))
+        expected = {r["area_id"]: r for r in self.snapshot()["rooms"]}
+        with patch.object(dashboard, "classify_room_data", wraps=dashboard.classify_room_data) as assess:
+            for area_id in expected:
+                self.assertEqual(areas.room_snapshot(self.manager, area_id), expected[area_id])
+            self.assertIsNone(areas.room_snapshot(self.manager, "removed"))
+            self.assertEqual(assess.call_count, len(expected))
+        self.assertEqual(expected[main.area_id]["action"], "close")
+        self.assertFalse(expected[main.area_id]["climate_only"])
+        self.assertTrue(expected["extra"]["climate_only"])
+
     def test_websocket_and_room_sensor_publish_same_readiness(self):
         self.controller()
         self.selection()
