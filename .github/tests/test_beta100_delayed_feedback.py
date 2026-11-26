@@ -71,5 +71,5 @@ assert "state==='minimum_on_hold'" in card
 assert "state==='minimum_off_hold'" in card
 assert "const label=presentation.label+untilLabel;" in card
 assert "_setpointPhase109" not in card
-assert "Math.ceil((until-Date.now()/1000)/60)+' min'" in card
+# The rendered hold duration is covered in test_beta109_setpoint_grace_browser.
 print('BETA100_DELAYED_NATIVE_OFF_AND_MINIMUM_ON_COUNTDOWN=PASS')
