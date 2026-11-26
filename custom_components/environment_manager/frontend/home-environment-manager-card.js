@@ -7697,10 +7697,10 @@
     const marker=root.querySelector('.hem-trend-cursor114');
     if(marker){
       marker.setAttribute('transform','translate('+trendX114(model,selected.time).toFixed(2)+' 0)');
-      marker.style.display=model.timeline075?'':'none';
+      marker.style.display=model.timeline075&&saved.activeTrace?'':'none';
       const dot=marker.querySelector('circle');
       dot?.setAttribute('cy',point?trendY114(model,point.v).toFixed(2):'0');
-      if(dot)dot.style.display=point?'':'none';
+      if(dot)dot.style.display=point&&!saved.hiddenTraces?.has('measured')?'':'none';
     }
     const chart=root.querySelector('[data-trend-chart114]');
     chart?.setAttribute('aria-valuenow',String(Math.max(0,selected.index)));
@@ -7718,7 +7718,7 @@
     const limitLabel=Number.isFinite(model.threshold)?this._t('limits')+' '+this._format(model.threshold,3)+' '+model.unit:'';
     const limitY=limitLabel?trendY114(model,model.threshold):0;
     const limitLine=limitLabel?'<line class="hem-sensor-limit" x1="'+model.left+'" x2="'+model.right+
-      '" y1="'+limitY+'" y2="'+limitY+'" data-trend-line="limit" stroke="var(--hem-trend-limit)" stroke-width="2" stroke-dasharray="6 3"><title>'+
+      '" y1="'+limitY+'" y2="'+limitY+'" data-trend-line="limit" data-trend-layer="limit" stroke="var(--hem-trend-limit)" stroke-width="2" stroke-dasharray="6 3"><title>'+
       escape(limitLabel)+'</title></line>':'';
     const ranges=[[21600,'6 '+tw114(this,'hours')],[86400,'24 '+tw114(this,'hours')],
       [604800,'7 '+tw114(this,'days')],[0,tw114(this,'all')]];
@@ -7798,8 +7798,10 @@
       '<stop offset="1" stop-color="currentColor" stop-opacity=".015"/></linearGradient>'+
       '<pattern id="hem-trend-gap114-'+uid+'" width="7" height="7" patternUnits="userSpaceOnUse">'+
       '<path d="M0 7L7 0" stroke="currentColor" stroke-opacity=".10"/></pattern></defs>'+
-      ticks+timeTicks+gaps+limitLine+'<path d="'+fill+'" fill="url(#hem-trend-fill114-'+uid+')"/>'+
-      '<path class="hem-avg-line105" d="'+paths.join(' ')+'" data-trend-line="measured"/>'+dots+
+      ticks+timeTicks+'<g data-trend-layer="measured">'+gaps+'</g>'+limitLine+
+      '<path data-trend-layer="measured" d="'+fill+'" fill="url(#hem-trend-fill114-'+uid+')"/>'+
+      '<!--hem-control-output--><g data-trend-layer="measured"><path class="hem-avg-line105" d="'+
+      paths.join(' ')+'" data-trend-line="measured"/>'+dots+'</g>'+
       '<g class="hem-trend-cursor114" pointer-events="none"><line y1="'+model.top+'" y2="'+
       model.bottom+'"/><circle cx="0" cy="0" r="4"/></g>'+
       model.traces.filter(trace=>trace.field!=='measured').map(trace=>
@@ -8057,10 +8059,11 @@
     .hem-trend-readout114{display:flex;align-items:baseline;justify-content:space-between;gap:8px;
       flex-wrap:wrap;margin:12px 0 5px;color:var(--hem-trend-muted114);font-size:11px;font-variant-numeric:tabular-nums}
     .hem-trend-values{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px 6px;margin:3px 0 9px}
-    .hem-trend114 .hem-trend-values button{display:grid;align-content:center;gap:2px;text-align:start;
+    .hem-trend114 .hem-trend-values button[aria-pressed]{display:grid;align-content:center;gap:2px;text-align:start;
       min-width:0;min-height:44px;padding:5px 7px;border:1px solid transparent;border-radius:6px;white-space:normal;
       background:transparent;color:var(--hem-series-color);overflow-wrap:anywhere;font:inherit}
-    .hem-trend114 .hem-trend-values button[aria-pressed=true]{background:var(--secondary-background-color,#292a2b);
+    .hem-trend114 .hem-trend-values button[aria-pressed=false]{color:light-dark(#666,#aaa)}
+    .hem-trend114 .hem-trend-values button[data-focused]{background:var(--secondary-background-color,#292a2b);
       border-color:var(--divider-color,#4a4a4a)}
     .hem-trend-values button span{font-size:12px}.hem-trend-values button b{font-size:16px;font-variant-numeric:tabular-nums}
     .hem-trend-values .hem-control-name075{grid-column:1/-1;margin-top:5px}
@@ -8150,6 +8153,12 @@
       return [field,color];
     }));
   }
+  function chooseVisibleTrace(saved,model){
+    const visible=model.traces.filter(trace=>!saved.hiddenTraces?.has(trace.key));
+    if(!visible.some(trace=>trace.key===saved.activeTrace)){
+      saved.activeTrace=(!model.visible.length&&visible.find(trace=>trace.index!==undefined)?.key)||visible[0]?.key;
+    }
+  }
   function trendReadouts(card,model,title){
     const saved=card._averageDialog105;
     const measured={slot:'measured',key:'measured',field:'measured',color:'var(--hem-trend-accent114)',label:title};
@@ -8174,14 +8183,12 @@
         model.traces.push({field,slot,key:group.id+'|'+field,index,label:labels[field],color:group.colors[field]});
       }
     });
-    if(!model.traces.some(trace=>trace.key===saved.activeTrace)){
-      saved.activeTrace=(!model.visible.length&&model.traces.find(t=>t.index!==undefined)?.key)||'measured';
-    }
+    chooseVisibleTrace(saved,model);
     return '<div class="hem-trend-values">'+model.traces.map(trace=>{
       const attr=trace.field==='measured'?'data-trend-value114':trace.field==='limit'?'data-trend-limit-value':
         'data-control-'+({demand_percent:'demand',output_percent:'output'}[trace.field]||trace.field)+'075="'+trace.index+'"';
       return (headers.get(trace.slot)||'')+'<button type="button" data-trend-pick="'+trace.slot+'" aria-pressed="'+
-        (trace.key===saved.activeTrace)+'" style="--hem-series-color:'+trace.color+'"><span>'+escape(trace.label)+
+        (!saved.hiddenTraces?.has(trace.key))+'" style="--hem-series-color:'+trace.color+'"><span>'+escape(trace.label)+
         '</span><strong><b '+attr+'>—</b>'+(trace.field==='measured'?' <small>'+escape(model.unit)+'</small>':'')+
         '</strong></button>';
     }).join('')+'</div>';
@@ -8381,7 +8388,8 @@
           Math.max(0,trendY114(model,point.target_low)-trendY114(model,point.target_high)).toFixed(2)+'"/>';
       }).join('');
       return '<g class="hem-control-target075" style="--hem-control-color075:'+group.color+'" aria-label="'+
-        escape(targetLabel(group)+' · '+group.name)+'">'+range+
+        escape(targetLabel(group)+' · '+group.name)+'">'+
+        (range?'<g data-trend-layer="'+index+'-target_low '+index+'-target_high">'+range+'</g>':'')+
         ['target','target_low','target_high'].map(field=>{
           const path=this._controlTrendPath075(group,model,field);
           const isolated=group.points.filter((point,index)=>point.t===point.targetUntil&&point.t>=model.start&&
@@ -8389,20 +8397,27 @@
             !(point.targetConnected&&Number.isFinite(group.points[index-1]?.[field]))).map(point=>
             '<circle class="hem-control-sample075" '+seriesStyle(group,field)+' cx="'+trendX114(model,point.t).toFixed(2)+
             '" cy="'+trendY114(model,point[field]).toFixed(2)+'" r="2.5"/>').join('');
-          return (path?'<path data-control-field075="'+field+'" data-trend-line="'+index+'-'+field+'" '+seriesStyle(group,field)+' d="'+path+'"/>':'')+isolated;
+          if(!path&&!isolated)return '';
+          return '<g data-trend-layer="'+index+'-'+field+'">'+
+            (path?'<path data-control-field075="'+field+'" data-trend-line="'+index+'-'+field+'" '+seriesStyle(group,field)+' d="'+path+'"/>':'')+
+            isolated+'</g>';
         }).join('')+'</g>';
     }).join('');
     const outputPaths=outputSeries.map(({group,index,demand,output})=>{
       if(!demand&&!output)return '';
-      const isolated=['demand_percent','output_percent'].map(field=>group.points.filter(point=>
-        point.t===point.until&&point.t>=model.start&&point.t<=model.end&&Number.isFinite(point[field])).map(point=>
-        '<circle class="hem-control-sample075" '+seriesStyle(group,field)+' cx="'+trendX114(model,point.t).toFixed(2)+
-        '" cy="'+(model.bottom-(model.bottom-model.top)*point[field]/100).toFixed(2)+'" r="2.5"/>').join('')).join('');
+      const fields=[['demand_percent',demand,'hem-control-demand075'],['output_percent',output,'hem-control-reported075']];
       return '<g class="hem-control-output-series075" data-control-output-series075="'+index+
         '" style="--hem-control-color075:'+group.color+'" aria-label="'+escape(text('Output evidence')+' · '+group.name)+'">'+
-        (demand?'<path class="hem-control-demand075" data-control-field075="demand_percent" data-trend-line="'+index+'-demand_percent" '+seriesStyle(group,'demand_percent')+' d="'+demand+'"/>':'')+
-        (output?'<path class="hem-control-reported075" data-control-field075="output_percent" data-trend-line="'+index+'-output_percent" '+seriesStyle(group,'output_percent')+' d="'+output+'"/>':'')+
-        isolated+'</g>';
+        fields.map(([field,path,cls])=>{
+          if(!path)return '';
+          const slot=index+'-'+field;
+          const isolated=group.points.filter(point=>point.t===point.until&&point.t>=model.start&&point.t<=model.end&&
+            Number.isFinite(point[field])).map(point=>'<circle class="hem-control-sample075" '+seriesStyle(group,field)+
+            ' cx="'+trendX114(model,point.t).toFixed(2)+'" cy="'+
+            (model.bottom-(model.bottom-model.top)*point[field]/100).toFixed(2)+'" r="2.5"/>').join('');
+          return '<g data-trend-layer="'+slot+'"><path class="'+cls+'" data-control-field075="'+field+
+            '" data-trend-line="'+slot+'" '+seriesStyle(group,field)+' d="'+path+'"/>'+isolated+'</g>';
+        }).join('')+'</g>';
     }).join('');
     const outputAxis=model.output075?(model.physicalValues075?
       '<text class="hem-control-unit075" x="'+model.left+'" y="9">'+escape(model.unit)+'</text>':'')+
@@ -8419,7 +8434,7 @@
       }).join('')+'</g>':'';
     // Output uses the same plot and timeline, below the measured curve and
     // targets so an equal screen position cannot hide those physical values.
-    html=html.replace('<path class="hem-avg-line105"',()=>outputPaths+'<path class="hem-avg-line105"');
+    html=html.replace('<!--hem-control-output-->',()=>outputPaths);
     html=html.replace('<g class="hem-trend-cursor114"',()=>targetPaths+outputAxis+'<g class="hem-trend-cursor114"');
     const status=saved.statusControl075;
     const statusHtml=status&&status!=='ready'?'<div class="hem-control-status075" role="status" data-control-status075="'+
@@ -8492,8 +8507,15 @@
         .map(v=>this._controllerStatusLabel(v)).join(' · '):'';
       return point;
     });
-    const focusChanged=model.focusedTrace!==saved.activeTrace;
-    model.focusedTrace=saved.activeTrace;
+    // Apply legend changes once per toggle or redraw, never on pointer movement.
+    const updateLegend=!model.legendApplied;
+    if(updateLegend&&saved.hiddenTraces){
+      const hiddenSlots=new Set(model.traces.filter(t=>saved.hiddenTraces?.has(t.key)).map(t=>t.slot));
+      for(const layer of root.querySelectorAll('[data-trend-layer]')){
+        layer.style.display=layer.dataset.trendLayer.split(' ').some(slot=>hiddenSlots.has(slot))?'none':'';
+      }
+    }
+    model.legendApplied=true;
     let active,x,y,tagText;
     for(const trace of model.traces){
       const {slot,field,index}=trace;
@@ -8505,8 +8527,10 @@
       }
       const {pick,value,label,unit,mark,line}=trace.ui;
       const focused=trace.key===saved.activeTrace;
-      if(focusChanged){
-        pick?.setAttribute('aria-pressed',String(focused));
+      const shown=!saved.hiddenTraces?.has(trace.key);
+      if(updateLegend){
+        pick?.setAttribute('aria-pressed',String(shown));
+        pick?.toggleAttribute('data-focused',focused);
         line?.toggleAttribute('data-focused',focused);
       }
       const point=points[index];
@@ -8524,20 +8548,22 @@
       const xx=trendX114(model,field==='measured'&&sampledEarlier?selected.point.t:selected.time);
       const yy=!valid?null:output?model.bottom-(model.bottom-model.top)*raw/100:trendY114(model,raw);
       if(mark){
-        mark.setAttribute('visibility',valid?'visible':'hidden');
-        if(valid)mark.setAttribute('transform','translate('+xx.toFixed(2)+' '+yy.toFixed(2)+')'+(focused?' scale(1.25)':''));
+        mark.setAttribute('visibility',valid&&shown?'visible':'hidden');
+        if(valid&&shown)mark.setAttribute('transform','translate('+xx.toFixed(2)+' '+yy.toFixed(2)+')'+(focused?' scale(1.25)':''));
       }
       if(focused){active=trace;x=xx;y=yy;tagText=display;}
-      if(valid&&field!=='measured'){
+      if(valid&&shown&&field!=='measured'){
         details.push((group?group.name+' · ':'')+name+' '+display);
       }
     }
     trendCallout(root,model,active,x,y,tagText);
-    if(details.length){
-      const pv=selected.point?this._format(selected.point.v,3)+' '+model.unit:tw114(this,'gap');
-      root.querySelector('[data-trend-chart114]')?.setAttribute('aria-valuetext',pv+
-        (sampledEarlier?' · '+tw114(this,'sample')+' '+this._trendDate114(selected.point.t):'')+
-        ' · '+details.join(' · ')+' · '+this._trendDate114(selected.time));
+    if(details.length||saved.hiddenTraces?.has('measured')){
+      if(!saved.hiddenTraces?.has('measured')){
+        const pv=selected.point?this._format(selected.point.v,3)+' '+model.unit:tw114(this,'gap');
+        details.unshift(pv+(sampledEarlier?' · '+tw114(this,'sample')+' '+this._trendDate114(selected.point.t):''));
+      }
+      details.push(this._trendDate114(selected.time));
+      root.querySelector('[data-trend-chart114]')?.setAttribute('aria-valuetext',details.join(' · '));
     }
   };
   const openAverageControl075=controlTrend075._openAverage105,openEntityControl075=controlTrend075._openEntityTrend122;
@@ -8566,7 +8592,15 @@
       const pick=event.target?.closest?.('[data-trend-pick]');
       if(pick){
         const trace=saved.model114?.traces.find(t=>t.slot===pick.dataset.trendPick);
-        if(trace){event.preventDefault();event.stopPropagation();saved.activeTrace=trace.key;this._inspectTrend114();}
+        if(trace){
+          event.preventDefault();event.stopPropagation();
+          const hidden=saved.hiddenTraces ||= new Set();
+          if(hidden.delete(trace.key))saved.activeTrace=trace.key;
+          else hidden.add(trace.key);
+          chooseVisibleTrace(saved,saved.model114);
+          saved.model114.legendApplied=false;
+          this._inspectTrend114();
+        }
         return;
       }
       if(!event.target?.closest?.('[data-retry-control075]'))return;

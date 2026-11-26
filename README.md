@@ -68,7 +68,7 @@ Reported activity appears at the far right inside each room tab. Its icons disti
 
 A room can have usable climate data while an optional measurement is unavailable. Expand the missing-measurements explanation to see which inputs are affected. Select a measurement to see its sources and history. A device row shows the feedback that applies to its role. Heaters and coolers show temperature. Drying and humidifying use humidity or the calibrated mold indication. A filtration fan can show PM2.5, room AQI and reported fan speed, while an extraction fan can show CO₂, PM2.5 and speed. The target icon beside a reading shows the current profile goal in the same unit. Automatic heat/cool can show a range. When mold control is active, both the measurement and goal refer to surface humidity. A multi-mode appliance follows its current mode. PID demand appears on PID controllers.
 
-Controller trends put the historical target, measured value, requested output and reported output on the same timeline. The HEM target stays level between recorded setpoints and steps vertically when the target changes. Each trace has its own color. Missing sensor or output samples leave gaps in their respective traces.
+Controller trends put the historical target, measured value, requested output and reported output on the same timeline. The HEM target stays level between recorded setpoints and steps vertically when the target changes. Tap a colored label or value to hide its trace. The label turns grey. Tap it again to show the trace in its original color. Missing sensor or output samples leave gaps in their respective traces.
 
 ### Different settings for the home, each room and each device
 
