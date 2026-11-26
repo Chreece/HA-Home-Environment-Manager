@@ -3879,13 +3879,16 @@
         cycle:'PWM-Periode',minimumOn:'Mindestlaufzeit',minimumOff:'Mindeststillstandszeit'},
     },"proto65._controllerTiming8.text:3760")[this._language()] || null;
     if(!text) return null;
+    // Prefer one report for each clock. An explicitly cleared deadline in the
+    // status entity must not restart an older timer from the climate entity.
+    const clockSource=(at,seconds)=>Object.hasOwn(d,at)||Object.hasOwn(d,seconds)?d:c;
     const countdown=(until,remaining)=>numeric(until)&&until>0?Math.max(0,Math.ceil(until-Date.now()/1000)):
       numeric(remaining)&&remaining>=0?Math.ceil(remaining):null;
-    const duration=seconds=>seconds>=60
-      ? this._format(Math.floor(seconds/60),0)+' min'+(seconds%60?' '+this._format(seconds%60,0)+' s':'')
-      : this._format(seconds,0)+' s';
+    const duration=seconds=>controllerDuration(seconds,this._language());
     if(['startup_warmup','native_device_stabilizing','waiting_for_physical_device'].includes(status)) {
-      const seconds=countdown(get('readiness_until'),get('readiness_remaining_seconds'));
+      const clock=clockSource('readiness_until','readiness_remaining_seconds');
+      const until=clock.readiness_until,seconds=countdown(until,clock.readiness_remaining_seconds);
+      const statusLabel=this._controllerStatusLabel(status);
       const evidence=status==='startup_warmup'?[text.startup]:status==='native_device_stabilizing'?[text.stable]:[];
       const known=new Set([...safeArray(a.source_entity_ids),get('upstream_power_switch')].filter(Boolean));
       const missing=safeArray(get('unavailable_source_entity_ids')).filter(id=>known.has(id));
@@ -3897,8 +3900,8 @@
             this._controllerStatusLabel(native?.state || 'unavailable'));
         }
       }
-      return {label:(seconds===null?'':duration(seconds)+' · ')+this._controllerStatusLabel(status),
-        evidence,waiting:status!=='waiting_for_physical_device'};
+      return {label:(seconds===null?'':duration(seconds)+' · ')+statusLabel,
+        clock:{until,after:' · '+statusLabel,expired:statusLabel},evidence,waiting:status!=='waiting_for_physical_device'};
     }
     if(status==='within_target_band') {
       // Explain the completed PID cutoff from one reported control snapshot.
@@ -3932,15 +3935,18 @@
     if(phase==='demand_below_minimum_safe_pulse')
       return {label:text.pidSmall,evidence:[...evidence,text.small],waiting:true,targetMetric};
     if(phase==='zero_demand')return {label:text.pidZero,evidence,waiting:true,targetMetric};
-    const seconds=countdown(get('pid_pwm_next_window_at'),get('pid_pwm_next_window_seconds'));
+    const clock=clockSource('pid_pwm_next_window_at','pid_pwm_next_window_seconds');
+    const until=clock.pid_pwm_next_window_at,seconds=countdown(until,clock.pid_pwm_next_window_seconds);
     if(get('pid_pwm_wait_reason')==='completed_pulse_rest')evidence.push(text.rest);
-    if(seconds!==null)evidence.push(text.next+': '+duration(seconds));
+    const detail=seconds===null?null:text.next+': '+duration(seconds);
+    if(detail!==null)evidence.push(detail);
     const stopped=get('pid_pwm_last_confirmed_off_at');
     if(numeric(stopped) && stopped>0 && stopped<=Date.now()/1000)
       evidence.push(text.off+': '+new Date(stopped*1000).toLocaleTimeString(this._language(),{
         hour:'2-digit',minute:'2-digit',second:'2-digit'}));
     evidence.push(text.safe);
     return {label:(seconds===null?'':duration(seconds)+' · ')+(seconds===0?text.pidDue:text.pidRest),
+      clock:{until,after:' · '+text.pidRest,expired:text.pidDue,detail,detailPrefix:text.next+': '},
       evidence,waiting:true,targetMetric};
   };
   proto65._controllerPresentation7 = function(entry) {
@@ -4001,8 +4007,25 @@
         Number.isFinite(mold.effective_humidity_target) && timing?.targetMetric!=='humidity')
       evidence.push(targetLabel+' · '+this._t('humidity')+': '+this._format(mold.effective_humidity_target)+'%');
     if(timing){label=timing.label;evidence.push(...timing.evidence);}
-    return {status,label,demand,evidence,qualified,reason:statusReason,waiting:timing?.waiting===true};
+    return {status,label,demand,evidence,qualified,reason:statusReason,waiting:timing?.waiting===true,clock:timing?.clock};
   };
+  const durationFormats=new Map();
+  function controllerDuration(seconds,language){
+    const locale=cardLanguage(language);
+    if(!durationFormats.has(locale))durationFormats.set(locale,new Intl.NumberFormat(locale,{maximumFractionDigits:0}));
+    const number=durationFormats.get(locale).format;
+    return seconds>=60?number(Math.floor(seconds/60))+' min'+(seconds%60?' '+number(seconds%60)+' s':''):
+      number(seconds)+' s';
+  }
+  function countdownMarkup(clock,language,initial,before='',after=clock?.after||'',expired=clock?.expired||''){
+    if(!Number.isFinite(clock?.until)||clock.until<=0)return escape(initial);
+    if(clock.until<=Date.now()/1000)initial=expired;
+    return '<hem-controller-countdown lang="'+escape(language)+'" until="'+clock.until+'" before="'+escape(before)+
+      '" after="'+escape(after)+'" expired="'+escape(expired)+'" aria-live="off">'+escape(initial)+'</hem-controller-countdown>';
+  }
+  function timingEvidence(value,clock,language){
+    return value===clock?.detail?countdownMarkup(clock,language,value,clock.detailPrefix,'',clock.expired):escape(value);
+  }
   proto65._deviceSummary65 = function(entry) {
     const a=entry.climate.attributes || {}, d=entry.statusInfo?.state?.attributes || {};
     const c=a.controller_status || {};
@@ -4239,10 +4262,12 @@
     const supply=d.upstream_power_switch || a.upstream_power_switch;
     let diagnostics=row(this._l66('controller'),a.friendly_name || friendly(id));
     diagnostics+=sources.map(entity=>row(this._l66('source'),friendly(entity))).join('');
-    diagnostics+=row(this._l66('status'),presentation.label);
+    diagnostics+='<div><dt>'+escape(this._l66('status'))+'</dt><dd>'+
+      countdownMarkup(presentation.clock,this._language(),presentation.label)+'</dd></div>';
     if(reason && reason!==status)diagnostics+=row(this._l65('reason'),this._controllerStatusLabel(reason));
     if(presentation.demand)diagnostics+=row(this._l65('demand'),presentation.demand);
-    if(presentation.evidence.length)diagnostics+=row(this._l65('information'),presentation.evidence.join(' · '));
+    if(presentation.evidence.length)diagnostics+='<div><dt>'+escape(this._l65('information'))+'</dt><dd>'+
+      presentation.evidence.map(value=>timingEvidence(value,presentation.clock,this._language())).join(' · ')+'</dd></div>';
     if(supply)diagnostics+=row(this._l65('supply'),friendly(supply));
     const raw=[id,...sources,supply].filter(Boolean).map(escape).join('<br>');
     diagnostics='<dl class="hem-diagnostic-data66">'+diagnostics+'</dl>'+
@@ -4444,7 +4469,7 @@
     const until=Number(untilKey?d[untilKey]:NaN);
     const held=!!untilKey && Number.isFinite(until) &&
       until>0 && until>Date.now()/1000;
-    const untilLabel=held?' · '+Math.ceil((until-Date.now()/1000)/60)+' min':'';
+    const untilLabel=held?' · '+controllerDuration(Math.ceil(until-Date.now()/1000),this._language()):'';
     const label=presentation.label+untilLabel;
     const tone=presentation.waiting?'neutral':/(paused|hold|unavailable|unknown|failed|error|blocked|inactive|missing|mold_above_limit)/.test(
       String(state))?'warn':/^(controlling|ready|within_target_band|manual)$/.test(
@@ -4475,11 +4500,15 @@
     if (toggle && windowState.status && windowState.status!=='window_closed_ready')
       info.push('<div>'+escape(this._l66('windowSwitch'))+': '+
         escape(this._controllerStatusLabel(windowState.status))+'</div>');
-    const badge=badge76(
-      tone==='warn'?'mdi:alert-circle-outline':'mdi:check-circle-outline',
-      label,tone
+    const clock=held?{until,after:'',expired:presentation.label}:presentation.clock;
+    const badgeIcon=tone==='warn'?'mdi:alert-circle-outline':'mdi:check-circle-outline';
+    const timed=Number.isFinite(clock?.until)&&clock.until>0;
+    const badge=timed?
+      '<span class="hem-status-pill76 hem-tone-'+escape(tone)+'"><ha-icon icon="'+badgeIcon+'"></ha-icon><span>'+
+        countdownMarkup(clock,this._language(),label,held?presentation.label+' · ':'')+'</span></span>':badge76(
+      badgeIcon,label,tone
     );
-    let chips='<div class="hem-device-state76" role="status">'+badge;
+    let chips='<div class="hem-device-state76" role="status"'+(timed?' aria-live="off"':'')+'>'+badge;
     if(targetNotice) chips+=badge76('mdi:target-variant',targetNotice.label,'neutral',
       [targetNotice.heading,...targetNotice.evidence,targetNotice.help].join(' · '))
       .replace('<span ','<span data-native-target-notice8="'+escape(targetNotice.entity)+'" ');
@@ -10280,7 +10309,7 @@
     const evidence=safeArray(presentation.evidence).filter(value=>typeof value==="string");
     return '<section class="hem-device-info126" data-hem-device-info126="'+
       escape(entry.entityId)+'">'+rows.join("")+
-      evidence.map(value=>'<div>'+escape(value)+'</div>').join("")+'</section>';
+      evidence.map(value=>'<div>'+timingEvidence(value,presentation.clock,this._language())+'</div>').join("")+'</section>';
   };
   const oldDeviceSummary126=hemProto126._deviceSummary65;
   hemProto126._deviceSummary65=function(entry){
@@ -12962,7 +12991,67 @@
   };
   /* HEM_SCIENCE_PERSISTENCE072_END */
 
-  // Only the canonical Lovelace custom element and editor are registered.
+  // One display clock for all cards in this dashboard. The clock owns only
+  // connected text elements. It has no card, hass, or controller reference.
+  if(!customElements.get('hem-controller-countdown')){
+    const connected=new Set(),visible=new Set(),running=new Set();
+    let observer=null,timer=null;
+    function paint(node,now){
+      const seconds=Math.max(0,Math.ceil(Number(node.getAttribute('until'))-now/1000));
+      const label=seconds>0?node.getAttribute('before')+controllerDuration(seconds,node.lang)+node.getAttribute('after'):
+        node.getAttribute('expired');
+      const text=node.firstChild;
+      if(text?.nodeType===3){if(text.data!==label)text.data=label;}
+      else node.textContent=label;
+      if(seconds>0)running.add(node);else running.delete(node);
+    }
+    function schedule(){
+      if(!document.hidden&&running.size){
+        if(timer===null)timer=setInterval(()=>{
+          const now=Date.now();
+          for(const node of running)paint(node,now);
+          schedule();
+        },1000);
+      }else if(timer!==null){clearInterval(timer);timer=null;}
+    }
+    function visibility(){
+      running.clear();
+      if(!document.hidden){const now=Date.now();for(const node of visible)paint(node,now);}
+      schedule();
+    }
+    customElements.define('hem-controller-countdown',class extends HTMLElement{
+      static get observedAttributes(){return ['until','lang','before','after','expired'];}
+      attributeChangedCallback(){
+        if(visible.has(this)&&!document.hidden){paint(this,Date.now());schedule();}
+      }
+      connectedCallback(){
+        if(typeof IntersectionObserver!=='function')return;
+        if(!observer){
+          observer=new IntersectionObserver(entries=>{
+            const now=Date.now();
+            for(const {target,isIntersecting,intersectionRect} of entries){
+              if(!connected.has(target))continue;
+              if(isIntersecting&&intersectionRect.width>0&&intersectionRect.height>0){
+                visible.add(target);if(!document.hidden)paint(target,now);
+              }else{visible.delete(target);running.delete(target);}
+            }
+            schedule();
+          });
+          document.addEventListener('visibilitychange',visibility);
+        }
+        connected.add(this);observer.observe(this);
+      }
+      disconnectedCallback(){
+        observer?.unobserve(this);
+        connected.delete(this);visible.delete(this);running.delete(this);schedule();
+        if(observer&&!connected.size){
+          observer.disconnect();observer=null;
+          document.removeEventListener('visibilitychange',visibility);
+        }
+      }
+    });
+  }
+
 // Measure the names together so every floor uses the same column, including
 // after a room rename or a theme font change. This element is outside the tabs.
 if (!customElements.get('hem-room-name-measure')) {

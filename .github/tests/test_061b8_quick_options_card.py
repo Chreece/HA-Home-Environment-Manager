@@ -479,6 +479,94 @@ def browser_checks():
                     for left, right in zip(geometry["chips"], geometry["chips"][1:]):
                         assert left["right"] <= right["left"], context
 
+            # Only the dashboard's visible text may change while HA is silent.
+            page.evaluate("""now=>{
+              window.wallTime=now;Date.now=()=>wallTime*1000;
+              const start=window.setInterval,stop=window.clearInterval;
+              window.secondsClocks=new Set();
+              window.setInterval=function(fn,ms,...args){
+                const id=start.call(window,fn,ms,...args);
+                if(ms===1000)secondsClocks.add(id);
+                return id;
+              };
+              window.clearInterval=function(id){secondsClocks.delete(id);return stop.call(window,id)};
+              window.clockWS=0;
+              card._hass.callWS=async()=>{clockWS++;return []};
+            }""", NOW)
+            clocks = fixture('el')
+            timing = clocks['sensor.control_0_0']['attributes']
+            timing.update(status_code='pid_output_inactive', pid_pwm_state='off_window',
+                          pid_pwm_next_window_at=NOW + 30, pid_pwm_next_window_seconds=30)
+            page.evaluate("s=>refresh8(s,'el')", clocks)
+            badge = device(0).locator('.hem-device-state76 hem-controller-countdown').first
+            badge.scroll_into_view_if_needed()
+            expect(badge).to_have_text('30 s · PID · Επόμενο επιτρεπτό διάστημα')
+            page.wait_for_function('secondsClocks.size===1')
+            page.evaluate("""()=>{
+              window.renders=0;const render=card._renderContent;
+              card._renderContent=function(...args){renders++;return render.apply(this,args)};
+              window.wsBaseline=clockWS;wallTime+=5;
+            }""")
+            expect(badge).to_have_text('25 s · PID · Επόμενο επιτρεπτό διάστημα')
+            assert page.evaluate('renders===0 && clockWS===wsBaseline && calls.length===0')
+            # Another connected countdown (including one on a second card)
+            # must share that interval. Removing it must leave the first running.
+            badge.evaluate("""el=>{
+              window.secondClock=el.cloneNode(true);
+              Object.assign(secondClock.style,{position:'fixed',top:'4px',left:'4px'});
+              document.body.append(secondClock);
+            }""")
+            expect(page.locator('body > hem-controller-countdown')).to_contain_text('25 s')
+            page.evaluate('wallTime++')
+            expect(page.locator('body > hem-controller-countdown')).to_contain_text('24 s')
+            expect(badge).to_contain_text('24 s')
+            assert page.evaluate('secondsClocks.size') == 1
+            page.evaluate('secondClock.remove();wallTime--')
+            # A floating info copy of this countdown shares the same clock.
+            device(0).locator('[data-detail-id="device-info:climate.managed_0_0"] > summary').click()
+            popup_timer = page.locator('.hem-floating-info87 hem-controller-countdown')
+            popup_timer.scroll_into_view_if_needed()
+            expect(popup_timer).to_contain_text('25 s')
+            page.evaluate('wallTime+=3')
+            expect(popup_timer).to_contain_text('22 s')
+            assert page.evaluate('secondsClocks.size') == 1
+            close_help()
+            # Collapsed details and a backgrounded dashboard do not tick.
+            summary = device(0).locator(':scope > summary')
+            summary.click()
+            page.wait_for_function('secondsClocks.size===0')
+            page.evaluate('wallTime+=4')
+            summary.click()
+            badge.scroll_into_view_if_needed()
+            expect(badge).to_contain_text('18 s')
+            page.evaluate("""()=>{
+              Object.defineProperty(document,'hidden',{configurable:true,value:true});
+              document.dispatchEvent(new Event('visibilitychange'));wallTime+=6;
+            }""")
+            assert page.evaluate('secondsClocks.size') == 0
+            page.evaluate("""()=>{
+              delete document.hidden;document.dispatchEvent(new Event('visibilitychange'));
+            }""")
+            expect(badge).to_have_text('12 s · PID · Επόμενο επιτρεπτό διάστημα')
+            page.evaluate('wallTime+=12')
+            expect(badge).to_have_text('PID · Εκκρεμεί αξιολόγηση')
+            assert page.evaluate('secondsClocks.size===0 && calls.length===0 && clockWS===wsBaseline')
+            page.evaluate("s=>refresh8(s,'el')", clocks)
+            expect(badge).to_have_text('PID · Εκκρεμεί αξιολόγηση')
+            # Same mounted badge can receive a new deadline or be retired.
+            timing['pid_pwm_next_window_at'] = NOW + 90
+            page.evaluate("s=>refresh8(s,'el')", clocks)
+            expect(badge).to_contain_text('1 min')
+            page.wait_for_function('secondsClocks.size===1')
+            timing.update(pid_pwm_next_window_at=None, pid_pwm_next_window_seconds=None)
+            clocks['climate.managed_0_0']['attributes'].setdefault('controller_status', {}).update(
+                pid_pwm_next_window_at=NOW + 999, pid_pwm_next_window_seconds=999)
+            page.evaluate("s=>refresh8(s,'el')", clocks)
+            expect(badge).to_have_count(0)
+            page.wait_for_function('secondsClocks.size===0')
+            assert page.evaluate('calls.length') == 0
+            page.evaluate('wallTime-=30')
+
             for language in ("en", "el", "de"):
                 states = fixture(language)
                 page.evaluate("([s,l])=>refresh8(s,l)", [states, language])

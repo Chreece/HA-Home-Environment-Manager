@@ -91,7 +91,7 @@ for(const language of input.languages)for(const code of input.codes){
   a.setpoint_wait_remaining_seconds=12;a.setpoint_wait_until=input.now+12;a.requested_temperature=99;
   assert.equal(card._controllerSignature(),signature,'retired direct metadata is still hashed');
   a.status_code='minimum_on_hold';a.native_minimum_on_until=input.now+30;
-  assert.ok(panel(card).includes('1 min'),'ordinary minimum-ON hold lost');
+  assert.ok(panel(card).includes('30 s'),'ordinary minimum-ON hold lost');
   assert.ok(panel(card).includes('hem-resume-recovery'));
   const original=card._managedControllers.bind(card);
   card._managedControllers=area=>original(area).map(e=>({...e,
