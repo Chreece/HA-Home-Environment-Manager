@@ -33,6 +33,12 @@
 
 HEM은 Home Assistant에 이미 연결된 센서로 방마다 온도, 습도, 공기질을 보여 줍니다. 실내외 상태를 비교해 창문을 언제 열거나 닫으면 좋을지 알려 줍니다. 조언만 받거나 원하는 난방기, 에어컨, 선풍기, 제습기의 제어를 맡길 수 있습니다. 재실, 외출, 취침 시의 목표값을 각각 설정할 수 있습니다.
 
+<p align="center">
+  <a href="../../docs/images/hem-dashboard-overview.png">
+    <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM 5개의 방에 걸쳐 환기 및 환경적 지표가 있는 홈 다시보드" width="640">
+  </a>
+</p>
+
 [상세한 안내서](../../docs/advanced-configuration.md) · [전체 설정 목록(영어)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>

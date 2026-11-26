@@ -33,6 +33,12 @@
 
 A HEM a Home Assistant meglévő érzékelői alapján helyiségenként mutatja a hőmérsékletet, a páratartalmat és a levegő minőségét. A kinti és benti viszonyokat összevetve javasolja, mikor érdemes kinyitni vagy becsukni az ablakokat. Kérhet csak tanácsokat, vagy rábízhatja a kiválasztott fűtőberendezések, klímák, ventilátorok és páramentesítők vezérlését. Az otthon töltött időre, távollétre és alváshoz külön célértékeket állíthat be.
 
+<p align="center">
+  <a href="../../docs/images/hem-dashboard-overview.png">
+    <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM háztartási képernyő, ahol öt szobában van szellőztetés és környezetértékelés" width="640">
+  </a>
+</p>
+
 [Fontos útmutató](../../docs/advanced-configuration.md) · [Az összes beállítás (angolul)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>

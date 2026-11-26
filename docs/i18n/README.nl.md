@@ -33,6 +33,12 @@
 
 HEM gebruikt de sensoren die je al in Home Assistant hebt om per kamer de temperatuur, luchtvochtigheid en luchtkwaliteit te tonen. Het vergelijkt de omstandigheden binnen en buiten en adviseert wanneer je de ramen kunt openen of sluiten. Je kunt het bij advies houden of HEM geselecteerde verwarmingen, airco’s, ventilatoren en ontvochtigers laten aansturen, met aparte streefwaarden voor thuis, afwezigheid en slaap.
 
+<p align="center">
+  <a href="../../docs/images/hem-dashboard-overview.png">
+    <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM Home dashboard met ventilatieadvies en milieulezen in vijf kamers" width="640">
+  </a>
+</p>
+
 [Gedetailleerde gids](../../docs/advanced-configuration.md) · [Alle instellingen (Engels)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>

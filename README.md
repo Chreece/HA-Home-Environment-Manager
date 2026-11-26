@@ -28,6 +28,12 @@
 
 HEM uses the sensors you already have in Home Assistant to show temperature, humidity and air quality room by room. It compares indoor and outdoor conditions to suggest when to open or close a window. You can use it for advice alone, or let it control selected heaters, air conditioners, fans and dehumidifiers with different targets when you’re home, away or asleep.
 
+<p align="center">
+  <a href="docs/images/hem-dashboard-overview.png">
+    <img src="docs/images/hem-dashboard-overview.png" alt="HEM home dashboard with ventilation advice and environmental readings across five rooms" width="640">
+  </a>
+</p>
+
 [Detailed guide](docs/advanced-configuration.md) · [Complete settings reference](docs/settings-reference.md)
 
 ## What can HEM do?

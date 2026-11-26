@@ -33,6 +33,12 @@
 
 HEM 利用已接入 Home Assistant 的传感器，按房间显示温度、湿度和空气质量。它会比较室内外状况，建议何时开窗或关窗。你可以只看建议，也可以让 HEM 控制选定的取暖器、空调、风扇和除湿机，并分别设置在家、离家和睡眠时的目标值。
 
+<p align="center">
+  <a href="../../docs/images/hem-dashboard-overview.png">
+    <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM 在五间房间内提供通风咨询和环境检测仪表板" width="640">
+  </a>
+</p>
+
 [详细的指南](../../docs/advanced-configuration.md) · [全部设置（英文）](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>

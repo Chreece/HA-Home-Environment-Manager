@@ -54,7 +54,12 @@ image_paths = [
     "docs/images/hem-room-settings.svg",
     "docs/images/hem-device-settings.svg",
 ]
-assert readme.count('src="docs/images/') == len(image_paths)
+overview = image_paths[0]
+tldr = readme.split("## TL;DR\n", 1)[1].split("\n## ", 1)[0]
+assert f'<a href="{overview}">' in tldr
+assert re.findall(r'<img src="([^"]+)"', tldr) == [overview]
+gallery = readme.split("## See HEM in action\n", 1)[1].split("\n## ", 1)[0]
+assert re.findall(r'<img src="([^"]+)"', gallery) == image_paths
 for path in image_paths:
     assert f'src="{path}"' in readme, path
     assert (root / path).is_file(), path

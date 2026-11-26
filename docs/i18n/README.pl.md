@@ -33,6 +33,12 @@
 
 HEM korzysta z czujników już podłączonych do Home Assistant, aby pokazywać temperaturę, wilgotność i jakość powietrza w każdym pokoju. Porównuje warunki wewnątrz i na zewnątrz i podpowiada, kiedy otworzyć lub zamknąć okna. Możesz korzystać tylko z porad albo powierzyć mu sterowanie wybranymi grzejnikami, klimatyzatorami, wentylatorami i osuszaczami, z osobnymi wartościami docelowymi na czas pobytu w domu, nieobecności i snu.
 
+<p align="center">
+  <a href="../../docs/images/hem-dashboard-overview.png">
+    <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM w domu z poradami w zakresie wentylacji i odczytami środowiskowymi w pięciu pomieszczeniach" width="640">
+  </a>
+</p>
+
 [Szczegółowy przewodnik](../../docs/advanced-configuration.md) · [Wszystkie ustawienia (po angielsku)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>

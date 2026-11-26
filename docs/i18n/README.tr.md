@@ -33,6 +33,12 @@
 
 HEM, Home Assistant’a zaten bağlı olan sensörlerle her odanın sıcaklığını, nemini ve hava kalitesini gösterir. İç ve dış ortam koşullarını karşılaştırarak pencereleri ne zaman açıp kapatabileceğinizi önerir. Yalnızca önerileri alabilir veya seçtiğiniz ısıtıcıları, klimaları, vantilatörleri ve nem alıcıları HEM’in yönetmesini sağlayabilirsiniz. Evdeyken, dışarıdayken ve uyurken farklı hedefler belirleyebilirsiniz.
 
+<p align="center">
+  <a href="../../docs/images/hem-dashboard-overview.png">
+    <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM 5 odada havalandırma tavsiyesi ve çevresel değerlendirmeler ile birlikte ev ekran tablosu" width="640">
+  </a>
+</p>
+
 [Detaylı rehber](../../docs/advanced-configuration.md) · [Tüm ayarlar (İngilizce)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>

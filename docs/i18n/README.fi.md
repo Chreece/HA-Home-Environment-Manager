@@ -33,6 +33,12 @@
 
 HEM näyttää huoneiden lämpötilan, ilmankosteuden ja ilmanlaadun Home Assistantiin jo liitettyjen anturien avulla. Se vertailee sisä- ja ulko-olosuhteita ja ehdottaa, milloin ikkunat kannattaa avata tai sulkea. Voit käyttää pelkkiä suosituksia tai antaa HEMin ohjata valitsemiasi lämmittimiä, ilmastointilaitteita, puhaltimia ja ilmankuivaimia eri tavoitearvoilla sen mukaan, oletko kotona, poissa vai nukkumassa.
 
+<p align="center">
+  <a href="../../docs/images/hem-dashboard-overview.png">
+    <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM kotimainen ohjauslauta, jossa on tuuletusohjeita ja ympäristöluokituksia viidessä huoneessa" width="640">
+  </a>
+</p>
+
 [Yksityiskohtainen opas](../../docs/advanced-configuration.md) · [Kaikki asetukset (englanniksi)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>

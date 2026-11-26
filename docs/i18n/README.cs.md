@@ -33,6 +33,12 @@
 
 HEM z vašich stávajících senzorů v Home Assistant zobrazuje teplotu, vlhkost a kvalitu vzduchu v jednotlivých místnostech. Porovnává podmínky uvnitř a venku a doporučí, kdy otevřít nebo zavřít okna. Můžete zůstat u doporučení nebo nechat HEM řídit vybrané topení, klimatizace, ventilátory a odvlhčovače s různými cílovými hodnotami podle toho, zda jste doma, venku nebo spíte.
 
+<p align="center">
+  <a href="../../docs/images/hem-dashboard-overview.png">
+    <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM domácí palubní deska s poradenstvím ventilace a environmentálními hodnotami v pěti místnostech" width="640">
+  </a>
+</p>
+
 [Detailní průvodce](../../docs/advanced-configuration.md) · [Všechna nastavení (anglicky)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>

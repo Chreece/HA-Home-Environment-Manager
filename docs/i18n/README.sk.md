@@ -33,6 +33,12 @@
 
 HEM využíva senzory, ktoré už máte v Home Assistant, a zobrazuje teplotu, vlhkosť a kvalitu vzduchu v každej miestnosti. Porovnáva podmienky vnútri a vonku a odporúča, kedy otvoriť alebo zatvoriť okná. Môžete využívať len odporúčania alebo nechať HEM ovládať vybrané ohrievače, klimatizácie, ventilátory a odvlhčovače s rôznymi cieľovými hodnotami podľa toho, či ste doma, preč alebo spíte.
 
+<p align="center">
+  <a href="../../docs/images/hem-dashboard-overview.png">
+    <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM domáca prístrojová doska s poradenstvom o vetrane a environmentálnych odčítaniach v piatich miestnostiach" width="640">
+  </a>
+</p>
+
 [Podrobné vedenie](../../docs/advanced-configuration.md) · [Všetky nastavenia (v angličtine)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>

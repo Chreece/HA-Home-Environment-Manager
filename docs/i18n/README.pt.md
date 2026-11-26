@@ -33,6 +33,12 @@
 
 O HEM usa os sensores que já tem no Home Assistant para mostrar a temperatura, a humidade e a qualidade do ar em cada divisão. Compara as condições no interior e no exterior para sugerir quando abrir ou fechar as janelas. Pode ficar apenas pelas sugestões ou deixar o HEM controlar os aquecedores, aparelhos de ar condicionado, ventoinhas e desumidificadores que escolher, com valores-alvo diferentes quando está em casa, fora ou a dormir.
 
+<p align="center">
+  <a href="../../docs/images/hem-dashboard-overview.png">
+    <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM painel de controle doméstico com aconselhamento de ventilação e leituras ambientais em cinco salas" width="640">
+  </a>
+</p>
+
 [Guia detalhada](../../docs/advanced-configuration.md) · [Todas as definições (em inglês)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
