@@ -273,12 +273,13 @@ per room; floor-wide environmental overrides are not implied.
   identity. Measurement, target, HEM's requested demand and the device's
   reported activity or output setting share one graph and one time axis.
   Measurements and targets use the left scale in the reading's unit; demand
-  and output use the right percentage or On/Off scale. Each recorded series uses a solid line and a distinct color. The legend groups
-  its matching swatches under the controller name, and one cursor inspects their values at the same
-  time. A fan percentage or valve position is a reported setting, not measured
+  and output use the right percentage or On/Off scale. The target uses a solid
+  step line. Each curve has a matching colored label and value. Select a label
+  to highlight that curve at the shared cursor. A fan percentage or valve position is a reported setting, not measured
   airflow or power.
-- Targets use the exact feedback sources and quantity represented by the
-  chart. For mold control, the mold chart shows the surface-humidity target;
+- A room-average chart keeps the configured HEM target when a sensor stops
+  contributing or returns. Measurements, PID demand and reported output use
+  the matching feedback samples. Individual sensor charts keep their own history. For mold control, the mold chart shows the surface-humidity target;
   the corresponding room-humidity chart shows the effective room-air target.
   Temperature targets follow the chart's temperature unit. Off, missing target
   evidence and Manual without an explicit HEM target leave the target line

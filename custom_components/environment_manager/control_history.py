@@ -32,7 +32,7 @@ _OUTPUT_KINDS = frozenset(("activity", "binary", "percentage", "position"))
 _TARGET_KINDS = frozenset(("control", "derived_room_rh", "physical_device"))
 _ENTITY = re.compile(r"^[a-z_][a-z0-9_]*\.[a-z0-9_]+$")
 _METADATA = ("metric", "basis", "unit", "feedback_source_ids", "context_id", "target_kind",
-             "source_entity_ids")
+             "source_entity_ids", "selected_feedback_source_ids")
 _OPTIONAL_TEXT = {"status": 96, "target_unavailable_reason": 128}
 
 
@@ -75,6 +75,9 @@ def _metadata(raw: Any) -> dict | None:
     # explicit temperature, humidity and weather provenance instead.
     if metric != "mold" and any(not value.startswith("sensor.") for value in feedback):
         return None
+    selected = _sources(raw.get("selected_feedback_source_ids", []), allow_empty=True)
+    if selected is None or any(not entity.startswith("sensor.") for entity in selected):
+        return None
     context = raw.get("context_id") if raw.get("context_id") is not None else "default"
     if _text(context, 128) is None:
         return None
@@ -86,7 +89,7 @@ def _metadata(raw: Any) -> dict | None:
         "controller_id": controller, "area_id": area,
         "name": _text(raw.get("name"), 160) or controller,
         "source_entity_ids": physical, "metric": metric, "basis": basis, "unit": unit,
-        "feedback_source_ids": feedback, "context_id": context, "target_kind": target_kind,
+        "feedback_source_ids": feedback, "selected_feedback_source_ids": selected, "context_id": context, "target_kind": target_kind,
     }
 
 
@@ -140,8 +143,26 @@ def _values(point: dict) -> dict:
     """Measured feedback is sampled; only actual control changes are events."""
     return {**{key: value for key, value in point.items()
                if key not in ("t", "until", "break_before", "target_break_before", "measured", "output_reported_at",
-                              "demand_reported_at")},
+                              "demand_reported_at", "target_link_from")},
             "measurement_available": point.get("measured") is not None}
+
+
+def _target_context(series: dict) -> tuple | None:
+    # The collector fingerprints the physical device and its configured sources.
+    # Older records without a fingerprint cannot establish shared ownership.
+    if series["target_kind"] == "control" and series["context_id"] != "default":
+        return series["context_id"], tuple(series["source_entity_ids"])
+    return None
+
+
+def _target_only(point: dict) -> dict:
+    """Project the setpoint onto its room chart without borrowing sample evidence."""
+    result = {key: point[key] for key in (
+        "t", "until", "target", "target_low", "target_high", "mode", "profile", "control_mode",
+        "target_break_before", "target_link_from", "target_unavailable_reason",
+    ) if key in point}
+    return dict(result, measured=None, demand_percent=None, output_percent=None,
+                output_kind=None, break_before=True)
 
 
 class ControlHistory:
@@ -249,8 +270,15 @@ class ControlHistory:
         record["source_entity_ids"] = metadata["source_entity_ids"]
         # Returning to an earlier source/calibration context must leave a gap
         # across the intervening observations of a different context.
+        link_from = None
+        other_context = False
+        target_context = _target_context(metadata)
         for old_key, old in record["series"].items():
             if old_key != key and old["metric"] == metadata["metric"]:
+                other_context = True
+                if (not old["gap"] and old["points"] and old["points"][-1]["until"] <= stamp
+                        and target_context is not None and _target_context(old) == target_context):
+                    link_from = old["points"][-1]["t"]
                 old["gap"] = True
         series = record["series"].get(key)
         if series is None:
@@ -263,6 +291,8 @@ class ControlHistory:
                 **{field: metadata[field] for field in _METADATA}, "points": deque(),
                 "gap": False,
             }
+        if metadata["selected_feedback_source_ids"]:
+            series["selected_feedback_source_ids"] = metadata["selected_feedback_source_ids"]
         points = series["points"]
         previous = points[-1] if points else None
         interrupted = bool(series.get("gap") or previous
@@ -279,16 +309,20 @@ class ControlHistory:
         fresh = {"t": stamp, "until": stamp, **point}
         if interrupted:
             fresh["break_before"] = True
-        if series.get("gap"):
-            # A restart, removed controller or changed source ends the setpoint
-            # history too. Elapsed time alone only interrupts sampled outputs.
+        if series.get("gap") or previous is None and other_context:
             fresh["target_break_before"] = True
+        if link_from is not None:
+            # Link only the preceding live setpoint. A chart lacking that record,
+            # or a capture after restore/pause, cannot bridge the interruption.
+            fresh["target_link_from"] = link_from
         series["gap"] = False
         if previous is not None and previous["t"] == stamp:
             if previous.get("break_before") is True:
                 fresh["break_before"] = True
             if previous.get("target_break_before") is True:
                 fresh["target_break_before"] = True
+            if link_from is None and "target_link_from" in previous and not interrupted:
+                fresh["target_link_from"] = previous["target_link_from"]
             points[-1] = fresh
         else:
             points.append(fresh)
@@ -394,7 +428,7 @@ class ControlHistory:
                 metadata = _metadata({
                     **{field: raw_controller.get(field)
                        for field in ("controller_id", "area_id", "name")},
-                    **{field: raw_series.get(field) for field in _METADATA},
+                    **{field: raw_series[field] for field in _METADATA if field in raw_series},
                 })
                 if metadata is not None:
                     candidates.append((metadata, raw_series["points"][-CONTROL_MAX_POINTS:]))
@@ -420,6 +454,9 @@ class ControlHistory:
                     point["break_before"] = True
                 if raw_point.get("target_break_before") is True:
                     point["target_break_before"] = True
+                link = _number(raw_point.get("target_link_from"), 0, at)
+                if link is not None:
+                    point["target_link_from"] = link
                 sequence += 1
                 row = (at, sequence, index, point)
                 if len(retained) < CONTROL_MAX_TOTAL_POINTS:
@@ -477,17 +514,32 @@ class ControlHistory:
             if record["area_id"] != area_id:
                 continue
             series_result = []
-            for series in record["series"].values():
-                if (series["metric"] != metric
-                        or metric != "mold" and series["feedback_source_ids"] != sources):
+            rows = [series for series in record["series"].values() if series["metric"] == metric]
+            # Room means can use a configured target even as contributors age in
+            # and out. Native sensor charts and calculated targets stay exact.
+            contexts = set()
+            if len(sources) >= 2:
+                contexts = {_target_context(row) for row in rows
+                            if sources in (row["feedback_source_ids"], row["selected_feedback_source_ids"])}
+                contexts.discard(None)
+            for series in rows:
+                exact = metric == "mold" or series["feedback_source_ids"] == sources
+                if not exact and _target_context(series) not in contexts:
                     continue
-                points = [dict(point) for point in series["points"]
+                points = [dict(point) if exact else _target_only(point) for point in series["points"]
                           if stamp - CONTROL_MAX_AGE <= point["t"] <= stamp + 60]
                 if points:
-                    series_result.append({
-                        **{field: (list(series[field]) if isinstance(series[field], list) else series[field])
-                           for field in _METADATA}, "points": points,
-                    })
+                    row = {field: (list(series[field]) if isinstance(series[field], list) else series[field])
+                           for field in _METADATA if field != "selected_feedback_source_ids"}
+                    # The projected row contains setpoints for the requested
+                    # chart and no feedback from the other contributing sensors.
+                    if not exact:
+                        row["feedback_source_ids"] = list(sources)
+                    if _target_context(series) in contexts:
+                        # Legacy first samples lack a predecessor, especially after
+                        # eviction or restart. Only a recorded switch can join one.
+                        points[0]["target_break_before"] = True
+                    series_result.append({**row, "points": points})
             if series_result:
                 result.append({"controller_id": record["controller_id"], "name": record["name"],
                                "area_id": area_id, "source_entity_ids": list(record["source_entity_ids"]),

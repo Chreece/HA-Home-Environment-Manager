@@ -8320,7 +8320,8 @@
         let previous=null;
         for(const point of group.points){
           point.targetUntil=point.until;
-          const compatible=previous&&previous.context===point.context&&!point.target_break_before;
+          const compatible=previous&&previous.context===point.context&&
+            (!point.target_break_before||point.target_link_from===previous.t);
           const bothHaveSetpoints=previous&&(
             Number.isFinite(previous.target)&&Number.isFinite(point.target)||
             Number.isFinite(previous.target_low)&&Number.isFinite(point.target_low));
@@ -8590,7 +8591,7 @@
     '.hem-control-output-series075 path{fill:none;stroke:var(--hem-control-color075);stroke-width:2.2;vector-effect:non-scaling-stroke}',
     '.hem-control-output-axis075 line{stroke:var(--hem-trend-muted114);stroke-opacity:.5;stroke-width:1;vector-effect:non-scaling-stroke}',
     '.hem-control-recorded075{font-size:10px;color:var(--hem-trend-muted114);line-height:1.5;margin:6px 0}',
-    '.hem-control-target075 path{stroke-dasharray:8 4}.hem-control-demand075{stroke-dasharray:2 4;stroke-linecap:round}',
+    '.hem-control-demand075{stroke-dasharray:2 4;stroke-linecap:round}',
     '</style>',
   ].join('');};
   /* HEM_RECORDED_CONTROL_TRENDS075_END */
