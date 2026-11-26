@@ -27,13 +27,13 @@
 
 <p align="center"><strong>Todo o ambiente da sua casa, em um Home Assistant Cartão.</strong></p>
 
-**HEM ajuda a sua casa a compreender o seu ambiente e a reagir ao que cada quarto realmente precisa.** Traz-lhe o seu Home Assistant sensores, dados meteorológicos, informações sobre a ocupação e dispositivos climáticos compatíveis juntos para que possa monitorar a qualidade do ar, receber conselhos de ventilação úteis, gerenciar o conforto e automatizar o equipamento escolhido.
+[Exemplos por divisão](#what-can-hem-do) · [Funcionalidades](#explore-the-features) · [Capturas de ecrã](#see-hem-in-action) · [Instalação](#installation) · [Primeiros passos](#getting-started) · [Perguntas frequentes](#common-questions) · [Resolução de problemas](#help-and-troubleshooting) · [Apoio e licença](#support-and-license)
 
-Por exemplo, HEM Pode reduzir o aquecimento enquanto todos estão fora, preparar salas selecionadas antes de voltar, usar um alvo de umidade diferente enquanto dorme ou pedir-lhe para abrir uma janela antes de usar um desumidificador. **monitorar e recomendar**, sem controlar nenhum dispositivo.
+## Em resumo
 
-**Fica no comando.** Cada sala tem as suas próprias configurações. Cada aparelho suportado tem o seu próprio controlador, modos de operação, alvos e limites de segurança. HEM nunca assume que a selecção de um dispositivo lhe dá permissão para operar esse dispositivo.
+O HEM usa os sensores que já tem no Home Assistant para mostrar a temperatura, a humidade e a qualidade do ar em cada divisão. Compara as condições no interior e no exterior para sugerir quando abrir ou fechar as janelas. Pode ficar apenas pelas sugestões ou deixar o HEM controlar os aquecedores, aparelhos de ar condicionado, ventoinhas e desumidificadores que escolher, com valores-alvo diferentes quando está em casa, fora ou a dormir.
 
-[Explore as características](#what-can-hem-do) · [Veja a interface](#see-hem-in-action) · [Instalar HEM](#installation) · [Arranja a tua casa](#getting-started) · [Guia detalhada](../../docs/advanced-configuration.md) · [Todas as definições (em inglês)](../../docs/settings-reference.md)
+[Guia detalhada](../../docs/advanced-configuration.md) · [Todas as definições (em inglês)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## O que pode HEM - Não?

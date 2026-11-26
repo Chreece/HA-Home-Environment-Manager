@@ -27,13 +27,13 @@
 
 <p align="center"><strong>Celé prostředí vašeho domu, v jednom Home Assistant Kartou.</strong></p>
 
-**HEM pomáhá vášmu domu pochopit jeho okolí a reagovat na to, co každý pokoj vlastně potřebuje.** Přináší vám Home Assistant snímače, údaje o počasí, informace o obsazení a kompatibilní klimatické zařízení společně, abyste mohli sledovat kvalitu vzduchu, získat užitečné poradenství v oblasti větrání, řídit pohodlí a automatizovat vybrané zařízení.
+[Příklady pro místnosti](#what-can-hem-do) · [Funkce](#explore-the-features) · [Snímky obrazovky](#see-hem-in-action) · [Instalace](#installation) · [První kroky](#getting-started) · [Časté otázky](#common-questions) · [Řešení problémů](#help-and-troubleshooting) · [Podpora a licence](#support-and-license)
 
-Například: HEM může snížit vytápění, zatímco všichni jsou pryč, připravit vybrané místnosti, než se vrátíte, použít jiný cíl vlhkosti, zatímco spíte, nebo požádat, abyste otevřeli okno před spuštěním dehumidifikátoru. **monitorovat a doporučovat**, bez ovládání žádného zařízení.
+## Stručně
 
-**Zůstaň na čele.** Každá místnost má své nastavení, každý podporovaný přístroj má svůj vlastní ovladač, provozní režimy, cíle a bezpečnostní limity. HEM nikdy nepředpokládá, že výběr zařízení mu dává povolení k provozu tohoto zařízení.
+HEM z vašich stávajících senzorů v Home Assistant zobrazuje teplotu, vlhkost a kvalitu vzduchu v jednotlivých místnostech. Porovnává podmínky uvnitř a venku a doporučí, kdy otevřít nebo zavřít okna. Můžete zůstat u doporučení nebo nechat HEM řídit vybrané topení, klimatizace, ventilátory a odvlhčovače s různými cílovými hodnotami podle toho, zda jste doma, venku nebo spíte.
 
-[Prozkoumejte charakteristiky](#what-can-hem-do) · [Podívejte se na rozhraní](#see-hem-in-action) · [Nainstalovat HEM](#installation) · [Vytvořte si domov.](#getting-started) · [Detailní průvodce](../../docs/advanced-configuration.md) · [Všechna nastavení (anglicky)](../../docs/settings-reference.md)
+[Detailní průvodce](../../docs/advanced-configuration.md) · [Všechna nastavení (anglicky)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Co může HEM - Ano? - Ano.

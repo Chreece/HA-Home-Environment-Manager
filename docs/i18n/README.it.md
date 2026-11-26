@@ -27,13 +27,13 @@
 
 <p align="center"><strong>L'intero ambiente della tua casa, in una sola Home Assistant - La carta.</strong></p>
 
-**HEM aiuta la tua casa a capire il suo ambiente e a reagire a ciò di cui ogni stanza ha realmente bisogno.** Porta il tuo Home Assistant i sensori, i dati meteorologici, le informazioni sull'occupazione e i dispositivi climatici compatibili insieme, in modo da poter monitorare la qualità dell'aria, ricevere consigli di ventilazione utili, gestire il comfort e automatizzare l'attrezzatura che scegli.
+[Esempi per stanza](#what-can-hem-do) · [Funzionalità](#explore-the-features) · [Schermate](#see-hem-in-action) · [Installazione](#installation) · [Primi passi](#getting-started) · [Domande frequenti](#common-questions) · [Risoluzione dei problemi](#help-and-troubleshooting) · [Sostegno e licenza](#support-and-license)
 
-Per esempio, HEM può ridurre il riscaldamento mentre tutti sono lontani, preparare stanze selezionate prima di tornare, utilizzare un obiettivo di umidità diverso durante il sonno, o chiederti di aprire una finestra prima di eseguire un deumidificatore. **monitorare e raccomandare**, senza controllare alcun dispositivo.
+## In breve
 
-**Resta tu al comando.** Ogni stanza ha le sue impostazioni, ogni apparecchio supportato ha il proprio controller, modalità di funzionamento, obiettivi e limiti di sicurezza. HEM non presuppone mai che la selezione di un dispositivo gli conceda il permesso di utilizzare quel dispositivo.
+HEM usa i sensori già presenti in Home Assistant per mostrare temperatura, umidità e qualità dell’aria in ogni stanza. Confronta le condizioni interne ed esterne per suggerire quando aprire o chiudere le finestre. Puoi limitarti ai consigli oppure affidargli il controllo di riscaldamento, climatizzatori, ventilatori e deumidificatori a tua scelta, con obiettivi diversi quando sei a casa, fuori o dormi.
 
-[Esplora le caratteristiche](#what-can-hem-do) · [Vedi l'interfaccia](#see-hem-in-action) · [Installare HEM](#installation) · [Preparate la vostra casa](#getting-started) · [Guida dettagliata](../../docs/advanced-configuration.md) · [Tutte le impostazioni (in inglese)](../../docs/settings-reference.md)
+[Guida dettagliata](../../docs/advanced-configuration.md) · [Tutte le impostazioni (in inglese)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Che cosa può HEM - Non è vero?

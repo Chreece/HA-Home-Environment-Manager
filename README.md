@@ -22,13 +22,13 @@
 
 <p align="center"><strong>Your whole home's environment, in one Home Assistant card.</strong></p>
 
-**HEM helps your home understand its surroundings and react to what each room actually needs.** It brings your Home Assistant sensors, weather data, occupancy information and compatible climate devices together so you can monitor air quality, receive useful ventilation advice, manage comfort and automate the equipment you choose.
+[Room examples](#what-can-hem-do) · [Features](#explore-the-features) · [Screenshots](#see-hem-in-action) · [Installation](#installation) · [Getting started](#getting-started) · [FAQ](#common-questions) · [Troubleshooting](#help-and-troubleshooting) · [Support and license](#support-and-license)
 
-For example, HEM can reduce heating while everybody is away, prepare selected rooms before you return, use a different humidity target while you sleep, or ask you to open a window before running a dehumidifier. It can also just **monitor and recommend**, without controlling any device.
+## TL;DR
 
-**You stay in charge.** Every room has its own settings. Each supported appliance has its own controller, operating modes, targets and safety limits. HEM never assumes that selecting a device gives it permission to operate that device.
+HEM uses the sensors you already have in Home Assistant to show temperature, humidity and air quality room by room. It compares indoor and outdoor conditions to suggest when to open or close a window. You can use it for advice alone, or let it control selected heaters, air conditioners, fans and dehumidifiers with different targets when you’re home, away or asleep.
 
-[Explore the features](#what-can-hem-do) · [See the interface](#see-hem-in-action) · [Install HEM](#installation) · [Set up your home](#getting-started) · [Detailed guide](docs/advanced-configuration.md) · [Complete settings reference](docs/settings-reference.md)
+[Detailed guide](docs/advanced-configuration.md) · [Complete settings reference](docs/settings-reference.md)
 
 ## What can HEM do?
 

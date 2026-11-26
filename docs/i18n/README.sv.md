@@ -27,13 +27,13 @@
 
 <p align="center"><strong>Hela ditt hems miljö, i en Home Assistant Kortet.</strong></p>
 
-**HEM hjälper ditt hem att förstå omgivningen och att reagera på vad varje rum egentligen behöver.** Det ger dig Home Assistant Sensorer, väderuppgifter, information om upptagning och kompatibla klimatutrustning tillsammans så att du kan övervaka luftkvaliteten, få användbara ventilationsråd, hantera komfort och automatisera den utrustning du väljer.
+[Exempel per rum](#what-can-hem-do) · [Funktioner](#explore-the-features) · [Skärmbilder](#see-hem-in-action) · [Installation](#installation) · [Kom i gång](#getting-started) · [Vanliga frågor](#common-questions) · [Felsökning](#help-and-troubleshooting) · [Stöd och licens](#support-and-license)
 
-Till exempel: HEM kan minska uppvärmningen medan alla är borta, förbereda utvalda rum innan du återvänder, använda ett annat luftfuktighetsmål medan du sover eller be dig öppna ett fönster innan du kör en avfuktar. **övervaka och rekommendera**, utan att kontrollera någon enhet.
+## Kort sagt
 
-**Du ska fortsätta att styra.** Varje rum har sina egna inställningar. Varje stödjande apparat har sin egen kontrollör, driftläge, mål och säkerhetsgränser. HEM aldrig antar att det när man väljer en enhet får tillstånd att använda den.
+HEM använder de sensorer du redan har i Home Assistant för att visa temperatur, luftfuktighet och luftkvalitet i varje rum. Det jämför förhållandena inne och ute och föreslår när du bör öppna eller stänga fönstren. Du kan nöja dig med råd eller låta HEM styra valda värmeelement, luftkonditioneringar, fläktar och avfuktare med olika målvärden när du är hemma, borta eller sover.
 
-[Utforska egenskaperna](#what-can-hem-do) • Förberedelser [Se gränssnittet](#see-hem-in-action) • Förberedelser [Installa HEM](#installation) • Förberedelser [Gör ditt hem](#getting-started) • Förberedelser [Detaljerad vägledning](../../docs/advanced-configuration.md) · [Alla inställningar (på engelska)](../../docs/settings-reference.md)
+[Detaljerad vägledning](../../docs/advanced-configuration.md) · [Alla inställningar (på engelska)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Vad kan HEM - Är det?

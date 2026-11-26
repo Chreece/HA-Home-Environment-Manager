@@ -27,13 +27,13 @@
 
 <p align="center"><strong>家庭の環境を一つに Home Assistant カード</strong></p>
 
-**HEM 部屋の周りを理解し 部屋のニーズに 反応する助けになります** それはあなたの Home Assistant センサー,天気データ,居住情報,兼容的な気候装置を組み合わせて,空気の質を監視し,有用な通気アドバイスを受け,快適さを管理し,選択した機器を自動化することができます.
+[部屋別の活用例](#what-can-hem-do) · [機能](#explore-the-features) · [画面例](#see-hem-in-action) · [インストール](#installation) · [初期設定](#getting-started) · [よくある質問](#common-questions) · [トラブルシューティング](#help-and-troubleshooting) · [支援とライセンス](#support-and-license)
 
-例えば HEM 部屋の暖房を減らしたり,帰宅前に 部屋の湿度を 調整したり,寝ている間に 湿度を 異なる標的にしたり, 脱湿器を動かす前に 窓を開けるとしたりできます. **監視と推奨**装置を制御することなく
+## 概要
 
-**お前が指揮を続ける** 各部屋には独自の設定があり,各サポートされた機器には独自のコントローラー,操作モード,ターゲット,安全制限があります. HEM デバイスを選択することで,そのデバイスを操作する許可を与えると仮定しない.
+HEM は Home Assistant に登録済みのセンサーを使い、部屋ごとの温度、湿度、空気質を表示します。屋内外の状況を比較し、窓を開けるとよいときや閉めるとよいときを知らせます。アドバイスだけを受け取ることも、選んだ暖房器具、エアコン、扇風機、除湿機の制御を任せることもできます。在宅時、外出時、就寝時で目標値を変えられます。
 
-[特徴を探求する](#what-can-hem-do) · [インターフェースを見る](#see-hem-in-action) · [HEMを設置する](#installation) · [家を作れ](#getting-started) · [詳細なガイド](../../docs/advanced-configuration.md) · [全設定一覧（英語）](../../docs/settings-reference.md)
+[詳細なガイド](../../docs/advanced-configuration.md) · [全設定一覧（英語）](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## 何ができるのか HEM やってる?

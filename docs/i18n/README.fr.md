@@ -23,13 +23,13 @@
 
 <p align="center"><strong>L'environnement de toute votre maison, réuni dans une seule carte Home Assistant.</strong></p>
 
-**HEM vous aide à comprendre les conditions de votre logement et à répondre aux besoins réels de chaque pièce.** L'intégration rassemble les capteurs Home Assistant, les données météo, les informations de présence et les appareils compatibles de chauffage, de climatisation et de traitement de l'air. Vous pouvez suivre la qualité de l'air, recevoir des conseils d'aération, améliorer le confort et automatiser les équipements de votre choix.
+[Exemples par pièce](#what-can-hem-do) · [Fonctionnalités](#explore-the-features) · [Captures d’écran](#see-hem-in-action) · [Installation](#installation) · [Premiers pas](#getting-started) · [Questions fréquentes](#common-questions) · [Dépannage](#help-and-troubleshooting) · [Soutien et licence](#support-and-license)
 
-HEM peut, par exemple, réduire le chauffage quand le logement est vide, préparer certaines pièces avant votre retour, adapter la consigne d'humidité pendant le sommeil ou vous proposer d'ouvrir une fenêtre avant de démarrer un déshumidificateur. Il peut aussi se limiter à **surveiller et conseiller**, sans commander le moindre appareil.
+## En bref
 
-**Vous gardez la main.** Chaque pièce dispose de ses propres paramètres. Chaque appareil compatible possède ses modes, ses méthodes de régulation, ses consignes et ses limites de sécurité. Sélectionner un appareil n'autorise jamais, à lui seul, HEM à le commander.
+HEM utilise les capteurs que vous avez déjà dans Home Assistant pour afficher la température, l’humidité et la qualité de l’air pièce par pièce. Il compare les conditions intérieures et extérieures pour vous conseiller quand ouvrir ou fermer les fenêtres. Vous pouvez suivre ses conseils ou lui confier les appareils de votre choix (chauffage, climatisation, ventilateurs, déshumidificateurs), avec des consignes différentes selon que vous êtes chez vous, absent ou en train de dormir.
 
-[Découvrir les fonctionnalités](#what-can-hem-do) · [Voir l'interface](#see-hem-in-action) · [Installer HEM](#installation) · [Premiers pas](#getting-started) · [Guide détaillé](../../docs/advanced-configuration.md) · [Tous les réglages (en anglais)](../../docs/settings-reference.md)
+[Guide détaillé](../../docs/advanced-configuration.md) · [Tous les réglages (en anglais)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Que peut faire HEM ?

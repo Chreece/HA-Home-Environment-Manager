@@ -27,13 +27,13 @@
 
 <p align="center"><strong>Hele hjemmet ditt miljø, i en Home Assistant kortet.</strong></p>
 
-**HEM hjelper hjemmet ditt til å forstå omgivelsene og reagere på hva hvert rom faktisk trenger.** Det bringer din Home Assistant sensorer, værdata, besetningsopplysninger og kompatible klimaparater sammen slik at du kan overvåke luftkvaliteten, få nyttig ventilasjonsrådgivning, administrere komfort og automatisere utstyret du velger.
+[Eksempler per rom](#what-can-hem-do) · [Funksjoner](#explore-the-features) · [Skjermbilder](#see-hem-in-action) · [Installasjon](#installation) · [Kom i gang](#getting-started) · [Vanlige spørsmål](#common-questions) · [Feilsøking](#help-and-troubleshooting) · [Støtte og lisens](#support-and-license)
 
-For eksempel: HEM kan redusere oppvarming mens alle er borte, forberede utvalgte rom før du kommer tilbake, bruke et annet luftfuktighetsmål mens du sover, eller be deg åpne et vindu før du kjører en avfukter. **overvåke og anbefale**, uten å kontrollere noen enhet.
+## Kort fortalt
 
-**Du holder ansvaret.** Hvert rom har sine egne innstillinger. Hver støttet apparat har sin egen kontroller, driftsmodus, mål og sikkerhetsgrenser. HEM aldri antager at valg av en enhet gir den tillatelse til å bruke den enheten.
+HEM bruker sensorene du allerede har i Home Assistant til å vise temperatur, luftfuktighet og luftkvalitet i hvert rom. Det sammenligner forholdene inne og ute og foreslår når du bør åpne eller lukke vinduene. Du kan nøye deg med rådene eller la HEM styre utvalgte varmeovner, klimaanlegg, vifter og avfuktere med ulike målverdier når du er hjemme, borte eller sover.
 
-[Utforsk funksjonene](#what-can-hem-do) · [Se grensesnittet](#see-hem-in-action) · [Install HEM](#installation) · [Sett opp ditt hjem](#getting-started) · [Detaljerte veiledning](../../docs/advanced-configuration.md) · [Alle innstillinger (på engelsk)](../../docs/settings-reference.md)
+[Detaljerte veiledning](../../docs/advanced-configuration.md) · [Alle innstillinger (på engelsk)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Hva kan HEM gjør du?

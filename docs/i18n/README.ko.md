@@ -27,13 +27,13 @@
 
 <p align="center"><strong>집 전체의 환경, 하나의 Home Assistant 카드</strong></p>
 
-**HEM 집의 주변을 이해하고 각 방이 실제로 필요로 하는 것에 반응하는 데 도움이 됩니다.** 그것은 당신의 Home Assistant 센서, 날씨 데이터, 취업 정보 및 호환 가능한 기후 장치들을 함께 사용하여 대기 품질을 모니터링하고 유용한 환기 조언을 받고 편안함을 관리하고 선택한 장비를 자동화 할 수 있습니다.
+[방별 활용 예시](#what-can-hem-do) · [기능](#explore-the-features) · [화면 예시](#see-hem-in-action) · [설치](#installation) · [시작하기](#getting-started) · [자주 묻는 질문](#common-questions) · [문제 해결](#help-and-troubleshooting) · [후원 및 라이선스](#support-and-license)
 
-예를 들어, HEM 모든 사람이 떨어져 있을 때 온도를 줄일 수 있고, 귀국하기 전에 선택된 방을 준비할 수 있고, 잠자리에 다른 습도 표적을 사용하거나, 비습기기를 실행하기 전에 창을 열어달라고 요청할 수도 있습니다. **모니터링하고 추천합니다**, 어떤 기기를 제어하지 않고
+## 한눈에 보기
 
-**넌 책임자야.** 각 방은 각자의 설정을 가지고 있습니다. 지원되는 기기마다 자신의 컨트롤러, 운영 모드, 목표 및 안전 제한이 있습니다. HEM 기기를 선택하면 그 기기를 조작할 수 있는 권한을 부여한다고 가정하지 않습니다.
+HEM은 Home Assistant에 이미 연결된 센서로 방마다 온도, 습도, 공기질을 보여 줍니다. 실내외 상태를 비교해 창문을 언제 열거나 닫으면 좋을지 알려 줍니다. 조언만 받거나 원하는 난방기, 에어컨, 선풍기, 제습기의 제어를 맡길 수 있습니다. 재실, 외출, 취침 시의 목표값을 각각 설정할 수 있습니다.
 
-[그 특징을 알아보세요](#what-can-hem-do) · [인터페이스 참조](#see-hem-in-action) · [HEM 설치](#installation) · [집을 꾸려라](#getting-started) · [상세한 안내서](../../docs/advanced-configuration.md) · [전체 설정 목록(영어)](../../docs/settings-reference.md)
+[상세한 안내서](../../docs/advanced-configuration.md) · [전체 설정 목록(영어)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## 어떻게 할 수 있을까요? HEM - 그래요?

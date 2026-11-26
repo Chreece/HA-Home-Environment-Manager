@@ -27,13 +27,13 @@
 
 <p align="center"><strong>Az egész otthoni környezet egy Home Assistant Kártyát.</strong></p>
 
-**HEM segít megérteni a ház körülményeit, és reagálni arra, amire minden szobának szüksége van.** - Ez hozza el a Home Assistant a szenzorok, az időjárási adatok, az elhelyezkedési adatok és a kompatibilis klímaeszközök együtt, így a levegő minőségét figyelemmel kísérheti, hasznos szellőztetési tanácsokat kaphat, a kényelmet kezelheti és automatizálja a kiválasztott berendezést.
+[Példák helyiségenként](#what-can-hem-do) · [Funkciók](#explore-the-features) · [Képernyőképek](#see-hem-in-action) · [Telepítés](#installation) · [Első lépések](#getting-started) · [Gyakori kérdések](#common-questions) · [Hibaelhárítás](#help-and-troubleshooting) · [Támogatás és licenc](#support-and-license)
 
-Például: HEM a többiek távolságában csökkentheti a fűtést, előkészíti a kiválasztott szobákat, mielőtt visszatér, más nedvességcélot használ, amikor alszik, vagy kér, hogy kinyissák az ablakot, mielőtt a nedvességbontót futtatják. **megfigyelés és ajánlás**, anélkül, hogy irányítaná a készüléket.
+## Röviden
 
-**Te maradj a főnök.** Minden szobának saját beállításai vannak, minden támogatott készüléknek saját vezérlője, működési módja, célpontja és biztonsági korlátai vannak. HEM soha nem feltételezi, hogy a készülék kiválasztása engedélyt ad annak a készüléknek a használatára.
+A HEM a Home Assistant meglévő érzékelői alapján helyiségenként mutatja a hőmérsékletet, a páratartalmat és a levegő minőségét. A kinti és benti viszonyokat összevetve javasolja, mikor érdemes kinyitni vagy becsukni az ablakokat. Kérhet csak tanácsokat, vagy rábízhatja a kiválasztott fűtőberendezések, klímák, ventilátorok és páramentesítők vezérlését. Az otthon töltött időre, távollétre és alváshoz külön célértékeket állíthat be.
 
-[Fedezze fel a jellemzőket](#what-can-hem-do) · [Lásd a felületet](#see-hem-in-action) · [HEM telepítés](#installation) · [Szépítsd ki a házad](#getting-started) · [Fontos útmutató](../../docs/advanced-configuration.md) · [Az összes beállítás (angolul)](../../docs/settings-reference.md)
+[Fontos útmutató](../../docs/advanced-configuration.md) · [Az összes beállítás (angolul)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>
 ## Mi lehet? HEM - Nem?
