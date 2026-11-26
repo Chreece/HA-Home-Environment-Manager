@@ -1376,6 +1376,7 @@ class EquipmentRuntime:
         output_state = state
         kind = "binary"
         from .pid_diagnostics import calibration_activity, calibration_output_uncertain
+        activity_mode = "humidify" if cap.domain == "humidifier" and cap.humidifying else mode
         output_kind, native_strategy = "reported_state", None
         minimum, maximum_percent, step, stages = 0., 100., 1., []
         max_change, step_origin, quantization = 100., 0., "nearest"
@@ -1479,7 +1480,7 @@ class EquipmentRuntime:
                         constraints.append("output_rate_limited")
             step = cap.temp_step / 1.5 * 100
         else:
-            activity = calibration_activity(cap.domain, state, mode)
+            activity = calibration_activity(cap.domain, state, activity_mode)
             output = 100. if activity == "on" else 0. if activity == "off" else None
             if cap.domain == "climate":
                 output_kind = "reported_activity"
@@ -1505,7 +1506,7 @@ class EquipmentRuntime:
                               100. if state.state == mode and owned and target_confirmed else None)
             constrained = demand
         domain = getattr(output_state, "domain", None) or cap.domain
-        physical_activity = calibration_activity(domain, output_state, mode)
+        physical_activity = calibration_activity(domain, output_state, activity_mode)
         if physical_activity is None or calibration_output_uncertain(record, cfg):
             output = None
         elif physical_activity == "off":
@@ -1531,6 +1532,7 @@ class EquipmentRuntime:
             "native_target_strategy": native_strategy,
             "constrained_output": constrained, "output_verified": verified,
             "output_at": reported_at, "constraints": constraints,
+            "output_entity": getattr(output_state, "entity_id", None) or cap.primary,
             "output_changed_at": record.get("target_at") if kind == "setpoint_trim" else record.get("output_at"),
             "min_on_seconds": on_min, "min_off_seconds": off_min,
             "max_on_seconds": maximum, "min_percentage": minimum,
@@ -1612,8 +1614,12 @@ class EquipmentRuntime:
                 or context.get("profile") != model.profile_name(cfg, plan)):
             return False
         cap = model.capabilities(self.manager, spec)
-        if (cap is None or self._gate(spec, cap, cfg, plan, cfg.get("requested_mode"),
-                                     read_only=True) is not None):
+        mode = cfg.get("requested_mode")
+        if mode is None:
+            sample = self._pid_adaptive_live_sample(spec, cfg=cfg, cap=cap, plan=plan)
+            mode = sample["native_mode"] if sample else None
+        if (cap is None or mode is None or self._gate(spec, cap, cfg, plan, mode,
+                                                     read_only=True) is not None):
             # A previously valid command cannot bridge a new window, ownership,
             # device-protection or other live policy hold in the response model.
             return False
@@ -1636,8 +1642,8 @@ class EquipmentRuntime:
                 return False
         return True
 
-    def _pid_adaptive_ack_event(self, spec):
-        """Record an exact native output edge without inventing a PV report."""
+    def _pid_adaptive_ack_event(self, spec, *, activity_change=False):
+        """Record a verified output transition independently of room sensor reports."""
         observer = getattr(self, "_pid_adaptive_observers", {}).get(spec.identifier)
         if observer is None:
             return
@@ -1645,6 +1651,9 @@ class EquipmentRuntime:
         if (sample is None or sample["context"] != observer.context
                 or not sample["output_verified"]):
             observer.interrupt("output_unverified")
+            return
+        if activity_change and (not sample["safe"] or "other_controller_active" in sample["constraints"]):
+            observer.interrupt(sample["hold_reason"] or "observation_interrupted")
             return
         observer.observe_output(sample["output_at"], sample["observed_output"])
 
@@ -1675,10 +1684,11 @@ class EquipmentRuntime:
             actuator["constraints"].append("other_controller_active")
         semantics = "upper_threshold" if metric in ("co2", "pm25") else "band"
         profile = model.profile_name(cfg, plan)
+        direction = "humidify" if cap.domain == "humidifier" and cap.humidifying else mode
         context_data = {
             "version": 1, "controller": spec.identifier, "area": spec.area_id,
             "source_device_id": spec.source_device_id, "physical_sources": list(spec.source_entities),
-            "primary": cap.primary, "operating_mode": cfg.get("operating_mode") or mode,
+            "primary": cap.primary, "operating_mode": cfg.get("operating_mode") or direction,
             "mode": mode, "metric": metric, "unit": units[metric],
             "target": float(goal), "increasing": bool(increasing),
             "target_semantics": semantics, "profile": profile,
@@ -1729,6 +1739,7 @@ class EquipmentRuntime:
         valid_input = finite(report, 0, now) is not None and now-report <= 600
         return {
             "context": context, "schema_version": 1, "operating_mode": context_data["operating_mode"],
+            "native_mode": mode,
             "observed_at": now, "reported_at": report, "measured": measured[metric],
             "target": goal, "metric": metric, "unit": units[metric], "increasing": bool(increasing),
             "target_semantics": semantics, "band": bands[metric],
@@ -1763,6 +1774,16 @@ class EquipmentRuntime:
                 return None
             measured = self.measurements(spec, cap)
             targets = model.targets(self.manager, spec, cap, cfg, plan)
+            if mode is None:
+                # Flat configurations can leave direction selection to the control tick.
+                from .dry_mode import automatic_mode
+                room = model.room_config(self.manager, spec)
+                mode = automatic_mode(cap, state, measured, targets, pid=True,
+                                      dedicated_dry=room.get("dry_climate_entity") == cap.primary)
+                if mode is None and cap.domain != "climate":
+                    mode = next((item for item in cap.modes if item != "off"), None)
+            if mode not in cap.modes or mode == "off":
+                return None
             if cap.domain == "fan" or mode == "fan_only" or set(cap.modes) == {"off", "fan_only"}:
                 from .device_activation import effective_device
                 extraction = effective_device(self.manager, spec, cap.primary).get("fan_purpose") == "extraction"
@@ -1790,6 +1811,8 @@ class EquipmentRuntime:
         """Current feedback and assessment; restored ledgers never imply live proof."""
         from .pid_adaptive_store import saved_snapshot
         cfg = model.settings(self.manager, spec) if cfg is None else cfg
+        if cap is None and cfg.get("control_mode") == "pid":
+            cap = model.capabilities(self.manager, spec)
         sample = self._pid_adaptive_live_sample(spec, cfg=cfg, cap=cap, plan=plan)
         observer = getattr(self, "_pid_adaptive_observers", {}).get(spec.identifier)
         record = self.records.get(spec.identifier, {})
@@ -1797,8 +1820,13 @@ class EquipmentRuntime:
         context = sample.get("context") if sample else None
         verified = bool(sample and sample["safe"] and observer is not None
                         and observer.context == context)
+        mode = sample["operating_mode"] if sample else cfg.get("operating_mode") or cfg.get("requested_mode")
+        if mode is None and cfg.get("control_mode") == "pid":
+            # Identify the settings panel even when a sensor is temporarily offline.
+            # This display fallback cannot verify a sample or authorize a write.
+            mode = self.active_control_mode(spec)
         result = {**assessment, "schema_version": 1,
-                  "operating_mode": cfg.get("operating_mode") or cfg.get("requested_mode"),
+                  "operating_mode": mode,
                   "context": context, "context_verified": verified,
                   "feedback": sample["feedback"] if sample else {},
                   "actuator_kind": sample["actuator_kind"] if sample else None,
@@ -1806,8 +1834,19 @@ class EquipmentRuntime:
                   "physical_activity": sample["physical_activity"] if sample else None,
                   "constraints": sample["constraints"] if sample else []}
         if not verified:
-            result.update(status="waiting", reason=(sample.get("hold_reason") if sample else None)
-                          or "fresh_observations_required", fresh_evidence=False, candidate=None)
+            reason = sample.get("hold_reason") if sample else None
+            if not self._active or not self._ready:
+                reason = "controller_inactive"
+            elif sample and not sample["soft_permission"]:
+                reason = "permissions_required"
+            elif sample is None:
+                native = self.hass.states.get(cap.primary) if cap else None
+                if native is None or native.state in ("unknown", "unavailable"):
+                    reason = "device_unavailable"
+                elif self.statuses.get(spec.identifier, {}).get("status") == "control_measurement_missing_or_stale":
+                    reason = "measurement_unavailable"
+            result.update(status="waiting", reason=reason or "fresh_observations_required",
+                          fresh_evidence=False, candidate=None)
         if sample:
             result.update(metric=sample["metric"], unit=sample["unit"], measured=sample["measured"],
                           target=sample["target"], band=sample["band"], increasing=sample["increasing"],
@@ -2001,7 +2040,7 @@ class EquipmentRuntime:
                     or observer.context != sample["context"]
                     or not validate_proof(proof, cfg, observer.snapshot(), sample["context"], self.clock())):
                 return False
-            if self._gate(spec, cap, cfg, plan, cfg["requested_mode"], read_only=True) is not None:
+            if self._gate(spec, cap, cfg, plan, sample["native_mode"], read_only=True) is not None:
                 return False
             expected = proof["apply"]
             if any(changes.get(key) != expected.get(key) for key in ("kp", "ki", "kd")):
@@ -2148,7 +2187,8 @@ class EquipmentRuntime:
             mode = review.get("operating_mode")
             # An interrupted application may belong to a now-inactive mode.
             # Reconcile its exact saved receipt before expiring old context.
-            if mode and hasattr(model, "settings_for_mode"):
+            if (mode and hasattr(model, "settings_for_mode")
+                    and (review.get("algorithm") != "performance_v1" or cfg.get("operating_mode"))):
                 try:
                     review_cfg = model.settings_for_mode(self.manager, spec, mode)
                 except (HomeAssistantError, ValueError, KeyError, TypeError):
@@ -3363,6 +3403,11 @@ class EquipmentRuntime:
                         signature[6:9] = [changes[key] for key in ("kp", "ki", "kd")]
                         adaptive_memory = (tuple(signature), transferred, previous_anchor)
                 self.hass.config_entries.async_update_entry(self.manager.entry, options=options)
+                if adaptive_proof is not None and not model.has_mode_settings(latest_profile or {}):
+                    # The first scoped gain write may occur while a multi-mode
+                    # thermostat is idle. Carry the just-revalidated direction
+                    # across this synchronous config update.
+                    record["active_operating_mode"] = operating_mode
                 if calibration_update:
                     # A successful write must be the effective gains for the
                     # intended profile, not merely a stored fallback value.
@@ -7117,15 +7162,21 @@ class EquipmentRuntime:
                     expected = getattr(self, "_pid_adaptive_expected_pending", None)
                     ordinary_ack = bool(callable(expected) and old_live and new_live
                                         and expected(spec, entity=entity_id, old=old, new=new))
-                    adaptive_observer = getattr(self, "_pid_adaptive_observers", {}).get(spec.identifier)
-                    command_activity = bool(reason == "native_activity_changed" and adaptive_observer is not None
-                        and (getattr(self, "_pid_adaptive_samples", {}).get(spec.identifier) or {}).get("output_kind")
-                            == "acknowledged_native_command")
-                    if ordinary_ack or command_activity:
-                        # Revoke queued gain writes, while preserving normal
-                        # closed-loop response across our own verified ACKs.
-                        interrupt_learning(spec, "native_command_acknowledged", preserve_adaptive=True)
-                        self._pid_adaptive_ack_event(spec)
+                    activity_change = False
+                    if reason == "native_activity_changed" and not explicit_human:
+                        from .pid_diagnostics import calibration_activity
+                        sample = getattr(self, "_pid_adaptive_samples", {}).get(spec.identifier) or {}
+                        mode = sample.get("native_mode")
+                        if (entity_id == sample.get("output_entity") and new.state == mode
+                                and sample.get("output_kind") in (
+                                    "acknowledged_native_command", "acknowledged_target", "reported_activity")):
+                            activity_change = {calibration_activity("climate", state, mode)
+                                               for state in (old, new)} == {"on", "off"}
+                    if ordinary_ack or activity_change:
+                        # A thermostat can cycle internally at an unchanged setpoint.
+                        # Record that physical edge and revoke any queued gain write.
+                        interrupt_learning(spec, reason or "native_command_acknowledged", preserve_adaptive=True)
+                        self._pid_adaptive_ack_event(spec, activity_change=activity_change and not ordinary_ack)
                         self._pid_learning_observed(spec)
                     elif reason is not None:
                         interrupt_learning(spec, reason)
