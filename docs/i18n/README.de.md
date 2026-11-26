@@ -29,6 +29,12 @@
 
 HEM zeigt anhand der vorhandenen Sensoren in Home Assistant Temperatur, Luftfeuchtigkeit und Luftqualität für jeden Raum. Es vergleicht die Bedingungen drinnen und draußen und empfiehlt, wann Sie die Fenster öffnen oder schließen sollten. Sie können es bei Empfehlungen belassen oder ausgewählte Heizungen, Klimaanlagen, Ventilatoren und Luftentfeuchter steuern lassen. Die Zielwerte können sich danach richten, ob Sie zu Hause sind, unterwegs sind oder schlafen.
 
+<p align="center">
+  <a href="../../docs/images/hem-dashboard-overview.png">
+    <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM-Übersicht mit Lüftungsempfehlungen und Umgebungswerten aus fünf Räumen" width="640">
+  </a>
+</p>
+
 [Ausführliche Anleitung](../../docs/advanced-configuration.md) · [Alle Einstellungen (Englisch)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>

@@ -33,6 +33,12 @@
 
 HEM dùng các cảm biến bạn đã có trong Home Assistant để hiển thị nhiệt độ, độ ẩm và chất lượng không khí của từng phòng. HEM so sánh điều kiện trong nhà và ngoài trời để gợi ý khi nào nên mở hoặc đóng cửa sổ. Bạn có thể chỉ nhận gợi ý hoặc cho phép HEM điều khiển các máy sưởi, máy lạnh, quạt và máy hút ẩm đã chọn, với mục tiêu khác nhau khi bạn ở nhà, đi vắng hoặc đang ngủ.
 
+<p align="center">
+  <a href="../../docs/images/hem-dashboard-overview.png">
+    <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM bảng điều khiển nhà với tư vấn thông gió và đọc môi trường trong năm phòng" width="640">
+  </a>
+</p>
+
 [Hướng dẫn chi tiết](../../docs/advanced-configuration.md) · [Tất cả cài đặt (tiếng Anh)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>

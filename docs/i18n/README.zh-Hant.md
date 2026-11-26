@@ -33,6 +33,12 @@
 
 HEM 利用已連接到 Home Assistant 的感測器，顯示各房間的溫度、濕度和空氣品質。它會比較室內外狀況，建議何時開窗或關窗。你可以只看建議，也可以讓 HEM 控制選定的暖氣、冷氣、風扇和除濕機，並分別設定在家、外出和睡眠時的目標值。
 
+<p align="center">
+  <a href="../../docs/images/hem-dashboard-overview.png">
+    <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM 在五個房間內提供通風輔導和環境檢測的家庭儀表板" width="640">
+  </a>
+</p>
+
 其他國家 [詳細的指南](../../docs/advanced-configuration.md) · [所有設定（英文）](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>

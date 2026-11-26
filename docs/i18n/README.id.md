@@ -33,6 +33,12 @@
 
 HEM memakai sensor yang sudah ada di Home Assistant untuk menampilkan suhu, kelembapan, dan kualitas udara di setiap ruangan. HEM membandingkan kondisi di dalam dan di luar rumah untuk menyarankan kapan jendela sebaiknya dibuka atau ditutup. Anda bisa menggunakan sarannya saja atau membiarkannya mengendalikan pemanas, AC, kipas, dan pengering udara pilihan Anda, dengan target berbeda saat Anda di rumah, bepergian, atau tidur.
 
+<p align="center">
+  <a href="../../docs/images/hem-dashboard-overview.png">
+    <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM home dashboard dengan nasihat ventilasi dan pembacaan lingkungan di lima kamar" width="640">
+  </a>
+</p>
+
 [Panduan terperinci](../../docs/advanced-configuration.md) · [Semua pengaturan (bahasa Inggris)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>

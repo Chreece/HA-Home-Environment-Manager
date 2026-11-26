@@ -33,6 +33,12 @@
 
 HEM använder de sensorer du redan har i Home Assistant för att visa temperatur, luftfuktighet och luftkvalitet i varje rum. Det jämför förhållandena inne och ute och föreslår när du bör öppna eller stänga fönstren. Du kan nöja dig med råd eller låta HEM styra valda värmeelement, luftkonditioneringar, fläktar och avfuktare med olika målvärden när du är hemma, borta eller sover.
 
+<p align="center">
+  <a href="../../docs/images/hem-dashboard-overview.png">
+    <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM Hemsidan med ventilationsrådgivning och miljöläsningar i fem rum" width="640">
+  </a>
+</p>
+
 [Detaljerad vägledning](../../docs/advanced-configuration.md) · [Alla inställningar (på engelska)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>

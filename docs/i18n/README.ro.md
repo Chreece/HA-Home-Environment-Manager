@@ -33,6 +33,12 @@
 
 HEM folosește senzorii pe care îi ai deja în Home Assistant pentru a afișa temperatura, umiditatea și calitatea aerului în fiecare cameră. Compară condițiile din interior și din exterior și îți sugerează când să deschizi sau să închizi ferestrele. Poți primi doar recomandări sau poți lăsa HEM să controleze aparatele de încălzire și de aer condiționat, ventilatoarele și dezumidificatoarele alese de tine, cu valori țintă diferite când ești acasă, plecat sau dormi.
 
+<p align="center">
+  <a href="../../docs/images/hem-dashboard-overview.png">
+    <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM tabla de bord de la domiciliu cu sfaturi de ventilație și citiri de mediu în cinci camere" width="640">
+  </a>
+</p>
+
 [Ghid detaliat](../../docs/advanced-configuration.md) · [Toate setările (în engleză)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>

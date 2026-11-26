@@ -35,7 +35,8 @@ for code in REWRITTEN:
     data = (DIRECTORY / f"README.{code}.md").read_text(encoding="utf-8")
     assert "HEM-TRANSLATION-UNREVIEWED" not in data, code
     assert data.count("type: custom:home-environment-manager-card") == 2, code
-    assert data.count('src="../../docs/images/') == 5, code
+    gallery = data.split('<a id="see-hem-in-action"></a>', 1)[1]
+    assert gallery.count('src="../../docs/images/') == 5, code
     assert data.count('<a id="') >= 25, code
     assert "**https://github.com/Chreece/HA-Home-Environment-Manager**" in data, code
     assert "**custom_components/environment_manager**" in data, code

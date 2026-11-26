@@ -33,6 +33,12 @@
 
 HEM は Home Assistant に登録済みのセンサーを使い、部屋ごとの温度、湿度、空気質を表示します。屋内外の状況を比較し、窓を開けるとよいときや閉めるとよいときを知らせます。アドバイスだけを受け取ることも、選んだ暖房器具、エアコン、扇風機、除湿機の制御を任せることもできます。在宅時、外出時、就寝時で目標値を変えられます。
 
+<p align="center">
+  <a href="../../docs/images/hem-dashboard-overview.png">
+    <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM 5つの部屋で通風のアドバイスと環境の測定を備えたホームダッシュボード" width="640">
+  </a>
+</p>
+
 [詳細なガイド](../../docs/advanced-configuration.md) · [全設定一覧（英語）](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>

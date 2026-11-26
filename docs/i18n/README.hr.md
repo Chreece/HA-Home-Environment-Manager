@@ -33,6 +33,12 @@
 
 HEM pomoću postojećih senzora u sustavu Home Assistant prikazuje temperaturu, vlažnost i kvalitetu zraka u svakoj prostoriji. Uspoređuje unutarnje i vanjske uvjete te preporučuje kada otvoriti ili zatvoriti prozore. Možete koristiti samo savjete ili mu prepustiti upravljanje odabranim grijalicama, klima-uređajima, ventilatorima i odvlaživačima uz različite ciljne vrijednosti ovisno o tome jeste li kod kuće, odsutni ili spavate.
 
+<p align="center">
+  <a href="../../docs/images/hem-dashboard-overview.png">
+    <img src="../../docs/images/hem-dashboard-overview.png" alt="HEM kućna ploča s savjetima za ventilaciju i mjerama okoliša u pet soba" width="640">
+  </a>
+</p>
+
 [Podrobni vodič](../../docs/advanced-configuration.md) · [Sve postavke (na engleskom)](../../docs/settings-reference.md)
 
 <a id="what-can-hem-do"></a>

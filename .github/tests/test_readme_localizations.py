@@ -61,6 +61,10 @@ for path in sorted(PAGES.glob("README.*.md")):
     expected_links = [link if link.startswith(("#", "http:", "https:"))
                       else "../../" + link for link in english_links]
     assert localized_links == expected_links, (path, "changed Markdown link")
+    intro = page.split("](#support-and-license)", 1)[1].split('<a id="what-can-hem-do">', 1)[0]
+    overview = "../../docs/images/hem-dashboard-overview.png"
+    assert f'<a href="{overview}">' in intro, path
+    assert re.findall(r'<img src="([^"]+)"', intro) == [overview], path
     for target in re.findall(r'(?:(?:src|href)=")([^"]+)', page) + localized_links:
         if target.startswith(("#", "http:", "https:", "mailto:", "data:")):
             continue
