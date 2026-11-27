@@ -5257,10 +5257,10 @@
       ?'<div class="metric-grid hem-metric-narrow-b6">'+
         this._metric(overview122.extras[1],false,room.area_id)+'</div>':'';
     const original=narrowOnly+_room87.call(this,room,overview122);
-    const prepare=this._roomPreparationControl(room.area_id);
     const labels=_roomLabels87(this._language());
     const open=this._roomsExpanded87?.has(room.area_id)===true;
     const presence=this._roomPresence114(room);
+    const prepare=presence.state==='unoccupied'?this._roomPreparationControl(room.area_id):null;
     const activity=_physicalActivities89(devices,this._hass);
     const activityText=_activityText112(this,activity.items) ||
       (_activityCopy112[this._language()]||_activityCopy112.en).neutral;
@@ -5417,19 +5417,18 @@
       '<strong class="hem-room-name87 hem-room-presence-'+presence.state+'" '+
       'data-room-presence114="'+presence.state+'" title="'+
       escape((room.name||room.area_id)+' · '+presence.label)+'">'+
-      (prepare&&presence.state==='unoccupied'
+      (prepare
         ?'<button type="button" class="hem-prepare-room" data-prepare-room="'+escape(room.area_id)+
-          '" data-prepare-entity="'+escape(prepare.id)+'" aria-label="'+
-          escape(prepare.name+' · '+(room.name||room.area_id))+'"'+(prepare.active?' disabled':'')+'>'+
+          '" data-prepare-entity="'+escape(prepare.id||'')+'" aria-pressed="'+prepare.active+
+          '" aria-label="'+escape((room.name||room.area_id)+' · '+prepare.name)+
+          '" title="'+escape(prepare.hint)+'"'+
+          (prepare.id?'':' disabled')+(this._pendingRoomPreparations?.has(prepare.startId)?' aria-busy="true"':'')+'>'+
           escape(room.name||room.area_id)+'</button>':escape(room.name||room.area_id))+'</strong>'+
       (showFaces?'<span class="hem-room-faces" role="img" aria-label="'+escape(conditions.label)+
         '" title="'+escape(conditions.label)+'">'+faceArt+'</span>':'')+
       '<span class="hem-room-alerts87" aria-label="'+escape(labels.attention)+'">'+
       alerts.join('')+'</span>'+
-      '<span class="hem-room-info-column">'+information.join('')+
-      (prepare?this._info76('prepare-room-'+room.area_id,prepare.name,
-        '<b>'+escape(prepare.name)+'</b><p>'+escape(prepare.help)+'</p>'+
-        (prepare.active?this._icon('mdi:timer-outline')+' '+escape(prepare.end):'')):'')+'</span>'+
+      '<span class="hem-room-info-column">'+information.join('')+'</span>'+
       '<span class="hem-room-active87" aria-label="'+escape(active.length+' '+labels.active)+'">'+
       activeIcons+extra+'</span></span></span>'+
       '<span class="hem-room-overview080">'+
@@ -5475,12 +5474,18 @@
       if(prepareButton){
         event.preventDefault();event.stopImmediatePropagation();
         const control=this._roomPreparationControl(prepareButton.dataset.prepareRoom);
-        if(!control||control.active||prepareButton.disabled||control.id!==prepareButton.dataset.prepareEntity)return;
-        prepareButton.disabled=true;
+        if(!control?.id||prepareButton.disabled||control.id!==prepareButton.dataset.prepareEntity)return;
+        this._pendingRoomPreparations ||= new Set();
+        if(this._pendingRoomPreparations.has(control.startId))return;
+        this._pendingRoomPreparations.add(control.startId);
+        prepareButton.setAttribute('aria-busy','true');
         this._hass.callService('button','press',{entity_id:control.id}).catch(error=>{
           this.dispatchEvent(new CustomEvent('hass-notification',{bubbles:true,composed:true,
             detail:{message:error?.message||String(error)}}));
-        }).finally(()=>this._render(true));
+        }).finally(()=>{
+          this._pendingRoomPreparations.delete(control.startId);
+          this._render(true);
+        });
         return;
       }
       const settings114=event.target?.closest?.('[data-room-settings114]');
@@ -8847,13 +8852,19 @@
   protoRoom114._roomPreparationControl=function(area){
     const source=this._arrivalSource124();
     if(!source?.owned)return null;
-    const id=this._dashboard105()?.room_preparation_entities?.[area],state=this._hass?.states?.[id];
-    const attrs=state?.attributes;
-    if(!id?.startsWith('button.')||!attrs||state.state==='unavailable'||
-        attrs.entry_id!==source.entry||attrs.room_preparation_area!==area)return null;
-    const active=Number(attrs.expires_at)>Date.now()/1000;
-    return {id,active,name:attrs.friendly_name,help:attrs.configuration_help,
-      end:active?new Date(attrs.expires_at*1000).toLocaleTimeString(this._language(),{hour:'2-digit',minute:'2-digit'}):''};
+    const dashboard=this._dashboard105(),states=this._hass?.states;
+    const startId=dashboard.room_preparation_entities?.[area],start=states?.[startId];
+    const owned=(id,state,action)=>id?.startsWith('button.')&&state&&state.state!=='unavailable'&&
+      state.attributes?.entry_id===source.entry&&state.attributes.room_preparation_area===area&&
+      (state.attributes.room_preparation_action??'prepare')===action;
+    if(!owned(startId,start,'prepare'))return null;
+    const name=start.attributes.friendly_name,expires=Number(start.attributes.expires_at);
+    if(!expires)return {id:startId,startId,active:false,name,hint:name};
+    const cancelId=dashboard.room_preparation_cancel_entities?.[area],cancel=states?.[cancelId];
+    const canCancel=owned(cancelId,cancel,'cancel');
+    const end=new Date(expires*1000).toLocaleTimeString(this._language(),{hour:'2-digit',minute:'2-digit'});
+    return {id:canCancel?cancelId:null,startId,active:true,name,
+      hint:(canCancel?cancel.attributes.friendly_name:name)+' · '+end};
   };
   protoRoom114._roomPresence114=function(room){
     const p=room?.environment?.climate_plan||{};
@@ -10209,10 +10220,12 @@
       source.owner,source.entry,source.owned,source.active,source.expires,source.homeStatus,
       source.canStart,source.timeout,source.remaining===null?null:Math.ceil(source.remaining/60),
       source.pending,source.error,controls,
-      Object.entries(this._dashboard105()?.room_preparation_entities||{}).map(([area,id])=>{
-        const state=this._hass?.states?.[id];
-        return [area,id,state?.state,state?.attributes?.expires_at,state?.attributes?.configuration_help];
-      })]);
+      ['room_preparation_entities','room_preparation_cancel_entities'].map(key=>
+        Object.entries(this._dashboard105()?.[key]||{}).map(([area,id])=>{
+          const state=this._hass?.states?.[id],attrs=state?.attributes;
+          return [area,id,state?.state,attrs?.entry_id,attrs?.room_preparation_area,
+            attrs?.room_preparation_action,attrs?.expires_at,attrs?.friendly_name];
+        }))]);
   };
   const arrivalRenderBefore124=arrivalProto124._renderContent;
   arrivalProto124._renderContent=function(force=false){
@@ -15331,11 +15344,19 @@ HomeEnvironmentManagerCard.prototype._styles=function(){
       flex:none;inline-size:min(var(--hem-room-name-width,12ch),max(40cqi,100cqi - 180px));
       min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
+    .rooms-list:has(.hem-prepare-room) hem-room-name-measure strong {padding-inline:7px}
     .hem-room-name87>.hem-prepare-room {
-      border:0;background:none;color:inherit;font:inherit;cursor:pointer;padding:0;
-      max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom;
+      box-sizing:border-box;min-height:28px;max-width:100%;padding:2px 6px;
+      border:1px solid currentColor;border-radius:6px;background:var(--aqa-surface);
+      color:inherit;font:inherit;cursor:pointer;vertical-align:middle;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
-    .hem-room-name87>.hem-prepare-room:disabled {color:var(--primary-color);cursor:default}
+    .hem-room-name87>.hem-prepare-room[aria-pressed="true"] {
+      background:var(--aqa-text);border-color:var(--aqa-text);color:var(--aqa-surface);
+      text-decoration:underline;text-underline-offset:3px;
+    }
+    .hem-room-name87>.hem-prepare-room:focus-visible {outline:2px solid currentColor;outline-offset:-4px}
+    .hem-room-name87>.hem-prepare-room[aria-busy="true"] {cursor:progress}
     .hem-room-tab080 .hem-room-settings114 {
       flex:0 0 34px;width:34px;height:34px;border-radius:6px;
     }

@@ -266,29 +266,45 @@ def room_action(page, expect):
       const states=structuredClone(card._hass.states);
       const dashboard=states['sensor.hem'].attributes.dashboard;
       dashboard.room_preparation_entities={room0:'button.prepare_test_room'};
+      dashboard.room_preparation_cancel_entities={room0:'button.stop_test_room'};
       dashboard.rooms[0].environment.room_presence={home:'home',occupancy:'unoccupied'};
-      states['button.prepare_test_room']={state:'unknown',attributes:{
-        friendly_name:'Prepare room',entry_id:'home_a',room_preparation_area:'room0',
-        configuration_help:'Tap the empty room name for up to 60 min.'}};
+      const room={entry_id:'home_a',room_preparation_area:'room0'};
+      states['button.prepare_test_room']={state:'unknown',attributes:{...room,
+        friendly_name:'Prepare room',room_preparation_action:'prepare'}};
+      states['button.stop_test_room']={state:'unavailable',attributes:{...room,
+        friendly_name:'Cancel room preparation',room_preparation_action:'cancel'}};
+      window.roomActive=active=>{
+        const states=structuredClone(card._hass.states);
+        states['button.prepare_test_room'].attributes.expires_at=active?Date.now()/1000+300:null;
+        states['button.stop_test_room'].state=active?'unknown':'unavailable';
+        card.hass={...card._hass,states};
+      };
       card.hass={...card._hass,states};
     }""")
-    button=page.locator('button[data-prepare-room="room0"]')
-    expect(button).to_be_visible()
-    button.focus()
+    button = page.locator('button[data-prepare-room="room0"]')
+    row = page.locator('[data-room-fold87="room0"]')
+    expect(row.locator('[data-detail-id="prepare-room-room0"]')).to_have_count(0)
+    expect(button).to_have_attribute("aria-pressed", "false")
+    assert button.evaluate("el=>parseFloat(getComputedStyle(el).borderTopWidth)>=1")
+    idle_background = button.evaluate("el=>getComputedStyle(el).backgroundColor")
     button.press("Enter")
-    assert page.evaluate("calls.at(-1)") == ["button", "press", {"entity_id":"button.prepare_test_room"}]
-    row=page.locator('[data-room-fold87="room0"]')
-    assert not row.evaluate("node=>node.open")
-    row.locator('[data-detail-id="prepare-room-room0"] > summary').click()
-    expect(page.locator('.hem-floating-info87')).to_contain_text("60 min")
-    page.evaluate("""() => {
-      const state=structuredClone(card._hass.states['button.prepare_test_room']);
-      state.attributes.expires_at=Date.now()/1000+300;
-      setNative124('button.prepare_test_room',state);
-    }""")
-    expect(button).to_be_disabled()
+    assert page.evaluate("calls") == [["button", "press", {"entity_id": "button.prepare_test_room"}]]
+    page.evaluate("roomActive(true)")
+    expect(button).to_have_attribute("aria-pressed", "true")
+    expect(button).to_be_enabled()
+    expect(button).to_have_attribute("title", re.compile(r"Cancel room preparation.*\d+:\d+"))
+    assert button.evaluate("el=>getComputedStyle(el).backgroundColor") != idle_background
+    button.click()
+    assert page.evaluate("calls")[-1] == ["button", "press", {"entity_id": "button.stop_test_room"}]
+    assert not row.evaluate("el=>el.open")
+    page.evaluate("roomActive(false)")
+    expect(button).to_have_attribute("aria-pressed", "false")
+    expect(button).to_be_enabled()
     page.evaluate("""() => setNative124('button.prepare_test_room',undefined)""")
     expect(button).to_have_count(0)
+    row.locator('.hem-room-name87').click()
+    assert row.evaluate("el=>el.open")
+    row.locator('.hem-room-name87').click()
 
 
 def run():

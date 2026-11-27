@@ -2472,7 +2472,7 @@
       "same_property_options_alias": null,
       "catalog_path": "strings.json/entity/button/area_recalculate_mold",
       "literal_references": [
-        "custom_components/environment_manager/button.py:167"
+        "custom_components/environment_manager/button.py:176"
       ],
       "consumer_status": "capability_and_registry_dependent_native_control"
     },
@@ -6556,8 +6556,8 @@
       "catalog_path": "strings.json/config/step/climate_actuators/data/kp",
       "literal_references": [
         "custom_components/environment_manager/area_entities.py:88",
-        "custom_components/environment_manager/button.py:299",
-        "custom_components/environment_manager/button.py:320",
+        "custom_components/environment_manager/button.py:308",
+        "custom_components/environment_manager/button.py:329",
         "custom_components/environment_manager/climate_direct.py:669",
         "custom_components/environment_manager/climate_pid.py:401",
         "custom_components/environment_manager/config_flow.py:1548"
@@ -6574,8 +6574,8 @@
       "catalog_path": "strings.json/config/step/climate_actuators/data/ki",
       "literal_references": [
         "custom_components/environment_manager/area_entities.py:88",
-        "custom_components/environment_manager/button.py:299",
-        "custom_components/environment_manager/button.py:320",
+        "custom_components/environment_manager/button.py:308",
+        "custom_components/environment_manager/button.py:329",
         "custom_components/environment_manager/climate_direct.py:669",
         "custom_components/environment_manager/climate_pid.py:401",
         "custom_components/environment_manager/config_flow.py:1548"
@@ -6592,8 +6592,8 @@
       "catalog_path": "strings.json/config/step/climate_actuators/data/kd",
       "literal_references": [
         "custom_components/environment_manager/area_entities.py:88",
-        "custom_components/environment_manager/button.py:299",
-        "custom_components/environment_manager/button.py:320",
+        "custom_components/environment_manager/button.py:308",
+        "custom_components/environment_manager/button.py:329",
         "custom_components/environment_manager/climate_direct.py:670",
         "custom_components/environment_manager/climate_pid.py:401",
         "custom_components/environment_manager/config_flow.py:1548"
@@ -6610,7 +6610,7 @@
       "catalog_path": "strings.json/config/step/climate_actuators/data/sample_seconds",
       "literal_references": [
         "custom_components/environment_manager/area_entities.py:89",
-        "custom_components/environment_manager/button.py:312",
+        "custom_components/environment_manager/button.py:321",
         "custom_components/environment_manager/climate_direct.py:664",
         "custom_components/environment_manager/climate_pid.py:215",
         "custom_components/environment_manager/climate_pid.py:326",
@@ -10786,8 +10786,8 @@
       "catalog_path": "strings.json/options/step/climate_actuators/data/kp",
       "literal_references": [
         "custom_components/environment_manager/area_entities.py:88",
-        "custom_components/environment_manager/button.py:299",
-        "custom_components/environment_manager/button.py:320",
+        "custom_components/environment_manager/button.py:308",
+        "custom_components/environment_manager/button.py:329",
         "custom_components/environment_manager/climate_direct.py:669",
         "custom_components/environment_manager/climate_pid.py:401",
         "custom_components/environment_manager/config_flow.py:1548"
@@ -10804,8 +10804,8 @@
       "catalog_path": "strings.json/options/step/climate_actuators/data/ki",
       "literal_references": [
         "custom_components/environment_manager/area_entities.py:88",
-        "custom_components/environment_manager/button.py:299",
-        "custom_components/environment_manager/button.py:320",
+        "custom_components/environment_manager/button.py:308",
+        "custom_components/environment_manager/button.py:329",
         "custom_components/environment_manager/climate_direct.py:669",
         "custom_components/environment_manager/climate_pid.py:401",
         "custom_components/environment_manager/config_flow.py:1548"
@@ -10822,8 +10822,8 @@
       "catalog_path": "strings.json/options/step/climate_actuators/data/kd",
       "literal_references": [
         "custom_components/environment_manager/area_entities.py:88",
-        "custom_components/environment_manager/button.py:299",
-        "custom_components/environment_manager/button.py:320",
+        "custom_components/environment_manager/button.py:308",
+        "custom_components/environment_manager/button.py:329",
         "custom_components/environment_manager/climate_direct.py:670",
         "custom_components/environment_manager/climate_pid.py:401",
         "custom_components/environment_manager/config_flow.py:1548"
@@ -10840,7 +10840,7 @@
       "catalog_path": "strings.json/options/step/climate_actuators/data/sample_seconds",
       "literal_references": [
         "custom_components/environment_manager/area_entities.py:89",
-        "custom_components/environment_manager/button.py:312",
+        "custom_components/environment_manager/button.py:321",
         "custom_components/environment_manager/climate_direct.py:664",
         "custom_components/environment_manager/climate_pid.py:215",
         "custom_components/environment_manager/climate_pid.py:326",

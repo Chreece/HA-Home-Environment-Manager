@@ -56,7 +56,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
     buttons = [
         ArrivalPreparationButton(manager, "prepare"),
         ArrivalPreparationButton(manager, "cancel"),
-        *(RoomPreparationButton(manager, area) for area in configured_area_ids(settings)),
+        *(RoomPreparationButton(manager, area, cancel=cancel)
+          for area in configured_area_ids(settings) for cancel in (False, True)),
         *(EquipmentResumeButton(manager, spec) for spec in controllers),
         *native_calibration_buttons(),
     ]
@@ -127,24 +128,27 @@ class ArrivalPreparationButton(SettingsMetadata, ButtonEntity):
 
 
 class RoomPreparationButton(ArrivalPreparationButton):
-    """Start Comfort in one room through Home Assistant's native control permissions."""
+    """Start or cancel Comfort in one room through Home Assistant's native control permissions."""
 
-    def __init__(self, manager, area):
+    def __init__(self, manager, area, *, cancel=False):
         self._manager, self._area = manager, area
+        self._cancel = cancel
+        suffix = "cancel_prepare_room" if cancel else "prepare_room"
         entry_id = manager.entry.entry_id
-        self._attr_unique_id = f"{entry_id}_area_{area}_prepare_room"
+        self._attr_unique_id = f"{entry_id}_area_{area}_{suffix}"
         self._attr_device_info = {"identifiers": {(DOMAIN, f"{entry_id}_area_{area}")}}
-        self._attr_icon = "mdi:timer-outline"
+        self._attr_icon = "mdi:timer-cancel-outline" if cancel else "mdi:timer-outline"
 
     @property
     def name(self):
         from .room_preparation import words
-        return words(self._manager)[0]
+        return words(self._manager, cancel=self._cancel)[0]
 
     @property
     def available(self):
         prep = self._manager.arrival_preparation
-        return prep._started and prep.rooms.enabled(self._area)
+        return (prep._started and prep.rooms.enabled(self._area)
+                and (not self._cancel or self._area in prep.rooms.requests))
 
     @property
     def extra_state_attributes(self):
@@ -152,11 +156,16 @@ class RoomPreparationButton(ArrivalPreparationButton):
         prep = self._manager.arrival_preparation
         request = prep.rooms.requests.get(self._area)
         return {"room_preparation_area": self._area, "entry_id": prep.entry_id,
+                "room_preparation_action": "cancel" if self._cancel else "prepare",
                 "expires_at": request[0] if request else None,
                 "configuration_help": words(self._manager)[1]}
 
     async def async_press(self):
-        self._manager.arrival_preparation.rooms.start(self._area)
+        rooms = self._manager.arrival_preparation.rooms
+        if self._cancel:
+            rooms.cancel(self._area)
+        else:
+            rooms.start(self._area)
 
 
 class AreaMoldCalibrationButton(SettingsMetadata, ButtonEntity):
