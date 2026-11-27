@@ -177,7 +177,7 @@ GLOBAL_POLICY_OPTIONS = {"home_policy": ("any_home", "all_home"),
 GLOBAL_THRESHOLD_MODE_OPTIONS = {"max_age_mode": ("auto", "custom")}
 CLIMATE_OPERATING_FLAGS = ("sleep_active", "sleep_schedule_enabled", "closed_door_eco",
                            "window_efficiency_notify")
-AREA_ENV_FLAGS = ("sleep_room", "enable_pmv")
+AREA_ENV_FLAGS = ("sleep_room", "enable_pmv", "room_preparation_enabled")
 GLOBAL_ENV_FLAGS = ("pollen_avoid_ventilation",)
 
 
@@ -532,7 +532,10 @@ async def update_device_setting(manager: Any, kind: str, key: str,
             if area is None:
                 room = data
             else:
-                if kind == "area_environment" and area not in current.get(CONF_AREAS, []):
+                from .device_hierarchy import configured_area_ids
+                allowed_areas = (configured_area_ids(current) if key == "room_preparation_enabled"
+                                 else current.get(CONF_AREAS, []))
+                if kind == "area_environment" and area not in allowed_areas:
                     raise HomeAssistantError("Select the room for environmental monitoring first")
                 if kind == "climate_operating" and climate_settings(current, area) is None:
                     raise HomeAssistantError("Select native room equipment or configure its climate manager first")

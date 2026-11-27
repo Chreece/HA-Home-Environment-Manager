@@ -674,10 +674,13 @@ def live_device_permission(hass: Any, area: str, room_config: Mapping,
         preparing, problem = live_preparation(
             hass, plan, home,
             eligible=device.get("_arrival_preparation_eligible", room_eligible(room_config)),
-            entry_id=device.get("_arrival_preparation_entry_id"),
+            entry_id=device.get("_arrival_preparation_entry_id"), area=area,
         )
         if problem:
             return "held", problem
+        if (plan.get("room_preparation_deadline") and room == "unoccupied"
+                and device.get("_arrival_preparation_presence_override", True)):
+            room, home = "occupied", "home"
         return device_permission(device, room, home, sleeping,
                                  household_sleeping=(sleeping is True and
                                      sleep_evidence == "all_occupied_rooms_sleeping"),

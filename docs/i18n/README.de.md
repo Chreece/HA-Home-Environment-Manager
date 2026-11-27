@@ -121,6 +121,8 @@ Dabei verwendet HEM vorübergehend die eingestellten **Home-Sollwerte** für daf
 
 Die Vorbereitung ist kein Befehl, alle Geräte einzuschalten. Es müssen tatsächlich Regelbedarf, gültige Sensordaten und die nötigen Freigaben vorliegen. Fensterbedingungen, Mindest-Ein- und -Ausschaltzeiten und Schutzfunktionen bleiben gültig. Die Aktion endet bei Ihrer Ankunft, nach Abbruch oder wenn die Zeit abgelaufen ist. Ein Neustart von Home Assistant beginnt die Laufzeit nicht erneut in voller Länge.
 
+**Einen Raum vorbereiten.** Tippe in der Übersicht auf den Namen eines leeren Raums, um seine Komfortziele zu verwenden. Das ⓘ erklärt die Funktion und zeigt während der Vorbereitung die Endzeit an. Jeder Raum hat einen eigenen Timer mit der in den Hauseinstellungen gewählten Höchstdauer. Anwesenheit, unbekannte Belegung, Ablauf, ein Neuladen von HEM oder das Ausschalten von **Raum vorbereiten** in den Raumeinstellungen beendet die Vorbereitung. Die Einstellung ist standardmäßig eingeschaltet.
+
 <a id="ventilation-advice-windows-doors-and-shading"></a>
 ### Lüftungsempfehlungen, Fenster, Türen und Beschattung
 

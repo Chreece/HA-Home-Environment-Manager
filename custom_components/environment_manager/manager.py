@@ -381,6 +381,9 @@ class AirQualityManager:
                 shared_presence, known_areas=known_presence_areas, home_status=home_status,
             ) for r in raw_rooms
         }
+        from .device_hierarchy import configured_area_ids
+        self.arrival_preparation.rooms.observe(
+            shared_presence, known_presence_areas | set(configured_area_ids(config)), observed_rooms)
         environment, changed = build_environment(
             self.hass, raw_rooms, selected_rooms, current_weather, outdoor_readings,
             history=self._environment_history, max_age_minutes=max_age,
@@ -440,6 +443,8 @@ class AirQualityManager:
         environment["__arrival_preparation__"] = {
             **self.arrival_preparation.context(home_status),
             "armed": self.arrival_preparation.armed,
+            "room_deadlines": {area: request[0] for area, request in
+                               self.arrival_preparation.rooms.requests.items()},
             "timeout_minutes": self.arrival_preparation.timeout_minutes,
             "home_status": home_status,
         }
@@ -516,8 +521,14 @@ class AirQualityManager:
                     require_window_contact=False,
                     global_presence=shared_presence,
                     known_areas=set(room_climate_configs) | set(monitored_areas),
-                    arrival_preparation=self.arrival_preparation.context(
-                        home_status, eligible=room_eligible(settings)),
+                    arrival_preparation={
+                        **self.arrival_preparation.context(home_status, eligible=room_eligible(settings)),
+                        "room_preparation_deadline": self.arrival_preparation.rooms.deadline(
+                            monitored.area_id, observed_rooms[monitored.area_id][0]
+                            if monitored.area_id in observed_rooms else
+                            self.arrival_preparation.rooms.occupancy(monitored.area_id)
+                        ) if room_eligible(settings) else None,
+                    },
                 )
                 basis=settings.get("target_source","temperature")
                 state["target_source"]=basis

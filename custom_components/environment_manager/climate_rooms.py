@@ -235,6 +235,7 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
         and getattr(item, "available", False) is True
     ]
     co2_values = [value for value in co2_values if value is not None]
+    preparing_room = bool(arrival_preparation and arrival_preparation.get("room_preparation_deadline"))
     door = observe_room_door(
         hass, area, settings, occupancy=profile_occupied,
         occupancy_evidence=occ_reason,
@@ -246,10 +247,10 @@ def gather(hass:Any,room:Any,settings:dict,*,prior_mode:str|None=None,
         window_safe=window_safe,
         now=datetime.fromtimestamp(now, timezone.utc) if now is not None else None,
         preparing_arrival=bool(arrival_preparation and
-                               arrival_preparation.get("arrival_preparing")),
+                               arrival_preparation.get("arrival_preparing")) or preparing_room,
     )
-    result=policy(settings,temp_c=temp,capability=cap,at_home=at_home,
-                  occupied=profile_occupied,sleeping=sleeping,
+    result=policy(settings,temp_c=temp,capability=cap,at_home="home" if preparing_room else at_home,
+                  occupied="occupied" if preparing_room else profile_occupied,sleeping=sleeping,
                   door_eco_active=door["eco_active"],
                   manual_profile=settings.get("manual_profile"),prior_mode=prior_mode,
                   window_safe=window_safe,comfort_target_c=comfort_target_c,

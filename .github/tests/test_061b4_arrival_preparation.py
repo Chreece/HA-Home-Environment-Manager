@@ -593,6 +593,33 @@ class PolicyTests(ArrivalCase):
             context.plan() if plan is None else plan, device,
         )
 
+    async def test_room_comfort_is_scoped_bounded_and_revocable(self):
+        context = await self.context(timeout=3)
+        device = self.effective_device(context)
+        rooms = context.helper.rooms
+        rooms.observe({}, {AREA, "kitchen"}, {})
+        rooms.start(AREA)
+        plan = context.plan()
+        self.assertEqual(context.profile(), "comfort")
+        self.assertEqual(plan["occupancy"], "unoccupied")
+        self.assertEqual(self.permission(context, device)[0], "eligible")
+        self.assertIsNone(rooms.deadline("kitchen", "unoccupied"))
+        context.now += 40
+        rooms.start(AREA)
+        self.assertEqual(context.plan()["room_preparation_deadline"], plan["room_preparation_deadline"])
+        context.now += 141
+        self.assertEqual(context.profile(), "away")
+        self.assertEqual(self.permission(context, device, plan)[0], "held")
+        rooms.start(AREA)
+        rooms.observe({}, {AREA}, {AREA: ("occupied",)})
+        self.assertFalse(rooms.requests)
+        rooms.start(AREA)
+        rooms.observe({}, {AREA}, {AREA: ("unknown",)})
+        self.assertFalse(rooms.requests)
+        context.manager.settings["environment_rooms"] = {AREA: {"room_preparation_enabled": False}}
+        with self.assertRaises(HomeAssistantError):
+            rooms.start(AREA)
+
     async def test_preparation_allows_empty_room_without_fabricating_room_presence(self):
         context = await self.context()
         device = self.effective_device(context)

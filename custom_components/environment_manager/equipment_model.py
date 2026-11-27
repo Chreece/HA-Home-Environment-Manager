@@ -1097,9 +1097,13 @@ def plan_for(manager: Any, spec: ManagedDevice) -> dict:
     if preparation is not None:
         from .arrival_preparation import automatic_eligible
         facts.update(preparation.context(home, eligible=automatic_eligible(cfg)))
+        rooms_control = getattr(preparation, "rooms", None)
+        facts["room_preparation_deadline"] = (
+            rooms_control.deadline(spec.area_id, occupancy)
+            if rooms_control and automatic_eligible(cfg) else None)
     else:
         # Never inherit an active marker from a previous manager instance.
-        facts.update(arrival_preparing=False, arrival_preparation_expires_at=None)
+        facts.update(arrival_preparing=False, arrival_preparation_expires_at=None, room_preparation_deadline=None)
     # Every native dispatch rechecks the SAME door/vacancy/temperature/RH
     # gates. A stale cached plan must not keep Eco active after the door opens.
     # Do not operate a physical device or infer isolation from an unselected
@@ -1142,7 +1146,7 @@ def plan_for(manager: Any, spec: ManagedDevice) -> dict:
             home=home, sleeping=sleeping,
             temperature_c=temperature, humidity_rh=humidity,
             window_safe=window_safe,
-            preparing_arrival=bool(facts.get("arrival_preparing")),
+            preparing_arrival=bool(facts.get("arrival_preparing") or facts.get("room_preparation_deadline")),
         )
         facts.update(door=door, door_eco_active=door["eco_active"])
     else:
@@ -1189,6 +1193,8 @@ def profile_name(config: dict, plan: dict) -> str:
         return requested
     if config.get("control_mode") == "manual":
         return "manual"  # Manual None keeps its independent explicit targets.
+    if config.get("control_mode") in ("automatic", "pid") and plan.get("room_preparation_deadline"):
+        return "sleep" if plan.get("sleeping") is True else "comfort"
     if (config.get("control_mode") in ("automatic", "pid")
             and plan.get("arrival_preparing") is True and plan.get("away") == "away"):
         return "home"

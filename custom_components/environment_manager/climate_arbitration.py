@@ -303,7 +303,7 @@ def new_command_gate(hass: Any, area: str, config: dict,
     from .arrival_preparation import live_preparation, room_eligible
     _preparing, preparation_problem = live_preparation(
         hass, plan, plan.get("away", "unknown"),
-        eligible=room_eligible(config), entry_id=entry_id,
+        eligible=room_eligible(config), entry_id=entry_id, area=area,
     )
     if preparation_problem:
         return preparation_problem
@@ -316,8 +316,8 @@ def new_command_gate(hass: Any, area: str, config: dict,
     if isinstance(profiles,dict) and isinstance(profiles.get(entity),dict):
         from .occupancy_policy import device_permission, live_device_permission
         action,reason=device_permission(
-            profiles[entity],plan.get("occupancy","unknown"),
-            plan.get("away","home"),plan.get("sleeping"),
+            profiles[entity],"occupied" if plan.get("room_preparation_deadline") else plan.get("occupancy","unknown"),
+            "home" if plan.get("room_preparation_deadline") else plan.get("away","home"),plan.get("sleeping"),
         )
         if action=="eligible":
             action,reason=live_device_permission(
