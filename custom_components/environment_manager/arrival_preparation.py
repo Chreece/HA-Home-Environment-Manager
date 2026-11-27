@@ -382,7 +382,8 @@ def live_preparation(hass: Any, plan: dict, home_status: str, *,
     if entry_id is not None and planned_entry is not None and planned_entry != entry_id:
         return False, "arrival_preparation_changed"
     if not isinstance(planned_entry, str):
-        return False, "arrival_preparation_changed" if plan.get("arrival_preparing") else None
+        return False, ("arrival_preparation_changed" if plan.get("arrival_preparing")
+                       or plan.get("room_preparation_deadline") else None)
     registry = getattr(hass, "data", {}).get(DATA_KEY, {})
     controller = registry.get(planned_entry)
     if "room_preparation_deadline" in plan and area is not None:

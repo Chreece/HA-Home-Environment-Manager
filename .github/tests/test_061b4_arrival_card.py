@@ -261,6 +261,36 @@ def actions(page, expect):
     assert page.evaluate("calls.length") == 5
 
 
+def room_action(page, expect):
+    page.evaluate("""() => {
+      const states=structuredClone(card._hass.states);
+      const dashboard=states['sensor.hem'].attributes.dashboard;
+      dashboard.room_preparation_entities={room0:'button.prepare_test_room'};
+      dashboard.rooms[0].environment.room_presence={home:'home',occupancy:'unoccupied'};
+      states['button.prepare_test_room']={state:'unknown',attributes:{
+        friendly_name:'Prepare room',entry_id:'home_a',room_preparation_area:'room0',
+        configuration_help:'Tap the empty room name for up to 60 min.'}};
+      card.hass={...card._hass,states};
+    }""")
+    button=page.locator('button[data-prepare-room="room0"]')
+    expect(button).to_be_visible()
+    button.focus()
+    button.press("Enter")
+    assert page.evaluate("calls.at(-1)") == ["button", "press", {"entity_id":"button.prepare_test_room"}]
+    row=page.locator('[data-room-fold87="room0"]')
+    assert not row.evaluate("node=>node.open")
+    row.locator('[data-detail-id="prepare-room-room0"] > summary').click()
+    expect(page.locator('.hem-floating-info87')).to_contain_text("60 min")
+    page.evaluate("""() => {
+      const state=structuredClone(card._hass.states['button.prepare_test_room']);
+      state.attributes.expires_at=Date.now()/1000+300;
+      setNative124('button.prepare_test_room',state);
+    }""")
+    expect(button).to_be_disabled()
+    page.evaluate("""() => setNative124('button.prepare_test_room',undefined)""")
+    expect(button).to_have_count(0)
+
+
 def run():
     from playwright.sync_api import expect, sync_playwright
     executable = os.environ.get("CHROME_BIN") or shutil.which("chromium") or shutil.which("google-chrome")
@@ -322,6 +352,8 @@ def run():
                 settle(page)
                 if language == "en":
                     current = "arrival-actions"
+                    room_action(page, expect)
+                    page.evaluate("calls.length=0")
                     actions(page, expect)
                 assert not errors, errors
                 print(f"PASS: {language} adjacent outdoor value and bounded arrival controls in five layouts")

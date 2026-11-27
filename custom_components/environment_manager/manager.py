@@ -443,6 +443,8 @@ class AirQualityManager:
         environment["__arrival_preparation__"] = {
             **self.arrival_preparation.context(home_status),
             "armed": self.arrival_preparation.armed,
+            "room_deadlines": {area: request[0] for area, request in
+                               self.arrival_preparation.rooms.requests.items()},
             "timeout_minutes": self.arrival_preparation.timeout_minutes,
             "home_status": home_status,
         }
@@ -522,7 +524,9 @@ class AirQualityManager:
                     arrival_preparation={
                         **self.arrival_preparation.context(home_status, eligible=room_eligible(settings)),
                         "room_preparation_deadline": self.arrival_preparation.rooms.deadline(
-                            monitored.area_id, observed_rooms.get(monitored.area_id, ("unknown",))[0]
+                            monitored.area_id, observed_rooms[monitored.area_id][0]
+                            if monitored.area_id in observed_rooms else
+                            self.arrival_preparation.rooms.occupancy(monitored.area_id)
                         ) if room_eligible(settings) else None,
                     },
                 )

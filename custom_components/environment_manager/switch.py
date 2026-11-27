@@ -176,7 +176,7 @@ class HomeSettingSwitch(SettingsMetadata, SwitchEntity):
         if self._key == "room_preparation_enabled":
             from .room_preparation import words
             name, help_text = words(self._manager)
-            return {"setting_display_name": name, "configuration_help": help_text,
+            return {**super().extra_state_attributes, "setting_display_name": name, "configuration_help": help_text,
                     "setting_key": self._attr_translation_key}
         if self._key != "enable_pmv" or not self._area:
             return super().extra_state_attributes

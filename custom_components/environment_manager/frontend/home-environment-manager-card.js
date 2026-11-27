@@ -10208,7 +10208,11 @@
     return arrivalSignatureBefore124.call(this)+JSON.stringify([
       source.owner,source.entry,source.owned,source.active,source.expires,source.homeStatus,
       source.canStart,source.timeout,source.remaining===null?null:Math.ceil(source.remaining/60),
-      source.pending,source.error,controls]);
+      source.pending,source.error,controls,
+      Object.entries(this._dashboard105()?.room_preparation_entities||{}).map(([area,id])=>{
+        const state=this._hass?.states?.[id];
+        return [area,id,state?.state,state?.attributes?.expires_at,state?.attributes?.configuration_help];
+      })]);
   };
   const arrivalRenderBefore124=arrivalProto124._renderContent;
   arrivalProto124._renderContent=function(force=false){
