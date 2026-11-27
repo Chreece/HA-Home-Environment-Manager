@@ -651,8 +651,22 @@ def browser_checks(data):
         for detail in ("22 °C", "75%", "On", "Radiator <north>", "Heat pump"):
             assert detail in main.get_attribute("aria-valuetext"), detail
         pid = popup.locator('[data-trend-pick="0-demand_percent"]')
+        expected_color = pid.locator("b").evaluate("n=>getComputedStyle(n).color")
         pid.click()
+        expect(pid).to_have_attribute("aria-pressed", "false")
+        expect(demand).to_be_hidden()
+        expect(main.locator('[data-trend-dot="0-demand_percent"]')).to_have_attribute("visibility", "hidden")
+        assert "75%" not in main.get_attribute("aria-valuetext")
+        assert pid.evaluate("""el=>[el.querySelector('span'),el.querySelector('b')].every(node=>{
+          const [r,g,b]=getComputedStyle(node).color.match(/[0-9]+/g).map(Number);
+          return r===g&&g===b;
+        })""")
+        expect(target).to_be_visible()
+        pid.press("Space")
+        expect(pid).to_be_focused()
         expect(pid).to_have_attribute("aria-pressed", "true")
+        expect(demand).to_be_visible()
+        assert pid.locator("b").evaluate("n=>getComputedStyle(n).color") == expected_color
         expect(demand).to_have_attribute("data-focused", "")
         expect(main.locator(".hem-trend-tag text")).to_have_text("75%")
         expect(main.locator('[data-trend-dot="0-demand_percent"]')).to_have_attribute("visibility", "visible")
@@ -661,8 +675,59 @@ def browser_checks(data):
         expect(main.locator(".hem-trend-tag")).to_have_attribute("visibility", "hidden")
         expect(main.locator('[data-trend-dot="0-demand_percent"]')).to_have_attribute("visibility", "hidden")
         main.press("End")
-        popup.locator('[data-trend-pick="0-target"]').click()
+        goal = popup.locator('[data-trend-pick="0-target"]')
+        goal.click()
+        expect(target).to_be_hidden()
+        goal.click()
         expect(main.locator(".hem-trend-tag text")).to_have_text("24 °C")
+        # Each legend button controls its entire series, including fills, isolated
+        # samples and both dependencies of a target band, without fetching history.
+        requests_before = page.evaluate("controlRequests.length")
+        measure = popup.locator('[data-trend-pick="measured"]')
+        low = popup.locator('[data-trend-pick="1-target_low"]')
+        high = popup.locator('[data-trend-pick="1-target_high"]')
+        low.click()
+        expect(main.locator(".hem-control-band075").first).to_be_hidden()
+        expect(main.locator('[data-trend-layer="1-target_high"]')).to_have_css("display", "inline")
+        high.click()
+        low.click()
+        expect(main.locator(".hem-control-band075").first).to_be_hidden()
+        high.click()
+        expect(main.locator(".hem-control-band075").first).to_be_visible()
+        measure.click()
+        expect(main.locator(".hem-avg-line105")).to_be_hidden()
+        expect(main.locator(".hem-trend-sample114").first).to_be_hidden()
+        expect(main.locator('path[fill^="url(#hem-trend-fill"]')).to_be_hidden()
+        expect(main.locator(".hem-trend-cursor114 circle")).to_be_hidden()
+        expect(target).to_be_visible()
+        goal.click()
+        popup.locator('[data-trend-range114="21600"]').click()
+        page.evaluate("card._refreshAverage105(true)")
+        expect(measure).to_have_attribute("aria-pressed", "false")
+        expect(goal).to_have_attribute("aria-pressed", "false")
+        expect(target).to_be_hidden()
+        popup.locator('[data-trend-range114="86400"]').click()
+        # The controller identity owns the choice even if a refresh reorders devices.
+        for index in (1, 0):
+            page.evaluate("card._averageDialog105.controlData075.controllers.reverse();card._refreshAverage105(true)")
+            expect(popup.locator(f'[data-trend-pick="{index}-target"]')).to_have_attribute("aria-pressed", "false")
+            expect(target).to_be_hidden()
+        # All series can be hidden and recovered one at a time.
+        buttons = popup.locator('[data-trend-pick]')
+        for button in buttons.all():
+            if button.get_attribute("aria-pressed") == "true":
+                button.click()
+        expect(main.locator('[data-trend-line]:visible')).to_have_count(0)
+        expect(main.locator(".hem-control-sample075:visible")).to_have_count(0)
+        expect(main.locator(".hem-trend-cursor114")).to_be_hidden()
+        expect(main.locator(".hem-trend-tag")).to_have_attribute("visibility", "hidden")
+        goal.press("Enter")
+        expect(target).to_be_visible()
+        expect(main.locator('[data-trend-line]:visible')).to_have_count(1)
+        for button in buttons.all():
+            if button.get_attribute("aria-pressed") == "false":
+                button.click()
+        assert page.evaluate("controlRequests.length") == requests_before
         for language in ("en", "el", "de"):
             page.evaluate("language=>{card._hass.language=language;card._refreshAverage105(true)}", language)
             assert "undefined" not in popup.inner_text()
@@ -762,8 +827,17 @@ def browser_checks(data):
         expect(popup.locator('[data-control-output075="0"]')).to_have_text("—")
         page.evaluate("card._inspectTrend114(data.start-3*3600)")
         expect(popup.locator('[data-control-target075="0"]')).to_have_text("—")
+        # A single sampled output has an isolated marker that follows its button.
+        isolated = main.locator('[data-trend-layer="0-output_percent"] .hem-control-sample075').first
+        expect(isolated).to_be_visible()
+        popup.locator('[data-trend-pick="0-output_percent"]').click()
+        expect(isolated).to_be_hidden()
         popup.locator("[data-close-avg105]").click()
         expect(popup).to_have_count(0)
+        temperature.click()
+        page.evaluate("controlRequests.at(-1).resolve(data.response)")
+        expect(popup.locator('[data-trend-pick="0-output_percent"]')).to_have_attribute("aria-pressed", "true")
+        popup.locator("[data-close-avg105]").click()
         assert page.evaluate("deviceCalls") == []
         assert not errors, errors
         browser.close()

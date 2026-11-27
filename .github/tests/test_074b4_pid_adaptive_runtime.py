@@ -73,6 +73,15 @@ class Runtime(fixture["LifecycleRuntime"]):
 
     measurements = production.measurements
 
+    def infer_direction(self, **settings):
+        """An existing flat PID configuration delegates direction to HEM."""
+        raw = self.raw()
+        for key in ("requested_mode", "mode_settings_version", "mode_settings"):
+            raw.pop(key, None)
+        raw.update(settings)
+        self.manager.entry.options[model.SETTINGS][SPEC.identifier] = raw
+        return raw
+
     def sample(self, **kwargs):
         return self._pid_adaptive_live_sample(SPEC, **kwargs)
 
@@ -183,6 +192,21 @@ class IntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(partial["measured"], 18.)
         self.assertEqual(partial["feedback"]["contributor_ids"], ["sensor.first"])
         self.assertNotEqual(partial["context"], fresh["context"])
+
+    def test_humidifier_native_auto_binds_humidifying_activity_to_its_logical_mode(self):
+        runtime = Runtime()
+        runtime.infer_direction()
+        runtime.state.state = "on"
+        runtime.state.domain = "humidifier"
+        runtime.state.attributes["action"] = "humidifying"
+        cap = N(**{**asdict(runtime.cap), "domain": "humidifier", "modes": ("off", "auto"),
+                   "humidifying": True})
+        sample = runtime.sample(cap=cap)
+        self.assertEqual((sample["native_mode"], sample["operating_mode"]), ("auto", "humidify"))
+        self.assertEqual(sample["physical_activity"], "on")
+        self.assertEqual(sample["observed_output"], 100.)
+        runtime.state.attributes["action"] = "drying"
+        self.assertFalse(runtime.sample(cap=cap)["output_verified"])
 
     async def test_reached_target_is_observed_without_waiting_for_a_long_on_cycle(self):
         runtime = Runtime()
@@ -450,6 +474,40 @@ class IntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(runtime.sample()["observed_output"], "A foreign below-goal target is not zero effort")
         runtime.native_report(target=25.)
         self.assertFalse(runtime.sample()["output_verified"])
+
+    async def test_flat_inferred_direction_binds_auto_and_review_writes(self):
+        for method in ("adaptive_auto", "adaptive_suggest"):
+            with self.subTest(method=method):
+                runtime = Runtime(method=method)
+                raw = runtime.infer_direction()
+                observer = runtime.evidence()
+                status = observer.snapshot()
+                if method == "adaptive_auto":
+                    proof = runtime.proof()
+                    self.assertEqual(proof["operating_mode"], "heat")
+                    # The same device can now need cooling. The old heat proof
+                    # must fail even though the configuration has not changed.
+                    for entity in ("sensor.first", "sensor.second"):
+                        runtime.extra_states[entity].state = "32"
+                    self.assertFalse(await runtime._pid_adaptive_apply(SPEC, proof))
+                    self.assertEqual(runtime.config_commits, [])
+                    for entity in ("sensor.first", "sensor.second"):
+                        runtime.extra_states[entity].state = "19"
+                    self.assertTrue(await runtime._pid_adaptive_apply(SPEC, proof))
+                else:
+                    proposal = store.proposal_for(runtime.cfg, status, observer.context, runtime.now)
+                    runtime.record["pid_passive_review"] = proposal
+                    await runtime._pid_review_maintenance(SPEC)
+                    self.assertTrue(runtime._pid_adaptive_review_authorized(SPEC, proposal["id"]))
+                    self.assertTrue(await runtime.async_review_pid(
+                        SPEC, "approve", token=proposal["id"], operating_mode="heat"))
+                self.assertEqual(runtime.cfg["pid_last_calibration"]["operating_mode"], "heat")
+                self.assertEqual(set(runtime.raw()["mode_settings"]), {"heat"})
+                self.assertEqual(runtime.raw()["kp"], raw["kp"])
+                self.assertEqual(model.settings_for_mode(runtime.manager, SPEC, "cool")["kp"], raw["kp"])
+                self.assertIsNone(runtime.raw().get("requested_mode"))
+                self.assertEqual(len(runtime.config_commits), 1)
+                self.assertEqual(runtime.hardware_calls, [])
 
     async def test_continuous_actual_writer_preserves_memory_phase_and_dwell(self):
         runtime = Runtime()

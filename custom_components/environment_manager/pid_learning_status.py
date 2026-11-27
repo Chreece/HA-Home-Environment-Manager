@@ -33,6 +33,9 @@ def adaptive_snapshot(*, cfg: dict, payload: dict | None) -> dict:
     when the current observation cannot be verified.
     """
     mode = cfg.get("operating_mode") or cfg.get("requested_mode")
+    if isinstance(payload, dict) and (mode is None or
+            mode == "auto" and payload.get("operating_mode") == "humidify"):
+        mode = payload.get("operating_mode")
     result = {
         "schema_version": 1, "engine": "performance", "operating_mode": mode,
         "status": "waiting", "reason": "awaiting_observation",

@@ -749,10 +749,18 @@ def browser_checks(data):
         ])
         limit = popup.locator('[data-trend-pick="limit"]')
         limit.click()
+        assert limit.get_attribute("aria-pressed") == "false"
+        assert popup.locator(".hem-sensor-limit").evaluate("e=>getComputedStyle(e).display") == "none"
+        assert popup.locator(".hem-trend-sample114").is_visible()
+        limit.press("Enter")
+        assert popup.locator(".hem-sensor-limit").evaluate("e=>getComputedStyle(e).display") != "none"
         assert limit.get_attribute("aria-pressed") == "true"
         assert popup.locator(".hem-trend-tag text").text_content() == "86 °F"
         assert limit.locator("b").inner_text() == "86 °F"
-        popup.locator('[data-trend-pick="measured"]').click()
+        measured = popup.locator('[data-trend-pick="measured"]')
+        measured.click()
+        assert not popup.locator(".hem-trend-sample114").is_visible()
+        measured.click()
         assert popup.locator(".hem-trend-tag text").text_content() == page.evaluate("card._format(70.123,3)")+ " °F"
         assert popup.evaluate("""p=>getComputedStyle(p.querySelector('.hem-sensor-limit')).stroke
           !==getComputedStyle(p.querySelector('.hem-avg-line105')).stroke""")

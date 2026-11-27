@@ -7,6 +7,7 @@ No learned response/model is seeded in the continuity tests.
 """
 from __future__ import annotations
 
+import asyncio
 from copy import deepcopy
 from contextlib import contextmanager
 import importlib
@@ -145,6 +146,86 @@ class AdaptiveEventTests(unittest.IsolatedAsyncioTestCase):
 
     def tearDown(self):
         self.input_transport.tearDown()
+
+    async def test_inferred_heat_progress_reaches_the_card_across_repeated_controller_ticks(self):
+        runtime = EventRuntime()
+        runtime.infer_direction()
+        runtime.state.attributes["hvac_modes"] = ["heat", "off"]
+        runtime.hass.async_add_executor_job = asyncio.to_thread
+        projection = importlib.import_module(fixture["PACKAGE"] + ".pid_learning_status")
+        for index in range(8):
+            runtime.now += 120
+            runtime.feedback(21.1)
+            runtime.native_report(mode="off", action="off")
+            await runtime.evaluate()
+            await runtime.evaluate()  # One room report counts only once.
+            payload = runtime._pid_adaptive_status(SPEC)
+            status = projection.adaptive_snapshot(cfg=runtime.cfg, payload=payload)
+            self.assertEqual(status["operating_mode"], "heat")
+            self.assertTrue(status["context_verified"])
+            self.assertEqual(status["samples"], index + 1)
+            self.assertEqual(status["observed_seconds"], index * 120)
+            self.assertEqual(status["target"], 21.)
+        self.assertEqual(status["reason"], "tracking_well")
+        self.assertEqual(runtime.config_commits, [])
+        self.assertEqual(runtime.calls, [])
+
+    async def test_inferred_thermostat_applies_a_validated_adjustment_from_room_reports(self):
+        runtime = EventRuntime()
+        runtime.infer_direction(kp=10., ki=.5, kd=0., sample_seconds=120, cycle_seconds=600,
+                                _native_timing_version=1, min_on_seconds=60, min_off_seconds=60,
+                                max_on_seconds=7200)
+        runtime.continuous()
+        runtime.state.attributes.update(hvac_modes=["heat"], target_temp_step=.1)
+        runtime.hass.async_add_executor_job = asyncio.to_thread
+        temperature, last_report = 18., runtime.now
+        # The simulated room responds only to the last acknowledged native
+        # setpoint. Tick, observer, model fit, replay and gain writer are real.
+        for _ in range(96):
+            runtime.now += 120
+            trim = (runtime.state.attributes["temperature"] - 21.) / 1.5
+            equilibrium = 18. + 8. * max(0., min(1., trim))
+            temperature = equilibrium + (temperature - equilibrium) * math.exp(
+                -(runtime.now - last_report) / 480.)
+            last_report = runtime.now
+            runtime.feedback(temperature)
+            runtime.state.last_reported = stamp(runtime.now)
+            await runtime.evaluate()
+            await runtime.acknowledge()
+            await runtime.drain()
+            if runtime.config_commits:
+                break
+        self.assertEqual(len(runtime.config_commits), 1)
+        receipt = runtime.cfg["pid_last_calibration"]
+        self.assertEqual((receipt["operating_mode"], receipt["method"]), ("heat", "performance_adaptive"))
+        self.assertGreater(receipt["predicted_improvement"], 0)
+        self.assertNotEqual(receipt["applied_gains"], receipt["previous_gains"])
+        self.assertEqual(runtime.observer.trial["state"], "evaluating")
+        self.assertIsNone(runtime.raw().get("requested_mode"))
+
+    async def test_thermostat_activity_edges_preserve_reports_and_revoke_queued_proof(self):
+        runtime = EventRuntime()
+        runtime.continuous()
+        # A thermostat holding its setpoint can cycle its valve on and off.
+        # Its room sensor reports independently of the activity changes.
+        runtime.feedback(20.)
+        runtime.native_report(mode="heat", action="heating", target=21.5)
+        await runtime._pid_adaptive_observe_sample(SPEC, runtime.cfg, runtime.sample())
+        observer = runtime.observer
+        initial_generation = runtime._pid_learning_generation.get(SPEC.identifier, 0)
+        for action, output in (("idle", 0.), ("heating", 1/3)):
+            runtime.now += 30
+            runtime.native_event(hvac_action=action)
+            self.assertEqual(len(observer.points), 1)
+            self.assertEqual(observer.events[-1][0], runtime.now)
+            self.assertAlmostEqual(observer.events[-1][1], output)
+        self.assertGreater(runtime._pid_learning_generation[SPEC.identifier], initial_generation)
+        runtime.now += 60
+        runtime.feedback(20.1)
+        await runtime._pid_adaptive_observe_sample(SPEC, runtime.cfg, runtime.sample())
+        self.assertEqual(len(runtime.observer.points), 2)
+        runtime.native_event(hvac_action="cooling")
+        self.assertEqual(len(runtime.observer.points), 0)
 
     async def test_repeated_native_trim_commands_keep_fresh_samples_and_output_edges(self):
         runtime = EventRuntime(method="adaptive_suggest")

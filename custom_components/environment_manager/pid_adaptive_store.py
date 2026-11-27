@@ -8,6 +8,7 @@ actuator acknowledgement, ownership and interruption generation under its lock.
 from __future__ import annotations
 
 from copy import deepcopy
+import json
 import math
 import re
 import secrets
@@ -38,8 +39,20 @@ def _signature(cfg: dict) -> dict:
     return tuning_signature(cfg)
 
 
-def _mode(cfg: dict) -> str | None:
-    return cfg.get("operating_mode") or cfg.get("requested_mode")
+def _mode(cfg: dict, context: str | None) -> str | None:
+    if cfg.get("operating_mode"):
+        return cfg["operating_mode"]
+    # The live observation binds an inferred direction to its native mode,
+    # physical device, sources and target. An explicit request must still match.
+    try:
+        observed = json.loads(context) if context else None
+    except (TypeError, ValueError):
+        observed = None
+    if isinstance(observed, dict) and observed.get("operating_mode"):
+        if cfg.get("requested_mode") not in (None, observed.get("mode")):
+            return None
+        return observed["operating_mode"]
+    return cfg.get("requested_mode")
 
 
 def _evidence_age(cfg: dict) -> float:
@@ -117,7 +130,7 @@ def make_proof(cfg: dict, snapshot: dict, context: str, now: float, *,
             or not 0 <= now - candidate["evidence_at"] <= _evidence_age(cfg)
             or candidate["current"] != _gains(cfg)
             or method not in ("adaptive_auto", "adaptive_suggest")
-            or not _mode(cfg)):
+            or not _mode(cfg, context)):
         return None
     if (not rollback and isinstance(verification, dict)
             and verification.get("state") in ("evaluating", "rollback_recommended")):
@@ -138,7 +151,8 @@ def make_proof(cfg: dict, snapshot: dict, context: str, now: float, *,
         "created_at": now,
         "current": candidate["current"],
         "apply": candidate["apply"],
-        "operating_mode": _mode(cfg),
+        "operating_mode": _mode(cfg, context),
+        "settings_scope": cfg.get("operating_mode"),  # Recheck flat/scoped settings under the write lock.
         "tuning_settings": _signature(cfg),
         "approved_id": approved_id,
         "rollback": rollback,
@@ -283,7 +297,7 @@ def review_projection(review: Any, cfg: dict, now: float, *,
         reason = "tuning_settings_changed"
     elif (cfg.get("pid_calibration_method") != "adaptive_suggest"
           or _gains(cfg) != _gains(result.get("current"))
-          or _mode(cfg) != result.get("operating_mode")):
+          or _mode(cfg, context or result.get("context")) != result.get("operating_mode")):
         reason = "recommendation_stale"
     elif context is not None and context != result.get("context"):
         reason = "recommendation_stale"

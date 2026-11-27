@@ -274,8 +274,9 @@ per room; floor-wide environmental overrides are not implied.
   reported activity or output setting share one graph and one time axis.
   Measurements and targets use the left scale in the reading's unit; demand
   and output use the right percentage or On/Off scale. The target uses a solid
-  step line. Each curve has a matching colored label and value. Select a label
-  to highlight that curve at the shared cursor. A fan percentage or valve position is a reported setting, not measured
+  step line. Tap a colored label or value to hide its curve. The label turns
+  grey and remains available. Tap it again to restore the curve and highlight
+  its value at the shared cursor. The selection lasts until the trend window closes. A fan percentage or valve position is a reported setting, not measured
   airflow or power.
 - A room-average chart keeps the configured HEM target when a sensor stops
   contributing or returns. Measurements, PID demand and reported output use

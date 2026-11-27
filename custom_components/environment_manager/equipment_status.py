@@ -139,6 +139,8 @@ class ControllerStatusSensor(EquipmentEntity, SensorEntity):
         adaptive_reader = getattr(runtime, "_pid_adaptive_status", None)
         adaptive_payload = (adaptive_reader(self._spec, cfg=cfg, cap=native_cap, plan=plan)
                             if callable(adaptive_reader) else None)
+        if isinstance(adaptive_payload, dict) and adaptive_payload.get("operating_mode"):
+            active_learning_mode = adaptive_payload["operating_mode"]
         review = record.get("pid_passive_review")
         performance_review = (isinstance(review, dict)
                               and review.get("algorithm") == "performance_v1")
