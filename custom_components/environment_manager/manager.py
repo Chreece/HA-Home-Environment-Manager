@@ -381,6 +381,9 @@ class AirQualityManager:
                 shared_presence, known_areas=known_presence_areas, home_status=home_status,
             ) for r in raw_rooms
         }
+        from .device_hierarchy import configured_area_ids
+        self.arrival_preparation.rooms.observe(
+            shared_presence, known_presence_areas | set(configured_area_ids(config)), observed_rooms)
         environment, changed = build_environment(
             self.hass, raw_rooms, selected_rooms, current_weather, outdoor_readings,
             history=self._environment_history, max_age_minutes=max_age,
@@ -516,8 +519,12 @@ class AirQualityManager:
                     require_window_contact=False,
                     global_presence=shared_presence,
                     known_areas=set(room_climate_configs) | set(monitored_areas),
-                    arrival_preparation=self.arrival_preparation.context(
-                        home_status, eligible=room_eligible(settings)),
+                    arrival_preparation={
+                        **self.arrival_preparation.context(home_status, eligible=room_eligible(settings)),
+                        "room_preparation_deadline": self.arrival_preparation.rooms.deadline(
+                            monitored.area_id, observed_rooms.get(monitored.area_id, ("unknown",))[0]
+                        ) if room_eligible(settings) else None,
+                    },
                 )
                 basis=settings.get("target_source","temperature")
                 state["target_source"]=basis

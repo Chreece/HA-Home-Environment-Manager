@@ -97,6 +97,13 @@ def websocket_dashboard(
     preparation = getattr(manager, "arrival_preparation", None)
     if preparation is not None:
         result["arrival_preparation"] = preparation.snapshot()
+        if hasattr(preparation, "rooms"):
+            from homeassistant.helpers import entity_registry as er
+            registry = er.async_get(hass)
+            result["room_preparation_entities"] = {
+                area: registry.async_get_entity_id("button", DOMAIN, f"{entry_id}_area_{area}_prepare_room")
+                for area in preparation.rooms.areas
+            }
     connection.send_result(msg["id"], result)
 
 

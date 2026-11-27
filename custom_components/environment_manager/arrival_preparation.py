@@ -73,6 +73,8 @@ class ArrivalPreparation:
         self._all_outside = False
         self._approach_request = None
         self._cancel_timer = None
+        from .room_preparation import RoomPreparation
+        self.rooms = RoomPreparation(self)
         self._tasks: set[asyncio.Task] = set()
 
     @property
@@ -343,6 +345,8 @@ class ArrivalPreparation:
         if self._started:
             self._generation += 1
         self._started = False
+        for area in tuple(self.rooms.requests):
+            self.rooms.clear(area)
         self._stopping = True
         if self._cancel_timer is not None:
             self._cancel_timer()
@@ -372,7 +376,7 @@ class ArrivalPreparation:
 
 def live_preparation(hass: Any, plan: dict, home_status: str, *,
                      eligible: bool = True,
-                     entry_id: str | None = None) -> tuple[bool, str | None]:
+                     entry_id: str | None = None, area: str | None = None) -> tuple[bool, str | None]:
     """Validate the entry, deadline and eligibility of a queued control plan."""
     planned_entry = plan.get("arrival_preparation_entry_id")
     if entry_id is not None and planned_entry is not None and planned_entry != entry_id:
@@ -381,6 +385,12 @@ def live_preparation(hass: Any, plan: dict, home_status: str, *,
         return False, "arrival_preparation_changed" if plan.get("arrival_preparing") else None
     registry = getattr(hass, "data", {}).get(DATA_KEY, {})
     controller = registry.get(planned_entry)
+    if "room_preparation_deadline" in plan and area is not None:
+        rooms = getattr(controller, "rooms", None)
+        deadline = (rooms.deadline(area, rooms.occupancy(area))
+                    if rooms and eligible and area in rooms.requests else None)
+        if deadline != plan["room_preparation_deadline"]:
+            return False, "arrival_preparation_changed"
     live_home = controller.home_status() if controller is not None else home_status
     if (controller is not None and controller.armed and eligible
             and (home_status == "unknown" or live_home == "unknown")):

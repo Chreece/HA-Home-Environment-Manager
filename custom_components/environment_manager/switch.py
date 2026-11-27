@@ -35,6 +35,9 @@ async def async_setup_entry(hass, entry, async_add_entities):
             entities.extend(HomeSettingSwitch(
                 manager, entry.entry_id, key, kind="area_environment", area=area,
             ) for key in AREA_ENV_FLAGS)
+        else:
+            entities.append(HomeSettingSwitch(manager, entry.entry_id, "room_preparation_enabled",
+                                              kind="area_environment", area=area))
         if climate_settings(manager.settings, area) is not None:
             entities.extend(HomeSettingSwitch(
                 manager, entry.entry_id, key, kind="climate_operating", area=area,
@@ -159,10 +162,22 @@ class HomeSettingSwitch(SettingsMetadata, SwitchEntity):
         cfg = settings.get(section, {})
         if self._area:
             cfg = cfg.get(self._area, {}) if isinstance(cfg, dict) else {}
-        return isinstance(cfg, dict) and cfg.get(self._key, False) is True
+        return isinstance(cfg, dict) and cfg.get(self._key, self._key == "room_preparation_enabled") is True
+
+    @property
+    def name(self):
+        if self._key == "room_preparation_enabled":
+            from .room_preparation import words
+            return words(self._manager)[0]
+        return super().name
 
     @property
     def extra_state_attributes(self):
+        if self._key == "room_preparation_enabled":
+            from .room_preparation import words
+            name, help_text = words(self._manager)
+            return {"setting_display_name": name, "configuration_help": help_text,
+                    "setting_key": self._attr_translation_key}
         if self._key != "enable_pmv" or not self._area:
             return super().extra_state_attributes
         room = self._manager.settings.get("environment_rooms", {}).get(self._area, {})

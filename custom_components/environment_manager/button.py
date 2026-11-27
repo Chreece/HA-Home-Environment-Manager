@@ -23,6 +23,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     from homeassistant.helpers import entity_registry as er
 
     registry = er.async_get(hass)
+    from .device_hierarchy import configured_area_ids
     controllers = equipment.specs(manager)
 
     def native_calibration_buttons():
@@ -55,6 +56,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     buttons = [
         ArrivalPreparationButton(manager, "prepare"),
         ArrivalPreparationButton(manager, "cancel"),
+        *(RoomPreparationButton(manager, area) for area in configured_area_ids(settings)),
         *(EquipmentResumeButton(manager, spec) for spec in controllers),
         *native_calibration_buttons(),
     ]
@@ -122,6 +124,39 @@ class ArrivalPreparationButton(SettingsMetadata, ButtonEntity):
     @callback
     def _update(self):
         self.async_write_ha_state()
+
+
+class RoomPreparationButton(ArrivalPreparationButton):
+    """Start Comfort in one room through Home Assistant's native control permissions."""
+
+    def __init__(self, manager, area):
+        self._manager, self._area = manager, area
+        entry_id = manager.entry.entry_id
+        self._attr_unique_id = f"{entry_id}_area_{area}_prepare_room"
+        self._attr_device_info = {"identifiers": {(DOMAIN, f"{entry_id}_area_{area}")}}
+        self._attr_icon = "mdi:timer-outline"
+
+    @property
+    def name(self):
+        from .room_preparation import words
+        return words(self._manager)[0]
+
+    @property
+    def available(self):
+        prep = self._manager.arrival_preparation
+        return prep._started and prep.rooms.enabled(self._area)
+
+    @property
+    def extra_state_attributes(self):
+        from .room_preparation import words
+        prep = self._manager.arrival_preparation
+        request = prep.rooms.requests.get(self._area)
+        return {"room_preparation_area": self._area, "entry_id": prep.entry_id,
+                "expires_at": request[0] if request else None,
+                "configuration_help": words(self._manager)[1]}
+
+    async def async_press(self):
+        self._manager.arrival_preparation.rooms.start(self._area)
 
 
 class AreaMoldCalibrationButton(SettingsMetadata, ButtonEntity):
