@@ -64,7 +64,7 @@ def _competing_heat_clear(runtime: Any, spec: Any, primary: str) -> bool:
 
 
 def _independent_room_temperature(runtime: Any, spec: Any, primary: str) -> tuple[float | None, tuple[str, ...]]:
-    """Read the room's selected thermometers or its configured legacy reference."""
+    """Read fresh independent contributors to the room's selected temperature."""
     try:
         from .room_sources import selected
         settings = runtime.manager.settings
@@ -81,9 +81,34 @@ def _independent_room_temperature(runtime: Any, spec: Any, primary: str) -> tupl
         )
     except (ImportError, AttributeError):
         return None, ()
-    ids = tuple(evidence.get("entity_ids") or ())
-    if (evidence.get("status") != "ready" or evidence.get("partial") is True
-            or not ids or evidence.get("valid_count") != len(ids)):
+    if not isinstance(evidence, dict) or evidence.get("status") != "ready":
+        return None, ()
+    selected_ids = evidence.get("entity_ids")
+    problems = evidence.get("invalid_sources", [])
+    if (not isinstance(selected_ids, (list, tuple)) or not selected_ids
+            or any(not isinstance(entity, str) or not entity for entity in selected_ids)
+            or len(set(selected_ids)) != len(selected_ids)
+            or not isinstance(problems, (list, tuple))):
+        return None, ()
+    discarded = set()
+    for problem in problems:
+        if (not isinstance(problem, dict)
+                or problem.get("entity_id") not in selected_ids
+                or problem["entity_id"] in discarded
+                or not isinstance(problem.get("reason"), str) or not problem["reason"]):
+            return None, ()
+        discarded.add(problem["entity_id"])
+    # The shared adapter excludes the appliance before averaging and already
+    # omits stale/invalid readings. Its entity_ids inventory still includes
+    # those omitted sensors, so bind the trend to the actual fresh contributors.
+    ids = tuple(entity for entity in selected_ids if entity not in discarded)
+    if (not ids or type(temp) not in (int, float) or not isfinite(temp)
+            or evidence.get("partial", False) is not bool(discarded)
+            or type(evidence.get("valid_count")) is not int
+            or evidence["valid_count"] != len(ids)
+            or "ignored_count" in evidence and (
+                type(evidence["ignored_count"]) is not int
+                or evidence["ignored_count"] != len(discarded))):
         return None, ()
     return temp, ids
 

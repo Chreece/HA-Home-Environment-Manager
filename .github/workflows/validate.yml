@@ -168,6 +168,7 @@ jobs:
           set -euo pipefail
           python -I .github/tests/test_b21_off_state_watchdog.py
           python -I .github/tests/test_b21_off_state_runtime.py
+          python -I .github/tests/test_086b7_partial_temperature_watchdog.py
           python -I .github/tests/test_b22_universal_off_profiles.py
           python -I .github/tests/test_b22_off_state_runtime.py
           python -I .github/tests/test_b23_off_state_options.py

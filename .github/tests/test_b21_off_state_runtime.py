@@ -355,4 +355,5 @@ async def main():
     print("B21_GENERIC_HEM_OFF_MONITOR_GUARDED_REPEAT_NOTICES_AND_PERSISTED_BUDGET=PASS")
 
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
