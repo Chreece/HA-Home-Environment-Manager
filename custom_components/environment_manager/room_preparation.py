@@ -5,18 +5,18 @@ import asyncio
 
 KEY = "room_preparation_enabled"
 
-# These are also used by the native room switch and the overview information bubble.
+# The native room actions and the room setting share these labels.
 TEXT = {
-    "en": ("Prepare room", "Tap the empty room’s name to run eligible controllers at Comfort for up to {minutes} min. Preparation ends when someone enters, occupancy becomes unknown, or you turn this room setting off."),
-    "el": ("Προετοιμασία δωματίου", "Πάτησε το όνομα του άδειου δωματίου για να λειτουργήσουν οι διαθέσιμοι ελεγκτές σε Άνεση για έως {minutes} λεπτά. Η προετοιμασία λήγει όταν μπει κάποιος, χαθεί η ένδειξη παρουσίας ή απενεργοποιήσεις τη ρύθμιση του δωματίου."),
-    "de": ("Raum vorbereiten", "Tippe auf den Namen des leeren Raums, um geeignete Geräte bis zu {minutes} Minuten im Komfortprofil zu betreiben. Die Vorbereitung endet bei Anwesenheit, unbekannter Belegung oder wenn du diese Raumeinstellung ausschaltest."),
+    "en": ("Prepare room", "Cancel room preparation", "Tap the empty room’s name to use Comfort for up to {minutes} min. Tap it again to cancel. Preparation ends when someone enters, occupancy becomes unknown, or you turn this room setting off."),
+    "el": ("Προετοιμασία δωματίου", "Ακύρωση προετοιμασίας δωματίου", "Πάτησε το όνομα του άδειου δωματίου για να χρησιμοποιήσεις τους στόχους Άνεσης για έως {minutes} λεπτά. Πάτησέ το ξανά για ακύρωση. Η προετοιμασία λήγει όταν μπει κάποιος, χαθεί η ένδειξη παρουσίας ή απενεργοποιήσεις τη ρύθμιση του δωματίου."),
+    "de": ("Raum vorbereiten", "Raumvorbereitung abbrechen", "Tippe auf den Namen des leeren Raums, um für bis zu {minutes} Minuten die Komfortziele zu verwenden. Tippe erneut, um abzubrechen. Die Vorbereitung endet bei Anwesenheit, unbekannter Belegung oder wenn du diese Raumeinstellung ausschaltest."),
 }
 
 
-def words(manager):
+def words(manager, *, cancel=False):
     locale = getattr(getattr(manager.hass, "config", None), "language", "en")
-    name, help_text = TEXT.get(locale.split("-")[0], TEXT["en"])
-    return name, help_text.format(minutes=manager.arrival_preparation.timeout_minutes)
+    name, cancel_name, help_text = TEXT.get(locale.split("-")[0], TEXT["en"])
+    return (cancel_name if cancel else name), help_text.format(minutes=manager.arrival_preparation.timeout_minutes)
 
 
 class RoomPreparation:
@@ -54,6 +54,11 @@ class RoomPreparation:
         request = self.requests.pop(area, None)
         if request:
             request[1].cancel()
+
+    def cancel(self, area):
+        if area in self.requests:
+            self.clear(area)
+            self.owner._changed()
 
     def start(self, area):
         from homeassistant.exceptions import HomeAssistantError

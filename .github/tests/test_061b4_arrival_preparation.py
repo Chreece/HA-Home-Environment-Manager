@@ -730,6 +730,33 @@ class NativeEntityTests(ArrivalCase):
                 buttons.ArrivalPreparationButton(context.manager, "cancel"),
                 numbers.ArrivalPreparationTimeoutNumber(context.manager))
 
+    async def test_native_room_cancel_releases_only_the_selected_room(self):
+        context = await self.context()
+        rooms = context.helper.rooms
+        rooms.observe({}, {AREA, "kitchen"}, {})
+        start = buttons.RoomPreparationButton(context.manager, AREA)
+        cancel = buttons.RoomPreparationButton(context.manager, AREA, cancel=True)
+        self.assertFalse(cancel.available)
+        rooms.start("kitchen")
+        other = rooms.requests["kitchen"]
+        await start.async_press()
+        self.assertTrue(cancel.available)
+        self.assertEqual(cancel.extra_state_attributes["room_preparation_action"], "cancel")
+        self.assertEqual(context.profile(), "comfort")
+        timer = rooms.requests[AREA][1]
+        count = len(context.recalculations)
+        await cancel.async_press()
+        await cancel.async_press()
+        self.assertEqual(len(context.recalculations), count + 1)
+        self.assertTrue(timer.cancelled())
+        self.assertFalse(cancel.available)
+        self.assertEqual(context.profile(), "away")
+        self.assertIsNone(start.extra_state_attributes["expires_at"])
+        self.assertEqual(rooms.requests, {"kitchen": other})
+        await start.async_press()
+        self.assertTrue(cancel.available)
+        self.assertEqual(context.profile(), "comfort")
+
     async def test_controls_share_exact_home_hub_and_native_actions_control_same_episode(self):
         context = await self.context()
         prepare, cancel, timeout = self.controls(context)
